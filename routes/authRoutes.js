@@ -1,9 +1,5 @@
 const express = require("express");
 const passport = require("passport");
-const AppError = require("../utils/appError.js");
-const catchAsync = require("../utils/catchAsync");
-const MailList = require("../models/emailListModel");
-const authController = require("../controllers/authController");
 
 const router = express.Router();
 //authenticate requests for google
@@ -12,7 +8,6 @@ router.get(
   "/google",
   passport.authenticate(
     "google",
-
     {
       scope: ["profile", "email"],
     }

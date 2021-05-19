@@ -1,18 +1,18 @@
 /* eslint-disable no-console */
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, 'Please tell us your first name.'],
+      required: [true, "Please tell us your first name."],
       trim: true,
     },
     lastName: {
       type: String,
-      required: [true, 'Please tell us your last name.'],
+      required: [true, "Please tell us your last name."],
       trim: true,
     },
     headline: {
@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, 'Please provide your email'],
+      required: [true, "Please provide your email"],
       unique: true,
       lowercase: true,
-      validate: [validator.isEmail, 'Please provide a valid email'],
+      validate: [validator.isEmail, "Please provide a valid email"],
     },
     initialisedAt: {
       type: Date,
@@ -36,34 +36,40 @@ const userSchema = new mongoose.Schema(
     photo: String,
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
+      required: [true, "Please provide a password"],
       minlength: 8,
       select: false,
     },
     passwordConfirm: {
       type: String,
-      required: [true, 'Please confirm your password'],
+      required: [true, "Please confirm your password"],
       validate: {
         // This only works on .Create() and .Save()
         validator: function (el) {
           return el === this.password; // Checking if the two passwords are same or not
         },
-        message: 'Password do not match',
+        message: "Password do not match",
       },
     },
     googleId: {
       type: String,
     },
+    facebookId: {
+      type: String,
+    },
+    linkedInId: {
+      type: String,
+    },
     gender: {
       type: String,
-      enum: ['Male', 'Female', 'Other'],
+      enum: ["Male", "Female", "Other"],
     },
     policySigned: {
       type: Boolean,
-      required: [true, 'A user must signin policy'],
+      required: [true, "A user must signin policy"],
       validate: {
         validator: (val) => val === true,
-        message: 'A user must sign the policy before using this application',
+        message: "A user must sign the policy before using this application",
       },
     },
     subscribedToMailList: {
@@ -74,22 +80,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: [
         "I'm looking for events to attend",
-        'I want to host an event',
-        'I want to do both',
+        "I want to host an event",
+        "I want to do both",
       ],
     },
     interests: {
       type: [String],
       enum: [
-        'Technology',
-        'Education',
-        'Lifestyle',
-        'Professional Development',
-        'Arts and crafts',
-        'Business & Entrepreneurship',
-        'Job Search',
-        'Entertainment',
-        'Health',
+        "Technology",
+        "Education",
+        "Lifestyle",
+        "Professional Development",
+        "Arts and crafts",
+        "Business & Entrepreneurship",
+        "Job Search",
+        "Entertainment",
+        "Health",
       ],
     },
     socialMediaHandles: {
@@ -114,27 +120,27 @@ const userSchema = new mongoose.Schema(
       {
         communityId: {
           type: mongoose.Schema.ObjectId,
-          ref: 'Community',
-          default: '609110268fb72211669e28c9',
+          ref: "Community",
+          default: "609110268fb72211669e28c9",
         },
         role: {
           type: String,
-          enum: ['superAdmin'],
-          default: 'superAdmin',
+          enum: ["superAdmin"],
+          default: "superAdmin",
         },
       },
     ],
-    registredInEvents: [{ type: mongoose.Schema.ObjectId, ref: 'Event' }],
+    registredInEvents: [{ type: mongoose.Schema.ObjectId, ref: "Event" }],
     reviews: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Review',
+        ref: "Review",
       },
     ],
     queries: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Query',
+        ref: "Query",
       },
     ],
   },
@@ -144,9 +150,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre('save', async function (next) {
+userSchema.pre("save", async function (next) {
   //Only run this function  if password was actually modified
-  if (!this.isModified('password')) {
+  if (!this.isModified("password")) {
     return next();
   }
   //Hash the password with cost of 12
@@ -178,5 +184,5 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
   return false;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
