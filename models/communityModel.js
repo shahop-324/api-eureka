@@ -1,47 +1,47 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+const mongoose = require("mongoose");
+const validator = require("validator");
 
 const communitySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please assign a name to your community'],
+      required: [true, "Please assign a name to your community"],
       unique: true,
       trim: true,
       maxlength: [
         100,
-        'A Community name must have less or equal than 100 characters',
+        "A Community name must have less or equal than 100 characters",
       ],
     },
     email: {
       type: String,
-      required: [true, 'Please provide your community email'],
+      required: [true, "Please provide your community email"],
       lowercase: true,
-      validate: [validator.isEmail, 'Please provide a valid email'],
+      validate: [validator.isEmail, "Please provide a valid email"],
     },
     superAdmin: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
-        required: [true, 'A community must have a Super Admin.'],
+        ref: "User",
+        required: [true, "A community must have a Super Admin."],
       },
     ],
     headline: {
       type: String,
       trim: true,
-      required: [true, 'Please provide a short description of your community'],
+      required: [true, "Please provide a short description of your community"],
       maxlength: [
         100,
-        'A Community name must have less or equal than 100 characters',
+        "A Community name must have less or equal than 100 characters",
       ],
     },
     policySigned: {
       type: Boolean,
-      required: [true, 'A community must sign policy'],
+      required: [true, "A community must sign policy"],
       validate: {
         validator: (val) => val === true,
         message:
-          'A community must sign the policy before using this application',
+          "A community must sign the policy before using this application",
       },
     },
     subscribedToCommunityMailList: {
@@ -55,7 +55,7 @@ const communitySchema = new mongoose.Schema(
     planDetails: {
       planName: {
         type: String,
-        enum: ['Starter', 'Growth', 'Business', 'Enterprise'],
+        enum: ["Starter", "Growth", "Business", "Enterprise"],
       },
       planRenewDuration: {
         type: Number,
@@ -84,9 +84,6 @@ const communitySchema = new mongoose.Schema(
           coupon: {
             type: Boolean,
           },
-          teamManagement: {
-            type: Boolean,
-          },
         },
         eventExperience: {
           reception: {
@@ -101,13 +98,16 @@ const communitySchema = new mongoose.Schema(
           networking: {
             type: Boolean,
           },
+          customNetworking: {
+            type: Boolean,
+          },
           multiSession: {
             type: Boolean,
           },
           multiTrack: {
             type: Boolean,
           },
-          moderation:{
+          moderation: {
             type: Boolean,
           },
           liveStreaming: {
@@ -123,6 +123,9 @@ const communitySchema = new mongoose.Schema(
             type: Boolean,
           },
           leaderShipBoard: {
+            type: Boolean,
+          },
+          sponsorShoutout: {
             type: Boolean,
           },
         },
@@ -178,9 +181,6 @@ const communitySchema = new mongoose.Schema(
           onboardingAndTraining: {
             type: Boolean,
           },
-          SSO: {
-            type: Boolean,
-          },
         },
         moreDetails: {
           eventLength: {
@@ -189,10 +189,13 @@ const communitySchema = new mongoose.Schema(
           registrationsPerMonth: {
             type: Number,
           },
+          speakersPerEvent: {
+            type: Number,
+          },
           maxTeamMembers: {
             type: Number,
           },
-          ticketingCharge: {
+          ticketingCommission: {
             type: Number,
           },
           pricePerAdditionalRegistration: {
@@ -204,7 +207,7 @@ const communitySchema = new mongoose.Schema(
     coupons: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Coupon',
+        ref: "Coupon",
       },
     ],
     eventsDocIdCommunityWise: {
@@ -336,6 +339,6 @@ const communitySchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-const Community = mongoose.model('Community', communitySchema);
+const Community = mongoose.model("Community", communitySchema);
 
 module.exports = Community;
