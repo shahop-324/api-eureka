@@ -1,0 +1,29 @@
+<=====================================>
+May-10
+------------------
+1) Speakers // ASSIGNED TO DINESH
+2) Sessions // ASSIGNED TO DINESH
+3) Booths   // ASSIGNED TO OP
+4) Sponsors // ASSIGNED TO OP
+
+***************************************
+SPEAKERS
+***************************************
+// 1) Community should be able to invite a speaker to his/her event by entering his/her email.
+// 2) After a speaker has been added to an event then community can assign that speaker to any session in that event.
+
+***************************************
+SESSIONS
+***************************************
+// 1) Community should be able to add multi track and multi sessions to his / her events.
+// 2) Community should be able to assign hosts and speakers to any session from the list of available team members and invited speakers.
+
+***************************************
+BOOTHS
+***************************************
+// 1) Community should be able to add booths to their events. (BOOTHS ARE EVENT SPECIFIC AND HAS A STRICT UPPER LIMIT. SO, IT'S GOING TO BE EMBEDDED IN THIER PARTICULAR EVENT DOCUMENTS.)
+
+***************************************
+SPONSORS
+***************************************
+// 1) Community should be able to add sponsors to their events. (SPONSORS ARE ALSO EVENT SPECIFIC WITH A STRICT UPPER LIMIT. SO, IT'S GOING TO BE EMBEDDED IN THIER PARTICULAR EVENT DOCUMENTS.)
