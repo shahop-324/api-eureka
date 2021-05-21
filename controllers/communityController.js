@@ -22,6 +22,7 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
   console.log("userId:", userId);
   console.log("communityId:", communityId);
 
+
   switch (selectedPlan) {
     // If selectedPlan = 'free'
     case "free":
@@ -226,3 +227,17 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
     data: { planDetails: communitySelectingPlan.planDetails },
   });
 });
+
+exports.customPlanGeneration = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'This route is being implemented',
+    // data: {
+    // }
+  });
+});
+
+
+
+// TODO
+// Create a POST endpoint for generating a custom plan (include community name, plan details, planRenewDuration & priceToBeCharged)

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const Community = require('../models/communityModel');
 const MailList = require('../models/emailListModel');
+const SalesDepartment = require('../models/salesDepartmentModel');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError.js');
 const catchAsync = require('../utils/catchAsync');
@@ -175,4 +176,40 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
   req.community = freshCommunity;
   console.log(req.community);
   next();
+});
+
+exports.salesSignup = catchAsync(async (req, res, next) => {
+  const newSalesPerson = await SalesDepartment.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    salesPersonId: req.body.salesPersonId,
+    employeeSince: Date.now(),
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+  });
+  
+  createSendToken(newSalesPerson, 201, req, res);
+});
+
+exports.salesLogin = catchAsync(async (req, res, next) => {
+  const { salesPersonId, password } = req.body;
+
+  // 1) Check if salesPersonId and password exist
+  if (!salesPersonId || !password) {
+    return next(new AppError('Please provide salesPersonId and password', 400));
+  }
+
+  // 2) Check if salesPerson exists && password is correct
+  const salesPerson = await SalesDepartment.findOne({ salesPersonId: salesPersonId }).select('+password');
+
+  if (!salesPerson || !(await salesPerson.correctPassword(password, salesPerson.password))) {
+    return next(new AppError('Incorrect salesPersonId and password', 401));
+  }
+
+  // 3) If everything is ok, send json web token to client
+  createSendToken(salesPerson, 200, req, res);
+});
+
+exports.salesProtect = catchAsync(async(req, res, next) => {
+
 });

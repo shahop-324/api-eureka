@@ -18,7 +18,9 @@ const communityRoutes = require("./routes/communityRoutes");
 const globalRoutes = require("./routes/globalRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const authRoutes = require("./routes/authRoutes");
-const { initialize } = require("passport");
+const salesDepartmentRoutes = require('./routes/salesDepartmentRoutes');
+const customPlanRoutes = require('./routes/customPlanRoutes');
+// const { initialize } = require("passport");
 
 require("./services/passport");
 
@@ -73,6 +75,9 @@ app.use("/eureka/v1/users", userRoutes);
 app.use("/eureka/v1/registration", registrationRoutes);
 app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
+app.use('/eureka/v1/sales', salesDepartmentRoutes);
+app.use('/eureka/v1/customPlan', customPlanRoutes);
+
 
 app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
