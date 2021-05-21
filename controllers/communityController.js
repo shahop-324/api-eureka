@@ -229,6 +229,8 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
 });
 
 exports.customPlanGeneration = catchAsync(async (req, res, next) => {
+  const salesPerson = req.salesPerson;
+  console.log('This is sales Person from last middleware:', salesPerson);
   res.status(200).json({
     status: 'success',
     message: 'This route is being implemented',

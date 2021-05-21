@@ -14,7 +14,7 @@ const salesDepartmentSchema = new mongoose.Schema({
   },
   salesPersonId: {
     type: String,
-    required: [true, "Please provide a sales person's Id"],
+    required: [true, "Please provide a sales persons Id"],
     unique: true,
   },
   password: {
