@@ -1,5 +1,9 @@
 const Community = require("../models/communityModel");
+const CustomPlanDoc = require("../models/customPlanDocsModel");
 const catchAsync = require("../utils/catchAsync");
+const sendEmail = require("../utils/email");
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 
 exports.selectPlan = catchAsync(async (req, res, next) => {
   console.log("We are able to reach this middleware function, Over and Out.");
@@ -17,17 +21,11 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
   const services = planDetails.features.services;
   const moreDetails = planDetails.features.moreDetails;
 
-  console.log("planRenewDuration:", planRenewDuration);
-  console.log("selectedPlan:", selectedPlan);
-  console.log("userId:", userId);
-  console.log("communityId:", communityId);
-
-
   switch (selectedPlan) {
     // If selectedPlan = 'free'
     case "free":
       // Setting values for plan name renew period and currentPlanExpiryDate
-      planDetails.planName = "free";
+      planDetails.planName = "Free";
       planDetails.planRenewDuration = planRenewDuration;
       planDetails.currentPlanExpiresOn =
         Date.now() + planRenewDuration * 31 * 24 * 60 * 60 * 1000;
@@ -158,7 +156,7 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
     // If selectedPlan = 'growth'
     case "growth":
       // Setting values for plan name renew period and currentPlanExpiryDate
-      planDetails.planName = "growth";
+      planDetails.planName = "Growth";
       planDetails.planRenewDuration = planRenewDuration;
       planDetails.currentPlanExpiresOn =
         Date.now() + planRenewDuration * 31 * 24 * 60 * 60 * 1000;
@@ -229,17 +227,120 @@ exports.selectPlan = catchAsync(async (req, res, next) => {
 });
 
 exports.customPlanGeneration = catchAsync(async (req, res, next) => {
-  const salesPerson = req.salesPerson;
-  console.log('This is sales Person from last middleware:', salesPerson);
+  const community = await Community.findOne({ name: req.body.communityName });
+
+  // 1) create a new document in customPlanDocModel based on req.body community Name, planRenewDuration & priceToBeCharged
+  const newCustomPlan = await CustomPlanDoc.create({
+    createdBySalesPerson: req.salesPerson.id,
+    forCommunityId: community.id,
+    planDoc: {
+      planName: "Business",
+      planRenewDuration: req.body.planRenewDuration,
+      currentPlanExpiresOn:
+        req.body.planRenewDuration * 30 * 24 * 60 * 60 * 1000,
+      features: {
+        eventManagement: {
+          ticketing: req.body.ticketing,
+          registartionPage: req.body.registartionPage,
+          queries: req.body.queries,
+          reviews: req.body.reviews,
+          email: req.body.email,
+          coupon: req.body.coupon,
+        },
+        eventExperience: {
+          reception: req.body.reception,
+          messaging: req.body.messaging,
+          connection: req.body.connection,
+          networking: req.body.networking,
+          customNetworking: req.body.customNetworking,
+          multiSession: req.body.multiSession,
+          multiTrack: req.body.multiTrack,
+          moderation: req.body.moderation,
+          liveStreaming: req.body.liveStreaming,
+          RTMP: req.body.RTMP,
+          twitterAndInstaWall: req.body.twitterAndInstaWall,
+          photoBooth: req.body.photoBooth,
+          leaderShipBoard: req.body.leaderShipBoard,
+          sponsorShoutout: req.body.sponsorShoutout,
+        },
+        customization: {
+          email: req.body.emailCustomization,
+          registrationForm: req.body.registrationForm,
+          stageBranding: req.body.stageBranding,
+        },
+        analytics: {
+          basic: req.body.basic,
+          advanced: req.body.advanced,
+          realTimeAnalytics: req.body.realTimeAnalytics,
+        },
+        integrations: {
+          zapier: req.body.zapier,
+          miro: req.body.miro,
+          limnu: req.body.limnu,
+          mailchimp: req.body.mailChimp,
+          socialMedia: req.body.socialMedia,
+          CRM: req.body.CRM,
+        },
+        services: {
+          emailAndChatSupport: req.body.emailAndChatSupport,
+          uptimeSLA: req.body.uptimeSLA,
+          onboardingAndTraining: req.body.onboardingAndTraining,
+        },
+        moreDetails: {
+          eventLength: req.body.eventLength,
+          registrationsPerMonth: req.body.registrationsPerMonth,
+          speakersPerEvent: req.body.speakersPerEvent,
+          maxTeamMembers: req.body.maxTeamMembers,
+          ticketingCommission: req.body.ticketingCommission,
+          pricePerAdditionalRegistration:
+            req.body.pricePerAdditionalRegistration,
+        },
+      },
+    },
+  });
+
+  // Generate random plan redeem token containing community Id and customPlanDoc Id
+
+  const generateToken = (communityId, customPlanId) =>
+    jwt.sign(
+      { communityId: communityId, customPlanId: customPlanId },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
+  const token = generateToken(community.id, newCustomPlan.id);
+  // console.log(token);
+
+  const redeemToken = `${req.protocol}://${req.get(
+    "host"
+  )}/eureka/v1/redeemCustomPlan/${token}`;
+  // console.log(redeemToken);
+  const message = `Get Access to your custom plan by clicking here ${redeemToken}`;
+
+  console.log(community.email);
+  await sendEmail({
+    email: community.email,
+    subject: "Your Custom Plan is ready to be redeemed.",
+    message,
+  });
+
   res.status(200).json({
-    status: 'success',
-    message: 'This route is being implemented',
-    // data: {
-    // }
+    status: "success",
+    data: newCustomPlan,
   });
 });
 
+exports.redeemCustomPlan = catchAsync(async (req, res, next) => {
+  const token = req.params.token;
+  console.log(token);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(decoded);
+  res.status(201).json({
+    status: "success",
+    message: "This route is yet being implemented",
+  });
+});
 
-
-// TODO
-// Create a POST endpoint for generating a custom plan (include community name, plan details, planRenewDuration & priceToBeCharged)
+//// TODO
+//// Create a POST endpoint for generating a custom plan (include community name, plan details, planRenewDuration & priceToBeCharged)
