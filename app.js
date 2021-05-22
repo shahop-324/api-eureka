@@ -78,7 +78,6 @@ app.use("/eureka/v1/feedback", feedbackRoutes);
 app.use('/eureka/v1/sales', salesDepartmentRoutes);
 app.use('/eureka/v1/customPlan', customPlanRoutes);
 
-
 app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 

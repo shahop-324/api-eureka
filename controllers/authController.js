@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line no-unused-vars
-const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
-const Community = require('../models/communityModel');
-const MailList = require('../models/emailListModel');
-const SalesDepartment = require('../models/salesDepartmentModel');
-const User = require('../models/userModel');
-const AppError = require('../utils/appError.js');
-const catchAsync = require('../utils/catchAsync');
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
+const Community = require("../models/communityModel");
+const MailList = require("../models/emailListModel");
+const SalesDepartment = require("../models/salesDepartmentModel");
+const User = require("../models/userModel");
+const AppError = require("../utils/appError.js");
+const catchAsync = require("../utils/catchAsync");
 
 // this function will return you jwt token
 const signToken = (id) =>
@@ -15,20 +15,10 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-// this function use signToken function for creating and sending token
-const createSendToken = (user, statusCode, req, res) => {
-  const token = signToken(user._id);
-
-  //remove password from output
-  user.password = undefined;
-  res.status(statusCode).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
+const signTokenForSalesLogin = (salesPersonId) =>
+  jwt.sign({ salesPersonId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
-};
 
 const signTokenForCommunityLogin = (userId, communityId) =>
   jwt.sign(
@@ -39,6 +29,35 @@ const signTokenForCommunityLogin = (userId, communityId) =>
     }
   );
 
+// this function use signToken function for creating and sending token
+const createSendToken = (user, statusCode, req, res) => {
+  const token = signToken(user._id);
+
+  //remove password from output
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
+const createSendTokenForSalesLogin = (salesPerson, statusCode, req, res) => {
+  const token = signTokenForSalesLogin(salesPerson.salesPersonId);
+
+  //remove password from output
+  salesPerson.password = undefined;
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      salesPerson,
+    },
+  });
+};
+
 const createSendTokenForCommunityLogin = async (
   userId,
   communityId,
@@ -48,7 +67,7 @@ const createSendTokenForCommunityLogin = async (
 ) => {
   const token = signTokenForCommunityLogin(userId, communityId);
   res.status(statusCode).json({
-    status: 'success',
+    status: "success",
     token,
   });
 };
@@ -83,14 +102,14 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 1) Check if email and password exist
   if (!email || !password) {
-    return next(new AppError('Please provide email and password', 400));
+    return next(new AppError("Please provide email and password", 400));
   }
 
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email: email }).select('+password');
+  const user = await User.findOne({ email: email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email and password', 401));
+    return next(new AppError("Incorrect email and password", 401));
   }
 
   // 3) If everything is ok, send json web token to client
@@ -98,15 +117,15 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log('I am here');
+  console.log("I am here");
   console.log(req.headers);
   // 1) Getting token and check if it's there
   let token;
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
+    req.headers.authorization.startsWith("Bearer")
   ) {
-    token = req.headers.authorization.split(' ')[1];
+    token = req.headers.authorization.split(" ")[1];
   }
 
   if (!token) {
@@ -122,7 +141,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!freshUser) {
     return next(
       new AppError(
-        'The user belonging to this token does no longer exists.',
+        "The user belonging to this token does no longer exists.",
         401
       )
     );
@@ -130,7 +149,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 4) Check if user changed password after the token was issued
   if (freshUser.changedPasswordAfter(decoded.iat)) {
     return next(
-      new AppError('User recently changed password! Please log in again.', 401)
+      new AppError("User recently changed password! Please log in again.", 401)
     );
   }
 
@@ -151,9 +170,9 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
+    req.headers.authorization.startsWith("Bearer")
   ) {
-    token = req.headers.authorization.split(' ')[1];
+    token = req.headers.authorization.split(" ")[1];
   }
 
   if (!token) {
@@ -187,8 +206,8 @@ exports.salesSignup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  
-  createSendToken(newSalesPerson, 201, req, res);
+
+  createSendTokenForSalesLogin(newSalesPerson, 201, req, res);
 });
 
 exports.salesLogin = catchAsync(async (req, res, next) => {
@@ -196,20 +215,50 @@ exports.salesLogin = catchAsync(async (req, res, next) => {
 
   // 1) Check if salesPersonId and password exist
   if (!salesPersonId || !password) {
-    return next(new AppError('Please provide salesPersonId and password', 400));
+    return next(new AppError("Please provide salesPersonId and password", 400));
   }
 
   // 2) Check if salesPerson exists && password is correct
-  const salesPerson = await SalesDepartment.findOne({ salesPersonId: salesPersonId }).select('+password');
+  const salesPerson = await SalesDepartment.findOne({
+    salesPersonId: salesPersonId,
+  }).select("+password");
 
-  if (!salesPerson || !(await salesPerson.correctPassword(password, salesPerson.password))) {
-    return next(new AppError('Incorrect salesPersonId and password', 401));
+  if (
+    !salesPerson ||
+    !(await salesPerson.correctPassword(password, salesPerson.password))
+  ) {
+    return next(new AppError("Incorrect salesPersonId and password", 401));
   }
 
   // 3) If everything is ok, send json web token to client
-  createSendToken(salesPerson, 200, req, res);
+  createSendTokenForSalesLogin(salesPerson, 200, req, res);
 });
 
-exports.salesProtect = catchAsync(async(req, res, next) => {
+exports.salesProtect = catchAsync(async (req, res, next) => {
+  // 1) Getting token and check if it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
+  if (!token) {
+    return next(
+      new AppError(
+        `You are not logged in your sales Management portal! Please try again after logging in.`,
+        401
+      )
+    );
+  }
+
+  // 2) Verification of token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const salesPersonId = decoded.salesPersonId;
+  const freshSalesPerson = await SalesDepartment.findOne({
+    salesPersonId: salesPersonId,
+  });
+  req.salesPerson = freshSalesPerson;
+  next();
 });

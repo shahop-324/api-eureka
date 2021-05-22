@@ -55,11 +55,11 @@ const communitySchema = new mongoose.Schema(
     planDetails: {
       planName: {
         type: String,
-        enum: ["Starter", "Growth", "Business", "Enterprise"],
+        enum: ["Free", "Starter", "Growth", "Business"],
       },
       planRenewDuration: {
         type: Number,
-        enum: [1, 4, 6, 12],
+        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       },
       currentPlanExpiresOn: {
         type: Date,
