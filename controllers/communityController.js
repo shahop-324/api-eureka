@@ -312,18 +312,18 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
   const token = generateToken(community.id, newCustomPlan.id);
   // console.log(token);
 
-  const redeemToken = `${req.protocol}://${req.get(
+  const redeemURL = `${req.protocol}://${req.get(
     "host"
-  )}/eureka/v1/redeemCustomPlan/${token}`;
-  // console.log(redeemToken);
-  const message = `Get Access to your custom plan by clicking here ${redeemToken}`;
+  )}/eureka/v1/customPlan/redeemCustomPlan/${token}`;
+  console.log(redeemURL);
+  const message = `Get Access to your custom plan by clicking here ${redeemURL}`;
 
   console.log(community.email);
-  await sendEmail({
-    email: community.email,
-    subject: "Your Custom Plan is ready to be redeemed.",
-    message,
-  });
+  // await sendEmail({
+  //   email: community.email,
+  //   subject: "Your Custom Plan is ready to be redeemed.",
+  //   message,
+  // });
 
   res.status(200).json({
     status: "success",

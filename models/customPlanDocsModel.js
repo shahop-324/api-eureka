@@ -23,7 +23,7 @@ const customPlanDocSchema = new mongoose.Schema({
   planDoc: Map,
   status: {
     type: String,
-    enum: ["Pending", "Accepted", "Rejected"],
+    enum: ["Pending", "Accepted", "Rejected", "Expired"],
     default: "Pending",
   },
 });

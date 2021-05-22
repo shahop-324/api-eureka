@@ -19,7 +19,6 @@ const sendEmail = async (options) => {
     // html:
   };
 
-  console.log(transporter.sendMail);
   // 3) Send the email with nodemailer
  await transporter.sendMail(mailOptions);
   

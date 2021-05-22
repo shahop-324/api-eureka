@@ -59,12 +59,6 @@ const salesDepartmentSchema = new mongoose.Schema({
   passwordChangedAt: {
     type: Date,
   },
-  passwordResetToken: {
-    type: String,
-  },
-  passwordResetExpires: {
-    type: Date,
-  },
 });
 
 salesDepartmentSchema.pre("save", async function (next) {
