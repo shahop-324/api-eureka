@@ -32,6 +32,12 @@ const signTokenForCommunityLogin = (userId, communityId) =>
 // this function use signToken function for creating and sending token
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
+const cookieOptions={
+  expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
+  httpOnly:true
+};
+if(process.env.NODE_ENV==='production')cookieOptions.secure=true;
+res.cookie('jwt',token,cookieOptions);
 
   //remove password from output
   user.password = undefined;
@@ -81,18 +87,18 @@ exports.signup = catchAsync(async (req, res) => {
     email: req.body.email,
     initialisedAt: Date.now(),
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+   
     policySigned: req.body.policySigned,
-    subscribedToMailList: req.body.subscribedToMailList,
+ 
   });
 
-  if (req.body.subscribedToMailList === true) {
+
     const name = `${req.body.firstName} ${req.body.lastName}`;
     await MailList.create({
       name: name,
       email: req.body.email,
     });
-  }
+  
 
   createSendToken(newUser, 201, req, res);
 });
@@ -117,8 +123,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log("I am here");
-  console.log(req.headers);
+  
   // 1) Getting token and check if it's there
   let token;
   if (
@@ -126,6 +131,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+  }
+  else if(req.cookies.jwt){
+    token=req.cookies.jwt;
   }
 
   if (!token) {

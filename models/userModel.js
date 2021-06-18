@@ -40,17 +40,8 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
-    passwordConfirm: {
-      type: String,
-      required: [true, "Please confirm your password"],
-      validate: {
-        // This only works on .Create() and .Save()
-        validator: function (el) {
-          return el === this.password; // Checking if the two passwords are same or not
-        },
-        message: "Password do not match",
-      },
-    },
+   
+    
     googleId: {
       type: String,
     },
@@ -74,7 +65,7 @@ const userSchema = new mongoose.Schema(
     },
     subscribedToMailList: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     whatAreYouPlanningToDo: {
       type: String,

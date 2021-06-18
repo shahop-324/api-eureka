@@ -10,7 +10,8 @@ const passport = require("passport");
 const xss = require("xss-clean");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errController");
-
+const cors=require("cors");
+const cookieParser =require("cookie-parser")
 // Imported Routes for Various Resources
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
@@ -26,7 +27,13 @@ require("./services/passport");
 
 // Created a new express app
 const app = express();
+app.use(cors());
+// app.use(cors({
+//   origin:'http://localhost:3001'
+// }))
+app.options('*',cors());
 
+app.use(cookieParser());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -68,7 +75,12 @@ app.use(mongosanitize());
 
 // Data sanitization against XSS
 app.use(xss());
-
+//test middleware 
+app.use((req,res,next)=>{
+ console.log("hello form cookie middleware")
+  console.log(req.cookies);
+  next();
+})
 // All routes
 app.use("/eureka/v1/auth", authRoutes);
 app.use("/eureka/v1/users", userRoutes);
@@ -81,12 +93,12 @@ app.use('/eureka/v1/customPlan', customPlanRoutes);
 app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
-app.get("/", (req, res, next) => {
-  res.status(200).json({
-    status: "success",
-    message: "welcome you are logged in from third Party",
-  });
-});
+// app.get("/", (req, res, next) => {
+//   res.status(200).json({
+//     status: "success",
+//     message: "welcome you are logged in from third Party",
+//   });
+// });
 // app.get("/eureka/v1/auth/facebook", (req, res, next) => {
 //   res.status(200).json({
 //     status: "success",
