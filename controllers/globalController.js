@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-console */
-const Event = require('../models/eventModel');
-const User = require('../models/userModel');
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+const Event = require("../models/eventModel");
+const User = require("../models/userModel");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
+const apiFeatures = require("../utils/apiFeatures");
 
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const result = await Event.updateMany(
@@ -19,12 +20,18 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
         },
       ],
     },
-    { status: 'inactive' }
+    { status: "inactive" }
   );
-  const eventDocuments = await Event.find({ status: 'active' });
+
+  const query = Event.find({ status: "active" });
+  // console.log(query);
+  const features = new apiFeatures(query, req.query).paginate();
+  const eventDocuments = await features.query;
+
+  // const eventDocuments = await Event.find({ status: 'active' });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     length: eventDocuments.length,
     data: {
       events: eventDocuments,
@@ -53,19 +60,12 @@ exports.DoesUserRegistredInThisEvent = catchAsync(async (req, res, next) => {
 exports.IsUserAlreadyRegistred = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const eventId = req.params.eventId;
-  const userCreatingReview = await User.findById(userId);
+  const userGettingRegistered = await User.findById(userId);
 
-  const bool = userCreatingReview.registredInEvents.includes(eventId);
+  const bool = userGettingRegistered.registredInEvents.includes(eventId);
   if (bool) {
-    next();
+    return next(new AppError(`You can only register once in an event.`, 400));
   } else {
-    return next(
-      new AppError(
-        `You can only register once in an event.`,
-        400
-      )
-    );
+    next();
   }
 });
-
-

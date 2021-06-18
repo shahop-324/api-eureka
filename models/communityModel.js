@@ -230,39 +230,44 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-      accountsReached: {
+
+      followersGainedPreviousDay: {
         type: Number,
         default: 0,
       },
-      followersGainedThisMonth: {
-        type: Number,
-        default: 0,
-      },
-      followersGainedThisQuarter: {
-        type: Number,
-        default: 0,
-      },
+
       followersGainedThisDay: {
         type: Number,
         default: 0,
       },
+
+      followersGainedInPreviousMonth: {
+        type: Number,
+      },
+
+      followersGainedThisMonth: {
+        type: Number,
+        default: 0,
+      },
+      followersGainedThisPreviousYear: {
+        type: Number,
+        default: 0,
+      },
+
       followersGainedThisYear: {
         type: Number,
         default: 0,
       },
-      accountsReachedThisMonth: {
+
+      revenueThisMonth: {
         type: Number,
         default: 0,
       },
-      accountsReachedThisQuarter: {
+      totalRevenue: {
         type: Number,
         default: 0,
       },
-      accountsReachedThisDay: {
-        type: Number,
-        default: 0,
-      },
-      accountsReachedThisYear: {
+      revenuePreviousMonth: {
         type: Number,
         default: 0,
       },
@@ -270,23 +275,39 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-      revenueThisQuarter: {
+      revenuePreviousDay: {
         type: Number,
         default: 0,
       },
+
       revenueThisDay: {
         type: Number,
         default: 0,
       },
+      revenuePreviousYear: {
+        type: Number,
+        default: 0,
+      },
+
       revenueThisYear: {
         type: Number,
         default: 0,
       },
+      totalRegistrations: {
+        type: Number,
+        default: 0,
+      },
+
+      totalRegistrationsPreviousMonth: {
+        type: Number,
+        default: 0,
+      },
+
       totalRegistrationsThisMonth: {
         type: Number,
         default: 0,
       },
-      totalRegistrationsThisQuarter: {
+      totalRegistrationsPreviousDay: {
         type: Number,
         default: 0,
       },
@@ -294,41 +315,13 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
+      totalRegistrationsPreviousYear: {
+        type: Number,
+        default: 0,
+      },
       totalRegistrationsThisYear: {
         type: Number,
         default: 0,
-      },
-      uniqueUsersThisMonth: {
-        type: Number,
-        default: 0,
-      },
-      uniqueUsersThisQuarter: {
-        type: Number,
-        default: 0,
-      },
-      uniqueUsersThisDay: {
-        type: Number,
-        default: 0,
-      },
-      uniqueUsersThisYear: {
-        type: Number,
-        default: 0,
-      },
-      avgRating: {
-        type: Number,
-        deafult: 4.2,
-      },
-      numberOfMonthlyActiveUsers: {
-        type: Number,
-        deafult: 4.2,
-      },
-      numberOfMonthlyQuarterlyUsers: {
-        type: Number,
-        deafult: 4.2,
-      },
-      numberOfYearlyActiveUsers: {
-        type: Number,
-        deafult: 4.2,
       },
     },
     coverPhoto: String,
