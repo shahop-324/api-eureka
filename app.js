@@ -89,17 +89,12 @@ app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
 app.use('/eureka/v1/sales', salesDepartmentRoutes);
 app.use('/eureka/v1/customPlan', customPlanRoutes);
-let x;
-app.use((req,res,next)=>{
-   console.log(req.user);
-    x =req.user;
-    next();
-})
+
 
 app.get('/eureka/v1/current_user',(req,res)=>{
 
-  res.send(x);
-  // res.send(req.user);
+
+   res.send(req.user);
 })
 app.get('/eureka/v1/logout',(req,res)=>{
   req.logout();
