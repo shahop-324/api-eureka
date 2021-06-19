@@ -41,6 +41,7 @@ res.cookie('jwt',token,cookieOptions);
 
   //remove password from output
   user.password = undefined;
+  req.user=user;
   res.status(statusCode).json({
     status: "success",
     token,

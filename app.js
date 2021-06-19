@@ -31,7 +31,7 @@ app.use(cors());
 // app.use(cors({
 //   origin:'http://localhost:3001'
 // }))
-app.options('*',cors());
+ app.options('*',cors());
 
 app.use(cookieParser());
 app.use(
@@ -89,21 +89,24 @@ app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
 app.use('/eureka/v1/sales', salesDepartmentRoutes);
 app.use('/eureka/v1/customPlan', customPlanRoutes);
+let x;
+app.use((req,res,next)=>{
+   console.log(req.user);
+    x =req.user;
+    next();
+})
 
+app.get('/eureka/v1/current_user',(req,res)=>{
+
+  res.send(x);
+  // res.send(req.user);
+})
+app.get('/eureka/v1/logout',(req,res)=>{
+  req.logout();
+  res.send(req.user);
+})
 app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
-// app.get("/", (req, res, next) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "welcome you are logged in from third Party",
-//   });
-// });
-// app.get("/eureka/v1/auth/facebook", (req, res, next) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "welcome you are logged in from third Party",
-//   });
-// });
 
 module.exports = app;

@@ -14,10 +14,10 @@ router.get(
   )
 );
 
-router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/users/login'}),
+router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/signin'}),
 (req,res)=>{
 
-  res.redirect('/eureka/v1/registration/generalIntent');
+  res.redirect('/explore-events');
 }
 
 )
