@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const googleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
-const facebookStrategy = require("passport-facebook").Strategy;
+
 const User = mongoose.model("User");
-const linkedinStrategy = require("passport-linkedin-oauth2").Strategy;
+
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -21,6 +21,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 
       callbackURL: "/eureka/v1/auth/google/callback",
+      proxy:true
     },
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ googleId: profile.id });

@@ -17,6 +17,7 @@ const ReviewsIdsCommunityWise = require("../models/reviewsIdsCommunityWise");
 const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
 
+
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
     const value = object[key];
@@ -258,11 +259,24 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
   const userCreatingReview = await User.findById(userId);
   const eventGettingReview = await Event.findById(eventId);
+  const eventPreviousRating = eventGettingReview.eventAverageRating;
+  const eventPreviousNumOfRatings = eventGettingReview.numberOfRatingsReceived;
   const communityId = eventGettingReview.createdBy;
   const communityGettingReview = await Community.findById(communityId);
-  const document = await Community.findById(
+  const communityPreviousRating = communityGettingReview.commuintyAverageRating;
+  const communityPreviousNumOfRatings = communityGettingReview.numberOfRating;
+  const document = await ReviewsIdsCommunityWise.findById(
     communityGettingReview.reviewsDocIdCommunityWise
   );
+
+
+  const newAvgRatingForCommunity = (communityPreviousRating * communityPreviousNumOfRatings + req.body.rating) / (communityPreviousNumOfRatings + 1);
+  const newNumOfRtingsForCommunity = communityPreviousNumOfRatings + 1;
+
+  const newAvgRatingForEvent = (eventPreviousRating * eventPreviousNumOfRatings + req.body.rating) / (eventPreviousNumOfRatings + 1);
+  const newNumofRatingsForEvent = eventPreviousNumOfRatings + 1;
+
+
   // 1) Create a new review document
   const newReview = await Review.create({
     createdForEvent: req.params.eventId,
@@ -274,10 +288,20 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 
   // 2) Update corresponding event document for which review is created
+  console.log(newAvgRatingForEvent);
+  await Event.findByIdAndUpdate(eventId, {
+    eventAverageRating: newAvgRatingForEvent,
+    numberOfRatingsReceived: newNumofRatingsForEvent,
+  });
+  eventGettingReview.eventAverageRating = newAvgRatingForEvent;
+  eventGettingReview.numberOfRatingsReceived = newNumofRatingsForEvent;
   eventGettingReview.reviews.push(newReview.id);
   await eventGettingReview.save({ validateModifiedOnly: true });
 
   // 3) Update corresponding community document to which this event belongs for which review was given by user
+  communityGettingReview.commuintyAverageRating = newAvgRatingForCommunity;
+  communityGettingReview.numberOfRatingsRecieved = newNumOfRtingsForCommunity;
+  await communityGettingReview.save({ validateModifiedOnly: true });
   document.reviewsIds.push(newReview.id);
   await document.save({ validateModifiedOnly: true });
 

@@ -75,6 +75,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     shortDescription: req.body.shortDescription,
     visibility: req.body.visibility,
     createdBy: communityId,
+    communityRating:communityGettingEvent.commuintyAverageRating,
     // host: req.community.superAdmin[0].id,
   });
   // 2) Update that event into communities resource in events array

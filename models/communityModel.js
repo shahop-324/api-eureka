@@ -324,6 +324,21 @@ const communitySchema = new mongoose.Schema(
         default: 0,
       },
     },
+
+
+    commuintyAverageRating:{
+    type:Number,
+    default:4,
+
+
+    },
+
+    numberOfRatingsRecieved: {
+      type: Number,
+      default: 0
+    },
+
+    
     coverPhoto: String,
     logo: String,
   },

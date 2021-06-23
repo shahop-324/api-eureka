@@ -137,10 +137,35 @@ const eventSchema = new mongoose.Schema(
         ref: 'Coupon',
       },
     ],
+    eventAverageRating:{
+
+       type:Number,
+      default: 3,
+
+    },
+    numberOfRatingsReceived:{
+        type:Number,
+        default: 0,
+    },
+           
+    communityRating:{
+      type:Number,
+      
+    },
+
+
+
+
+
+
+
+
     status: {
       type: String,
       default: 'active',
     },
+
+
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {
@@ -148,6 +173,8 @@ const eventSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+eventSchema.index({eventName:"text"});
 
 const Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

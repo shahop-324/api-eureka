@@ -22,13 +22,23 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     },
     { status: "inactive" }
   );
-
+     let eventDocuments;
+  if(req.query.text)
+  {
   const query = Event.find({ status: "active" });
   // console.log(query);
-  const features = new apiFeatures(query, req.query).paginate();
-  const eventDocuments = await features.query;
 
-  // const eventDocuments = await Event.find({ status: 'active' });
+  const features = new apiFeatures(query, req.query).paginate().textFilter();
+   eventDocuments = await features.query;
+  }
+  else
+  
+{
+
+     eventDocuments= await Event.find({ status: "active" });
+
+
+}  // const eventDocuments = await Event.find({ status: 'active' });
 
   res.status(200).json({
     status: "success",
