@@ -137,25 +137,42 @@ const eventSchema = new mongoose.Schema(
         ref: 'Coupon',
       },
     ],
-    eventAverageRating:{
+    eventAverageRating: {
 
-       type:Number,
+      type: Number,
       default: 3,
 
     },
-    numberOfRatingsReceived:{
-        type:Number,
-        default: 0,
-    },
-           
-    communityRating:{
-      type:Number,
-      
+    numberOfRatingsReceived: {
+      type: Number,
+      default: 0,
     },
 
+    communityRating: {
+      type: Number,
 
+    },
 
+    tickets: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'Ticket',
+    }],
+    minTicketPrice: {
+      type: Number,
+      default: 0,
+    },
+    maxTicketPrice: {
+      type: Number,
+      default: 0,
+    },
 
+     categories:[
+       {
+         type:String,
+         enum:['Technology','Education','Carrer Fair','Professional Development','Health & Lifestyle','Marketing & Advertisting','Crypto','Web Security','Entertainment','Business & Entrepreneurship'],
+
+       }
+     ],
 
 
 
@@ -174,7 +191,7 @@ const eventSchema = new mongoose.Schema(
   }
 );
 
-eventSchema.index({eventName:"text"});
+eventSchema.index({ eventName: "text" });
 
 const Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

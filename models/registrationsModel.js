@@ -15,9 +15,9 @@ const registrationSchema = new mongoose.Schema(
     email: {
       type: String,
     },
-    ticketType: {
-      type: String,
-      default: 'Regular Ticket',
+    ticketId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Ticket',
     },
     bookedByUser: {
       type: mongoose.Schema.ObjectId,

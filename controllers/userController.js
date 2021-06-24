@@ -4,6 +4,7 @@
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 
+const AppError = require("../utils/appError");
 const Community = require("../models/communityModel");
 const CommunityMailList = require("../models/communityMailListModel");
 const User = require("../models/userModel");
@@ -16,6 +17,7 @@ const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
 const ReviewsIdsCommunityWise = require("../models/reviewsIdsCommunityWise");
 const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
+const Ticket = require("../models/ticketModel");
 
 
 const fillSocialMediaHandler = (object, updatedUser) => {
@@ -173,14 +175,52 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.DoesTicketBelongToThisEvent = catchAsync(async (req, res, next) => {
+  const ticketId = req.params.ticketId;
+  const eventGettingRegistration = await Event.findById(req.params.eventId);
+ 
+  const bool = eventGettingRegistration.tickets.includes(ticketId);
+
+  if (bool) {
+    next();
+  } else {
+    return next( new AppError(`Sorry, this ticket does not belong to this event you are trying to register for.`,
+    400));
+  }
+
+})
+
 exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   // Handled Firstly we need to check if user is already registered in this event he is trying to register for if so then return an error saying already registered
-
+const ticketId = req.params.ticketId;
+const ticketWhichIsBeingUtilised = await Ticket.findById(ticketId);
   const eventGettingRegistration = await Event.findById(req.params.eventId);
   const userWhoIsRegistering = await User.findById(req.user.id);
   const communityGettingRegistration = await Community.findById(
     eventGettingRegistration.createdBy
   );
+
+  const amountOfTicketAvailable = ticketWhichIsBeingUtilised.amountOfTicketAvailable;
+  const numberOfTicketSoldPreviously = ticketWhichIsBeingUtilised.numberOfTicketSold;
+  let ticketIsSoldOut = ticketWhichIsBeingUtilised.ticketIsSoldOut;
+
+  if(numberOfTicketSoldPreviously + 1 == amountOfTicketAvailable) {
+    ticketIsSoldOut = true;
+  }
+
+  const updatedNumOfTicketSold = numberOfTicketSoldPreviously + 1;
+
+  const xahs = await Ticket.findByIdAndUpdate(ticketId, {
+    numberOfTicketSold: updatedNumOfTicketSold,
+    ticketIsSoldOut: ticketIsSoldOut,
+  }, {new: true});
+
+  console.log(xahs);
+ 
+  // create a new registration for that event and update corresponding user, event and community document
+
+  // Update corresponding ticket that its amount avaliable is reduced by 1 and also update if ticket is sold out
+
   // console.log(communityGettingRegistration);
   // const { analytics } = communityGettingRegistrations;
   // console.log(analytics);
@@ -221,6 +261,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
     bookedByUser: req.user.id,
     bookedForEventId: req.params.eventId,
     eventByCommunityId: eventGettingRegistration.createdBy,
+    ticketId: ticketId,
   });
 
   // Update corresponding event document with current registartion by adding its ObjectId into registrations array

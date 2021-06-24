@@ -181,4 +181,7 @@ router.patch(
   eventController.updateSession
 );
 
+// Create New Ticket
+router.post('/:eventId/ticket/new', authController.protectCommunity, eventController.createTicket);
+
 module.exports = router;

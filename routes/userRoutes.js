@@ -40,9 +40,10 @@ router.post('/:id', authController.communityLogin);
 router.get('/events', globalController.getAllEvents);
 // register in an event
 router.post(
-  '/events/:eventId',
+  '/events/:eventId/:ticketId',
 
   globalController.IsUserAlreadyRegistred,
+  userController.DoesTicketBelongToThisEvent,
   userController.registerInAnEvent
 );
 // create review for an event in which user participated

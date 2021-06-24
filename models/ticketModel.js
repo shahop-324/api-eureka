@@ -1,53 +1,49 @@
- const mongoose = require('mongoose');
-  const ticketSchema=new mongoose.Schema({
+const mongoose = require('mongoose');
+const ticketSchema = new mongoose.Schema({
 
-//   //name,price ,description,amountofticketLabel
-//   //community connected with stripe
-  name:{
-      type:String,
-      required:true
+  //   //name,price ,description,amountofticketLabel
+  //   //community connected with stripe
+  name: {
+    type: String,
+    required: true
   },
-  price:{
-      type:Number,
-      required:true
-
-  },
-
-  description:{
-       type:String,
-       
+  price: {
+    type: Number,
+    required: true
 
   },
 
-  amountOfTicketAvailable:{
-      type:Number,
-      required,
+  description: {
+    type: String,
 
 
   },
-  numberOfTicketSold:{
-
-       type:Number
+  amountOfTicketAvailable: {
+    type: Number,
+    required: [true, 'You must specify amount of ticket of this type to be made available.'],
   },
-  ticketIsSoldOut:{
-    type:Boolean
+  numberOfTicketSold: {
+    type: Number,
+    default: 0,
   },
-  initiatedAt:{
-      type:Date,
+  ticketIsSoldOut: {
+    type: Boolean,
+    default: false,
+  },
+  initiatedAt: {
+    type: Date,
   },
 
-  lastUpdatedAt:{
-
-    type:Date,
-    default:Date.now()
+  lastUpdatedAt: {
+    type: Date,
+    default: Date.now()
   }
+},
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
-
-
-   
-
-
- })
-
- const Ticket = mongoose.model('Ticket',ticketSchema);
- module.exports = Ticket;
+const Ticket = mongoose.model('Ticket', ticketSchema);
+module.exports = Ticket;

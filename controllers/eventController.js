@@ -6,6 +6,7 @@ const SpeakersIdsCommunityWise = require('../models/speakersIdsCommunityWiseMode
 const Booth = require('../models/boothModel');
 const Sponsor = require('../models/sponsorModel');
 const Session = require('../models/sessionModel');
+const Ticket = require('../models/ticketModel');
 
 const catchAsync = require('../utils/catchAsync');
 const validator = require('validator');
@@ -76,6 +77,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     visibility: req.body.visibility,
     createdBy: communityId,
     communityRating:communityGettingEvent.commuintyAverageRating,
+    categories:req.body.categories
     // host: req.community.superAdmin[0].id,
   });
   // 2) Update that event into communities resource in events array
@@ -321,6 +323,50 @@ exports.updateSession = catchAsync(async (req, res, next) => {
     data: updatedSession,
   });
 });
+
+exports.createTicket = catchAsync(async (req, res, next) => {
+const eventId = req.params.eventId;
+const eventGettingNewTicket = await Event.findById(eventId);
+const previousMinPrice = eventGettingNewTicket.minTicketPrice;
+const previousMaxPrice = eventGettingNewTicket.maxTicketPrice;
+
+console.log(`previous min price ${previousMinPrice}`, `previous max price ${previousMaxPrice}`);
+
+let updatedMinPrice = previousMinPrice;
+let updatedMaxPrice = previousMaxPrice;
+const currentPriceValue = req.body.price;
+
+if (currentPriceValue < previousMinPrice) {
+  updatedMinPrice = currentPriceValue;
+}
+if (currentPriceValue > previousMaxPrice) {
+  updatedMaxPrice = currentPriceValue;
+}
+
+  // Create a new Ticket Document in Ticket collection
+  const newlyCreatedTicket = await Ticket.create({
+    name: req.body.name,
+    price: req.body.price,
+    description: req.body.description,
+    amountOfTicketAvailable: req.body.amountOfTicketAvailable,
+    initiatedAt: Date.now(),
+  });
+
+  eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
+  await eventGettingNewTicket.save({ validateModifiedOnly: true});
+  await Event.findByIdAndUpdate(eventId, {
+    minTicketPrice: updatedMinPrice,
+    maxTicketPrice: updatedMaxPrice,
+  });
+
+
+  // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
+ res.status(201).json({
+   status: "success",
+   message: "New Ticket Created Successfully",
+   data: newlyCreatedTicket,
+ })
+})
 
 ///////////////////////////
 // && !(AlreadyInSessions.includes(el)
