@@ -27,7 +27,12 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
   const query = Event.find({ status: "active" });
   // console.log(query);
 
-  const features = new apiFeatures(query, req.query).priceWiseFilter();
+  const features = new apiFeatures(query, req.query)
+    .priceWiseFilter()
+    .textFilter()
+    .categoryWiseFilter()
+    .dateWiseFilter()
+    .paginate();
   // .paginate()
   // .textFilter()
 
