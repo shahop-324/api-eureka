@@ -34,12 +34,15 @@ class apiFeatures {
   }
 
   dateWiseFilter() {
+    const start_Date = new Date(this.queryString.startDate);
+    const end_Date = new Date(this.queryString.endDate);
+    console.log(start_Date, end_Date);
     if (this.queryString.startDate && this.query.endDate) {
       this.query = this.query.find({
         $and: [
-          { startDate: { $gte: this.queryString.startDate } },
+          { startDate: { $gte: start_Date } },
           {
-            endDate: { $lte: this.queryString.endDate },
+            endDate: { $lte: end_Date },
           },
         ],
       });
