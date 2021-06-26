@@ -5,16 +5,13 @@ class apiFeatures {
   }
 
   ratingFilter() {
-    console.log(this.queryString.communityRating);
-    //     if(this.queryString.communityRating)
-    //  { // const queryObj = { ...this.queryString };
-    //   // const excludedFields = ["page", "sort", "limit", "fields"];
-    //   // excludedFields.forEach((el) => delete queryObj[el]);
-    //   // 1B) Advanced filtering
-    //   let queryStr = JSON.stringify(queryObj);
-    //   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    //   this.query = this.query.find(JSON.parse(queryStr));
-    //  }
+    if(this.queryString.communityRating)
+    {
+          const queryObj=this.queryString.communityRating;
+      let queryStr = JSON.stringify(queryObj);
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+      this.query = this.query.find(JSON.parse(queryStr));
+     }
     return this;
   }
 
@@ -51,9 +48,11 @@ class apiFeatures {
   }
 
   priceWiseFilter() {
-    const min_price = this.queryString.min_price * 1;
-    const max_price = this.queryString.max_price * 1;
+  
     if (this.queryString.min_price && this.queryString.max_price) {
+
+      const min_price = this.queryString.min_price * 1;
+      const max_price = this.queryString.max_price * 1;
       this.query = this.query.find({
         $and: [
           {
