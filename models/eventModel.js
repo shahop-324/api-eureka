@@ -27,7 +27,6 @@ const eventSchema = new mongoose.Schema(
     startDate: {
       type: Date,
       required: [true, 'An event must have a start date.'],
-      default: Date.now(),
     },
     endDate: {
       type: Date,
@@ -39,7 +38,6 @@ const eventSchema = new mongoose.Schema(
         },
         message: 'End date should be greater than start date.',
       },
-      default: Date.now() + 10 * 24 * 60 * 60 * 1000,
     },
     startTime: {
       type: Date,
@@ -141,7 +139,6 @@ const eventSchema = new mongoose.Schema(
 
       type: Number,
       default: 3,
-
     },
     numberOfRatingsReceived: {
       type: Number,
@@ -150,7 +147,6 @@ const eventSchema = new mongoose.Schema(
 
     communityRating: {
       type: Number,
-
     },
 
     tickets: [{
