@@ -32,7 +32,8 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     .textFilter()
     .categoryWiseFilter()
     .dateWiseFilter()
-    .paginate();
+    .paginate()
+    .ratingFilter();
   // .paginate()
   // .textFilter()
 

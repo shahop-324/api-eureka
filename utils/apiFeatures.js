@@ -4,16 +4,19 @@ class apiFeatures {
     this.queryString = queryString;
   }
 
-  // filter() {
-  //   const queryObj = { ...this.queryString };
-  //   const excludedFields = ["page", "sort", "limit", "fields"];
-  //   excludedFields.forEach((el) => delete queryObj[el]);
-  //   // 1B) Advanced filtering
-  //   let queryStr = JSON.stringify(queryObj);
-  //   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-  //   this.query = this.query.find(JSON.parse(queryStr));
-  //   return this;
-  // }
+  ratingFilter() {
+    console.log(this.queryString.communityRating);
+    //     if(this.queryString.communityRating)
+    //  { // const queryObj = { ...this.queryString };
+    //   // const excludedFields = ["page", "sort", "limit", "fields"];
+    //   // excludedFields.forEach((el) => delete queryObj[el]);
+    //   // 1B) Advanced filtering
+    //   let queryStr = JSON.stringify(queryObj);
+    //   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    //   this.query = this.query.find(JSON.parse(queryStr));
+    //  }
+    return this;
+  }
 
   textFilter() {
     if (this.queryString.text) {
@@ -34,10 +37,7 @@ class apiFeatures {
   }
 
   dateWiseFilter() {
-    const start_Date = new Date(this.queryString.startDate);
-    const end_Date = new Date(this.queryString.endDate);
-    console.log(start_Date, end_Date);
-    if (this.queryString.startDate && this.query.endDate) {
+    if (this.queryString.startDate && this.queryString.endDate) {
       this.query = this.query.find({
         $and: [
           { startDate: { $gte: start_Date } },
