@@ -3,7 +3,7 @@
 
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
-
+const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const Community = require("../models/communityModel");
 const CommunityMailList = require("../models/communityMailListModel");
@@ -19,6 +19,30 @@ const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseMode
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
 const Ticket = require("../models/ticketModel");
 
+const signTokenForCommunityLogin = (userId, communityId) =>
+  jwt.sign(
+    { userId: userId, communityId: communityId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
+
+const createSendTokenForCommunityLogin = async (
+  userId,
+  communityId,
+  statusCode,
+  communityCreated,
+  res
+) => {
+  const token = signTokenForCommunityLogin(userId, communityId);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    communityCreated,
+  });
+};
 
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
@@ -166,57 +190,66 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
       email: req.body.email,
     });
   }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      Community: createdCommunity,
-    },
-  });
+  createSendTokenForCommunityLogin(
+    userId,
+    createdCommunity.id,
+    200,
+    createdCommunity,
+    res
+  );
 });
 
 exports.DoesTicketBelongToThisEvent = catchAsync(async (req, res, next) => {
   const ticketId = req.params.ticketId;
   const eventGettingRegistration = await Event.findById(req.params.eventId);
- 
+
   const bool = eventGettingRegistration.tickets.includes(ticketId);
 
   if (bool) {
     next();
   } else {
-    return next( new AppError(`Sorry, this ticket does not belong to this event you are trying to register for.`,
-    400));
+    return next(
+      new AppError(
+        `Sorry, this ticket does not belong to this event you are trying to register for.`,
+        400
+      )
+    );
   }
-
-})
+});
 
 exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   // Handled Firstly we need to check if user is already registered in this event he is trying to register for if so then return an error saying already registered
-const ticketId = req.params.ticketId;
-const ticketWhichIsBeingUtilised = await Ticket.findById(ticketId);
+  const ticketId = req.params.ticketId;
+  const ticketWhichIsBeingUtilised = await Ticket.findById(ticketId);
   const eventGettingRegistration = await Event.findById(req.params.eventId);
   const userWhoIsRegistering = await User.findById(req.user.id);
   const communityGettingRegistration = await Community.findById(
     eventGettingRegistration.createdBy
   );
 
-  const amountOfTicketAvailable = ticketWhichIsBeingUtilised.amountOfTicketAvailable;
-  const numberOfTicketSoldPreviously = ticketWhichIsBeingUtilised.numberOfTicketSold;
+  const amountOfTicketAvailable =
+    ticketWhichIsBeingUtilised.amountOfTicketAvailable;
+  const numberOfTicketSoldPreviously =
+    ticketWhichIsBeingUtilised.numberOfTicketSold;
   let ticketIsSoldOut = ticketWhichIsBeingUtilised.ticketIsSoldOut;
 
-  if(numberOfTicketSoldPreviously + 1 == amountOfTicketAvailable) {
+  if (numberOfTicketSoldPreviously + 1 == amountOfTicketAvailable) {
     ticketIsSoldOut = true;
   }
 
   const updatedNumOfTicketSold = numberOfTicketSoldPreviously + 1;
 
-  const xahs = await Ticket.findByIdAndUpdate(ticketId, {
-    numberOfTicketSold: updatedNumOfTicketSold,
-    ticketIsSoldOut: ticketIsSoldOut,
-  }, {new: true});
+  const xahs = await Ticket.findByIdAndUpdate(
+    ticketId,
+    {
+      numberOfTicketSold: updatedNumOfTicketSold,
+      ticketIsSoldOut: ticketIsSoldOut,
+    },
+    { new: true }
+  );
 
   console.log(xahs);
- 
+
   // create a new registration for that event and update corresponding user, event and community document
 
   // Update corresponding ticket that its amount avaliable is reduced by 1 and also update if ticket is sold out
@@ -310,13 +343,16 @@ exports.createReview = catchAsync(async (req, res, next) => {
     communityGettingReview.reviewsDocIdCommunityWise
   );
 
-
-  const newAvgRatingForCommunity = (communityPreviousRating * communityPreviousNumOfRatings + req.body.rating) / (communityPreviousNumOfRatings + 1);
+  const newAvgRatingForCommunity =
+    (communityPreviousRating * communityPreviousNumOfRatings +
+      req.body.rating) /
+    (communityPreviousNumOfRatings + 1);
   const newNumOfRtingsForCommunity = communityPreviousNumOfRatings + 1;
 
-  const newAvgRatingForEvent = (eventPreviousRating * eventPreviousNumOfRatings + req.body.rating) / (eventPreviousNumOfRatings + 1);
+  const newAvgRatingForEvent =
+    (eventPreviousRating * eventPreviousNumOfRatings + req.body.rating) /
+    (eventPreviousNumOfRatings + 1);
   const newNumofRatingsForEvent = eventPreviousNumOfRatings + 1;
-
 
   // 1) Create a new review document
   const newReview = await Review.create({
