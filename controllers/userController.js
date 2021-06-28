@@ -3,7 +3,7 @@
 
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
-
+const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const Community = require("../models/communityModel");
 const CommunityMailList = require("../models/communityMailListModel");
@@ -19,6 +19,7 @@ const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseMode
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
 const Ticket = require("../models/ticketModel");
 
+<<<<<<< HEAD
 exports.getParticularEvent = catchAsync(async (req, res) => {
   const response = await Event.findById(req.params.id);
 
@@ -29,6 +30,32 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     },
   });
 });
+=======
+const signTokenForCommunityLogin = (userId, communityId) =>
+  jwt.sign(
+    { userId: userId, communityId: communityId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
+
+const createSendTokenForCommunityLogin = async (
+  userId,
+  communityId,
+  statusCode,
+  communityCreated,
+  res
+) => {
+  const token = signTokenForCommunityLogin(userId, communityId);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    communityCreated,
+  });
+};
+>>>>>>> 4dc5a6c11391cf50f4d118bd216f0bb487b1a260
 
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
@@ -176,13 +203,13 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
       email: req.body.email,
     });
   }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      Community: createdCommunity,
-    },
-  });
+  createSendTokenForCommunityLogin(
+    userId,
+    createdCommunity.id,
+    200,
+    createdCommunity,
+    res
+  );
 });
 
 exports.DoesTicketBelongToThisEvent = catchAsync(async (req, res, next) => {
