@@ -1,46 +1,51 @@
 /* eslint-disable no-unused-vars */
-const express = require('express');
+const express = require("express");
 
-const authController = require('../controllers/authController');
-const globalController = require('../controllers/globalController');
-const userController = require('../controllers/userController');
-const communityController = require('../controllers/communityController');
+const authController = require("../controllers/authController");
+const globalController = require("../controllers/globalController");
+const userController = require("../controllers/userController");
+const communityController = require("../controllers/communityController");
 
 const router = express.Router();
 
 // user signup router
-router.post('/signup', authController.signup);
+router.post("/signup", authController.signup);
 // user login router
-router.post('/login', authController.login);
+router.post("/login", authController.login);
+
+//user getting particular event
+
+router.get("/event/:id", userController.getParticularEvent);
+
 // const helperFxn =
 
 router.use((req, res, next) => {
   if (req.user != undefined) {
     return next();
   } else {
-    console.log('hello from else part');
+    console.log("hello from else part");
     return authController.protect(req, res, next);
   }
 });
 
 // DONE Creating new Community
-router.post('/newCommunity', userController.createNewCommunity);
+router.post("/newCommunity", userController.createNewCommunity);
 
 // ! Select Plan
 router.post(
-  '/selectPlan',
+  "/selectPlan",
   authController.protectCommunity,
   communityController.selectPlan
 );
 
 // DONE Logining Into a Community
-router.post('/:id', authController.communityLogin);
+router.post("/:id", authController.communityLogin);
 
 // get all events for user
-router.get('/events', globalController.getAllEvents);
+router.get("/events", globalController.getAllEvents);
 // register in an event
 router.post(
-  '/events/:eventId/:ticketId',
+  "/events/:eventId/:ticketId",
 
   globalController.IsUserAlreadyRegistred,
   userController.DoesTicketBelongToThisEvent,
@@ -48,32 +53,32 @@ router.post(
 );
 // create review for an event in which user participated
 router.post(
-  '/events/review/:eventId',
+  "/events/review/:eventId",
 
   globalController.DoesUserRegistredInThisEvent,
   userController.createReview
 );
 // create query for an event
 router.post(
-  '/events/query/:eventId',
+  "/events/query/:eventId",
 
   userController.createQuery,
   userController.IsUserRegistred
 );
 
 //Me
-router.get('/Me', userController.getMe);
+router.get("/Me", userController.getMe);
 
 // update Me
-router.patch('/Me', userController.updateMe);
+router.patch("/Me", userController.updateMe);
 
 // delete Me
-router.delete('/Me', userController.deleteMe);
+router.delete("/Me", userController.deleteMe);
 
 // forgot Password (now use email to reset password)
-router.post('/forgotPassword', userController.forgotPassword); // TODO This route is not getting hits, I have to check and fix it.
+router.post("/forgotPassword", userController.forgotPassword); // TODO This route is not getting hits, I have to check and fix it.
 
 // reset Password
-router.patch('/resetPassword', userController.resetPassword);
+router.patch("/resetPassword", userController.resetPassword);
 
 module.exports = router;

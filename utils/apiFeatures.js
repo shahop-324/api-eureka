@@ -5,13 +5,17 @@ class apiFeatures {
   }
 
   ratingFilter() {
-    if(this.queryString.communityRating)
-    {
-          const queryObj=this.queryString.communityRating;
+    if (this.queryString.communityRating) {
+      const queryObj = this.queryString.communityRating;
       let queryStr = JSON.stringify(queryObj);
-      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+      queryStr = queryStr.replace(
+        /\b(gte|gt|lte|lt)\b/g,
+        (match) => `$${match}`
+      );
+      console.log(queryStr);
+      console.log(JSON.parse(queryStr));
       this.query = this.query.find(JSON.parse(queryStr));
-     }
+    }
     return this;
   }
 
@@ -26,8 +30,18 @@ class apiFeatures {
 
   categoryWiseFilter() {
     if (this.queryString.category) {
+      console.log("i reached category filter");
       const queryArray = this.queryString.category.split(",");
-      this.query = this.query.find({ category: { $in: queryArray } });
+      // let categoryArray = [];
+      // categoryArray = queryArray.Map((el) => el);
+      // console.log( 1111,typeof queryArray);
+      // const a = [1, 2];
+      // console.log(typeof a);
+      this.query = this.query.find({
+        categories: {
+          $in: Object.values(queryArray),
+        },
+      });
     }
 
     return this;
@@ -35,6 +49,9 @@ class apiFeatures {
 
   dateWiseFilter() {
     if (this.queryString.startDate && this.queryString.endDate) {
+      const start_Date = new Date(this.queryString.startDate);
+
+      const end_Date = new Date(this.queryString.endDate);
       this.query = this.query.find({
         $and: [
           { startDate: { $gte: start_Date } },
@@ -48,11 +65,9 @@ class apiFeatures {
   }
 
   priceWiseFilter() {
-  
+    const min_price = this.queryString.min_price * 1;
+    const max_price = this.queryString.max_price * 1;
     if (this.queryString.min_price && this.queryString.max_price) {
-
-      const min_price = this.queryString.min_price * 1;
-      const max_price = this.queryString.max_price * 1;
       this.query = this.query.find({
         $and: [
           {
@@ -63,7 +78,10 @@ class apiFeatures {
           },
         ],
       });
-    } else if (this.queryString.max_price && max_price === 0) {
+    } else if (
+      this.queryString.max_price &&
+      this.queryString.max_price * 1 == 0
+    ) {
       console.log("i reached at this point");
       this.query = this.query.find({
         maxTicketPrice: max_price,
