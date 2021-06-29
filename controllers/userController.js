@@ -20,7 +20,14 @@ const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommuni
 const Ticket = require("../models/ticketModel");
 
 exports.getParticularEvent = catchAsync(async (req, res) => {
-  const response = await Event.findById(req.params.id);
+  const response = await Event.findById(req.params.id).populate(
+    "Ticket",
+    "Coupon",
+    "Sponsor",
+    "Booth",
+    "Session",
+    "Speaker"
+  );
 
   res.status(200).json({
     status: "SUCCESS",
