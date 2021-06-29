@@ -23,7 +23,7 @@ router.use((req, res, next) => {
   if (req.user != undefined) {
     return next();
   } else {
-    console.log("hello from else part");
+    console.log("hello from 32 userRoutes");
     return authController.protect(req, res, next);
   }
 });

@@ -39,16 +39,11 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide a password"],
       minlength: 8,
       select: false,
-    }, 
+    },
     googleId: {
       type: String,
     },
-    facebookId: {
-      type: String,
-    },
-    linkedInId: {
-      type: String,
-    },
+
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],

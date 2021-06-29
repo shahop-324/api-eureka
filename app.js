@@ -10,8 +10,8 @@ const passport = require("passport");
 const xss = require("xss-clean");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errController");
-const cors=require("cors");
-const cookieParser =require("cookie-parser")
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 // Imported Routes for Various Resources
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
@@ -19,8 +19,9 @@ const communityRoutes = require("./routes/communityRoutes");
 const globalRoutes = require("./routes/globalRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const authRoutes = require("./routes/authRoutes");
-const salesDepartmentRoutes = require('./routes/salesDepartmentRoutes');
-const customPlanRoutes = require('./routes/customPlanRoutes');
+const salesDepartmentRoutes = require("./routes/salesDepartmentRoutes");
+const customPlanRoutes = require("./routes/customPlanRoutes");
+const session = require("express-session");
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -31,16 +32,16 @@ app.use(cors());
 // app.use(cors({
 //   origin:'http://localhost:3001'
 // }))
- app.options('*',cors());
+app.options("*", cors());
 
 app.use(cookieParser());
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-  })
-);
-
+// app.use(
+//   cookieSession({
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
+//     keys: [process.env.COOKIE_KEY],
+//   })
+//);
+app.use(session({ secret: "anything" }));
 // console.log(initialise, session);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -75,33 +76,29 @@ app.use(mongosanitize());
 
 // Data sanitization against XSS
 app.use(xss());
-//test middleware 
-app.use((req,res,next)=>{
- console.log("hello form cookie middleware")
+//test middleware
+app.use((req, res, next) => {
+  console.log("hello form cookie middleware");
   console.log(req.cookies);
   next();
-})
+});
 // All routes
 app.use("/eureka/v1/auth", authRoutes);
 app.use("/eureka/v1/users", userRoutes);
 app.use("/eureka/v1/registration", registrationRoutes);
 app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
-app.use('/eureka/v1/sales', salesDepartmentRoutes);
-app.use('/eureka/v1/customPlan', customPlanRoutes);
+app.use("/eureka/v1/sales", salesDepartmentRoutes);
+app.use("/eureka/v1/customPlan", customPlanRoutes);
 
-
-app.get('/eureka/v1/current_user',(req,res)=>{
-
-
-   res.send(req.user);
-})
-app.get('/eureka/v1/logout',(req,res)=>{
+app.get("/eureka/v1/current_user", (req, res) => {
+  res.send(req.user);
+});
+app.get("/eureka/v1/logout", (req, res) => {
   req.logout();
   res.send(req.user);
-})
+});
 app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
-
 
 module.exports = app;

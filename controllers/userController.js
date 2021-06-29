@@ -19,7 +19,6 @@ const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseMode
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
 const Ticket = require("../models/ticketModel");
 
-<<<<<<< HEAD
 exports.getParticularEvent = catchAsync(async (req, res) => {
   const response = await Event.findById(req.params.id);
 
@@ -30,7 +29,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     },
   });
 });
-=======
+
 const signTokenForCommunityLogin = (userId, communityId) =>
   jwt.sign(
     { userId: userId, communityId: communityId },
@@ -55,7 +54,6 @@ const createSendTokenForCommunityLogin = async (
     communityCreated,
   });
 };
->>>>>>> 4dc5a6c11391cf50f4d118bd216f0bb487b1a260
 
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
@@ -71,6 +69,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
+          console.log(updatedUser.socialMediaHandles);
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
@@ -210,6 +209,31 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     createdCommunity,
     res
   );
+});
+exports.updateCommunity = catchAsync(async (req, res) => {
+  const communityId = req.community.id;
+  // const filteredBody = filterObj(req.body, "headline", "photo", "gender");
+
+  // const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
+  //   new: true,
+  //   runValidators: true,
+  // });
+  const communityGettingUpdate = await Community.findById(communityId);
+  console.log(communityGettingUpdate);
+  //i am going to create one function which takes obj and  updatedUser and we get  from req.body.socialMediaHandles and pass into function
+
+  //create function let say fillSocialMediaHandler
+  communityGettingUpdate.socialMediaHandles = {};
+  fillSocialMediaHandler(req.body.socialMediaHandles, communityGettingUpdate);
+  const doublyUpdatedUser = await communityGettingUpdate.save({
+    validateModifiedOnly: true,
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: doublyUpdatedUser,
+    },
+  });
 });
 
 exports.DoesTicketBelongToThisEvent = catchAsync(async (req, res, next) => {
