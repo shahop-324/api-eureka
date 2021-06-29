@@ -105,7 +105,6 @@ const userSchema = new mongoose.Schema(
         communityId: {
           type: mongoose.Schema.ObjectId,
           ref: "Community",
-          default: "609110268fb72211669e28c9",
         },
         role: {
           type: String,
