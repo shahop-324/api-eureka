@@ -6,6 +6,8 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongosanitize = require("express-mongo-sanitize");
 const cookieSession = require("cookie-session");
+const session = require("express-session");
+const bodyParser = require("body-parser");
 const passport = require("passport");
 const xss = require("xss-clean");
 const AppError = require("./utils/appError");
@@ -13,6 +15,7 @@ const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 // Imported Routes for Various Resources
+
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
 const communityRoutes = require("./routes/communityRoutes");
@@ -21,7 +24,7 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const authRoutes = require("./routes/authRoutes");
 const salesDepartmentRoutes = require("./routes/salesDepartmentRoutes");
 const customPlanRoutes = require("./routes/customPlanRoutes");
-const session = require("express-session");
+
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -35,16 +38,41 @@ app.use(cors());
 app.options("*", cors());
 
 app.use(cookieParser());
-// app.use(
-//   cookieSession({
-//     maxAge: 30 * 24 * 60 * 60 * 1000,
-//     keys: [process.env.COOKIE_KEY],
-//   })
-//);
-app.use(session({ secret: "anything" }));
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(
+  session({
+    secret: "keyboard cat",
+    proxy: true,
+    resave: true,
+    saveUnintialized: true,
+    cookie: {
+      secure: false,
+    },
+    // maxAge: 30 * 24 * 60 * 60 * 1000,
+    // keys: [process.env.COOKIE_KEY],
+  })
+);
+// app.use(session({ secret: "anything" }));
 // console.log(initialise, session);
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  console.log(1111, user);
+  done(null, user.id);
+});
+passport.deserializeUser(async (id, done) => {
+  console.log(2222, id);
+  const u = await User.findById(id);
+
+  done(null, u);
+});
 
 // 1. GLOBAL MIDDLEWARES
 

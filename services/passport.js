@@ -5,14 +5,15 @@ const mongoose = require("mongoose");
 
 const User = mongoose.model("User");
 
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// // });
+// passport.deserializeUser(async (id, done) => {
+//   const user = await User.findById(id);
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
-});
+//   console.log(user);
+//   done(null, user);
+// });
 
 passport.use(
   new googleStrategy(
@@ -21,7 +22,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 
       callbackURL: "/eureka/v1/auth/google/callback",
-      proxy:true
+      proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ googleId: profile.id });
@@ -42,5 +43,3 @@ passport.use(
     }
   )
 );
-
-

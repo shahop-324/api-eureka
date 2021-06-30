@@ -6,20 +6,19 @@ const router = express.Router();
 
 router.get(
   "/google",
-  passport.authenticate(
-    "google",
-    {
-      scope: ["profile", "email"],
-    }
-  )
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
 );
 
-router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/signin'}),
-(req,res)=>{
-
-  res.redirect('/explore-events');
-}
-
-)
-module.exports=router;
-
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/signin" }),
+  function (req, res) {
+    // console.log(req.user, req.isAuthenticated());
+    req.session.save(function (err) {
+      res.redirect("/explore-events");
+    });
+  }
+);
+module.exports = router;

@@ -27,7 +27,9 @@ router.use((req, res, next) => {
     return authController.protect(req, res, next);
   }
 });
-
+router.get("/auth", (req, res) => {
+  res.send("hey i am protected route");
+});
 // DONE Creating new Community
 router.post("/newCommunity", userController.createNewCommunity);
 
