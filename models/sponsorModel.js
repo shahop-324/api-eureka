@@ -13,7 +13,7 @@ const sponsorSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Emerald', 'Gold', 'Silver', 'Bronze'],
+    enum: ['Platinum', 'Gold', 'Silver', 'Bronze'],
   },
 });
 

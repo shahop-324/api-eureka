@@ -187,6 +187,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   const eventGettingSpeaker = await Event.findById(eventId);
   const allSessionsInThisEvent = eventGettingSpeaker.session;
   // confirm if this session exist in this event
+
+  const processedArray = [];
   const fxn = (allSessionsInThisEvent, sessionsMappedByCommunity) => {
     const processedSessions = [];
     sessionsMappedByCommunity.map((el) => {
@@ -196,7 +198,10 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     });
     return processedSessions;
   };
-  const processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
+
+  if (sessionsMappedByCommunity != undefined) {
+    processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
+  }
 
   const communityGettingSpeaker = await Community.findById(communityId);
   const speaker = await Speaker.create({
@@ -229,6 +234,8 @@ exports.addSession = catchAsync(async (req, res, next) => {
   const allSpeakersInThisEvent = eventGettingSessions.speaker;
 
   // confirm if this session exist in this event
+
+  const processedArray = [];
   const fxn = (allSpeakersInThisEvent, speakersMappedByCommunityForSession) => {
     const processedSpeakers = [];
     speakersMappedByCommunityForSession.map((el) => {
@@ -238,10 +245,12 @@ exports.addSession = catchAsync(async (req, res, next) => {
     });
     return processedSpeakers;
   };
-  const processedArray = fxn(
-    allSpeakersInThisEvent,
-    speakersMappedByCommunityForSession
-  );
+  if (speakersMappedByCommunityForSession != undefined) {
+    processedArray = fxn(
+      allSpeakersInThisEvent,
+      speakersMappedByCommunityForSession
+    );
+  }
   // console.log(`allSessionsInThisEvent:`, allSessionsInThisEvent);
   // console.log(`sessionsMappedByCommunity:`, sessionsMappedByCommunity);
   // console.log(`processedArray:`, processedArray);
@@ -273,6 +282,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
   const allSessionsInThisEvent = eventGettingSpeaker.session;
   const speakerGettingUpdate = req.params.speakerId;
   // confirm if this session exist in this event
+  const processedArray = [];
 
   const fxn = (allSessionsInThisEvent, sessionsMappedByCommunity) => {
     const processedSessions = [];
@@ -283,7 +293,9 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     });
     return processedSessions;
   };
-  const processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
+  if (sessionsMappedByCommunity != undefined) {
+    processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
+  }
 
   const updatedSpeaker = await Speaker.findByIdAndUpdate(speakerGettingUpdate, {
     firstName: req.body.firstName,
@@ -306,6 +318,8 @@ exports.updateSession = catchAsync(async (req, res, next) => {
   const allSpeakersInThisEvent = eventGettingSession.speaker;
 
   // confirm if this session exist in this event
+  const processedArray = [];
+
   const fxn = (allSpeakersInThisEvent, speakersMappedByCommunity) => {
     const processedSessions = [];
     speakersMappedByCommunity.map((el) => {
@@ -315,7 +329,9 @@ exports.updateSession = catchAsync(async (req, res, next) => {
     });
     return processedSessions;
   };
-  const processedArray = fxn(allSpeakersInThisEvent, speakersMappedByCommunity);
+  if (speakersMappedByCommunity != undefined) {
+    processedArray = fxn(allSpeakersInThisEvent, speakersMappedByCommunity);
+  }
 
   const updatedSession = await Session.findByIdAndUpdate(sessionGettingUpdate, {
     speaker: processedArray,
