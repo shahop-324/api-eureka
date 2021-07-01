@@ -33,9 +33,11 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     .populate("booths")
     .populate("session")
     .populate("speaker")
-    .populate("createdBy")
-    .select("name socialMediaHandles logo");
-
+    .populate({
+path:"createdBy",
+select:"name logo socialMediaHandles"
+    })
+    
   res.status(200).json({
     status: "SUCCESS",
     data: {
