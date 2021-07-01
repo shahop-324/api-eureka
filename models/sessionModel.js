@@ -16,6 +16,10 @@ const sessionSchema = new mongoose.Schema(
     startTime: {
       type: Date,
     },
+    endTime: {
+      type: Date,
+      default:Date.now() //todo
+    },
     duration: {
       type: Number,
     },
@@ -41,6 +45,11 @@ const sessionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    description:{
+      type:String,
+      default:"From combatting Email Fraud to Building Your Brand! Research: Stories about brands being phished, loss of trust due to phishing, Success stories due to DMARC"
+    },
+   
   },
   {
     toJSON: { virtuals: true },

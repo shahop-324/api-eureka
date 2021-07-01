@@ -1,20 +1,19 @@
-const Event = require("../models/eventModel");
-const Community = require("../models/communityModel");
-const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
-const Speaker = require("../models/speakerModel");
-const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
-const Booth = require("../models/boothModel");
-const Sponsor = require("../models/sponsorModel");
-const Session = require("../models/sessionModel");
-const Ticket = require("../models/ticketModel");
+const Event = require('../models/eventModel');
+const Community = require('../models/communityModel');
+const EventsIdsCommunityWise = require('../models/eventsIdsCommunityWiseModel');
+const Speaker = require('../models/speakerModel');
+const SpeakersIdsCommunityWise = require('../models/speakersIdsCommunityWiseModel');
+const Booth = require('../models/boothModel');
+const Sponsor = require('../models/sponsorModel');
+const Session = require('../models/sessionModel');
+const Ticket = require('../models/ticketModel');
 
-const catchAsync = require("../utils/catchAsync");
-const validator = require("validator");
+const catchAsync = require('../utils/catchAsync');
+const validator = require('validator');
 
-const fillSocialMediaHandler = (InputObject) => {
-  const newObj = {};
-  for (let key in InputObject) {
-    const value = InputObject[key];
+const fillSocialMediaHandler = (object, updatedUser) => {
+  for (let key in object) {
+    const value = object[key];
     // 2) Check if value is a url
     // 3) if yes then go to next step and fetch only userhandle and then use it to replace old value of key
     // 4) if no then directly use this key value pair and return
@@ -24,41 +23,42 @@ const fillSocialMediaHandler = (InputObject) => {
       // now I have to use regular expression
       switch (key) {
         case "facebook": {
-          let regex = /(?<=com\/).+/;
+          const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj[key] = newVal;
+          console.log(updatedUser.socialMediaHandles);
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "instagram": {
-          let regex = /(?<=com\/).+/;
+          const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj[key] = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "twitter": {
-          let regex = /(?<=com\/).+/;
+          const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj[key] = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "linkedIn": {
-          let regex = /(?<=\/in\/).+/;
+          const regex = /(?<=\/in\/).+/;
           [newVal] = value.match(regex);
-          newObj[key] = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "website": {
-          let regex = /(?<=www.).+/;
+          const regex = /(?<=www.).+/;
           [newVal] = value.match(regex);
-          newObj[key] = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
       }
     } else {
-      newObj[key] = value;
+      updatedUser.socialMediaHandles.set(key, value);
     }
   }
-  return newObj;
+  return updatedUser;
 };
 
 /* eslint-disable no-console */
@@ -85,10 +85,10 @@ exports.createEvent = catchAsync(async (req, res, next) => {
   });
   // 2) Update that event into communities resource in events array
   document.eventsIds.push(createdEvent.id);
-  await document.save({ validateModifiedOnly: true });
+  await document.save({validateModifiedOnly: true});
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       event: createdEvent,
     },
@@ -97,11 +97,11 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
-  const events = await Community.findById(communityId).select("events");
+  const events = await Community.findById(communityId).select('events');
 
   res.status(200).json({
     length: events.length,
-    status: "success",
+    status: 'success',
     events,
   });
 });
@@ -113,7 +113,7 @@ exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const event = await Event.findById(eventId);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       event,
     },
@@ -144,11 +144,11 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // save refrence of this booth in its event
   eventGettingBooth.booths.push(createdBooth.id);
-  await eventGettingBooth.save({ validateModifiedOnly: true });
+  await eventGettingBooth.save({validateModifiedOnly: true});
 
   // send newly created booth back to client
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: createdBooth,
   });
 });
@@ -170,11 +170,11 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
   });
   // save refrence of this sponsor in its event
   eventGettingSponsor.sponsors.push(createdSponsor.id);
-  await eventGettingSponsor.save({ validateModifiedOnly: true });
+  await eventGettingSponsor.save({validateModifiedOnly: true});
 
   // send newly created sponsor back to client
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: createdSponsor,
   });
 });
@@ -186,6 +186,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   const sessionsMappedByCommunity = req.body.sessions;
   const eventGettingSpeaker = await Event.findById(eventId);
   const allSessionsInThisEvent = eventGettingSpeaker.session;
+
   // confirm if this session exist in this event
 
   const processedArray = [];
@@ -204,11 +205,20 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   }
 
   const communityGettingSpeaker = await Community.findById(communityId);
+
   const speaker = await Speaker.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
     sessions: processedArray,
+  });
+
+  speaker.socialMediaHandles = {};
+  console.log(req.body.socialMediaHandles);
+  fillSocialMediaHandler(req.body.socialMediaHandles, speaker);
+  console.log(speaker);
+  const updatedSpeaker = await speaker.save({
+    validateModifiedOnly: true,
   });
 
   const document = await SpeakersIdsCommunityWise.findById(
@@ -217,11 +227,11 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   console.log(document);
   document.speakersIds.push(speaker._id);
   eventGettingSpeaker.speaker.push(speaker._id);
-  await eventGettingSpeaker.save({ validateModifiedOnly: true });
+  await eventGettingSpeaker.save({validateModifiedOnly: true});
 
   res.status(200).json({
-    status: "success",
-    data: speaker,
+    status: 'success',
+    data: updatedSpeaker,
   });
 });
 
@@ -266,10 +276,10 @@ exports.addSession = catchAsync(async (req, res, next) => {
   });
 
   eventGettingSessions.session.push(session._id);
-  await eventGettingSessions.save({ validateModifiedOnly: true });
+  await eventGettingSessions.save({validateModifiedOnly: true});
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: session,
   });
 });
@@ -306,7 +316,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
   console.log(updatedSpeaker);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: updatedSpeaker,
   });
 });
@@ -338,7 +348,7 @@ exports.updateSession = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: updatedSession,
   });
 });
@@ -375,7 +385,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   });
 
   eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
-  await eventGettingNewTicket.save({ validateModifiedOnly: true });
+  await eventGettingNewTicket.save({validateModifiedOnly: true});
   await Event.findByIdAndUpdate(eventId, {
     minTicketPrice: updatedMinPrice,
     maxTicketPrice: updatedMaxPrice,
@@ -383,8 +393,8 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 
   // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
   res.status(201).json({
-    status: "success",
-    message: "New Ticket Created Successfully",
+    status: 'success',
+    message: 'New Ticket Created Successfully',
     data: newlyCreatedTicket,
   });
 });
