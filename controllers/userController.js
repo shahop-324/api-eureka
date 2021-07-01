@@ -116,6 +116,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
       updatedUser.socialMediaHandles.set(key, value);
     }
   }
+  return updatedUser;
 };
 const filterObj = (obj, ...allowedFields) => {
   const newobj = {};

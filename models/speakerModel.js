@@ -37,6 +37,7 @@ const speakerSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: 250,
+      default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
     },
     sessions: [
       {
@@ -52,6 +53,10 @@ const speakerSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    socialMediaHandles:{
+      type :Map,
+      of:String
+    }
   },
   {
     toJSON: { virtuals: true },
