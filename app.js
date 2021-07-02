@@ -31,19 +31,18 @@ require("./services/passport");
 
 // Created a new express app
 const app = express();
-app.use(cors());
-// app.use(cors({
-//   origin:'http://localhost:3001'
-// }))
-app.options("*", cors());
 
-app.use(cookieParser());
-app.use(bodyParser.json());
 app.use(
-  bodyParser.urlencoded({
-    extended: true,
+  cors({
+    origin: "http://localhost:3001",
+    methods: ["GET", "PATCH", "POST", "DELETE"],
+
+    credentials: true,
   })
 );
+
+app.use(cookieParser());
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -62,17 +61,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  console.log(1111, user);
-  done(null, user.id);
-});
-passport.deserializeUser(async (id, done) => {
-  console.log(2222, id);
-  const u = await User.findById(id);
-
-  done(null, u);
-});
 
 // 1. GLOBAL MIDDLEWARES
 

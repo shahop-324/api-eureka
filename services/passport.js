@@ -5,15 +5,15 @@ const mongoose = require("mongoose");
 
 const User = mongoose.model("User");
 
-// passport.serializeUser((user, done) => {
-//   done(null, user.id);
-// // });
-// passport.deserializeUser(async (id, done) => {
-//   const user = await User.findById(id);
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
 
-//   console.log(user);
-//   done(null, user);
-// });
+  console.log(user);
+  done(null, user);
+});
 
 passport.use(
   new googleStrategy(
