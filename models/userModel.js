@@ -43,7 +43,6 @@ const userSchema = new mongoose.Schema(
     googleId: {
       type: String,
     },
-
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
