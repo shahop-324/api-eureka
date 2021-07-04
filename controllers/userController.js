@@ -203,10 +203,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     registrationsDocIdCommunityWise: registrationsIdsDocument._id,
   });
 
-  userCreatingCommunity.communities.push({
-    communityId: createdCommunity.id,
-    role: 'superAdmin',
-  });
+  userCreatingCommunity.communities.push(createdCommunity.id);
   await userCreatingCommunity.save({validateModifiedOnly: true});
 
   if (req.body.subscribedToCommunityMailList === true) {
