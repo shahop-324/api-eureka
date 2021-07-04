@@ -132,8 +132,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-
-userSchema.pre(/^find/, function(next) {
+userSchema.pre(/^find/, function (next) {
   // this points to the current query
   this.populate("communities.communityId");
   next();
