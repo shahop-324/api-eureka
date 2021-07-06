@@ -6,6 +6,13 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
+exports.aliasTopEvents=catchAsync(async(req,res,next)=>{
+   req.query.sort='-numberOfRegistrationsReceived'
+
+  next();
+})
+
+
 
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const result = await Event.updateMany(
@@ -33,7 +40,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     .categoryWiseFilter()
     .dateWiseFilter()
     .paginate()
-    .ratingFilter();
+    .ratingFilter().sort()
   // .paginate()
   // .textFilter()
 

@@ -310,6 +310,20 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
 
   const communityId = eventGettingRegistration.createdBy;
   console.log(communityId);
+  const numberOfRegistrationsReceived = await Event.findOneAndUpdate(
+    {_id: req.params.eventId},
+    {
+      $inc: {
+        numberOfRegistrationsReceived: 1,
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  console.log(numberOfRegistrationsReceived);
   const x = await Community.findOneAndUpdate(
     {_id: communityId},
     {
@@ -349,7 +363,9 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
 
   // Update corresponding event document with current registartion by adding its ObjectId into registrations array
   eventGettingRegistration.registrations.push(newRegistration.id);
+
   eventGettingRegistration.save({validateModifiedOnly: true});
+
   // communityGettingRegistration.save({ validateModifiedOnly: true });
   // Update Corresponding Community with this Registration by adding its ObjectId into registrations array
   const document = await RegistrationsIdsCommunityWise.findById(

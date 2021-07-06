@@ -182,7 +182,11 @@ const eventSchema = new mongoose.Schema(
         ],
       },
     ],
+numberOfRegistrationsReceived:{
+    type:Number,
+    default:0,
 
+},
     status: {
       type: String,
       default: "active",

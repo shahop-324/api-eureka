@@ -134,7 +134,16 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query
-  this.populate("communities.communityId");
+ 
+   this.populate({path :"communities.communityId",
+   select:"name"
+  })
+  this.populate(
+    {
+      path:"registredInEvents"
+
+    }
+  )
   next();
 });
 
