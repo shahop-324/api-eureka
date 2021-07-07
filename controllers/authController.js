@@ -43,7 +43,7 @@ const createSendToken = (user, statusCode, req, res) => {
 
   //remove password from output
   user.password = undefined;
-  req.user = user;
+
   res.status(statusCode).json({
     status: "success",
     token,
@@ -270,4 +270,22 @@ exports.salesProtect = catchAsync(async (req, res, next) => {
   });
   req.salesPerson = freshSalesPerson;
   next();
+});
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select("+password");
+
+  // 2) Check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.oldPass, user.password))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+
+  // 3) If so, update password
+  user.password = req.body.newPass;
+  user.passwordConfirm = req.body.confirmPass;
+  await user.save();
+  // User.findByIdAndUpdate will NOT work as intended!
+
+  // 4) Log user in, send JWT
+  createSendToken(user, 200, req, res);
 });

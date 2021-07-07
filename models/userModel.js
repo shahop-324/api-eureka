@@ -40,6 +40,18 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
+    passwordConfirm: {
+      type: String,
+
+      validate: {
+        // This only works on CREATE and SAVE!!!
+        validator: function (el) {
+          return el === this.password;
+        },
+        message: "Passwords are not the same!",
+      },
+    },
+
     googleId: {
       type: String,
     },
@@ -134,16 +146,11 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query
- 
-   this.populate({path :"communities.communityId",
-   select:"name"
-  })
-  this.populate(
-    {
-      path:"registredInEvents"
 
-    }
-  )
+  this.populate({ path: "communities.communityId", select: "name" });
+  this.populate({
+    path: "registredInEvents",
+  });
   next();
 });
 

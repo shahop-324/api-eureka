@@ -6,13 +6,11 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
-exports.aliasTopEvents=catchAsync(async(req,res,next)=>{
-   req.query.sort='-numberOfRegistrationsReceived'
+exports.aliasTopEvents = catchAsync(async (req, res, next) => {
+  req.query.sort = "-numberOfRegistrationsReceived";
 
   next();
-})
-
-
+});
 
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const result = await Event.updateMany(
@@ -29,7 +27,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     },
     { status: "inactive" }
   );
-  let eventDocuments;
+
   console.log(req.query);
   const query = Event.find({ status: "active" });
   // console.log(query);
@@ -40,15 +38,16 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     .categoryWiseFilter()
     .dateWiseFilter()
     .paginate()
-    .ratingFilter().sort()
+    .ratingFilter()
+    .sort();
   // .paginate()
   // .textFilter()
 
   // .filter()
   // .categoryWiseFilter()
   // .dateWiseFilter();
-  eventDocuments = await features.query;
-
+  const eventDocuments = await features.query;
+  console.log(eventDocuments.length);
   res.status(200).json({
     status: "success",
     length: eventDocuments.length,

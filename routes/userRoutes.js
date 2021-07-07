@@ -81,6 +81,6 @@ router.delete("/Me", userController.deleteMe);
 router.post("/forgotPassword", userController.forgotPassword); // TODO This route is not getting hits, I have to check and fix it.
 
 // reset Password
-router.patch("/resetPassword", userController.resetPassword);
+router.patch("/updatePassword", authController.updatePassword);
 
 module.exports = router;
