@@ -549,6 +549,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const filteredBody = filterObj(
     req.body,
+    "phoneNumber",
     "firstName",
     "lastName",
     "headline",
@@ -557,15 +558,18 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "interests",
     "socialMediaHandles"
   );
-  const updatedMe = await User.findByIdAndUpdate(userId, filteredBody, {
+  console.log(filteredBody);
+  const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
-    runValidators: true,
+     runValidators: true,
   });
+
+  console.log(updatedUser);
 
   res.status(201).json({
     status: "success",
     data: {
-      userData: updatedMe,
+      userData: updatedUser,
     },
   });
 });
@@ -597,25 +601,3 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 // TODO
-exports.resetPassword = catchAsync(async (req, res, next) => {
-  //1)  take the req.body and take its old password and check it is valid or not
-
-  //2) if it is valid then confirm that new pass and confirm pass are equal
-
-  //3) if they are equal then  encrypt the password and store the password and send respond
-
-  User.findByIdAndUpdate(
-    {
-      id: req.user.id,
-    },
-
-    {
-      // password :req.para
-    }
-  );
-
-  res.status(200).json({
-    status: "success",
-    message: "This route is not yet implemented",
-  });
-});

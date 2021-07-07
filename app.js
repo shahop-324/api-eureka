@@ -111,6 +111,7 @@ app.use("/eureka/v1/customPlan", customPlanRoutes);
 app.get("/eureka/v1/current_user", (req, res) => {
   res.send(req.user);
 });
+
 app.get("/eureka/v1/logout", (req, res) => {
   req.logout();
   res.send(req.user);

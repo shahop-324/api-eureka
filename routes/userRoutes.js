@@ -27,6 +27,10 @@ router.use((req, res, next) => {
     return authController.protect(req, res, next);
   }
 });
+
+// update Me
+router.patch("/updateMe", userController.updateMe);
+
 router.get("/auth", (req, res) => {
   res.send("hey i am protected route");
 });
@@ -71,8 +75,7 @@ router.post(
 //Me
 router.get("/Me", userController.getMe);
 
-// update Me
-router.patch("/Me", userController.updateMe);
+
 
 // delete Me
 router.delete("/Me", userController.deleteMe);
