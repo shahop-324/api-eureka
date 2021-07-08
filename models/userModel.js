@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    phoneNumber:{
-      type:String,
-      trim:true
+    phoneNumber: {
+      type: String,
+      trim: true,
     },
     email: {
       type: String,
@@ -141,6 +141,23 @@ const userSchema = new mongoose.Schema(
         ref: "Query",
       },
     ],
+
+    notificationsForRegisteredEvents: {
+      type: Boolean,
+      default: false,
+    },
+    notificationsForEventRemainder: {
+      type: Boolean,
+      default: false,
+    },
+    notificationsForRegisteredEvents: {
+      type: Boolean,
+      default: false,
+    },
+    notificationBasedOnMyPreference: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
