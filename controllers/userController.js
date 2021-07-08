@@ -121,13 +121,12 @@ const fillSocialMediaHandler = (object, updatedUser) => {
   return updatedUser;
 };
 const filterObj = (obj, ...allowedFields) => {
-  const newobj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.el) newobj[el] = obj[el];
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
   });
-  return newobj;
+  return newObj;
 };
-
 exports.generalIntent = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
