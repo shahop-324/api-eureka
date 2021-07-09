@@ -114,7 +114,7 @@ app.get("/eureka/v1/current_user", (req, res) => {
 
 app.get("/eureka/v1/logout", (req, res) => {
   req.logout();
-  res.send(req.user);
+  res.redirect("/");
 });
 app.use("/eureka/v1/exploreEvents", globalRoutes);
 app.use(globalErrorHandler);
