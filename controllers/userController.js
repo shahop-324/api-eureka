@@ -556,7 +556,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'socialMediaHandles',
     'notificationsForRegisteredEvents',
     'notificationsForEventRemainder',
-    'notificationBasedOnMyPreference'
+    'notificationBasedOnMyPreference',
+    "key"
   );
   // console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
@@ -564,16 +565,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  const twiceUpdatedUser = await User.findByIdAndUpdate(
-    userId,
-    {image: key},
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  // const twiceUpdatedUser = await User.findByIdAndUpdate(
+  //   userId,
+  //   {image: key},
+  //   {
+  //     new: true,
+  //     runValidators: true,
+  //   }
+  // );
 
-  console.log(twiceUpdatedUser.image);
+  // console.log(twiceUpdatedUser.image);
 
   res.status(201).json({
     status: 'success',
