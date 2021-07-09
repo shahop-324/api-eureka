@@ -545,6 +545,8 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
+  const key = req.body.key;
+  console.log(key);
   const userId = req.user.id;
   const filteredBody = filterObj(
     req.body,
@@ -560,13 +562,19 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "notificationsForEventRemainder",
     "notificationBasedOnMyPreference"
   );
-  console.log(filteredBody);
+  // console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
      runValidators: true,
   });
 
-  console.log(updatedUser);
+  const twiceUpdatedUser = await User.findByIdAndUpdate(userId, {image: key}, {
+    new: true,
+     runValidators: true,
+  });
+
+
+  console.log(twiceUpdatedUser.image);
 
   res.status(201).json({
     status: "success",
