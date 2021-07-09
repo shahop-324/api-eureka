@@ -17,6 +17,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 // Imported Routes for Various Resources
 
+const uploadRoutes = require('./routes/uploadRoutes');
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
 const communityRoutes = require("./routes/communityRoutes");
@@ -36,7 +37,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3001",
-    methods: ["GET", "PATCH", "POST", "DELETE"],
+    methods: ["GET", "PATCH", "POST", "DELETE","PUT"],
 
     credentials: true,
   })
@@ -101,6 +102,7 @@ app.use((req, res, next) => {
 });
 // All routes
 app.use("/eureka/v1/auth", authRoutes);
+app.use("/eureka/v1/upload", uploadRoutes);
 app.use("/eureka/v1/users", userRoutes);
 app.use("/eureka/v1/registration", registrationRoutes);
 app.use("/eureka/v1/community", communityRoutes);

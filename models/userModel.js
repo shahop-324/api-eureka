@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    photo: String,
+    image: String,
     password: {
       type: String,
       required: [true, "Please provide a password"],
