@@ -555,7 +555,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "email",
     "photo",
     "interests",
-    "socialMediaHandles"
+    "socialMediaHandles",
+    "notificationsForRegisteredEvents",
+    "notificationsForEventRemainder",
+    "notificationBasedOnMyPreference"
   );
   console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
