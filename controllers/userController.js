@@ -18,6 +18,10 @@ const ReviewsIdsCommunityWise = require('../models/reviewsIdsCommunityWise');
 const SpeakersIdsCommunityWise = require('../models/speakersIdsCommunityWiseModel');
 const RegistrationsIdsCommunityWise = require('../models/registrationsIdsCommunityWiseModel');
 const Ticket = require('../models/ticketModel');
+const Mailer = require('../services/Mailer');
+const ForgotPasswordTemplate = require('../services/email/ForgotPasswordTemplate');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.getParticularEvent = catchAsync(async (req, res) => {
   console.log(req.user);
@@ -557,7 +561,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'notificationsForRegisteredEvents',
     'notificationsForEventRemainder',
     'notificationBasedOnMyPreference',
-    "key"
+    'key'
   );
   // console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
@@ -602,12 +606,65 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 // TODO
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  console.log('This is forgot password middleware function');
-  console.log('We are able to reach this point in req res cycle.');
-  res.status(200).json({
-    status: 'success',
-    message: 'This route is not yet implemented',
-  });
+  console.log('I reached here in forgot password');
+  // 1) Get user based on POSTed email
+  const user = await User.findOne({email: req.body.email});
+
+  if (!user) {
+    return next(new AppError('There is no user with email address.', 404));
+  }
+
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({validateBeforeSave: false});
+
+  console.log(resetToken);
+
+  // 3) Send it to user's email
+  try {
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/eureka/v1/users/resetPassword/${resetToken}`;
+    
+// Send Grid is implemented here
+
+    const msg = {
+      to: user.email, // Change to your recipient
+      from: 'shreyanshshah242@gmail.com', // Change to your verified sender
+      subject: 'Sending with SendGrid is Fun',
+      text: 'and easy to do anywhere, even with Node.js',
+      html: ForgotPasswordTemplate(user, resetURL),
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent');
+        res.status(200).json({
+          status: 'success',
+          message: 'Token sent to email!',
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({validateBeforeSave: false});
+
+    return next(
+      new AppError('There was an error sending the email. Try again later!'),
+      500
+    );
+  }
+
+  // console.log('This is forgot password middleware function');
+  // console.log('We are able to reach this point in req res cycle.');
+  // res.status(200).json({
+  //   status: 'success',
+  //   message: 'This route is not yet implemented',
+  // });
 });
 
 // TODO

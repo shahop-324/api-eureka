@@ -8,6 +8,8 @@ const communityController = require("../controllers/communityController");
 
 const router = express.Router();
 
+router.post("/forgotPassword", userController.forgotPassword); 
+
 // user signup router
 router.post("/signup", authController.signup);
 // user login router
@@ -81,7 +83,7 @@ router.get("/Me", userController.getMe);
 router.delete("/Me", userController.deleteMe);
 
 // forgot Password (now use email to reset password)
-router.post("/forgotPassword", userController.forgotPassword); // TODO This route is not getting hits, I have to check and fix it.
+// TODO This route is not getting hits, I have to check and fix it.
 
 // reset Password
 router.patch("/updatePassword", authController.updatePassword);

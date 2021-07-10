@@ -1,7 +1,6 @@
 const Community = require("../models/communityModel");
 const CustomPlanDoc = require("../models/customPlanDocsModel");
 const catchAsync = require("../utils/catchAsync");
-const sendEmail = require("../utils/email");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
@@ -319,6 +318,7 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
   const message = `Get Access to your custom plan by clicking here ${redeemURL}`;
 
   console.log(community.email);
+
   // await sendEmail({
   //   email: community.email,
   //   subject: "Your Custom Plan is ready to be redeemed.",
