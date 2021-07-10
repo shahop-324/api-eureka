@@ -10,11 +10,13 @@ const queriesController = require("../controllers/queriesController");
 const teamController = require("../controllers/teamController");
 const feedbackController = require("../controllers/feedbackController");
 const billingController = require("../controllers/billingController");
-
+const communityController=require("../controllers/communityController")
 const router = express.Router();
 
 // DONE Creating a new Event from a Community
 
+
+router.get(':/id',communityController.getParticularCommunity)
 router.patch(
   "/updateCommunity",
   authController.protectCommunity,

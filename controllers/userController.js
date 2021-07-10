@@ -561,14 +561,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'notificationsForRegisteredEvents',
     'notificationsForEventRemainder',
     'notificationBasedOnMyPreference',
-    'key'
+    'image'
   );
-  // console.log(filteredBody);
+   console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
     runValidators: true,
   });
-
+console.log(updatedUser);
   // const twiceUpdatedUser = await User.findByIdAndUpdate(
   //   userId,
   //   {image: key},

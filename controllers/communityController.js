@@ -4,6 +4,13 @@ const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
+exports.getParticularCommunity = catchAsync(async (req, res, next) => {
+  const community = await Community.findById(req.params.id);
+  res.status(200).json({
+    status: "success",
+    data: community,
+  });
+});
 exports.selectPlan = catchAsync(async (req, res, next) => {
   console.log("We are able to reach this middleware function, Over and Out.");
   const selectedPlan = req.body.plan;

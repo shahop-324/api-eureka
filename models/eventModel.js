@@ -66,8 +66,8 @@ const eventSchema = new mongoose.Schema(
     },
     visibility: {
       type: String,
-      required: [true, "An event can be either public or unlisted"],
-      enum: ["Public", "Unlisted"],
+      required: [true, "An event can be either public or private"],
+      enum: ["Public", "Private"],
     },
     createdAt: {
       type: Date,
