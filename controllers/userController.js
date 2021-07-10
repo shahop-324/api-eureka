@@ -631,8 +631,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const msg = {
       to: user.email, // Change to your recipient
       from: 'shreyanshshah242@gmail.com', // Change to your verified sender
-      subject: 'Sending with SendGrid is Fun',
-      text: 'and easy to do anywhere, even with Node.js',
+      subject: 'Your Password Reset Link',
+      text: 'use this link to reset your password. This link is valid for only 10 min.',
       html: ForgotPasswordTemplate(user, resetURL),
     };
 

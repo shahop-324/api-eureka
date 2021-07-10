@@ -22,7 +22,7 @@ module.exports = (user, url) => {
             Hi, ${user.firstName}
           </div>
           <div className="pt-4 email-body-text mb-5" style="padding-top: 10px; margin-bottom: 40px; text-align: left;
-          font: normal normal normal 1rem/1.25rem Roboto;
+          font: normal normal normal 0.8rem/1.25rem Roboto;
           letter-spacing: 0px;
           color: #343434;
           opacity: 1;">
@@ -49,7 +49,7 @@ module.exports = (user, url) => {
           <div className="email-body-bottom-msg-text mb-3 pt-3" style="text-align: left;
           margin-bottom: 15px;
           padding-top: 35px;
-          font: normal normal normal 16px/20px Roboto;
+          font: normal normal normal 13px/20px Roboto;
           letter-spacing: 0px;
           color: #555555;">
           If you didn’t requested a password reset, then you can ignore this email. Your password will not be changed.
