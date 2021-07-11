@@ -158,8 +158,8 @@ exports.communityLogin = catchAsync(async (req, res, next) => {
 });
 
 exports.protectCommunity = catchAsync(async (req, res, next) => {
-  console.log("I reached here");
-  console.log(req.user);
+  console.log("I reached here", 'auth line 161');
+  
   // 1) Getting token and check if it's there
   let token;
   if (

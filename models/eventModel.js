@@ -11,7 +11,11 @@ const eventSchema = new mongoose.Schema(
         "A Community name must have less or equal than 150 characters",
       ],
     },
-
+    image: {
+      type: String,
+      default:
+        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/631e7d50-e0bf-11eb-8a5d-f7d3623a14fd.jpeg",
+    },
     shortDescription: {
       type: String,
       required: [true, "A short description for an event is required"],
@@ -58,6 +62,7 @@ const eventSchema = new mongoose.Schema(
       ],
       enum: [
         // TODO Here I have to add all Time Zones
+        "(GMT + 00:00) UTC",
         "(GMT-10:00) Hawaii",
         "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
         "(GMT+5:45) Kathmandu",
@@ -68,6 +73,14 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "An event can be either public or private"],
       enum: ["Public", "Private"],
+    },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    registrationsRecieved: {
+      type: Number,
+      default: 0,
     },
     createdAt: {
       type: Date,
@@ -182,11 +195,14 @@ const eventSchema = new mongoose.Schema(
         ],
       },
     ],
-numberOfRegistrationsReceived:{
-    type:Number,
-    default:0,
-
-},
+    numberOfRegistrationsReceived: {
+      type: Number,
+      default: 0,
+    },
+    publishedStatus: {
+      type: String,
+      default: "Draft",
+    },
     status: {
       type: String,
       default: "active",

@@ -8,7 +8,7 @@ const eventsIdsCommunityWiseSchema = new mongoose.Schema({
   eventsIds: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Query',
+      ref: 'Event',
     },
   ],
 });

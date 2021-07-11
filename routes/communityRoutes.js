@@ -15,8 +15,16 @@ const router = express.Router();
 
 // DONE Creating a new Event from a Community
 
+router.get(
+  "/events",
+  authController.protectCommunity,
+  eventController.getAllEventsForCommunities
+);
 
-router.get(':/id',communityController.getParticularCommunity)
+
+router.get('/:id',communityController.getParticularCommunity)
+
+
 router.patch(
   "/updateCommunity",
   authController.protectCommunity,
@@ -31,11 +39,7 @@ router.post(
 
 // DONE Getting all events For a Community
 // protectCommunity routes contains user and community which user enter in community for restrictation and community for which community you wants all events
-router.get(
-  "/events",
-  authController.protectCommunity,
-  eventController.getAllEventsForCommunities
-);
+
 
 // Done Getting One Particular event For a Community
 router.get(

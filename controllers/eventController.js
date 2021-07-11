@@ -97,8 +97,13 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
-  const events = await Community.findById(communityId).select('events');
 
+  console.log(req.community);
+  const community = await Community.findById(communityId);
+                  const id=  community.eventsDocIdCommunityWise;
+
+                    const events=await EventsIdsCommunityWise.findById(id).populate('eventsIds');
+    
   res.status(200).json({
     length: events.length,
     status: 'success',
