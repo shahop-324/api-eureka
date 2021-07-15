@@ -19,13 +19,6 @@ const communitySchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email"],
     },
-    superAdmin: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: [true, "A community must have a Super Admin."],
-      },
-    ],
     headline: {
       type: String,
       trim: true,

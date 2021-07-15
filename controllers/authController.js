@@ -60,9 +60,11 @@ const createSendTokenForCommunityLogin = async (
   res
 ) => {
   const token = signTokenForCommunityLogin(userId, communityId);
+  const communityDoc = await Community.findById(communityId);
   res.status(statusCode).json({
     status: "success",
     token,
+    communityDoc,
   });
 };
 
@@ -162,6 +164,7 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
   
   // 1) Getting token and check if it's there
   let token;
+  
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -177,6 +180,8 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
       )
     );
   }
+
+  console.log(token);
 
   // 2) Verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);

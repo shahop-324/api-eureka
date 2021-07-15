@@ -1,15 +1,23 @@
-const Event = require('../models/eventModel');
-const Community = require('../models/communityModel');
-const EventsIdsCommunityWise = require('../models/eventsIdsCommunityWiseModel');
-const Speaker = require('../models/speakerModel');
-const SpeakersIdsCommunityWise = require('../models/speakersIdsCommunityWiseModel');
-const Booth = require('../models/boothModel');
-const Sponsor = require('../models/sponsorModel');
-const Session = require('../models/sessionModel');
-const Ticket = require('../models/ticketModel');
+const Event = require("../models/eventModel");
+const Community = require("../models/communityModel");
+const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
+const Speaker = require("../models/speakerModel");
+const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
+const Booth = require("../models/boothModel");
+const Sponsor = require("../models/sponsorModel");
+const Session = require("../models/sessionModel");
+const Ticket = require("../models/ticketModel");
 
-const catchAsync = require('../utils/catchAsync');
-const validator = require('validator');
+const catchAsync = require("../utils/catchAsync");
+const validator = require("validator");
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
 
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
@@ -64,6 +72,9 @@ const fillSocialMediaHandler = (object, updatedUser) => {
 /* eslint-disable no-console */
 exports.createEvent = catchAsync(async (req, res, next) => {
   console.log(req.community);
+  console.log("op", new Date(req.body.startTime));
+  console.log("op 222", new Date(req.body.endTime));
+
   const communityId = req.community._id;
   const communityGettingEvent = await Community.findById(communityId);
   const document = await EventsIdsCommunityWise.findById(
@@ -80,15 +91,18 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     categories: req.body.categories,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
+    startTime: new Date(req.body.startTime),
+    endTime: new Date(req.body.endTime),
     socialMediaHandles: communityGettingEvent.socialMediaHandles,
+    Timezone: req.body.timezone,
     // host: req.community.superAdmin[0].id,
   });
   // 2) Update that event into communities resource in events array
   document.eventsIds.push(createdEvent.id);
-  await document.save({validateModifiedOnly: true});
+  await document.save({ validateModifiedOnly: true });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       event: createdEvent,
     },
@@ -100,13 +114,15 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
 
   console.log(req.community);
   const community = await Community.findById(communityId);
-                  const id=  community.eventsDocIdCommunityWise;
+  const id = community.eventsDocIdCommunityWise;
 
-                    const events=await EventsIdsCommunityWise.findById(id).populate('eventsIds');
-    
+  const events = await EventsIdsCommunityWise.findById(id).populate(
+    "eventsIds"
+  );
+
   res.status(200).json({
     length: events.length,
-    status: 'success',
+    status: "success",
     events,
   });
 });
@@ -118,7 +134,7 @@ exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const event = await Event.findById(eventId);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       event,
     },
@@ -149,11 +165,11 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // save refrence of this booth in its event
   eventGettingBooth.booths.push(createdBooth.id);
-  await eventGettingBooth.save({validateModifiedOnly: true});
+  await eventGettingBooth.save({ validateModifiedOnly: true });
 
   // send newly created booth back to client
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: createdBooth,
   });
 });
@@ -175,17 +191,18 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
   });
   // save refrence of this sponsor in its event
   eventGettingSponsor.sponsors.push(createdSponsor.id);
-  await eventGettingSponsor.save({validateModifiedOnly: true});
+  await eventGettingSponsor.save({ validateModifiedOnly: true });
 
   // send newly created sponsor back to client
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: createdSponsor,
   });
 });
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
+  console.log(12345);
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
@@ -232,10 +249,10 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   console.log(document);
   document.speakersIds.push(speaker._id);
   eventGettingSpeaker.speaker.push(speaker._id);
-  await eventGettingSpeaker.save({validateModifiedOnly: true});
+  await eventGettingSpeaker.save({ validateModifiedOnly: true });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: updatedSpeaker,
   });
 });
@@ -281,10 +298,10 @@ exports.addSession = catchAsync(async (req, res, next) => {
   });
 
   eventGettingSessions.session.push(session._id);
-  await eventGettingSessions.save({validateModifiedOnly: true});
+  await eventGettingSessions.save({ validateModifiedOnly: true });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: session,
   });
 });
@@ -321,7 +338,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
   console.log(updatedSpeaker);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: updatedSpeaker,
   });
 });
@@ -353,7 +370,7 @@ exports.updateSession = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: updatedSession,
   });
 });
@@ -390,7 +407,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   });
 
   eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
-  await eventGettingNewTicket.save({validateModifiedOnly: true});
+  await eventGettingNewTicket.save({ validateModifiedOnly: true });
   await Event.findByIdAndUpdate(eventId, {
     minTicketPrice: updatedMinPrice,
     maxTicketPrice: updatedMaxPrice,
@@ -398,8 +415,8 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 
   // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
   res.status(201).json({
-    status: 'success',
-    message: 'New Ticket Created Successfully',
+    status: "success",
+    message: "New Ticket Created Successfully",
     data: newlyCreatedTicket,
   });
 });
@@ -407,3 +424,81 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 ///////////////////////////
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
+exports.updateEvent = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  const filteredBody = filterObj(
+    req.body,
+    "eventName",
+    "shortDescription",
+    "startDate",
+    "startTime",
+    "endDate",
+    "endTime",
+    "selectTimeZone",
+    "selectCategories",
+    "visibility",
+    "editingComment"
+  );
+
+  const updatedEvent = await Event.findByIdAndUpdate(
+    req.params.id,
+    filteredBody,
+    {
+      new: true,
+      validateModifiedOnly: true,
+    }
+  );
+
+  res.status(200).json({
+    status: "success",
+    updatedEvent,
+  });
+});
+
+exports.updateEventDescription = catchAsync(async (req, res, next) => {
+  console.log(req.body.editingComment);
+  
+
+  const updatedEvent = await Event.findByIdAndUpdate(
+    req.params.id,
+    {editingComment: JSON.stringify(req.body.editingComment)},
+    {
+      new: true,
+      validateModifiedOnly: true,
+    }
+  );
+
+  res.status(200).json({
+    status: "success",
+    updatedEvent,
+  });
+});
+
+
+
+exports.getAllSessions = catchAsync(async (req, res, next) => {
+  const sessions = await Event.findById(req.params.id)
+    .select("session")
+    .populate("session");
+  console.log(sessions);
+  res.status(200).json({
+    status: "Successs",
+
+    data: {
+      sessions,
+    },
+  });
+});
+exports.getAllSpeakers = catchAsync(async (req, res, next) => {
+  const speakers = await Event.findById(req.params.id)
+    .select("speaker")
+    .populate("speaker");
+  console.log(speakers);
+  res.status(200).json({
+    status: "Successs",
+
+    data: {
+      speakers,
+    },
+  });
+});

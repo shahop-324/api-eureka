@@ -14,7 +14,7 @@ const eventSchema = new mongoose.Schema(
     image: {
       type: String,
       default:
-        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/631e7d50-e0bf-11eb-8a5d-f7d3623a14fd.jpeg",
+        "60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg",
     },
     shortDescription: {
       type: String,
@@ -25,7 +25,7 @@ const eventSchema = new mongoose.Schema(
         "A Community name must have less or equal than 150 characters",
       ],
     },
-    completeDescription: {
+editingComment: {
       type: String,
       trim: true,
     },
@@ -67,7 +67,7 @@ const eventSchema = new mongoose.Schema(
         "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
         "(GMT+5:45) Kathmandu",
       ],
-      default: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
+      default: "(GMT + 00:00) UTC",
     },
     visibility: {
       type: String,

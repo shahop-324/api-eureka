@@ -2,13 +2,19 @@ const Community = require("../models/communityModel");
 const CustomPlanDoc = require("../models/customPlanDocsModel");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 const { promisify } = require("util");
 
+
+
 exports.getParticularCommunity = catchAsync(async (req, res, next) => {
+
+
+  console.log(req.params.id);
   const community = await Community.findById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: community,
+    data: {community},
   });
 });
 exports.selectPlan = catchAsync(async (req, res, next) => {

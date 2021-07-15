@@ -26,7 +26,8 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const authRoutes = require("./routes/authRoutes");
 const salesDepartmentRoutes = require("./routes/salesDepartmentRoutes");
 const customPlanRoutes = require("./routes/customPlanRoutes");
-
+const eventRoutes = require("./routes/eventRoutes");
+const sessionRoutes = require("./routes/sessionRoutes");
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -109,6 +110,11 @@ app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
 app.use("/eureka/v1/sales", salesDepartmentRoutes);
 app.use("/eureka/v1/customPlan", customPlanRoutes);
+app.use("/eureka/v1/events", eventRoutes);
+app.use("/eureka/v1/sessions", sessionRoutes);
+
+
+
 
 app.get("/eureka/v1/current_user", (req, res) => {
   res.send(req.user);

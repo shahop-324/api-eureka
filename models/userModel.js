@@ -117,19 +117,12 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     communities: [
-      {
-        communityId: {
+     {
           type: mongoose.Schema.ObjectId,
           ref: "Community",
         },
-        role: {
-          type: String,
-          enum: ["superAdmin"],
-          default: "superAdmin",
-        },
-      },
     ],
-    registredInEvents: [{ type: mongoose.Schema.ObjectId, ref: "Event" }],
+    registeredInEvents: [{ type: mongoose.Schema.ObjectId, ref: "Event" }],
     reviews: [
       {
         type: mongoose.Schema.ObjectId,
@@ -166,15 +159,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre(/^find/, function (next) {
-  // this points to the current query
+// userSchema.pre(/^find/, function (next) {
+//   // this points to the current query
 
-  this.populate({ path: "communities.communityId", select: "name" });
-  this.populate({
-    path: "registredInEvents",
-  });
-  next();
-});
+//   this.populate({ path: "communities.communityId", select: "name" });
+//   this.populate({
+//     path: "registredInEvents",
+//   });
+//   next();
+// });
 
 userSchema.pre("save", async function (next) {
   //Only run this function  if password was actually modified

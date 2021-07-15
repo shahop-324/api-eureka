@@ -177,18 +177,9 @@ router.post(
   eventController.addSponsor
 );
 
-// Done adding speakers to an event
-router.post(
-  "/:eventId/addSpeaker",
-  authController.protectCommunity,
-  eventController.addSpeaker
-);
-// add sessions routes
-router.post(
-  "/:eventId/addSession",
-  authController.protectCommunity,
-  eventController.addSession
-);
+
+
+
 router.patch(
   "/:eventId/:speakerId/updateSpeaker",
   authController.protectCommunity,
@@ -206,5 +197,10 @@ router.post(
   authController.protectCommunity,
   eventController.createTicket
 );
+
+
+// router.patch("/event/:id/update",authController.protectCommunity,eventController.updateEvent)
+
+
 
 module.exports = router;

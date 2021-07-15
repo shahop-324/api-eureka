@@ -1,75 +1,102 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
-const catchAsync = require('../utils/catchAsync');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const AppError = require('../utils/appError');
-const Community = require('../models/communityModel');
-const CommunityMailList = require('../models/communityMailListModel');
-const User = require('../models/userModel');
-const Event = require('../models/eventModel');
-const Registration = require('../models/registrationsModel');
-const Review = require('../models/reviewModel');
-const Query = require('../models/queriesModel');
-const QueriesIdsCommunityWise = require('../models/queryIdsCommunityWiseModel');
-const EventsIdsCommunityWise = require('../models/eventsIdsCommunityWiseModel');
-const ReviewsIdsCommunityWise = require('../models/reviewsIdsCommunityWise');
-const SpeakersIdsCommunityWise = require('../models/speakersIdsCommunityWiseModel');
-const RegistrationsIdsCommunityWise = require('../models/registrationsIdsCommunityWiseModel');
-const Ticket = require('../models/ticketModel');
-const Mailer = require('../services/Mailer');
-const ForgotPasswordTemplate = require('../services/email/ForgotPasswordTemplate');
-const sgMail = require('@sendgrid/mail');
+const catchAsync = require("../utils/catchAsync");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const AppError = require("../utils/appError");
+const Community = require("../models/communityModel");
+const CommunityMailList = require("../models/communityMailListModel");
+const User = require("../models/userModel");
+const Event = require("../models/eventModel");
+const Registration = require("../models/registrationsModel");
+const Review = require("../models/reviewModel");
+const Query = require("../models/queriesModel");
+const QueriesIdsCommunityWise = require("../models/queryIdsCommunityWiseModel");
+const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
+const ReviewsIdsCommunityWise = require("../models/reviewsIdsCommunityWise");
+const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
+const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
+const Ticket = require("../models/ticketModel");
+const Mailer = require("../services/Mailer");
+const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
+const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
-
-exports.getParticularEvent = catchAsync(async (req, res) => {
-  console.log(req.user);
-  const response = await Event.findById(req.params.id)
-    .populate(
-      'tickets'
-      // "sponsors",
-      // "booths",
-      // "sessions",
-      // "speakers"
-    )
-    .populate('sponsors')
-    .populate('booths')
-    .populate('session')
-    .populate('speaker')
-    .populate({
-      path: 'createdBy',
-      select: 'name logo socialMediaHandles',
-    });
-
-  res.status(200).json({
-    status: 'SUCCESS',
-    data: {
-      response,
-    },
-  });
-});
-
 const signTokenForCommunityLogin = (userId, communityId) =>
-  jwt.sign({userId: userId, communityId: communityId}, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-
+  jwt.sign(
+    { userId: userId, communityId: communityId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
 const createSendTokenForCommunityLogin = async (
   userId,
   communityId,
   statusCode,
-  communityCreated,
+  communityDoc,
   res
 ) => {
   const token = signTokenForCommunityLogin(userId, communityId);
 
   res.status(statusCode).json({
-    status: 'success',
+    status: "success",
     token,
-    communityCreated,
+    communityDoc,
   });
 };
+exports.getAllPersonalData = catchAsync(async (req, res, next) => {
+  const personalData = await User.findById(req.user.id)
+    .populate("communities")
+    .populate("registeredInEvents");
+  res.status(200).json({
+    status: "SUCCESSS",
+    data: {
+      personalData,
+    },
+  });
+});
+// exports.getAllRegisteredEvents=catchAsync(async(req,res,next)=>{
+
+//   const registeredInEventsList=await User.findById(req.user.id).select('registeredInEvents').populate('registeredInEvents')
+//   res.status(200).json({
+// status:"SUCCESSS",
+// data:{
+
+//   registeredInEventsList
+// }
+
+//   })
+
+// }
+// )
+
+exports.getParticularEvent = catchAsync(async (req, res) => {
+  console.log(req.user);
+  const response = await Event.findById(req.params.id)
+    .populate(
+      "tickets"
+      // "sponsors",
+      // "booths",
+      // "sessions",
+      // "speakers"
+    )
+    .populate("sponsors")
+    .populate("booths")
+    .populate("session")
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name logo socialMediaHandles",
+    });
+
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      response,
+    },
+  });
+});
 
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
@@ -82,32 +109,32 @@ const fillSocialMediaHandler = (object, updatedUser) => {
     if (bool) {
       // now I have to use regular expression
       switch (key) {
-        case 'facebook': {
+        case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
           console.log(updatedUser.socialMediaHandles);
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
-        case 'instagram': {
+        case "instagram": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
-        case 'twitter': {
+        case "twitter": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
-        case 'linkedIn': {
+        case "linkedIn": {
           const regex = /(?<=\/in\/).+/;
           [newVal] = value.match(regex);
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
-        case 'website': {
+        case "website": {
           const regex = /(?<=www.).+/;
           [newVal] = value.match(regex);
           updatedUser.socialMediaHandles.set(key, newVal);
@@ -130,8 +157,8 @@ const filterObj = (obj, ...allowedFields) => {
 exports.generalIntent = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
-    'whatAreYouPlanningToDo',
-    'interests'
+    "whatAreYouPlanningToDo",
+    "interests"
   );
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -140,7 +167,7 @@ exports.generalIntent = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       user: updatedUser,
     },
@@ -149,7 +176,7 @@ exports.generalIntent = catchAsync(async (req, res, next) => {
 
 exports.profileCompletion = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const filteredBody = filterObj(req.body, 'headline', 'photo', 'gender');
+  const filteredBody = filterObj(req.body, "headline", "photo", "gender");
 
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
@@ -164,68 +191,13 @@ exports.profileCompletion = catchAsync(async (req, res, next) => {
     validateModifiedOnly: true,
   });
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       user: doublyUpdatedUser,
     },
   });
 });
 
-exports.createNewCommunity = catchAsync(async (req, res, next) => {
-  // console.log(req);
-  console.log(req.user);
-  const userId = req.user.id;
-  const userCreatingCommunity = await User.findById(userId);
-  const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const reviewsIdsDocument = await ReviewsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const eventsIdsDocument = await EventsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const queriesIdsDocument = await QueriesIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const registrationsIdsDocument = await RegistrationsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  // 1) Create a new community and store id of loggedIn user as superAdmin in community
-  const createdCommunity = await Community.create({
-    name: req.body.name,
-    superAdmin: req.user.id,
-    email: req.body.email,
-    headline: req.body.headline,
-    policySigned: req.body.policySigned,
-    subscribedToCommunityMailList: req.body.subscribedToCommunityMailList,
-    queriesDocIdCommunityWise: queriesIdsDocument._id,
-    eventsDocIdCommunityWise: eventsIdsDocument._id,
-    reviewsDocIdCommunityWise: reviewsIdsDocument._id,
-    speakersDocIdCommunityWise: speakersIdsDocument._id,
-    registrationsDocIdCommunityWise: registrationsIdsDocument._id,
-  });
-
-  userCreatingCommunity.communities.push({
-    communityId: createdCommunity.id,
-    role: 'superAdmin',
-  });
-  await userCreatingCommunity.save({validateModifiedOnly: true});
-
-  if (req.body.subscribedToCommunityMailList === true) {
-    await CommunityMailList.create({
-      name: req.body.name,
-      email: req.body.email,
-    });
-  }
-  createSendTokenForCommunityLogin(
-    userId,
-    createdCommunity.id,
-    200,
-    createdCommunity,
-    res
-  );
-});
 exports.updateCommunity = catchAsync(async (req, res) => {
   const communityId = req.community.id;
   // const filteredBody = filterObj(req.body, "headline", "photo", "gender");
@@ -245,7 +217,7 @@ exports.updateCommunity = catchAsync(async (req, res) => {
     validateModifiedOnly: true,
   });
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       user: doublyUpdatedUser,
     },
@@ -298,7 +270,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
       numberOfTicketSold: updatedNumOfTicketSold,
       ticketIsSoldOut: ticketIsSoldOut,
     },
-    {new: true}
+    { new: true }
   );
 
   console.log(xahs);
@@ -314,7 +286,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   const communityId = eventGettingRegistration.createdBy;
   console.log(communityId);
   const numberOfRegistrationsReceived = await Event.findOneAndUpdate(
-    {_id: req.params.eventId},
+    { _id: req.params.eventId },
     {
       $inc: {
         numberOfRegistrationsReceived: 1,
@@ -328,13 +300,13 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
 
   console.log(numberOfRegistrationsReceived);
   const x = await Community.findOneAndUpdate(
-    {_id: communityId},
+    { _id: communityId },
     {
       $inc: {
-        'analytics.totalRegistrations': 1,
-        'analytics.totalRegistrationsThisMonth': 1,
-        'analytics.totalRegistrationsThisDay': 1,
-        'analytics.totalRegistrationsThisYear': 1,
+        "analytics.totalRegistrations": 1,
+        "analytics.totalRegistrationsThisMonth": 1,
+        "analytics.totalRegistrationsThisDay": 1,
+        "analytics.totalRegistrationsThisYear": 1,
       },
     },
     {
@@ -367,7 +339,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   // Update corresponding event document with current registartion by adding its ObjectId into registrations array
   eventGettingRegistration.registrations.push(newRegistration.id);
 
-  eventGettingRegistration.save({validateModifiedOnly: true});
+  eventGettingRegistration.save({ validateModifiedOnly: true });
 
   // communityGettingRegistration.save({ validateModifiedOnly: true });
   // Update Corresponding Community with this Registration by adding its ObjectId into registrations array
@@ -376,17 +348,17 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   );
   console.log(document);
   document.registrationsId.push(newRegistration.id);
-  await document.save({validateModifiedOnly: true});
+  await document.save({ validateModifiedOnly: true });
 
   // Update currently loggedIn User's document with current registartion by adding its ObjectId into registration array
   userWhoIsRegistering.registredInEvents.push(req.params.eventId);
-  await userWhoIsRegistering.save({validateModifiedOnly: true});
+  await userWhoIsRegistering.save({ validateModifiedOnly: true });
   // await userWhoIsRegistering.save({ validateModifiedOnly: true });
 
   // Send newly created registration as response and a message saying resigtration successful.
   res.status(201).json({
-    status: 'success',
-    message: 'User is successfully registered in this event.',
+    status: "success",
+    message: "User is successfully registered in this event.",
     data: {
       user: req.user.id,
       eventInWhichRegistered: req.params.eventId,
@@ -442,22 +414,22 @@ exports.createReview = catchAsync(async (req, res, next) => {
   eventGettingReview.eventAverageRating = newAvgRatingForEvent;
   eventGettingReview.numberOfRatingsReceived = newNumofRatingsForEvent;
   eventGettingReview.reviews.push(newReview.id);
-  await eventGettingReview.save({validateModifiedOnly: true});
+  await eventGettingReview.save({ validateModifiedOnly: true });
 
   // 3) Update corresponding community document to which this event belongs for which review was given by user
   communityGettingReview.commuintyAverageRating = newAvgRatingForCommunity;
   communityGettingReview.numberOfRatingsRecieved = newNumOfRtingsForCommunity;
-  await communityGettingReview.save({validateModifiedOnly: true});
+  await communityGettingReview.save({ validateModifiedOnly: true });
   document.reviewsIds.push(newReview.id);
-  await document.save({validateModifiedOnly: true});
+  await document.save({ validateModifiedOnly: true });
 
   // 4) Update corresponding user document with this newly created review documents ObjectId.
   userCreatingReview.reviews.push(newReview.id);
-  await userCreatingReview.save({validateModifiedOnly: true});
+  await userCreatingReview.save({ validateModifiedOnly: true });
 
   // 5) Send newly created review document back to user
   res.status(201).json({
-    status: 'success',
+    status: "success",
     data: newReview,
   });
 });
@@ -489,7 +461,7 @@ exports.createQuery = catchAsync(async (req, res, next) => {
 
   // 3) Update corresponding event, community and user documents with the ObjectId of newly created query document
   eventGettingQuery.queries.push(createdQuery.id);
-  await eventGettingQuery.save({validateModifiedOnly: true});
+  await eventGettingQuery.save({ validateModifiedOnly: true });
 
   document.queriesIds.push(createdQuery.id);
   await document.save({
@@ -497,7 +469,7 @@ exports.createQuery = catchAsync(async (req, res, next) => {
   });
 
   userCreatingQuery.queries.push(createdQuery.id);
-  await userCreatingQuery.save({validateModifiedOnly: true});
+  await userCreatingQuery.save({ validateModifiedOnly: true });
 
   // 4) Call next middleware in this stack
   next();
@@ -512,9 +484,9 @@ exports.IsUserRegistred = catchAsync(async (req, res, next) => {
   // 5) Check if user is registred in this event for which he / she is trying to create a query for
   const bool = userCreatingQuery.registredInEvents.includes(eventId);
   if (bool) {
-    queryGettingUpdated.userIs = 'Registred';
+    queryGettingUpdated.userIs = "Registred";
   } else {
-    queryGettingUpdated.userIs = 'Unregistred';
+    queryGettingUpdated.userIs = "Unregistred";
   }
   const updatedQuery = await queryGettingUpdated.save({
     validateModifiedOnly: true,
@@ -522,7 +494,7 @@ exports.IsUserRegistred = catchAsync(async (req, res, next) => {
 
   // 6) Send finally updated Query document back to user
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       createdQuery: updatedQuery,
     },
@@ -532,12 +504,12 @@ exports.IsUserRegistred = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const userDoc = await User.findById(userId).populate({
-    path: 'registredInEvents queries',
+    path: "registredInEvents queries",
     select:
-      'startDate endDate eventName shortDescription createdAt queryIs questionText',
+      "startDate endDate eventName shortDescription createdAt queryIs questionText",
   });
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       userData: userDoc,
     },
@@ -545,30 +517,32 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  const key = req.body.key;
-  console.log(key);
+  // const key = req.body.key;
+  // console.log(key);
+
+  console.log("updated you ");
   const userId = req.user.id;
   const filteredBody = filterObj(
     req.body,
-    'phoneNumber',
-    'firstName',
-    'lastName',
-    'headline',
-    'email',
-    'photo',
-    'interests',
-    'socialMediaHandles',
-    'notificationsForRegisteredEvents',
-    'notificationsForEventRemainder',
-    'notificationBasedOnMyPreference',
-    'image'
+    "phoneNumber",
+    "firstName",
+    "lastName",
+    "headline",
+    "email",
+    "photo",
+    "interests",
+    "socialMediaHandles",
+    "notificationsForRegisteredEvents",
+    "notificationsForEventRemainder",
+    "notificationBasedOnMyPreference",
+    "image"
   );
-   console.log(filteredBody);
+  console.log(filteredBody);
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
     runValidators: true,
   });
-console.log(updatedUser);
+  console.log(updatedUser);
   // const twiceUpdatedUser = await User.findByIdAndUpdate(
   //   userId,
   //   {image: key},
@@ -581,7 +555,7 @@ console.log(updatedUser);
   // console.log(twiceUpdatedUser.image);
 
   res.status(201).json({
-    status: 'success',
+    status: "success",
     data: {
       userData: updatedUser,
     },
@@ -592,7 +566,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   await User.findByIdAndUpdate(
     userId,
-    {active: false},
+    { active: false },
     {
       new: true,
       runValidators: true,
@@ -600,49 +574,49 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   );
 
   res.status(202).json({
-    status: 'success',
+    status: "success",
   });
 });
 
 // TODO
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  console.log('I reached here in forgot password');
+  console.log("I reached here in forgot password");
   // 1) Get user based on POSTed email
-  const user = await User.findOne({email: req.body.email});
+  const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError('There is no user with email address.', 404));
+    return next(new AppError("There is no user with email address.", 404));
   }
 
   // 2) Generate the random reset token
   const resetToken = user.createPasswordResetToken();
-  await user.save({validateBeforeSave: false});
+  await user.save({ validateBeforeSave: false });
 
   console.log(resetToken);
 
   // 3) Send it to user's email
   try {
     const resetURL = `${req.protocol}://${req.get(
-      'host'
+      "host"
     )}/eureka/v1/users/resetPassword/${resetToken}`;
-    
-// Send Grid is implemented here
+
+    // Send Grid is implemented here
 
     const msg = {
       to: user.email, // Change to your recipient
-      from: 'shreyanshshah242@gmail.com', // Change to your verified sender
-      subject: 'Your Password Reset Link',
-      text: 'use this link to reset your password. This link is valid for only 10 min.',
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: "Your Password Reset Link",
+      text: "use this link to reset your password. This link is valid for only 10 min.",
       html: ForgotPasswordTemplate(user, resetURL),
     };
 
     sgMail
       .send(msg)
       .then(() => {
-        console.log('Email sent');
+        console.log("Email sent");
         res.status(200).json({
-          status: 'success',
-          message: 'Token sent to email!',
+          status: "success",
+          message: "Token sent to email!",
         });
       })
       .catch((error) => {
@@ -651,10 +625,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
-    await user.save({validateBeforeSave: false});
+    await user.save({ validateBeforeSave: false });
 
     return next(
-      new AppError('There was an error sending the email. Try again later!'),
+      new AppError("There was an error sending the email. Try again later!"),
       500
     );
   }
@@ -668,3 +642,55 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 // TODO
+exports.createNewCommunity = catchAsync(async (req, res, next) => {
+  // console.log(req);
+  console.log(req.user);
+  const userId = req.user.id;
+  const userCreatingCommunity = await User.findById(userId);
+  const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
+    initialisedAt: Date.now(),
+  });
+  const reviewsIdsDocument = await ReviewsIdsCommunityWise.create({
+    initialisedAt: Date.now(),
+  });
+  const eventsIdsDocument = await EventsIdsCommunityWise.create({
+    initialisedAt: Date.now(),
+  });
+  const queriesIdsDocument = await QueriesIdsCommunityWise.create({
+    initialisedAt: Date.now(),
+  });
+  const registrationsIdsDocument = await RegistrationsIdsCommunityWise.create({
+    initialisedAt: Date.now(),
+  });
+  // 1) Create a new community and store id of loggedIn user as superAdmin in community
+  const createdCommunity = await Community.create({
+    name: req.body.name,
+    superAdmin: req.user.id,
+    email: req.body.email,
+    headline: req.body.headline,
+    policySigned: req.body.policySigned,
+    subscribedToCommunityMailList: req.body.subscribedToCommunityMailList,
+    queriesDocIdCommunityWise: queriesIdsDocument._id,
+    eventsDocIdCommunityWise: eventsIdsDocument._id,
+    reviewsDocIdCommunityWise: reviewsIdsDocument._id,
+    speakersDocIdCommunityWise: speakersIdsDocument._id,
+    registrationsDocIdCommunityWise: registrationsIdsDocument._id,
+  });
+
+  userCreatingCommunity.communities.push(createdCommunity.id);
+  await userCreatingCommunity.save({ validateModifiedOnly: true });
+
+  if (req.body.subscribedToCommunityMailList === true) {
+    await CommunityMailList.create({
+      name: req.body.name,
+      email: req.body.email,
+    });
+  }
+  createSendTokenForCommunityLogin(
+    userId,
+    createdCommunity.id,
+    200,
+    createdCommunity,
+    res
+  );
+});
