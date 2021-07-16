@@ -3,6 +3,11 @@ const validator = require('validator');
 
 const speakerSchema = new mongoose.Schema(
   {
+    status: {
+      type: String,
+      enum: ["Active", "Inactive", "Deleted"],
+      default: "Active",
+    },
     firstName: {
       type: String,
       trim: true,
@@ -28,16 +33,12 @@ const speakerSchema = new mongoose.Schema(
       trim: true,
       maxlength: 25,
     },
-    designation: {
-      type: String,
-      trim: true,
-      maxlength: 25,
-    },
-    bio: {
+  
+    headline: {
       type: String,
       trim: true,
       maxlength: 250,
-      default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
+     // default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
     },
     sessions: [
       {
@@ -63,6 +64,12 @@ const speakerSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+speakerSchema.pre(/^find/, function(next) {
+  console.log(123);
+  this.find({ status: { $ne: "Inactive" } });
+  next();
+});
 
 const Speaker = mongoose.model('Speaker', speakerSchema);
 

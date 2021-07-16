@@ -177,9 +177,6 @@ router.post(
   eventController.addSponsor
 );
 
-
-
-
 router.patch(
   "/:eventId/:speakerId/updateSpeaker",
   authController.protectCommunity,

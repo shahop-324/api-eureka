@@ -13,8 +13,7 @@ const eventSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default:
-        "60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg",
+      default: "60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg",
     },
     shortDescription: {
       type: String,
@@ -25,7 +24,7 @@ const eventSchema = new mongoose.Schema(
         "A Community name must have less or equal than 150 characters",
       ],
     },
-editingComment: {
+    editingComment: {
       type: String,
       trim: true,
     },
@@ -216,6 +215,56 @@ editingComment: {
     socialMediaHandles: {
       type: Map,
       Of: String,
+    },
+    networkingSettings: {
+      socialLounge: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        numberOfTables: {
+          type: Number,
+          default: 50,
+        },
+        numberOfSeatsPerTable: {
+          type: Number,
+          default: 4,
+        },
+      },
+      speedNetworking: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        timeAllotedPerInteraction: {
+          type: Number,
+          default: 5, // This is time in min
+        },
+      },
+      customGroupBasedNetworking: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        timeAllotedPerInteraction: {
+          type: Number,
+          default: 5, // This is time in min
+        },
+      },
+      privateMeetings: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        maxNoOfParticipants: {
+          type: Number,
+          default: 4,
+        },
+        timeAllotedPerInteraction: {
+          type: Number,
+          default: 20, // This is time in min
+        },
+      },
     },
 
     // TODO I have to do research on how recording will work and where it will be stored.

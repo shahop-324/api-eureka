@@ -1,19 +1,27 @@
 const mongoose = require('mongoose');
 
 const sponsorSchema = new mongoose.Schema({
-  name: {
+  docStatus: {
     type: String,
+    enum: ["Active", "Inactive", "Deleted"],
+    default: "Active",
   },
-  socialMediaHandles: {
-    type: Map,
-    of: String,
+  organisationName: {
+    type: String,
   },
   logo: {
     type: String,
   },
   status: {
     type: String,
-    enum: ['Platinum', 'Gold', 'Silver', 'Bronze'],
+    enum: ['Diamond', 'Platinum', 'Gold', 'Bronze'],
+  },
+  website: {
+    type: String,
+  },
+  initiatedAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

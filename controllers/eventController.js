@@ -182,11 +182,9 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
   const eventGettingSponsor = await Event.findById(eventId);
 
   // Create a new sponsor document with recived req.body info
-  const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
   const createdSponsor = await Sponsor.create({
-    name: req.body.name,
-    logo: req.body.logo,
-    socialMediaHandles: processedObj,
+    organisationName: req.body.organisationName,
+    website: req.body.website,
     status: req.body.status,
   });
   // save refrence of this sponsor in its event
@@ -203,15 +201,18 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
   console.log(12345);
+  console.log(req.body.organisation, "op ki line");
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
   const eventGettingSpeaker = await Event.findById(eventId);
   const allSessionsInThisEvent = eventGettingSpeaker.session;
 
+  console.log(sessionsMappedByCommunity);
+
   // confirm if this session exist in this event
 
-  const processedArray = [];
+  let processedArray = [];
   const fxn = (allSessionsInThisEvent, sessionsMappedByCommunity) => {
     const processedSessions = [];
     sessionsMappedByCommunity.map((el) => {
@@ -226,6 +227,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
   }
 
+  console.log("processedArray", processedArray);
+
   const communityGettingSpeaker = await Community.findById(communityId);
 
   const speaker = await Speaker.create({
@@ -233,6 +236,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     lastName: req.body.lastName,
     email: req.body.email,
     sessions: processedArray,
+    headline: req.body.headline,
+    organisation: req.body.organisation,
   });
 
   speaker.socialMediaHandles = {};
@@ -251,9 +256,13 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   eventGettingSpeaker.speaker.push(speaker._id);
   await eventGettingSpeaker.save({ validateModifiedOnly: true });
 
+  const populatedSpeaker = await Speaker.findById(speaker.id).populate(
+    "sessions"
+  );
+
   res.status(200).json({
     status: "success",
-    data: updatedSpeaker,
+    data: populatedSpeaker,
   });
 });
 
@@ -267,7 +276,7 @@ exports.addSession = catchAsync(async (req, res, next) => {
 
   // confirm if this session exist in this event
 
-  const processedArray = [];
+  let processedArray = [];
   const fxn = (allSpeakersInThisEvent, speakersMappedByCommunityForSession) => {
     const processedSpeakers = [];
     speakersMappedByCommunityForSession.map((el) => {
@@ -297,12 +306,16 @@ exports.addSession = catchAsync(async (req, res, next) => {
     speaker: processedArray,
   });
 
+  const populatedSession = await Session.findById(session.id).populate(
+    "speaker"
+  );
+
   eventGettingSessions.session.push(session._id);
   await eventGettingSessions.save({ validateModifiedOnly: true });
 
   res.status(200).json({
     status: "success",
-    data: session,
+    data: populatedSession,
   });
 });
 //update handler for updating speakers
@@ -425,7 +438,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+  console.log(req.body, 435);
   const filteredBody = filterObj(
     req.body,
     "eventName",
@@ -457,11 +470,10 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
 
 exports.updateEventDescription = catchAsync(async (req, res, next) => {
   console.log(req.body.editingComment);
-  
 
   const updatedEvent = await Event.findByIdAndUpdate(
     req.params.id,
-    {editingComment: JSON.stringify(req.body.editingComment)},
+    { editingComment: JSON.stringify(req.body.editingComment) },
     {
       new: true,
       validateModifiedOnly: true,
@@ -475,12 +487,15 @@ exports.updateEventDescription = catchAsync(async (req, res, next) => {
 });
 
 
-
 exports.getAllSessions = catchAsync(async (req, res, next) => {
-  const sessions = await Event.findById(req.params.id)
+  let sessions = await Event.findById(req.params.id)
     .select("session")
-    .populate("session");
+    .populate({
+      path: "session",
+      populate: { path: "speaker" },
+    });
   console.log(sessions);
+  sessions = sessions.session.filter((session) => session.status !== "Deleted");
   res.status(200).json({
     status: "Successs",
 
@@ -490,10 +505,16 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
   });
 });
 exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-  const speakers = await Event.findById(req.params.id)
+  let speakers = await Event.findById(req.params.id)
     .select("speaker")
-    .populate("speaker");
+    .populate({
+      path: "speaker",
+      populate: { path: "sessions" },
+    });
   console.log(speakers);
+
+  speakers = speakers.speaker.filter((speaker) => speaker.status !== "Deleted");
+
   res.status(200).json({
     status: "Successs",
 

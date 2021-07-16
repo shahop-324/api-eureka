@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const boothSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: ["Active", "Inactive", "Deleted"],
+    default: "Active",
+  },
   name: {
     type: String,
   },

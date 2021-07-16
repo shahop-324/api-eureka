@@ -1,16 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema(
   {
     eventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
     },
 
     name: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive", "Deleted"],
+      default: "Active",
+    },
     startDate: {
+      type: Date,
+    },
+    endDate: {
       type: Date,
     },
     startTime: {
@@ -18,7 +26,7 @@ const sessionSchema = new mongoose.Schema(
     },
     endTime: {
       type: Date,
-      default:Date.now() //todo
+      default: Date.now(), //todo
     },
     duration: {
       type: Number,
@@ -26,13 +34,13 @@ const sessionSchema = new mongoose.Schema(
     host: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     speaker: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Speaker',
+        ref: "Speaker",
       },
     ],
     agenda: {
@@ -45,18 +53,25 @@ const sessionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    description:{
-      type:String,
-      default:"From combatting Email Fraud to Building Your Brand! Research: Stories about brands being phished, loss of trust due to phishing, Success stories due to DMARC"
+    description: {
+      type: String,
+      default:
+        "From combatting Email Fraud to Building Your Brand! Research: Stories about brands being phished, loss of trust due to phishing, Success stories due to DMARC",
     },
-   
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+// sessionSchema.pre(/^find/, function(next) {
+//   this.populate({
+//     path: 'guides',
+//     select: '-__v -passwordChangedAt'
+//   });
 
-const Session = mongoose.model('Session', sessionSchema);
+//   next();
+// });
+const Session = mongoose.model("Session", sessionSchema);
 
 module.exports = Session;

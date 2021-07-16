@@ -1,25 +1,25 @@
 const express = require("express");
 
 const authController = require("../controllers/authController");
-const sessionController = require("../controllers/sessionController");
+const speakerController = require("../controllers/speakerController");
 const router = express.Router();
 
 router.get(
   "/:id",
   authController.protectCommunity,
-  sessionController.getParticularSession
+  speakerController.getParticularSpeaker
 );
 
-router.post(
+router.patch(
   "/:id/update",
   authController.protectCommunity,
-  sessionController.updateSession
+  speakerController.updateSpeaker
 );
 
 router.delete(
     "/:id/delete",
     authController.protectCommunity,
-    sessionController.DeleteSession
+    speakerController.DeleteSpeaker
   );
 
 module.exports = router;

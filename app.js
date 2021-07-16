@@ -17,7 +17,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 // Imported Routes for Various Resources
 
-const uploadRoutes = require('./routes/uploadRoutes');
+const uploadRoutes = require("./routes/uploadRoutes");
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
 const communityRoutes = require("./routes/communityRoutes");
@@ -28,6 +28,11 @@ const salesDepartmentRoutes = require("./routes/salesDepartmentRoutes");
 const customPlanRoutes = require("./routes/customPlanRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
+const speakerRoutes = require("./routes/speakerRoutes");
+const boothRoutes = require("./routes/boothRoutes");
+const sponsorRoutes = require("./routes/sponsorRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
+
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -38,7 +43,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3001",
-    methods: ["GET", "PATCH", "POST", "DELETE","PUT"],
+    methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
     credentials: true,
   })
@@ -90,6 +95,9 @@ app.use("/eureka", limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" })); // Middleware // use method is used to add middlewares to our middleware stack
 
+app.use(bodyParser.json());
+
+
 // Data sanitization against NoSQL query injection
 app.use(mongosanitize());
 
@@ -112,9 +120,10 @@ app.use("/eureka/v1/sales", salesDepartmentRoutes);
 app.use("/eureka/v1/customPlan", customPlanRoutes);
 app.use("/eureka/v1/events", eventRoutes);
 app.use("/eureka/v1/sessions", sessionRoutes);
-
-
-
+app.use("/eureka/v1/speakers", speakerRoutes);
+app.use("/eureka/v1/booths", boothRoutes);
+app.use("/eureka/v1/sponsors", sponsorRoutes);
+app.use("/eureka/v1/tickets", ticketRoutes);
 
 app.get("/eureka/v1/current_user", (req, res) => {
   res.send(req.user);
