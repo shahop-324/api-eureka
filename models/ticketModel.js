@@ -8,6 +8,10 @@ const ticketSchema = new mongoose.Schema(
       enum: ["Active", "Inactive", "Deleted"],
       default: "Active",
     },
+    currency: {
+      type: String,
+      default: "USD",
+    },
     name: {
       type: String,
       required: true,
@@ -19,7 +23,16 @@ const ticketSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    amountOfTicketAvailable: {
+    venueAreasAccessible: [
+      {
+        type: String,
+      },
+    ],
+    shareRecording: {
+      type: Boolean,
+      default: false,
+    },
+    numberOfTicketAvailable: {
       type: Number,
       required: [
         true,

@@ -190,7 +190,7 @@ router.patch(
 
 // Create New Ticket
 router.post(
-  "/ticket/new/:eventId",
+  "/:eventId/addTicket",
   authController.protectCommunity,
   eventController.createTicket
 );

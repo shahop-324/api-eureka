@@ -22,20 +22,51 @@ router.post(
   eventController.addSession
 );
 router.post(
-    "/:eventId/addSpeaker",
-    authController.protectCommunity,
-    eventController.addSpeaker
-  );
-  router.get(
-    "/:id/sessions",
-    authController.protectCommunity,
-    eventController.getAllSessions
-  );
-  router.get(
-    "/:id/speakers",
-    authController.protectCommunity,
-    eventController.getAllSpeakers
-  );
+  "/:eventId/addSpeaker",
+  authController.protectCommunity,
+  eventController.addSpeaker
+);
+router.get(
+  "/:id/sessions",
+  authController.protectCommunity,
+  eventController.getAllSessions
+);
+router.get(
+  "/:id/speakers",
+  authController.protectCommunity,
+  eventController.getAllSpeakers
+);
+
+router.get(
+  "/:id/getNetworkSettings",
+  authController.protectCommunity,
+  eventController.getNetworkSettings
+);
+
+router.get(
+  "/:id/tickets",
+  authController.protectCommunity,
+  eventController.getAllTickets,
+);
+
+router.get(
+  "/:id/ticket",
+  authController.protectCommunity,
+  eventController.getOneTicket,
+);
+
+router.patch(
+  "/:id/updateTicket",
+  authController.protectCommunity,
+  eventController.updateTicket,
+);
+
+router.delete(
+  "/:id/deleteTicket",
+  authController.protectCommunity,
+  eventController.deleteTicket,
+);
+
 
 
 module.exports = router;

@@ -394,11 +394,6 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   const previousMinPrice = eventGettingNewTicket.minTicketPrice;
   const previousMaxPrice = eventGettingNewTicket.maxTicketPrice;
 
-  console.log(
-    `previous min price ${previousMinPrice}`,
-    `previous max price ${previousMaxPrice}`
-  );
-
   let updatedMinPrice = previousMinPrice;
   let updatedMaxPrice = previousMaxPrice;
   const currentPriceValue = req.body.price;
@@ -415,7 +410,10 @@ exports.createTicket = catchAsync(async (req, res, next) => {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
-    amountOfTicketAvailable: req.body.amountOfTicketAvailable,
+    numberOfTicketAvailable: req.body.numberOfTicketAvailable,
+    currency: req.body.currency,
+    shareRecording: req.body.shareRecording,
+    venueAreasAccessible: req.body.venueAreasAccessible,
     initiatedAt: Date.now(),
   });
 
@@ -486,7 +484,6 @@ exports.updateEventDescription = catchAsync(async (req, res, next) => {
   });
 });
 
-
 exports.getAllSessions = catchAsync(async (req, res, next) => {
   let sessions = await Event.findById(req.params.id)
     .select("session")
@@ -521,5 +518,82 @@ exports.getAllSpeakers = catchAsync(async (req, res, next) => {
     data: {
       speakers,
     },
+  });
+});
+
+exports.getNetworkSettings = catchAsync(async (req, res, next) => {
+  const eventId = req.params.id;
+
+  const settings = await Event.findById(eventId).select("networkingSettings");
+
+  res.status(200).json({
+    status: "success",
+    data: settings,
+  });
+});
+
+exports.updateTicket = catchAsync(async (req, res, next) => {
+  const ticketId = req.params.id;
+
+  console.log(ticketId);
+
+  const updatedTicket = await Ticket.findByIdAndUpdate(
+    ticketId,
+    {
+      name: req.body.name,
+      price: req.body.price,
+      description: req.body.description,
+      numberOfTicketAvailable: req.body.numberOfTicketAvailable,
+      currency: req.body.currency,
+      shareRecording: req.body.shareRecording,
+      venueAreasAccessible: req.body.venueAreasAccessible,
+    },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  console.log(updatedTicket);
+
+  res.status(200).json({
+    status: "success",
+    data: updatedTicket,
+  });
+});
+
+exports.getAllTickets = catchAsync(async (req, res, next) => {
+  let tickets = await Event.findById(req.params.id)
+    .select("tickets")
+    .populate("tickets");
+  console.log(tickets);
+
+  tickets = tickets.tickets.filter((ticket) => ticket.status !== "Deleted");
+
+  res.status(200).json({
+    status: "Success",
+    data: tickets,
+  });
+});
+
+exports.getOneTicket = catchAsync(async (req, res, next) => {
+  let ticket = await Ticket.findById(req.params.id);
+  console.log(ticket);
+
+  res.status(200).json({
+    status: "Success",
+    data: ticket,
+  });
+});
+
+exports.deleteTicket = catchAsync(async (req, res, next) => {
+  let deletedTicket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    { status: "Deleted" },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  const id = deletedTicket.id;
+
+  res.status(200).json({
+    status: "Success",
+    data: id,
   });
 });
