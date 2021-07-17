@@ -13,7 +13,7 @@ const sponsorSchema = new mongoose.Schema({
   organisationName: {
     type: String,
   },
-  logo: {
+  image: {
     type: String,
   },
   status: {

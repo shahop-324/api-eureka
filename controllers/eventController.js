@@ -163,6 +163,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
     emails: req.body.emails,
     tagline: req.body.tagline,
     description: req.body.description,
+    image: req.body.image,
     // boothLogo: req.body.boothLogo,
     // boothPoster: req.body.boothPoster,
     socialMediaHandles: processedObj,
@@ -197,6 +198,7 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
     website: req.body.website,
     status: req.body.status,
     eventId: eventGettingSponsor.id,
+    image: req.body.image,
   });
   // save refrence of this sponsor in its event
   eventGettingSponsor.sponsors.push(createdSponsor.id);
@@ -251,6 +253,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     organisation: req.body.organisation,
     eventId: eventGettingSpeaker.id,
     socialMediaHandles: processedObj,
+    image: req.body.image,
   });
 
   const document = await SpeakersIdsCommunityWise.findById(
@@ -455,7 +458,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "selectTimeZone",
     "selectCategories",
     "visibility",
-    "editingComment"
+    "editingComment",
+    "image"
   );
 
   const updatedEvent = await Event.findByIdAndUpdate(

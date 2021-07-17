@@ -38,7 +38,22 @@ class apiFeatures {
     }
     return this;
   }
-
+  tagFilter() {
+    if (this.queryString.tag) {
+      this.query = this.query
+        .find({ $text: { $search: this.queryString.tag } })
+        .sort({ score: { $meta: "textScore" } });
+    }
+    return this;
+  }
+  sponsorFilter() {
+    if (this.queryString.sponsorStatus) {
+      this.query = this.query
+        .find({ $text: { $search: this.queryString.sponsorStatus } })
+        .sort({ score: { $meta: "textScore" } });
+    }
+    return this;
+  }
   sessionFilter() {
     if (this.queryString.sessionId) {
       this.query = this.query.find({

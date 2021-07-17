@@ -25,7 +25,7 @@ const boothSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  boothLogo: {
+  image: {
     type: String,
   },
   boothPoster: {

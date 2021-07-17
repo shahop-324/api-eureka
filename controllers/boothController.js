@@ -79,7 +79,7 @@ exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   });
 
-  const features = new apiFeatures(query, req.query).textFilter();
+  const features = new apiFeatures(query, req.query).textFilter().tagFilter();
   const booths = await features.query;
 
   console.log(booths);
@@ -115,6 +115,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       emails: req.body.emails,
       tagline: req.body.tagline,
       description: req.body.description,
+      image: req.body.image,
       // boothLogo: req.body.boothLogo,
       // boothPoster: req.body.boothPoster,
       socialMediaHandles: processedObj,

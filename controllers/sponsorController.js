@@ -43,6 +43,7 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
       organisationName: req.body.organisationName,
       status: req.body.status,
       website: req.body.website,
+      image: req.body.image,
     },
     {
       new: true,
@@ -80,7 +81,9 @@ exports.getAllSponsors = catchAsync(async (req, res, next) => {
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   });
 
-  const features = new apiFeatures(query, req.query).textFilter();
+  const features = new apiFeatures(query, req.query)
+    .textFilter()
+    .sponsorFilter();
   const sponsors = await features.query;
 
   console.log(sponsors);

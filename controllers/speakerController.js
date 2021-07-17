@@ -34,7 +34,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "organisation",
     "headline",
     "sessions",
-    "socialMediaHandles"
+    "socialMediaHandles",
+    "image",
   );
 
   console.log("filteredBody", filteredBody);
