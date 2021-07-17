@@ -64,10 +64,13 @@ const speakerSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+speakerSchema.index({ firstName: "text",lastName:"text",headline:"text" });
+
+
 
 speakerSchema.pre(/^find/, function(next) {
-  console.log(123);
-  this.find({ status: { $ne: "Inactive" } });
+ 
+  this.find({ status: { $ne: "Deleted" } });
   next();
 });
 

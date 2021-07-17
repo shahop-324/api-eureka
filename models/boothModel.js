@@ -9,6 +9,12 @@ const boothSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  email: {
+    type: String,
+  },
+  tagline: {
+    type: String,
+  },
   description: {
     type: String,
   },

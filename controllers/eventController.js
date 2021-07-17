@@ -7,7 +7,7 @@ const Booth = require("../models/boothModel");
 const Sponsor = require("../models/sponsorModel");
 const Session = require("../models/sessionModel");
 const Ticket = require("../models/ticketModel");
-
+const apiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 
@@ -19,7 +19,9 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-const fillSocialMediaHandler = (object, updatedUser) => {
+const newObj = {};
+
+const fillSocialMediaHandler = (object) => {
   for (let key in object) {
     const value = object[key];
     // 2) Check if value is a url
@@ -33,40 +35,39 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          console.log(updatedUser.socialMediaHandles);
-          updatedUser.socialMediaHandles.set(key, newVal);
+          newObj.facebook = newVal;
           break;
         }
         case "instagram": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          updatedUser.socialMediaHandles.set(key, newVal);
+          newObj.instagram = newVal;
           break;
         }
         case "twitter": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          updatedUser.socialMediaHandles.set(key, newVal);
+          newObj.twitter = newVal;
           break;
         }
         case "linkedIn": {
           const regex = /(?<=\/in\/).+/;
           [newVal] = value.match(regex);
-          updatedUser.socialMediaHandles.set(key, newVal);
+          newObj.linkedIn = newVal;
           break;
         }
         case "website": {
           const regex = /(?<=www.).+/;
           [newVal] = value.match(regex);
-          updatedUser.socialMediaHandles.set(key, newVal);
+          newObj.website = newVal;
           break;
         }
       }
     } else {
-      updatedUser.socialMediaHandles.set(key, value);
+      newObj.set(key, value);
     }
   }
-  return updatedUser;
+  return newObj;
 };
 
 /* eslint-disable no-console */
@@ -144,7 +145,9 @@ exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
 // create booth
 exports.createBooth = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const eventId = req.params.eventId;
+  const eventId = req.params.id;
+
+  console.log(req.body, "line 149");
 
   // fetch event for which I have to create a booth
   const eventGettingBooth = await Event.findById(eventId);
@@ -154,13 +157,16 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
+  console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
+    email: req.body.email,
+    tagline: req.body.tagline,
     description: req.body.description,
-    boothLogo: req.body.boothLogo,
-    boothPoster: req.body.boothPoster,
+    // boothLogo: req.body.boothLogo,
+    // boothPoster: req.body.boothPoster,
     socialMediaHandles: processedObj,
-    tags: req.body.tags,
+    // tags: req.body.tags,
   });
 
   // save refrence of this booth in its event
@@ -200,8 +206,6 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
-  console.log(12345);
-  console.log(req.body.organisation, "op ki line");
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
@@ -209,6 +213,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   const allSessionsInThisEvent = eventGettingSpeaker.session;
 
   console.log(sessionsMappedByCommunity);
+
+  const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
 
   // confirm if this session exist in this event
 
@@ -238,14 +244,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     sessions: processedArray,
     headline: req.body.headline,
     organisation: req.body.organisation,
-  });
-
-  speaker.socialMediaHandles = {};
-  console.log(req.body.socialMediaHandles);
-  fillSocialMediaHandler(req.body.socialMediaHandles, speaker);
-  console.log(speaker);
-  const updatedSpeaker = await speaker.save({
-    validateModifiedOnly: true,
+    eventId: eventGettingSpeaker.id,
+    socialMediaHandles: processedObj,
   });
 
   const document = await SpeakersIdsCommunityWise.findById(
@@ -501,25 +501,38 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-  let speakers = await Event.findById(req.params.id)
-    .select("speaker")
-    .populate({
-      path: "speaker",
-      populate: { path: "sessions" },
-    });
-  console.log(speakers);
+// exports.getAllSpeakers = catchAsync(async (req, res, next) => {
+//   const query =  Event.findById(req.params.id)
+//     .select("speaker")
+//     .populate({
+//       path: "speaker",
+//       populate: { path: "sessions" },
+//     });
+//  //console.log(speakers);
+//  console.log(query,1)
+//  console.log(req.query,2);
+//  const features = new apiFeatures(query, req.query).textFilter()
+// //  .priceWiseFilter()
+// //  .textFilter()
+// //  .categoryWiseFilter()
+// //  .dateWiseFilter()
+// //  .paginate()
+// //  .ratingFilter()
+// //  .sort();
 
-  speakers = speakers.speaker.filter((speaker) => speaker.status !== "Deleted");
+// let speakers = await features.query;
+//  console.log(speakers,3)
 
-  res.status(200).json({
-    status: "Successs",
+//  // speakers = speakers.speaker.filter((speaker) => speaker.status !== "Deleted");
 
-    data: {
-      speakers,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "Successs",
+
+//     data: {
+//       speakers,
+//     },
+//   });
+// });
 
 exports.getNetworkSettings = catchAsync(async (req, res, next) => {
   const eventId = req.params.id;
@@ -595,5 +608,22 @@ exports.deleteTicket = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "Success",
     data: id,
+  });
+});
+
+exports.updateNetworking = catchAsync(async (req, res, next) => {
+  const eventId = req.params.id;
+
+  const updatedSettings = await Event.findByIdAndUpdate(
+    eventId,
+    {
+      networkingSettings: req.body.networkingSettings,
+    },
+    { new: true, validateModifiedOnly: true }
+  ).select("networkingSettings");
+
+  res.status(200).json({
+    status: "success",
+    data: updatedSettings,
   });
 });

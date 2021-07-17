@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const Speaker = require("../models/speakerModel");
-
+const apiFeatures = require("../utils/apiFeatures");
+const mongoose = require("mongoose");
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -33,10 +34,10 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "organisation",
     "headline",
     "sessions",
-    "socialMediaHandles",
+    "socialMediaHandles"
   );
 
-  console.log('filteredBody',filteredBody);
+  console.log("filteredBody", filteredBody);
 
   const updatedSpeaker = await Speaker.findByIdAndUpdate(
     req.params.id,
@@ -46,8 +47,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
       validateModifiedOnly: true,
     }
   ).populate("sessions");
-   
-console.log('updatedSpeaker', updatedSpeaker);
+
+  console.log("updatedSpeaker", updatedSpeaker);
   res.status(200).json({
     status: "success",
     data: { updatedSpeaker },
@@ -55,18 +56,36 @@ console.log('updatedSpeaker', updatedSpeaker);
 });
 
 exports.DeleteSpeaker = catchAsync(async (req, res, next) => {
-    const speakerId = req.params.id;
-  
-    const deletedSpeaker = await Speaker.findByIdAndUpdate(
-      speakerId,
-      { status: "Deleted" },
-      { new: true, validateModifiedOnly: true }
-    );
+  const speakerId = req.params.id;
 
-    const id = deletedSpeaker.id
-  
-    res.status(200).json({
-      status: "success",
-      id,
-    });
+  const deletedSpeaker = await Speaker.findByIdAndUpdate(
+    speakerId,
+    { status: "Deleted" },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  const id = deletedSpeaker.id;
+
+  res.status(200).json({
+    status: "success",
+    id,
   });
+});
+
+exports.getAllSpeakers = catchAsync(async (req, res, next) => {
+  console.log(req.params.id, 78);
+  const query = Speaker.find({
+    eventId: mongoose.Types.ObjectId(req.params.id),
+  });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+  const speakers = await features.query;
+
+  console.log(speakers);
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      speakers,
+    },
+  });
+});

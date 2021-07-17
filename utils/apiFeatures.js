@@ -3,6 +3,8 @@ class apiFeatures {
     this.query = query;
     this.queryString = queryString;
   }
+
+  
   sort() {
     console.log("me sort function has sent the response okay");
     if (this.queryString.sort) {

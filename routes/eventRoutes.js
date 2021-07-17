@@ -2,6 +2,7 @@ const express = require("express");
 
 const authController = require("../controllers/authController");
 const eventController = require("../controllers/eventController");
+const speakerController = require("../controllers/speakerController");
 const router = express.Router();
 
 router.patch(
@@ -34,7 +35,7 @@ router.get(
 router.get(
   "/:id/speakers",
   authController.protectCommunity,
-  eventController.getAllSpeakers
+  speakerController.getAllSpeakers
 );
 
 router.get(
@@ -67,6 +68,11 @@ router.delete(
   eventController.deleteTicket,
 );
 
+router.patch(
+  "/:id/updateNetworking",
+  authController.protectCommunity,
+  eventController.updateNetworking,
+);
 
 
 module.exports = router;
