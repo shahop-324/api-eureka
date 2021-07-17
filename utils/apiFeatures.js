@@ -1,10 +1,11 @@
+const mongoose = require("mongoose");
+
 class apiFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
   }
 
-  
   sort() {
     console.log("me sort function has sent the response okay");
     if (this.queryString.sort) {
@@ -38,19 +39,14 @@ class apiFeatures {
     return this;
   }
 
-
-   sessionFilter()
-   {
-       if(this.queryString.sessionId)
-       {
-
-        this.query=this.query.find({ eventId: mongoose.Types.ObjectId(this.queryString.sessionId)})
-       }
-      return this;
-
-
-   }
-
+  sessionFilter() {
+    if (this.queryString.sessionId) {
+      this.query = this.query.find({
+        sessions: { $in: mongoose.Types.ObjectId(this.queryString.sessionId) },
+      });
+    }
+    return this;
+  }
 
   categoryWiseFilter() {
     if (this.queryString.category) {

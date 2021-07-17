@@ -6,7 +6,6 @@ const sessionSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
-
     name: {
       type: String,
     },
@@ -64,14 +63,15 @@ const sessionSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-// sessionSchema.pre(/^find/, function(next) {
-//   this.populate({
-//     path: 'guides',
-//     select: '-__v -passwordChangedAt'
-//   });
 
-//   next();
-// });
+sessionSchema.index({ name: "text",description:"text"});
+
+sessionSchema.pre(/^find/, function(next) {
+ 
+  this.find({ status: { $ne: "Deleted" } });
+  next();
+});
+
 const Session = mongoose.model("Session", sessionSchema);
 
 module.exports = Session;

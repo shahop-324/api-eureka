@@ -3,6 +3,8 @@ const express = require("express");
 const authController = require("../controllers/authController");
 const eventController = require("../controllers/eventController");
 const speakerController = require("../controllers/speakerController");
+const sessionController = require("../controllers/sessionController");
+const ticketController = require("../controllers/ticketController");
 const router = express.Router();
 
 router.patch(
@@ -28,9 +30,9 @@ router.post(
   eventController.addSpeaker
 );
 router.get(
-  "/:id/sessions",
+  "/:eventId/sessions",
   authController.protectCommunity,
-  eventController.getAllSessions
+  sessionController.getAllSessions
 );
 router.get(
   "/:eventId/speakers",
@@ -45,9 +47,9 @@ router.get(
 );
 
 router.get(
-  "/:id/tickets",
+  "/:eventId/tickets",
   authController.protectCommunity,
-  eventController.getAllTickets,
+  ticketController.getAllTickets,
 );
 
 router.get(

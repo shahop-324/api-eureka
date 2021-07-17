@@ -1,6 +1,8 @@
 const Event = require("../models/eventModel");
 const catchAsync = require("../utils/catchAsync");
 const Booth = require("./../models/boothModel");
+const mongoose = require("mongoose");
+const apiFeatures = require("../utils/apiFeatures");
 const validator = require("validator");
 
 const newObj = {};
@@ -68,19 +70,21 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
   });
 });
 
+
+
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
-  const eventId = req.params.id;
+  console.log(req.query, 72);
 
-  let booths = await Event.findById(eventId)
-    .select("booths")
-    .populate("booths");
+  const query = Booth.find({
+    eventId: mongoose.Types.ObjectId(req.params.eventId),
+  });
 
-  console.log("These are all booths", booths);
+  const features = new apiFeatures(query, req.query).textFilter();
+  const booths = await features.query;
 
-  booths = booths.booths.filter((booth) => booth.status !== "Deleted");
-
+  console.log(booths);
   res.status(200).json({
-    status: "success",
+    status: "SUCCESS",
     data: booths,
   });
 });
@@ -108,13 +112,13 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     boothId,
     {
       name: req.body.name,
-      email: req.body.email,
+      emails: req.body.emails,
       tagline: req.body.tagline,
       description: req.body.description,
       // boothLogo: req.body.boothLogo,
       // boothPoster: req.body.boothPoster,
       socialMediaHandles: processedObj,
-      // tags: req.body.tags,
+      tags: req.body.tags,
     },
     {
       new: true,

@@ -160,17 +160,21 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
-    email: req.body.email,
+    emails: req.body.emails,
     tagline: req.body.tagline,
     description: req.body.description,
     // boothLogo: req.body.boothLogo,
     // boothPoster: req.body.boothPoster,
     socialMediaHandles: processedObj,
-    // tags: req.body.tags,
+    tags: req.body.tags,
+    eventId: eventGettingBooth.id,
   });
 
   // save refrence of this booth in its event
   eventGettingBooth.booths.push(createdBooth.id);
+  for(let element of req.body.tags) {
+    eventGettingBooth.boothTags.push(element);
+  }
   await eventGettingBooth.save({ validateModifiedOnly: true });
 
   // send newly created booth back to client
@@ -192,6 +196,7 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
     organisationName: req.body.organisationName,
     website: req.body.website,
     status: req.body.status,
+    eventId: eventGettingSponsor.id,
   });
   // save refrence of this sponsor in its event
   eventGettingSponsor.sponsors.push(createdSponsor.id);
@@ -304,6 +309,7 @@ exports.addSession = catchAsync(async (req, res, next) => {
     endDate: req.body.endDate,
     endTime: req.body.endTime,
     speaker: processedArray,
+    eventId: eventGettingSessions.id,
   });
 
   const populatedSession = await Session.findById(session.id).populate(
@@ -415,6 +421,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
     shareRecording: req.body.shareRecording,
     venueAreasAccessible: req.body.venueAreasAccessible,
     initiatedAt: Date.now(),
+    eventId: eventGettingNewTicket.id,
   });
 
   eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
@@ -484,23 +491,23 @@ exports.updateEventDescription = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllSessions = catchAsync(async (req, res, next) => {
-  let sessions = await Event.findById(req.params.id)
-    .select("session")
-    .populate({
-      path: "session",
-      populate: { path: "speaker" },
-    });
-  console.log(sessions);
-  sessions = sessions.session.filter((session) => session.status !== "Deleted");
-  res.status(200).json({
-    status: "Successs",
+// exports.getAllSessions = catchAsync(async (req, res, next) => {
+//   let sessions = await Event.findById(req.params.id)
+//     .select("session")
+//     .populate({
+//       path: "session",
+//       populate: { path: "speaker" },
+//     });
+//   console.log(sessions);
+//   sessions = sessions.session.filter((session) => session.status !== "Deleted");
+//   res.status(200).json({
+//     status: "Successs",
 
-    data: {
-      sessions,
-    },
-  });
-});
+//     data: {
+//       sessions,
+//     },
+//   });
+// });
 // exports.getAllSpeakers = catchAsync(async (req, res, next) => {
 //   const query =  Event.findById(req.params.id)
 //     .select("speaker")

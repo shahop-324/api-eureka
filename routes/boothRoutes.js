@@ -6,7 +6,7 @@ const eventController = require("../controllers/eventController");
 const router = express.Router();
 
 router.get(
-    '/:id/getAllbooths',
+    '/:eventId/getAllbooths',
     authController.protectCommunity,
     boothController.getAllBoothOfEvent
 )

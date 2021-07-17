@@ -1,6 +1,7 @@
 const Event = require("../models/eventModel");
 const catchAsync = require("../utils/catchAsync");
-
+const mongoose = require("mongoose");
+const apiFeatures = require("../utils/apiFeatures");
 const Sponsor = require("./../models/sponsorModel");
 
 exports.getSponsor = catchAsync(async (req, res, next) => {
@@ -55,19 +56,36 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllSponsorsOfAnEvent = catchAsync(async (req, res, next) => {
-  const eventId = req.params.id;
+// exports.getAllSponsorsOfAnEvent = catchAsync(async (req, res, next) => {
+//   const eventId = req.params.id;
 
-  let sponsors = await Event.findById(eventId)
-    .select("sponsors")
-    .populate("sponsors");
+//   let sponsors = await Event.findById(eventId)
+//     .select("sponsors")
+//     .populate("sponsors");
+
+//   console.log(sponsors);
+
+//   sponsors = sponsors.sponsors.filter((sponsor) => sponsor.docStatus !== "Deleted");
+
+//   res.status(200).json({
+//     status: "success",
+//     data: sponsors,
+//   });
+// });
+
+exports.getAllSponsors = catchAsync(async (req, res, next) => {
+  console.log(req.query, 76);
+
+  const query = Sponsor.find({
+    eventId: mongoose.Types.ObjectId(req.params.eventId),
+  });
+
+  const features = new apiFeatures(query, req.query).textFilter();
+  const sponsors = await features.query;
 
   console.log(sponsors);
-
-  sponsors = sponsors.sponsors.filter((sponsor) => sponsor.docStatus !== "Deleted");
-
   res.status(200).json({
-    status: "success",
+    status: "SUCCESS",
     data: sponsors,
   });
 });

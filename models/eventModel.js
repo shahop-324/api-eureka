@@ -266,6 +266,16 @@ const eventSchema = new mongoose.Schema(
         },
       },
     },
+    boothTags: [
+      {
+        type: String,
+      },
+    ],
+    eventTags: [
+      {
+        type: String,
+      },
+    ],
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

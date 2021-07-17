@@ -5,9 +5,9 @@ const sponsorController = require("../controllers/sponsorController");
 const router = express.Router();
 
 router.get(
-  "/:id",
+  "/:eventId",
   authController.protectCommunity,
-  sponsorController.getAllSponsorsOfAnEvent
+  sponsorController.getAllSponsors
 );
 
 router.get(

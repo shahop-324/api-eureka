@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const boothSchema = new mongoose.Schema({
+  eventId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Event",
+  },
   status: {
     type: String,
     enum: ["Active", "Inactive", "Deleted"],
@@ -9,9 +13,12 @@ const boothSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  email: {
-    type: String,
-  },
+  emails: [
+    {
+      type: String,
+    },
+  ],
+  tags: [{ type: String }],
   tagline: {
     type: String,
   },
@@ -28,8 +35,20 @@ const boothSchema = new mongoose.Schema({
     type: Map,
     of: String,
   },
-  tags: [{ type: String }],
 });
 
-const Booth = mongoose.model('Booth', boothSchema);
+boothSchema.index({
+  name: "text",
+  description: "text",
+  tagline: "text",
+  tags: "text",
+  emails: "text",
+});
+
+boothSchema.pre(/^find/, function (next) {
+  this.find({ status: { $ne: "Deleted" } });
+  next();
+});
+
+const Booth = mongoose.model("Booth", boothSchema);
 module.exports = Booth;

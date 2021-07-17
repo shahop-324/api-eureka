@@ -3,6 +3,10 @@ const ticketSchema = new mongoose.Schema(
   {
     //   //name,price ,description,amountofticketLabel
     //   //community connected with stripe
+    eventId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Event",
+    },
     status: {
       type: String,
       enum: ["Active", "Inactive", "Deleted"],
@@ -61,6 +65,15 @@ const ticketSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+ticketSchema.index({ name: "text",description:"text", price: "text", currency: "text", status: "text"});
+
+ticketSchema.pre(/^find/, function(next) {
+ 
+  this.find({ status: { $ne: "Deleted" } });
+  next();
+});
+
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;

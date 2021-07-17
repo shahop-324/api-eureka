@@ -73,17 +73,16 @@ exports.DeleteSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-
-  
   console.log(req.query, 78);
 
   const query = Speaker.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
-   // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
+    // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
+  }).populate("sessions");
 
-  }).populate('sessions');
-
-  const features = new apiFeatures(query, req.query).textFilter().sessionFilter();
+  const features = new apiFeatures(query, req.query)
+    .textFilter()
+    .sessionFilter();
   const speakers = await features.query;
 
   console.log(speakers);
