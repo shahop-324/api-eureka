@@ -38,6 +38,20 @@ class apiFeatures {
     return this;
   }
 
+
+   sessionFilter()
+   {
+       if(this.queryString.sessionId)
+       {
+
+        this.query=this.query.find({ eventId: mongoose.Types.ObjectId(this.queryString.sessionId)})
+       }
+      return this;
+
+
+   }
+
+
   categoryWiseFilter() {
     if (this.queryString.category) {
       console.log("i reached category filter");

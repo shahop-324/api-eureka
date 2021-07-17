@@ -33,7 +33,7 @@ router.get(
   eventController.getAllSessions
 );
 router.get(
-  "/:id/speakers",
+  "/:eventId/speakers",
   authController.protectCommunity,
   speakerController.getAllSpeakers
 );
