@@ -49,7 +49,7 @@ const communitySchema = new mongoose.Schema(
       planName: {
         type: String,
         enum: ["Free", "Starter", "Growth", "Business"],
-        default:"Free",
+        default: "Free",
       },
       planRenewDuration: {
         type: Number,
@@ -329,10 +329,13 @@ const communitySchema = new mongoose.Schema(
       default: 0,
     },
     socialMediaHandles: {
-     type:Map,
-     Of:String
+      type: Map,
+      Of: String,
     },
-
+    connectedToStripe: {
+      type: Boolean,
+      default: false,
+    },
     coverPhoto: String,
     logo: String,
   },

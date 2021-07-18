@@ -1,18 +1,34 @@
-const Community = require('../models/communityModel');
-const Coupon = require('../models/couponModel');
-const Event = require('../models/eventModel');
-const catchAsync = require('../utils/catchAsync');
+const Community = require("../models/communityModel");
+const Coupon = require("../models/couponModel");
+const Event = require("../models/eventModel");
+const catchAsync = require("../utils/catchAsync");
 
 const filterObj = (obj, ...allowedFields) => {
-  const newobj = {};
+  const newObj = {};
   Object.keys(obj).forEach((el) => {
-    if (allowedFields.el) newobj[el] = obj[el];
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
   });
-  return newobj;
+  return newObj;
 };
 
+exports.getOneCoupon = catchAsync(async (req, res, next) => {
+  console.log(req.params.id);
+
+  const coupon = await Coupon.findById(req.params.id).populate(
+    "discountForEventId"
+  );
+
+  console.log(coupon);
+
+  res.status(200).json({
+    status: "success",
+    data: coupon,
+  });
+});
+
 exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
-  const eventId = req.params.eventId;
+  console.log("I reached in create new coupon");
+  const eventId = req.body.discountForEventId;
   const communityId = req.community.id;
 
   const eventGettingCoupon = await Event.findById(eventId);
@@ -20,10 +36,9 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
 
   // 1) when a new coupon is created then create a new document in Coupons Resource
   const createdCoupon = await Coupon.create({
-    discountForEventId: req.params.eventId,
-    discountDescription: req.body.discountDescription,
+    discountForEventId: req.body.discountForEventId,
     discountPercentage: req.body.discountPercentage,
-    discountCode: req.body.couponCode,
+    discountCode: req.body.discountCode,
     validTillDate: req.body.validTillDate,
     validTillTime: req.body.validTillTime,
     maxNumOfDiscountPermitted: req.body.maxNumOfDiscountPermitted,
@@ -39,53 +54,70 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
 
   // 3) Send the newly created coupon document back to client
   res.status(200).json({
-    status: 'success',
-    data: {
-      Coupon: createdCoupon,
-    },
+    status: "success",
+    data: createdCoupon,
   });
 });
 
 exports.getAllCoupons = catchAsync(async (req, res, next) => {
- const couponDocs = await Community.findById(req.community.id).select('coupons');
+  console.log(" I reached in get all coupons");
+  let couponDocs = await Community.findById(req.community.id)
+    .select("coupons")
+    .populate({
+      path: "coupons",
+      populate: {
+        path: "discountForEventId",
+      },
+    });
 
- const obj = await JSON.parse(JSON.stringify(couponDocs));
-  const { coupons } = obj;
- 
+couponDocs = couponDocs.coupons.filter((coupon) => coupon.status !== "Deleted");
+
   res.status(200).json({
-    status: 'success',
-    length: coupons.length,
-    data: coupons,
+    status: "success",
+    data: couponDocs,
   });
 });
 
 exports.UpdateCoupon = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
-    'validTillDate',
-    'validTillTime',
-    'discountDescription',
-    'discountPercentage',
-    'discountCode',
-    'maxNumOfDiscountPermitted'
+    "validTillDate",
+    "validTillTime",
+    "discountPercentage",
+    "discountCode",
+    "maxNumOfDiscountPermitted"
   );
-  
-  const updatedCoupon = await Coupon.findByIdAndUpdate(req.params.couponId, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+
+  const updatedCoupon = await Coupon.findByIdAndUpdate(
+    req.params.id,
+    filteredBody,
+    {
+      new: true,
+      validateModifiedOnly: true,
+    }
+  );
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: updatedCoupon,
   });
 });
 
 exports.DeleteCoupon = catchAsync(async (req, res, next) => {
-    await Coupon.findByIdAndUpdate(req.params.couponId, {active: false}, {
-    new: true,
-    runValidators: true,
-  });
-  res.status(204).json({
-    status: 'success',
+ const deletedCoupon =  await Coupon.findByIdAndUpdate(
+    req.params.id,
+    { status: "Deleted", active: false },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  const id = deletedCoupon._id;
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      id,
+    }
   });
 });

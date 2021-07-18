@@ -10,7 +10,7 @@ const queriesController = require("../controllers/queriesController");
 const teamController = require("../controllers/teamController");
 const feedbackController = require("../controllers/feedbackController");
 const billingController = require("../controllers/billingController");
-const communityController=require("../controllers/communityController")
+const communityController = require("../controllers/communityController");
 const router = express.Router();
 
 // DONE Creating a new Event from a Community
@@ -21,9 +21,7 @@ router.get(
   eventController.getAllEventsForCommunities
 );
 
-
-router.get('/:id',communityController.getParticularCommunity)
-
+router.get("/:id/getCommunity", communityController.getParticularCommunity);
 
 router.patch(
   "/updateCommunity",
@@ -39,7 +37,6 @@ router.post(
 
 // DONE Getting all events For a Community
 // protectCommunity routes contains user and community which user enter in community for restrictation and community for which community you wants all events
-
 
 // Done Getting One Particular event For a Community
 router.get(
@@ -64,7 +61,7 @@ router.get(
 
 // Done Enabling community to create a Coupon for any of their events
 router.post(
-  "/coupons/:eventId",
+  "/coupons/createNew",
   authController.protectCommunity,
   couponController.CreateNewCoupon
 );
@@ -73,6 +70,13 @@ router.post(
   "/updateCommunity",
   authController.protectCommunity,
   userController.updateCommunity
+);
+
+// GET ONE PARTICULAR COUPON
+router.get(
+  "/:id/getOneCoupon",
+  authController.protectCommunity,
+  couponController.getOneCoupon
 );
 
 // DONE Getting all coupons which are created by a community
@@ -84,14 +88,14 @@ router.get(
 
 // DONE Updating coupon For a Community
 router.patch(
-  "/coupons/:couponId",
+  "/:id/updateCoupon",
   authController.protectCommunity,
   couponController.UpdateCoupon
 );
 
 // DONE Deleting coupons for a community (set active property to false)
 router.delete(
-  "/coupons/:couponId",
+  "/:id/deleteCoupon",
   authController.protectCommunity,
   couponController.DeleteCoupon
 );
@@ -195,9 +199,6 @@ router.post(
   eventController.createTicket
 );
 
-
 // router.patch("/event/:id/update",authController.protectCommunity,eventController.updateEvent)
-
-
 
 module.exports = router;

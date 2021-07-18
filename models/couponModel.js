@@ -6,10 +6,6 @@ const couponSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'Event',
     },
-    discountDescription: {
-      type: String,
-      max: [100, 'Description should have less than 100 characters.'],
-    },
     discountPercentage: {
       type: Number,
       min: 1,
@@ -47,6 +43,11 @@ const couponSchema = new mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
+    },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive", "Deleted"],
+      default: "Active",
     },
     numOfCouponsUsed: {
       type: Number,

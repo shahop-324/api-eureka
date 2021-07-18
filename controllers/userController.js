@@ -21,6 +21,7 @@ const Ticket = require("../models/ticketModel");
 const Mailer = require("../services/Mailer");
 const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
 const sgMail = require("@sendgrid/mail");
+const { options } = require("../routes/speakerRoutes");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 const signTokenForCommunityLogin = (userId, communityId) =>
   jwt.sign(
@@ -70,17 +71,17 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
 
 // }
 // )
-
+// .populate({path: 'spells', options: { sort: [['damages', 'asc']] }})
+// Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
   console.log(req.user);
   const response = await Event.findById(req.params.id)
-    .populate(
-      "tickets"
-      // "sponsors",
-      // "booths",
-      // "sessions",
-      // "speakers"
-    )
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
     .populate("sponsors")
     .populate("booths")
     .populate("session")
@@ -88,6 +89,12 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     .populate({
       path: "createdBy",
       select: "name logo socialMediaHandles",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
     });
 
   res.status(200).json({

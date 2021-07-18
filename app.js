@@ -32,6 +32,7 @@ const speakerRoutes = require("./routes/speakerRoutes");
 const boothRoutes = require("./routes/boothRoutes");
 const sponsorRoutes = require("./routes/sponsorRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
+const stripeRoutes = require("./routes/stripeRoutes");
 
 // const { initialize } = require("passport");
 
@@ -123,6 +124,7 @@ app.use("/eureka/v1/sessions", sessionRoutes);
 app.use("/eureka/v1/speakers", speakerRoutes);
 app.use("/eureka/v1/booths", boothRoutes);
 app.use("/eureka/v1/sponsors", sponsorRoutes);
+app.use("/eureka/v1/stripe", stripeRoutes);
 app.use("/eureka/v1/tickets", ticketRoutes);
 
 app.get("/eureka/v1/current_user", (req, res) => {
