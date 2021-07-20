@@ -29,7 +29,27 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
   );
 
   console.log(req.query);
-  const query = Event.find({ status: "active" });
+  const query = Event.find({ status: "active" })
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate("session")
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name logo socialMediaHandles",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    });
   // console.log(query);
 
   const features = new apiFeatures(query, req.query)

@@ -10,4 +10,16 @@ router.post(
   stripeService.createStripeAccount
 );
 
+router.get(
+  "/getConnectedAccountStatus",
+  authController.protectCommunity,
+  stripeService.getConnectedAccountStatus
+);
+
+router.post(
+  "/getEventRegistrationCheckoutSession",
+  authController.protect,
+  stripeService.getEventRegistrationCheckoutSession
+);
+
 module.exports = router;

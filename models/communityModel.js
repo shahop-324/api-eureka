@@ -336,6 +336,9 @@ const communitySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    stripeAccountId: {
+      type: String,
+    },
     coverPhoto: String,
     logo: String,
   },
