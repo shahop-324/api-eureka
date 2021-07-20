@@ -122,7 +122,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   //   "eventsIds"
   // );
 
-  const query = await Event.find({createdBy: mongoose.Types.ObjectId(communityId)});
+  const query = Event.find({createdBy: mongoose.Types.ObjectId(communityId)});
 
   const features = new apiFeatures(query, req.query)
   .textFilter();
