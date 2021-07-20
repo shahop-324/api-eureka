@@ -3,6 +3,9 @@ const Community = require("../../models/communityModel");
 const User = require("../../models/userModel");
 const Event = require("../../models/eventModel");
 const Ticket = require("../../models/ticketModel");
+const Coupon = require("../../models/couponModel");
+const { convert } = require("exchange-rates-api");
+const CC = require("currency-converter-lt");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.createStripeAccount = catchAsync(async (req, res, next) => {
@@ -77,16 +80,26 @@ exports.getEventRegistrationCheckoutSession = catchAsync(
     const userId = req.user.id;
     const eventId = req.body.eventId;
     const ticketId = req.body.ticketId;
+    const couponId = req.body.couponId;
 
-    const userRegisteringForEvent = User.findById(userId);
+    const userRegisteringForEvent = await User.findById(userId);
 
-    const eventGettingRegistration = Event.findById(eventId);
+    const eventGettingRegistration = await Event.findById(eventId);
 
-    const communityGettingRegistration = Community.findById(
+    const communityGettingRegistration = await Community.findById(
       eventGettingRegistration.createdBy
     );
 
-    const ticketBeingUtilised = Ticket.findById(ticketId);
+    const ticketBeingUtilised = await Ticket.findById(ticketId);
+
+    let couponBeingApplied;
+    let applicableDiscount;
+
+    if (couponId) {
+      couponBeingApplied = await Coupon.findById(couponId);
+
+      applicableDiscount = couponBeingApplied.discountPercentage;
+    }
 
     const priceToBeCharged = ticketBeingUtilised.price * 1 * 100;
 
@@ -95,30 +108,65 @@ exports.getEventRegistrationCheckoutSession = catchAsync(
     const connectedStripeAccountId =
       communityGettingRegistration.stripeAccountId;
 
-      console.log(connectedStripeAccountId);
+    // console.log(connectedStripeAccountId);
+    // console.log(userId, eventId, ticketId, couponId);
+    // console.log(eventGettingRegistration);
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [{
-          name: 'Checking Stripe checkout session',
-          amount: 100000,
-          currency: 'inr',
-          quantity: 1,
-        }],
-        payment_intent_data: {
-          application_fee_amount: 12300,
-        },
-        mode: 'payment',
-        success_url: 'https://example.com/success',
-        cancel_url: 'https://example.com/cancel',
-      }, {
-        stripeAccount: 'acct_1JEznhGaMJl0MX6t',
-      });
+    const session = await stripe.checkout.sessions.create(
+      {
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            name: eventGettingRegistration.eventName,
+            amount: priceToBeCharged,
+            currency: "inr",
+            quantity: 1,
+          },
+        ],
+        // payment_intent_data: {
+        //   application_fee_amount: applicationFeeAmount,
+        // },
+        mode: "payment",
+        success_url: "http://localhost:3001/event-landing-page/60f19602c310ac24da7b39f5",
+        cancel_url: "http://localhost:3001/event-landing-page/60f19602c310ac24da7b39f5",
+      },
+      {
+        stripeAccount: connectedStripeAccountId,
+      }
+    );
 
     res.status(200).json({
       status: "success",
       data: session,
     });
-
   }
 );
+
+exports.ListenForEvents = catchAsync(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
+
+  let event;
+
+  // Verify webhook signature and extract the event.
+  // See https://stripe.com/docs/webhooks/signatures for more information.
+
+  event = stripe.webhooks.constructEvent(
+    req.body,
+    sig,
+    whsec_MGSApLJ7d0EbInSaVsKjtBDuUn7ADOsT
+  );
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const connectedAccountId = event.account;
+    console.log("session: ", event.data.object);
+    console.log("connected Account: ", event.account);
+    // handleCompletedCheckoutSession(connectedAccountId, session);
+  }
+
+  console.log(event.type);
+
+  res.status(200).json({
+    status: "success",
+  });
+});

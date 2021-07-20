@@ -22,4 +22,9 @@ router.post(
   stripeService.getEventRegistrationCheckoutSession
 );
 
+router.post(
+  "/connect/listen",
+  stripeService.ListenForEvents
+);
+
 module.exports = router;
