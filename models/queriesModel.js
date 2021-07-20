@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const querySchema = new mongoose.Schema(
   {
     createdBy: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     createdAt: {
       type: Date,
@@ -18,31 +18,38 @@ const querySchema = new mongoose.Schema(
     },
     userIs: {
       type: String,
-      enum: ['Registred', 'Unregistred'],
+      enum: ["Registred", "Unregistered"],
     },
     queryIs: {
       type: String,
-      enum: ['Resolved', 'Unresolved'],
-      default: 'Unresolved',
+      enum: ["Resolved", "Unresolved"],
+      default: "Unresolved",
     },
     createdForEventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
+    },
+    createdForCommunityId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Community",
     },
     createdForEvent: {
       type: String,
     },
     questionText: {
       type: String,
-      max: [200, 'Question can be of maximum 200 character length.'],
+      max: [200, "Question can be of maximum 200 character length."],
     },
     answerText: {
       type: String,
-      max: [500, 'Answer can be of maximum 500 character length.'],
+      max: [500, "Answer can be of maximum 500 character length."],
     },
-    AnsweredBy: {
+    answeredBy: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: "User",
+    },
+    answeredAt: {
+      type: Date,
     },
   },
   {
@@ -51,5 +58,14 @@ const querySchema = new mongoose.Schema(
   }
 );
 
-const Query = mongoose.model('Query', querySchema);
+querySchema.index({
+  userName: "text",
+  userIs: "text",
+  queryIs: "text",
+  createdForEvent: "text",
+  questionText: "text",
+  answerText: "text",
+});
+
+const Query = mongoose.model("Query", querySchema);
 module.exports = Query;

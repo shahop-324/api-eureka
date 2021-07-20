@@ -1,25 +1,53 @@
-const catchAsync = require('../utils/catchAsync');
-const Community = require('./../models/communityModel');
+const mongoose = require("mongoose");
+const Query = require("../models/queriesModel");
+const QueriesIdsCommunityWise = require("../models/queryIdsCommunityWiseModel");
+const apiFeatures = require("../utils/apiFeatures");
+const catchAsync = require("../utils/catchAsync");
+const Community = require("./../models/communityModel");
 
-// I am trying to get all queries of cummnity i have community_id so i find it and from there but one thing is there if i store every query id there this array will grow indefinitely in size because we want to provide each and every queries because we are trying to store each query so idd one solutoin is that we store only reference here and all id at partocuylar place make one collection in which we have all query of particular community sot ot do that we can make one schema for queryReference which store reference and from there actually we store everything here only reference and put its reference of every query here with community id
+
 exports.getAllQueries = catchAsync(async (req, res, next) => {
-  Community.findById(req.community._id);
+  
+  const query = Query.find({createdForCommunityId: mongoose.Types.ObjectId(req.community.id)});
+
+    const features = new apiFeatures(query, req.query).textFilter().eventWiseFilter().answerStatusFilter().userRegistrationFilter();
+
+    const queries = await features.query;
+
+    console.log(queries);
+
   res.status(200).json({
-    status: 'success',
-    message: 'This route is not yet implemented',
+    status: "success",
+    data: queries,
   });
 });
 
 exports.answerQuery = catchAsync(async (req, res, next) => {
+
+  const queryDocId = req.body.queryId;
+  const userId = req.user.id;
+  const answerText = req.body.answerText;
+
+  const updatedQueryDoc = await Query.findByIdAndUpdate(queryDocId, {
+    answerText: answerText,
+    answeredBy: userId,
+    queryIs: "Resolved",
+    answeredAt: Date.now(),
+  }, {
+    new: true, 
+    validateModifiedOnly: true,
+  });
+  console.log(updatedQueryDoc, 40);
+
   res.status(200).json({
-    status: 'success',
-    message: 'This route is not yet implemented',
+    status: "success",
+    data: updatedQueryDoc,
   });
 });
 
 exports.getAllQueriesForOneEvent = catchAsync(async (req, res, next) => {
   res.status(200).json({
-    status: 'success',
-    message: 'This route is not yet implemented',
+    status: "success",
+    message: "This route is not yet implemented",
   });
 });

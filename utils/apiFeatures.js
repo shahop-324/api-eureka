@@ -5,7 +5,54 @@ class apiFeatures {
     this.query = query;
     this.queryString = queryString;
   }
+  answerStatusFilter()
+  {
+        if(this.queryString.answerStatus)
+        {
 
+             this.query=this.query.find({
+              queryIs:this.queryString.answerStatus
+
+             })
+
+
+        }
+        return this;
+
+
+  }
+  userRegistrationFilter()
+  {
+        if(this.queryString.userRegistrationStatus)
+        {
+
+             this.query=this.query.find({
+              userIs:this.queryString.userRegistrationStatus
+
+             })
+
+
+        }
+        return this;
+
+
+  }
+  eventWiseFilter()
+  {
+        if(this.queryString.event)
+        {
+
+             this.query=this.query.find({
+              createdForEventId:mongoose.Types.ObjectId(this.queryString.event)
+
+             })
+
+
+        }
+        return this;
+
+
+  }
   sort() {
     console.log("me sort function has sent the response okay");
     if (this.queryString.sort) {

@@ -60,17 +60,19 @@ router.post(
   userController.DoesTicketBelongToThisEvent,
   userController.registerInAnEvent
 );
+
 // create review for an event in which user participated
 router.post(
   "/events/review/:eventId",
-
   globalController.DoesUserRegistredInThisEvent,
   userController.createReview
 );
+
 // create query for an event
 router.post(
-  "/events/query/:eventId",
+  "/query/createNew",
 
+  authController.protect,
   userController.createQuery,
   userController.IsUserRegistred
 );

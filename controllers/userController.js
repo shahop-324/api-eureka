@@ -443,7 +443,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 exports.createQuery = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const eventId = req.params.eventId;
+  const eventId = req.body.createdForEventId;
   const userCreatingQuery = await User.findById(userId);
   const eventGettingQuery = await Event.findById(eventId);
   const communityGettingQuery = await Community.findById(
@@ -452,13 +452,15 @@ exports.createQuery = catchAsync(async (req, res, next) => {
   const document = await QueriesIdsCommunityWise.findById(
     communityGettingQuery.queriesDocIdCommunityWise
   );
+
   // 1) Create a query and mark that query as userIs : 'Registred'
   const createdQuery = await Query.create({
-    createdBy: userCreatingQuery.id,
-    userName: `${userCreatingQuery.firstName} ${userCreatingQuery.lastName}`,
-    userImg: userCreatingQuery.photo,
+    createdBy: userId,
+    userName: req.body.userName,
+    userImg: req.body.userImg,
     // userIs: 'Registred or Unregistred', // This field will be set in next step of this middleware stack
-    createdForEventId: eventGettingQuery.id,
+    createdForEventId: eventId,
+    createdForCommunityId: communityGettingQuery.id,
     createdForEvent: eventGettingQuery.eventName,
     questionText: req.body.questionText,
   });
@@ -484,16 +486,18 @@ exports.createQuery = catchAsync(async (req, res, next) => {
 
 exports.IsUserRegistred = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const eventId = req.params.eventId;
+  const eventId = req.body.createdForEventId;
   const queryId = req.query.id;
   const userCreatingQuery = await User.findById(userId);
   const queryGettingUpdated = await Query.findById(queryId);
   // 5) Check if user is registred in this event for which he / she is trying to create a query for
-  const bool = userCreatingQuery.registredInEvents.includes(eventId);
+  const bool = userCreatingQuery.registredInEvents
+    ? userCreatingQuery.registredInEvents.includes(eventId)
+    : false;
   if (bool) {
     queryGettingUpdated.userIs = "Registred";
   } else {
-    queryGettingUpdated.userIs = "Unregistred";
+    queryGettingUpdated.userIs = "Unregistered";
   }
   const updatedQuery = await queryGettingUpdated.save({
     validateModifiedOnly: true,
@@ -502,9 +506,7 @@ exports.IsUserRegistred = catchAsync(async (req, res, next) => {
   // 6) Send finally updated Query document back to user
   res.status(200).json({
     status: "success",
-    data: {
-      createdQuery: updatedQuery,
-    },
+    data: updatedQuery,
   });
 });
 

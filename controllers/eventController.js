@@ -10,6 +10,7 @@ const Ticket = require("../models/ticketModel");
 const apiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
+const  mongoose  = require("mongoose");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -113,13 +114,20 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
-  console.log(req.community);
-  const community = await Community.findById(communityId);
-  const id = community.eventsDocIdCommunityWise;
+  // console.log(req.community);
+  // const community = await Community.findById(communityId);
+  // const id = community.eventsDocIdCommunityWise;
 
-  const events = await EventsIdsCommunityWise.findById(id).populate(
-    "eventsIds"
-  );
+  // const events = await EventsIdsCommunityWise.findById(id).populate(
+  //   "eventsIds"
+  // );
+
+  const query = await Event.find({createdBy: mongoose.Types.ObjectId(communityId)});
+
+  const features = new apiFeatures(query, req.query)
+  .textFilter();
+
+  const events = await features.query;
 
   res.status(200).json({
     length: events.length,

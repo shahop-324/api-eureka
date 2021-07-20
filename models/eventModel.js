@@ -285,7 +285,16 @@ const eventSchema = new mongoose.Schema(
   }
 );
 
-eventSchema.index({ eventName: "text" });
+eventSchema.index({
+  eventName: "text",
+  shortDescription: "text",
+  Timezone: "text",
+  visibility: "text",
+  categories: "text",
+  publishedStatus: "text",
+  status: "text",
+  eventTags: "text",
+});
 
 const Event = mongoose.model("Event", eventSchema);
 module.exports = Event;

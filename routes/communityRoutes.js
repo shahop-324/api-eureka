@@ -115,7 +115,7 @@ router.get(
 );
 
 router.get(
-  "/queries",
+  "/queries/getAll",
   authController.protectCommunity,
   queriesController.getAllQueries
 );
@@ -126,8 +126,8 @@ router.get(
   queriesController.getAllQueriesForOneEvent
 );
 
-router.post(
-  "/queries",
+router.patch(
+  "/queries/createAnswer",
   authController.protectCommunity,
   queriesController.answerQuery
 );

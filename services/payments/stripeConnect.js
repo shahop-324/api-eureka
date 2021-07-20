@@ -112,28 +112,25 @@ exports.getEventRegistrationCheckoutSession = catchAsync(
     // console.log(userId, eventId, ticketId, couponId);
     // console.log(eventGettingRegistration);
 
-    const session = await stripe.checkout.sessions.create(
-      {
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            name: eventGettingRegistration.eventName,
-            amount: priceToBeCharged,
-            currency: "inr",
-            quantity: 1,
-          },
-        ],
-        // payment_intent_data: {
-        //   application_fee_amount: applicationFeeAmount,
-        // },
-        mode: "payment",
-        success_url: "http://localhost:3001/event-landing-page/60f19602c310ac24da7b39f5",
-        cancel_url: "http://localhost:3001/event-landing-page/60f19602c310ac24da7b39f5",
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        name: 'Kavholm rental',
+        amount: 1000,
+        currency: 'usd',
+        quantity: 1,
+      }],
+      payment_intent_data: {
+        application_fee_amount: 123,
+        transfer_data: {
+          destination: connectedStripeAccountId,
+        },
       },
-      {
-        stripeAccount: connectedStripeAccountId,
-      }
-    );
+      mode: 'payment',
+      success_url: 'https://example.com/success',
+      cancel_url: 'https://example.com/failure',
+    });
+    
 
     res.status(200).json({
       status: "success",
