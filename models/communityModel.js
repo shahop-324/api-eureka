@@ -339,6 +339,17 @@ const communitySchema = new mongoose.Schema(
     stripeAccountId: {
       type: String,
     },
+    paypalTrackingId : {
+      type: String,
+    },
+    paymentGateway: {
+        type: String,
+        enum: ["Razorpay", "Paypal"],
+    },
+    paypalOnboardingData: {
+      type: Map,
+      of: String,
+    },
     coverPhoto: String,
     logo: String,
   },

@@ -117,15 +117,15 @@ exports.getEventRegistrationCheckoutSession = catchAsync(
       line_items: [{
         name: 'Kavholm rental',
         amount: 1000,
-        currency: 'usd',
+        currency: 'inr',
         quantity: 1,
       }],
-      payment_intent_data: {
-        application_fee_amount: 123,
-        transfer_data: {
-          destination: connectedStripeAccountId,
-        },
-      },
+      // payment_intent_data: {
+      //   application_fee_amount: 123,
+      //   transfer_data: {
+      //     destination: connectedStripeAccountId,
+      //   },
+      // },
       mode: 'payment',
       success_url: 'https://example.com/success',
       cancel_url: 'https://example.com/failure',

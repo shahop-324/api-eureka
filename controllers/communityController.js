@@ -5,16 +5,20 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { promisify } = require("util");
 
-
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
 
 exports.getParticularCommunity = catchAsync(async (req, res, next) => {
-
-
   console.log(req.params.id);
   const community = await Community.findById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: {community},
+    data: { community },
   });
 });
 exports.selectPlan = catchAsync(async (req, res, next) => {
@@ -357,3 +361,24 @@ exports.redeemCustomPlan = catchAsync(async (req, res, next) => {
 
 //// TODO
 //// Create a POST endpoint for generating a custom plan (include community name, plan details, planRenewDuration & priceToBeCharged)
+
+exports.updateCommunity = catchAsync(async (req, res, next) => {
+  const communityId = req.community.id;
+
+  const filteredBody = filterObj(
+    req.body,
+    "paymentGateway",
+    "paypalOnboardingData"
+  );
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    filteredBody,
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});

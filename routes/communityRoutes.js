@@ -21,7 +21,17 @@ router.get(
   eventController.getAllEventsForCommunities
 );
 
-router.get("/:id/getCommunity", communityController.getParticularCommunity);
+router.get(
+  "/:id/getCommunity",
+  authController.protectCommunity,
+  communityController.getParticularCommunity
+);
+
+router.patch(
+  "/:id/updateCommunity",
+  authController.protectCommunity,
+  communityController.updateCommunity
+);
 
 router.patch(
   "/updateCommunity",

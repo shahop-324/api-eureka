@@ -15,6 +15,7 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 // Imported Routes for Various Resources
 
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -33,6 +34,7 @@ const boothRoutes = require("./routes/boothRoutes");
 const sponsorRoutes = require("./routes/sponsorRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
+const razorpayRoutes = require("./routes/razorpayRoutes.js");
 
 // const { initialize } = require("passport");
 
@@ -43,7 +45,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    // origin: "http://localhost:3001",
+    origin: "*",
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
     credentials: true,
@@ -125,10 +128,35 @@ app.use("/eureka/v1/speakers", speakerRoutes);
 app.use("/eureka/v1/booths", boothRoutes);
 app.use("/eureka/v1/sponsors", sponsorRoutes);
 app.use("/eureka/v1/stripe", stripeRoutes);
+app.use("/eureka/v1/razorpay", razorpayRoutes);
 app.use("/eureka/v1/tickets", ticketRoutes);
 
+const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
+
+const createSendToken = (user, statusCode, req, res) => {
+  const token = signToken(user._id);
+
+  //remove password from output
+ 
+
+  res.status(statusCode).json({
+    status: "success",
+
+    token,
+    data: {
+      user,
+    },
+  });
+};
 app.get("/eureka/v1/current_user", (req, res) => {
-  res.send(req.user);
+ // createSendToken(req.user,200,req,res)
+ const token = signToken(req.user._id);
+
+
+
+
+ 
+  res.send({user:req.user,token:token});
 });
 
 app.get("/eureka/v1/logout", (req, res) => {

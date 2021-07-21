@@ -21,8 +21,9 @@ const Ticket = require("../models/ticketModel");
 const Mailer = require("../services/Mailer");
 const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
 const sgMail = require("@sendgrid/mail");
-const { options } = require("../routes/speakerRoutes");
+const UUID = require('uuid/v4');
 sgMail.setApiKey(process.env.SENDGRID_KEY);
+
 const signTokenForCommunityLogin = (userId, communityId) =>
   jwt.sign(
     { userId: userId, communityId: communityId },
@@ -676,6 +677,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     name: req.body.name,
     superAdmin: req.user.id,
     email: req.body.email,
+    payPalEmail: req.body.email,
     headline: req.body.headline,
     policySigned: req.body.policySigned,
     subscribedToCommunityMailList: req.body.subscribedToCommunityMailList,
@@ -684,6 +686,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     reviewsDocIdCommunityWise: reviewsIdsDocument._id,
     speakersDocIdCommunityWise: speakersIdsDocument._id,
     registrationsDocIdCommunityWise: registrationsIdsDocument._id,
+    paypalTrackingId: UUID(),
   });
 
   userCreatingCommunity.communities.push(createdCommunity.id);
