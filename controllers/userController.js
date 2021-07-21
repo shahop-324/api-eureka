@@ -591,11 +591,12 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 // TODO
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   console.log("I reached here in forgot password");
+  console.log(req.body);
   // 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError("There is no user with email address.", 404));
+    return next(new AppError("There is no user with email address or you signed up with google .", 404));
   }
 
   // 2) Generate the random reset token
@@ -606,9 +607,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/eureka/v1/users/resetPassword/${resetToken}`;
+    const resetURL = `http://localhost:3001/resetPassword/${resetToken}`;
 
     // Send Grid is implemented here
 

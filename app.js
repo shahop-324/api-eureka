@@ -45,8 +45,8 @@ const app = express();
 
 app.use(
   cors({
-    // origin: "http://localhost:3001",
-    origin: "*",
+     origin: "http://localhost:3001",
+    //origin: "*",
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
     credentials: true,
@@ -99,7 +99,12 @@ app.use("/eureka", limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" })); // Middleware // use method is used to add middlewares to our middleware stack
 
-app.use(bodyParser.json());
+// app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
+
+// app.use(bodyParser.json());
 
 
 // Data sanitization against NoSQL query injection

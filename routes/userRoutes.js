@@ -5,15 +5,19 @@ const authController = require("../controllers/authController");
 const globalController = require("../controllers/globalController");
 const userController = require("../controllers/userController");
 const communityController = require("../controllers/communityController");
+const bodyParser = require("body-parser");
+
 
 const router = express.Router();
 
-router.post("/forgotPassword", userController.forgotPassword); 
+router.post("/forgotPassword",  userController.forgotPassword); 
 
 // user signup router
 router.post("/signup", authController.signup);
 // user login router
 router.post("/login", authController.login);
+
+router.patch("/resetPassword/:token", authController.resetPassword);
 
 //user getting particular event
 
@@ -90,5 +94,7 @@ router.delete("/Me", userController.deleteMe);
 
 // reset Password
 router.patch("/updatePassword", authController.updatePassword);
+
+
 
 module.exports = router;
