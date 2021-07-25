@@ -38,7 +38,11 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    image: String,
+    image: {
+      type: String,
+      default:
+        "60e1c15b557681e9fc6af91e/user_account_profile_avatar_person_student_male-512.png",
+    },
     password: {
       type: String,
       required: [true, "Please provide a password"],
@@ -76,6 +80,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    eventTransactionIds: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventTransaction",
+      },
+    ],
     whatAreYouPlanningToDo: {
       type: String,
       enum: [
@@ -117,12 +127,18 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     communities: [
-     {
-          type: mongoose.Schema.ObjectId,
-          ref: "Community",
-        },
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Community",
+      },
     ],
     registeredInEvents: [{ type: mongoose.Schema.ObjectId, ref: "Event" }],
+    registrations: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Registration"
+      }
+    ],
     reviews: [
       {
         type: mongoose.Schema.ObjectId,
@@ -203,13 +219,13 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
   return false;
 };
 
-userSchema.methods.createPasswordResetToken = function() {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
 
   this.passwordResetToken = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(resetToken)
-    .digest('hex');
+    .digest("hex");
 
   // console.log({ resetToken }, this.passwordResetToken);
 

@@ -1,48 +1,81 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const registrationSchema = new mongoose.Schema(
   {
+    registrationType: {
+      type: String,
+      enum: ["Pre Event Sale", "Post Event Sale"],
+    },
     eventName: {
       type: String,
-      default: 'dummy',
     },
-    name: {
+    userName: {
       type: String,
     },
-    photo: {
+    userImage: {
       type: String,
     },
-    email: {
+    userEmail: {
       type: String,
+    },
+    created_by_contact: {
+      type: String,
+    },
+    ticketType: {
+      type: String,
+    },
+    paymentProcesserFee: {
+      type: Number,
+    },
+    paymentTax: {
+      type: Number,
+    },
+    eventTransactionId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "EventTransaction",
     },
     ticketId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Ticket',
+      ref: "Ticket",
+    },
+    totalAmountPaid: {
+      type: Number,
+    },
+    currency: {
+      type: String,
+    },
+    orderId: {
+      type: String,
+    },
+    razorpayPayId: {
+      type: String,
+    },
+    paymentStatus: {
+      type: String,
+    },
+    paymentDescription: {
+      type: String,
     },
     bookedByUser: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     bookedForEventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
     },
     appliedCouponId: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Coupon',
-    },
-    // TODO create fields for ticketType and ticketPrice paid
-    ticketPDFawsRef: {
       type: String,
     },
     eventByCommunityId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Community',
+      ref: "Community",
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
     },
+
+    // Accessible venue areas, recordings and assets or add ons
   },
   {
     toJSON: { virtuals: true },
@@ -50,5 +83,5 @@ const registrationSchema = new mongoose.Schema(
   }
 );
 
-const Registration = mongoose.model('Registration', registrationSchema);
+const Registration = mongoose.model("Registration", registrationSchema);
 module.exports = Registration;

@@ -2,7 +2,6 @@ module.exports = (user, url) => {
   console.log(user);
   return `
       <html>
-      
         <body>
         <div style="text-align: center;">
           <div className="mail-container container p-5" style="max-width: 1920px; text-align: center;">

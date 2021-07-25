@@ -59,6 +59,7 @@ const ticketSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    // Leaderboard winner prices and other sharable event assets or resources.
   },
   {
     toJSON: { virtuals: true },

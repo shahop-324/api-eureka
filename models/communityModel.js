@@ -219,6 +219,9 @@ const communitySchema = new mongoose.Schema(
     speakersDocIdCommunityWise: {
       type: mongoose.Schema.ObjectId,
     },
+    eventTransactionDocIdCommunityWise: {
+      type: mongoose.Schema.ObjectId,
+    },
     analytics: {
       follwersCount: {
         type: Number,
@@ -301,6 +304,24 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
+      totalRegistrationsPreviousWeek: {
+        type: Number,
+        default: 0,
+      },
+
+      totalRegistrationsThisWeek: {
+        type: Number,
+        default: 0,
+      },
+      totalRegistrationsYesterday: {
+        type: Number,
+        default: 0,
+      },
+
+      totalRegistrationsToday: {
+        type: Number,
+        default: 0,
+      },
       totalRegistrationsPreviousDay: {
         type: Number,
         default: 0,
@@ -339,19 +360,50 @@ const communitySchema = new mongoose.Schema(
     stripeAccountId: {
       type: String,
     },
-    paypalTrackingId : {
+    paypalTrackingId: {
       type: String,
     },
     paymentGateway: {
-        type: String,
-        enum: ["Razorpay", "Paypal"],
+      type: String,
+      enum: ["Razorpay", "Paypal"],
     },
     paypalOnboardingData: {
       type: Map,
       of: String,
     },
+    billingPlansTransactionIds: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "BillingTransaction",
+      },
+    ],
     coverPhoto: String,
-    logo: String,
+    image: String,
+    superAdmin: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+    superAdminName: {
+      type: String,
+    },
+    superAdminEmail: {
+      type: String,
+    },
+    superAdminImage: {
+      type: String,
+    },
+    teamMembers: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    notYetAcceptedInvitations: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "TeamInvite",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

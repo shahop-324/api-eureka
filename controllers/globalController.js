@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-console */
+const jwt = require("jsonwebtoken");
 const Event = require("../models/eventModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
@@ -106,4 +107,31 @@ exports.IsUserAlreadyRegistred = catchAsync(async (req, res, next) => {
   } else {
     next();
   }
+});
+
+const signTokenForEventAccess = (id, role, eventId) =>
+  jwt.sign({ id: id, role: role, eventId: eventId }, process.env.JWT_SECRET);
+
+const createSendTokenForEventAccess = async (
+  id,
+  role,
+  eventId,
+  statusCode,
+  req,
+  res
+) => {
+  const EventAccessToken = signTokenForEventAccess(id, role, eventId);
+
+  res.status(statusCode).json({
+    status: "success",
+    EventAccessToken,
+  });
+};
+
+exports.createEventAccessToken = catchAsync(async (req, res, next) => {
+  const role = req.body.role;
+  const id = req.body.id;
+  const eventId = req.body.eventId;
+
+  createSendTokenForEventAccess(id, role, eventId, 200, req, res);
 });

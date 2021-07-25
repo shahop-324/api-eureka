@@ -12,6 +12,9 @@ const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const  mongoose  = require("mongoose");
 
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_KEY);
+
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -263,6 +266,27 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     socialMediaHandles: processedObj,
     image: req.body.image,
   });
+
+  speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`
+
+
+  // 2.) Send new Invitation via mail to speaker
+  const msg = {
+    to: req.body.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: "Your Event Invitation Link",
+    text: `use this link to join this event as a speaker. ${speakerLink}  `,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   const document = await SpeakersIdsCommunityWise.findById(
     communityGettingSpeaker.speakersDocIdCommunityWise

@@ -21,7 +21,8 @@ const Ticket = require("../models/ticketModel");
 const Mailer = require("../services/Mailer");
 const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
 const sgMail = require("@sendgrid/mail");
-const UUID = require('uuid/v4');
+const UUID = require("uuid/v4");
+const EventTransactionIdsCommunityWise = require("../models/eventTransactionIdsCommunityWise");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const signTokenForCommunityLogin = (userId, communityId) =>
@@ -596,7 +597,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError("There is no user with email address or you signed up with google .", 404));
+    return next(
+      new AppError(
+        "There is no user with email address or you signed up with google .",
+        404
+      )
+    );
   }
 
   // 2) Generate the random reset token
@@ -659,6 +665,10 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
   const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
     initialisedAt: Date.now(),
   });
+  const eventTransactionIdsDocument =
+    await EventTransactionIdsCommunityWise.create({
+      initialisedAt: Date.now(),
+    });
   const reviewsIdsDocument = await ReviewsIdsCommunityWise.create({
     initialisedAt: Date.now(),
   });
@@ -685,6 +695,11 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     reviewsDocIdCommunityWise: reviewsIdsDocument._id,
     speakersDocIdCommunityWise: speakersIdsDocument._id,
     registrationsDocIdCommunityWise: registrationsIdsDocument._id,
+    eventTransactionDocIdCommunityWise: eventTransactionIdsDocument._id,
+    superAdmin: req.user.id,
+    superAdminName: `${req.user.firstName} ${req.user.firstName}`,
+    superAdminEmail: req.user.email,
+    superAdminImage: req.user.image,
     paypalTrackingId: UUID(),
   });
 
@@ -704,4 +719,15 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     createdCommunity,
     res
   );
+});
+exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
+  const registeredInEventsList = await User.findById(req.user.id)
+    .select("registeredInEvents")
+    .populate("registeredInEvents");
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      registeredInEventsList,
+    },
+  });
 });

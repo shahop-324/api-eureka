@@ -10,6 +10,13 @@ router.get(
   speakerController.getParticularSpeaker
 );
 
+router.get(
+  "/:id/getSpeaker",
+  // TODO OTP BASED AUTH
+  speakerController.getParticularSpeaker
+);
+
+
 router.patch(
   "/:id/update",
   authController.protectCommunity,

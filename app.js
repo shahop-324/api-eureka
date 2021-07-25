@@ -35,6 +35,7 @@ const sponsorRoutes = require("./routes/sponsorRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 const razorpayRoutes = require("./routes/razorpayRoutes.js");
+const teamInvite = require("./routes/teamInviteRoutes");
 
 // const { initialize } = require("passport");
 
@@ -122,7 +123,7 @@ app.use((req, res, next) => {
 app.use("/eureka/v1/auth", authRoutes);
 app.use("/eureka/v1/upload", uploadRoutes);
 app.use("/eureka/v1/users", userRoutes);
-app.use("/eureka/v1/registration", registrationRoutes);
+app.use("/eureka/v1/registrations", registrationRoutes);
 app.use("/eureka/v1/community", communityRoutes);
 app.use("/eureka/v1/feedback", feedbackRoutes);
 app.use("/eureka/v1/sales", salesDepartmentRoutes);
@@ -135,7 +136,7 @@ app.use("/eureka/v1/sponsors", sponsorRoutes);
 app.use("/eureka/v1/stripe", stripeRoutes);
 app.use("/eureka/v1/razorpay", razorpayRoutes);
 app.use("/eureka/v1/tickets", ticketRoutes);
-
+app.use("/eureka/v1/team-invites",teamInvite);
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
 const createSendToken = (user, statusCode, req, res) => {
@@ -156,11 +157,8 @@ const createSendToken = (user, statusCode, req, res) => {
 app.get("/eureka/v1/current_user", (req, res) => {
  // createSendToken(req.user,200,req,res)
  const token = signToken(req.user._id);
-
-
-
-
  
+    
   res.send({user:req.user,token:token});
 });
 
@@ -168,7 +166,7 @@ app.get("/eureka/v1/logout", (req, res) => {
   req.logout();
   res.redirect("/");
 });
-app.use("/eureka/v1/exploreEvents", globalRoutes);
+app.use("/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
 module.exports = app;

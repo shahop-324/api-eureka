@@ -89,7 +89,6 @@ const eventSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Community",
     },
-
     RegistrationLimit: {
       type: Number,
       default: 100000,
@@ -275,6 +274,12 @@ const eventSchema = new mongoose.Schema(
       {
         type: String,
       },
+    ],
+    eventTransactionIds: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventTransaction"
+      }
     ],
 
     // TODO I have to do research on how recording will work and where it will be stored.

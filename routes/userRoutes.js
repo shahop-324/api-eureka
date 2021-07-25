@@ -33,6 +33,11 @@ router.use((req, res, next) => {
     return authController.protect(req, res, next);
   }
 });
+
+
+
+
+router.get("/registeredEvents",userController.getAllRegisteredEvents);
 router.get("/personalData",userController.getAllPersonalData);
 // router.get("/registeredEvents",userController.getAllRegisteredEvents);
 // update Me
