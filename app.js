@@ -16,6 +16,10 @@ const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+
+
+const http = require('http');
+const socketio = require('socket.io');
 // Imported Routes for Various Resources
 
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -78,6 +82,14 @@ app.use(passport.session());
 // 1. GLOBAL MIDDLEWARES
 
 // passport.js middleware functions
+
+
+
+
+
+
+
+
 
 // Set security HTTP headers
 app.use(helmet());

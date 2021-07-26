@@ -281,6 +281,12 @@ const eventSchema = new mongoose.Schema(
         ref: "EventTransaction"
       }
     ],
+    currentlyInEvent: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      }
+    ],
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

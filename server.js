@@ -13,7 +13,25 @@ process.on("uncaughtException", (err) => {
 });
 
 dotenv.config({ path: "./config.env" });
+
 const app = require("./app");
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3001",
+
+    methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
+
+    credentials: true,
+  },
+});
+
+const cors = require("cors");
+const Event = require("./models/eventModel");
+const User = require("./models/userModel");
+
+const lobbyController=require("./controllers/lobbyController")
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -35,9 +53,50 @@ mongoose
 
 const port = process.env.PORT || 8000;
 
-// 4. STARTING THE SERVER
+// app.use(cors(
+// {
 
-const server = app.listen(port, () => {
+// }
+
+// ));
+// app.use(
+//   cors({
+//      origin: "http://localhost:3001",
+//     //origin: "*",
+//     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
+
+//     credentials: true,
+//   })
+// );
+const { addUser, removeUser, getUser, getUsersInRoom } = lobbyController;
+io.on('connect', (socket) => {
+
+  socket.on('join', ({email,eventId} , callback) => {
+    const { error, user } = addUser({ id: socket.id,email:email ,room: eventId });
+  // console.log(user);
+
+    if(error) return callback(error);
+
+    socket.join(user.room);
+
+    io.to(user.room).emit('roomData', {  users: getUsersInRoom(user.room) });
+
+
+    callback();
+  });
+
+  socket.on('disconnect', () => {
+    const user =removeUser(socket.id);
+     
+     if(user)
+     {
+    io.to(user.room).emit('roomData', {  users: getUsersInRoom(user.room) });
+     }
+  })
+})
+
+// 4. STARTING THE SERVER
+server.listen(port, () => {
   console.log(`App running on port ${port} ...`);
 });
 

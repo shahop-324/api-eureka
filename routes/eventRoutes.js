@@ -35,6 +35,11 @@ router.get(
   sessionController.getAllSessions
 );
 router.get(
+  "/:eventId/sessionsForUser",
+  authController.protect,
+  sessionController.getAllSessionsForUser
+);
+router.get(
   "/:eventId/speakers",
   authController.protectCommunity,
   speakerController.getAllSpeakers

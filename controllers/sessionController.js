@@ -89,3 +89,25 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
+
+  console.log(req.query, 73);
+
+  const query = Session.find({
+    eventId: mongoose.Types.ObjectId(req.params.eventId),
+   // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
+
+  }).populate('speaker');
+
+  const features = new apiFeatures(query, req.query).textFilter();
+  const sessions = await features.query;
+
+  console.log(sessions);
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      sessions,
+    },
+  });
+});
