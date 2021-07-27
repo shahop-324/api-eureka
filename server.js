@@ -31,7 +31,7 @@ const cors = require("cors");
 const Event = require("./models/eventModel");
 const User = require("./models/userModel");
 
-const lobbyController=require("./controllers/lobbyController")
+const lobbyController = require("./controllers/lobbyController");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -68,32 +68,144 @@ const port = process.env.PORT || 8000;
 //     credentials: true,
 //   })
 // );
-const { addUser, removeUser, getUser, getUsersInRoom } = lobbyController;
-io.on('connect', (socket) => {
+const {
+  addUser,
+  removeUser,
+  getUser,
+  addUserInSession,
+  getUsersInSession,
+  getUsersInRoom,
+  getStageMembers,
+  addSession,
+  updateSession,
+  removeSession,
+  removeUserFromSession,
+  getSessionsInRoom,
+} = lobbyController;
+io.on("connect", (socket) => {
+  socket.on("join", ({ email, eventId }, callback) => {
+    const { error, user } = addUser({
+      id: socket.id,
+      email: email,
+      room: eventId,
+    });
+    // console.log(user);
 
-  socket.on('join', ({email,eventId} , callback) => {
-    const { error, user } = addUser({ id: socket.id,email:email ,room: eventId });
-  // console.log(user);
-
-    if(error) return callback(error);
+    if (error) return callback(error);
 
     socket.join(user.room);
 
-    io.to(user.room).emit('roomData', {  users: getUsersInRoom(user.room) });
-
+    io.to(user.room).emit("roomData", { users: getUsersInRoom(user.room) });
 
     callback();
   });
 
-  socket.on('disconnect', () => {
-    const user =removeUser(socket.id);
-     
-     if(user)
-     {
-    io.to(user.room).emit('roomData', {  users: getUsersInRoom(user.room) });
-     }
-  })
-})
+  socket.on("joinSession", ({ userId, sessionId, sessionRole }, callback) => {
+    console.log("Join session was fired!");
+    const { error, sessionUser } = addUserInSession({
+      id: socket.id,
+      userId: userId,
+      room: sessionId,
+      role: sessionRole,
+    });
+    // console.log(user);
+
+    if (error) return callback(error);
+
+    socket.join(sessionUser.room);
+
+    console.log(sessionUser);
+    console.log(getUsersInSession(sessionUser.room));
+    io.to(sessionUser.room).emit("sessionRoomData", {
+      sessionUsers: getUsersInSession(sessionUser.room),
+    });
+
+    io.to(sessionUser.room).emit("stageMembers", {
+      stageMembers: getStageMembers(),
+    });
+
+    callback();
+  });
+
+  socket.on("addSession", ({ sessionId, sessionStatus, eventId }, callback) => {
+    console.log(sessionStatus, "addSession");
+    const { error, session } = addSession({
+      id: socket.id,
+      sessionStatus: sessionStatus,
+      sessionId: sessionId,
+      room: eventId,
+    });
+    // console.log(user);
+
+    if (error) return callback(error);
+
+    socket.join(session.room);
+
+    io.to(session.room).emit("roomSessionData", {
+      sessions: getSessionsInRoom(session.room),
+    });
+
+    callback();
+  });
+
+  socket.on(
+    "updateSession",
+    ({ sessionId, sessionStatus, eventId }, callback) => {
+      const { error, session } = updateSession({
+        id: socket.id,
+        sessionStatus,
+        sessionId: sessionId,
+        room: eventId,
+      });
+      // console.log(user);
+
+      if (error) return callback(error);
+
+      socket.join(session.room);
+
+      io.to(session.room).emit("roomSessionData", {
+        sessions: getSessionsInRoom(session.room),
+      });
+
+      callback();
+    }
+  );
+
+  socket.on("disconnectSession", () => {
+    const session = removeSession(socket.id);
+
+    if (session) {
+      io.to(session.room).emit("roomSessionData", {
+        sessions: getSessionsInRoom(session.room),
+      });
+    }
+  });
+
+  socket.on("disconnectUserFromSession", () => {
+    const sessionUser = removeUserFromSession(socket.id);
+
+    if (sessionUser) {
+      io.to(sessionUser.room).emit("sessionRoomData", {
+        sessionUsers: getUsersInSession(sessionUser.room),
+      });
+
+      io.to(sessionUser.room).emit("stageMembers", {
+        stageMembers: getStageMembers(),
+      });
+    }
+  });
+
+  socket.on("disconnectUser", () => {
+    console.log("Disconnect was fired!");
+    const user = removeUser(socket.id);
+
+    if (user) {
+      console.log(user);
+      console.log(getUsersInRoom(user.room));
+      io.to(user.room).emit("roomData", { users: getUsersInRoom(user.room) });
+    }
+  });
+});
 
 // 4. STARTING THE SERVER
 server.listen(port, () => {
