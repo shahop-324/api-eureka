@@ -16,6 +16,22 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please tell us your last name."],
       trim: true,
     },
+    organisation: {
+      type: String,
+      default: "Google Inc.", // TODO This needs to fixed
+    },
+    designation: {
+      type: String,
+      default: "Vice President", // TODO This needs to fixed
+    },
+    city: {
+      type: String,
+      default: "Los Angeles", // TODO This needs to fixed
+    },
+    country: {
+      type: String,
+      default: "USA", // TODO This needs to fixed
+    },
     headline: {
       type: String,
       trim: true,
@@ -136,8 +152,8 @@ const userSchema = new mongoose.Schema(
     registrations: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "Registration"
-      }
+        ref: "Registration",
+      },
     ],
     reviews: [
       {

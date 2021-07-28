@@ -32,6 +32,9 @@ const Event = require("./models/eventModel");
 const User = require("./models/userModel");
 
 const lobbyController = require("./controllers/lobbyController");
+const UsersInEvent = require("./models/usersInEventModel");
+const UsersInSession = require("./models/usersInSessionModel");
+const Session = require("./models/sessionModel");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -69,12 +72,9 @@ const port = process.env.PORT || 8000;
 //   })
 // );
 const {
-  addUser,
   removeUser,
-  getUser,
-  addUserInSession,
+
   getUsersInSession,
-  getUsersInRoom,
   getStageMembers,
   addSession,
   updateSession,
@@ -83,70 +83,346 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
-  socket.on("join", ({ email, eventId }, callback) => {
-    const { error, user } = addUser({
-      id: socket.id,
-      email: email,
-      room: eventId,
-    });
-    // console.log(user);
+  socket.on(
+    "join",
+    (
+      {
+        email,
+        eventId,
+        userId,
+        userName,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+      },
+      callback
+    ) => {
+      socket.join(eventId);
 
-    if (error) return callback(error);
+      const fetchCurrentUsers = async () => {
+        await Event.findById(eventId, (err, doc) => {
+          console.log(doc, "This is events doc from getUsersInRoom");
+          io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
+        })
+          .select("currentlyInEvent")
+          .populate({
+            path: "currentlyInEvent",
+            options: {
+              match: { status: "Active" },
+            },
+          });
+      };
 
-    socket.join(user.room);
+      const addUser = async ({
+        id,
+        email,
+        room,
+        userId,
+        userName,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+      }) => {
+        // const existingUser = users.find(
+        //   (user) => user.room === room && user.email === email
+        // );
+        console.log(id, userId, "This is my console log");
 
-    io.to(user.room).emit("roomData", { users: getUsersInRoom(user.room) });
+        const existingUser = await UsersInEvent.findOne(
+          {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+          async (error, existingUser) => {
+            console.log("error", error);
 
-    callback();
-  });
+            console.log(existingUser, "existingUser");
 
-  socket.on("joinSession", ({ userId, sessionId, sessionRole }, callback) => {
-    console.log("Join session was fired!");
-    const { error, sessionUser } = addUserInSession({
-      id: socket.id,
-      userId: userId,
-      room: sessionId,
-      role: sessionRole,
-    });
-    // console.log(user);
+            let mongoUser;
 
-    if (error) return callback(error);
+            if (!existingUser) {
+              mongoUser = await UsersInEvent.create(
+                {
+                  room: room,
+                  socketId: id,
+                  userId: userId,
+                  userEmail: email,
+                  userName: userName,
+                  userImage: userImage,
+                  userCity: userCity,
+                  userCountry: userCountry,
+                  userOrganisation: userOrganisation,
+                  userDesignation: userDesignation,
+                },
+                async (err, doc) => {
+                  console.log(doc, "line 103");
+                  console.log("error: ", err);
 
-    socket.join(sessionUser.room);
+                  if (!existingUser) {
+                    const eventDoc = await Event.findById(room);
+                    eventDoc.currentlyInEvent.push(doc._id);
 
-    console.log(sessionUser);
-    console.log(getUsersInSession(sessionUser.room));
-    io.to(sessionUser.room).emit("sessionRoomData", {
-      sessionUsers: getUsersInSession(sessionUser.room),
-    });
+                    await eventDoc.save(
+                      { validateModifiedOnly: true },
+                      (err, doc) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          fetchCurrentUsers();
+                        }
+                      }
+                    );
+                  }
+                }
+              );
+            } else {
+              await UsersInEvent.findOneAndUpdate(
+                { userId: mongoose.Types.ObjectId(userId) },
+                { status: "Active" },
+                { new: true },
+                (err, doc) => {
+                  console.log(err);
+                  console.log(doc);
+                  fetchCurrentUsers();
+                }
+              );
+            }
+          }
+        );
 
-    io.to(sessionUser.room).emit("stageMembers", {
-      stageMembers: getStageMembers(),
-    });
+        if (!room || !email) return { error: "email and room are required." };
+        // if(existingUser) return { error: 'Username is taken.' };
 
-    callback();
-  });
+        // return { user };
+      };
 
-  socket.on("addSession", ({ sessionId, sessionStatus, eventId }, callback) => {
-    console.log(sessionStatus, "addSession");
-    const { error, session } = addSession({
-      id: socket.id,
-      sessionStatus: sessionStatus,
-      sessionId: sessionId,
-      room: eventId,
-    });
-    // console.log(user);
+      const { error } = addUser({
+        id: socket.id,
+        email: email,
+        room: eventId,
+        userId: userId,
+        userName: userName,
+        userImage: userImage,
+        userCity: userCity,
+        userCountry: userCountry,
+        userOrganisation: userOrganisation,
+        userDesignation: userDesignation,
+      });
 
-    if (error) return callback(error);
+      if (error) return callback(error);
 
-    socket.join(session.room);
+      callback();
+    }
+  );
 
-    io.to(session.room).emit("roomSessionData", {
-      sessions: getSessionsInRoom(session.room),
-    });
+  socket.on(
+    "joinSession",
+    (
+      {
+        userId,
+        sessionId,
+        sessionRole,
+        userName,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+      },
+      callback
+    ) => {
+      console.log("Join session was fired!");
 
-    callback();
-  });
+      socket.join(sessionId);
+
+      const fetchCurrentUsersInSession = async () => {
+        await Session.findById(sessionId, (err, doc) => {
+          console.log(doc, "This is session doc from fetchUserInSession");
+
+          io.to(sessionId).emit("sessionRoomData", {
+            sessionUsers: doc.currentlyInSession,
+          });
+
+          
+        })
+          .select("currentlyInSession")
+          .populate({
+            path: "currentlyInSession",
+            options: {
+              match: { status: "Active" },
+            },
+          });
+      };
+
+      const fetchCurrentlyOnStage = async () => {
+        await Session.findById(sessionId, (err, doc) => {
+          console.log(doc, "This is currently on session stage fetchUserInSession");
+
+          io.to(sessionId).emit("stageMembers", {
+            stageMembers: doc,
+          });
+
+        })
+          .select("currentlyOnStage");
+      };
+
+      const addUserInSession = async ({
+        id,
+        userId,
+        room,
+        sessionRole,
+        userName,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+      }) => {
+        const existingUser = await UsersInSession.findOne(
+          {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+          async (error, existingUser) => {
+            console.log("error", error);
+
+            console.log(existingUser, "existingUser");
+
+            let mongoUser;
+
+            if (!existingUser) {
+              mongoUser = await UsersInSession.create(
+                {
+                  room: room,
+                  socketId: id,
+                  sessionRole: sessionRole,
+                  userId: userId,
+                  userEmail: userEmail,
+                  userName: userName,
+                  userImage: userImage,
+                  userCity: userCity,
+                  userCountry: userCountry,
+                  userOrganisation: userOrganisation,
+                  userDesignation: userDesignation,
+                },
+                async (err, doc) => {
+                  console.log(doc, "line 296");
+                  console.log("error: ", err);
+
+                  if (!existingUser) {
+                    const sessionDoc = await Session.findById(room);
+                    sessionDoc.currentlyInSession.push(doc._id);
+
+                    if(sessionRole !== "audience") {
+                      sessionDoc.currentlyOnStage = sessionDoc.currentlyOnStage + 1;
+                    }
+
+                    await sessionDoc.save(
+                      { validateModifiedOnly: true },
+                      (err, doc) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          fetchCurrentUsersInSession();
+
+                        }
+                      }
+                    );
+                  }
+                }
+              );
+            } else {
+              await UsersInSession.findOneAndUpdate(
+                { userId: mongoose.Types.ObjectId(userId) },
+                { status: "Active" },
+                { new: true },
+                (err, doc) => {
+                  console.log(err);
+                  console.log(doc);
+                  fetchCurrentUsersInSession();
+                  fetchCurrentlyOnStage();
+                }
+              );
+            }
+          }
+        );
+      };
+
+      const { error } = addUserInSession({
+        id: socket.id,
+        userId: userId,
+        room: sessionId,
+        sessionRole: sessionRole,
+        userName: userName,
+        userEmail: userEmail,
+        userImage: userImage,
+        userCity: userCity,
+        userCountry: userCountry,
+        userOrganisation: userOrganisation,
+        userDesignation: userDesignation,
+      });
+
+      if (error) return callback(error);
+
+      callback();
+    }
+  );
+
+  // socket.on("addSession", ({ sessionId, sessionStatus, eventId }, callback) => {
+  //   console.log(sessionStatus, "addSession");
+  //   const { error, session } = addSession({
+  //     id: socket.id,
+  //     sessionStatus: sessionStatus,
+  //     sessionId: sessionId,
+  //     room: eventId,
+  //   });
+  //   // console.log(user);
+
+  //   if (error) return callback(error);
+
+  //   socket.join(session.room);
+
+  //   io.to(session.room).emit("roomSessionData", {
+  //     sessions: getSessionsInRoom(session.room),
+  //   });
+
+  //   callback();
+  // });
+
+  socket.on(
+    "setSessionRunningStatus",
+    async ({ sessionId, eventId, sessionRunningStatus }, callback) => {
+      console.log("sessionId", sessionId);
+      console.log("eventId", eventId);
+      console.log("sessionRunningStatus", sessionRunningStatus);
+
+      await Session.findByIdAndUpdate(
+        sessionId,
+        { runningStatus: sessionRunningStatus },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(doc, "This is updated session document");
+
+            io.to(eventId).emit("updatedSession", {
+              session: doc,
+            });
+
+            io.to(sessionId).emit("updatedCurrentSession", {
+              session: doc,
+            });
+          }
+        }
+      );
+      callback();
+    }
+  );
 
   socket.on(
     "updateSession",
@@ -181,29 +457,63 @@ io.on("connect", (socket) => {
     }
   });
 
-  socket.on("disconnectUserFromSession", () => {
-    const sessionUser = removeUserFromSession(socket.id);
+  socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
+    console.log("Disconnect User From Session was fired!");
+    const sessionUser = removeUserFromSession(userId);
 
-    if (sessionUser) {
-      io.to(sessionUser.room).emit("sessionRoomData", {
-        sessionUsers: getUsersInSession(sessionUser.room),
-      });
+    const fetchCurrentUsersInSession = async () => {
+      await Session.findById(sessionId, (err, doc) => {
+        console.log(doc, "This is session doc from fetchUsersInSession");
 
-      io.to(sessionUser.room).emit("stageMembers", {
-        stageMembers: getStageMembers(),
-      });
-    }
+        io.to(sessionId).emit("sessionRoomData", {
+          sessionUsers: doc.currentlyInSession,
+        });
+
+        // TODO Here we also have to send stage members data
+
+        // io.to(sessionUser.room).emit("stageMembers", {
+        //   stageMembers: getStageMembers(),
+        // });
+      })
+        .select("currentlyInSession")
+        .populate({
+          path: "currentlyInSession",
+          options: {
+            match: { status: "Active" },
+          },
+        });
+    };
+
+    fetchCurrentUsersInSession();
+
+    // io.to(sessionUser.room).emit("sessionRoomData", {
+    //   sessionUsers: getUsersInSession(sessionUser.room),
+    // });
+
+    // io.to(sessionUser.room).emit("stageMembers", {
+    //   stageMembers: getStageMembers(),
+    // });
   });
 
-  socket.on("disconnectUser", () => {
-    console.log("Disconnect was fired!");
-    const user = removeUser(socket.id);
+  socket.on("disconnectUser", ({ userId, eventId }) => {
+    console.log("Disconnect User was fired!");
+    const user = removeUser(userId);
 
-    if (user) {
-      console.log(user);
-      console.log(getUsersInRoom(user.room));
-      io.to(user.room).emit("roomData", { users: getUsersInRoom(user.room) });
-    }
+    const fetchCurrentUsers = async () => {
+      await Event.findById(eventId, (err, doc) => {
+        console.log(doc, "This is events doc from getUsersInRoom");
+        io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
+      })
+        .select("currentlyInEvent")
+        .populate({
+          path: "currentlyInEvent",
+          options: {
+            match: { status: "Active" },
+          },
+        });
+    };
+
+    fetchCurrentUsers();
   });
 });
 

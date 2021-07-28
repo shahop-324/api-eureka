@@ -10,6 +10,12 @@ router.get(
   sessionController.getParticularSession
 );
 
+router.get(
+  "/:id/getOneSession",
+  authController.protect,
+  sessionController.getParticularSession
+);
+
 router.post(
   "/:id/update",
   authController.protectCommunity,
@@ -17,9 +23,9 @@ router.post(
 );
 
 router.delete(
-    "/:id/delete",
-    authController.protectCommunity,
-    sessionController.DeleteSession
-  );
+  "/:id/delete",
+  authController.protectCommunity,
+  sessionController.DeleteSession
+);
 
 module.exports = router;

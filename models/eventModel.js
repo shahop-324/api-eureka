@@ -278,14 +278,20 @@ const eventSchema = new mongoose.Schema(
     eventTransactionIds: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "EventTransaction"
-      }
+        ref: "EventTransaction",
+      },
     ],
     currentlyInEvent: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "User",
-      }
+        ref: "UsersInEvent",
+      },
+    ],
+    sessionsStatus: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "SessionsStatus",
+      },
     ],
 
     // TODO I have to do research on how recording will work and where it will be stored.

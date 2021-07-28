@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+const mongoose = require("mongoose");
+const validator = require("validator");
 
 const speakerSchema = new mongoose.Schema(
   {
@@ -23,57 +23,64 @@ const speakerSchema = new mongoose.Schema(
     email: {
       type: String,
       lowercase: true,
-      validate: [validator.isEmail, 'Please provide a valid email'],
+      validate: [validator.isEmail, "Please provide a valid email"],
     },
     image: {
       type: String,
     },
     organisation: {
       type: String,
-      trim: true,
-      maxlength: 25,
+      default: "Facebook Inc.", // TODO This needs to fixed
     },
-  
+    designation: {
+      type: String,
+      default: "Product Manager", // TODO This needs to fixed
+    },
+    city: {
+      type: String,
+      default: "Mountain View, CA", // TODO This needs to fixed
+    },
+    country: {
+      type: String,
+      default: "USA", // TODO This needs to fixed
+    },
     headline: {
       type: String,
       trim: true,
       maxlength: 250,
-     // default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
+      // default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
     },
     sessions: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Session',
+        ref: "Session",
       },
     ],
     eventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
     },
     createdAt: {
       type: Date,
       default: Date.now(),
     },
-    socialMediaHandles:{
-      type :Map,
-      of:String
-    }
+    socialMediaHandles: {
+      type: Map,
+      of: String,
+    },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
-speakerSchema.index({ firstName: "text",lastName:"text",headline:"text" });
+speakerSchema.index({ firstName: "text", lastName: "text", headline: "text" });
 
-
-
-speakerSchema.pre(/^find/, function(next) {
- 
+speakerSchema.pre(/^find/, function (next) {
   this.find({ status: { $ne: "Deleted" } });
   next();
 });
 
-const Speaker = mongoose.model('Speaker', speakerSchema);
+const Speaker = mongoose.model("Speaker", speakerSchema);
 
 module.exports = Speaker;

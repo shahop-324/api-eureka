@@ -1,7 +1,14 @@
 const users = [];
 const sessions = [];
 const sessionUsers = [];
-let stageMembers=0;
+let stageMembers = 0;
+const Rooms = [];
+
+const mongoose = require("mongoose");
+const Event = require("../models/eventModel");
+const UsersInSession = require("../models/usersInSessionModel");
+const UsersInEvent = require("./../models/usersInEventModel");
+// const UserInEvent = require("./../models/usersInEventModel");
 
 // Add session (setting status to started)
 
@@ -43,7 +50,6 @@ const updateSession = ({ id, sessionStatus, sessionId, room }) => {
   return { existingSession };
 };
 
-
 // Remove session (setting status to ended)
 
 const removeSession = (id) => {
@@ -53,48 +59,38 @@ const removeSession = (id) => {
   if (index !== -1) return sessions.splice(index, 1)[0];
 };
 
-
-const removeUserFromSession = (id) => {
-  //console.log(users,"20 lobby controller")
-  const index = sessionUsers.findIndex((user) => user.id === id);
-
-  if (index !== -1) {
-    
-    
-    if(role==="host" || role==="speaker") {
-      stageMembers--;
+const removeUser = async (userId) => {
+  
+  await UsersInEvent.findOneAndUpdate(
+    { userId: mongoose.Types.ObjectId(userId) },
+    { status: "Inactive" },
+    { new: true },
+    (err, doc) => {
+      console.log(err);
+      console.log(doc);
+      return doc;
     }
-    return sessionUsers.splice(index, 1)[0];
-  
-  
-  }
+  );
 };
-//const removeUser = (id) => users.filter((user) => user.id !== id);
 
-// const getUser = (id) => users.find((user) => user.id === id);
+const removeUserFromSession = async (userId) => {
+  
+  await UsersInSession.findOneAndUpdate(
+    { userId: mongoose.Types.ObjectId(userId) },
+    { status: "Inactive" },
+    { new: true },
+    (err, doc) => {
+      console.log(err);
+      console.log(doc);
+      return doc;
+    }
+  );
+};
 
 const getSessionsInRoom = (room) =>
   sessions.filter((session) => session.room === room);
 
-const addUser = ({ id, email, room }) => {
-  //   name = name.trim().toLowerCase();
-  //   room = room.trim().toLowerCase();
 
-  const existingUser = users.find(
-    (user) => user.room === room && user.email === email
-  );
-
-  if (!room || !email) return { error: "email and room are required." };
-  // if(existingUser) return { error: 'Username is taken.' };
-
-  const user = { id, email, room };
-
-  if (!existingUser) {
-    users.push(user);
-  }
-
-  return { user };
-};
 
 const addUserInSession = ({ id, userId, room, role }) => {
   //   name = name.trim().toLowerCase();
@@ -107,16 +103,10 @@ const addUserInSession = ({ id, userId, room, role }) => {
   if (!room || !userId) return { error: "userId and room are required." };
   // if(existingUser) return { error: 'Username is taken.' };
 
-  const sessionUser = { id, userId, room,role  };
-if(role==="host"||role==="speaker")
-{
-
-   stageMembers+=1;
-
-}
-   
-    
-
+  const sessionUser = { id, userId, room, role };
+  if (role === "host" || role === "speaker") {
+    stageMembers += 1;
+  }
 
   if (!existingUser) {
     sessionUsers.push(sessionUser);
@@ -125,38 +115,34 @@ if(role==="host"||role==="speaker")
   return { sessionUser };
 };
 
+// const removeUser = (id) => {
+//   console.log(users, "20 lobby controller");
+//   const index = users.findIndex((user) => user.id === id);
 
+//   console.log(index);
 
-
-const removeUser = (id) => {
-  console.log(users, "20 lobby controller");
-  const index = users.findIndex((user) => user.id === id);
-
-  console.log(index);
-
-  if (index !== -1) return users.splice(index, 1)[0];
-};
+//   if (index !== -1) return users.splice(index, 1)[0];
+// };
 //const removeUser = (id) => users.filter((user) => user.id !== id);
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+// const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
-const getUsersInSession = (room) => sessionUsers.filter((sessionUser) => sessionUser.room === room);
+const getUsersInSession = (room) =>
+  sessionUsers.filter((sessionUser) => sessionUser.room === room);
 
 const getStageMembers = () => stageMembers;
 
 module.exports = {
-  addUser,
   removeUser,
   getUser,
-  getUsersInRoom,
   addSession,
   updateSession,
-  removeUserFromSession,
   getSessionsInRoom,
   getStageMembers,
   addUserInSession,
   getUsersInSession,
   removeSession,
+  removeUserFromSession,
 };

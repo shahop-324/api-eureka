@@ -57,6 +57,21 @@ const sessionSchema = new mongoose.Schema(
       default:
         "From combatting Email Fraud to Building Your Brand! Research: Stories about brands being phished, loss of trust due to phishing, Success stories due to DMARC",
     },
+    currentlyInSession: [
+      { type: mongoose.Schema.ObjectId, ref: "UsersInSession" },
+    ],
+    runningStatus: {
+      type: String,
+      default: "Not Yet Started",
+      enum: ["Not Yet Started", "Started", "Paused", "Ended", "Resumed"],
+    },
+    currentlyOnStage: {
+      type: Number,
+      default: 0,
+    },
+    sessionStatus: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -64,10 +79,9 @@ const sessionSchema = new mongoose.Schema(
   }
 );
 
-sessionSchema.index({ name: "text",description:"text"});
+sessionSchema.index({ name: "text", description: "text" });
 
-sessionSchema.pre(/^find/, function(next) {
- 
+sessionSchema.pre(/^find/, function (next) {
   this.find({ status: { $ne: "Deleted" } });
   next();
 });
