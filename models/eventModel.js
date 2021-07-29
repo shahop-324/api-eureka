@@ -293,6 +293,18 @@ const eventSchema = new mongoose.Schema(
         ref: "SessionsStatus",
       },
     ],
+    chairs: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "RoomChair",
+      },
+    ],
+    tables: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "RoomTable",
+      },
+    ],
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

@@ -35,6 +35,8 @@ const lobbyController = require("./controllers/lobbyController");
 const UsersInEvent = require("./models/usersInEventModel");
 const UsersInSession = require("./models/usersInSessionModel");
 const Session = require("./models/sessionModel");
+const RoomChair = require("./models/roomChairModel");
+const RoomTable = require("./models/roomTableModel");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -83,6 +85,256 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  socket.on(
+    "updateChair",
+    (
+      {
+        eventId,
+        tableId,
+        chairId,
+        userName,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+        status,
+      },
+      callback
+    ) => {
+      socket.join(tableId);
+
+      fetchCurrentRoomChairs = async () => {
+        await Event.findById(eventId, (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(doc, "This is roomChairs data in this Event");
+            io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
+          }
+        })
+          .select("chairs")
+          .populate("chairs");
+      };
+
+      fetchNumberOfPeopleOnTable = async () => {
+        await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(
+              tableDoc,
+              "This is Table doc from fetch Number Of People On table."
+            );
+            io.to(tableId).emit("numberOfPeopleOnTable", {
+              numberOfPeopleOnTable: tableDoc.numberOfPeople,
+            });
+          }
+        });
+      };
+
+      const addUserToChair = async ({
+        eventId,
+        tableId,
+        chairId,
+        userName,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+        status,
+      }) => {
+        const existingChair = await RoomChair.findOne(
+          { chairId: chairId },
+          async (err, existingChair) => {
+            if (err) {
+              console.log(err);
+            } else {
+              if (!existingChair) {
+                // Write what to do when chair is not existing
+
+                await RoomChair.create(
+                  {
+                    status: "Occupied",
+                    eventId: eventId,
+                    tableId: tableId,
+                    userName: userName,
+                    userEmail: userEmail,
+                    userImage: userImage,
+                    usercity: userCity,
+                    userCountry: userCountry,
+                    userOrganisation: userOrganisation,
+                    userDesignation: userDesignation,
+                  },
+                  async (err, newChair) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log(newChair);
+
+                      const existingTable = await RoomTable.findOne(
+                        { tableId: tableid },
+                        async (err, table) => {
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            if (!table) {
+                              // handle if table does not exists
+
+                              await RoomTable.create(
+                                {
+                                  eventId: eventId,
+                                  tableId: tableId,
+                                  numberOfPeople: 1,
+                                },
+                               async (err, newTable) => {
+                                  if (err) {
+                                    console.log(err);
+                                  } else {
+                                    console.log(newTable);
+                                    fetchNumberOfPeopleOnTable();
+                                    await Event.findById(
+                                      eventId,
+                                      (err, event) => {
+                                        if (err) {
+                                          console.log(err);
+                                        } else {
+                                          event.tables.push(newTable._id);
+                                        }
+                                      }
+                                    );
+                                  }
+                                }
+                              );
+                            } else {
+                              // handle if table already exists
+
+                              await RoomTable.findOne(
+                                { tableId: tableId },
+                                (err, tableDoc) => {
+                                  if (err) {
+                                    console.log(err);
+                                  } else {
+                                    tableDoc.numberOfPeople =
+                                      tableDoc.numberOfPeople + 1;
+                                    tableDoc.save(
+                                      { validateModifiedOnly: true },
+                                      (err, updatedTableDoc) => {
+                                        if (err) {
+                                          console.log(err);
+                                        } else {
+                                          console.log(updatedTableDoc);
+                                          // TODO call fetchNumberOfPeopleOnTable
+                                          fetchNumberOfPeopleOnTable();
+                                        }
+                                      }
+                                    );
+                                  }
+                                }
+                              );
+                            }
+                          }
+                        }
+                      );
+
+                      await Event.findById(eventId, async (err, eventDoc) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log(eventDoc);
+                          eventDoc.chairs.push(newChair._id);
+
+                          await eventDoc.save(
+                            { validateModifiedOnly: true },
+                            async (err, updatedEventDoc) => {
+                              if (err) {
+                                console.log(err);
+                              } else {
+                                console.log(updatedEventDoc);
+                                fetchCurrentRoomChairs();
+                              }
+                            }
+                          );
+                        }
+                      });
+                    }
+                  }
+                );
+              } else {
+                // Write what to do when chair already exists
+
+                await RoomTable.findOne(
+                  { tableId: tableId },
+                  (err, tableDoc) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      tableDoc.numberOfPeople = tableDoc.numberOfPeople + 1;
+                      tableDoc.save(
+                        { validateModifiedOnly: true },
+                        (err, updatedTableDoc) => {
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            console.log(updatedTableDoc);
+                            // TODO call fetchNumberOfPeopleOnTable
+                            fetchNumberOfPeopleOnTable();
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+
+                existingChair.status = "Occupied";
+                existingChair.userName = userName;
+                existingChair.userEmail = userEmail;
+                existingChair.userImage = userImage;
+                existingChair.userCity = userCity;
+                existingChair.userCountry = userCountry;
+                existingChair.userDesignation = userDesignation;
+                existingChair.userOrganisation = userOrganisation;
+
+                existingChair.save(
+                  { validateModifiedOnly: true },
+                  async (err, updatedChair) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log(updatedChair);
+                      fetchCurrentRoomChairs();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        );
+      };
+
+      const { error } = addUserToChair({
+        eventId: eventId,
+        tableId: tableId,
+        chairId: chairId,
+        userName: userName,
+        userEmail: userEmail,
+        userImage: userImage,
+        userCity: userCity,
+        userCountry: userCountry,
+        userOrganisation: userOrganisation,
+        userDesignation: userDesignation,
+        status: status,
+      });
+
+      if (error) return callback(error);
+
+      callback();
+    }
+  );
+
   socket.on(
     "join",
     (
@@ -194,9 +446,6 @@ io.on("connect", (socket) => {
         );
 
         if (!room || !email) return { error: "email and room are required." };
-        // if(existingUser) return { error: 'Username is taken.' };
-
-        // return { user };
       };
 
       const { error } = addUser({
@@ -246,8 +495,6 @@ io.on("connect", (socket) => {
           io.to(sessionId).emit("sessionRoomData", {
             sessionUsers: doc.currentlyInSession,
           });
-
-          
         })
           .select("currentlyInSession")
           .populate({
@@ -260,14 +507,15 @@ io.on("connect", (socket) => {
 
       const fetchCurrentlyOnStage = async () => {
         await Session.findById(sessionId, (err, doc) => {
-          console.log(doc, "This is currently on session stage fetchUserInSession");
+          console.log(
+            doc,
+            "This is currently on session stage fetchUserInSession"
+          );
 
           io.to(sessionId).emit("stageMembers", {
             stageMembers: doc,
           });
-
-        })
-          .select("currentlyOnStage");
+        }).select("currentlyOnStage");
       };
 
       const addUserInSession = async ({
@@ -317,8 +565,9 @@ io.on("connect", (socket) => {
                     const sessionDoc = await Session.findById(room);
                     sessionDoc.currentlyInSession.push(doc._id);
 
-                    if(sessionRole !== "audience") {
-                      sessionDoc.currentlyOnStage = sessionDoc.currentlyOnStage + 1;
+                    if (sessionRole !== "audience") {
+                      sessionDoc.currentlyOnStage =
+                        sessionDoc.currentlyOnStage + 1;
                     }
 
                     await sessionDoc.save(
@@ -328,7 +577,6 @@ io.on("connect", (socket) => {
                           console.log(err);
                         } else {
                           fetchCurrentUsersInSession();
-
                         }
                       }
                     );
