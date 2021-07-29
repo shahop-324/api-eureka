@@ -85,6 +85,88 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  socket.on("leaveChair", ({ chairId, eventId, tableId }, callback) => {
+    fetchCurrentRoomChairs = async () => {
+      await Event.findById(eventId, (err, doc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(doc, "This is roomChairs data in this Event");
+          io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
+        }
+      })
+        .select("chairs")
+        .populate("chairs");
+    };
+
+    fetchNumberOfPeopleOnTable = async () => {
+      await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(
+            tableDoc,
+            "This is Table doc from fetch Number Of People On table."
+          );
+          io.to(tableId).emit("numberOfPeopleOnTable", {
+            numberOfPeopleOnTable: tableDoc.numberOfPeople,
+          });
+        }
+      });
+    };
+
+    const unOccupyChair = async ({ chairId, eventId, tableId }) => {
+      await RoomChair.findOneAndUpdate(
+        { chairId: chairId },
+        { status: "Unoccupied" },
+        { new: true },
+       async (err, updatedChair) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(
+              updatedChair,
+              "This is updated chair after leaving it."
+            );
+
+            await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(tableDoc);
+
+                tableDoc.numberOfPeople = tableDoc.numberOfPeople - 1;
+                tableDoc.save(
+                  { validateModifiedOnly: true },
+                  (err, updatedTableDoc) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log(
+                        updatedTableDoc,
+                        "This is updated table document after leaving table."
+                      );
+
+                      fetchCurrentRoomChairs(); // ! Listen To This event
+
+                      fetchNumberOfPeopleOnTable(); // ! Listen To This event
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
+    };
+
+    const { error } = unOccupyChair({ chairId, eventId, tableId });
+
+    if (error) return callback(error);
+
+    callback();
+  });
+
   socket.on(
     "updateChair",
     (
@@ -161,6 +243,7 @@ io.on("connect", (socket) => {
                     status: "Occupied",
                     eventId: eventId,
                     tableId: tableId,
+                    chairId: chairId,
                     userName: userName,
                     userEmail: userEmail,
                     userImage: userImage,
@@ -176,7 +259,7 @@ io.on("connect", (socket) => {
                       console.log(newChair);
 
                       const existingTable = await RoomTable.findOne(
-                        { tableId: tableid },
+                        { tableId: tableId },
                         async (err, table) => {
                           if (err) {
                             console.log(err);
@@ -190,7 +273,7 @@ io.on("connect", (socket) => {
                                   tableId: tableId,
                                   numberOfPeople: 1,
                                 },
-                               async (err, newTable) => {
+                                async (err, newTable) => {
                                   if (err) {
                                     console.log(err);
                                   } else {
