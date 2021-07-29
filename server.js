@@ -86,6 +86,8 @@ const {
 } = lobbyController;
 io.on("connect", (socket) => {
   socket.on("leaveChair", ({ chairId, eventId, tableId }, callback) => {
+    
+
     fetchCurrentRoomChairs = async () => {
       await Event.findById(eventId, (err, doc) => {
         if (err) {
@@ -108,6 +110,9 @@ io.on("connect", (socket) => {
             tableDoc,
             "This is Table doc from fetch Number Of People On table."
           );
+
+          console.log(tableDoc.numberOfPeople, "number of People after removing")
+
           io.to(tableId).emit("numberOfPeopleOnTable", {
             numberOfPeopleOnTable: tableDoc.numberOfPeople,
           });
@@ -118,9 +123,18 @@ io.on("connect", (socket) => {
     const unOccupyChair = async ({ chairId, eventId, tableId }) => {
       await RoomChair.findOneAndUpdate(
         { chairId: chairId },
-        { status: "Unoccupied" },
+        {
+          status: "Unoccupied",
+          userName: null,
+          userEmail: null,
+          userImage: null,
+          userCity: null,
+          userCountry: null,
+          userOrganisation: null,
+          userDesignation: null,
+        },
         { new: true },
-       async (err, updatedChair) => {
+        async (err, updatedChair) => {
           if (err) {
             console.log(err);
           } else {
@@ -150,6 +164,8 @@ io.on("connect", (socket) => {
                       fetchCurrentRoomChairs(); // ! Listen To This event
 
                       fetchNumberOfPeopleOnTable(); // ! Listen To This event
+
+                      socket.leave(tableId);
                     }
                   }
                 );
@@ -192,7 +208,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(doc, "This is roomChairs data in this Event");
+            console.log(doc.chairs, "This is roomChairs data in this Event, oooooooooooooooppppppppp");
             io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
           }
         })
@@ -789,6 +805,7 @@ io.on("connect", (socket) => {
   });
 
   socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
+    socket.leave(sessionId);
     console.log("Disconnect User From Session was fired!");
     const sessionUser = removeUserFromSession(userId);
 
@@ -827,6 +844,7 @@ io.on("connect", (socket) => {
   });
 
   socket.on("disconnectUser", ({ userId, eventId }) => {
+    socket.leave(eventId);
     console.log("Disconnect User was fired!");
     const user = removeUser(userId);
 
