@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
       default:
-        "60e1c15b557681e9fc6af91e/user_account_profile_avatar_person_student_male-512.png",
+        "60e1c15b557681e9fc6af91e/20190907_105616.jpg",
     },
     password: {
       type: String,
