@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 process.on("uncaughtException", (err) => {
-  // console.log(err.name, err.message);
+  
   console.log(err);
   console.log("UNCAUGHT Exception! Shutting down ...");
   process.exit(1);
@@ -50,11 +50,11 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((con) => {
-    // console.log(con.connections);
+    
     console.log("DB Connection successful");
   });
 
-// console.log(process.env);
+
 
 const port = process.env.PORT || 8000;
 
@@ -93,7 +93,7 @@ io.on("connect", (socket) => {
         if (err) {
           console.log(err);
         } else {
-          console.log(doc, "This is roomChairs data in this Event");
+          
           io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
         }
       })
@@ -104,14 +104,9 @@ io.on("connect", (socket) => {
     fetchNumberOfPeopleOnTable = async () => {
       await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
         if (err) {
-          console.log(err);
+          
         } else {
-          console.log(
-            tableDoc,
-            "This is Table doc from fetch Number Of People On table."
-          );
-
-          console.log(tableDoc.numberOfPeople, "number of People after removing")
+          
 
           io.to(tableId).emit("numberOfPeopleOnTable", {
             numberOfPeopleOnTable: tableDoc.numberOfPeople,
@@ -138,28 +133,22 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(
-              updatedChair,
-              "This is updated chair after leaving it."
-            );
+            
 
             await RoomTable.findOne({ tableId: tableId }, (err, tableDoc) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(tableDoc);
+                
 
-                tableDoc.numberOfPeople = tableDoc.numberOfPeople - 1;
+                tableDoc.numberOfPeople = tableDoc.numberOfPeople ? tableDoc.numberOfPeople - 1 : 0;
                 tableDoc.save(
                   { validateModifiedOnly: true },
                   (err, updatedTableDoc) => {
                     if (err) {
                       console.log(err);
                     } else {
-                      console.log(
-                        updatedTableDoc,
-                        "This is updated table document after leaving table."
-                      );
+                      
 
                       fetchCurrentRoomChairs(); // ! Listen To This event
 
@@ -208,7 +197,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(doc.chairs, "This is roomChairs data in this Event, oooooooooooooooppppppppp");
+            
             io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
           }
         })
@@ -221,10 +210,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(
-              tableDoc,
-              "This is Table doc from fetch Number Of People On table."
-            );
+            
             io.to(tableId).emit("numberOfPeopleOnTable", {
               numberOfPeopleOnTable: tableDoc.numberOfPeople,
             });
@@ -263,7 +249,7 @@ io.on("connect", (socket) => {
                     userName: userName,
                     userEmail: userEmail,
                     userImage: userImage,
-                    usercity: userCity,
+                    userCity: userCity,
                     userCountry: userCountry,
                     userOrganisation: userOrganisation,
                     userDesignation: userDesignation,
@@ -272,7 +258,7 @@ io.on("connect", (socket) => {
                     if (err) {
                       console.log(err);
                     } else {
-                      console.log(newChair);
+                      
 
                       const existingTable = await RoomTable.findOne(
                         { tableId: tableId },
@@ -293,7 +279,7 @@ io.on("connect", (socket) => {
                                   if (err) {
                                     console.log(err);
                                   } else {
-                                    console.log(newTable);
+                                    
                                     fetchNumberOfPeopleOnTable();
                                     await Event.findById(
                                       eventId,
@@ -325,7 +311,7 @@ io.on("connect", (socket) => {
                                         if (err) {
                                           console.log(err);
                                         } else {
-                                          console.log(updatedTableDoc);
+                                          
                                           // TODO call fetchNumberOfPeopleOnTable
                                           fetchNumberOfPeopleOnTable();
                                         }
@@ -343,7 +329,7 @@ io.on("connect", (socket) => {
                         if (err) {
                           console.log(err);
                         } else {
-                          console.log(eventDoc);
+                          
                           eventDoc.chairs.push(newChair._id);
 
                           await eventDoc.save(
@@ -352,7 +338,7 @@ io.on("connect", (socket) => {
                               if (err) {
                                 console.log(err);
                               } else {
-                                console.log(updatedEventDoc);
+                                
                                 fetchCurrentRoomChairs();
                               }
                             }
@@ -378,7 +364,7 @@ io.on("connect", (socket) => {
                           if (err) {
                             console.log(err);
                           } else {
-                            console.log(updatedTableDoc);
+                            
                             // TODO call fetchNumberOfPeopleOnTable
                             fetchNumberOfPeopleOnTable();
                           }
@@ -403,7 +389,7 @@ io.on("connect", (socket) => {
                     if (err) {
                       console.log(err);
                     } else {
-                      console.log(updatedChair);
+                      
                       fetchCurrentRoomChairs();
                     }
                   }
@@ -454,7 +440,7 @@ io.on("connect", (socket) => {
 
       const fetchCurrentUsers = async () => {
         await Event.findById(eventId, (err, doc) => {
-          console.log(doc, "This is events doc from getUsersInRoom");
+          
           io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
         })
           .select("currentlyInEvent")
@@ -481,7 +467,7 @@ io.on("connect", (socket) => {
         // const existingUser = users.find(
         //   (user) => user.room === room && user.email === email
         // );
-        console.log(id, userId, "This is my console log");
+        
 
         const existingUser = await UsersInEvent.findOne(
           {
@@ -490,7 +476,7 @@ io.on("connect", (socket) => {
           async (error, existingUser) => {
             console.log("error", error);
 
-            console.log(existingUser, "existingUser");
+            
 
             let mongoUser;
 
@@ -509,7 +495,7 @@ io.on("connect", (socket) => {
                   userDesignation: userDesignation,
                 },
                 async (err, doc) => {
-                  console.log(doc, "line 103");
+                  
                   console.log("error: ", err);
 
                   if (!existingUser) {
@@ -536,7 +522,7 @@ io.on("connect", (socket) => {
                 { new: true },
                 (err, doc) => {
                   console.log(err);
-                  console.log(doc);
+                  
                   fetchCurrentUsers();
                 }
               );
@@ -583,13 +569,13 @@ io.on("connect", (socket) => {
       },
       callback
     ) => {
-      console.log("Join session was fired!");
+      
 
       socket.join(sessionId);
 
       const fetchCurrentUsersInSession = async () => {
         await Session.findById(sessionId, (err, doc) => {
-          console.log(doc, "This is session doc from fetchUserInSession");
+          
 
           io.to(sessionId).emit("sessionRoomData", {
             sessionUsers: doc.currentlyInSession,
@@ -606,10 +592,7 @@ io.on("connect", (socket) => {
 
       const fetchCurrentlyOnStage = async () => {
         await Session.findById(sessionId, (err, doc) => {
-          console.log(
-            doc,
-            "This is currently on session stage fetchUserInSession"
-          );
+          
 
           io.to(sessionId).emit("stageMembers", {
             stageMembers: doc,
@@ -637,7 +620,7 @@ io.on("connect", (socket) => {
           async (error, existingUser) => {
             console.log("error", error);
 
-            console.log(existingUser, "existingUser");
+           
 
             let mongoUser;
 
@@ -657,7 +640,7 @@ io.on("connect", (socket) => {
                   userDesignation: userDesignation,
                 },
                 async (err, doc) => {
-                  console.log(doc, "line 296");
+                  
                   console.log("error: ", err);
 
                   if (!existingUser) {
@@ -689,7 +672,7 @@ io.on("connect", (socket) => {
                 { new: true },
                 (err, doc) => {
                   console.log(err);
-                  console.log(doc);
+                  
                   fetchCurrentUsersInSession();
                   fetchCurrentlyOnStage();
                 }
@@ -743,9 +726,7 @@ io.on("connect", (socket) => {
   socket.on(
     "setSessionRunningStatus",
     async ({ sessionId, eventId, sessionRunningStatus }, callback) => {
-      console.log("sessionId", sessionId);
-      console.log("eventId", eventId);
-      console.log("sessionRunningStatus", sessionRunningStatus);
+      
 
       await Session.findByIdAndUpdate(
         sessionId,
@@ -755,7 +736,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(doc, "This is updated session document");
+            
 
             io.to(eventId).emit("updatedSession", {
               session: doc,
@@ -780,7 +761,7 @@ io.on("connect", (socket) => {
         sessionId: sessionId,
         room: eventId,
       });
-      // console.log(user);
+      
 
       if (error) return callback(error);
 
@@ -806,12 +787,12 @@ io.on("connect", (socket) => {
 
   socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
     socket.leave(sessionId);
-    console.log("Disconnect User From Session was fired!");
+    
     const sessionUser = removeUserFromSession(userId);
 
     const fetchCurrentUsersInSession = async () => {
       await Session.findById(sessionId, (err, doc) => {
-        console.log(doc, "This is session doc from fetchUsersInSession");
+        
 
         io.to(sessionId).emit("sessionRoomData", {
           sessionUsers: doc.currentlyInSession,
@@ -845,12 +826,12 @@ io.on("connect", (socket) => {
 
   socket.on("disconnectUser", ({ userId, eventId }) => {
     socket.leave(eventId);
-    console.log("Disconnect User was fired!");
+    
     const user = removeUser(userId);
 
     const fetchCurrentUsers = async () => {
       await Event.findById(eventId, (err, doc) => {
-        console.log(doc, "This is events doc from getUsersInRoom");
+        
         io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
       })
         .select("currentlyInEvent")
