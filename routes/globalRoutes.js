@@ -13,5 +13,7 @@ router.post('/generateEventAccessToken', globalController.createEventAccessToken
 
 router.post('/getRTCVideoCallToken',globalController.nocache, authController.protect, globalController.generateTokenForVideoCall);
 
+router.post('/getRTCScreenToken',globalController.nocache, authController.protect, globalController.generateTokenForScreenShareCall);
+
 
 module.exports = router;
