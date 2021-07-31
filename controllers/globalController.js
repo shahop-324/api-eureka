@@ -148,55 +148,31 @@ exports.generateTokenForVideoCall = catchAsync(async (req, res, next) => {
   const channel = req.body.tableId;
   const userId = req.user._id;
 
-  const appID = '6877e158655f4810968b19e65d0bbb23';
-const appCertificate = '8a33b9e912794ab4a78ddd5aafbc590a';
-const channelName = channel;
-const uid = userId;
-const account = "2882341273";
-const role = RtcRole.PUBLISHER;
- 
-const expirationTimeInSeconds = 3600
- 
-const currentTimestamp = Math.floor(Date.now() / 1000)
- 
-const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
- 
-// IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
- 
-// Build token with uid
-const token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, role, privilegeExpiredTs);
-console.log("Token With Integer Number Uid: " + token);
+  const appID = "6877e158655f4810968b19e65d0bbb23";
+  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const channelName = channel;
+  const uid = userId;
+  const account = "2882341273";
+  const role = RtcRole.PUBLISHER;
 
-  
+  const expirationTimeInSeconds = 3600;
 
-  res.status(200).json({
-    status: "success",
-    token: token,
-  });
-});
+  const currentTimestamp = Math.floor(Date.now() / 1000);
 
-exports.generateTokenForScreenShareCall = catchAsync(async (req, res, next) => {
-  const channel = req.body.tableId;
-  const userId = `${req.user._id}_screen`;
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
-  const appID = '6877e158655f4810968b19e65d0bbb23';
-const appCertificate = '8a33b9e912794ab4a78ddd5aafbc590a';
-const channelName = channel;
-const uid = userId;
-const account = "2882341273";
-const role = RtcRole.PUBLISHER;
- 
-const expirationTimeInSeconds = 3600
- 
-const currentTimestamp = Math.floor(Date.now() / 1000)
- 
-const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
- 
-// IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
- 
-// Build token with uid
-const token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, role, privilegeExpiredTs);
-console.log("Token With Integer Number Uid: " + token);
+  // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+  // Build token with uid
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appID,
+    appCertificate,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs
+  );
+  console.log("Token With Integer Number Uid: " + token);
 
   res.status(200).json({
     status: "success",
@@ -204,9 +180,32 @@ console.log("Token With Integer Number Uid: " + token);
   });
 });
 
-exports.nocache = (req, res, next) => {
-  res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
-  res.header("Expires", "-1");
-  res.header("Pragma", "no-cache");
-  next();
-};
+exports.generateRTMToken = catchAsync(async (req, res, next) => {
+  const channel = req.body.eventId;
+
+  const userId = req.user._id;
+
+  const appID = "6877e158655f4810968b19e65d0bbb23";
+  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+
+  const account = userId.toString();
+
+  const expirationTimeInSeconds = 3600;
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  const token = RtmTokenBuilder.buildToken(
+    appID,
+    appCertificate,
+    account,
+    RtmRole,
+    privilegeExpiredTs
+  );
+  console.log("Rtm Token: " + token);
+
+  res.status(200).json({
+    status: "success",
+    token: token,
+  });
+});
