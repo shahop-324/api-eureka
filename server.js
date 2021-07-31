@@ -799,9 +799,10 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
+                console.log(eventDoc);
                 eventDoc.chatMessages.push(chatMsgDoc._id);
 
-                eventDoc.save({ validateModifiedOnly }, (err, data) => {
+                eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
                   if (err) {
                     console.log(err);
                   } else {
