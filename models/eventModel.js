@@ -305,6 +305,12 @@ const eventSchema = new mongoose.Schema(
         ref: "RoomTable",
       },
     ],
+    chatMessages: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventChatMessage",
+      },
+    ],
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },
