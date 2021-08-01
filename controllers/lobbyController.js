@@ -59,38 +59,51 @@ const removeSession = (id) => {
   if (index !== -1) return sessions.splice(index, 1)[0];
 };
 
-const removeUser = async (userId) => {
-  
+const removeUser = async (userId, eventId) => {
   await UsersInEvent.findOneAndUpdate(
-    { userId: mongoose.Types.ObjectId(userId) },
+    {
+      $and: [
+        { userId: mongoose.Types.ObjectId(userId) },
+        { room: mongoose.Types.ObjectId(eventId) },
+      ],
+    },
     { status: "Inactive" },
     { new: true },
     (err, doc) => {
-      console.log(err);
-      console.log(doc);
-      return doc;
+      if(err) {
+        console.log(err);
+      }
+      else {
+        console.log(doc);
+        return doc;
+      }
     }
   );
 };
 
-const removeUserFromSession = async (userId) => {
-  
+const removeUserFromSession = async (userId, sessionId) => {
   await UsersInSession.findOneAndUpdate(
-    { userId: mongoose.Types.ObjectId(userId) },
+    {
+      $and: [
+        { userId: mongoose.Types.ObjectId(userId) },
+        { room: mongoose.Types.ObjectId(sessionId) },
+      ],
+    },
     { status: "Inactive" },
     { new: true },
     (err, doc) => {
-      console.log(err);
-      console.log(doc);
-      return doc;
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(doc);
+        return doc;
+      }
     }
   );
 };
 
 const getSessionsInRoom = (room) =>
   sessions.filter((session) => session.room === room);
-
-
 
 const addUserInSession = ({ id, userId, room, role }) => {
   //   name = name.trim().toLowerCase();
