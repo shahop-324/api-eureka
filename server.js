@@ -55,24 +55,8 @@ mongoose
 
 const port = process.env.PORT || 8000;
 
-// app.use(cors(
-// {
-
-// }
-
-// ));
-// app.use(
-//   cors({
-//      origin: "http://localhost:3001",
-//     //origin: "*",
-//     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
-
-//     credentials: true,
-//   })
-// );
 const {
   removeUser,
-
   getUsersInSession,
   getStageMembers,
   addSession,
@@ -505,7 +489,12 @@ io.on("connect", (socket) => {
               );
             } else {
               await UsersInEvent.findOneAndUpdate(
-                { userId: mongoose.Types.ObjectId(userId) },
+                {
+                  $and: [
+                    { userId: mongoose.Types.ObjectId(userId) },
+                    { room: mongoose.Types.ObjectId(eventId) },
+                  ],
+                },
                 { status: "Active" },
                 { new: true },
                 (err, doc) => {
@@ -659,14 +648,18 @@ io.on("connect", (socket) => {
               );
             } else {
               await UsersInSession.findOneAndUpdate(
-                { userId: mongoose.Types.ObjectId(userId) },
+                {
+                  $and: [
+                    { userId: mongoose.Types.ObjectId(userId) },
+                    { room: mongoose.Types.ObjectId(sessionId) },
+                  ],
+                },
                 { status: "Active" },
                 { new: true },
                 (err, doc) => {
-                  if(err) {
+                  if (err) {
                     console.log(err);
-                  }
-                  else {
+                  } else {
                     fetchCurrentUsersInSession(sessionId);
                     fetchCurrentlyOnStage(sessionId);
                   }
@@ -707,10 +700,12 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
+            // transmit to whole event
             io.to(eventId).emit("updatedSession", {
               session: doc,
             });
 
+            // transmit to people currently in session
             io.to(sessionId).emit("updatedCurrentSession", {
               session: doc,
             });
@@ -779,15 +774,13 @@ io.on("connect", (socket) => {
   );
 
   socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
-    
     const sessionUser = removeUserFromSession(userId, sessionId);
 
     const fetchCurrentUsersInSession = async (sessionId) => {
       await Session.findById(sessionId, (err, doc) => {
-        if(err) {
+        if (err) {
           console.log(err);
-        }
-        else {
+        } else {
           io.to(sessionId).emit("sessionRoomData", {
             sessionUsers: doc.currentlyInSession,
           });
@@ -804,7 +797,7 @@ io.on("connect", (socket) => {
     };
 
     fetchCurrentUsersInSession(sessionId);
-    socket.leave(sessionId);
+    // socket.leave(sessionId);
   });
 
   socket.on("disconnectUser", ({ userId, eventId }) => {
@@ -812,10 +805,9 @@ io.on("connect", (socket) => {
 
     const fetchCurrentUsers = async (eventId) => {
       await Event.findById(eventId, (err, doc) => {
-        if(err) {
+        if (err) {
           console.log(err);
-        }
-        else {
+        } else {
           io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
         }
       })
@@ -829,7 +821,7 @@ io.on("connect", (socket) => {
     };
 
     fetchCurrentUsers(eventId);
-    socket.leave(eventId);
+    // socket.leave(eventId);
   });
 });
 

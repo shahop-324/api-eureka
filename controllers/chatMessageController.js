@@ -1,14 +1,15 @@
-// const catchAsync = require("../utils/catchAsync");
-// const AppError = require("../utils/appError");
-// const EventChatMessage = require("../models/eventChatMessageModel");
+const catchAsync = require("../utils/catchAsync");
+const Event = require("../models/eventModel");
 
-// exports.createNewMessage = catchAsync(async(req, res, next) => {
-//     const textMessage = req.body.textMessage;
-//     const eventId = req.body.eventId;
+exports.getPreviousEventChatMessage = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
 
-//     const userId = req.user._id;
+  const eventChatMessages = await Event.findById(eventId)
+    .select("chatMessages")
+    .populate("chatMessages");
 
-//     const newMessage = 
-
-
-// });
+  res.status(200).json({
+    status: "success",
+    data: eventChatMessages,
+  });
+});

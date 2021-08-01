@@ -52,7 +52,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
- 
+
     .populate("communities")
     .populate("registeredInEvents");
   res.status(200).json({
@@ -726,7 +726,20 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
 exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
   const registeredInEventsList = await User.findById(req.user.id)
     .select("registeredInEvents")
-    .populate("registeredInEvents");
+    .populate({
+      path: "registeredInEvents",
+
+      populate: {
+        path: "tickets speaker sponsors session createdBy coupon",
+        options: {
+          match: {
+            status: "Active",
+          },
+        },
+      },
+    });
+
+  console.log(registeredInEventsList);
   res.status(200).json({
     status: "SUCCESS",
     data: {

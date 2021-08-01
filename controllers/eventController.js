@@ -10,7 +10,7 @@ const Ticket = require("../models/ticketModel");
 const apiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
-const  mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -117,18 +117,24 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
-  // console.log(req.community);
-  // const community = await Community.findById(communityId);
-  // const id = community.eventsDocIdCommunityWise;
+  const query = Event.find({ createdBy: mongoose.Types.ObjectId(communityId) })
+    .populate("sponsors")
+    .populate("tickets")
+    .populate("booths")
+    .populate("session")
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name logo socialMediaHandles",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    });
 
-  // const events = await EventsIdsCommunityWise.findById(id).populate(
-  //   "eventsIds"
-  // );
-
-  const query = Event.find({createdBy: mongoose.Types.ObjectId(communityId)});
-
-  const features = new apiFeatures(query, req.query)
-  .textFilter();
+  const features = new apiFeatures(query, req.query).textFilter();
 
   const events = await features.query;
 
@@ -184,7 +190,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // save refrence of this booth in its event
   eventGettingBooth.booths.push(createdBooth.id);
-  for(let element of req.body.tags) {
+  for (let element of req.body.tags) {
     eventGettingBooth.boothTags.push(element);
   }
   await eventGettingBooth.save({ validateModifiedOnly: true });
@@ -267,8 +273,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     image: req.body.image,
   });
 
-  speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`
-
+  speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`;
 
   // 2.) Send new Invitation via mail to speaker
   const msg = {
