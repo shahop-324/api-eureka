@@ -52,6 +52,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
+  
 
     .populate("communities")
     .populate("registeredInEvents");
