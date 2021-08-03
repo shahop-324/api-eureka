@@ -725,7 +725,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
   );
 });
 exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
-  const registeredInEventsList = await Users.findById(req.user.id)
+  const registeredInEventsList = await User.findById(req.user.id)
     .select("registeredInEvents")
     .populate({
       path: "registeredInEvents",
