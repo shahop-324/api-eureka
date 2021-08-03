@@ -52,7 +52,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
-  
+
 
     .populate("communities")
     .populate("registeredInEvents");
@@ -725,7 +725,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
   );
 });
 exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
-  const registeredInEventsList = await User.findById(req.user.id)
+  const registeredInEventsList = await Users.findById(req.user.id)
     .select("registeredInEvents")
     .populate({
       path: "registeredInEvents",
