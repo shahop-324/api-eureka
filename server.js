@@ -18,7 +18,7 @@ const http = require("http");
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3001",
+    origin: ["http://localhost:3001", "https://www.evenz.in"],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
