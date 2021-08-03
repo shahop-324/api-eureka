@@ -140,7 +140,7 @@ console.log(err);
 });
 
 exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
-  const secret = "12345678";
+  const secret = "sbvhqi839pqp’;a;s;sbuhwuhbhauxwvcywg3638228282fhvhyw";
 
   console.log(req.body.payload.payment.entity);
 
