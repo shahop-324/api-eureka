@@ -15,14 +15,9 @@ const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsComm
 const { convert } = require("exchange-rates-api");
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_pHbL8wg7ApJttl",
-  key_secret: "YwRmrbTadItoMJFDUiY3xNZ8",
+  key_id: "rzp_live_bDVAURs4oXxSGi",
+  key_secret: "TFitnOVh9eOIFK3qdZsfCLfQ",
 });
-
-// (async () => {
-//   let amount = await convert(1, 'USD', 'INR', '2021-07-24');
-//   console.log(amount);
-// })();
 
 exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
