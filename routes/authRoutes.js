@@ -15,9 +15,10 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/signin" }),
   function (req, res) {
+    console.log(req, res);
     // console.log(req.user, req.isAuthenticated());
     req.session.save(function (err) {
-      res.redirect("/user/home");
+      res.status(301).redirect("/user/home");
     });
   }
 );
