@@ -10,7 +10,7 @@ import './../../../../index.css';
 const MainChatComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState("all");
 
-  const { RTMClient, isLoading, error } = useSelector((state) => state.RTM);
+  const {  isLoading } = useSelector((state) => state.RTM);
 
   return (
     <>

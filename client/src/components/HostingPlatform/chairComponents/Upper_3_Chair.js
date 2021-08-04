@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import Faker from "faker";
+
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
@@ -14,7 +15,7 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
     return (chair && chair.chairId ? (chair.chairId === `${id}_chair_3` && chair.status === "Occupied" ? chair  : null) : null);
    }) );
 
-   const chairArrangement = useSelector((state) => state.rooms.chairs);
+   
 
   let chairIsOccupied;
   let userName3;
@@ -44,7 +45,7 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
 
     
     displayPopUp = "none";
-    displayAvatar = "none";
+    
   }
 
   const params = useParams();
@@ -110,7 +111,7 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
         document.getElementById(`${id}_chair_3_img_blob`).remove();
       }
       
-    }, [userImage3]);
+    }, [userImage3, userImage, id]);
 
   return (
     <>

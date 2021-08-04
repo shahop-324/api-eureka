@@ -127,7 +127,7 @@ const Root = () => {
     //  socket.emit('disconnection')
     //  socket.off();
     // }
-  }, []);
+  }, [dispatch, email, eventId, id, role, userCity, userCountry, userName, userImage, userId, userDesignation, userOrganisation]);
 
   useEffect(() => {
     socket.on("roomData", ({ users }) => {
@@ -138,7 +138,7 @@ const Root = () => {
         })
       );
     });
-  }, []);
+  }, [dispatch]);
 
   const speaker = useSelector((state) => {
     return state.speaker.speakers.find((speaker) => {
@@ -165,7 +165,7 @@ const Root = () => {
     return () => {
       dispatch(navigationIndexForHostingPlatform(0));
     };
-  }, []);
+  }, [dispatch]);
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));

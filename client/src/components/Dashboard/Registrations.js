@@ -129,7 +129,7 @@ const Registrations = () => {
 
   useEffect(() => {
     dispatch(fetchRegistrationsOfParticularCommunity(communityId));
-  }, []);
+  }, [dispatch, communityId]);
 
   const { registrationDetails, isLoading, error } = useSelector(
     (state) => state.registration

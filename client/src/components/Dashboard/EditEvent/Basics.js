@@ -12,10 +12,8 @@ import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useParams } from "react-router";
-import { useDispatch } from "react-redux";
-import { fetchParticularEventOfCommunity } from "../../../actions";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -26,7 +24,7 @@ const Basics = () => {
   const id = params.id;
 
   console.log(id);
-  const dispatch = useDispatch();
+  
   // //  dispatch(fetchParticularEventOfCommunity(id));
   // useEffect(() => {
   //   dispatch(fetchParticularEventOfCommunity(id));

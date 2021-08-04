@@ -31,8 +31,6 @@ import TermsOfService from "./StaticScreens/Screens/TermsOfService";
 import PrivacyPolicy from "./StaticScreens/Screens/PrivacyPolicy";
 import InternalServerError from "./StaticScreens/Screens/InternalServerError";
 import NewSignIn from "./Signin/NewSignIn";
-import ContactUs from "./StaticScreens/Screens/ContactUs";
-import AboutUs from "./StaticScreens/Screens/AboutUs";
 
 class App extends React.Component {
   render() {
@@ -60,8 +58,6 @@ class App extends React.Component {
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
-              <Route path="/about-us" exact component={AboutUs} />
-              <Route path="/contact-us" exact component={ContactUs} />
               <Route path="/login" exact component={NewSignIn} />
               <Route path="/not-found" exact component={NotFoundPage} />
               <Route path="/internal-server-error" exact component={InternalServerError} />

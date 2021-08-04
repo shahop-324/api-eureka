@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../Styles/root.scss";
 
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
@@ -6,14 +6,14 @@ import GroupIcon from "@material-ui/icons/Group";
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
-import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
+
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import history from "../../../history";
-import { signOut } from "../../../actions";
+
+import { signOut } from "../../../actions"; 
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
-let socket;
+
 
 const SideNav = (props) => {
   const userDetails = useSelector((state) => state.user.userDetails);

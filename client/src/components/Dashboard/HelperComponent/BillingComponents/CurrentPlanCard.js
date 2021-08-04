@@ -35,7 +35,7 @@ const CurrentPlanCard = () => {
             You have 100 registrations available and 2hrs of streaming left.
           </div>
           <div className="plan-card-upgrade-message">
-            Wanna lift up your capabilities ? <a href="#">Upgrade to Basics</a>
+            Wanna lift up your capabilities ? Upgrade to Basics
           </div>
         </div>
         <div>

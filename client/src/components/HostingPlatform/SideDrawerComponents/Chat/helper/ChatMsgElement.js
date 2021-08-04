@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar } from '@material-ui/core';
-import Faker from 'faker';
+
 
 import "./../../../Styles/root.scss";
 

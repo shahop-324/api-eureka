@@ -1,34 +1,15 @@
 import React from "react";
-import { Avatar, IconButton, makeStyles } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
-import Faker from "faker";
 
 import "./../../Styles/root.scss";
 import PollComponent from "./helper/PollComponent";
 import CreateNewPollForm from "./helper/CreateNewPollForm";
 // import { PollComponent } from "./helper/PollComponent";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
-  },
-}));
 
 const PollsMainComponent = (props) => {
-  const classes = useStyles();
-
+  
   const [open, setOpen] = React.useState(false);
 
   const handleCreateNewPoll = () => {

@@ -169,7 +169,7 @@ const AddNewSession = (props) => {
     setState({ vertical: "top", horizontal: "center", open: false });
   };
 
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
   const dispatch = useDispatch();
 
   const speakers = useSelector((state) => state.speaker.speakers);

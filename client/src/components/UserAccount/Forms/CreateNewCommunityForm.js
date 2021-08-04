@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -5,12 +6,12 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import { connect, useSelector } from "react-redux";
+
+import {  useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
+
 import { reduxForm, Field } from "redux-form";
-import { useState ,useEffect} from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { createCommunity } from "../../../actions";

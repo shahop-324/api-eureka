@@ -85,7 +85,7 @@ const Sessions = () => {
   const dispatch = useDispatch();
   const id = params.id;
 
-  const communityId = params.communityId;
+  // const communityId = params.communityId;
   // useEffect(() => {
   //   dispatch(fetchParticularEventOfCommunity(communityId));
   // }, []);

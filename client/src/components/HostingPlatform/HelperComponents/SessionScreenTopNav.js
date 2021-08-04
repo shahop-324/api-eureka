@@ -38,10 +38,10 @@ const SessionScreenTopNav = ({
       ? true
       : false;
 
-  const showLiveIndicator =
-    sessionRunningStatus === "Started" || sessionRunningStatus === "Resumed"
-      ? true
-      : false;
+  // const showLiveIndicator =
+  //   sessionRunningStatus === "Started" || sessionRunningStatus === "Resumed"
+  //     ? true
+  //     : false;
 
   const userId = userDetails._id;
 

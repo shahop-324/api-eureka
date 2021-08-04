@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {  IconButton} from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
@@ -29,7 +29,7 @@ const MainPeopleComponent = (props) => {
 
   const currentlyInEvent = useSelector((state) => state.user.peopleInThisEvent);
 
-  const activePeople = currentlyInEvent.filter((person) => person.status === "Active");
+
 
   const renderPeopleList = (people) => {
     return people.map((person) => {

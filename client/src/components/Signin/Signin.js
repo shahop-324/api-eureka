@@ -43,9 +43,11 @@ const renderInput = ({
   );
 };
 const Signin = (props) => {
-  const { isSending, error } = useSelector((state) => state.auth);
+
+  const {isSending}=useSelector((state)=>state.auth)
   const { handleSubmit, pristine, submitting, valid } = props;
 
+                   
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -57,21 +59,24 @@ const Signin = (props) => {
     dispatch(googleLinkClicked());
   };
 
-  if (isSending) {
-    return (
-      <section>
-        <p>Sending...</p>
-      </section>
-    );
-  }
-  //  if(error)
-  // {
-  //   return (
-  //     <section >
-  //       <p>{error}</p>
-  //     </section>
-  //   );
-  // }
+  if(isSending)
+{
+  
+  return (
+    <section >
+      <p>Sending...</p>
+    </section>
+  );
+
+}
+//  if(error)
+// {
+//   return (
+//     <section >
+//       <p>{error}</p>
+//     </section>
+//   );
+// }
 
   return (
     <>
@@ -107,11 +112,9 @@ const Signin = (props) => {
                   }}
                 >
                   <div onClick={onClickHandle}>
-                    <a href="http://localhost:3000/eureka/v1/auth/google">Login with Google</a>
+                    {/* <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">Login with Google</a> */}
 
-                    {/* <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">
-                      Login with Google
-                    </a> */}
+                    <a href="/eureka/v1/auth/google">Login with Google</a>
                   </div>
                 </div>
                 <div

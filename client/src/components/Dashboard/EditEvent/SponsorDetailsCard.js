@@ -6,7 +6,6 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";

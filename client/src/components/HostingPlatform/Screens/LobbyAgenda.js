@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 
 import {fade, makeStyles} from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSessions, fetchSessionsForUser } from '../../../actions';
+import { fetchSessionsForUser } from '../../../actions';
 import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +102,7 @@ const LobbyAgenda = ({socket}) => {
 
   useEffect(() => {
     dispatch(fetchSessionsForUser(eventId));
-  }, []);
+  }, [dispatch, eventId]);
 
   const sessions = useSelector((state) => state.session.sessions);
 

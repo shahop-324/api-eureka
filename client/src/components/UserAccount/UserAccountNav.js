@@ -48,7 +48,7 @@ class UserAccountNav extends React.Component {
                   </button>
                 </li>
                 <li class="nav-item" style={{ alignSelf: "center" }}>
-                  {/* <AvatarMenu /> */}
+                  <AvatarMenu />
                 </li>
               </ul>
             </div>

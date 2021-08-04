@@ -195,7 +195,7 @@ export const googleSignIn = () => async (dispatch) => {
       credentials: "include",
     };
     const response = await fetch(
-      "http://localhost:3000/eureka/v1/current_user",
+      "https://damp-taiga-71545.herokuapp.com/eureka/v1/current_user",
       params
     );
 
@@ -334,11 +334,11 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
       }
     );
     console.log(res);
-    // if (!res.ok) {
-    //   if (res.status === 500) {
-    //     throw new Error(500);
-    //   }
-    // }
+    if (!res.ok) {
+      if (res.status === 500) {
+        throw new Error(500);
+      }
+    }
     res = await res.json();
     return res;
   };
@@ -2727,7 +2727,12 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
 
     res = await res.json();
     console.log(res);
-    
+
+    // dispatch(
+    //   queriesActions.EditQuery({
+    //     query: res.data,
+    //   })
+    // );
   } catch (err) {
     console.log(err);
   }

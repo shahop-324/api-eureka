@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, {  useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -298,9 +298,9 @@ const SearchEvents = () => {
         <div className="row nav-section">
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">
+              
                 <span style={{ color: "#538BF7" }}>Evenz</span>
-              </a>
+             
               <button
                 class="navbar-toggler"
                 type="button"
@@ -332,7 +332,7 @@ const SearchEvents = () => {
                 </form>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <a class="nav-link active" aria-current="page" href="#">
+                    
                       <Link
                         to="/signin"
                         type="button"
@@ -340,14 +340,14 @@ const SearchEvents = () => {
                       >
                         Login
                       </Link>
-                    </a>
+                    
                   </li>
                   <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <a class="nav-link" href="#">
+                    
                       <Link to="/signup" type="button" class="btn btn-primary">
                         Get Started
                       </Link>
-                    </a>
+                   
                   </li>
                 </ul>
               </div>

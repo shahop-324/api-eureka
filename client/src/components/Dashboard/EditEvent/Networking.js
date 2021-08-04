@@ -20,7 +20,7 @@ const Networking = () => {
 
   useEffect(() => {
     dispatch(fetchNetworking(id));
-  }, []);
+  }, [dispatch, id]);
 
   return (
     <>

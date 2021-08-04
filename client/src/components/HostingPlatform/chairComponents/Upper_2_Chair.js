@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import Faker from "faker";
+
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import $ from 'jquery';
+
 
 const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
    }) );
 
 
-   const chairArrangement = useSelector((state) => state.rooms.chairs);
+   
 
 
   const params = useParams();
@@ -30,7 +31,6 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
   let userOrganisation2;
   let userDesignation2;
   let displayPopUp = "auto";
-  let displayAvatar = "auto";
 
   if (chair) {
     // What if chair_2 is occupied
@@ -50,7 +50,7 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
 
     
     displayPopUp = "none";
-    displayAvatar = "none";
+    
   }
 
   const eventId = params.eventId;
@@ -114,7 +114,7 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
         document.getElementById(`${id}_chair_2_img_blob`).remove();
       }
       
-    }, [userImage2]);
+    }, [userImage2, userImage, id]);
 
   return (
     <>

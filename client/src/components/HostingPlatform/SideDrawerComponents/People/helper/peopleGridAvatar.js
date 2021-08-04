@@ -2,12 +2,11 @@ import { makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
-import Faker from "faker";
 import "./../../../Styles/root.scss";
 
 // import "semantic-ui-css/semantic.min.css";
 
-import { Button, Popup } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
 
 const useStyles = makeStyles((theme) => ({
   root: {

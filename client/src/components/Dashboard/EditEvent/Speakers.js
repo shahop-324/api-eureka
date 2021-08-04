@@ -117,7 +117,7 @@ const Speakers = () => {
   const { isLoading, error, speakers } = useSelector((state) => {
     return state.speaker;
   });
-  const communityId = params.communityId;
+  // const communityId = params.communityId;
 
   useEffect(() => {
     dispatch(fetchSessions(id));

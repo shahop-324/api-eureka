@@ -25,8 +25,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
    let userOrganisation4;
    let userDesignation4;
    let displayPopUp = "auto";
-   let displayAvatar = "auto";
- 
+   
    if (chair) {
      // What if chair_1 is occupied
      chairIsOccupied = true;
@@ -45,7 +44,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
  
      
      displayPopUp = "none";
-     displayAvatar = "none";
+     
    }
  
   
@@ -116,7 +115,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
   
 
       
-    }, [userImage4]);
+    }, [userImage4, userImage, id]);
 
    useEffect(() => {
     return 1+1;

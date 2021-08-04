@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTickets } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
-import ConnectToStripeStrip from "../MessageStrips/connectToStripeStrip";
 import Loader from "../../Loader";
 
 const useStyles = makeStyles((theme) => ({

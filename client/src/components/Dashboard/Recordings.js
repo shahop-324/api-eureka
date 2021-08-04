@@ -8,13 +8,13 @@ import Divider from "@material-ui/core/Divider";
 import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { useDispatch } from "react-redux";
+
 
 import RecordingsListFields from "./HelperComponent/RecordingsListFields";
 import RecordingsDetailsCard from "./HelperComponent/RecordingsDetailsCard";
-import { fetchRegistrationsOfParticularCommunity, navigationIndexForCommunityDash } from "../../actions";
+
 import { useParams } from "react-router-dom";
 
 const options = [
@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Recordings = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
+  
 
   const params = useParams();
   const communityId = params.communityId;

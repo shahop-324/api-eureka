@@ -157,7 +157,7 @@ const styles = {
 };
 
 const CreateNewEventForm = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency

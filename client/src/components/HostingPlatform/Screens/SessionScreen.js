@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import SessionScreenTopNav from "../HelperComponents/SessionScreenTopNav";
-import ReactDOM from "react-dom";
+
 
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -163,7 +164,7 @@ const SessionScreen = () => {
     return () => {
       // ! TODO leaveStreaming();
     };
-  }, []);
+  }, [agoraRole, dispatch, sessionId]);
 
   const sessionRunningStatus = sessionDetails
     ? sessionDetails.runningStatus
@@ -241,7 +242,7 @@ const SessionScreen = () => {
         })
       );
     });
-  }, []);
+  }, [dispatch, sessionId]);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });

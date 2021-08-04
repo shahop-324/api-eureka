@@ -7,15 +7,12 @@ import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import PhoneInput from "react-phone-input-2";
-import { Avatar, Drawer, IconButton } from "@material-ui/core";
-import dateFormat from "dateformat";
+import {  IconButton } from "@material-ui/core";
+
 
 import { Field } from "redux-form";
 import Select from "react-select";
-import { connect } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
 
-import { useState } from "react";
 import { reduxForm } from "redux-form";
 
 const options = [
@@ -43,24 +40,24 @@ const styles = {
   }),
 };
 
-const validate = (values) => {
-  const errors = {};
+// const validate = (values) => {
+//   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -161,7 +158,7 @@ const onSubmit = (formValues) => {
 const EnterprisePlanCard = (props) => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
-  const { handleSubmit, pristine, valid, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props;
   return (
     <>
       <div className="pricing-plan-card p-4">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./../Styles/rooms.scss";
 
 import Room from "./../HelperComponents/Room";
@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 import socket from "../service/socket";
 
-import { roomsActions } from "../../../reducers/roomsSlice";
+
 import {
   fetchChairArrangement,
   fetchNumberOfPeopleOnTable,
@@ -15,24 +15,14 @@ import {
 
 
 
-const renderTables = (numberOfTables, eventId) => {
-  let TablesArray = [];
-  
-  for (let i = 0; i < numberOfTables; i++) {
-    TablesArray.push(<Room id={`${eventId}_table_${i}`} num={i + 1} />);
-  }
-  return TablesArray;
-};
+
 
 const Rooms = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const eventId = params.eventId;
 
-  const { hasChangedChairs } = useSelector((state) => state.rooms);
-
-  const chairArrangement = useSelector((state) => state.rooms.chairs);
-
+  
   useEffect(() => {
     // window.location.reload();
   }, []);
@@ -47,7 +37,7 @@ const Rooms = () => {
       console.log(numberOfPeopleOnTable);
       dispatch(fetchNumberOfPeopleOnTable(numberOfPeopleOnTable));
     });
-  }, []);
+  }, [dispatch]);
 
   const numberOfTables = useSelector(
     (state) =>

@@ -33,15 +33,8 @@ const Room = ({ id, num }) => {
     setOpenTableScreen(false);
   };
 
-  const renderLeftChair = () => {
-    return {
-      
-    }
-  }
-
-  const leftChair = () => {
-    renderLeftChair();
-  }
+  
+ 
 
   const dispatch = useDispatch();
 
@@ -58,7 +51,7 @@ const Room = ({ id, num }) => {
 
 
 
-  }, [chairArrangement]);
+  }, [chairArrangement, dispatch ]);
 
   return (
     <>

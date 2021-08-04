@@ -1,5 +1,5 @@
 import React from "react";
-import Faker from "faker";
+
 import Divider from "@material-ui/core/Divider";
 import ReceiptOutlinedIcon from "@material-ui/icons/ReceiptOutlined";
 import Avatar from "@material-ui/core/Avatar";

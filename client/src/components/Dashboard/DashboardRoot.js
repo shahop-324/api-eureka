@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -8,8 +8,7 @@ import Topnav from "./HelperComponent/TopNav";
 import SideNav from "./HelperComponent/SideNav";
 import {
   fetchCommunity,
-  fetchSessions,
-  fetchSpeakers,
+  
   navigationIndexForCommunityDash,
 } from "../../actions/index";
 import Overview from "./Overview";
@@ -63,7 +62,7 @@ const DashboardRoot = () => {
     //   console.log("cleaned up okay")
     //   dispatch(navigationIndexForCommunityDash(0));
     // };
-  }, []);
+  }, [id, dispatch]);
   useEffect(()=>{
     return ()=>{
 
@@ -74,7 +73,7 @@ const DashboardRoot = () => {
     }
 
 
-  },[])
+  },[dispatch])
  
 
   // const params = useParams();

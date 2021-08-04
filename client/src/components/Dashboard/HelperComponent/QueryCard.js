@@ -1,7 +1,5 @@
 import React from "react";
-import Faker from "faker";
-// import Box from '@material-ui/core/Box';
-// import Rating from 'react-star-rating-lite';
+
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";

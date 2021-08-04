@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -259,7 +261,7 @@ await rtc.client.unpublish(rtc.localVideoTrack);
   useEffect(() => {
     appToken ? joinTable() : console.log("Retriving App Token from server");
     getToken();
-  }, [appToken]);
+  }, [appToken, getToken]);
 
   return (
     <>

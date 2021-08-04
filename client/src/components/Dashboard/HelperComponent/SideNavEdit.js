@@ -6,7 +6,7 @@ import "./../../../assets/Sass/TopNav.scss";
 import IconButton from "@material-ui/core/IconButton";
 import { Divider } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import history from "./../../../history";
+
 import CategoryIcon from "@material-ui/icons/Category";
 import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 import TrackChangesIcon from "@material-ui/icons/TrackChanges";
@@ -16,20 +16,21 @@ import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchParticularEventOfCommunity } from "../../../actions";
 
 const SideNavEdit = (props) => {
   const params = useParams();
+  const dispatch = useDispatch();
 
   const id = params.id;
   const communityId = params.communityId;
 
   const userId = useSelector((state) => state.user.userDetails._id);
   useEffect(() => {
-    fetchParticularEventOfCommunity(id);
-  }, []);
+    dispatch(fetchParticularEventOfCommunity(id));
+  }, [id, dispatch]);
 
   const event = useSelector((state) => {
     return state.event.events.find((event) => {

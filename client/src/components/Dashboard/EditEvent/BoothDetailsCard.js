@@ -1,5 +1,4 @@
 import React from "react";
-import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";

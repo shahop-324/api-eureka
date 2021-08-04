@@ -5,7 +5,7 @@ import {withStyles} from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {editUser} from '../../../actions';
 import {connect} from 'react-redux';
 const RoyalBlueCheckBox = withStyles({
@@ -51,7 +51,7 @@ const RenderCustomCheckboxLabels = ({input, label, value}) => {
 };
 
 const EditNotificationSettings = (props) => {
-  const {handleSubmit, pristine, reset, submitting} = props;
+  const {handleSubmit, pristine, submitting} = props;
 
   // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const showResults = (formValues) => {

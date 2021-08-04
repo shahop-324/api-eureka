@@ -8,7 +8,7 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
 import EditSession from "./FormComponents/EditSessionForms/EditSession";
 import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
-import {useEffect} from "react"
+
 import { useDispatch } from "react-redux";
 import { fetchParticularSessionOfEvent } from "../../../actions";
 
@@ -47,9 +47,9 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
     setOpen(false);
   };
 
-  const truncateText = (str, n) => {
-    return str > n ? `${str.subString(0,n)} + ...` : str;
-  }
+  // const truncateText = (str, n) => {
+  //   return str > n ? `${str.subString(0,n)} + ...` : str;
+  // }
 
   return (
     <>

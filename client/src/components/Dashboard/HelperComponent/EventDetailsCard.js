@@ -1,12 +1,12 @@
 import React from "react";
-import Faker from "faker";
+
 import Divider from "@material-ui/core/Divider";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import Ripple from "./../../ActiveStatusRipple";
 import "./../../../assets/Sass/DataGrid.scss";
-import history from "../../../history";
+
 import {
-  fetchParticularEventOfCommunity,
+  
   generateEventAccessToken,
 } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";

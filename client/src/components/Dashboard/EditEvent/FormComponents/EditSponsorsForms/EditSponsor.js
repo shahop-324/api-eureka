@@ -11,10 +11,10 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import { useParams } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { createSpeaker, editSponsor } from "../../../../../actions";
+import { editSponsor } from "../../../../../actions";
 
 import { connect } from "react-redux";
 
@@ -50,24 +50,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const validate = (values) => {
-  const errors = {};
+// const validate = (values) => {
+//   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -107,30 +107,30 @@ const renderInput = ({
     </div>
   );
 };
-const renderTextArea = ({
-  input,
+// const renderTextArea = ({
+//   input,
 
-  meta,
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-}) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <textarea
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className={classes}
-        placeholder={placeholder}
-      />
+//   meta,
+//   type,
+//   ariadescribedby,
+//   classes,
+//   placeholder,
+// }) => {
+//   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+//   return (
+//     <div className={className}>
+//       <textarea
+//         type={type}
+//         {...input}
+//         aria-describedby={ariadescribedby}
+//         className={classes}
+//         placeholder={placeholder}
+//       />
 
-      {renderError(meta)}
-    </div>
-  );
-};
+//       {renderError(meta)}
+//     </div>
+//   );
+// };
 
 const renderReactSelect = ({
   isMulti,
@@ -163,7 +163,7 @@ const renderReactSelect = ({
   </div>
 );
 const EditSponosor = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting, reset } = props;
 
   // const params = useParams();
   // const id = params.id;
@@ -178,8 +178,7 @@ const EditSponosor = (props) => {
 
   //    },[]);
 
-  const sessions = useSelector((state) => state.session.sessions);
-
+  
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },

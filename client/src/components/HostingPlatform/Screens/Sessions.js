@@ -91,7 +91,7 @@ const Sessions = () => {
   const params = useParams();
   
   const eventId = params.eventId;
-  const communityId = params.communityId;
+  
 
   useEffect(() => {
     dispatch(fetchSessions(eventId));

@@ -14,9 +14,6 @@ import DoughnutChart from "./ChartComponents/DonutChart";
 import WorldMapChart from "./ChartComponents/WorldMapChart";
 import EventListFields from "./HelperComponent/EventListFields";
 import EventDetailCard from "./HelperComponent/EventDetailsCard";
-import Dialog from "@material-ui/core/Dialog";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import IconButton from "@material-ui/core/IconButton";
 import history from "../../history";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
@@ -31,12 +28,7 @@ const options = [
   { value: "Lifetime", label: "Lifetime" },
 ];
 
-const teamPosition = [
-  { value: "Super Admin", label: "Super Admin" },
-  { value: "Admin", label: "Admin" },
-  { value: "Community Manager", label: "Community Manager" },
-  { value: "Event Host", label: "Event Host" },
-];
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +68,7 @@ const Overview = () => {
   const id = params.id;
   useEffect(() => {
     dispatch(fetchCommunity(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
       
  
   const classes = useStyles();

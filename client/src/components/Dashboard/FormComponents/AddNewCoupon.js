@@ -12,7 +12,6 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import {createCoupon} from "./../../../actions";
 
 let eventOptions = [];
@@ -100,7 +99,7 @@ const AddNewCoupon = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {

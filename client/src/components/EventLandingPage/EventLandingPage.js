@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
@@ -8,28 +8,26 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
-import HeroImg from "./../../assets/images/eventLandingHeroPoster@2x.png";
-import Avatar from "@material-ui/core/Avatar";
 import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 import { createQuery, fetchEvent } from "../../actions/index";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 
 import SessionCard from "./HelperComponent/SessionCard";
 import SpeakerCard from "./HelperComponent/SpeakerCard";
 import DiamondSponsorCard from "./HelperComponent/DiamondSponsorCard";
 import PlatinumSponsorCard from "./HelperComponent/PlatinumSponsorCard";
 import GoldSponsorCard from "./HelperComponent/GoldSponsorCard";
-import AccordionItem from "./HelperComponent/AccordionItem";
+
 import BoothCard from "./HelperComponent/BoothCard";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { stateToHTML } from "draft-js-export-html";
-import { convertFromRaw } from "draft-js";
+// import { stateToHTML } from "draft-js-export-html";
+// import { convertFromRaw } from "draft-js";
 import { useEffect } from "react";
 import dateFormat from "dateformat";
-import { Field, reduxForm } from "redux-form";
+import {  reduxForm } from "redux-form";
 import TicketForm from "./FormComponent/TicketForm";
 import AvatarMenu from "../AvatarMenu";
 // import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -114,12 +112,7 @@ const AccordionDetails = withStyles((theme) => ({
   },
 }))(MuiAccordionDetails);
 
-const AvatarComponent = (props) => {
-  const classes = useStyles();
-  return (
-    <Avatar alt="Remy Sharp" className={classes.large} src={props.imgURL} />
-  );
-};
+
 
 const EventLandingPage = (props) => {
   const classes = useStyles();
@@ -156,7 +149,7 @@ const EventLandingPage = (props) => {
     dispatch(fetchEvent(id));
   }, [dispatch, id]);
 
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  
   // const convertFromJSONToHTML = (text) => {
   //   return stateToHTML(convertFromRaw(JSON.parse(text)));
   // };
@@ -323,9 +316,9 @@ const EventLandingPage = (props) => {
         >
           <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">
+              
                 <span style={{ color: "#538BF7" }}>Evenz</span>
-              </a>
+              
               <button
                 class="navbar-toggler"
                 type="button"
@@ -344,24 +337,24 @@ const EventLandingPage = (props) => {
                   ) : (
                     <div className="d-flex flex-row">
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        <a class="nav-link active" aria-current="page" href="#">
+                        
                           <button
                             type="button"
                             class="btn btn-outline-primary btn-outline-text"
                           >
                             Get started
                           </button>
-                        </a>
+                        
                       </li>
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        <a class="nav-link" href="#">
+                        
                           <button
                             type="button"
                             class="btn btn-primary btn-outline-text"
                           >
                             Login
                           </button>
-                        </a>
+                        
                       </li>
                     </div>
                   )}

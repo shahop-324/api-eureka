@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
-import Select from "react-select";
 
-import { makeStyles } from "@material-ui/core/styles";
+
+
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -17,70 +17,30 @@ import { reduxForm, Field } from "redux-form";
 import { fetchParticularEventOfCommunity } from "../../../../../actions";
 import { Divider } from "@material-ui/core";
 
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
 
-const venueAreaOptions = [
-  { value: "Session", label: "Session" },
-  { value: "Speed Networking", label: "Speed Networking" },
-  { value: "Social Lounge", label: "Social Lounge" },
-  { value: "Booths", label: "Booths" },
-];
 
-const sessionOptions = [
-  { value: "Session - 1", label: "Session - 1" },
-  { value: "Session - 2", label: "Session - 2" },
-  { value: "Session - 3", label: "Session - 3" },
-  { value: "Session - 4", label: "Session - 4" },
-];
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    width: "100%",
-    display: "flex",
-    minHeight: "76.5vh",
-  },
-  large: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-}));
 
-const validate = (values) => {
-  const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
 
-  return errors;
-};
+// const validate = (values) => {
+//   const errors = {};
+
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
+
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -123,7 +83,7 @@ const renderInput = ({
 };
 
 const CreateNewPoll = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting} = props;
 
   const params = useParams();
   const id = params.id;

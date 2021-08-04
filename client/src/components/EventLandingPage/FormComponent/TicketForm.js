@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Radio from "@material-ui/core/Radio";
 import { withStyles } from "@material-ui/core/styles";
 
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Link } from "react-router-dom";
-import { getEventRegistrationCheckoutSession } from "../../../actions";
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -29,9 +29,7 @@ const RoyalBlueRadio = withStyles({
 const TicketForm = ({ eventId, tickets, coupon }) => {
   console.log(tickets);
   console.log(eventId);
-  const dispatch = useDispatch();
-  //const {isSignedIn}=useSelector((state)=>state.auth)
-  const community = useSelector((state) => state.community.communityDetails);
+  
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -125,8 +123,6 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       alert("Invalid coupon code!");
     }
   };
-
-  const handleRegistrationUsingPaypal = () => {};
 
   const displayRazorpay = async () => {
     const res = await loadRazorpay();

@@ -1,5 +1,4 @@
 import React from "react";
-import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -35,9 +34,9 @@ const dispatch = useDispatch();
     setOpen(false);
   };
 
-  const truncateText = (str, n) => {
-    return str.length > n ? `${str.substring(0, n)} ...` : str;
-  };
+  // const truncateText = (str, n) => {
+  //   return str.length > n ? `${str.substring(0, n)} ...` : str;
+  // };
   return (
     <>
       <div className="session-field-value-container">

@@ -2,7 +2,7 @@ import React from "react";
 import ToggleSwitch from "../../ToggleSwitch";
 import Ripple from "./../../ActiveStatusRipple";
 import { Field, reduxForm } from "redux-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { editUserPassword } from "../../../actions";
 const renderError = ({ touched, error }) => {
   if (touched && error) {

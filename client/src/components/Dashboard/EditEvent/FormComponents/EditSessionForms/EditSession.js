@@ -131,7 +131,7 @@ const styles = {
 };
 
 const EditSession = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting, reset } = props;
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -142,7 +142,7 @@ const EditSession = (props) => {
 
   useEffect(() => {
     dispatch(fetchParticularSessionOfEvent(props.id));
-  }, []);
+  }, [props.id, dispatch]);
   const speakers = useSelector((state) => state.speaker.speakers);
 
   const speakerOptions = speakers.map((speaker) => {

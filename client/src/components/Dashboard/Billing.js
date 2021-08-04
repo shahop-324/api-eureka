@@ -9,13 +9,13 @@ import "./../../assets/Sass/Billing.scss";
 import BasicPlanCard from "./HelperComponent/BillingComponents/BasicsPlanCard";
 import ProPlanCard from "./HelperComponent/BillingComponents/ProPlanCard";
 import EnterprisePlanCard from "./HelperComponent/BillingComponents/EnterprisePlanCard";
-import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
+
 import CurrentPlanCard from "./HelperComponent/BillingComponents/CurrentPlanCard";
 import { SwipeableDrawer } from "@material-ui/core";
 
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import PhoneInput from "react-phone-input-2";
-import { Avatar, Drawer, IconButton } from "@material-ui/core";
+
+import { IconButton } from "@material-ui/core";
 import BillingListFields from "./HelperComponent/BillingComponents/BillingListFields";
 import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/BillingHistoryDetailsCard";
 

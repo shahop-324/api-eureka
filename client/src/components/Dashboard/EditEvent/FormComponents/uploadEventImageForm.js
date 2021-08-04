@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./../Style/uploadEventImage.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { fetchParticularEventOfCommunity, uploadEventImage } from "../../../../actions";
+import {  uploadEventImage } from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UploadEventImageForm = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const { handleSubmit } = props;
 
   const params = useParams();
 

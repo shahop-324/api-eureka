@@ -1,78 +1,75 @@
 import React from "react";
 import "./../../assets/css/style.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { useDispatch } from "react-redux";
-import { googleLinkClicked } from "../../actions/index";
-import { signIn } from "../../actions/index";
-import { reduxForm, Field } from "redux-form";
+import { reduxForm } from "redux-form";
 import { useSelector } from "react-redux";
 import "./newSignin.css";
 import "./googleBtn.scss";
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
+// const renderError = ({ error, touched }) => {
+//   if (touched && error) {
+//     return (
+//       <div className="ui error message">
+//         <div className="header">{error}</div>
+//       </div>
+//     );
+//   }
+// };
 
-const renderInput = ({
-  input,
+// const renderInput = ({
+//   input,
 
-  meta,
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-}) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <input
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className={classes}
-        placeholder={placeholder}
-        required
-      />
+//   meta,
+//   type,
+//   ariadescribedby,
+//   classes,
+//   placeholder,
+// }) => {
+//   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+//   return (
+//     <div className={className}>
+//       <input
+//         type={type}
+//         {...input}
+//         aria-describedby={ariadescribedby}
+//         className={classes}
+//         placeholder={placeholder}
+//         required
+//       />
 
-      {renderError(meta)}
-    </div>
-  );
-};
+//       {renderError(meta)}
+//     </div>
+//   );
+// };
 
-const SigninSignupFormSwitch = () => {
-  const signUpButton = document.getElementById("signUp");
-  const signInButton = document.getElementById("signIn");
-  const container = document.getElementById("container");
+// const SigninSignupFormSwitch = () => {
+//   const signUpButton = document.getElementById("signUp");
+//   const signInButton = document.getElementById("signIn");
+//   const container = document.getElementById("container");
 
-  signUpButton.addEventListener("click", () =>
-    container.classList.add("right-panel-active")
-  );
+//   signUpButton.addEventListener("click", () =>
+//     container.classList.add("right-panel-active")
+//   );
 
-  signInButton.addEventListener("click", () =>
-    container.classList.remove("right-panel-active")
-  );
-};
+//   signInButton.addEventListener("click", () =>
+//     container.classList.remove("right-panel-active")
+//   );
+// };
 
 const NewSignin = (props) => {
-  const { isSending, error } = useSelector((state) => state.auth);
-  const { handleSubmit, pristine, submitting, valid } = props;
+  const { isSending } = useSelector((state) => state.auth);
+  // const { handleSubmit, pristine, submitting, valid } = props;
 
-  const dispatch = useDispatch();
-  const onSubmit = (formValues) => {
-    console.log(formValues);
+  // const dispatch = useDispatch();
+  // const onSubmit = (formValues) => {
+  //   console.log(formValues);
 
-    dispatch(signIn(formValues));
-  };
+  //   dispatch(signIn(formValues));
+  // };
 
-  const onClickHandle = () => {
-    dispatch(googleLinkClicked());
-  };
+  // const onClickHandle = () => {
+  //   dispatch(googleLinkClicked());
+  // };
 
   if (isSending) {
     return (
@@ -139,7 +136,7 @@ const NewSignin = (props) => {
                 <span>or use your account</span>
                 <input type="email" placeholder="Email" />
                 <input type="password" placeholder="Password" />
-                <a href="#">Forgot your password?</a>
+                Forgot your password?
                 <button>Sign In</button>
               </form>
             </div>

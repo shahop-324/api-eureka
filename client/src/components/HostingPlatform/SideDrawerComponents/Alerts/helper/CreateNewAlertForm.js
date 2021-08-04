@@ -4,14 +4,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 
-import { makeStyles } from "@material-ui/core/styles";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
 import {
@@ -50,41 +48,24 @@ const sessionOptions = [
   
 ];
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    width: "100%",
-    display: "flex",
-    minHeight: "76.5vh",
-  },
-  large: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-}));
+// const validate = (values) => {
+//   const errors = {};
 
-const validate = (values) => {
-  const errors = {};
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
-
-  return errors;
-};
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -159,7 +140,7 @@ const renderReactSelect = ({
 );
 
 const CreateNewAlert = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const params = useParams();
   const id = params.id;
@@ -174,9 +155,6 @@ const CreateNewAlert = (props) => {
 
   //    },[]);
 
-  const sessions = useSelector((state) => state.session.sessions);
-
-  const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -187,18 +165,14 @@ const CreateNewAlert = (props) => {
   // }
   const dispatch = useDispatch();
 
-  const [file, setFile] = useState(null);
-  const [fileToPreview, setFileToPreview] = useState(null);
+  const [file] = useState(null);
+ 
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  const onFileChange = (event) => {
-    console.log(event.target.files[0]);
-    setFile(event.target.files[0]);
-    setFileToPreview(URL.createObjectURL(event.target.files[0]));
-  };
+  
 
   const onSubmit = async (formValues) => {
     console.log(formValues);

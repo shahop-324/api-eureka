@@ -48,24 +48,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const validate = (values) => {
-  const errors = {};
+// const validate = (values) => {
+//   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -161,7 +161,7 @@ const renderReactSelect = ({
   </div>
 );
 const AddNewSpeaker = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const params = useParams();
   const id = params.id;

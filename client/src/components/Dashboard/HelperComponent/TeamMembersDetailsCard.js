@@ -6,7 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 import "./../../../assets/Sass/TeamManagement.scss";
 import "./../../../assets/Sass/DataGrid.scss";
 
-import { fade, makeStyles } from "@material-ui/core/styles";
+
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -16,7 +16,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+
 
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -67,80 +67,27 @@ const styles = {
   }),
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
 
 
-const validate = (values) => {
-  const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+// const validate = (values) => {
+//   const errors = {};
 
-  return errors;
-};
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
+
+//   return errors;
+// };
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -213,17 +160,16 @@ const onSubmit = (formValues) => {
 
 const TeamManagementDetailsCard = (props) => {
 
-  const { handleSubmit, pristine, valid, submitting } = props;
+  const { handleSubmit, pristine,  submitting } = props;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [open, setOpen] = React.useState(false);
+  
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
-  const classes = useStyles();
 
   const handleOpenDrawer = () => {
     setOpenDrawer(true);
@@ -243,15 +189,7 @@ const TeamManagementDetailsCard = (props) => {
   };
 
 
-  const dispatch = useDispatch();
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleRemoveUser = () => {
-    setOpenDeleteDialog(true);
-  };
+  
 
   return (
     <>

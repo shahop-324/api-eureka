@@ -11,7 +11,7 @@ import Ripple from "../../ActiveStatusRipple";
 import EditTicket from "./FormComponents/EditTicketForms/EditTicket";
 import DeleteTicket from "./FormComponents/EditTicketForms/DeleteTicket";
 import { useDispatch } from "react-redux";
-import { deleteTicket, fetchTicket } from "../../../actions";
+import { fetchTicket } from "../../../actions";
 
 const TicketingDetailsCard = (props) => {
 

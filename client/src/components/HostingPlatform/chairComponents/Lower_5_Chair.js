@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import Faker from "faker";
+
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
@@ -14,7 +15,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     return (chair && chair.chairId ? (chair.chairId === `${id}_chair_5` && chair.status === "Occupied" ? chair  : null) : null);
    }) );
 
-   const chairArrangement = useSelector((state) => state.rooms.chairs);
+   
 
    
 
@@ -79,29 +80,6 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     }
   }
 
-
-  useEffect(() => {
-    if (userImage) {
-      fetchImage(userImage5, id).catch((e) => {
-        console.log(
-          "There has been a problem with your fetch operation: " + e.message
-        );
-      });
-    } else {
-      document.getElementById(`${id}_chair_5_img_blob`).remove();
-    }
-   
-  }, [userImage5]);
-
-  
-
-
-
-  const params = useParams();
-  // console.log(params);
-
-  const eventId = params.eventId;
-
   const userDetails = useSelector((state) => state.user.userDetails);
 
   const { email } = useSelector((state) => state.eventAccessToken);
@@ -119,6 +97,31 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     : "Vice President";
 
    
+
+
+  useEffect(() => {
+    if (userImage) {
+      fetchImage(userImage5, id).catch((e) => {
+        console.log(
+          "There has been a problem with your fetch operation: " + e.message
+        );
+      });
+    } else {
+      document.getElementById(`${id}_chair_5_img_blob`).remove();
+    }
+   
+  }, [userImage5, id, userImage]);
+
+  
+
+
+
+  const params = useParams();
+  // console.log(params);
+
+  const eventId = params.eventId;
+
+  
 
   return (
     <>

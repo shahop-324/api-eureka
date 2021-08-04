@@ -1,13 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import dateFormat from "dateformat";
 import { useParams } from "react-router";
 import Select from "react-select";
 import "./../../../../index.css";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { editEvent } from "../../../../actions";
-import { fetchParticularEventOfCommunity } from "../../../../actions";
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -162,7 +161,7 @@ const styles = {
 };
 
 const EditBasicDetailsForm = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting, reset } = props;
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;

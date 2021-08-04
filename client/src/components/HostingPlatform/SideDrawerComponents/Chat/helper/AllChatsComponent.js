@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import ChatMsgElement from "./ChatMsgElement";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +25,7 @@ const AllChatsComponent = () => {
       console.log(chats);
      dispatch(fetchEventChats(chats));
     })
-  }, []);
+  }, [dispatch, eventId]);
 
   const { RTMClient } = useSelector((state) => state.RTM);
 
@@ -74,11 +75,11 @@ const AllChatsComponent = () => {
         await channel.leave();
       })();
     };
-  }, []);
+  }, [channel]);
 
   channel.on("ChannelMessage", function (message, memberId) {
    
-    const { userId, userName, userEmail, userImage } = findSender(memberId);
+    const {  userName, userImage } = findSender(memberId);
     
 
     ReactDOM.render(

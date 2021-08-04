@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import "../../../../../assets/Sass/Dashboard_Overview.scss";
 import "../../../../../assets/Sass/SideNav.scss";
@@ -21,24 +21,24 @@ import { editNetworking } from "../../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../../Loader";
 
-const validate = (values) => {
-  const errors = {};
+// const validate = (values) => {
+//   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -92,7 +92,7 @@ const renderInput = ({
 };
 
 const NetworkingFormRight = (props) => {
-  const { handleSubmit, pristine, reset, submitting, valid } = props;
+  const { handleSubmit, pristine, reset, submitting } = props;
 
   const params = useParams();
   const id = params.id;

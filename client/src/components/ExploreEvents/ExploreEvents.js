@@ -25,9 +25,9 @@ class ExploreEvents extends React.Component {
             >
               <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container-fluid">
-                  <a class="navbar-brand" href="#">
+                  
                     <span style={{ color: "#538BF7" }}>Evenz</span>
-                  </a>
+                  
                   <button
                     class="navbar-toggler"
                     type="button"
@@ -45,18 +45,18 @@ class ExploreEvents extends React.Component {
                   >
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                       <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        
                           <button type="button" class="btn btn-outline-primary">
                             Login
                           </button>
-                        </a>
+                        
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        
                           <button type="button" class="btn btn-primary">
                             Get Started
                           </button>
-                        </a>
+                        
                       </li>
                     </ul>
                   </div>

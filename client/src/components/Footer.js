@@ -26,7 +26,7 @@ const Footer = () => {
                 All Rights Reserved.
               </div>
             </div>
-            {/* <div className="use-cases px-3 py-4">
+            <div className="use-cases px-3 py-4">
               <div className="footer-section-headline btn-outline-text mb-3">
                 Use Cases
               </div>
@@ -38,19 +38,15 @@ const Footer = () => {
               <div className="footer-section-link mb-2">Product launch</div>
               <div className="footer-section-link mb-2">Online Cohorts</div>
               <div className="footer-section-link">Happy Hours</div>
-            </div> */}
+            </div>
             <div className="company px-3 py-4">
               <div className="footer-section-headline btn-outline-text mb-3">
                 Company
               </div>
 
-              <div className="footer-section-link mb-2"><a style={{ color: "#ADADAD", textDecoration: "none" }} href="/about-us">
-                  About us
-                </a></div>
+              <div className="footer-section-link mb-2">About us</div>
               <div className="footer-section-link mb-2">Careers</div>
-              <div className="footer-section-link mb-2"><a style={{ color: "#ADADAD", textDecoration: "none" }} href="/contact-us">
-                  Contact us
-                </a></div>
+              <div className="footer-section-link mb-2">Contact us</div>
             </div>
             <div className="further-nformation px-3 py-4">
               <div className="footer-section-headline btn-outline-text mb-3">

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import Faker from "faker";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
@@ -25,7 +24,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
    let userOrganisation7;
    let userDesignation7;
    let displayPopUp = "auto";
-   let displayAvatar = "auto";
+   
  
    if (chair) {
      // What if chair_7 is occupied
@@ -45,14 +44,14 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
  
      
      displayPopUp = "none";
-     displayAvatar = "none";
+     
    }
  
   const params = useParams();
   // console.log(params);
 
   const eventId = params.eventId;
-  const communityId = params.communityId;
+  
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -113,7 +112,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
       }
   
       
-    }, [userImage7]);
+    }, [userImage7, id, userImage]);
 
 
     useEffect(() => {

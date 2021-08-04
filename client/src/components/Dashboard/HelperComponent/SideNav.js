@@ -11,7 +11,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import history from "./../../../history";
+
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
 import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";

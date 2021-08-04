@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -41,7 +41,7 @@ const EditEventRoot = () => {
     return ()=>{
       dispatch(navigationIndexForEditEvent(0))
     }
-  },[])
+  },[dispatch])
 
   const handleBasicsClick = () => {
     dispatch(navigationIndexForEditEvent(0));

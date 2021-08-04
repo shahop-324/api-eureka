@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
@@ -112,7 +113,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
     } else {
       document.getElementById(`${id}_chair_8_img_blob`).remove();
     }
-  }, [userImage8, id]);
+  }, [userImage8, id, userImage]);
 
   return (
     <>

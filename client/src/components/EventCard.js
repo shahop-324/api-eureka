@@ -1,9 +1,8 @@
 import React from "react";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import Faker, { name } from "faker";
+
 import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.css";
-import Skeleton from "@material-ui/lab/Skeleton";
+
 import { Divider } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { generateEventAccessToken } from "../actions";

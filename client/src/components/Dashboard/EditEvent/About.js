@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -14,7 +14,7 @@ import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import {
   editEventDescription,
-  fetchParticularEventOfCommunity,
+  
 } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";

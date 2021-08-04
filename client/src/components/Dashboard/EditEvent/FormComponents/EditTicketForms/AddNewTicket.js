@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,7 +9,7 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { createTicket } from "../../../../../actions";
 
@@ -28,24 +28,24 @@ const styles = {
   }),
 };
 
-const validate = (values) => {
-  const errors = {};
+// const validate = (values) => {
+//   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
-  }
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
+//   if (values.firstName && values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+//   if (values.lastName && values.lastName.length > 15) {
+//     errors.lastName = "Must be 15 characters or less";
+//   }
+//   if (
+//     values.email &&
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+//   ) {
+//     errors.email = "Invalid email address";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
 // const warn = values => {
 //   const warnings = {}
 //   if (values.age < 19) {
@@ -141,7 +141,7 @@ const renderReactSelect = ({
   </div>
 );
 const AddNewTicket = (props) => {
-  const { handleSubmit, pristine, submitting, valid, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const params = useParams();
   const id = params.id;
@@ -156,7 +156,7 @@ const AddNewTicket = (props) => {
 
   //    },[]);
 
-  const sessions = useSelector((state) => state.session.sessions);
+  
 
   const currencyOptions = [
     { value: "USD", label: "US Dollars" },

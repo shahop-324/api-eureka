@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import { Avatar, Drawer, IconButton } from "@material-ui/core";
-import dateFormat from "dateformat";
+import {  IconButton } from "@material-ui/core";
+
 
 const BasicPlanCard = () => {
   const [openDrawer, setOpenDrawer] = React.useState(false);

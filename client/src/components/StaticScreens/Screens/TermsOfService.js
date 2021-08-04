@@ -2,8 +2,8 @@ import React from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
+
 import Footer from "../../Footer";
-import StaticTopNav from "../Helper/StaticTopNav";
 
 const TermsOfService = () => {
   return (
@@ -13,8 +13,59 @@ const TermsOfService = () => {
           className="header-section-home header-section"
           style={{ height: "auto" }}
         >
-          {/* Static Top Nav */}
-          <StaticTopNav />
+          <div
+            className="row nav-section"
+            style={{ marginLeft: "auto", marginRight: "auto" }}
+          >
+            <nav class="navbar navbar-expand-xxl navbar-light">
+              <div class="container">
+                {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
+                <span class="navbar-brand nav-brand-name-home">Evenz</span>
+
+                <button
+                  class="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
+                >
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div
+                  class="collapse navbar-collapse"
+                  id="navbarSupportedContent"
+                >
+                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <div className="nav-link-btn me-4">Features</div>
+                    </li>
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <div className="nav-link-btn me-4">Use Cases</div>
+                    </li>
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <div className="nav-link-btn me-4">Explore Events</div>
+                    </li>
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <div className="nav-link-btn me-4">Pricing</div>
+                    </li>
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <button
+                        type="button"
+                        className="btn btn-light btn-outline-text ms-3"
+                      >
+                        Login
+                      </button>
+                    </li>
+                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                      {/* <AvatarMenu /> */}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
 
           <div className="container py-5 my-5" style={{ textAlign: "center" }}>
             <div className="heading-primary-term mb-5">Terms of service</div>

@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -71,9 +72,28 @@ export default function VerticalTabs() {
     if (!userLoading) {
       dispatch(fetchUserRegisteredEvents());
     }
-  }, [userLoading]);
+  }, [userLoading, dispatch]);
 
   console.log(events);
+
+  // if(isLoading)
+  // {
+
+  //   return (
+  //     <section >
+  //       <p>Loading...</p>
+  //     </section>
+  //   );
+
+  // }
+  //  if(error)
+  // {
+  //   return (
+  //     <section >
+  //       <p>{error}</p>
+  //     </section>
+  //   );
+  // }
 
   let registeredInEvents = events.filter(
     (event) => new Date(event.endDate) > Date.now()
@@ -176,35 +196,35 @@ export default function VerticalTabs() {
     }
   };
 
-  // const handleError = (error) => {
-  //   console.log(typeof error, error);
-  //   switch (error) {
+  const handleError = (error) => {
+    console.log(typeof error, error);
+    switch (error) {
       
-  //     case "401":
-  //       // history.push("/not-found");
-  //       return <div></div>;
-  //     case "403":
-  //       // history.push("/not-found");
-  //       return <div></div>;
-  //     case "404":
-  //       // history.push("/not-found");
-  //       return <div></div>;
-  //     case "405":
-  //       // history.push("/not-found");
-  //       return <div></div>;
-  //     case "409":
-  //       // history.push("/not-found");
-  //       return <div></div>;
-  //     case "500":
-  //       history.push("/internal-server-error");
-  //       return <div></div>;
+      case "401":
+        history.push("/not-found");
+        return <div></div>;
+      case "403":
+        history.push("/not-found");
+        return <div></div>;
+      case "404":
+        history.push("/not-found");
+        return <div></div>;
+      case "405":
+        history.push("/not-found");
+        return <div></div>;
+      case "409":
+        history.push("/not-found");
+        return <div></div>;
+      case "500":
+        history.push("/internal-server-error");
+        return <div></div>;
 
-  //     default:
-  //       // history.push("/home"); // TODO SNACKBAR
-  //       window.location.href = `www.evenz.in/home`;
-  //       return <div></div>;
-  //   }
-  // };
+      default:
+        // history.push("/home"); // TODO SNACKBAR
+        window.location.href = `www.evenz.in/home`;
+        return <div></div>;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -215,9 +235,8 @@ export default function VerticalTabs() {
         <Loader />
       </div>
     );
-  } 
-  if (error) {
-    // handleError(error);
+  } else if (error) {
+    handleError(error);
     return <div>{error}</div>;
   }
 

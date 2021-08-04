@@ -4,7 +4,7 @@ import "./../Styles/root.scss";
 import GroupIcon from "@material-ui/icons/Group";
 
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
+
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import SecurityIcon from "@material-ui/icons/Security";
 

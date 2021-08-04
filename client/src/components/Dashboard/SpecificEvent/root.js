@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -39,7 +39,7 @@ const SpecificEventRoot = () => {
     return () => {
       dispatch(navigationIndexForSpecificEvent(1));
     };
-  }, []);
+  }, [dispatch]);
 
   const handleEditEventClick = () => {
     history.push(`/community/${communityId}/edit-event/${eventId}/basics`);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
@@ -14,7 +15,7 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
   }) );
 
 
-  const chairArrangement = useSelector((state) => state.rooms.chairs);
+  
 
  
 
@@ -46,7 +47,6 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
 
     
     displayPopUp = "none";
-    displayAvatar = "none";
   }
 
 
@@ -112,7 +112,7 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
         document.getElementById(`${id}_chair_1_img_blob`).remove();
       }
       
-    }, [userImage1]);
+    }, [userImage1, userImage, id]);
 
   return (
     <>
