@@ -114,7 +114,7 @@ const Signin = (props) => {
                   <div onClick={onClickHandle}>
                     {/* <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">Login with Google</a> */}
 
-                    <a href="/eureka/v1/auth/google">Login with Google</a>
+                    <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">Login with Google</a>
                   </div>
                 </div>
                 <div
