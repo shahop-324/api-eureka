@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.row > * {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.avatar-menu-community-tab {
+  min-width: 260px;
+  min-height: 70px;
+  /* border: 1px solid green; */
+}
+
+.avatar-menu-community-name {
+  text-align: left;
+  font: normal normal 900 1.1rem/1.5rem Lato;
+  letter-spacing: 0.35px;
+  color: #333333;
+  opacity: 1;
+}
+
+.outline-btn-text {
+  font: normal normal 900 16px/24px Lato;
+  letter-spacing: 0.29px;
+  color: #538bf7;
+  opacity: 1;
+}
+
+.avatar-menu-group-heading {
+  text-align: left;
+  font: normal normal normal 15px/22px Lato;
+  letter-spacing: 0.33px;
+  color: #414141;
+  opacity: 1;
+}
+
+.avatar-menu-account-section-btns {
+  text-align: left;
+  font: normal normal 900 19px/28px Lato;
+  letter-spacing: 0.42px;
+  color: #414141;
+  opacity: 1;
+}
+
+.hide {
+  display: none !important;
+}
+
+.msg-strip {
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.strip-msg-text {
+  text-align: left;
+  font: normal normal 600 14px/28px "Inter";
+  letter-spacing: 0.42px;
+  color: #646464;
+  opacity: 1;
+}
+
+.community-invitation-card {
+  min-width: 40vw;
+  min-height: 45vh;
+  /* box-shadow: 1px 6px 0px #212121; */
+
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(176, 180, 238, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.join-session-btn:hover {
+  box-shadow: 0px 6px 3px #d5e2fd !important;
+  cursor: pointer;
+}
+
+/* .agora_video_player {
+  border-radius: px;
+} */
+
+
+
+/* Loader Styling */
+
+.blob-7 {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  background: #fff;
+  filter: blur(5px) contrast(10) hue-rotate(300deg);
+  padding: 10px;
+  mix-blend-mode: darken;
+}
+.blob-7:before,
+.blob-7:after{ 
+  content: "";
+  grid-area: 1/1; 
+  width:40px;
+  height:40px;
+  background: #ffff00;
+  animation: bo7 2s infinite;
+}
+.blob-7:after{ 
+  animation-delay: -1s;
+}
+@keyframes bo7{
+  0%   {transform: translate(   0,0)}
+  25%  {transform: translate(100%,0)}
+  50%  {transform: translate(100%,100%)}
+  75%  {transform: translate(   0,100%)}
+  100% {transform: translate(   0,0)}
+}
+
+.brand-dark {
+  color: #333333 !important;
+}

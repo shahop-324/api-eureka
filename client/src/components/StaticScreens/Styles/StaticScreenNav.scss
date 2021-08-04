@@ -1,0 +1,308 @@
+.nav-link-btn {
+  text-align: left;
+  font: normal normal medium 0.938rem/1.313rem Ubuntu !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #e7e7e7;
+  opacity: 1;
+}
+
+.nav-brand-name-home {
+  text-align: left;
+  font: normal normal medium 2.5rem/3rem Ubuntu !important;
+  letter-spacing: 1px;
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+.header-section {
+  height: 90vh;
+
+  background: #4a4a4a 0% 0% no-repeat padding-box;
+  border: 1px solid #707070;
+  opacity: 1;
+}
+
+.grid-of-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  height: 73vh;
+}
+
+.grid-1-of-2 {
+  //   border: 2px solid green;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  //   align-items: center;
+}
+.grid-2-of-2 {
+  //   border: 2px solid green;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  //   align-items: center;
+  //   animation: pulse 5s;
+}
+
+.header-main-heading-and-action-btn {
+  height: auto; // TODO Change it to auto after designing
+
+  //   border: 2px solid red;
+}
+
+.hero-heading {
+  text-align: left;
+  font: normal normal 600 2.7rem/3.5rem Poppins;
+  letter-spacing: 2.69px;
+  color: #538bf7;
+
+  text-shadow: 0px 0px 41px #538bf7;
+}
+
+.section-hero-img {
+  animation-duration: 2.5s;
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%;
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+    transform: translateZ(0);
+    opacity: 1;
+  }
+}
+
+.home-section-2 {
+  height: 100vh;
+  //   border: 2px solid green;
+}
+
+.home-section-3 {
+  height: 95vh;
+  background-color: hsla(113, 52%, 55%, 0.589);
+}
+
+.home-section-4 {
+  height: 95vh;
+  background-color: hsl(0, 0%, 100%);
+}
+
+.home-section-5 {
+  height: 90vh;
+  background-color: #e1bae1;
+}
+
+.home-section-6 {
+  height: 80vh;
+  background-color: #ffffff;
+}
+
+.home-section-7 {
+  height: 95vh;
+  background-color: #000000c7;
+}
+
+.home-section-8 {
+  height: 90vh;
+  background-color: #e8b665c7;
+}
+
+.home-section-9 {
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+.centered-heading-primary {
+  text-align: center;
+  font: normal normal 600 45px/77px Poppins;
+  letter-spacing: 2.21px;
+  color: #000000;
+  text-shadow: 0px 0px 41px #538bf7;
+  opacity: 1;
+}
+
+.centered-heading-secondary {
+  text-align: center;
+  font: normal normal 500 19px/50px Poppins;
+  letter-spacing: 0.93px;
+  color: #434343;
+  opacity: 1;
+}
+
+.application-workflow-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1rem;
+}
+
+.workflow-container {
+  height: 400px; // TODO Set it to auto
+  //   border: 2px solid gray;
+}
+
+.workflow-group-container-1 {
+  height: 320px; // TODO Set it to auto
+  width: 100%;
+  background: #4f4f4f 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  filter: blur(0px);
+
+  text-align: center;
+}
+.workflow-group-container-2 {
+  height: 320px; // TODO Set it to auto
+  width: 100%;
+  background: #e7c75e 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  filter: blur(0px);
+
+  text-align: center;
+}
+.workflow-group-container-3 {
+  height: 320px; // TODO Set it to auto
+  width: 100%;
+  background: #76a3f9 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  filter: blur(0px);
+
+  text-align: center;
+}
+
+.workflow-step-explanation {
+  text-align: left;
+  font: normal normal 600 17px/32px Poppins;
+  letter-spacing: 0.93px;
+  color: #2e2e2e;
+  opacity: 1;
+}
+
+.section-heading-primary {
+  text-align: left;
+  font: normal normal 600 2rem/3rem Poppins;
+  letter-spacing: 1.93px;
+  text-shadow: 0px 0px 41px #538bf7;
+  opacity: 1;
+}
+
+.home-text-description {
+  text-align: left;
+  font: normal normal 600 18px/38px Roboto;
+  letter-spacing: 0.97px;
+  color: #2f2f2f;
+  opacity: 1;
+}
+
+.home-feature-text {
+  text-align: left;
+  font: normal normal 500 17px/55px Poppins;
+  letter-spacing: 1.04px;
+  color: #000000;
+  opacity: 1;
+}
+
+.btn-attention-home {
+  background: #538bf7 0% 0% no-repeat padding-box;
+  box-shadow: inset 0px 3px 19px #00000029, 0px 0px 10px #538bf7;
+  border-radius: 10px;
+  opacity: 1;
+
+  text-align: left;
+  font: normal normal 600 1.25rem Poppins;
+  letter-spacing: 0.47px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+footer {
+  background-color: #2f2f2f;
+  height: 35vh;
+}
+
+.footer-container {
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: 0.5fr 1fr  1fr 2fr;
+  grid-gap: 1rem;
+}
+
+.brand-logo-and-copyright {
+  height: 100%;
+}
+
+.use-cases {
+  height: 100%;
+}
+
+.company {
+  height: 100%;
+}
+
+.further-nformation {
+  height: 100%;
+}
+
+.follow-us {
+  height: 100%;
+}
+
+.footer-section-headline {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.footer-section-link {
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: #a7a7a7;
+}
+.footer-section-link:hover {
+  cursor: pointer;
+  width: fit-content;
+  color: #538bf7;
+  border-bottom: 1px solid #1c62ec;
+}
+
+.heading-primary-term {
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #fff;
+
+  font-family: Ubuntu;
+}
+
+.terms-condition-heading {
+    font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+
+  font-family: Ubuntu;
+  text-align: left;
+}
+
+.term-description {
+    font-size: 0.95rem;
+  font-weight: 400;
+  color: rgb(204, 204, 204);
+
+  font-family: Ubuntu;
+  text-align: left;
+  letter-spacing: 1px;
+}
