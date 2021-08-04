@@ -17,7 +17,7 @@ router.get(
   function (req, res) {
     // console.log(req.user, req.isAuthenticated());
     req.session.save(function (err) {
-      res.redirect("https://www.evenz.in/user/home");
+      res.redirect("/user/home");
     });
   }
 );
