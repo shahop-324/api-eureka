@@ -7,7 +7,6 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongosanitize = require("express-mongo-sanitize");
 const cookieSession = require("cookie-session");
-const session = require("express-session");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const xss = require("xss-clean");
@@ -16,6 +15,7 @@ const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const session = require('cookie-session');
 
 
 const http = require('http');
