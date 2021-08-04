@@ -18,7 +18,7 @@ router.get(
     console.log(req, res);
     // console.log(req.user, req.isAuthenticated());
     req.session.save(function (err) {
-      res.status(301).redirect("https://www.evenz.in/");
+      res.status(301).redirect("https://www.evenz.in/search-events");
     });
   }
 );
