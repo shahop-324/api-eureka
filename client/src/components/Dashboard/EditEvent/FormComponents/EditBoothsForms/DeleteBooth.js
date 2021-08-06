@@ -39,7 +39,6 @@ const DeleteBooth = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.openDeleteDialog}
-        onClose={props.handleCloseDeleteBooth}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
@@ -47,7 +46,8 @@ const DeleteBooth = (props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This booths owners won't be able to join event through earlier invitation. Are you sure ?
+            This booths owners won't be able to join event through earlier
+            invitation. Are you sure ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -56,7 +56,7 @@ const DeleteBooth = (props) => {
           </Button>
           <Button
             onClick={() => {
-              dispatch(deleteBooth(props.id))
+              dispatch(deleteBooth(props.id));
               props.handleCloseDeleteBooth();
               setState({ open: true, vertical: "top", horizontal: "center" });
             }}

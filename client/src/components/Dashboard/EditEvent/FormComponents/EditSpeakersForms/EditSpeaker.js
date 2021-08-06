@@ -14,9 +14,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import {
-  editSpeaker,
-} from "../../../../../actions";
+import { editSpeaker } from "../../../../../actions";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -56,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
-
 
 const renderInput = ({
   input,
@@ -106,7 +103,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -114,7 +111,7 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -128,7 +125,6 @@ const renderTextArea = ({
               {warning}
             </div>
           )))}
-
     </div>
   );
 };
@@ -161,8 +157,8 @@ const renderReactSelect = ({
 );
 const EditSpeakerForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-const params =useParams();
-const id =params.id
+  const params = useParams();
+  const id = params.id;
 
   const dispatch = useDispatch();
 
@@ -174,16 +170,12 @@ const id =params.id
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const event=useSelector((state)=>{
-    return state.event.events.find((event)=>{
-
-
-     return event.id===id
-    })
-
-
-  })
-const imgKey = event.image;
+  const event = useSelector((state) => {
+    return state.event.events.find((event) => {
+      return event.id === id;
+    });
+  });
+  const imgKey = event.image;
   //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
@@ -253,7 +245,6 @@ const imgKey = event.image;
         fullScreen={fullScreen}
         scroll="paper"
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>

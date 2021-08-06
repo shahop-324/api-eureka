@@ -215,7 +215,6 @@ const AddNewSession = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>

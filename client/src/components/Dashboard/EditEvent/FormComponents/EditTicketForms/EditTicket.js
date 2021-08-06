@@ -11,7 +11,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { connect, useDispatch } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import {  editTicket } from "../../../../../actions";
+import { editTicket } from "../../../../../actions";
 
 const styles = {
   control: (base) => ({
@@ -75,7 +75,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -83,7 +83,7 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -138,7 +138,7 @@ const EditTicket = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  
+
   const currencyOptions = [
     { value: "USD", label: "US Dollars" },
     { value: "AED", label: "United Arab Emirates Dirham" },
@@ -191,7 +191,6 @@ const EditTicket = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui from error" onSubmit={handleSubmit(onSubmit)}>
@@ -412,7 +411,7 @@ const mapStateToProps = (state) => ({
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.name) {
     errors.name = "Ticket name is required";
   }
@@ -437,7 +436,6 @@ const validate = (formValues) => {
 
   return errors;
 };
-
 
 export default connect(mapStateToProps)(
   reduxForm({

@@ -76,14 +76,14 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
       />
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -164,7 +164,9 @@ const AddNewTicket = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    const accessibleAreas = formValues.venueAreasAccessible.map((area) => area.value);
+    const accessibleAreas = formValues.venueAreasAccessible.map(
+      (area) => area.value
+    );
     console.log("accessible areas", accessibleAreas);
 
     const ModifiedFormValues = {};
@@ -174,7 +176,8 @@ const AddNewTicket = (props) => {
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.price = formValues.price;
     ModifiedFormValues.shareRecording = formValues.shareRecording;
-    ModifiedFormValues.numberOfTicketAvailable = formValues.numberOfTicketAvailable;
+    ModifiedFormValues.numberOfTicketAvailable =
+      formValues.numberOfTicketAvailable;
     ModifiedFormValues.venueAreasAccessible = accessibleAreas;
 
     console.log(ModifiedFormValues);
@@ -190,7 +193,6 @@ const AddNewTicket = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
@@ -320,7 +322,7 @@ const AddNewTicket = (props) => {
 
             <div className="form-check d-flex flex-row mb-3">
               <Field
-              name="shareRecording"
+                name="shareRecording"
                 type="checkbox"
                 classes="form-check-input me-3 pb-1"
                 component={renderInput}
@@ -353,7 +355,7 @@ const AddNewTicket = (props) => {
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.name) {
     errors.name = "Ticket name is required";
   }
@@ -378,7 +380,6 @@ const validate = (formValues) => {
 
   return errors;
 };
-
 
 export default reduxForm({
   form: "newTicketAddForm",

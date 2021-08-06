@@ -16,7 +16,10 @@ import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
-import { createBooth, fetchParticularEventOfCommunity } from "../../../../../actions";
+import {
+  createBooth,
+  fetchParticularEventOfCommunity,
+} from "../../../../../actions";
 import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
 
@@ -86,7 +89,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -111,11 +114,11 @@ const renderTextArea = ({
   );
 };
 
-const renderMultiEmail = ({ input, meta: { touched, error, warning }, }) => {
+const renderMultiEmail = ({ input, meta: { touched, error, warning } }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <MultiEmailInput  input={input} value={input.value} />
+      <MultiEmailInput input={input} value={input.value} />
       {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
@@ -134,11 +137,11 @@ const renderMultiEmail = ({ input, meta: { touched, error, warning }, }) => {
   );
 };
 
-const renderMultiTags = ({ input, meta: { touched, error, warning }, }) => {
+const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <MultiTagInput  input={input} value={input.value} />
+      <MultiTagInput input={input} value={input.value} />
       {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
@@ -166,20 +169,18 @@ const AddNewBooth = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
- 
 
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
 
   function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   const onFileChange = (event) => {
@@ -224,7 +225,6 @@ const AddNewBooth = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
@@ -328,29 +328,20 @@ const AddNewBooth = (props) => {
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
-                for="emails"
-                class="form-label form-label-customized"
-              >
+              <label for="emails" class="form-label form-label-customized">
                 Emails
               </label>
               <div class="form-group">
-                
-
-                <Field name="multiEmail"component={renderMultiEmail}/>
+                <Field name="multiEmail" component={renderMultiEmail} />
               </div>
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
-                for="tags"
-                class="form-label form-label-customized"
-              >
+              <label for="tags" class="form-label form-label-customized">
                 Tags
               </label>
               <div class="form-group">
-              <Field name="multiTags"component={renderMultiTags}/>
-                
+                <Field name="multiTags" component={renderMultiTags} />
               </div>
             </div>
 
@@ -489,7 +480,7 @@ const validate = (formValues) => {
   ) {
     errors.multiEmail = "Invalid Email address";
   }
-  
+
   return errors;
 };
 

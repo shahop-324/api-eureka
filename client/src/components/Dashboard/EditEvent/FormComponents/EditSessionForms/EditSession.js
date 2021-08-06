@@ -58,7 +58,7 @@ const renderInput = ({
 const renderTextArea = ({
   input,
   meta: { touched, error, warning },
-  
+
   type,
   ariadescribedby,
   classes,
@@ -68,7 +68,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -76,7 +76,7 @@ const renderTextArea = ({
         placeholder={placeholder}
         required
       />
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -90,7 +90,6 @@ const renderTextArea = ({
               {warning}
             </div>
           )))}
-     
     </div>
   );
 };
@@ -118,7 +117,6 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      
     </div>
   </div>
 );
@@ -150,7 +148,7 @@ const EditSession = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  
+
   useEffect(() => {
     dispatch(fetchParticularSessionOfEvent(props.id));
   }, [props.id, dispatch]);
@@ -176,7 +174,7 @@ const EditSession = (props) => {
   };
 
   const theme = useTheme();
-  
+
   const onSubmit = (formValues) => {
     const categories = [];
 
@@ -189,12 +187,10 @@ const EditSession = (props) => {
     ModifiedFormValues.endDate = formValues.endDate;
     ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
-    
 
     console.log(ModifiedFormValues);
     showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
-
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -202,7 +198,6 @@ const EditSession = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
@@ -323,7 +318,6 @@ const EditSession = (props) => {
                 Speakers
               </label>
               <Field
-
                 name="speaker"
                 styles={styles}
                 menuPlacement="top"
@@ -382,7 +376,6 @@ const EditSession = (props) => {
   );
 };
 const mapStateToProps = (state) => ({
- 
   initialValues: {
     name:
       state.session.sessionDetails && state.session.sessionDetails.name
@@ -415,18 +408,16 @@ const mapStateToProps = (state) => ({
       state.session.sessionDetails && state.session.sessionDetails.endTime
         ? dateFormat(new Date(state.session.sessionDetails.endTime), "HH:MM")
         : "",
-    
+
     speaker:
       state.session.sessionDetails &&
       state.session.sessionDetails.speaker.length !== 0 &&
       state.session.sessionDetails.speaker.map((element) => {
-
         return {
           value: element.id,
           label: element.firstName,
         };
       }),
-    
   },
 });
 

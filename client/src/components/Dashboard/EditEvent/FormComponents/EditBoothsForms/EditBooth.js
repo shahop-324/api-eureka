@@ -13,7 +13,6 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
-
 import { editBooth } from "../../../../../actions";
 
 import MultiEmailInput from "../../../MultiEmailInput";
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
-
 
 const renderInput = ({
   input,
@@ -87,7 +85,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -95,7 +93,7 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -113,7 +111,7 @@ const renderTextArea = ({
   );
 };
 
-const renderMultiEmail = ({ input, meta: { touched, error, warning }, }) => {
+const renderMultiEmail = ({ input, meta: { touched, error, warning } }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   console.log(input);
   return (
@@ -137,7 +135,7 @@ const renderMultiEmail = ({ input, meta: { touched, error, warning }, }) => {
   );
 };
 
-const renderMultiTags = ({ input, meta: { touched, error, warning }, }) => {
+const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
   console.log(input);
   const className = `field ${error && touched ? "error" : ""}`;
   return (
@@ -178,8 +176,10 @@ const EditBooth = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-   
-  const imgKey = useSelector((state) => state.booth.boothDetails ? state.booth.boothDetails.image : false);
+
+  const imgKey = useSelector((state) =>
+    state.booth.boothDetails ? state.booth.boothDetails.image : false
+  );
 
   let imgUrl = " #";
   if (imgKey) {
@@ -217,14 +217,11 @@ const EditBooth = (props) => {
     props.handleClose();
   };
 
-  
-
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
@@ -466,7 +463,6 @@ const EditBooth = (props) => {
 
               <button
                 type="submit"
-                
                 className="btn btn-primary btn-outline-text"
                 onClick={() => {
                   props.handleClose();
@@ -570,7 +566,7 @@ const validate = (formValues) => {
   ) {
     errors.multiEmail = "Invalid Email address";
   }
-  
+
   return errors;
 };
 

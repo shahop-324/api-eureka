@@ -118,12 +118,11 @@ const renderReactSelect = ({
 const EditSponosor = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
 
- 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  
+
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },
@@ -173,7 +172,6 @@ const EditSponosor = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
@@ -329,7 +327,7 @@ const mapStateToProps = (state) => ({
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.organisationName) {
     errors.organisationName = "Organisation name is required";
   }

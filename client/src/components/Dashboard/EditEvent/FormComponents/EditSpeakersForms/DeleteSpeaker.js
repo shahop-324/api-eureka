@@ -39,7 +39,6 @@ const DeleteSpeaker = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.openDeleteDialog}
-        onClose={props.handleCloseDeleteSpeaker}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
@@ -57,7 +56,7 @@ const DeleteSpeaker = (props) => {
           </Button>
           <Button
             onClick={() => {
-              dispatch(deleteSpeaker(props.id))
+              dispatch(deleteSpeaker(props.id));
               props.handleCloseDeleteSpeaker();
               setState({ open: true, vertical: "top", horizontal: "center" });
             }}

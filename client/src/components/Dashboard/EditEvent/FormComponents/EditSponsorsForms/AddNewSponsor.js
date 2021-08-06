@@ -123,7 +123,7 @@ const AddNewSponsor = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  
+
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },
@@ -163,18 +163,13 @@ const AddNewSponsor = (props) => {
 
   return (
     <>
-       <Dialog
+      <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-          
-
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div
-            className="create-new-coupon-form px-4 py-4"
-          >
+          <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
               <div className="coupon-overlay-form-headline">
@@ -284,7 +279,6 @@ const AddNewSponsor = (props) => {
             </div>
           </div>
         </form>
-         
       </Dialog>
     </>
   );
@@ -292,7 +286,7 @@ const AddNewSponsor = (props) => {
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.organisationName) {
     errors.organisationName = "Organisation name is required";
   }
