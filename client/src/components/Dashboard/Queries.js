@@ -6,7 +6,7 @@ import "./../../assets/Sass/Queries.scss";
 import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
-import CustomPagination from "./HelperComponent/Pagination";
+// import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
@@ -171,7 +171,7 @@ const Queries = () => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Queries (16)</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -207,7 +207,7 @@ const Queries = () => {
               Filter
             </div>
 
-            <div className="mb-3 ms-4" style={{ width: "320px" }}>
+            <div className="mb-3 ms-4" style={{ width: "280px" }}>
               <label className="queries-filter-label mb-2">
                 Filter by event
               </label>
@@ -220,7 +220,7 @@ const Queries = () => {
               />
             </div>
 
-            <div className="mb-3 ms-4" style={{ width: "320px" }}>
+            <div className="mb-3 ms-4" style={{ width: "280px" }}>
               <label className="queries-filter-label mb-2">Answer Status</label>
               <Select
                 className="select"
@@ -232,7 +232,7 @@ const Queries = () => {
               />
             </div>
 
-            <div className="mb-3 ms-4" style={{ width: "320px" }}>
+            <div className="mb-3 ms-4" style={{ width: "280px" }}>
               <label className="queries-filter-label mb-2">
                 Filter by user status
               </label>
@@ -248,7 +248,7 @@ const Queries = () => {
           </div>
         </div>
         {/* Here I have to use pagination */}
-        <CustomPagination />
+        {/* <CustomPagination /> */}
       </div>
     </>
   );

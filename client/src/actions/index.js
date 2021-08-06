@@ -775,6 +775,7 @@ export const createSpeaker =
             },
           }
         );
+        console.log(res);
 
         res = await res.json();
         console.log(res);

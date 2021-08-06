@@ -5,7 +5,7 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "./HelperComponent/Pagination";
+// import CustomPagination from "./HelperComponent/Pagination";
 import EventListFields from "./HelperComponent/EventListFields";
 import EventDetailCard from "./HelperComponent/EventDetailsCard";
 import InputBase from "@material-ui/core/InputBase";
@@ -149,17 +149,12 @@ const EventManagement = () => {
             eventName={eventName}
             communityId={communityId}
             id={id}
-            // onClick={dispatch(fetchParticularEventOfCommunity(id))}
           />
         );
       });
   };
 
-  // if(isLoading) {
-  //   return <div className="event-management-content-grid d-flex flex-row justify-content-center align-items-center">
-  //   <Loader/>
-  // </div>
-  // }
+  
 
   if(error){
    return  <div>{error}</div>
@@ -167,7 +162,7 @@ const EventManagement = () => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Events</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -209,7 +204,7 @@ const EventManagement = () => {
           { isLoading ? <div className="d-flex flex-row align-items-center justify-content-center" style={{height: "60vh"}}><Loader /></div> : renderCommunityEventsList(communityEvents) }
         </div>
         {/* Here I have to use pagination */}
-        <CustomPagination />
+        {/* <CustomPagination /> */}
       </div>
       <Dialog
         fullScreen={fullScreen}

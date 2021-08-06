@@ -97,9 +97,9 @@ const Overview = () => {
 
   return (
     <>
-      <div>
+      <div className="me-3">
         {/* Secondary Heading with drop selector */}
-        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
+        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4" style={{minWidth: "1138px"}}>
           {/* Secondary Heading */}
           <div className="sec-heading-text">Overview</div>
           {/* Drop Selector */}
@@ -215,7 +215,7 @@ const Overview = () => {
           <div className="overview-content-right">
             {/* Team Overview Card */}
             
-            <div className="team-overview-and-top-events-row-container mt-4">
+            <div className="team-overview-and-top-events-row-container mt-5">
             <div className="team-overview mb-4 py-4">
               {/* Team Overview Card Heading and See all link */}
               <div className="d-flex flex-row justify-content-between px-4 mb-4">
@@ -538,7 +538,7 @@ const Overview = () => {
         </div>
 
         {/* Recent Events Data Table Grid */}
-        <div className="recent-events-data-grid mx-3 mb-4">
+        <div className="recent-events-data-grid mx-3 mb-4" style={{minWidth: "1138px"}}>
           {/* Recent Events Heading */}
           <div className="chart-heading-registrations mb-3 px-4 pt-4">
             Recent Events

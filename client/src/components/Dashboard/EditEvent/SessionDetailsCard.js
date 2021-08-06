@@ -1,5 +1,5 @@
 import React from "react";
-import Faker from "faker";
+// import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -11,6 +11,7 @@ import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
 
 import { useDispatch } from "react-redux";
 import { fetchParticularSessionOfEvent } from "../../../actions";
+import { Tooltip } from "@material-ui/core";
 
 var dateFormat = require("dateformat");
 //var now = new Date();
@@ -18,11 +19,23 @@ var dateFormat = require("dateformat");
 // Basic usage
 //dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 // Saturday, June 9th, 2007, 5:46:21 PM
-const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description,speaker,id}) => {
+const SessionDetailCard = ({
+  endTime,
+  startTime,
+  name,
+  startDate,
+  endDate,
+  description,
+  speaker,
+  id,
+}) => {
+
+
+  
+
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
-  
   //  const formatDateAndTime =(date)=>{
   //   var now = new Date();
   //   dateFormat(startDate, "mm/d/yyyy");
@@ -35,8 +48,8 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
-  
-  const dispatch=useDispatch();
+
+  const dispatch = useDispatch();
 
   const handleEditSession = () => {
     dispatch(fetchParticularSessionOfEvent(id));
@@ -51,6 +64,19 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
   //   return str > n ? `${str.subString(0,n)} + ...` : str;
   // }
 
+  const renderSessionSpeakersList = (sessionSpeakers) => {
+    return sessionSpeakers.map((speaker) => {
+      return (
+        <Tooltip title={speaker.name} aria-label={speaker.name}>
+          <Avatar
+            alt={speaker.name}
+            src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+          />
+        </Tooltip>
+      );
+    });
+  };
+
   return (
     <>
       <div className="session-field-value-container" id={id}>
@@ -61,7 +87,7 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
           }}
         >
           <div className="event-name-d" style={{ width: "100%" }}>
-           {name}
+            {name}
           </div>
         </div>
         <div
@@ -74,10 +100,16 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-             <div className="me-3">{ dateFormat(startDate, "mm/d/yyyy")} { dateFormat(startTime, "h:MM TT")}</div>
+            <div className="me-3">
+              {dateFormat(startDate, "mm/d/yyyy")}{" "}
+              {dateFormat(startTime, "h:MM TT")}
+            </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
-            <div>{ dateFormat(endDate, "mm/d/yyyy")} { dateFormat(endTime, "h:MM TT")}</div>{" "}
+            <div>
+              {dateFormat(endDate, "mm/d/yyyy")}{" "}
+              {dateFormat(endTime, "h:MM TT")}
+            </div>{" "}
           </div>
         </div>
         <div
@@ -105,15 +137,8 @@ const SessionDetailCard = ({endTime,startTime,name,startDate,endDate,description
         >
           <div className="event-field-label registrations-field-label">
             <div className="session-card-speaker-grid">
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-              <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
+              {/* Session speaker List */}
+              {renderSessionSpeakersList(speaker)}
             </div>
           </div>
         </div>

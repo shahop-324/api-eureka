@@ -6,7 +6,7 @@ import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Registrations.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "./HelperComponent/Pagination";
+// import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -176,7 +176,7 @@ const Registrations = () => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Registrations</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -224,10 +224,10 @@ const Registrations = () => {
           {isLoading ? <div className="d-flex flex-row align-items-center justify-content-center" style={{height: "60vh"}}><Loader /></div> : renderRegistrationsList(communityRegistrations)}
         </div>
         {/* Here I have to use pagination */}
-        <CustomPagination />
+        {/* <CustomPagination /> */}
       </div>
       <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
+        
         <SwipeableDrawer
           anchor="right"
           open={openDrawer}

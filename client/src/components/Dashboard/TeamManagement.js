@@ -5,7 +5,7 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "./HelperComponent/Pagination";
+// import CustomPagination from "./HelperComponent/Pagination";
 import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
@@ -16,7 +16,6 @@ import HowManyMembersCanBeAddedMsg from "./HelperComponent/HowManyMembersCanbeAd
 import { IconButton } from "@material-ui/core";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
 
 import { Field } from "redux-form";
 import Select from "react-select";
@@ -122,25 +121,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -233,7 +213,7 @@ const TeamManagement = (props) => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Members (4)</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -273,7 +253,7 @@ const TeamManagement = (props) => {
           <HowManyMembersCanBeAddedMsg />
         </div>
 
-        <CustomPagination />
+        {/* <CustomPagination /> */}
       </div>
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}

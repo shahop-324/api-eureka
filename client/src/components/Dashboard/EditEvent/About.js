@@ -14,7 +14,6 @@ import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import {
   editEventDescription,
-  
 } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -65,7 +64,7 @@ const About = (props) => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">About</div>
           <div className="drop-selector d-flex flex-row justify-content-end">

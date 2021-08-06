@@ -115,7 +115,7 @@ const renderInputCheckbox = ({
         className={classes}
         placeholder={placeholder}
         id={id}
-        required
+        // required
       />
       <label class={labelClass} for={labelFor}>
         {label}
@@ -209,11 +209,6 @@ const CreateNewCommunityForm = (props) => {
     // showResults(formValues);
     dispatch(createCommunity(formValues, file, userId));
   };
-
-  //   const onFileChange = (event) => {
-  //     console.log(event.target.files[0]);
-  //     setFile(event.target.files[0]);
-  //   };
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
