@@ -13,8 +13,6 @@ const renderInput = ({
   ariadescribedby,
   classes,
   placeholder,
-  
-  
 }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
