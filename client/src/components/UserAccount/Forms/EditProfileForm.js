@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import "react-phone-input-2/lib/style.css";
 import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser, resetAuthError, resetUserError } from "../../../actions";
+import { editUser, resetUserError } from "../../../actions";
 
 import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
@@ -64,13 +64,7 @@ const validate = (values) => {
 
   return errors;
 };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
+
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -243,7 +237,7 @@ let EditProfileForm = (props) => {
     ModifiedFormValues.interests = modifiedInterests;
 
     console.log(ModifiedFormValues);
-
+console.log(file);
     dispatch(editUser(ModifiedFormValues, file));
     // showResults(ModifiedFormValues);
   };
