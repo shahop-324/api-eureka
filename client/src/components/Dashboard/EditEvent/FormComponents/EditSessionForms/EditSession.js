@@ -18,26 +18,16 @@ import {
   fetchParticularSessionOfEvent,
 } from "../../../../../actions";
 
-//import {fetchParticularS}
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
 
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -47,24 +37,38 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
+  
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+      rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -72,8 +76,21 @@ const renderTextArea = ({
         placeholder={placeholder}
         required
       />
-
-      {renderError(meta)}
+{touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+     
     </div>
   );
 };
@@ -101,19 +118,14 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+      
     </div>
   </div>
 );
 
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-
 
 const styles = {
   control: (base) => ({
@@ -138,8 +150,7 @@ const EditSession = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  // dispatch(fetchParticularEventOfCommunity(id));
-
+  
   useEffect(() => {
     dispatch(fetchParticularSessionOfEvent(props.id));
   }, [props.id, dispatch]);
@@ -178,15 +189,12 @@ const EditSession = (props) => {
     ModifiedFormValues.endDate = formValues.endDate;
     ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
-    //ModifiedFormValues.Timezone = formValues.selectTimeZone.value;
-    //ModifiedFormValues.categories = categories;
-    //ModifiedFormValues.visibility = formValues.visibility;
+    
 
     console.log(ModifiedFormValues);
     showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
 
-    // props.openSavedChangesSnack();
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -197,7 +205,7 @@ const EditSession = (props) => {
         onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -349,7 +357,7 @@ const EditSession = (props) => {
                     horizontal: "center",
                   });
                 }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Save Changes
               </button>
@@ -374,9 +382,7 @@ const EditSession = (props) => {
   );
 };
 const mapStateToProps = (state) => ({
-  // initialValues:{ startDate:  "2021-07-12"}
-
-  // initialValues:state.event.event,
+ 
   initialValues: {
     name:
       state.session.sessionDetails && state.session.sessionDetails.name
@@ -409,10 +415,7 @@ const mapStateToProps = (state) => ({
       state.session.sessionDetails && state.session.sessionDetails.endTime
         ? dateFormat(new Date(state.session.sessionDetails.endTime), "HH:MM")
         : "",
-    // selectTimeZone: {
-    //   value: state.session.sessionDetails.Timezone,
-    //   label: state.session.sessionDetails.Timezone,
-    // },
+    
     speaker:
       state.session.sessionDetails &&
       state.session.sessionDetails.speaker.length !== 0 &&
@@ -423,15 +426,40 @@ const mapStateToProps = (state) => ({
           label: element.firstName,
         };
       }),
-    // visibility: state.session.sessionDetails.visibility
-    //   ? state.session.sessionDetails.visibility
-    //   : "",
+    
   },
 });
+
+const validate = (formValues) => {
+  const errors = {};
+  console.log(formValues.name);
+  if (!formValues.name) {
+    errors.name = "Session name is required";
+  }
+
+  if (!formValues.description) {
+    errors.description = "Description is required";
+  }
+  if (!formValues.startDate) {
+    errors.startDate = "Start date is required";
+  }
+  if (!formValues.startTime) {
+    errors.startTime = "Start time is required";
+  }
+  if (!formValues.endDate) {
+    errors.endDate = "End date is required";
+  }
+  if (!formValues.endTime) {
+    errors.endTime = "End time is required";
+  }
+
+  return errors;
+};
 
 export default connect(mapStateToProps)(
   reduxForm({
     form: "EditSessionDetails",
+    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(EditSession)

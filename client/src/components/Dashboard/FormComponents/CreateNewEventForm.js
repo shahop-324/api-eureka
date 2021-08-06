@@ -5,19 +5,10 @@ import "./../../../index.css";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { createEvent } from "../../../actions";
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
+
 const renderInput = ({
   input,
-  
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
@@ -25,7 +16,7 @@ const renderInput = ({
   
   
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -36,24 +27,37 @@ const renderInput = ({
         placeholder={placeholder}
         required
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+      rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -62,7 +66,20 @@ const renderTextArea = ({
         required
       />
 
-      {renderError(meta)}
+{touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -157,7 +174,7 @@ const styles = {
 };
 
 const CreateNewEventForm = (props) => {
-  const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit } = props;
 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
@@ -195,7 +212,7 @@ const CreateNewEventForm = (props) => {
   };
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
         <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
           <h2
             className={
@@ -416,7 +433,7 @@ const CreateNewEventForm = (props) => {
           >
             <button
               type="submit"
-              disabled={pristine || submitting}
+              // disabled={pristine || submitting}
               className={
                 `btn btn-primary btn-outline-text ` +
                 (props.showBlockButton === "false" ? "hide" : "")
@@ -432,8 +449,42 @@ const CreateNewEventForm = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.eventName) {
+    errors.eventName = "Event name is required";
+  }
+  if (!formValues.shortDescription) {
+    errors.description = "Event description is required";
+  }
+  if (!formValues.startDate) {
+    errors.startDate = "Start Date is required";
+  }
+  if (!formValues.startTime) {
+    errors.startTime = "Start Time is required";
+  }
+  if (!formValues.endDate) {
+    errors.endDate = "End Date is required";
+  }
+  if (!formValues.endTime) {
+    errors.endTime = "End Time is required";
+  }
+  if (!formValues.selectTimeZone) {
+    errors.selectTimeZone = "Timezone is required";
+  }
+  if (!formValues.selectCategories) {
+    errors.selectCategories = "Categories is required";
+  }
+  if (!formValues.visibility) {
+    errors.visibility = "Event visibility is required";
+  }
+  
+  return errors;
+};
+
 export default reduxForm({
   form: " createNewEventForm",
+  validate,
 })(CreateNewEventForm);
 
-//export default CreateNewEventForm;

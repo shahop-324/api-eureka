@@ -48,50 +48,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -101,7 +66,20 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -137,7 +115,7 @@ const renderReactSelect = ({
   </div>
 );
 const AddNewSponsor = (props) => {
-  const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit } = props;
 
   const params = useParams();
   const id = params.id;
@@ -145,15 +123,7 @@ const AddNewSponsor = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  //   // ! call API HERE
-  //  const dispatch=useDispatch()
-  //    useEffect(()=>{
-  //     dispatch(getAllSessionsOfParticularEvent(id))
-
-  //    },[]);
-
   
-
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },
@@ -165,11 +135,6 @@ const AddNewSponsor = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // const imgKey = useSelector((state) => state.auth.user.image);
-  // let imgUrl = " #";
-  // if (imgKey) {
-  //   imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
-  // }
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
@@ -206,10 +171,9 @@ const AddNewSponsor = (props) => {
       >
           
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div
             className="create-new-coupon-form px-4 py-4"
-            
           >
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -313,7 +277,7 @@ const AddNewSponsor = (props) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Add New Sponsor
               </button>
@@ -326,6 +290,24 @@ const AddNewSponsor = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.organisationName) {
+    errors.organisationName = "Organisation name is required";
+  }
+
+  if (!formValues.status) {
+    errors.status = "Sponsor status is required";
+  }
+  if (!formValues.website) {
+    errors.website = "website or any social link is required";
+  }
+
+  return errors;
+};
+
 export default reduxForm({
   form: "newSponsorAddForm",
+  validate,
 })(AddNewSponsor);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -46,14 +47,13 @@ const renderError = ({ error, touched }) => {
 };
 const renderInput = ({
   input,
-  value,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -64,24 +64,37 @@ const renderInput = ({
         placeholder={placeholder}
         required
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -90,14 +103,26 @@ const renderTextArea = ({
         required
       />
 
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
 const renderReactSelect = ({
   input,
-  meta: { touched, error, warning },
   styles,
   menuPlacement,
   options,
@@ -118,41 +143,9 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
     </div>
   </div>
 );
-// const renderReactSelectTimeZone = ({
-//   isMulti,
-//   input,
-//   meta: { touched, error, warning },
-//   styles,
-//   menuPlacement,
-//   options,
-//   defaultValue,
-
-//   name,
-// }) => (
-//   <div>
-//     <div>
-//       <Select
-//         defaultValue={defaultValue}
-//         styles={styles}
-//         menuPlacement={menuPlacement}
-//         name={name}
-//         options={options}
-//         value={input.value}
-//         onChange={(value) => input.onChange(value)}
-//         onBlur={() => input.onBlur()}
-//       />
-//       {touched &&
-//         ((error && <span>{error}</span>) ||
-//           (warning && <span>{warning}</span>))}
-//     </div>
-//   </div>
-// );
 
 const AddNewSession = (props) => {
   let speakerOptions = [];
@@ -225,7 +218,7 @@ const AddNewSession = (props) => {
         onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -357,7 +350,7 @@ const AddNewSession = (props) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Add New Session
               </button>
@@ -381,6 +374,33 @@ const AddNewSession = (props) => {
     </>
   );
 };
+
+const validate = (formValues) => {
+  const errors = {};
+  console.log(formValues.name);
+  if (!formValues.name) {
+    errors.name = "Session name is required";
+  }
+  if (!formValues.description) {
+    errors.description = "Description is required";
+  }
+  if (!formValues.startDate) {
+    errors.startDate = "Start date is required";
+  }
+  if (!formValues.startTime) {
+    errors.startTime = "Start time is required";
+  }
+  if (!formValues.endDate) {
+    errors.endDate = "End date is required";
+  }
+  if (!formValues.endTime) {
+    errors.endTime = "End time is required";
+  }
+
+  return errors;
+};
+
 export default reduxForm({
   form: "newSessionForm",
+  validate,
 })(AddNewSession);

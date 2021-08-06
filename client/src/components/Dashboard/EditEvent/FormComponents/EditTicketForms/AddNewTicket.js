@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -28,50 +29,15 @@ const styles = {
   }),
 };
 
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -81,31 +47,56 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+      rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
       />
-
-      {renderError(meta)}
+{touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -149,14 +140,6 @@ const AddNewTicket = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  //   // ! call API HERE
-  //  const dispatch=useDispatch()
-  //    useEffect(()=>{
-  //     dispatch(getAllSessionsOfParticularEvent(id))
-
-  //    },[]);
-
-  
 
   const currencyOptions = [
     { value: "USD", label: "US Dollars" },
@@ -210,7 +193,7 @@ const AddNewTicket = (props) => {
         onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -356,7 +339,7 @@ const AddNewTicket = (props) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Add New ticket
               </button>
@@ -368,6 +351,36 @@ const AddNewTicket = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.name) {
+    errors.name = "Ticket name is required";
+  }
+  if (!formValues.description) {
+    errors.description = "Ticket description is required";
+  }
+  if (!formValues.currency) {
+    errors.currency = "Currency is required";
+  }
+  if (!formValues.price) {
+    errors.price = "Ticket price is required";
+  }
+  if (!formValues.venueAreasAccessible) {
+    errors.venueAreasAccessible = "Accessible venue areas is required";
+  }
+  if (!formValues.numberOfTicketAvailable) {
+    errors.numberOfTicketAvailable = "Number of tickets available is required";
+  }
+  if (!formValues.shareRecording) {
+    errors.shareRecording = "Recording sharing permission is required";
+  }
+
+  return errors;
+};
+
+
 export default reduxForm({
   form: "newTicketAddForm",
+  validate,
 })(AddNewTicket);
