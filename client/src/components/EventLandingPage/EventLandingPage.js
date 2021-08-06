@@ -115,6 +115,8 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 const EventLandingPage = (props) => {
+
+  
   const classes = useStyles();
 
   const { isLoading, error } = useSelector((state) => state.event);
@@ -151,6 +153,7 @@ const EventLandingPage = (props) => {
   console.log(id);
   const dispatch = useDispatch();
 
+  
   useEffect(() => {
     let abortController = new AbortController();
 
@@ -160,7 +163,6 @@ const EventLandingPage = (props) => {
       abortController.abort();
     };
   }, [dispatch, id]);
-
   // const convertFromJSONToHTML = (text) => {
   //   return stateToHTML(convertFromRaw(JSON.parse(text)));
   // };
@@ -177,9 +179,9 @@ const EventLandingPage = (props) => {
     (state) => state.event.eventLandingPageDetails
   );
 
-  if (!event) {
+  
     event = eventLandingPageDetails;
-  }
+  
 
   console.log(event);
 
