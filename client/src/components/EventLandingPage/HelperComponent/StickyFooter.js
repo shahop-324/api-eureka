@@ -55,9 +55,11 @@ const StickyFooter = () => {
 
   const { userDetails } = useSelector((state) => state.user);
 
-  const event = useSelector((state) => state.event.eventLandingPageDetails);
-
-  console.log(event);
+  let event = useSelector((state) => {
+    return state.event.events.find((event) => {
+      return event.id === id;
+    });
+  });
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 

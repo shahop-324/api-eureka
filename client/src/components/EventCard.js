@@ -5,19 +5,33 @@ import "./../assets/css/CardStyle.css";
 
 import { Divider } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { generateEventAccessToken } from "../actions";
+import { fetchEvent, generateEventAccessToken } from "../actions";
 
-const EventCard = ({ image, date, id, eventName, minPrice, maxPrice, showBtn, communityId }) => {
-const dispatch = useDispatch();
-const eventId = id;
-const userDetails = useSelector((state) => state.user.userDetails ? state.user.userDetails : null);
+const EventCard = ({
+  image,
+  date,
+  id,
+  eventName,
+  minPrice,
+  maxPrice,
+  showBtn,
+  communityId,
+}) => {
+  const dispatch = useDispatch();
+  const eventId = id;
+  const userDetails = useSelector((state) =>
+    state.user.userDetails ? state.user.userDetails : null
+  );
 
-console.log(showBtn);
+  console.log(showBtn);
   const displayJoinBtn = showBtn ? "block" : "none";
   return (
     <div className="event-card-main">
       <div className="event-card-img-container">
-        <Link to={`/event-landing-page/${id}`}>
+        <Link
+          onClick={() => dispatch(fetchEvent(id))}
+          to={`/event-landing-page/${id}`}
+        >
           <img src={image} className="poster-img" alt="event-poster" />
         </Link>
       </div>
@@ -26,6 +40,7 @@ console.log(showBtn);
         <div className="event-card-name-main mb-3">
           {" "}
           <Link
+            onClick={() => dispatch(fetchEvent(id))}
             to={`/event-Landing-page/${id}`}
             style={{
               textDecoration: "none",
@@ -42,20 +57,33 @@ console.log(showBtn);
           $ {minPrice} - $ {maxPrice}
         </div>
 
-        <div className="mt-4 mb-3" style={{display: displayJoinBtn}}>
+        <div className="mt-4 mb-3" style={{ display: displayJoinBtn }}>
           <Divider />
         </div>
         <div className="d-flex flex-row justify-content-end align-items-center">
-         
-          <Link to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`} >
-         <button type="button" onClick={() => {
-           dispatch(generateEventAccessToken( userDetails.id,userDetails.email, "audience", eventId, communityId));
-         }} className="btn btn-primary btn-outline-text me-3" style={{display: displayJoinBtn}}>
-            Join Event
-          </button>
-
+          <Link
+            to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(
+                  generateEventAccessToken(
+                    userDetails.id,
+                    userDetails.email,
+                    "audience",
+                    eventId,
+                    communityId
+                  )
+                );
+              }}
+              className="btn btn-primary btn-outline-text me-3"
+              style={{ display: displayJoinBtn }}
+            >
+              Join Event
+            </button>
           </Link>
-         
+
           {/* <button className="btn btn-outline-primary btn-outline-text" style={{display: displayJoinBtn}}>
             View Reciept
           </button> */}

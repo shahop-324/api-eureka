@@ -80,8 +80,8 @@ export const signUp = (formValues) => async (dispatch) => {
   }
 };
 export const signOut = () => (dispatch, getState) => {
-   window.localStorage.clear();
-   
+  window.localStorage.clear();
+
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
@@ -94,8 +94,8 @@ export const createCommunity =
   (formValues, file, userId) => async (dispatch, getState) => {
     console.log(formValues);
 
-    try{
-      if(file) {
+    try {
+      if (file) {
         console.log(file);
 
         let uploadConfig = await fetch(
@@ -122,7 +122,6 @@ export const createCommunity =
 
         console.log(awsRes);
 
-
         const communityCreating = async () => {
           let res = await fetch(
             "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
@@ -132,7 +131,7 @@ export const createCommunity =
                 ...formValues,
                 image: uploadConfig.key,
               }),
-    
+
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${getState().auth.token}`,
@@ -148,7 +147,7 @@ export const createCommunity =
         // console.log(res);
         try {
           let res = await communityCreating();
-    
+
           dispatch(
             communityAuthActions.CommunitySignIn({
               token: res.token,
@@ -159,16 +158,14 @@ export const createCommunity =
               community: res.communityDoc,
             })
           );
-    
-          history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+
+          history.push(
+            `/user/${userId}/community/overview/${res.communityDoc.id}`
+          );
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
         }
-
-
-
-      }
-      else {
+      } else {
         const communityCreating = async () => {
           let res = await fetch(
             "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
@@ -177,7 +174,7 @@ export const createCommunity =
               body: JSON.stringify({
                 ...formValues,
               }),
-    
+
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${getState().auth.token}`,
@@ -193,7 +190,7 @@ export const createCommunity =
         // console.log(res);
         try {
           let res = await communityCreating();
-    
+
           dispatch(
             communityAuthActions.CommunitySignIn({
               token: res.token,
@@ -204,18 +201,17 @@ export const createCommunity =
               community: res.communityDoc,
             })
           );
-    
-          history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+
+          history.push(
+            `/user/${userId}/community/overview/${res.communityDoc.id}`
+          );
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
         }
       }
-    } 
-    catch(err) {
+    } catch (err) {
       console.log(err);
     }
-
-   
   };
 //Yet to be implemented
 export const communitySignIn = (id, userId) => async (dispatch, getState) => {
@@ -1877,7 +1873,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
 };
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
-  const editingUser = async() => { 
+  const editingUser = async () => {
     if (file) {
       console.log(formValues);
 
@@ -1892,7 +1888,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         }
       );
 
-      if(!uploadConfig.ok) {
+      if (!uploadConfig.ok) {
         throw new Error("Editing user details failed!");
       }
 
@@ -1912,8 +1908,6 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // console.log(amazoneFile);
       console.log(awsRes);
 
-
-
       const res = await fetch(
         "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updateMe",
         {
@@ -1930,7 +1924,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         }
       );
 
-      if(!res.ok) {
+      if (!res.ok) {
         throw new Error("Editing user details failed!");
       }
 
@@ -1962,27 +1956,25 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         }
       );
 
-      if(!res.ok) {
+      if (!res.ok) {
         throw new Error("Editing user details failed!");
       }
 
       const result = await res.json();
       return result;
     }
-  }
-try{
-  const result = await editingUser();
-      console.log(result);
-      // console.warn(xhr.responseText)
-      console.log(result.data.userData);
-      dispatch(
-        userActions.EditUser({
-          user: result.data.userData,
-        })
-      );
-    }
- 
-  catch (err) {
+  };
+  try {
+    const result = await editingUser();
+    console.log(result);
+    // console.warn(xhr.responseText)
+    console.log(result.data.userData);
+    dispatch(
+      userActions.EditUser({
+        user: result.data.userData,
+      })
+    );
+  } catch (err) {
     dispatch(userActions.hasError(err.message));
     console.log(err);
   }

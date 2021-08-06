@@ -115,11 +115,19 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 const EventLandingPage = (props) => {
-
-  
+  const params = useParams();
+  const id = params.id;
+  console.log(id);
+  const dispatch = useDispatch();
+  useEffect(() => {
+   
+    dispatch(fetchEvent(id));
+   
+  }, [dispatch, id]);
   const classes = useStyles();
-
-  const { isLoading, error } = useSelector((state) => state.event);
+  const { isLoading, error } = useSelector(
+    (state) => state.event
+  );
 
   const [selectedSection, setSelectedSection] = useState(0);
 
@@ -148,21 +156,9 @@ const EventLandingPage = (props) => {
     console.log(i);
   };
 
-  const params = useParams();
-  const id = params.id;
-  console.log(id);
-  const dispatch = useDispatch();
+ 
 
   
-  useEffect(() => {
-    let abortController = new AbortController();
-
-    console.log("entered in use effect");
-    dispatch(fetchEvent(id));
-    return () => {
-      abortController.abort();
-    };
-  }, [dispatch, id]);
   // const convertFromJSONToHTML = (text) => {
   //   return stateToHTML(convertFromRaw(JSON.parse(text)));
   // };
@@ -175,15 +171,7 @@ const EventLandingPage = (props) => {
     });
   });
 
-  const eventLandingPageDetails = useSelector(
-    (state) => state.event.eventLandingPageDetails
-  );
-
-  
-    event = eventLandingPageDetails;
-  
-
-  console.log(event);
+ 
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -196,10 +184,11 @@ const EventLandingPage = (props) => {
         <Loader />{" "}
       </div>
     ); // TODO
-  } else if (error) {
-    return <div>{error}</div>;
+  } 
+  if(error)
+  {
+    return <div>{error}</div>
   }
-
   console.log(event);
 
   const handleQueryText = (event) => {
@@ -471,14 +460,13 @@ const EventLandingPage = (props) => {
                 style={{ position: "sticky", top: "2rem" }}
               >
                 <a
-                onClick={() => {
-                  handleSecNav(0);
-                }}
+                  onClick={() => {
+                    handleSecNav(0);
+                  }}
                   href="#overview-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
                   <div
-                    
                     className={`event-landing-secondary-nav-item  ${
                       selectedSection === 0
                         ? "active-secondary-nav-item py-1"
@@ -490,14 +478,13 @@ const EventLandingPage = (props) => {
                   </div>
                 </a>
                 <a
-                onClick={() => {
-                  handleSecNav(1);
-                }}
+                  onClick={() => {
+                    handleSecNav(1);
+                  }}
                   href="#schedule-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
                   <div
-                    
                     className={`event-landing-secondary-nav-item  ${
                       selectedSection === 1
                         ? "active-secondary-nav-item py-1"
@@ -509,14 +496,13 @@ const EventLandingPage = (props) => {
                   </div>
                 </a>
                 <a
-                onClick={() => {
-                  handleSecNav(2);
-                }}
+                  onClick={() => {
+                    handleSecNav(2);
+                  }}
                   href="#speakers-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
                   <div
-                    
                     className={`event-landing-secondary-nav-item  ${
                       selectedSection === 2
                         ? "active-secondary-nav-item py-1"
@@ -528,9 +514,9 @@ const EventLandingPage = (props) => {
                   </div>
                 </a>
                 <a
-                onClick={() => {
-                  handleSecNav(3);
-                }}
+                  onClick={() => {
+                    handleSecNav(3);
+                  }}
                   href="#sponsors-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
@@ -546,9 +532,9 @@ const EventLandingPage = (props) => {
                   </div>
                 </a>
                 <a
-                onClick={() => {
-                  handleSecNav(4);
-                }}
+                  onClick={() => {
+                    handleSecNav(4);
+                  }}
                   href="#booths-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
@@ -750,8 +736,8 @@ const EventLandingPage = (props) => {
                 {/* This is ticket form */}
                 <TicketForm
                   eventId={id}
-                  tickets={eventLandingPageDetails.tickets}
-                  coupon={eventLandingPageDetails.coupon}
+                  tickets={event.tickets}
+                  coupon={event.coupon}
                 />
               </div>
 
@@ -896,8 +882,8 @@ const EventLandingPage = (props) => {
         {/*  */}
         <StickyFooter
           eventId={id}
-          tickets={eventLandingPageDetails.tickets}
-          coupon={eventLandingPageDetails.coupon}
+          tickets={event.tickets}
+          coupon={event.coupon}
         />
       </div>
 

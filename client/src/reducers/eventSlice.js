@@ -6,7 +6,7 @@ const eventSlice = createSlice({
   initialState: {
     events: [],
     eventDetails: null,
-    eventLandingPageDetails: null,
+
     isLoading: true,
     error: false,
   },
@@ -20,6 +20,7 @@ const eventSlice = createSlice({
       state.error = action.payload;
       state.isLoading = false;
     },
+
     CreateEvent(state, action) {
       state.events.push(action.payload.event);
     },
@@ -29,7 +30,6 @@ const eventSlice = createSlice({
     },
     FetchEvent(state, action) {
       console.log("opoo", 28);
-      state.eventLandingPageDetails = action.payload.event;
 
       const newEvent = action.payload.event;
       const existingEvent = state.events.find(
@@ -56,18 +56,6 @@ const eventSlice = createSlice({
         (event) => event.id !== action.payload.event.id
       );
     },
-
-    // addSessionOfParticularEvent(state,action){
-
-    //   state.allSessionsOfParticularEvent=action.payload.allSessions;
-
-    // },
-
-    // addSpeakerOfParticularEvent(state,action){
-
-    //   state.allSpeakersOfParticularEvent=action.payload.speakers
-
-    // }
   },
 });
 export const eventActions = eventSlice.actions;
