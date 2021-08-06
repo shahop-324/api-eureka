@@ -89,11 +89,11 @@ const AvatarMenu = () => {
   const communities = user.userDetails.communities;
   const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
 
-  const renderCommunitiesCommunities = (communities, handleClose) => {
+  const renderCommunities = (communities, handleClose) => {
     return communities.map((community) => {
       return (
 
-        <div className="px-3 menulist-community-tab"  onClick={() => {
+        <div className="px-3 me-2 menulist-community-tab" style={{width: "100%"}} onClick={() => {
           history.push(`/user/${user.userDetails._id}/community/overview/${community._id}`)
         }}>
 
@@ -131,7 +131,7 @@ const AvatarMenu = () => {
         </Button>
 
         <Popper
-          style={{ zIndex: 10000, textAlign: "center", marginTop: "20px", maxWidth: "250px" }}
+          style={{ zIndex: 10000, textAlign: "center", marginTop: "20px", maxWidth: "250px", marginRight: "2.5rem" }}
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
@@ -197,9 +197,12 @@ const AvatarMenu = () => {
 
                     <hr />
                     <div className="avatar-menu-group-heading px-3 pb-2">
-                      Switch to A Community
+                      Switch to A Community ({communities.length})
                     </div>
-                    {renderCommunitiesCommunities(communities, handleClose)}
+                    <div className="communities-list-error" style={{maxHeight: "200px", overflow: "scroll"}}>
+
+                    {renderCommunities(communities, handleClose)}
+                    </div>
                     
                     <hr className="px-2" />
                     <button

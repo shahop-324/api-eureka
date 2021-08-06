@@ -33,7 +33,7 @@ $bg-color-light-sea: #eef3f6;
 
 $color-icon: #231f20;
 
-$font-family: "Inter";
+$font-family: 'Inter';
 
 // SideNav Styling
 //===========================================================================================//
@@ -108,7 +108,6 @@ $font-family: "Inter";
     color: $color-white;
   }
 }
-
 
 // Secondary Heading & drop selector Styling
 //===========================================================================================//
@@ -467,14 +466,6 @@ $font-family: "Inter";
   /* transform: matrix(-1, 0, 0, 1, 0, 0); */
 }
 
-
-
-
-
-
-
-
-
 .custom-doughnut-datalabels-wrapper {
   margin: 0 auto;
   height: 200px;
@@ -525,9 +516,9 @@ $font-family: "Inter";
 }
 
 .event-edit-icon:hover {
-    color: $color-primary-main;
-    box-shadow: 1px #538BF7;
-    cursor: pointer;
+  color: $color-primary-main;
+  box-shadow: 1px #538bf7;
+  cursor: pointer;
 }
 
 .world-map-chart {
@@ -539,4 +530,44 @@ $font-family: "Inter";
 .see-all-members:hover {
   cursor: pointer;
   color: $color-primary-dark;
+}
+
+.team-overview-and-top-events-row-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.5rem;
+  height: 592px;
+}
+
+@media only screen and (max-width: "1480px") {
+  .overview-content-grid {
+   
+    grid-template-columns: 1fr;
+    
+  }
+
+  .top-events-card{
+    height: 592px;
+  }
+
+  .center-label-and-doughnut-wrapper {
+    width: 78%;
+    
+    margin-bottom: 1rem;
+  }
+
+  
+
+  .team-and-top-events-bg-container {
+    display: none;
+  }
+}
+@media only screen and (min-width: "1480px") {
+ 
+
+  .team-overview-and-top-events-row-container {
+    display: none;
+  }
+
+  
 }

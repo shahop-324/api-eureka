@@ -25,7 +25,7 @@ code {
 
 .avatar-menu-community-name {
   text-align: left;
-  font: normal normal 900 1.1rem/1.5rem Lato;
+  font: normal normal 600 1rem/1.5rem Lato;
   letter-spacing: 0.35px;
   color: #333333;
   opacity: 1;
@@ -94,8 +94,6 @@ code {
   border-radius: px;
 } */
 
-
-
 /* Loader Styling */
 
 .blob-7 {
@@ -108,25 +106,39 @@ code {
   mix-blend-mode: darken;
 }
 .blob-7:before,
-.blob-7:after{ 
+.blob-7:after {
   content: "";
-  grid-area: 1/1; 
-  width:40px;
-  height:40px;
+  grid-area: 1/1;
+  width: 40px;
+  height: 40px;
   background: #ffff00;
   animation: bo7 2s infinite;
 }
-.blob-7:after{ 
+.blob-7:after {
   animation-delay: -1s;
 }
-@keyframes bo7{
-  0%   {transform: translate(   0,0)}
-  25%  {transform: translate(100%,0)}
-  50%  {transform: translate(100%,100%)}
-  75%  {transform: translate(   0,100%)}
-  100% {transform: translate(   0,0)}
+@keyframes bo7 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(100%, 0);
+  }
+  50% {
+    transform: translate(100%, 100%);
+  }
+  75% {
+    transform: translate(0, 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
 .menulist-community-tab:hover {
   cursor: pointer;
+}
+
+.profile-tabs-container {
+  padding-bottom: 2.2rem;
 }

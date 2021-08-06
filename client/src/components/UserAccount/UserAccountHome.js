@@ -8,7 +8,11 @@ import UserAccountHomeMainBody from "./UserAccountHomeMainBodyComponent";
 import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
-import { fetchUserAllPersonalData, googleSignIn, signOut } from "../../actions/index";
+import {
+  fetchUserAllPersonalData,
+  googleSignIn,
+  signOut,
+} from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 
 import { useEffect } from "react";
@@ -91,8 +95,10 @@ const UserAccountHome = () => {
           style={{
             paddingLeft: "0",
             paddingRight: "0",
-            position: "fixed",
-            overflow: "hidden",
+
+            overflow: "scroll",
+            width: "auto",
+            // whiteSpace: "nowrap",
           }}
         >
           <UserAccountNav />
@@ -100,7 +106,7 @@ const UserAccountHome = () => {
             <UserAccountSideNav />
             <div
               className="user-account-main-body"
-              style={{ minWidth: "988px", overflow: "visible" }}
+              style={{ minWidth: "1024px", overflow: "visible" }}
             >
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs

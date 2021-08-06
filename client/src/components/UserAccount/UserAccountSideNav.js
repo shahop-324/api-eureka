@@ -26,7 +26,7 @@ const CommunityProfileTab = (props) => {
         src={props.communityImage}
         style={{ alignSelf: "center" }}
       />
-      <div className="d-flex flex-column justify-content-center align-items-left">
+      <div className="d-flex flex-column justify-content-center align-items-left ms-3">
         <div
           className="community-profile-name mb-1"
           style={{ fontSize: "1rem" }}
@@ -51,7 +51,7 @@ class UserProfileTab extends React.Component {
           src={imageURL}
           style={{ alignSelf: "center" }}
         />
-        <div className="d-flex flex-column justify-content-between align-items-left">
+        <div className="d-flex flex-column justify-content-between align-items-left ms-3">
           <div className="user-profile-name mb-1" style={{ fontSize: "1rem" }}>
             {name}
           </div>

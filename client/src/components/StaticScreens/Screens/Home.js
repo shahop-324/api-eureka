@@ -221,7 +221,7 @@ const Home = () => {
                   className="section-hero-img"
                   src={HomeHero}
                   alt="home-hero"
-                  style={{ maxWidth: "100%", maxHeight: "90%", aspectRatio: "1/1" }}
+                  style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
             </div>

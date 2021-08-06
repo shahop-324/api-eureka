@@ -6,59 +6,39 @@ class UserAccountNav extends React.Component {
   render() {
     return (
       <div
-        className="row nav-section"
-        style={{ marginLeft: "auto", marginRight: "auto" }}
+        className="row "
+        style={{ marginLeft: "auto", marginRight: "auto", minWidth: "1256px", overflow: "visible" }}
       >
-        <nav
-          class="navbar navbar-expand-xxl navbar-light"
-          style={{ backgroundColor: "#ffffff" }}
-        >
-          <div class="container-fluid">
-            {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
+        <div className="custom-nav-bar d-flex flex-row align-items-center justify-content-between px-3 py-2">
+          <a
+            href="https://www.evenz.in/home"
+            className="navbar-brand"
+            style={{ textDecoration: "none", color: "#538BF7" }}
+          >
+            Evenz
+          </a>
 
-              {/* <span class="navbar-brand" style={{ color: "#538BF7" }}>Evenz</span> */}
-
-              <a href="https://www.evenz.in/home"
-                  className="navbar-brand"
-                  style={{ textDecoration: "none", color: "#538BF7" }}>Evenz</a>
-            
-            <button
-              class="navbar-toggler"
+          <div class="d-flex flex-row align-items-center" x>
+            <Link
+              to={`/search-events`}
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
+              className="btn btn-outline-primary btn-outline-text"
             >
-              <span class="navbar-toggler-icon"></span>
+              Explore Events
+            </Link>
+
+            <button
+              type="button"
+              className="btn btn-primary btn-outline-text ms-3"
+            >
+              Get Help
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item" style={{ alignSelf: "center" }}>
-                  <Link
-                    to={`/search-events`}
-                    type="button"
-                    className="btn btn-outline-primary btn-outline-text"
-                  >
-                    Explore Events
-                  </Link>
-                </li>
-                <li class="nav-item" style={{ alignSelf: "center" }}>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-outline-text ms-3"
-                  >
-                    Get Help
-                  </button>
-                </li>
-                <li class="nav-item" style={{ alignSelf: "center" }}>
-                  <AvatarMenu />
-                </li>
-              </ul>
+            <div>
+              <AvatarMenu />
             </div>
           </div>
-        </nav>
+        </div>
+        
       </div>
     );
   }

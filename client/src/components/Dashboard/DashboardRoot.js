@@ -8,7 +8,6 @@ import Topnav from "./HelperComponent/TopNav";
 import SideNav from "./HelperComponent/SideNav";
 import {
   fetchCommunity,
-  
   navigationIndexForCommunityDash,
 } from "../../actions/index";
 import Overview from "./Overview";
@@ -26,71 +25,27 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
 
-// this.props.navigationIndexForCommunityDash(newValue);
-//     switch (newValue) {
-//       case 0: {
-//         history.push("/user/home");
-//         break;
-//       }
-//       case 1: {
-//         history.push("/user/events");
-//         break;
-//       }
-//       case 2: {
-//         history.push("/user/recordings");
-//         break;
-//       }
-//       case 3: {
-//         history.push("/user/profile");
-//         break;
-//       }
-//       default: {
-//         history.push("/user/home");
-//         break;
-//       }
-//     }
+
 
 const DashboardRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
-  const userId=params.userId; 
+  const userId = params.userId;
   console.log(userId);
   useEffect(() => {
     dispatch(fetchCommunity(id));
-    // return () => {
-    //   console.log("cleaned up okay")
-    //   dispatch(navigationIndexForCommunityDash(0));
-    // };
   }, [id, dispatch]);
-  useEffect(()=>{
-    return ()=>{
+  useEffect(() => {
+    return () => {
+      console.log("cleaned up");
+      dispatch(navigationIndexForCommunityDash(0));
+    };
+  }, [dispatch]);
 
-       console.log("cleaned up")
-       dispatch(navigationIndexForCommunityDash(0));
-
-      
-    }
-
-
-  },[dispatch])
- 
-
-  // const params = useParams();
-  // const dispatch = useDispatch();
-  // const id = params.id;
-  // useEffect(() => {
-  //   dispatch(fetchSpeakers(id),fetchSessions(id));
-  // }, [dispatch]);
-
-  //  useEffect(() => {
-  //     dispatch(fetchCommunity(id));
-  //   }, [dispatch]);
-  // /user/${userId}/community/overview/${id}
   const handleOverviewClick = () => {
     dispatch(navigationIndexForCommunityDash(0));
     history.push(`/user/${userId}/community/overview/${id}`);
-    // setActiveIndex("0");
   };
 
   const handleEventManagementClick = () => {
@@ -137,8 +92,6 @@ const DashboardRoot = () => {
     dispatch(navigationIndexForCommunityDash(9));
     history.push(`/user/${userId}/community/revenue-management/${id}`);
   };
-
-  // const { currentIndex } = this.props.navigation;
 
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForCommunityDash
@@ -197,9 +150,6 @@ const DashboardRoot = () => {
 
                 case "9":
                   return <RevenueManagement />;
-
-                // case "9":
-                //   return <Feedback />; Feedback is handled in SideNav itself as its just a modal screen
 
                 default:
                   return <div>You are a community.</div>;

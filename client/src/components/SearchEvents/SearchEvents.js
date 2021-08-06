@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -22,7 +22,8 @@ import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
 
-import Loader from './../../components/Loader';
+import Loader from "./../../components/Loader";
+import AvatarMenu from "../AvatarMenu";
 
 const categories = [
   { title: "Technology" },
@@ -71,13 +72,15 @@ const categories = [
 const SearchEvents = () => {
   const dispatch = useDispatch();
 
+  const {isSignedIn} = useSelector((state) => state.auth);
+
   // const innerWidth = window.innerWidth;
 
   // const collapseFilter = () => {
   //   document.getElementsByClassName('collapse').collapse('toggle');
   // }
 
-  const {error, isLoading} = useSelector((state) => state.event);
+  const { error, isLoading } = useSelector((state) => state.event);
 
   const location = useLocation();
   console.log(location);
@@ -221,7 +224,7 @@ const SearchEvents = () => {
 
       return (
         <EventCard
-        image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
+          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
           date={formatedDate}
           id={event.id}
           eventName={event.eventName}
@@ -297,8 +300,8 @@ const SearchEvents = () => {
     }
   };
 
-  if(error) {
-    return <div>{error}</div>
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
@@ -308,9 +311,10 @@ const SearchEvents = () => {
         <div className="row nav-section">
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              
-                <span class="navbar-brand" style={{ color: "#538BF7" }}>Evenz</span>
-             
+              <span class="navbar-brand" style={{ color: "#538BF7" }}>
+                Evenz
+              </span>
+
               <button
                 class="navbar-toggler"
                 type="button"
@@ -341,32 +345,38 @@ const SearchEvents = () => {
                   </button>
                 </form>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    
-                      <Link
-                        to="/signin"
-                        type="button"
-                        class="btn btn-outline-primary btn-outline-text me-3"
-                      >
-                        Login
-                      </Link>
-                    
+                  
+                  {isSignedIn ? <div className="me-5"><AvatarMenu /></div>  : <div className="d-flex flex-row align-items-center justify-content-center"> <li class="nav-item" style={{ alignSelf: "center" }}>
+                    <Link
+                      to="/signin"
+                      type="button"
+                      class="btn btn-outline-primary btn-outline-text me-3"
+                    >
+                      Login
+                    </Link>
                   </li>
                   <li class="nav-item" style={{ alignSelf: "center" }}>
-                    
-                      <Link to="/signup" type="button" class="btn btn-primary btn-outline-text">
-                        Get Started
-                      </Link>
-                   
-                  </li>
+                    <Link
+                      to="/signup"
+                      type="button"
+                      class="btn btn-primary btn-outline-text"
+                    >
+                      Get Started
+                    </Link>
+                  </li> </div>  }
                 </ul>
               </div>
             </div>
           </nav>
         </div>
         <div className="row no-of-events-section">
-          <div className="text-center search-page-events-text" style={{fontFamily: "Inter"}}>Events</div>
-          <div className="text-center search-page-results-text" >
+          <div
+            className="text-center search-page-events-text"
+            style={{ fontFamily: "Inter" }}
+          >
+            Events
+          </div>
+          <div className="text-center search-page-results-text">
             {eventsList.length} Events . 8 Categories
           </div>
         </div>
@@ -397,23 +407,31 @@ const SearchEvents = () => {
                 className="row date-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name pt-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Date</div>
-
-<div className="px-2">
-
-                <DateRangePicker
-                  initialSettings={{
-                    autoUpdateInput: false,
-                    locale: {
-                      cancelLabel: "Clear",
-                    },
-                  }}
-                  onApply={handleApply}
-                  onCancel={handleCancel}
+                <div
+                  className="filter-name pt-3"
+                  style={{ fontFamily: "Inter", fontWeight: "600" }}
                 >
-                  <input type="text" className="form-control col-4" Value="" />
-                </DateRangePicker>
-</div>
+                  Date
+                </div>
+
+                <div className="px-2">
+                  <DateRangePicker
+                    initialSettings={{
+                      autoUpdateInput: false,
+                      locale: {
+                        cancelLabel: "Clear",
+                      },
+                    }}
+                    onApply={handleApply}
+                    onCancel={handleCancel}
+                  >
+                    <input
+                      type="text"
+                      className="form-control col-4"
+                      Value=""
+                    />
+                  </DateRangePicker>
+                </div>
 
                 {/* </div> */}
                 <div style={{ margin: "5% 0" }}>
@@ -425,19 +443,27 @@ const SearchEvents = () => {
                 className="row price-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name mb-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Price (in USD)</div>
+                <div
+                  className="filter-name mb-3"
+                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                >
+                  Price (in USD)
+                </div>
                 <div className="price-filter-input">
                   <div class="form-check">
                     <input
                       class="form-check-input"
-                      
                       type="radio"
                       name="price"
                       id="filterAnyPrice"
                       value="Any Price"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="filterAnyPrice">
+                    <label
+                      class="form-check-label"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                      for="filterAnyPrice"
+                    >
                       Any Price
                     </label>
                   </div>
@@ -450,7 +476,11 @@ const SearchEvents = () => {
                       value="Free"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="filterfree">
+                    <label
+                      class="form-check-label"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                      for="filterfree"
+                    >
                       Free
                     </label>
                   </div>
@@ -463,7 +493,12 @@ const SearchEvents = () => {
                       value="Paid"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label mb-3" style={{fontFamily: "Inter", fontWeight: "500"}}>Paid</label>
+                    <label
+                      class="form-check-label mb-3"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    >
+                      Paid
+                    </label>
                   </div>
                   {priceFilter === "Paid" ? (
                     <PaidPriceSelector URL={url} searchParams={search_params} />
@@ -480,7 +515,12 @@ const SearchEvents = () => {
                 className="row community-rating-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name mb-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Community Rating</div>
+                <div
+                  className="filter-name mb-3"
+                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                >
+                  Community Rating
+                </div>
                 <div className="price-filter-input">
                   <div class="form-check">
                     <input
@@ -491,7 +531,11 @@ const SearchEvents = () => {
                       value="Any Rating"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault4">
+                    <label
+                      class="form-check-label"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                      for="flexRadioDefault4"
+                    >
                       Any Rating
                     </label>
                   </div>
@@ -504,7 +548,11 @@ const SearchEvents = () => {
                       value="Above 4"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault5">
+                    <label
+                      class="form-check-label"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                      for="flexRadioDefault5"
+                    >
                       Above 4
                     </label>
                   </div>
@@ -517,7 +565,11 @@ const SearchEvents = () => {
                       value="Above 3"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault6">
+                    <label
+                      class="form-check-label"
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                      for="flexRadioDefault6"
+                    >
                       Above 3
                     </label>
                   </div>
@@ -531,7 +583,12 @@ const SearchEvents = () => {
                 className="row categories-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name" style={{fontFamily: "Inter", fontWeight: "600"}}>Categories</div>
+                <div
+                  className="filter-name"
+                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                >
+                  Categories
+                </div>
                 <div className="categories-filter-input">
                   <Autocomplete
                     onChange={onCategoryBucketChange}
@@ -558,15 +615,26 @@ const SearchEvents = () => {
                 gridRowGap: "40px",
               }}
             >
-              {isLoading ? <div className="d-flex flex-row justify-content-center align-items-center" style={{minWidth: "60vw", height: "50vh"}}><Loader />  </div> : renderedList()}
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row justify-content-center align-items-center"
+                  style={{ minWidth: "60vw", height: "50vh" }}
+                >
+                  <Loader />{" "}
+                </div>
+              ) : (
+                renderedList()
+              )}
             </div>
           </div>
         </div>
-        <div className="row show-more-search-page " style={{height: "auto"}}>
+        <div className="row show-more-search-page " style={{ height: "auto" }}>
           <div className="col-0 col-lg-4"></div>
           <div className="col-12 col-lg-6 d-flex flex-row justify-content-center py-4">
             {/* <Pagination count={100} color="primary" /> */}
-            <button className="btn btn-light-outline disabled btn-outline-text">End of Results</button>
+            <button className="btn btn-light-outline disabled btn-outline-text">
+              End of Results
+            </button>
           </div>
           <div className="col-0 col-lg-2"></div>
         </div>
@@ -578,4 +646,3 @@ const SearchEvents = () => {
 };
 
 export default SearchEvents;
-

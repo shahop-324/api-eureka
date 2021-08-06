@@ -214,6 +214,8 @@ const Overview = () => {
           {/* Overview Right Grid */}
           <div className="overview-content-right">
             {/* Team Overview Card */}
+            
+            <div className="team-overview-and-top-events-row-container">
             <div className="team-overview mb-4 py-4">
               {/* Team Overview Card Heading and See all link */}
               <div className="d-flex flex-row justify-content-between px-4 mb-4">
@@ -286,6 +288,8 @@ const Overview = () => {
                 Top Events
               </div>
               {/* Donughnut Chart */}
+              <div className="d-flex flex-row justify-content-center align-items-center" style={{width: "100%"}}>
+                
               <div className="center-label-and-doughnut-wrapper">
                 <div className="center-label-wrapper">
                   12 <br />{" "}
@@ -304,6 +308,7 @@ const Overview = () => {
                 <div className="donut-chart-wrapper">
                   <DoughnutChart />
                 </div>
+              </div>
               </div>
 
               {/* Doughnut Chart Legends */}
@@ -366,6 +371,168 @@ const Overview = () => {
                   </div>
                 </div>
               </div>
+            </div>
+
+
+            </div>
+            <div className="team-and-top-events-bg-container">
+
+            <div className="team-overview mb-4 py-4">
+              {/* Team Overview Card Heading and See all link */}
+              <div className="d-flex flex-row justify-content-between px-4 mb-4">
+                <div className="team-overview-card-heading">Your Team (5)</div>
+                <div
+                  className="see-all-members"
+                  onClick={() => history.push("/community/team-management")}
+                >
+                  See all
+                </div>
+              </div>
+              <Divider />
+
+              {/* Team Overview Member Card */}
+              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+                <div className="team-member-permission-chip p-2">
+                  Super Admin
+                </div>
+              </div>
+              <Divider />
+
+              {/* Team Overview Member Card */}
+              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+              </div>
+              <Divider />
+
+              {/* Team Overview Member Card */}
+              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+              </div>
+              <Divider />
+
+              {/* Add New Member Button */}
+              <div className="mx-4">
+                <button
+                  className="btn btn-outline-primary btn-outline-text"
+                  style={{ width: "100%" }}
+                  onClick={handleAddNewMember}
+                >
+                  Add Member
+                </button>
+              </div>
+
+              {/* Plan Members Limit Message */}
+              <div className="add-more-info mt-3 mx-4">
+                You can onboard 2 more members.
+              </div>
+            </div>
+            {/* Top Events in this Period card */}
+            <div className="top-events-card">
+              {/* Top Events Heading */}
+              <div className="chart-heading-registrations mb-3 px-4 pt-4">
+                Top Events
+              </div>
+              {/* Donughnut Chart */}
+              <div className="d-flex flex-row justify-content-center ">
+
+              <div className="center-label-and-doughnut-wrapper ">
+                <div className="center-label-wrapper">
+                  12 <br />{" "}
+                  <span
+                    style={{
+                      color: "#7D9EB5",
+                      fontSize: "18px",
+                      lineHeight: "17px",
+                      letterSpacing: "0.6px",
+                    }}
+                  >
+                    {" "}
+                    Events <br /> Hosted
+                  </span>
+                </div>
+                <div className="donut-chart-wrapper">
+                  <DoughnutChart />
+                </div>
+              </div>
+              </div>
+
+              {/* Doughnut Chart Legends */}
+              <div className="custom-doughnut-datalabels-wrapper">
+                {/* Doughnut Chart Datalabel Row 1 */}
+                <div className="custom-doughnut-datalabel-row">
+                  <div
+                    className="color-label"
+                    style={{ background: "#11A1FD" }}
+                  ></div>
+                  <div className="text-label">E - Summit 21'</div>
+                  <div
+                    className="percentage-label-doughnut"
+                    style={{ color: "#11A1FD" }}
+                  >
+                    55%
+                  </div>
+                </div>
+
+                {/* Doughnut Chart Datalabel Row 2 */}
+                <div className="custom-doughnut-datalabel-row">
+                  <div
+                    className="color-label"
+                    style={{ background: "#A6CEE3" }}
+                  ></div>
+                  <div className="text-label">Eureka Road to enterprise</div>
+                  <div
+                    className="percentage-label-doughnut"
+                    style={{ color: "#A6CEE3" }}
+                  >
+                    25%
+                  </div>
+                </div>
+                {/* Doughnut Chart Datalabel Row 3 */}
+                <div className="custom-doughnut-datalabel-row">
+                  <div
+                    className="color-label"
+                    style={{ background: "#B2DF8A" }}
+                  ></div>
+                  <div className="text-label">ACT - A creative TechFest</div>
+                  <div
+                    className="percentage-label-doughnut"
+                    style={{ color: "#B2DF8A" }}
+                  >
+                    15%
+                  </div>
+                </div>
+                {/* Doughnut Chart Datalabel Row 4 */}
+                <div className="custom-doughnut-datalabel-row">
+                  <div
+                    className="color-label"
+                    style={{ background: "#33A02C" }}
+                  ></div>
+                  <div className="text-label">Others</div>
+                  <div
+                    className="percentage-label-doughnut"
+                    style={{ color: "#33A02C" }}
+                  >
+                    5%
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>

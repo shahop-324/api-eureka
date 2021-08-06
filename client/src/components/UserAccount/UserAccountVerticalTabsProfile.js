@@ -5,6 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import './../../index.css';
 
 import EditProfileForm from "./Forms/EditProfileForm";
 import EditNotificationSettings from "./Forms/EditNotificationSettings";
@@ -70,7 +71,7 @@ export default function VerticalTabsProfile() {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} profile-tabs-container`}>
       <Tabs
         style={{ height: "auto" }}
         orientation="vertical"
