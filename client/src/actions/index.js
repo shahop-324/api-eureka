@@ -53,6 +53,7 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     }
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
+    console.log(err.response);
     alert(err.response.data.message);
   }
 };
@@ -79,8 +80,10 @@ export const signUp = (formValues) => async (dispatch) => {
     alert(err.response.data.message);
   }
 };
-export const signOut = () => (dispatch, getState) => {
-  window.localStorage.clear();
+export const signOut = () => async (dispatch, getState) => {
+  // while (window.localStorage.length !== 0) {
+  //   window.localStorage.clear();
+  // }
 
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
@@ -299,7 +302,11 @@ export const googleSignIn = () => async (dispatch) => {
     alert(err.message);
   }
 };
-export const googleSignOut = () => (dispatch, getState) => {
+export const googleSignOut = () => async (dispatch, getState) => {
+  // while (window.localStorage.length !== 0) {
+  //   window.localStorage.clear();
+  // }
+
   dispatch(authActions.SignOut());
 };
 
@@ -318,6 +325,7 @@ export const fetchEvents = (query) => async (dispatch) => {
       })
     );
   } catch (e) {
+    console.log(e);
     dispatch(eventActions.hasError(e.message));
   }
 };
