@@ -554,7 +554,8 @@ $font-family: 'Inter';
   }
 
   .center-label-and-doughnut-wrapper {
-    width: 78%;
+    width: 65%;
+    max-width: 350px;
 
     margin-bottom: 1rem;
   }

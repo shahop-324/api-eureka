@@ -11,8 +11,6 @@ import { reduxForm, Field } from "redux-form";
 
 let formIsvalidated = false;
 
-
-
 const renderInput = ({
   input,
   type,

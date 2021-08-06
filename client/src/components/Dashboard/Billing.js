@@ -23,7 +23,7 @@ const Billing = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Billing</div>
           <div className="sec-heading-action-button d-flex flex-row">

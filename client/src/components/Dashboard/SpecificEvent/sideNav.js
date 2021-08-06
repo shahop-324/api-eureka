@@ -6,8 +6,6 @@ import "./../../../assets/Sass/TopNav.scss";
 import IconButton from "@material-ui/core/IconButton";
 import { Divider } from "@material-ui/core";
 
-
-
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
@@ -29,7 +27,6 @@ const SideNav = (props) => {
 
   const eventId = params.eventId;
   const communityId = params.communityId;
-  
 
   return (
     <>

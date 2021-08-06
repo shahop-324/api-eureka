@@ -5,7 +5,7 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "./HelperComponent/Pagination";
+// import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
@@ -104,22 +104,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Recordings = () => {
   const classes = useStyles();
-  
-
   const params = useParams();
   const communityId = params.communityId;
-
   console.log(communityId);
-
   useEffect(() => {
-    // dispatch(fetchRegistrationsOfParticularCommunity(communityId));
   }, []);
-
-  
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Recordings</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -179,7 +172,7 @@ const Recordings = () => {
           
         </div>
         {/* Here I have to use pagination */}
-        <CustomPagination />
+        {/* <CustomPagination /> */}
       </div>
     </>
   );

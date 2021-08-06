@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { IconButton } from "@material-ui/core";
 
 // import { useDispatch } from "react-redux";
 // import { fetchParticularEventOfCommunity } from "../../../actions";
@@ -35,23 +36,19 @@ const EventDetailCard = ({
   const userId = params.userId;
   const email = useSelector((state) => state.user.userDetails.email);
   console.log(userId);
-  //  const handleEventEditClick = () => {
-
-  //   dispatch(fetchParticularEventOfCommunity(communityId,id))
-
-  // // //  // history.push(`/community/edit-event/${id}/basics`);
-
-  //  };
-
+  
   return (
     <>
       <div className="events-field-value-container">
-        <div className="event-edit-field">
+        <div className="event-edit-field me-2">
           <Link
-            className="event-field-label event-edit-icon ms-3"
+            className="event-field-label event-edit-icon "
             to={`/community/${communityId}/edit-event/${id}/basics`}
           >
+            <IconButton >
+
             <EditRoundedIcon />
+            </IconButton>
           </Link>
         </div>
 
@@ -60,9 +57,6 @@ const EventDetailCard = ({
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
           >
-            {/* /user/:userId/community/:communityId/event/:eventId */}
-            {/* <Link to={`/user/${userId}/community/${communityId}/event/${eventId}`} style={{width: "100%"}}> 
-            </Link> */}
 
             <img
               src={imgUrl}

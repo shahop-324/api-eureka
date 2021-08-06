@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -48,50 +49,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
-
+  meta: { touched, error, warning },
   meta,
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -101,35 +68,51 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+        {error}
+      </div>) ||
+          (warning && <div
+            className="my-1"
+            style={{ color: "#8B780D", fontWeight: "500" }}
+          > {warning}
+          </div>))}
     </div>
   );
 };
 const renderTextArea = ({
   input,
 
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
         type={type}
+        rows="2"
         {...input}
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
       />
-
-      {renderError(meta)}
+ {touched &&
+        ((error && <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+        {error}
+      </div>) ||
+          (warning && <div
+            className="my-1"
+            style={{ color: "#8B780D", fontWeight: "500" }}
+          > {warning}
+          </div>))}
+      
     </div>
   );
 };
-
 
 const renderReactSelect = ({
   input,
@@ -154,9 +137,7 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+      
     </div>
   </div>
 );
@@ -169,12 +150,6 @@ const AddNewSpeaker = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-  //   // ! call API HERE
-  //  const dispatch=useDispatch()
-  //    useEffect(()=>{
-  //     dispatch(getAllSessionsOfParticularEvent(id))
-
-  //    },[]);
 
   const sessions = useSelector((state) => state.session.sessions);
 
@@ -189,7 +164,6 @@ const AddNewSpeaker = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
@@ -200,7 +174,6 @@ const AddNewSpeaker = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -238,18 +211,16 @@ const AddNewSpeaker = (props) => {
     props.handleClose();
   };
 
-  
-
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
         scroll="paper"
         open={props.open}
-        onClose={props.handleClose}
+        // onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div
             className="create-new-coupon-form px-4 py-4"
             style={{ minHeight: "100vh" }}
@@ -485,7 +456,7 @@ const AddNewSpeaker = (props) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Add New Speaker
               </button>
@@ -497,7 +468,39 @@ const AddNewSpeaker = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.firstName) {
+    errors.firstName = "Required";
+  }
+
+  if (!formValues.lastName) {
+    errors.lastName = "Required";
+  }
+
+  if (!formValues.email) {
+    errors.email = "email is required";
+  }
+
+  if (
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+  ) {
+    errors.email = "Invalid Email address";
+  }
+
+  if (!formValues.organisation) {
+    errors.organisation = "Organisation is required";
+  }
+  if (!formValues.headline) {
+    errors.headline = "Headline is required";
+  }
+
+  return errors;
+};
+
 export default reduxForm({
   form: "newSpeakerAddForm",
-  
+  validate,
 })(AddNewSpeaker);

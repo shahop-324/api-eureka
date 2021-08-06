@@ -140,7 +140,7 @@ const Ticketing = () => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pb-4 pt-4">
           <div className="sec-heading-text">All Tickets</div>
           <div className="drop-selector d-flex flex-row justify-content-end">

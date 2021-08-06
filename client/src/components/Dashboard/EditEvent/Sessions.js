@@ -158,7 +158,7 @@ const Sessions = () => {
 
   return (
     <>
-      <div>
+      <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Sessions</div>
           <div className="drop-selector d-flex flex-row justify-content-end">

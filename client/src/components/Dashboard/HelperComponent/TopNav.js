@@ -48,7 +48,7 @@ const Topnav = () => {
           <div className={`${classes.root} mx-2`}>
             <SettingsIcon />
           </div>
-          <div className="dashboard-avatar-menu mx-2 d-flex flex-row align-items-center">
+          <div className="dashboard-avatar-menu mx-2 d-flex flex-row align-items-center" style={{padding: "0"}}>
             <AvatarMenu />
             {/* <Avatar alt="Travis Howard" src={Faker.image.avatar()} /> */}
           </div>
