@@ -24,7 +24,7 @@ const CommunityProfileTab = (props) => {
       <Avatar
         alt={props.name}
         variant="rounded"
-        src={Faker.image.avatar()}
+        src={props.communityImage}
         style={{ alignSelf: "center" }}
       />
       <div className="d-flex flex-column justify-content-center align-items-left">
@@ -112,6 +112,7 @@ const UserAccountSideNav = () => {
             // TODO ALLOW COMMUNITY TO UPLOAD AND EDIT ITS LOGO
             communityId={community.id}
             key={community.id}
+            communityImage={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`}
           />
         );
       });

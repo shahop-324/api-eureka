@@ -15,6 +15,9 @@ const communitySlice = createSlice({
   
   },
   reducers: {
+    ResetError(state, action) {
+      state.error = false;
+    },
     startLoading( state ){
       state.isLoading = true;
    },

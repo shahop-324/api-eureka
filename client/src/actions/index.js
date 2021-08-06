@@ -1878,9 +1878,9 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
   try {
 
 
-    const editingUser = async() => {
-      
-    }
+    // const editingUser = async() => {
+
+    // }
     if (file) {
       console.log(formValues);
 

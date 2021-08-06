@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import "./../../../index.css";
 import Select from "react-select";
@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import "react-phone-input-2/lib/style.css";
 import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser } from "../../../actions";
+import { editUser, resetAuthError, resetUserError } from "../../../actions";
 
 import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
@@ -114,6 +114,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
+      rows="3"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -179,6 +180,9 @@ const renderEventPreferences = ({
 );
 
 let EditProfileForm = (props) => {
+  const { error } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
  // const imgKey = useSelector((state) => state.user.userDetails.image);
  const {userDetails} = useSelector((state) => state.user);
  let imgKey;
@@ -194,17 +198,25 @@ if(userDetails)
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
+  const [editProfileClicked, setEditProfileClicked] = useState(false);
+
+  useEffect(() => {
+    dispatch(resetUserError());
+    setEditProfileClicked(false);
+  }, [dispatch, error]);
+
   const { handleSubmit, pristine, reset, submitting } = props;
   const classes = useStyles();
   // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+  // const showResults = (formValues) => {
+  //   // await sleep(500); // simulate server latency
+  //   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
+  // };
 
 
-  const dispatch = useDispatch();
+  
   const onSubmit = (formValues) => {
+    setEditProfileClicked(true);
     console.log(formValues);
 
     const ModifiedFormValues = {};
@@ -234,7 +246,9 @@ if(userDetails)
     console.log(ModifiedFormValues);
 
     dispatch(editUser(ModifiedFormValues, file));
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
+
+
   };
   // const renderButton = ({  input,type,classes,sty,value}) => {
 
@@ -479,18 +493,29 @@ if(userDetails)
             {/* className="col-3 btn btn-outline-primary outline-btn-text me-3" style={{textAlign: "center", backgroundColor: "#538BF7"}} */}
             <button
               type="submit"
+              disabled={editProfileClicked && !error}
               // disabled={pristine}
-              className="col-3 btn btn-outline-primary outline-btn-text me-3"
+              className="col-3 btn btn-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}
             >
               Save Changes
+              {editProfileClicked && !error ? (
+                  <div
+                    class="spinner-border text-light spinner-border-sm ms-3"
+                    role="status"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
             </button>
             <button
               type="button"
               disabled={pristine || submitting}
               onClick={reset}
-              className="col-3 btn btn-outline-primary outline-btn-text me-3"
-              style={{ textAlign: "center", backgroundColor: "#538BF7" }}
+              className="col-3 btn btn-outline-primary btn-outline-text me-3"
+              style={{ textAlign: "center" }}
             >
               Discard Changes
             </button>

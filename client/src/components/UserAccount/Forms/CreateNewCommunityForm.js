@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect } from "react";
 
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -14,10 +14,12 @@ import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { createCommunity } from "../../../actions";
+import { createCommunity, resetCommunityError } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
+let formIsvalidated = false;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,6 +85,9 @@ const renderInput = ({
               {warning}
             </div>
           )))}
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
     </div>
   );
 };
@@ -115,6 +120,9 @@ const renderInputCheckbox = ({
       <label class={labelClass} for={labelFor}>
         {label}
       </label>
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
     </div>
   );
 };
@@ -143,7 +151,7 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -158,19 +166,27 @@ const renderTextArea = ({
             </div>
           )))}
 
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
+
       {/* {renderError(meta)} */}
     </div>
   );
 };
 const CreateNewCommunityForm = (props) => {
+  const { error } = useSelector((state) => state.community);
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
+
+  const [createCommunityClicked, setCreateCommunityClicked] = useState(false);
+
   const dispatch = useDispatch();
-  //  useEffect(()=>{
 
-  //     dispatch(getMe());
-
-  //  })
+  useEffect(() => {
+    dispatch(resetCommunityError());
+    setCreateCommunityClicked(false);
+  }, [dispatch, error]);
 
   const { id } = useSelector((state) => state.user.userDetails);
   const userId = id;
@@ -188,8 +204,9 @@ const CreateNewCommunityForm = (props) => {
   };
 
   const onSubmit = (formValues) => {
+    setCreateCommunityClicked(true);
     console.log(formValues);
-    showResults(formValues);
+    // showResults(formValues);
     dispatch(createCommunity(formValues, file, userId));
   };
 
@@ -348,10 +365,21 @@ const CreateNewCommunityForm = (props) => {
               <button
                 type="submit"
                 class="btn btn-outline-primary outline-btn-text form-control"
-                onClick={props.closeHandler}
+                disabled={createCommunityClicked && formIsvalidated && !error}
+                // onClick={props.closeHandler}
                 // disabled={pristine || submitting || !valid}
               >
                 Create New Community
+                {createCommunityClicked && formIsvalidated && !error ? (
+                  <div
+                    class="spinner-border text-primary spinner-border-sm ms-3"
+                    role="status"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
               </button>
             </div>
           </div>
@@ -363,26 +391,26 @@ const CreateNewCommunityForm = (props) => {
 
 const validate = (formValues) => {
   const errors = {};
-console.log(formValues.name);
+  console.log(formValues.name);
   if (!formValues.name) {
     errors.name = "Name is Required";
   }
- 
 
   if (!formValues.headline) {
     errors.headline = "Headline is Required";
   }
-  
 
   if (!formValues.email) {
     errors.email = "Email is Required";
   }
 
-  if(formValues.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email) ) {
-    errors.email = "Invalid Email address"
+  if (
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+  ) {
+    errors.email = "Invalid Email address";
   }
 
-  
   if (!formValues.policySigned) {
     errors.policySigned = "You must sign policy";
   }
