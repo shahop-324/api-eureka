@@ -1874,7 +1874,13 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   }
 };
 export const editUser = (formValues, file) => async (dispatch, getState) => {
+  dispatch(userActions.startLoading());
   try {
+
+
+    const editingUser = async() => {
+      
+    }
     if (file) {
       console.log(formValues);
 
@@ -1904,6 +1910,8 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // const amazoneFile = await awsRes.json();
       // console.log(amazoneFile);
       console.log(awsRes);
+
+
 
       const res = await fetch(
         "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updateMe",
@@ -3258,4 +3266,8 @@ export const resetAuthError = () => async (dispatch, getState) => {
 
 export const resetUserError = () => async (dispatch, getState) => {
   dispatch(userActions.ResetError());
+};
+
+export const resetCommunityError = () => async (dispatch, getState) => {
+  dispatch(communityActions.ResetError());
 };
