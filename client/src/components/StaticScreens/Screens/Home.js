@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
@@ -88,6 +88,10 @@ window.onload();
 
 const Home = () => {
   const [hambergerOpen, setHambergerOpen] = useState(false);
+
+  useEffect(() => {
+    window.localStorage.clear();
+  })
 
   const openHamberger = () => {
     setHambergerOpen(true);

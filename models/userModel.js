@@ -112,16 +112,35 @@ const userSchema = new mongoose.Schema(
     },
     interests: {
       type: [String],
+
+      // { value: "Technology", label: "Technology" },
+      // { value: "Education", label: "Education" },
+      // { value: "Lifestyle", label: "Lifestyle" },
+      // { value: "Professional Development", label: "Professional Development" },
+      // { value: "Arts and crafts", label: "Arts and crafts" },
+      // {
+      //   value: "Business & Enterpreneurship",
+      //   label: "Business & Enterpreneurship",
+      // },
+      // { value: "Job Search", label: "Job Search" },
+      // { value: "Entertainment", label: "Entertainment" },
+      // { value: "Health", label: "Health" },
+      // { value: "Crypto", label: "Crypto" },
+      // { value: "Web Security", label: "Web Security" },
+
+
       enum: [
         "Technology",
         "Education",
         "Lifestyle",
         "Professional Development",
         "Arts and crafts",
-        "Business & Entrepreneurship",
+        "Business & Enterpreneurship",
         "Job Search",
         "Entertainment",
         "Health",
+        "Crypto",
+        "Web Security"
       ],
     },
     socialMediaHandles: {

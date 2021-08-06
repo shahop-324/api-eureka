@@ -1,6 +1,5 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
 
 import { useDispatch, useSelector } from "react-redux";
 

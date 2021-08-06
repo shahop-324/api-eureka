@@ -8,7 +8,7 @@ import UserAccountHomeMainBody from "./UserAccountHomeMainBodyComponent";
 import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
-import { fetchUserAllPersonalData, googleSignIn } from "../../actions/index";
+import { fetchUserAllPersonalData, googleSignIn, signOut } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 
 import { useEffect } from "react";
@@ -30,17 +30,12 @@ const UserAccountHome = () => {
       dispatch(fetchUserAllPersonalData());
     }
   }, [isClicked, dispatch]);
-  useEffect(()=>{
-    return ()=>{
-
-       console.log("cleaned up")
-       dispatch(navigationIndex(0));
-
-      
-    }
-
-
-  },[dispatch])
+  useEffect(() => {
+    return () => {
+      console.log("cleaned up");
+      dispatch(navigationIndex(0));
+    };
+  }, [dispatch]);
   const handleChange = (event, newValue) => {
     dispatch(navigationIndex(newValue));
     switch (newValue) {
@@ -67,17 +62,15 @@ const UserAccountHome = () => {
     }
   };
 
-  // if(error) {
-  //   history.push('/internal-server-error');
-  // }
-
   const { currentIndex } = useSelector((state) => state.navigation);
 
-  if(error) {
-    return alert(error);
+  if (error) {
+    alert(error);
+    // Clearing Local Storage
+    dispatch(signOut());
+    window.location.href = "/home";
+    return <div></div>;
   }
-
-  
 
   return (
     <>
@@ -86,7 +79,12 @@ const UserAccountHome = () => {
       {/* {error && handleError(error)} */}
 
       {isLoading ? (
-        <Loader />
+        <div
+          className="d-flex flex-row justify-content-center align-items-center"
+          style={{ width: "100vw", height: "100vh" }}
+        >
+          <Loader />
+        </div>
       ) : (
         <div
           className="container-fluid page-user-account"
@@ -100,7 +98,10 @@ const UserAccountHome = () => {
           <UserAccountNav />
           <div className="user-account-body">
             <UserAccountSideNav />
-            <div className="user-account-main-body" style={{minWidth: "988px", overflow: "visible"}}>
+            <div
+              className="user-account-main-body"
+              style={{ minWidth: "988px", overflow: "visible" }}
+            >
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs
                   activeIndex={currentIndex}

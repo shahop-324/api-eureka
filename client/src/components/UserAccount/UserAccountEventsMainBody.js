@@ -57,7 +57,7 @@ const UserAccountEventsMainBody = () => {
         <div className="user-account-events-event-card-grid px-2 py-2">
           {isLoading ? <div
         className="d-flex flex-row align-items-center justify-content-center"
-        style={{ height: "80vh", width: "100%" }}
+        style={{ height: "80vh", width: "80vw" }}
       >
         <Loader />
       </div> :   renderSuggestedEventsList()}

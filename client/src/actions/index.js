@@ -80,6 +80,8 @@ export const signUp = (formValues) => async (dispatch) => {
   }
 };
 export const signOut = () => (dispatch, getState) => {
+   window.localStorage.clear();
+   
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
@@ -1875,12 +1877,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
 };
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
-  try {
-
-
-    // const editingUser = async() => {
-
-    // }
+  const editingUser = async() => { 
     if (file) {
       console.log(formValues);
 
@@ -1894,6 +1891,10 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
           },
         }
       );
+
+      if(!uploadConfig.ok) {
+        throw new Error("Editing user details failed!");
+      }
 
       uploadConfig = await uploadConfig.json();
       console.log(uploadConfig);
@@ -1929,16 +1930,22 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         }
       );
 
+      if(!res.ok) {
+        throw new Error("Editing user details failed!");
+      }
+
       const result = await res.json();
 
-      console.log(result);
-      // console.warn(xhr.responseText)
-      console.log(result.data.userData);
-      dispatch(
-        userActions.EditUser({
-          user: result.data.userData,
-        })
-      );
+      return result;
+
+      // console.log(result);
+      // // console.warn(xhr.responseText)
+      // console.log(result.data.userData);
+      // dispatch(
+      //   userActions.EditUser({
+      //     user: result.data.userData,
+      //   })
+      // );
     } else {
       const res = await fetch(
         "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updateMe",
@@ -1955,8 +1962,16 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         }
       );
 
-      const result = await res.json();
+      if(!res.ok) {
+        throw new Error("Editing user details failed!");
+      }
 
+      const result = await res.json();
+      return result;
+    }
+  }
+try{
+  const result = await editingUser();
       console.log(result);
       // console.warn(xhr.responseText)
       console.log(result.data.userData);
@@ -1966,7 +1981,9 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         })
       );
     }
-  } catch (err) {
+ 
+  catch (err) {
+    dispatch(userActions.hasError(err.message));
     console.log(err);
   }
 };

@@ -34,10 +34,12 @@ const authSlice = createSlice({
     },
     SignOut(state, action) {
 
-      
+      (async() => {
+       await window.localStorage.clear();
+      })();
       state.token = null;
       state.isSignedIn = false;
-       window.localStorage.clear();
+       
       
 
     },

@@ -10,28 +10,24 @@ const userSlice = createSlice({
     peopleInThisEvent: [],
     peopleInNetworking: [],
     currentlyJoinedChair: null,
-    isLoading:true,
-    error:false,
-
-
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
-
     ResetError(state, action) {
       state.error = false;
     },
 
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
 
-   state.error = action.payload;
-   state.isLoading = false;
-},
-    
     FetchPeopleInSession(state, action) {
       state.peopleInThisSession = action.payload.peopleInThisSession;
     },
@@ -61,12 +57,15 @@ hasError(state,action){
       );
     },
 
-    // EditUser(state,action)
-    // {
+    EditUser(state, action) {
+      state.users = state.users.map((user) =>
+        user.id === action.payload.user.id ? action.payload.user : user
+      );
 
-    //      state.users=state.users.map((user)=>user.id===action.payload.user.id?action.payload.user:user)
+      state.userDetails = action.payload.user;
+      state.isLoading = false;
 
-    // },
+    },
   },
 });
 export const userActions = userSlice.actions;

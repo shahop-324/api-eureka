@@ -114,7 +114,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="3"
+        rows="3"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -183,14 +183,13 @@ let EditProfileForm = (props) => {
   const { error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
- // const imgKey = useSelector((state) => state.user.userDetails.image);
- const {userDetails} = useSelector((state) => state.user);
- let imgKey;
-if(userDetails)
-{
-  imgKey=userDetails.image;
-}
-  
+  // const imgKey = useSelector((state) => state.user.userDetails.image);
+  const { userDetails } = useSelector((state) => state.user);
+  let imgKey;
+  if (userDetails) {
+    imgKey = userDetails.image;
+  }
+
   let imgUrl = " #";
   if (imgKey) {
     imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
@@ -213,8 +212,6 @@ if(userDetails)
   //   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   // };
 
-
-  
   const onSubmit = (formValues) => {
     setEditProfileClicked(true);
     console.log(formValues);
@@ -236,19 +233,19 @@ if(userDetails)
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
 
     const modifiedInterests = [];
+
     if (formValues.interests) {
       for (let element of formValues.interests) {
         modifiedInterests.push(element.value);
       }
     }
+
     ModifiedFormValues.interests = modifiedInterests;
 
     console.log(ModifiedFormValues);
 
     dispatch(editUser(ModifiedFormValues, file));
     // showResults(ModifiedFormValues);
-
-
   };
   // const renderButton = ({  input,type,classes,sty,value}) => {
 
@@ -489,8 +486,6 @@ if(userDetails)
           </div>
 
           <div className="row edit-profile-form-row mb-3 d-flex flex-row justify-content-end">
-            {/* className="col-3 btn btn-outline-primary outline-btn-text me-3" style={{textAlign: "center"}} */}
-            {/* className="col-3 btn btn-outline-primary outline-btn-text me-3" style={{textAlign: "center", backgroundColor: "#538BF7"}} */}
             <button
               type="submit"
               disabled={editProfileClicked && !error}
@@ -500,15 +495,15 @@ if(userDetails)
             >
               Save Changes
               {editProfileClicked && !error ? (
-                  <div
-                    class="spinner-border text-light spinner-border-sm ms-3"
-                    role="status"
-                  >
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
+                <div
+                  class="spinner-border text-light spinner-border-sm ms-3"
+                  role="status"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </button>
             <button
               type="button"
@@ -539,9 +534,12 @@ const mapStateToProps = (state) => ({
       ? state.user.userDetails.lastName
       : "",
     email: state.user.userDetails.email ? state.user.userDetails.email : "",
+
     interests: state.user.userDetails.interests
-      ? state.user.userDetails.interests
-      : [],
+      ? state.user.userDetails.interests.map((interest) => {
+          return { value: interest, label: interest };
+        })
+      : "",
 
     linkedin:
       state.user.userDetails.socialMediaHandles &&
