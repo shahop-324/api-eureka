@@ -215,7 +215,7 @@ const Overview = () => {
           <div className="overview-content-right">
             {/* Team Overview Card */}
             
-            <div className="team-overview-and-top-events-row-container">
+            <div className="team-overview-and-top-events-row-container mt-4">
             <div className="team-overview mb-4 py-4">
               {/* Team Overview Card Heading and See all link */}
               <div className="d-flex flex-row justify-content-between px-4 mb-4">

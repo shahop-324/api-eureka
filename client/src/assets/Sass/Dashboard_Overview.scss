@@ -539,35 +539,32 @@ $font-family: 'Inter';
   height: 592px;
 }
 
-@media only screen and (max-width: "1480px") {
+@media only screen and (max-width: '1480px') {
   .overview-content-grid {
-   
     grid-template-columns: 1fr;
-    
   }
 
-  .top-events-card{
+  .revenue-chart-container,
+  .registrations-map-chart-container {
+    height: 370px;
+  }
+
+  .top-events-card {
     height: 592px;
   }
 
   .center-label-and-doughnut-wrapper {
     width: 78%;
-    
+
     margin-bottom: 1rem;
   }
-
-  
 
   .team-and-top-events-bg-container {
     display: none;
   }
 }
-@media only screen and (min-width: "1480px") {
- 
-
+@media only screen and (min-width: '1480px') {
   .team-overview-and-top-events-row-container {
     display: none;
   }
-
-  
 }
