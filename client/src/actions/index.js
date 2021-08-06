@@ -37,7 +37,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
-
         isSignedIn: true,
       })
     );
@@ -53,8 +52,8 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       history.push("/user/home");
     }
   } catch (err) {
+    dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
-    authActions.hasError(err.message);
   }
 };
 
@@ -76,6 +75,7 @@ export const signUp = (formValues) => async (dispatch) => {
     );
     history.push("/user/home");
   } catch (err) {
+    dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
   }
 };
@@ -89,49 +89,131 @@ export const signOut = () => (dispatch, getState) => {
 
 ///community auth
 export const createCommunity =
-  (formValues, userId) => async (dispatch, getState) => {
+  (formValues, file, userId) => async (dispatch, getState) => {
     console.log(formValues);
 
-    const communityCreating = async () => {
-      let res = await fetch(
-        "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+    try{
+      if(file) {
+        console.log(file);
+
+        let uploadConfig = await fetch(
+          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          {
+            headers: {
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          }
+        );
+
+        uploadConfig = await uploadConfig.json();
+        console.log(uploadConfig);
+
+        const awsRes = await fetch(uploadConfig.url, {
+          method: "PUT",
+
+          body: file,
 
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
+            "Content-Type": file.type,
           },
+        });
+
+        console.log(awsRes);
+
+
+        const communityCreating = async () => {
+          let res = await fetch(
+            "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                ...formValues,
+                image: uploadConfig.key,
+              }),
+    
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            }
+          );
+          if (!res.ok) {
+            throw new Error("creating community failed");
+          }
+          res = await res.json();
+          return res;
+        };
+        // console.log(res);
+        try {
+          let res = await communityCreating();
+    
+          dispatch(
+            communityAuthActions.CommunitySignIn({
+              token: res.token,
+            })
+          );
+          dispatch(
+            communityActions.CreateCommunity({
+              community: res.communityDoc,
+            })
+          );
+    
+          history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+        } catch (e) {
+          dispatch(communityActions.hasError(e.message));
         }
-      );
-      if (!res.ok) {
-        throw new Error("creating community failed");
+
+
+
       }
-      res = await res.json();
-      return res;
-    };
-    // console.log(res);
-    try {
-      let res = await communityCreating();
-
-      dispatch(
-        communityAuthActions.CommunitySignIn({
-          token: res.token,
-        })
-      );
-      dispatch(
-        communityActions.CreateCommunity({
-          community: res.communityDoc,
-        })
-      );
-
-      history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
-    } catch (e) {
-      dispatch(communityActions.hasError(e.message));
+      else {
+        const communityCreating = async () => {
+          let res = await fetch(
+            "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                ...formValues,
+              }),
+    
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            }
+          );
+          if (!res.ok) {
+            throw new Error("creating community failed");
+          }
+          res = await res.json();
+          return res;
+        };
+        // console.log(res);
+        try {
+          let res = await communityCreating();
+    
+          dispatch(
+            communityAuthActions.CommunitySignIn({
+              token: res.token,
+            })
+          );
+          dispatch(
+            communityActions.CreateCommunity({
+              community: res.communityDoc,
+            })
+          );
+    
+          history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+        } catch (e) {
+          dispatch(communityActions.hasError(e.message));
+        }
+      }
+    } 
+    catch(err) {
+      console.log(err);
     }
+
+   
   };
 //Yet to be implemented
 export const communitySignIn = (id, userId) => async (dispatch, getState) => {
@@ -179,8 +261,6 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
 
 // authentication with google auth
 export const googleSignIn = () => async (dispatch) => {
-  
-  
   try {
     console.log("mai yaha se gujara hue");
     const headers = new Headers();
@@ -228,8 +308,8 @@ export const googleSignOut = () => (dispatch, getState) => {
 //events actions
 export const fetchEvents = (query) => async (dispatch) => {
   console.log(query);
-
   dispatch(eventActions.startLoading());
+
   try {
     const res = await eureka.get(`/eureka/v1/exploreEvents${query}`);
     console.log(res.data);
@@ -3170,4 +3250,12 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(RTCActions.hasError(err.message));
   }
+};
+
+export const resetAuthError = () => async (dispatch, getState) => {
+  dispatch(authActions.ResetError());
+};
+
+export const resetUserError = () => async (dispatch, getState) => {
+  dispatch(userActions.ResetError());
 };

@@ -6,6 +6,7 @@ const eventSlice = createSlice({
   initialState: {
     events: [],
     eventDetails: null,
+    eventLandingPageDetails: null,
     isLoading: true,
     error: false,
   },
@@ -28,6 +29,7 @@ const eventSlice = createSlice({
     },
     FetchEvent(state, action) {
       console.log("opoo", 28);
+      state.eventLandingPageDetails = action.payload.event;
 
       const newEvent = action.payload.event;
       const existingEvent = state.events.find(

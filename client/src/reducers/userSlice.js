@@ -18,6 +18,10 @@ const userSlice = createSlice({
 
   reducers: {
 
+    ResetError(state, action) {
+      state.error = false;
+    },
+
     startLoading( state ){
       state.isLoading = true;
    },

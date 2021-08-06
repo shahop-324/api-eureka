@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 * {
   box-sizing: border-box;
 }
@@ -37,12 +39,12 @@ html {
 
 ::-webkit-scrollbar {
   display: none;
-  width: 0;  /* Remove scrollbar space */
-  background: transparent;  /* Optional: just make scrollbar invisible */
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #FF0000;
+  background: #ff0000;
 }
 
 .page-body {
@@ -80,9 +82,10 @@ html {
 }
 
 .companyName {
-  height: 30%;
+  height: auto;
+  padding-bottom: 30%;
   padding-top: 5%;
-  font-family: Montserrat;
+  font-family: "Inter" !important;
   font-style: normal;
   font-weight: bold;
   font-size: 1.75rem;
@@ -95,15 +98,17 @@ html {
 }
 
 .welcome-message {
-  height: 10%;
-  font-family: Montserrat;
+  height: auto;
+  padding-bottom: 10%;
+  font-family: "Inter";
   font-style: normal;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1.75rem;
   line-height: 32px;
   /* identical to box height, or 145% */
 
-  color: #000000;
+  color: #272727;
+  text-decoration: none;
 
   mix-blend-mode: normal;
 }
@@ -143,7 +148,7 @@ html {
 }
 
 .sign-in-heading {
-  font-family: Montserrat;
+  font-family: "Inter";
   font-style: normal;
   font-weight: bold;
   font-size: 1.5rem;
@@ -151,7 +156,7 @@ html {
   letter-spacing: 0.1px;
   /* identical to box height, or 145% */
 
-  color: #000000;
+  color: #2c2c2c;
 
   mix-blend-mode: normal;
   margin-bottom: 2%;
@@ -160,6 +165,7 @@ html {
 .sign-in-sub-heading {
   letter-spacing: 0.3px;
   margin-bottom: 8%;
+  font-family: "Inter";
 }
 .OAuth {
   border: 1px solid rgba(192, 192, 192, 0.698);
@@ -176,6 +182,7 @@ html {
 
 .OR {
   text-align: center;
+  font-family: "Inter";
 }
 
 .btn-text {
@@ -630,6 +637,13 @@ html {
   height: auto;
   padding-top: 5%;
   padding-bottom: 5%;
+
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(155, 159, 221, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .filter-name {
@@ -660,6 +674,7 @@ html {
 .search-result-grid {
   margin-top: 3%;
   margin-bottom: 2%;
+  grid-template-columns: 1fr 1fr 1fr !important;
 }
 
 .search-event-card {
@@ -961,7 +976,6 @@ html {
   grid-row-gap: 20px;
 }
 
-
 .platinum-sponsor-card-grid {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
@@ -1033,7 +1047,7 @@ html {
 
 .event-info-card-2 {
   width: 100%;
-  border: 2px solid #bebbbc;
+  /* border: 2px solid #bebbbc; */
   background-color: #ffffff;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -1046,7 +1060,7 @@ html {
 
   background: #c6d6f5 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
-  border-radius: 10px;
+
   opacity: 1;
   display: flex;
   flex-direction: column;
@@ -1055,12 +1069,12 @@ html {
 }
 .event-info-card-1-secondary {
   width: 100%;
-  border: 2px solid #bebbbc;
+  /* border: 2px solid #bebbbc; */
   padding-top: 6rem;
   padding-bottom: 2.5rem;
   background-color: #ffffff;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
 }
 
 .event-name {
@@ -1117,14 +1131,22 @@ html {
   grid-column-gap: 10px;
 }
 
-.event-ticket-section, .event-queries-section {
+.event-ticket-section,
+.event-queries-section {
   width: 100%;
-  border: 2px solid salmon;
+  /* border: 2px solid salmon; */
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 2px 3px #00000029;
   border: 0.30000001192092896px solid #707070;
   border-radius: 10px;
   opacity: 1;
+
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 10px 0 rgba(173, 175, 197, 0.37);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 10px;
+  border: 1px solid rgba(170, 170, 170, 0.507);
 }
 
 .event-ticket-section-headline {
@@ -1224,18 +1246,65 @@ input[type="radio"] {
 
 .accordion-button {
   text-align: left;
-font: normal normal normal 0.94rem/1.5rem Helvetica;
-letter-spacing: 0.41px;
-color: #414141C3;
-opacity: 1;
+  font: normal normal normal 0.94rem/1.5rem Helvetica;
+  letter-spacing: 0.41px;
+  color: #414141c3;
+  opacity: 1;
 }
 
-.page{
+.page {
   overflow: hidden;
 }
 
 .nav-avatar {
   width: 20%;
+}
+
+.event-info-card-1,
+.event-info-card-2 {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(147, 197, 230, 0.37);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  /* border-radius: 10px; */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.event-info-card-1-primary {
+  background: rgba(92, 147, 225, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.sticky-landing-page-buttons-container {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background-color: #fff;
+}
+
+.share-and-ticket-btn-container {
+  /* border: 2px solid green; */
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2.5rem;
+}
+
+.event-name-date-hosting-community-container {
+  /* border: 1px solid green; */
+  
+  width: 100%;
+}
+
+.event-start-end-date {
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: 1rem;
+  color: #3f3f3f;
 }
 
 @media only screen and (max-width: 1650px) {
@@ -1244,7 +1313,6 @@ opacity: 1;
     padding-right: 2;
   }
 }
-
 
 @media only screen and (max-width: 1596px) {
   .explore-nav {
@@ -1271,13 +1339,15 @@ opacity: 1;
   .explore-display-image {
     width: 70% !important;
   }
+  .search-result-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }
 
 @media only screen and (max-width: 1298px) {
   .question {
     height: 15%;
   }
-  
 }
 
 @media only screen and (max-width: 1200px) {
@@ -1293,6 +1363,24 @@ opacity: 1;
     display: grid;
     grid-template-columns: 8fr;
     grid-column-gap: 30px;
+  }
+
+  .footer-container-event-landing-page {
+    padding-bottom: 50px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .sticky-landing-page-buttons-container,
+  .FAQs,
+  .buy-tickets,
+  .sticky-footer {
+    display: none !important;
+    background-color: rgba(255, 255, 255, 0);
+    height: 1px !important;
+  }
+
+  .event-name-date-hosting-community-container{
+    display: none !important;
   }
 }
 
@@ -1326,10 +1414,6 @@ opacity: 1;
   .event-landing-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .search-result-grid {
-    grid-template-columns: 1fr 1fr !important;
   }
 
   .pre-footer {
@@ -1481,7 +1565,7 @@ opacity: 1;
     grid-template-columns: 1fr 1fr 1fr;
   }
 
-  .speakers-card-grid{
+  .speakers-card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1516,9 +1600,9 @@ opacity: 1;
   .event-landing-secondary-nav {
     border-bottom: 1px solid #414141;
     min-width: 600px;
-    grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     grid-auto-flow: column;
-    grid-auto-columns: minmax(160px,1fr);
+    grid-auto-columns: minmax(160px, 1fr);
     overflow-x: auto;
   }
 }
@@ -1529,7 +1613,7 @@ opacity: 1;
   }
 
   .date-card-row {
-    grid-template-columns: 1fr 1fr ;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -1547,4 +1631,14 @@ opacity: 1;
 .row > * {
   padding-left: 0;
   padding-right: 0;
+}
+
+.sign-in-with-google-text {
+  font-family: "Inter";
+  font-weight: 600;
+  color: #000000;
+}
+
+.form-control:focus {
+  border: 1px solid #162e5c;
 }

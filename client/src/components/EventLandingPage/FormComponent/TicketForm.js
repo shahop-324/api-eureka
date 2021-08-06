@@ -73,7 +73,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
   const user = useSelector((state) => state.user.userDetails);
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const couponsArray = coupon.map((coupon) => {
+  const couponsArray = coupon && coupon.map((coupon) => {
     return {
       id: coupon.id,
       code: coupon.discountCode,
@@ -133,7 +133,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
     }
 
     let order = await fetch(
-      "http://localhost:3000/eureka/v1/razorpay/createRazorpayOrder",
+      "https://damp-taiga-71545.herokuapp.com/eureka/v1/razorpay/createRazorpayOrder",
       {
         method: "POST",
         body: JSON.stringify({
@@ -231,15 +231,18 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
 
       return (
         <div className="ticket-card mb-2 px-3 py-4">
+          <div className="d-flex flex-row align-items-center">
+
           <RoyalBlueRadio
             color="primary"
-            style={{ fill: "#538BF7" }}
+            style={{ fill: "#538BF7", maxHeight: "fit-content" }}
             checked={selectedTicket === ticket.id}
             onChange={handleChange}
             value={ticket.id}
             name="radio-button-demo"
             inputProps={{ "aria-label": "A" }}
           />
+          </div>
           <div className="ticket-name-and-description">
             <div className="ticket-name mb-1">{ticket.name}</div>
             <div className="ticket-description">{ticket.description}</div>
@@ -275,7 +278,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
 
       <hr className="mb-3" />
       <div className="mb-4">
-        <div className="got-a-coupon-code mb-3">Got a coupon code?</div>
+        <div className="got-a-coupon-code mb-3" style={{fontWeight: "500", fontFamily: "Inter" }}>Got a coupon code?</div>
         <div
           class="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
           style={{ width: "100%" }}

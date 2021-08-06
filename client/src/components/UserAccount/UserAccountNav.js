@@ -15,7 +15,12 @@ class UserAccountNav extends React.Component {
         >
           <div class="container-fluid">
             {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-              <span class="navbar-brand" style={{ color: "#538BF7" }}>Evenz</span>
+
+              {/* <span class="navbar-brand" style={{ color: "#538BF7" }}>Evenz</span> */}
+
+              <a href="https://www.evenz.in/home"
+                  className="navbar-brand"
+                  style={{ textDecoration: "none", color: "#538BF7" }}>Evenz</a>
             
             <button
               class="navbar-toggler"

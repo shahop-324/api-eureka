@@ -38,7 +38,7 @@
 } */
 
 .event-card-date-main {
-  font-family: Montserrat;
+  font-family: "Inter";
   font-style: normal;
   font-weight: bold;
   font-size: 0.9rem;
@@ -51,7 +51,7 @@
 }
 
 .event-card-name-main {
-  font-family: Montserrat;
+  font-family: "Inter";
   font-style: normal;
   font-weight: bold;
   font-size: 1.25rem;
@@ -62,7 +62,7 @@
 }
 
 .event-card-price-main {
-  font-family: Montserrat;
+  font-family: "Inter";
   font-style: normal;
   font-weight: bold;
   font-size: 0.9rem;

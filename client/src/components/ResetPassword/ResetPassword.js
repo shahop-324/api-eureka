@@ -6,6 +6,7 @@ import { reduxForm,Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { resetPassword } from "../../actions";
 import { useParams } from "react-router";
+import Footer from "../Footer";
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -36,7 +37,6 @@ const renderInput = ({
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
-        
         required
       />
      
@@ -49,7 +49,7 @@ const renderInput = ({
 const ResetPassword =(props)=> {
   
   const dispatch = useDispatch();
-  const {handleSubmit,pristine,valid,submitting}=props;
+  const {handleSubmit}=props;
 
   const params=useParams();
   const token=params.passwordResetToken;
@@ -73,7 +73,9 @@ const ResetPassword =(props)=> {
             <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
               <div className="col illustration-card">
                 <div className="row">
-                  <div className="companyName">Evenz</div>
+                  <a href="https://www.evenz.in/home"
+                  className="companyName"
+                  style={{ textDecoration: "none", color: "#538BF7" }}>Evenz</a>
                   <div className="welcome-message">
                     Let's reset your password...
                   </div>
@@ -86,8 +88,8 @@ const ResetPassword =(props)=> {
             <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
               <div className="col signin-form">
                 <div className="container">
-                  <div className="row sign-in-heading">Set New Password</div>
-                  <div className="row sign-in-sub-heading">
+                  <div className="row sign-in-heading px-2">Set New Password</div>
+                  <div className="row sign-in-sub-heading px-2">
                     Enter new password and confirm it.
                   </div>
 
@@ -95,7 +97,7 @@ const ResetPassword =(props)=> {
                     <div className="row">
                       <div className="mb-3">
                         <div class="form-group">
-                          <label for="emailAddress" className="mb-2">
+                          <label for="emailAddress" className="mb-2 form-label form-label-customized">
                             New Password
                           </label>
                           <Field
@@ -112,7 +114,7 @@ const ResetPassword =(props)=> {
                       </div>
                       <div className="mb-3">
                         <div class="form-group">
-                          <label for="emailAddress" className="mb-2">
+                          <label for="emailAddress" className="mb-2 form-label form-label-customized">
                           Confirm new Password
                           </label>
                           <Field
@@ -136,7 +138,7 @@ const ResetPassword =(props)=> {
                       className="row"
                       style={{ padding: "0 2%", marginTop: "3%" }}
                     >
-                      <button type="submit" className="btn btn-primary" disabled={pristine||submitting||!valid}>
+                      <button type="submit" className="btn btn-primary">
                         <span className="btn-text">Reset</span>
                       </button>
                     </div>
@@ -146,6 +148,7 @@ const ResetPassword =(props)=> {
             </div>
           </div>
         </div>
+        <Footer />
       </>
     );
   }

@@ -30,7 +30,7 @@ import Home from "./StaticScreens/Screens/Home";
 import TermsOfService from "./StaticScreens/Screens/TermsOfService";
 import PrivacyPolicy from "./StaticScreens/Screens/PrivacyPolicy";
 import InternalServerError from "./StaticScreens/Screens/InternalServerError";
-import NewSignIn from "./Signin/NewSignIn";
+
 
 class App extends React.Component {
   render() {
@@ -58,7 +58,7 @@ class App extends React.Component {
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
-              <Route path="/login" exact component={NewSignIn} />
+              
               <Route path="/not-found" exact component={NotFoundPage} />
               <Route path="/internal-server-error" exact component={InternalServerError} />
               <Route path="/home" exact component={Home} />
@@ -320,9 +320,9 @@ class App extends React.Component {
                 component={SessionScreen}
               />
 
-              <Route path="/forgotPassword" exact component={ForgotPassword} />
+              <Route path="/forgot-password" exact component={ForgotPassword} />
               <Route
-                path="/resetPassword/:passwordResetToken"
+                path="/reset-password/:passwordResetToken"
                 exact
                 component={ResetPassword}
               />

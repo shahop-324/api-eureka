@@ -18,18 +18,6 @@ console.log(showBtn);
     <div className="event-card-main">
       <div className="event-card-img-container">
         <Link to={`/event-landing-page/${id}`}>
-          {/* <div className="poster-img">
-            <Skeleton
-              animation="wave"
-              variant="rect"
-              width="100%"
-              height="100%"
-              style={{
-                borderTopLeftRadius: "20px",
-                borderTopRightRadius: "20px",
-              }}
-            />
-          </div> */}
           <img src={image} className="poster-img" alt="event-poster" />
         </Link>
       </div>

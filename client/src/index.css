@@ -126,3 +126,7 @@ code {
   75%  {transform: translate(   0,100%)}
   100% {transform: translate(   0,0)}
 }
+
+.menulist-community-tab:hover {
+  cursor: pointer;
+}

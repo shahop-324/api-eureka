@@ -30,7 +30,17 @@ const UserAccountHome = () => {
       dispatch(fetchUserAllPersonalData());
     }
   }, [isClicked, dispatch]);
+  useEffect(()=>{
+    return ()=>{
 
+       console.log("cleaned up")
+       dispatch(navigationIndex(0));
+
+      
+    }
+
+
+  },[dispatch])
   const handleChange = (event, newValue) => {
     dispatch(navigationIndex(newValue));
     switch (newValue) {
@@ -57,14 +67,14 @@ const UserAccountHome = () => {
     }
   };
 
-  if(error) {
-    history.push('/internal-server-error');
-  }
+  // if(error) {
+  //   history.push('/internal-server-error');
+  // }
 
   const { currentIndex } = useSelector((state) => state.navigation);
 
   if(error) {
-    return <div>{error}</div>
+    return alert(error);
   }
 
   
@@ -90,7 +100,7 @@ const UserAccountHome = () => {
           <UserAccountNav />
           <div className="user-account-body">
             <UserAccountSideNav />
-            <div className="user-account-main-body">
+            <div className="user-account-main-body" style={{minWidth: "988px", overflow: "visible"}}>
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs
                   activeIndex={currentIndex}

@@ -14,12 +14,17 @@ const authSlice = createSlice({
 
    
 
-  hasError(state,action){
-
-   state.error = action.payload;
-   
-},
-
+    
+    ResetError(state,action){
+  
+     state.error = false;
+     
+  },
+    hasError(state,action){
+  
+     state.error = action.payload;
+     
+  },
     SignIn(state, action) {
       state.token = action.payload.token;
       state.isSignedIn = action.payload.isSignedIn;

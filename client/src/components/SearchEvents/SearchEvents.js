@@ -3,7 +3,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import Pagination from "@material-ui/lab/Pagination";
+// import Pagination from "@material-ui/lab/Pagination";
 import EventCard from "../EventCard";
 import { useState } from "react";
 import PaidPriceSelector from "../PaidPriceSelector";
@@ -21,6 +21,9 @@ import dateFormat from "dateformat";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
+
+import Loader from './../../components/Loader';
+
 const categories = [
   { title: "Technology" },
   { title: "Education" },
@@ -34,39 +37,47 @@ const categories = [
   { title: "Business & Entrepreneurship" },
 ];
 
-class PreFooter extends React.Component {
-  render() {
-    return (
-      <div className="row pre-footer">
-        <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
-          <div className="col-1 col-xl-2"></div>
-          <div className="col-10 col-xl-8">
-            <div className="pre-footer-hero-text">
-              Amaze Your Audience with Your Next-Gen Virtual Event.
-            </div>
-            <div className="pre-footer-sub-hero-text">
-              Memorable events don’t just happen. They happen to be our
-              business.
-            </div>
-            <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
-              <button type="button" class="btn btn-light pre-footer-btn-light">
-                Host a free event
-              </button>
-            </div>
-          </div>
-          <div className="col-1 col-xl-2"></div>
-        </div>
-        <div
-          className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
-          style={{ maxHeight: "50vh" }}
-        ></div>
-      </div>
-    );
-  }
-}
+// class PreFooter extends React.Component {
+//   render() {
+//     return (
+//       <div className="row pre-footer">
+//         <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
+//           <div className="col-1 col-xl-2"></div>
+//           <div className="col-10 col-xl-8">
+//             <div className="pre-footer-hero-text">
+//               Amaze Your Audience with Your Next-Gen Virtual Event.
+//             </div>
+//             <div className="pre-footer-sub-hero-text">
+//               Memorable events don’t just happen. They happen to be our
+//               business.
+//             </div>
+//             <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
+//               <button type="button" class="btn btn-light pre-footer-btn-light">
+//                 Host a free event
+//               </button>
+//             </div>
+//           </div>
+//           <div className="col-1 col-xl-2"></div>
+//         </div>
+//         <div
+//           className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
+//           style={{ maxHeight: "50vh" }}
+//         ></div>
+//       </div>
+//     );
+//   }
+// }
 
 const SearchEvents = () => {
   const dispatch = useDispatch();
+
+  // const innerWidth = window.innerWidth;
+
+  // const collapseFilter = () => {
+  //   document.getElementsByClassName('collapse').collapse('toggle');
+  // }
+
+  const {error, isLoading} = useSelector((state) => state.event);
 
   const location = useLocation();
   console.log(location);
@@ -81,7 +92,7 @@ const SearchEvents = () => {
   const [text, setText] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
 
-  let fullLocation = `http://127.0.0.1:3001${location.pathname}${location.search}`;
+  let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
   let search_params = url.searchParams;
 
@@ -241,11 +252,6 @@ const SearchEvents = () => {
   };
 
   const onCategoryBucketChange = (event, value) => {
-    // let queryString = "";
-    // for (let i = 0; i < value.length; i++) {
-    //   queryString = value[i].join(",");
-    // }
-
     const queryString = value
       .map(function (elem) {
         return elem.title;
@@ -291,6 +297,10 @@ const SearchEvents = () => {
     }
   };
 
+  if(error) {
+    return <div>{error}</div>
+  }
+
   return (
     <>
       <CssBaseline />
@@ -299,7 +309,7 @@ const SearchEvents = () => {
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
               
-                <span style={{ color: "#538BF7" }}>Evenz</span>
+                <span class="navbar-brand" style={{ color: "#538BF7" }}>Evenz</span>
              
               <button
                 class="navbar-toggler"
@@ -336,7 +346,7 @@ const SearchEvents = () => {
                       <Link
                         to="/signin"
                         type="button"
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-primary btn-outline-text me-3"
                       >
                         Login
                       </Link>
@@ -344,7 +354,7 @@ const SearchEvents = () => {
                   </li>
                   <li class="nav-item" style={{ alignSelf: "center" }}>
                     
-                      <Link to="/signup" type="button" class="btn btn-primary">
+                      <Link to="/signup" type="button" class="btn btn-primary btn-outline-text">
                         Get Started
                       </Link>
                    
@@ -355,9 +365,9 @@ const SearchEvents = () => {
           </nav>
         </div>
         <div className="row no-of-events-section">
-          <div className="text-center search-page-events-text">Events</div>
-          <div className="text-center search-page-results-text">
-            503 Events . 8 Categories
+          <div className="text-center search-page-events-text" style={{fontFamily: "Inter"}}>Events</div>
+          <div className="text-center search-page-results-text" >
+            {eventsList.length} Events . 8 Categories
           </div>
         </div>
         <div
@@ -387,7 +397,9 @@ const SearchEvents = () => {
                 className="row date-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name">Date</div>
+                <div className="filter-name pt-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Date</div>
+
+<div className="px-2">
 
                 <DateRangePicker
                   initialSettings={{
@@ -401,6 +413,7 @@ const SearchEvents = () => {
                 >
                   <input type="text" className="form-control col-4" Value="" />
                 </DateRangePicker>
+</div>
 
                 {/* </div> */}
                 <div style={{ margin: "5% 0" }}>
@@ -412,18 +425,19 @@ const SearchEvents = () => {
                 className="row price-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name">Price (in USD)</div>
+                <div className="filter-name mb-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Price (in USD)</div>
                 <div className="price-filter-input">
                   <div class="form-check">
                     <input
                       class="form-check-input"
+                      
                       type="radio"
                       name="price"
                       id="filterAnyPrice"
                       value="Any Price"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label" for="filterAnyPrice">
+                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="filterAnyPrice">
                       Any Price
                     </label>
                   </div>
@@ -436,7 +450,7 @@ const SearchEvents = () => {
                       value="Free"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label" for="filterfree">
+                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="filterfree">
                       Free
                     </label>
                   </div>
@@ -449,7 +463,7 @@ const SearchEvents = () => {
                       value="Paid"
                       onChange={onPriceFilterChange}
                     />
-                    <label class="form-check-label mb-3">Paid</label>
+                    <label class="form-check-label mb-3" style={{fontFamily: "Inter", fontWeight: "500"}}>Paid</label>
                   </div>
                   {priceFilter === "Paid" ? (
                     <PaidPriceSelector URL={url} searchParams={search_params} />
@@ -466,7 +480,7 @@ const SearchEvents = () => {
                 className="row community-rating-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name">Community Rating</div>
+                <div className="filter-name mb-3" style={{fontFamily: "Inter", fontWeight: "600"}}>Community Rating</div>
                 <div className="price-filter-input">
                   <div class="form-check">
                     <input
@@ -477,7 +491,7 @@ const SearchEvents = () => {
                       value="Any Rating"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" for="flexRadioDefault4">
+                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault4">
                       Any Rating
                     </label>
                   </div>
@@ -490,7 +504,7 @@ const SearchEvents = () => {
                       value="Above 4"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" for="flexRadioDefault5">
+                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault5">
                       Above 4
                     </label>
                   </div>
@@ -503,7 +517,7 @@ const SearchEvents = () => {
                       value="Above 3"
                       onChange={onRatingFilterChange}
                     />
-                    <label class="form-check-label" for="flexRadioDefault6">
+                    <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500"}} for="flexRadioDefault6">
                       Above 3
                     </label>
                   </div>
@@ -517,7 +531,7 @@ const SearchEvents = () => {
                 className="row categories-filter"
                 style={{ width: "90%", margin: "0 auto" }}
               >
-                <div className="filter-name">Categories</div>
+                <div className="filter-name" style={{fontFamily: "Inter", fontWeight: "600"}}>Categories</div>
                 <div className="categories-filter-input">
                   <Autocomplete
                     onChange={onCategoryBucketChange}
@@ -534,28 +548,29 @@ const SearchEvents = () => {
             </div>
           </div>
           <div className="col-12 col-lg-9 search-results-section px-5">
-            <div className="row search-result-heading ">Top Picks</div>
+            <div className="row search-result-heading pb-4">Top Picks</div>
             <div
               className="row search-result-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 gridColumnGap: "40px",
-                gridRowGap: "30px",
+                gridRowGap: "40px",
               }}
             >
-              {renderedList()}
+              {isLoading ? <div className="d-flex flex-row justify-content-center align-items-center" style={{minWidth: "60vw", height: "50vh"}}><Loader />  </div> : renderedList()}
             </div>
           </div>
         </div>
-        <div className="row show-more-search-page">
+        <div className="row show-more-search-page " style={{height: "auto"}}>
           <div className="col-0 col-lg-4"></div>
-          <div className="col-12 col-lg-6 d-flex flex-row justify-content-center">
-            <Pagination count={100} color="primary" />
+          <div className="col-12 col-lg-6 d-flex flex-row justify-content-center py-4">
+            {/* <Pagination count={100} color="primary" /> */}
+            <button className="btn btn-light-outline disabled btn-outline-text">End of Results</button>
           </div>
           <div className="col-0 col-lg-2"></div>
         </div>
-        <PreFooter />
+        {/* <PreFooter /> */}
         <Footer />
       </div>
     </>
@@ -564,308 +579,3 @@ const SearchEvents = () => {
 
 export default SearchEvents;
 
-// import React from "react";
-// import CssBaseline from "@material-ui/core/CssBaseline";
-// import Divider from "@material-ui/core/Divider";
-// import Autocomplete from "@material-ui/lab/Autocomplete";
-// import TextField from "@material-ui/core/TextField";
-// // import Chip from '@material-ui/core/Chip';
-// // import PreFooterImg from "./../../assets/images/PreFooter@2x.png";
-// import Faker from "faker";
-// import EventCard from "../EventCard";
-// // import DateRangePickerComponent from "../DateRangePicker";
-
-// const categories = [
-//   { title: "Technology" },
-//   { title: "Education" },
-//   { title: "Career Fair" },
-//   { title: "Professional Development" },
-//   { title: "Health & Lifestyle" },
-//   { title: "Marketing & Advertisement" },
-//   { title: "Crypto" },
-//   { title: "Web Security" },
-//   { title: "Entertainment" },
-//   { title: "Business & Entrepreneurship" },
-// ];
-
-// class PreFooter extends React.Component {
-//   render() {
-//     return (
-//       <div className="row pre-footer">
-//         <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
-//           <div className="col-1 col-xl-2"></div>
-//           <div className="col-10 col-xl-8">
-//             <div className="pre-footer-hero-text">
-//               Amaze Your Audience with Your Next-Gen Virtual Event.
-//             </div>
-//             <div className="pre-footer-sub-hero-text">
-//               Memorable events don’t just happen. They happen to be our
-//               business.
-//             </div>
-//             <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
-//               <button type="button" class="btn btn-light pre-footer-btn-light">
-//                 Host a free event
-//               </button>
-//             </div>
-//           </div>
-//           <div className="col-1 col-xl-2"></div>
-//         </div>
-//         <div
-//           className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
-//           style={{ maxHeight: "50vh" }}
-//         ></div>
-//       </div>
-//     );
-//   }
-// }
-
-// class SearchEvents extends React.Component {
-//   render() {
-//     return (
-//       <>
-//         <CssBaseline />
-//         <div className="container-fluid page">
-//           <div className="row nav-section">
-//             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-//               <div class="container-fluid">
-//                 <a class="navbar-brand" href="#">
-//                   <span style={{ color: "#538BF7" }}>Evenz</span>
-//                 </a>
-//                 <button
-//                   class="navbar-toggler"
-//                   type="button"
-//                   data-bs-toggle="collapse"
-//                   data-bs-target="#navbarSupportedContent"
-//                   aria-controls="navbarSupportedContent"
-//                   aria-expanded="false"
-//                   aria-label="Toggle navigation"
-//                 >
-//                   <span class="navbar-toggler-icon"></span>
-//                 </button>
-//                 <div
-//                   class="collapse navbar-collapse"
-//                   id="navbarSupportedContent"
-//                 >
-//                   <form class="d-flex special" style={{ marginLeft: "2%", alignSelf: "center" }} >
-//                     <input
-//                       class="form-control me-2"
-//                       type="search"
-//                       placeholder="Search events"
-//                       aria-label="Search"
-//                     />
-//                     <button class="btn btn-outline-primary" type="submit">
-//                       <i className="fa fa-search"></i>
-//                     </button>
-//                   </form>
-//                   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-//                     <li class="nav-item" style={{alignSelf: "center"}}>
-//                       <a class="nav-link active" aria-current="page" href="#">
-//                         <button type="button" class="btn btn-outline-primary">
-//                           Login
-//                         </button>
-//                       </a>
-//                     </li>
-//                     <li class="nav-item" style={{alignSelf: "center"}}>
-//                       <a class="nav-link" href="#">
-//                         <button type="button" class="btn btn-primary">
-//                           Get Started
-//                         </button>
-//                       </a>
-//                     </li>
-//                   </ul>
-//                 </div>
-//               </div>
-//             </nav>
-//           </div>
-//           <div className="row no-of-events-section">
-//             <div className="text-center search-page-events-text">Events</div>
-//             <div className="text-center search-page-results-text">
-//               503 Events . 8 Categories
-//             </div>
-//           </div>
-//           <div className="row filter-and-results-section max-width">
-//             <div className="col-12 col-lg-3 filter-section">
-//               <div
-//                 className="filter-toggle-button col"
-//                 style={{ display: "none" }}
-//               >
-//                 <div
-//                   className="row"
-//                   style={{ width: "99.5%", margin: "0 auto" }}
-//                 >
-//                   <button
-//                     type="button"
-//                     data-bs-toggle="collapse"
-//                     data-bs-target="#collapseExample"
-//                     aria-expanded="false"
-//                     aria-controls="collapseExample"
-//                     class="btn btn-outline-secondary"
-//                   >
-//                     Filter
-//                   </button>
-//                 </div>
-//               </div>
-//               <div className="col filter-wrapper" id="collapseExample">
-//                 <div
-//                   className="row date-filter"
-//                   style={{ width: "90%", margin: "0 auto" }}
-//                 >
-//                   <div className="filter-name">Date</div>
-//                   <div className="date-range-filter-input">
-//                     <input
-//                       className="form-control"
-//                       type="date"
-//                       value="12/12/2020"
-//                     />
-//                   </div>
-//                   <div style={{ margin: "5% 0" }}>
-//                     <Divider />
-//                   </div>
-//                 </div>
-
-//                 <div
-//                   className="row price-filter"
-//                   style={{ width: "90%", margin: "0 auto" }}
-//                 >
-//                   <div className="filter-name">Price</div>
-//                   <div className="price-filter-input">
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="anyprice"
-//                       />
-//                       <label class="form-check-label" Forhtml="anyprice">
-//                         Any price
-//                       </label>
-//                     </div>
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="freeprice"
-//                       />
-//                       <label class="form-check-label" Forhtml="freeprice">
-//                         Free
-//                       </label>
-//                     </div>
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="paidprice"
-//                       />
-//                       <label class="form-check-label" Forhtml="paidprice">
-//                         Paid
-//                       </label>
-//                     </div>
-//                   </div>
-//                   <div style={{ margin: "5% 0" }}>
-//                     <Divider />
-//                   </div>
-//                 </div>
-
-//                 <div
-//                   className="row community-rating-filter"
-//                   style={{ width: "90%", margin: "0 auto" }}
-//                 >
-//                   <div className="filter-name">Community Rating</div>
-//                   <div className="price-filter-input">
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="defaultCheck1"
-//                       />
-//                       <label class="form-check-label" for="defaultCheck1">
-//                         Any rating
-//                       </label>
-//                     </div>
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="defaultCheck1"
-//                       />
-//                       <label class="form-check-label" for="defaultCheck1">
-//                         Above 4
-//                       </label>
-//                     </div>
-//                     <div class="form-check">
-//                       <input
-//                         class="form-check-input"
-//                         type="checkbox"
-//                         value=""
-//                         id="defaultCheck1"
-//                       />
-//                       <label class="form-check-label" for="defaultCheck1">
-//                         Above 3
-//                       </label>
-//                     </div>
-//                   </div>
-//                   <div style={{ margin: "5% 0" }}>
-//                     <Divider />
-//                   </div>
-//                 </div>
-
-//                 <div
-//                   className="row categories-filter"
-//                   style={{ width: "90%", margin: "0 auto" }}
-//                 >
-//                   <div className="filter-name">Categories</div>
-//                   <div className="categories-filter-input">
-//                     <Autocomplete
-//                       multiple
-//                       id="tags-standard"
-//                       options={categories}
-//                       getOptionLabel={(option) => option.title}
-//                       defaultValue={[categories[3]]}
-//                       renderInput={(params) => (
-//                         <TextField {...params} variant="standard" />
-//                       )}
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//             <div className="col-12 col-lg-9 search-results-section px-5">
-//               <div className="row search-result-heading ">Top Picks</div>
-//               <div
-//                 className="row search-result-grid"
-//                 style={{
-//                   display: "grid",
-//                   gridTemplateColumns: "1fr 1fr",
-//                   gridColumnGap: "40px",
-//                   gridRowGap: "30px",
-//                 }}
-//               >
-//                 <EventCard />
-//                 <EventCard />
-//                 <EventCard />
-
-//               </div>
-//             </div>
-//           </div>
-
-//           <div className="row show-more-search-page">
-//             <div className="col-3 col-lg-7"></div>
-//             <div className="col-6 col-lg-2 d-flex flex-row justify-content-center">
-//               <button type="button" class="btn btn-outline-primary">
-//                 Show more
-//               </button>
-//             </div>
-//             <div className="col-3 col-lg-3"></div>
-//           </div>
-//           <PreFooter />
-//         </div>
-//       </>
-//     );
-//   }
-// }
-
-// export default SearchEvents;

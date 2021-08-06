@@ -16,18 +16,30 @@
 }
 
 .header-section {
-  height: 90vh;
+  height: auto;
+  min-height: 90vh;
+  
+
+  
 
   background: #4a4a4a 0% 0% no-repeat padding-box;
   border: 1px solid #707070;
   opacity: 1;
 }
 
+.header-content-section {
+  height: 82vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .grid-of-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
-  height: 73vh;
+  grid-gap: 3rem;
+  height: auto;
 }
 
 .grid-1-of-2 {
@@ -86,48 +98,90 @@
 }
 
 .home-section-2 {
-  height: 100vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   //   border: 2px solid green;
 }
 
 .home-section-3 {
-  height: 95vh;
+  height: auto;
+  min-height: 85vh;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: hsla(113, 52%, 55%, 0.589);
 }
 
 .home-section-4 {
-  height: 95vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: hsl(0, 0%, 100%);
 }
 
 .home-section-5 {
-  height: 90vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #e1bae1;
 }
 
 .home-section-6 {
-  height: 80vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #ffffff;
 }
 
 .home-section-7 {
-  height: 95vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #000000c7;
 }
 
 .home-section-8 {
-  height: 90vh;
+  height: auto;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #e8b665c7;
 }
 
 .home-section-9 {
-  height: 100vh;
+  height: auto;
+  min-height: 85vh;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #ffffff;
 }
 
 .centered-heading-primary {
   text-align: center;
-  font: normal normal 600 45px/77px Poppins;
+  font: normal normal 600 3.5rem/4.813rem Poppins;
   letter-spacing: 2.21px;
   color: #000000;
   text-shadow: 0px 0px 41px #538bf7;
@@ -136,7 +190,7 @@
 
 .centered-heading-secondary {
   text-align: center;
-  font: normal normal 500 19px/50px Poppins;
+  font: normal normal 500 1.18rem/3.125rem Poppins;
   letter-spacing: 0.93px;
   color: #434343;
   opacity: 1;
@@ -231,7 +285,7 @@
 
 footer {
   background-color: #2f2f2f;
-  height: 35vh;
+  height: auto;
 }
 
 .footer-container {
@@ -289,7 +343,7 @@ footer {
 }
 
 .terms-condition-heading {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: #fff;
 
@@ -298,11 +352,113 @@ footer {
 }
 
 .term-description {
-    font-size: 0.95rem;
+  font-size: 0.95rem;
   font-weight: 400;
   color: rgb(204, 204, 204);
 
   font-family: Ubuntu;
   text-align: left;
   letter-spacing: 1px;
+}
+
+
+
+@media only screen and (max-width: 998px) {
+
+  .footer-section-link {
+    font-size: 0.97rem;
+    font-weight: 500;
+    color: #a7a7a7;
+  }
+  .footer-container {
+    height: 100%;
+  
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    grid-gap: 1rem;
+  }
+  .grid-of-2 {
+    grid-template-columns: 1fr;
+    width: 100%;
+    height: auto;
+  }
+  .header-content-section {
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-hero-img {
+    max-width: 300px !important;
+  }
+
+  .hero-heading {
+    text-align: center;
+  }
+
+  .landing-action-btn-row {
+    justify-content: center;
+  }
+
+  .section-hero-img {
+    text-align: center;
+  }
+
+  .home-section-2 {
+    height: auto;
+  }
+
+  .centered-heading-primary {
+    font-size: 2rem;
+    line-height: 4rem;
+  }
+
+  .centered-heading-secondary {
+    font-size: 1.05rem;
+    line-height: 2.4rem;
+  }
+  .application-workflow-row {
+    grid-template-columns: 1fr;
+    grid-row-gap: 3rem;
+  }
+  .workflow-step-explanation {
+    text-align: center;
+  }
+
+  .home-section-3 {
+    height: auto;
+  }
+
+  .section-heading-primary {
+    text-align: center;
+  }
+
+  .home-text-description {
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .action-btn-home {
+    text-align: center;
+  }
+
+  .home-feature-text {
+    font-size: 1.1rem;
+  }
+
+  .nav-item {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .nav-link-btn-dark {
+    color: #000000;
+  }
+
+  .navbar-collapse-dark {
+    background-color: #ffffff;
+    padding-top: 1.2rem;
+  }
+
+  
 }

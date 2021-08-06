@@ -7,7 +7,7 @@ import { useTheme } from "@material-ui/core/styles";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 
 import { reduxForm, Field } from "redux-form";
@@ -15,6 +15,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { createCommunity } from "../../../actions";
+import { IconButton } from "@material-ui/core";
+
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -29,21 +33,21 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(9),
   },
 }));
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
+// const renderError = ({ error, touched }) => {
+//   if (touched && error) {
+//     return (
+//       <div className="ui error message">
+//         <div className="header">{error}</div>
+//       </div>
+//     );
+//   }
+// };
 
 const renderInput = ({
   input,
   labelClass,
   labelFor,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
@@ -51,7 +55,7 @@ const renderInput = ({
   id,
   label,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -65,32 +69,94 @@ const renderInput = ({
       <label class={labelClass} for={labelFor}>
         {label}
       </label>
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
+
+const renderInputCheckbox = ({
+  input,
+  labelClass,
+  labelFor,
+
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+  id,
+  label,
+  meta: { touched, error, warning },
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        id={id}
+        required
+      />
+      <label class={labelClass} for={labelFor}>
+        {label}
+      </label>
+    </div>
+  );
+};
+
 const renderTextArea = ({
   input,
   // labelClass,
   // labelFor,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
   // label
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       {/* <label class={labelClass} for={labelFor}>{label}</label> */}
       <textarea
+        rows="3"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
       />
+
+{touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
 
       {/* {renderError(meta)} */}
     </div>
@@ -99,19 +165,15 @@ const renderTextArea = ({
 const CreateNewCommunityForm = (props) => {
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   //  useEffect(()=>{
-
 
   //     dispatch(getMe());
 
-
-
   //  })
 
-
-  const {id}=useSelector((state)=>state.user.userDetails)
-  const userId =id;
+  const { id } = useSelector((state) => state.user.userDetails);
+  const userId = id;
   const { handleSubmit, pristine, valid, submitting } = props;
   const classes = useStyles();
 
@@ -124,11 +186,11 @@ const CreateNewCommunityForm = (props) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
- 
+
   const onSubmit = (formValues) => {
     console.log(formValues);
     showResults(formValues);
-    dispatch(createCommunity(formValues,userId));
+    dispatch(createCommunity(formValues, file, userId));
   };
 
   //   const onFileChange = (event) => {
@@ -150,15 +212,29 @@ const CreateNewCommunityForm = (props) => {
         maxWidth={maxWidth}
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.closeHandler}
+        // onClose={props.closeHandler}
         aria-labelledby="responsive-dialog-title"
       >
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div
             className="overlay-form px-4 pt-4 pb-2 d-flex flex-column align-items-center"
-            style={{ minHeight: "100vh" }}
+            // style={{ minHeight: "100vh" }}
           >
-            <h2 className="overlay-form-heading">New Community</h2>
+            <div
+              className="form-heading-and-close-button "
+              style={{ width: "100%" }}
+            >
+              <div></div>
+              <h2 className="overlay-form-heading">New Community</h2>
+              <div
+                className="overlay-form-close-button"
+                onClick={props.closeHandler}
+              >
+                <IconButton aria-label="delete">
+                  <CancelRoundedIcon />
+                </IconButton>
+              </div>
+            </div>
             <h5 className="overlay-sub-form-heading mb-5">
               Let's take the first step in our jouney of hosting and managing
               events.
@@ -221,29 +297,6 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            {/* <div class="mb-4 overlay-form-input-row d-flex flex-column">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Avatar
-              </label>
-
-              <input
-              name ="imgUpload"
-                accept="image/*"
-                className={classes.input}
-                id="contained-button-file"
-                multiple
-                type="file"
-              />
-              <label htmlFor="contained-button-file">
-                <Button  variant="contained" color="primary" component="span">
-                  Upload
-                </Button>
-              </label>
-            </div> */}
-
             <div class="mb-4 overlay-form-input-row">
               <label
                 for="communityHeadline"
@@ -268,26 +321,16 @@ const CreateNewCommunityForm = (props) => {
                 type="checkbox"
                 classes="form-check-input"
                 id="communityTermsAndConditionsOfUse"
-                component={renderInput}
+                component={renderInputCheckbox}
                 labelclass="form-check-label form-check-label-consent"
                 labelfor="communityTermsAndConditionsOfUse"
                 label=" I agree to follow Evenz Terms & Conditions and agree that I am
                 authorized to agree to Evenz Terms & Condtions on behalf of my
                 organistion"
               />
-
-              {/* <label
-                labelclass="form-check-label form-check-label-consent"
-                labelfor="communityTermsAndConditionsOfUse"
-              >
-                I agree to follow Evenz Terms & Conditions and agree that I am
-                authorized to agree to Evenz Terms & Condtions on behalf of my
-                organistion
-              </label> */}
             </div>
 
             <div class="mb-4 form-check overlay-form-input-row">
-            
               <Field
                 name="subscribedToCommunityMailList"
                 type="checkbox"
@@ -299,13 +342,6 @@ const CreateNewCommunityForm = (props) => {
                 label="I would like to recieve product updates and marketing
                 communications from Evenz."
               />
-              {/* <label
-                labelclass="form-check-label form-check-label-consent"
-                labelfor="communityEmailListInclusionConsent"
-              >
-                I would like to recieve product updates and marketing
-                communications from Evenz.
-              </label> */}
             </div>
 
             <div class="mb-4 overlay-form-input-row d-flex flex-column">
@@ -313,7 +349,7 @@ const CreateNewCommunityForm = (props) => {
                 type="submit"
                 class="btn btn-outline-primary outline-btn-text form-control"
                 onClick={props.closeHandler}
-                disabled={pristine || submitting || !valid}
+                // disabled={pristine || submitting || !valid}
               >
                 Create New Community
               </button>
@@ -325,6 +361,36 @@ const CreateNewCommunityForm = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+console.log(formValues.name);
+  if (!formValues.name) {
+    errors.name = "Name is Required";
+  }
+ 
+
+  if (!formValues.headline) {
+    errors.headline = "Headline is Required";
+  }
+  
+
+  if (!formValues.email) {
+    errors.email = "Email is Required";
+  }
+
+  if(formValues.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email) ) {
+    errors.email = "Invalid Email address"
+  }
+
+  
+  if (!formValues.policySigned) {
+    errors.policySigned = "You must sign policy";
+  }
+
+  return errors;
+};
+
 export default reduxForm({
   form: "newCreatedCommunity",
+  validate,
 })(CreateNewCommunityForm);

@@ -8,15 +8,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
 import "./../index.css";
 import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../actions/index";
+import { navigationIndex, signOut } from "../actions/index";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import history from "../history";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,8 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvatarMenu = ()  => {
-  const {image} = useSelector((state) => state.user.userDetails);
+const AvatarMenu = () => {
+  const user = useSelector((state) => state.user);
+  const isLoading = user.isLoading;
+  const error = user.error;
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -72,7 +74,43 @@ const AvatarMenu = ()  => {
     prevOpen.current = open;
   }, [open]);
 
+  if (isLoading) {
+    return (
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    );
+  }
+  if (error) {
+    return alert(error);
+  }
+  const image = user.userDetails.image;
+
+  const communities = user.userDetails.communities;
   const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+
+  const renderCommunitiesCommunities = (communities, handleClose) => {
+    return communities.map((community) => {
+      return (
+
+        <div className="px-3 menulist-community-tab"  onClick={() => {
+          history.push(`/user/${user.userDetails._id}/community/overview/${community._id}`)
+        }}>
+
+          <div className="avatar-menu-community-tab d-flex flex-row align-items-center">
+            <Avatar
+              className={`me-4`}
+              variant="rounded"
+              alt={community.name}
+              src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`}
+            />
+            <div className="avatar-menu-community-name">{community.name}</div>
+          </div>
+        </div>
+        
+      );
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -87,17 +125,13 @@ const AvatarMenu = ()  => {
           disableElevation={true}
         >
           <div className="avatar-menu-h-wrapper d-flex flex-row me-3 ms-3 align-items-center ps-3 py-2">
-            <Avatar
-              variant="rounded"
-              alt="Travis Howard"
-              src={imgURL}
-            />
+            <Avatar variant="rounded" alt="Travis Howard" src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>
         </Button>
 
         <Popper
-          style={{ zIndex: 10000, textAlign: "center", marginTop: "20px" }}
+          style={{ zIndex: 10000, textAlign: "center", marginTop: "20px", maxWidth: "250px" }}
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
@@ -123,9 +157,41 @@ const AvatarMenu = ()  => {
                     <div className="avatar-menu-group-heading px-3 pb-3 mt-2">
                       Account
                     </div>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={(event) => {
+                      dispatch(navigationIndex(0));
+                      history.push('/user/home');
+                      handleClose(event);
+                    }}>
+                      <div className="avatar-menu-account-section-btns mb-2">
+                        Home
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={(event) => {
+                      dispatch(navigationIndex(3));
+                      history.push('/user/profile');
+                      handleClose(event);
+                    }}>
                       <div className="avatar-menu-account-section-btns mb-2">
                         Profile
+                      </div>
+                    </MenuItem>
+                    
+                    <MenuItem onClick={(event) => {
+                      // dispatch(navigationIndex(3));
+                      history.push('/search-events');
+                      handleClose(event);
+                    }}>
+                      <div className="avatar-menu-account-section-btns mb-2">
+                        Explore Events
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={(event) => {
+                      // dispatch(navigationIndex(3));
+                      // history.push('/user/profile');
+                      handleClose(event);
+                    }}>
+                      <div className="avatar-menu-account-section-btns mb-2">
+                        Announcements
                       </div>
                     </MenuItem>
 
@@ -133,30 +199,8 @@ const AvatarMenu = ()  => {
                     <div className="avatar-menu-group-heading px-3 pb-2">
                       Switch to A Community
                     </div>
-                    <MenuItem onClick={handleClose}>
-                      <div className="avatar-menu-community-tab d-flex flex-row align-items-center">
-                        <Avatar
-                          className={`me-4`}
-                          variant="rounded"
-                          alt="Travis Howard"
-                          src={Faker.image.avatar()}
-                        />
-                        <div className="avatar-menu-community-name">Github</div>
-                      </div>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <div className="avatar-menu-community-tab d-flex flex-row align-items-center">
-                        <Avatar
-                          className={`me-4`}
-                          variant="rounded"
-                          alt="Travis Howard"
-                          src={Faker.image.avatar()}
-                        />
-                        <div className="avatar-menu-community-name">
-                          Microsoft
-                        </div>
-                      </div>
-                    </MenuItem>
+                    {renderCommunitiesCommunities(communities, handleClose)}
+                    
                     <hr className="px-2" />
                     <button
                       onClick={onClickLoggedOut}
@@ -173,7 +217,6 @@ const AvatarMenu = ()  => {
       </div>
     </div>
   );
-}
-
+};
 
 export default AvatarMenu;

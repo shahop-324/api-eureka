@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
@@ -11,7 +11,6 @@ import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 import { createQuery, fetchEvent } from "../../actions/index";
-
 
 import SessionCard from "./HelperComponent/SessionCard";
 import SpeakerCard from "./HelperComponent/SpeakerCard";
@@ -27,7 +26,7 @@ import { Link, useParams } from "react-router-dom";
 // import { convertFromRaw } from "draft-js";
 import { useEffect } from "react";
 import dateFormat from "dateformat";
-import {  reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import TicketForm from "./FormComponent/TicketForm";
 import AvatarMenu from "../AvatarMenu";
 // import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -42,6 +41,9 @@ import Typography from "@material-ui/core/Typography";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import Footer from "../Footer";
+import { IconButton } from "@material-ui/core";
+import StickyFooter from "./HelperComponent/StickyFooter";
+import Loader from "../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -112,12 +114,12 @@ const AccordionDetails = withStyles((theme) => ({
   },
 }))(MuiAccordionDetails);
 
-
-
 const EventLandingPage = (props) => {
   const classes = useStyles();
 
-  const {isLoading, error} = useSelector((state) => state.event);
+  const { isLoading, error } = useSelector((state) => state.event);
+
+  const [selectedSection, setSelectedSection] = useState(0);
 
   const [expanded, setExpanded] = React.useState("panel1");
 
@@ -139,48 +141,64 @@ const EventLandingPage = (props) => {
     setState({ vertical: "top", horizontal: "center", openSuccess: false });
   };
 
+  const handleSecNav = (i) => {
+    setSelectedSection(i);
+    console.log(i);
+  };
+
   const params = useParams();
   const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let abortController = new AbortController();
+
     console.log("entered in use effect");
     dispatch(fetchEvent(id));
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, id]);
 
-  
   // const convertFromJSONToHTML = (text) => {
   //   return stateToHTML(convertFromRaw(JSON.parse(text)));
   // };
 
-  
-  const {userDetails} = useSelector((state) => state.user);
+  const { userDetails } = useSelector((state) => state.user);
 
-
-
-  const event = useSelector((state) => {
+  let event = useSelector((state) => {
     return state.event.events.find((event) => {
       return event.id === id;
     });
   });
 
+  const eventLandingPageDetails = useSelector(
+    (state) => state.event.eventLandingPageDetails
+  );
+
+  if (!event) {
+    event = eventLandingPageDetails;
+  }
+
   console.log(event);
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
-  if(isLoading) {
-    return <div>Loading</div> // TODO
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ height: "100vh", width: "100vw" }}
+      >
+        <Loader />{" "}
+      </div>
+    ); // TODO
+  } else if (error) {
+    return <div>{error}</div>;
   }
-
-  else if(error) {
-    return <div>{error}</div>
-  }
-
 
   console.log(event);
-
-
 
   const handleQueryText = (event) => {
     setQueryText(event.target.value);
@@ -242,11 +260,6 @@ const EventLandingPage = (props) => {
         return <DiamondSponsorCard id={sponsor.id} />;
       }
       return <></>;
-      // else if(sponsor.status==='Platinum')
-      // {
-      //   return <PlatinumSponsorCard></PlatinumSponsorCard>
-      // }
-      // return <GoldSponsorCard/>
     });
   };
   const renderPlatinumSponsorCard = () => {
@@ -255,11 +268,6 @@ const EventLandingPage = (props) => {
         return <PlatinumSponsorCard id={sponsor.id} />;
       }
       return <></>;
-      // else if(sponsor.status==='Platinum')
-      // {
-      //   return <PlatinumSponsorCard></PlatinumSponsorCard>
-      // }
-      // return <GoldSponsorCard/>
     });
   };
   const renderGoldSponsorCard = () => {
@@ -268,11 +276,6 @@ const EventLandingPage = (props) => {
         return <GoldSponsorCard id={sponsor.id} />;
       }
       return <></>;
-      // else if(sponsor.status==='Platinum')
-      // {
-      //   return <PlatinumSponsorCard></PlatinumSponsorCard>
-      // }
-      // return <GoldSponsorCard/>
     });
   };
 
@@ -288,23 +291,30 @@ const EventLandingPage = (props) => {
     });
   };
 
-  const { startTime, endTime } = event;
+  let startMonth;
+  let startYear;
+  let startDate;
+  let endDate;
 
-  let startMonth = new Date(startTime);
-  startMonth = dateFormat("mmmm");
-  let startYear = new Date(startTime);
-  startYear = dateFormat("yyyy");
+  const formatDate = () => {
+    const { startTime, endTime } = event;
 
-  let startDate = new Date(startTime);
-  startDate = dateFormat("d");
-  let endDate = new Date(endTime);
-  endDate = dateFormat("d");
+    startMonth = new Date(startTime);
+    startMonth = dateFormat("mmmm");
+    startYear = new Date(startTime);
+    startYear = dateFormat("yyyy");
 
-  console.log(event);
+    startDate = new Date(startTime);
+    startDate = dateFormat("d");
+    endDate = new Date(endTime);
+    endDate = dateFormat("d");
 
+    console.log(event);
+  };
 
   return (
     <>
+      {formatDate()}
       <CssBaseline />
       <div
         className="conatiner-fluid page"
@@ -316,9 +326,14 @@ const EventLandingPage = (props) => {
         >
           <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-              
-                <span style={{ color: "#538BF7" }}>Evenz</span>
-              
+              <a
+                href="https://www.evenz.in/home"
+                className="navbar-brand"
+                style={{ textDecoration: "none", color: "#538BF7" }}
+              >
+                Evenz
+              </a>
+
               <button
                 class="navbar-toggler"
                 type="button"
@@ -337,24 +352,20 @@ const EventLandingPage = (props) => {
                   ) : (
                     <div className="d-flex flex-row">
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        
-                          <button
-                            type="button"
-                            class="btn btn-outline-primary btn-outline-text"
-                          >
-                            Get started
-                          </button>
-                        
+                        <button
+                          type="button"
+                          class="btn btn-outline-primary btn-outline-text"
+                        >
+                          Get started
+                        </button>
                       </li>
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        
-                          <button
-                            type="button"
-                            class="btn btn-primary btn-outline-text"
-                          >
-                            Login
-                          </button>
-                        
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-outline-text"
+                        >
+                          Login
+                        </button>
                       </li>
                     </div>
                   )}
@@ -363,7 +374,7 @@ const EventLandingPage = (props) => {
             </div>
           </nav>
         </div>
-        <div style={{ margin: "0.5% 0" }}>
+        <div style={{ margin: "0.5% 0" }} className="mb-5">
           <Divider />
         </div>
         <div
@@ -379,18 +390,32 @@ const EventLandingPage = (props) => {
           >
             <div className="share-on">
               <div className="shareon-card d-flex flex-column align-items-center">
-                <div className="shareon-icon text mb-3">Share on</div>
-                <div className="shareon-icon mb-3">
-                  <LinkedInIcon style={{ fill: "#2565A5" }} />
+                <div
+                  className="shareon-icon text mb-3"
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
+                >
+                  Share on
                 </div>
                 <div className="shareon-icon mb-3">
-                  <TwitterIcon style={{ fill: "#539FF7" }} />
+                  <IconButton>
+                    {" "}
+                    <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
+                  </IconButton>
                 </div>
                 <div className="shareon-icon mb-3">
-                  <FacebookIcon style={{ fill: "#1760A8" }} />
+                  <IconButton>
+                    <TwitterIcon style={{ fill: "#539FF7" }} />
+                  </IconButton>
                 </div>
                 <div className="shareon-icon mb-3">
-                  <WhatsAppIcon style={{ fill: "#378D1E" }} />
+                  <IconButton>
+                    <FacebookIcon style={{ fill: "#1760A8" }} />
+                  </IconButton>
+                </div>
+                <div className="shareon-icon mb-3">
+                  <IconButton>
+                    <WhatsAppIcon style={{ fill: "#378D1E" }} />
+                  </IconButton>
                 </div>
               </div>
             </div>
@@ -400,44 +425,139 @@ const EventLandingPage = (props) => {
                 src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
                 alt="event-landing-hero"
               />
-              <div className="event-landing-secondary-nav mb-3">
+
+              <div className="event-name-date-hosting-community-container mb-4 px-4">
+                <div className="event-name mb-3" style={{ fontSize: "1.3rem" }}>
+                  {event.eventName}
+                </div>
+                <div className="event-start-end-date mb-4">
+                  2 Aug - 8 Aug 2021{" "}
+                </div>
+                <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
+                  <img
+                    src={Faker.image.avatar()}
+                    className="hosted-by-community-logo"
+                    alt="community logo"
+                  />
+                  <div className="hosted-by-community-name-sec">
+                    <div
+                      className="hosted-by-headline mb-1"
+                      style={{ fontWeight: "600" }}
+                    >
+                      Hosted By
+                    </div>
+                    <div className="hosted-by-community-name mb-2">
+                      {event.createdBy.name}
+                    </div>
+                  </div>
+                </div>
+                <div className="hosted-by-social-grid mb-3">
+                  <IconButton>
+                    <LanguageIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
+                  <IconButton>
+                    <LinkedInIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
+                  <IconButton>
+                    <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div
+                className="event-landing-secondary-nav mb-3"
+                style={{ position: "sticky", top: "2rem" }}
+              >
                 <a
+                onClick={() => {
+                  handleSecNav(0);
+                }}
                   href="#overview-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
-                  <div className="event-landing-secondary-nav-item active-secondary-nav-item py-1">
+                  <div
+                    
+                    className={`event-landing-secondary-nav-item  ${
+                      selectedSection === 0
+                        ? "active-secondary-nav-item py-1"
+                        : ""
+                    }`}
+                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                  >
                     Overview
                   </div>
                 </a>
                 <a
+                onClick={() => {
+                  handleSecNav(1);
+                }}
                   href="#schedule-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
-                  <div className="event-landing-secondary-nav-item py-1">
+                  <div
+                    
+                    className={`event-landing-secondary-nav-item  ${
+                      selectedSection === 1
+                        ? "active-secondary-nav-item py-1"
+                        : ""
+                    }`}
+                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                  >
                     Schedule
                   </div>
                 </a>
                 <a
+                onClick={() => {
+                  handleSecNav(2);
+                }}
                   href="#speakers-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
-                  <div className="event-landing-secondary-nav-item py-1">
+                  <div
+                    
+                    className={`event-landing-secondary-nav-item  ${
+                      selectedSection === 2
+                        ? "active-secondary-nav-item py-1"
+                        : ""
+                    }`}
+                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                  >
                     Speakers
                   </div>
                 </a>
                 <a
+                onClick={() => {
+                  handleSecNav(3);
+                }}
                   href="#sponsors-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
-                  <div className="event-landing-secondary-nav-item py-1">
+                  <div
+                    className={`event-landing-secondary-nav-item  ${
+                      selectedSection === 3
+                        ? "active-secondary-nav-item py-1"
+                        : ""
+                    }`}
+                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                  >
                     Sponsors
                   </div>
                 </a>
                 <a
+                onClick={() => {
+                  handleSecNav(4);
+                }}
                   href="#booths-section"
                   style={{ textDecoration: "none", fontWeight: "600" }}
                 >
-                  <div className="event-landing-secondary-nav-item py-1">
+                  <div
+                    className={`event-landing-secondary-nav-item  ${
+                      selectedSection === 4
+                        ? "active-secondary-nav-item py-1"
+                        : ""
+                    }`}
+                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                  >
                     Booths
                   </div>
                 </a>
@@ -445,7 +565,7 @@ const EventLandingPage = (props) => {
 
               <div
                 id="overview-section"
-                className="overview-content mb-5 mt-3"
+                className="overview-content mb-5 mt-3 pt-4"
                 // dangerouslySetInnerHTML={{
                 //   __html: convertFromJSONToHTML(
                 //     event.editingComment
@@ -455,7 +575,10 @@ const EventLandingPage = (props) => {
 
               <hr className="my-5" />
 
-              <div className="schedule-section mb-5 mt-3" id="schedule-section">
+              <div
+                className="schedule-section mb-5 mt-3 pt-4"
+                id="schedule-section"
+              >
                 <div className="event-landing-page-section-headline mb-5">
                   <div className="section-headline">Schedule</div>
                 </div>
@@ -465,7 +588,10 @@ const EventLandingPage = (props) => {
 
               <hr className="my-5" />
 
-              <div className="speakers-section mb-3 mt-3" id="speakers-section">
+              <div
+                className="speakers-section mb-3 mt-3 pt-4"
+                id="speakers-section"
+              >
                 <div className="event-landing-page-section-headline mb-5">
                   <div className="section-headline">Speakers</div>
                 </div>
@@ -474,7 +600,10 @@ const EventLandingPage = (props) => {
 
               <hr className="my-5" />
 
-              <div className="sponsor-section mb-3 mt-3" id="sponsors-section">
+              <div
+                className="sponsor-section mb-3 mt-3 pt-4"
+                id="sponsors-section"
+              >
                 <div className="event-landing-page-section-headline mb-5">
                   <div className="section-headline">Sponsors</div>
                 </div>
@@ -545,6 +674,20 @@ const EventLandingPage = (props) => {
                   </div>
                 </div>
               </div>
+
+              <div className="booth-section mb-3 mt-3 pt-4" id="booths-section">
+                <div className="event-landing-page-section-headline mb-5">
+                  <div
+                    className="section-headline"
+                    style={{ fontSize: "1.8rem" }}
+                  >
+                    Booths
+                  </div>
+                </div>
+                <div className="booth-section-card-grid">
+                  {renderBoothCardList()}
+                </div>
+              </div>
             </div>
             <div className="event-landing-other-info">
               <div className="event-info-card-1">
@@ -582,9 +725,15 @@ const EventLandingPage = (props) => {
                   </div>
                 </div>
                 <div className="hosted-by-social-grid mb-3">
-                  <LanguageIcon />
-                  <LinkedInIcon />
-                  <MailOutlineIcon />
+                  <IconButton>
+                    <LanguageIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
+                  <IconButton>
+                    <LinkedInIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
+                  <IconButton>
+                    <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
+                  </IconButton>
                 </div>
               </div>
 
@@ -599,13 +748,16 @@ const EventLandingPage = (props) => {
                 {/* This is ticket form */}
                 <TicketForm
                   eventId={id}
-                  tickets={event.tickets}
-                  coupon={event.coupon}
+                  tickets={eventLandingPageDetails.tickets}
+                  coupon={eventLandingPageDetails.coupon}
                 />
               </div>
 
               <div className="event-queries-section px-4 py-4 mb-5">
-                <div className="got-a-coupon-code mb-3">
+                <div
+                  className="got-a-coupon-code mb-3"
+                  style={{ fontWeight: "500", fontFamily: "Inter" }}
+                >
                   Some question you might have?
                 </div>
                 <div className={`${classes.root} d-flex flex-column`}>
@@ -682,7 +834,10 @@ const EventLandingPage = (props) => {
                 </div>
 
                 <div className="mb-4">
-                  <div className="got-a-coupon-code mb-3">
+                  <div
+                    className="got-a-coupon-code mb-3 mt-3"
+                    style={{ fontWeight: "500", fontFamily: "Inter" }}
+                  >
                     Still have any queries before making call?
                   </div>
                   <form
@@ -732,21 +887,16 @@ const EventLandingPage = (props) => {
               </div>
             </div>
           </div>
-
-          <div className="booth-section mb-3 mt-3" id="booths-section">
-            <div className="event-landing-page-section-headline mb-5">
-              <div className="section-headline" style={{ fontSize: "1.8rem" }}>
-                Booths
-              </div>
-            </div>
-            <div className="booth-section-card-grid">
-              {renderBoothCardList()}
-            </div>
-          </div>
-
-          
         </div>
-        <Footer />
+        <div className="footer-container-event-landing-page">
+          <Footer />
+        </div>
+        {/*  */}
+        <StickyFooter
+          eventId={id}
+          tickets={eventLandingPageDetails.tickets}
+          coupon={eventLandingPageDetails.coupon}
+        />
       </div>
 
       <Snackbar
@@ -755,12 +905,9 @@ const EventLandingPage = (props) => {
         onClose={handleCloseSuccess}
         autoHideDuration={4000}
       >
-        <Alert
-          onClose={handleCloseSuccess}
-          severity="info"
-        >
-          Query submitted successfully!
-          You will recieve answer in your user profile section.
+        <Alert onClose={handleCloseSuccess} severity="info">
+          Query submitted successfully! You will recieve answer in your user
+          profile section.
         </Alert>
       </Snackbar>
     </>

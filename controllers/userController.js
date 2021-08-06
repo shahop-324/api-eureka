@@ -651,18 +651,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       500
     );
   }
-
-  // console.log('This is forgot password middleware function');
-  // console.log('We are able to reach this point in req res cycle.');
-  // res.status(200).json({
-  //   status: 'success',
-  //   message: 'This route is not yet implemented',
-  // });
 });
 
 // TODO
 exports.createNewCommunity = catchAsync(async (req, res, next) => {
   // console.log(req);
+  console.log(req.body.image);
   console.log(req.user);
   const userId = req.user.id;
   const userCreatingCommunity = await User.findById(userId);
@@ -690,6 +684,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     name: req.body.name,
     superAdmin: req.user.id,
     email: req.body.email,
+    image: req.body.image,
     payPalEmail: req.body.email,
     headline: req.body.headline,
     policySigned: req.body.policySigned,

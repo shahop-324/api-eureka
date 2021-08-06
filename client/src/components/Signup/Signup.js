@@ -1,244 +1,448 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
-import { googleLinkClicked } from "../../actions/index";
-import { connect } from "react-redux";
+import { googleLinkClicked, resetAuthError } from "../../actions/index";
+import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../actions/index";
-class Signup extends React.Component {
-  state = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    policySigned: true,
-  };
+import { Link } from "react-router-dom";
+import Footer from "../Footer";
+import { reduxForm, Field } from "redux-form";
 
-  onFirstNameChange = (e) => {
-    this.setState({ firstName: e.target.value });
-  };
-  onLastNameChange = (e) => {
-    this.setState({ lastName: e.target.value });
-  };
-  onEmailAddressChange = (e) => {
-    this.setState({ email: e.target.value });
-  };
-  onPasswordChange = (e) => {
-    this.setState({ password: e.target.value });
-  };
-  onPrivacyPolicyChange = (e) => {
-    this.setState({ policySigned: e.target.value });
-  };
+let formIsvalidated = false;
 
-  onSubmit = (e) => {
-    e.preventDefault();
 
-    this.props.signUp(this.state);
-  };
-  onClickHandle=()=>{
-    this.props.googleLinkClicked()
-   
- }
-  render() {
-    return (
-      <>
-        <CssBaseline />
-        <div className="container-fluid page-body signup-signin-fixed">
-          <div
-            className="row d-flex"
-            style={{ height: "100%", alignItems: "center" }}
-          >
-            <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
-              <div className="col illustration-card">
-                <div className="row">
-                  <div className="companyName">Evenz</div>
-                  <div className="welcome-message mb-5">
-                    Let's create your account.
-                  </div>
-                  <div className="login-illustration">
-                    <img alt="login-illustration" src={SignupPNG}></img>
-                  </div>
-                </div>
-              </div>
+
+const renderInput = ({
+  input,
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+  meta: { touched, error, warning },
+}) => {
+   const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
             </div>
-            <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
-              <div className="col signin-form">
-                <div className="container">
-                  <div className="row sign-in-heading">
-                    Get Started absolutely free.
-                  </div>
-                  <div className="row sign-in-sub-heading">
-                    Free forever. No credit card needed.
-                  </div>
-                  <div className="row d-flex flex-row justify-content-center">
-                    <button type="button" onClick={this.onClickHandle}>
-                      <a href="/eureka/v1/auth/google">Sign In with Google</a>
-                    </button>
-                  </div>
+          )))}
+      {/* {renderError(meta)} */}
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
+    </div>
+  );
+};
 
-                  {/*  */}
-                  <div
-                    className="row d-flex"
-                    style={{ alignItems: "center", marginBottom: "6%" }}
-                  >
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                    <div className="col-2 OR">OR</div>
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                  </div>
-                  <form
-                    className="ui form error"
-                    onSubmit={this.onSubmit}
-                    // action="/eureka/v1/users/signup"
-                    // method="post"
-                  >
-                    <div className="row">
-                      <div className="col-6">
-                        <div class="form-group">
-                          <label for="firstName">First Name</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="firstName"
-                            value={this.state.firstName}
-                            name="firstName"
-                            aria-describedby="Enter First Name "
-                            placeholder="John"
-                            required
-                            onChange={this.onFirstNameChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-6">
-                        <div className="mb-3">
-                          <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="lastName"
-                              name="lastName"
-                              aria-describedby="Enter Last Name"
-                              value={this.state.lastName}
-                              placeholder="Doe"
-                              required
-                              onChange={this.onLastNameChange}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+const renderInputCheckbox = ({
+  input,
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+  meta: { touched, error, warning },
+}) => {
+  // const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  return (
+    <div>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+      />
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
+      
+    </div>
+  );
+};
+const Signup = (props) => {
+  const { error } = useSelector((state) => state.auth);
 
-                    <div className="row" style={{ marginBottom: "2%" }}>
-                      <div className="mb-3">
-                        <div class="form-group">
-                          <label for="emailAddress">Email address</label>
-                          <input
-                            type="email"
-                            class="form-control"
-                            id="emailAddress"
-                            name="email"
-                            aria-describedby="Enter Email Address"
-                            placeholder="Enter Email"
-                            value={this.state.email}
-                            onChange={this.onEmailAddressChange}
-                            required
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="row mb-3 d-flex"
-                      style={{ padding: "0 0%", alignItems: "center" }}
-                    >
-                      <div className="mb-3">
-                        <div class="form-group">
-                          <label for="password">Password</label>
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            name="password"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email"
-                            required
-                            value={this.state.password}
-                            onChange={this.onPasswordChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col">
-                        <div className="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value={this.state.policySigned}
-                            name="policySigned"
-                            required
-                            id="defaultCheck1"
-                            checked
-                            onChange={this.onPrivacyPolicyChange}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexCheckChecked"
-                            style={{ color: "grey" }}
-                          >
-                            By registering, I agree to Evenz{" "}
-                            <span
-                              className="text-link"
-                              style={{
-                                color: "#538BF7",
-                                textDecoration: "underline",
-                              }}
-                            >
-                              Terms of Service
-                            </span>{" "}
-                            and{" "}
-                            <span
-                              className="text-link"
-                              style={{
-                                color: "#538BF7",
-                                textDecoration: "underline",
-                              }}
-                            >
-                              Privacy Policy
-                            </span>
-                            .
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="row"
-                      style={{ padding: "0 2%", marginTop: "3%" }}
-                    >
-                      <div className="row">
-                        <button type="submit" class="btn btn-primary">
-                          Register
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                  <div
-                    className="col"
-                    style={{ marginTop: "4%", padding: "0" }}
-                  >
-                    Already have an account?{" "}
-                    <span style={{ color: "#11A1FD" }}>Login</span>
-                  </div>
+  const [signupClicked, setSignupClicked] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetAuthError());
+    setSignupClicked(false);
+  }, [dispatch, error]);
+
+  const { handleSubmit } = props;
+
+  const onSubmit = (formValues) => {
+    // e.preventDefault();
+    setSignupClicked(true);
+
+    dispatch(signUp(formValues));
+  };
+  const onClickHandle = () => {
+    dispatch(googleLinkClicked());
+  };
+
+  return (
+    <>
+      <CssBaseline />
+      <div className="container-fluid page-body signup-signin-fixed">
+        <div
+          className="row d-flex"
+          style={{ height: "100%", alignItems: "center" }}
+        >
+          <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
+            <div className="col illustration-card">
+              <div className="row">
+                <a
+                  href="https://www.evenz.in/home"
+                  className="companyName"
+                  style={{ textDecoration: "none", color: "#538BF7" }}
+                >
+                  Evenz
+                </a>
+                <div className="welcome-message mb-5">
+                  Let's create your account.
+                </div>
+                <div className="login-illustration">
+                  <img alt="login-illustration" src={SignupPNG}></img>
                 </div>
               </div>
             </div>
           </div>
+          <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
+            <div className="col signin-form">
+              <div className="container">
+                <div className="row sign-in-heading px-2">
+                  Get Started absolutely free.
+                </div>
+                <div className="row sign-in-sub-heading px-2">
+                  Free forever. No credit card needed.
+                </div>
+                <div className="row d-flex flex-row justify-content-center px-2 mb-4">
+                  <button
+                    type="button"
+                    onClick={onClickHandle}
+                    className="btn btn-light py-2 px-2"
+                  >
+                    <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
+                      <img
+                        class=""
+                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                        alt="google-signin"
+                      />
+                      <div className="sign-in-with-google-text ms-4">
+                        Sign in with google
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                {/*  */}
+                <div
+                  className="row d-flex"
+                  style={{ alignItems: "center", marginBottom: "6%" }}
+                >
+                  <div className="col-5">
+                    <hr />
+                  </div>
+                  <div className="col-2 OR">OR</div>
+                  <div className="col-5">
+                    <hr />
+                  </div>
+                </div>
+                <form
+                
+                  className="ui form error"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
+                  <div className="row">
+                    <div className="col-6">
+                      <div class="form-group">
+                        <label
+                          for="firstName"
+                          className="form-label form-label-customized"
+                        >
+                          First Name
+                        </label>
+                        <Field
+                          type="text"
+                          classes="form-control"
+                          id="firstName"
+                          //value={this.state.firstName}
+                          name="firstName"
+                          ariadescribedby="Enter First Name "
+                          placeholder="John"
+                          component={renderInput}
+                          
+                          //required
+                          //onChange={this.onFirstNameChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="mb-3">
+                        <div class="form-group">
+                          <label
+                            for="lastName"
+                            className="form-label form-label-customized"
+                          >
+                            Last Name
+                          </label>
+                          <Field
+                            component={renderInput}
+                            type="text"
+                            classes="form-control"
+                            id="lastName"
+                            name="lastName"
+                            ariadescribedby="Enter Last Name"
+                            // value={this.state.lastName}
+                            placeholder="Doe"
+                            //required
+                            // onChange={this.onLastNameChange}
+                            
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row" style={{ marginBottom: "2%" }}>
+                    <div className="mb-3">
+                      <div class="form-group">
+                        <label
+                          for="emailAddress"
+                          className="form-label form-label-customized"
+                        >
+                          Email address
+                        </label>
+                        <Field
+                          type="email"
+                          classes="form-control"
+                          id="emailAddress"
+                          name="email"
+                          ariadescribedby="Enter Email Address"
+                          placeholder="Enter Email"
+                          component={renderInput}
+                          // value={this.state.email}
+                          // onChange={this.onEmailAddressChange}
+                          //required
+                         
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="row mb-3 d-flex"
+                    style={{ padding: "0 0%", alignItems: "center" }}
+                  >
+                    <div className="mb-3">
+                      <div class="form-group">
+                        <label
+                          for="password"
+                          className="form-label form-label-customized"
+                        >
+                          Password
+                        </label>
+                        <Field
+                          type="password"
+                          classes="form-control"
+                          id="password"
+                          name="password"
+                          ariadescribedby="emailHelp"
+                          placeholder="Enter email"
+                          component={renderInput}
+                         
+
+                          
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      <div className="form-check">
+                        <Field
+                          classes="form-check-input"
+                          type="checkbox"
+                          
+                          name="policySigned"
+                          required
+                          id="defaultCheck1"
+                          
+                          component={renderInputCheckbox}
+                         
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckChecked"
+                          style={{
+                            color: "grey",
+                            fontFamily: "Inter",
+                            fontSize: "14px",
+                          }}
+                        >
+                          By registering, I agree to Evenz{" "}
+                          <span
+                            className="text-link"
+                            style={{
+                              color: "#538BF7",
+                              textDecoration: "underline",
+                            }}
+                          >
+                            <Link
+                              to="/terms-of-service"
+                              style={{ textDecoration: "none" }}
+                            >
+                              {" "}
+                              Terms of Service
+                            </Link>
+                          </span>{" "}
+                          and{" "}
+                          <span
+                            className="text-link"
+                            style={{
+                              color: "#538BF7",
+                              textDecoration: "underline",
+                            }}
+                          >
+                            <Link
+                              to="/privacy-policy"
+                              style={{ textDecoration: "none" }}
+                            >
+                              Privacy Policy
+                            </Link>
+                          </span>
+                          .
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+
+                  <div
+                    className="row"
+                    style={{ padding: "0 2%", marginTop: "3%" }}
+                  >
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={signupClicked && formIsvalidated && !error}
+                    >
+                      <span className="btn-text">
+                        Register
+                        {signupClicked && formIsvalidated && !error ? (
+                          <div
+                            class="spinner-border text-light spinner-border-sm ms-3"
+                            role="status"
+                          >
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+                      </span>
+                    </button>
+                    <div
+                      className="col"
+                      style={{
+                        marginTop: "4%",
+                        padding: "0",
+                        fontFamily: "Inter",
+                        fontWeight: "500",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Already have an account?{" "}
+                      <Link
+                        to="/signin"
+                        style={{
+                          color: "#538BF7",
+                          textDecoration: "none",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Login
+                      </Link>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-      </>
-    );
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.firstName) {
+    errors.firstName = "required";
   }
-}
-export default connect(null, { signUp,googleLinkClicked })(Signup);
+  if (formValues.firstName && formValues.firstName.length > 10) {
+    errors.firstName = "max 10 characters allowed";
+  }
+  if (!formValues.lastName) {
+    errors.lastName = "required";
+  }
+  if (formValues.lastName && formValues.lastName.length > 10) {
+    errors.lastName = "max 10 characters allowed";
+  }
+
+  if (!formValues.email) {
+    errors.email = "email is required";
+  }
+
+  errors.email =
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+      ? "Invalid email address"
+      : undefined;
+  if (!formValues.password) {
+    errors.password = "password is required";
+  }
+  if (formValues.password&&formValues.password.length<8) {
+    errors.password = "password length must be greater than 8";
+  }
+  if(!formValues.policySigned)
+  {
+  errors.policySigned="required"
+
+  }
+
+
+
+  return errors;
+};
+
+export default reduxForm({
+  form: "signUpForm",
+
+  validate,
+})(Signup);
+

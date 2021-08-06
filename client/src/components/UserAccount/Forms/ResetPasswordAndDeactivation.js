@@ -4,6 +4,7 @@ import Ripple from "./../../ActiveStatusRipple";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch } from "react-redux";
 import { editUserPassword } from "../../../actions";
+import { Link } from "react-router-dom";
 const renderError = ({ touched, error }) => {
   if (touched && error) {
     return (
@@ -66,9 +67,12 @@ const ResetPasswordAndDeactivation = (props) => {
               <small
                 id="emailHelp"
                 class="form-text"
-                style={{ color: "#538BF7", cursor: "pointer" }}
+                style={{ color: "#538BF7", cursor: "pointer", fontWeight: "500", fontFamily: "Inter" }}
               >
+                <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+                
                 Forgot Password?
+                </Link>
               </small>
             </div>
 
