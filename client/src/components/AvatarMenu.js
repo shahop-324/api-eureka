@@ -61,7 +61,12 @@ const AvatarMenu = () => {
 
   const dispatch = useDispatch();
   const onClickLoggedOut = () => {
-    dispatch(signOut());
+    while (!window.localStorage.length === 0) {
+      window.localStorage.clear();
+    }
+    if (window.localStorage.length === 0) {
+      dispatch(signOut());
+    }
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -92,11 +97,15 @@ const AvatarMenu = () => {
   const renderCommunities = (communities, handleClose) => {
     return communities.map((community) => {
       return (
-
-        <div className="px-3 me-2 menulist-community-tab" style={{width: "100%"}} onClick={() => {
-          history.push(`/user/${user.userDetails._id}/community/overview/${community._id}`)
-        }}>
-
+        <div
+          className="px-3 me-2 menulist-community-tab"
+          style={{ width: "100%" }}
+          onClick={() => {
+            history.push(
+              `/user/${user.userDetails._id}/community/overview/${community._id}`
+            );
+          }}
+        >
           <div className="avatar-menu-community-tab d-flex flex-row align-items-center">
             <Avatar
               className={`me-4`}
@@ -107,7 +116,6 @@ const AvatarMenu = () => {
             <div className="avatar-menu-community-name">{community.name}</div>
           </div>
         </div>
-        
       );
     });
   };
@@ -131,7 +139,13 @@ const AvatarMenu = () => {
         </Button>
 
         <Popper
-          style={{ zIndex: 10000, textAlign: "center", marginTop: "20px", maxWidth: "250px", marginRight: "2.5rem" }}
+          style={{
+            zIndex: 10000,
+            textAlign: "center",
+            marginTop: "20px",
+            maxWidth: "250px",
+            marginRight: "2.5rem",
+          }}
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
@@ -157,39 +171,47 @@ const AvatarMenu = () => {
                     <div className="avatar-menu-group-heading px-3 pb-3 mt-2">
                       Account
                     </div>
-                    <MenuItem onClick={(event) => {
-                      dispatch(navigationIndex(0));
-                      history.push('/user/home');
-                      handleClose(event);
-                    }}>
+                    <MenuItem
+                      onClick={(event) => {
+                        dispatch(navigationIndex(0));
+                        history.push("/user/home");
+                        handleClose(event);
+                      }}
+                    >
                       <div className="avatar-menu-account-section-btns mb-2">
                         Home
                       </div>
                     </MenuItem>
-                    <MenuItem onClick={(event) => {
-                      dispatch(navigationIndex(3));
-                      history.push('/user/profile');
-                      handleClose(event);
-                    }}>
+                    <MenuItem
+                      onClick={(event) => {
+                        dispatch(navigationIndex(3));
+                        history.push("/user/profile");
+                        handleClose(event);
+                      }}
+                    >
                       <div className="avatar-menu-account-section-btns mb-2">
                         Profile
                       </div>
                     </MenuItem>
-                    
-                    <MenuItem onClick={(event) => {
-                      // dispatch(navigationIndex(3));
-                      history.push('/search-events');
-                      handleClose(event);
-                    }}>
+
+                    <MenuItem
+                      onClick={(event) => {
+                        // dispatch(navigationIndex(3));
+                        history.push("/search-events");
+                        handleClose(event);
+                      }}
+                    >
                       <div className="avatar-menu-account-section-btns mb-2">
                         Explore Events
                       </div>
                     </MenuItem>
-                    <MenuItem onClick={(event) => {
-                      // dispatch(navigationIndex(3));
-                      // history.push('/user/profile');
-                      handleClose(event);
-                    }}>
+                    <MenuItem
+                      onClick={(event) => {
+                        // dispatch(navigationIndex(3));
+                        // history.push('/user/profile');
+                        handleClose(event);
+                      }}
+                    >
                       <div className="avatar-menu-account-section-btns mb-2">
                         Announcements
                       </div>
@@ -199,11 +221,13 @@ const AvatarMenu = () => {
                     <div className="avatar-menu-group-heading px-3 pb-2">
                       Switch to A Community ({communities.length})
                     </div>
-                    <div className="communities-list-error" style={{maxHeight: "200px", overflow: "scroll"}}>
-
-                    {renderCommunities(communities, handleClose)}
+                    <div
+                      className="communities-list-error"
+                      style={{ maxHeight: "200px", overflow: "scroll" }}
+                    >
+                      {renderCommunities(communities, handleClose)}
                     </div>
-                    
+
                     <hr className="px-2" />
                     <button
                       onClick={onClickLoggedOut}
