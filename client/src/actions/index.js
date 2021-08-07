@@ -142,7 +142,13 @@ export const createCommunity =
             }
           );
           if (!res.ok) {
-            throw new Error("creating community failed");
+            if (!res.message) {
+              
+
+              throw new Error("creating community failed");
+            } else {
+              throw new Error(res.message);
+            }
           }
           res = await res.json();
           return res;
@@ -184,9 +190,15 @@ export const createCommunity =
               },
             }
           );
+
           if (!res.ok) {
-            throw new Error("creating community failed");
+            if (!res.message) {
+              throw new Error("creating community failed");
+            } else {
+              throw new Error(res.message);
+            }
           }
+
           res = await res.json();
           return res;
         };
@@ -232,8 +244,13 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
         },
       }
     );
+
     if (!res.ok) {
-      throw new Error("Signing in the community failed");
+      if (!res.message) {
+        throw new Error("Signing in the community failed");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -346,33 +363,11 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
     );
 
     console.log(res);
-
     if (!res.ok) {
-      if (res.status === 400) {
-        // The request was invalid.
-
-        throw new Error(400);
-      } else if (res.status === 401) {
-        // Redirect to Sign in (Unauthorized)
-        history.push("/signin");
-        throw new Error(401);
-      } else if (res.status === 403) {
-        // Forbidden
-        throw new Error(403);
-      } else if (res.status === 404) {
-        // NOT FOUND
-        throw new Error(404);
-      } else if (res.status === 405) {
-        // METHOD NOT ALLOWED
-
-        throw new Error(405);
-      } else if (res.status === 409) {
-        // Conflict
-
-        throw new Error(409);
-      } else if (res.status === 500) {
-        throw new Error(500);
-        // Internal Server Error
+      if (!res.message) {
+        throw new Error("fetching user data failed");
+      } else {
+        throw new Error(res.message);
       }
     }
 
@@ -420,11 +415,15 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
       }
     );
     console.log(res);
+
     if (!res.ok) {
-      if (res.status === 500) {
-        throw new Error(500);
+      if (!res.message) {
+        throw new Error("fetching user registrations failed");
+      } else {
+        throw new Error(res.message);
       }
     }
+
     res = await res.json();
     return res;
   };
@@ -821,7 +820,11 @@ export const fetchSpeakers =
       });
 
       if (!res.ok) {
-        throw new Error("Something went wrong");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
 
       res = await res.json();
@@ -1120,7 +1123,11 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
     });
 
     if (!res.ok) {
-      throw new Error("Something went wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -1423,8 +1430,13 @@ export const fetchSponsors =
         },
       });
       if (!res.ok) {
-        throw new Error("Something went wrong");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+
       res = await res.json();
       console.log(res);
       return res;
@@ -1611,7 +1623,11 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
     });
 
     if (!res.ok) {
-      throw new Error("Something went wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -1934,7 +1950,11 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       );
 
       if (!res.ok) {
-        throw new Error("Editing user details failed!");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
 
       const result = await res.json();
@@ -1966,7 +1986,11 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       );
 
       if (!res.ok) {
-        throw new Error("Editing user details failed!");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
 
       const result = await res.json();
@@ -2162,7 +2186,11 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
     });
 
     if (!res.ok) {
-      throw new Error("Something went wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -2396,7 +2424,11 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
     });
 
     if (!res.ok) {
-      throw new Error("");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -2499,7 +2531,11 @@ export const fetchCoupons = () => async (dispatch, getState) => {
     );
 
     if (!res.ok) {
-      throw new Error("Something Went Wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
 
     res = await res.json();
@@ -2756,8 +2792,13 @@ export const fetchQueriesForCommunity =
       });
 
       if (!res.ok) {
-        throw new Error("Something went wrong");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+
       res = await res.json();
       return res;
     };
@@ -2901,7 +2942,11 @@ export const fetchRegistrationsOfParticularCommunity =
       );
 
       if (!res.ok) {
-        throw new Error("Something went wrong");
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
 
       res = await res.json();
@@ -3094,8 +3139,13 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
       }
     );
     if (!res.ok) {
-      throw new Error("Something went wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
+
     res = await res.json();
     return res;
   };
@@ -3128,65 +3178,6 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
 export const channelJoinedTracker = () => async (dispatch, getState) => {
   dispatch(RTMActions.joinChannelTracker());
 };
-
-// export const joiningChannel=(channel)=>async(dispatch,getState)=>{
-
-//     // dispatch(RTMActions.joinChannelTracker());
-
-//          try{
-
-//          await channel.join().then(()=> dispatch(RTMActions.joinChannelTracker()));
-
-//          }
-//          catch(err)
-//          {
-
-//            dispatch(RTMActions.hasError(err.message));
-
-//          }
-// }
-// export const connectRTMServer=()=>async(dispatch,getState)=>{
-
-//     dispatch(RTMActions.startLoading());
-
-// const connectToRTMServer=async()=> {
-
-//   let res=await fetch(
-//     "https://damp-taiga-71545.herokuapp.com/eureka/v1/getRTMToken",
-//     {
-//       method: "POST",
-//       body: JSON.stringify({
-//         eventId: eventId,
-//       }),
-
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${getState().auth.token}`,
-//       },
-//     }
-//   );
-//   if(!res.ok)
-//   {
-//     throw new Error("Something went wrong")
-//   }
-//   res = await res.json();
-//   return res;
-// }
-// try{
-//    let res = await  fetchingRTMToken();
-//   console.log(res);
-//    dispatch(RTMActions.fetchRTMToken({
-//      token:res.token
-
-//    }))
-
-// }
-// catch(err)
-// {
-//   dispatch(RTMActions.hasError(err.message))
-// }
-
-// }
 
 export const connectToRTMServer = (client) => async (dispatch, getState) => {
   dispatch(
@@ -3259,8 +3250,13 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
       }
     );
     if (!res.ok) {
-      throw new Error("Something went wrong");
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
     }
+
     res = await res.json();
     return res;
   };

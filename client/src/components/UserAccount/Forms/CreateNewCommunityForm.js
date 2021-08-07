@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-
+import { useDispatch } from "react-redux";
+import { reset } from "redux-form";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -12,7 +13,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 
 import { createCommunity, resetCommunityError } from "../../../actions";
 import { IconButton } from "@material-ui/core";
@@ -217,7 +218,7 @@ const CreateNewCommunityForm = (props) => {
 
   console.log(file);
   console.log(fileToPreview);
-
+  // const dispatch=useDispatch();
   return (
     <>
       <Dialog
@@ -241,6 +242,12 @@ const CreateNewCommunityForm = (props) => {
               <div
                 className="overlay-form-close-button"
                 onClick={props.closeHandler}
+                // onClick={(props)=>{
+                //   props.closeHandler,
+                //   dispatch(reset(form:"newCreatedCommunity")),
+
+                // }
+                // }
               >
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
@@ -416,4 +423,5 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "newCreatedCommunity",
   validate,
+  destoryOnUnmount: true,
 })(CreateNewCommunityForm);
