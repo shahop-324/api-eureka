@@ -9,7 +9,7 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import SessionDetailCardsList from "../HelperComponents/SessionDetailCardsList";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { errorTrackerForFetchSessionsForUser, fetchSessions, fetchSessionsForUser } from "../../../actions";
+import { errorTrackerForFetchSessionsForUser, fetchSessionsForUser } from "../../../actions";
 
 import socket from './../service/socket';
 import Loader from "../../Loader";

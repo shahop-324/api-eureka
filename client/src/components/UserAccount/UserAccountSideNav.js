@@ -4,7 +4,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import { communitySignIn, errorTrackerForCommunitySignIn, errorTrackerForPersonalData, fetchCommunity } from "../../actions";
+import { communitySignIn, errorTrackerForCommunitySignIn, errorTrackerForPersonalData } from "../../actions";
 import Loader from "../Loader";
 
 const CommunityProfileTab = (props) => {
