@@ -86,7 +86,6 @@ const EventManagement = () => {
   const dispatch = useDispatch();
   const communityId = params.id;
  
-
   useEffect(() => {
     console.log(term);
 

@@ -21,7 +21,7 @@ const Topnav = () => {
   return (
     <div className="row topnav-container px-3">
       <div className="col-6 left">
-        <div className="brand-logo-text">
+        <div className="brand-logo-text" style={{fontFamily: "Inter"}}>
           Evenz <span>Communities</span>
         </div>
       </div>

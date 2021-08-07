@@ -7,6 +7,38 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in transparent */
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.not-enough-data {
+  height: auto;
+  max-width: 300px;
+  min-width: 200px;
+  min-height: 150px;
+  border-radius: 5px;
+  background-color: #eceff5;
+  margin: 0 auto;
+
+  margin-top: 10%;
+}
+
+.not-enough-data-text {
+  font-family: "Ubuntu";
+  font-size: 0.95rem;
+  color: #444444;
+  font-weight: 400;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

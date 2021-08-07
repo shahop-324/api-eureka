@@ -58,8 +58,6 @@ exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
       },
     },
     async (err, order) => {
-      // console.log("newOrder", newOrder);
-
       console.log("userId", userId);
       console.log("ticketId", ticketId);
       console.log("eventId", eventId);
@@ -128,7 +126,7 @@ exports.createCommunityBillingPlanOrder = catchAsync(async (req, res, next) => {
       //   created_for_ticket: ticketId,
       //   created_at: Date.now(),
       // });
-console.log(err);
+      console.log(err);
       console.log(order);
 
       res.status(200).json({
@@ -171,6 +169,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
     console.log("Transaction Status", paymentEntity.status);
     console.log("Transaction Description", paymentEntity.description);
     console.log("Transaction Created At", paymentEntity.created_at);
+
+    let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 
     try {
       // 1.) Created a New Event Transaction Doc and saved its reference in user, event and community documents.
@@ -320,6 +320,50 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
       communityGettingEventTransaction.analytics.totalRegistrationsToday =
         communityGettingEventTransaction.analytics.totalRegistrationsToday + 1;
+
+      communityGettingEventTransaction.analytics.totalRevenue =
+        communityGettingEventTransaction.analytics.totalRevenue +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenuePreviousMonth =
+        communityGettingEventTransaction.analytics.revenuePreviousMonth +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueThisMonth =
+        communityGettingEventTransaction.analytics.revenueThisMonth +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenuePreviousDay =
+        communityGettingEventTransaction.analytics.revenuePreviousDay +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueThisDay =
+        communityGettingEventTransaction.analytics.revenueThisDay +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenuePreviousYear =
+        communityGettingEventTransaction.analytics.revenuePreviousYear +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueThisYear =
+        communityGettingEventTransaction.analytics.revenueThisYear +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenuePreviousWeek =
+        communityGettingEventTransaction.analytics.revenuePreviousWeek +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueThisWeek =
+        communityGettingEventTransaction.analytics.revenueThisWeek +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueYesterday =
+        communityGettingEventTransaction.analytics.revenueYesterday +
+        communityCredit;
+
+      communityGettingEventTransaction.analytics.revenueToday =
+        communityGettingEventTransaction.analytics.revenueToday +
+        communityCredit;
 
       // 6.) Update Corresponding Ticket document
 

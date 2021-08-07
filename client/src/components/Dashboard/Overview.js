@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -17,9 +18,15 @@ import EventDetailCard from "./HelperComponent/EventDetailsCard";
 import history from "../../history";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
-import { fetchCommunity} from "../../actions/index";
+import {
+  fetchCommunity,
+  fetchEventsOfParticularCommunity,
+} from "../../actions/index";
 import { useSelector } from "react-redux";
 import AddNewMember from "./FormComponents/AddNewMember";
+import Doughnut from "./ChartComponents/Doughnut";
+import NotEnoughData from "../NotEnoughData";
+
 const options = [
   { value: "Today", label: "Today" },
   { value: "This Week", label: "This Week" },
@@ -27,8 +34,6 @@ const options = [
   { value: "This Year", label: "This Year" },
   { value: "Lifetime", label: "Lifetime" },
 ];
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,14 +68,75 @@ const styles = {
 };
 
 const Overview = () => {
+  const [term, setTerm] = React.useState("");
+
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
   useEffect(() => {
     dispatch(fetchCommunity(id));
   }, [dispatch, id]);
-      
- 
+
+  useEffect(() => {
+    console.log(term);
+
+    const timeoutId = setTimeout(() => {
+      dispatch(fetchEventsOfParticularCommunity(term));
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [dispatch, term]);
+
+  const { analytics, superAdminImage, superAdminName } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  const { events, isLoading, error } = useSelector((state) => state.event);
+
+  const communityEvents = events
+    .slice(0)
+    .reverse()
+    .map((event) => event);
+
+  const length = communityEvents.length;
+  let j;
+  if (length >= 3) {
+    j = 3;
+  } else if (length >= 2) {
+    j = 2;
+  } else if (length >= 1) {
+    j = 1;
+  } else {
+    j = 0;
+  }
+
+  const renderRecentEvents = (communityEvents) => {
+    let recentEvents = [];
+
+    for (let i = 0; i < j; i++) {
+      const event = communityEvents[i];
+      recentEvents.push(
+        <EventDetailCard
+          key={event.id}
+          imgUrl={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
+          shortDescription={event.shortDescription}
+          publishedStatus={event.publishedStatus}
+          views={event.views}
+          registrations={event.registrationsRecieved}
+          status={event.status}
+          visibility={event.visibility}
+          eventName={event.eventName}
+          communityId={event.communityId}
+          id={event.id}
+        />
+      );
+    }
+
+    return recentEvents;
+  };
+
   const classes = useStyles();
 
   const [openAddToTeamDialog, setOpenAddToTeamDialog] = React.useState(false);
@@ -82,24 +148,21 @@ const Overview = () => {
     setOpenAddToTeamDialog(false);
   };
 
-
-
-  const community= useSelector((state)=>{
-
-   return state.community.communities.find((community) => {
+  const community = useSelector((state) => {
+    return state.community.communities.find((community) => {
       return community.id === id;
-    })
+    });
+  });
 
-  })
-  
-  console.log(community)
-
-
+  console.log(community);
   return (
     <>
       <div className="me-3">
         {/* Secondary Heading with drop selector */}
-        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4" style={{minWidth: "1138px"}}>
+        <div
+          className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4"
+          style={{ minWidth: "1138px" }}
+        >
           {/* Secondary Heading */}
           <div className="sec-heading-text">Overview</div>
           {/* Drop Selector */}
@@ -122,8 +185,10 @@ const Overview = () => {
                 <div>
                   <div className="number-card-heading mb-2">Registrations</div>
                   <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
-                    <div className="num-text me-3">10,284</div>
-                    <div className="num-percent increment">+224%</div>
+                    <div className="num-text me-3">
+                      {analytics.totalRegistrations}
+                    </div>
+                    <div className="num-percent increment">+100%</div>
                   </div>
                 </div>
               </div>
@@ -132,8 +197,10 @@ const Overview = () => {
                 <div>
                   <div className="number-card-heading mb-2">Revenue</div>
                   <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
-                    <div className="num-text me-3">$6,284</div>
-                    <div className="num-percent increment">+224%</div>
+                    <div className="num-text me-3">
+                      INR {analytics.totalRevenue}
+                    </div>
+                    <div className="num-percent increment">+0%</div>
                   </div>
                 </div>
               </div>
@@ -142,8 +209,8 @@ const Overview = () => {
                 <div>
                   <div className="number-card-heading mb-2">Followers</div>
                   <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
-                    <div className="num-text me-3">2.8M</div>
-                    <div className="num-percent decrement">-10%</div>
+                    <div className="num-text me-3">0</div>
+                    <div className="num-percent decrement">+0%</div>
                   </div>
                 </div>
               </div>
@@ -155,7 +222,8 @@ const Overview = () => {
                 Revenue
               </div>
               <div className="spline-container">
-                <SplineChart />
+                {/* // TODO Not Enough Data Available for now and then fix it <SplineChart /> */}
+                <NotEnoughData />
               </div>
             </div>
 
@@ -164,13 +232,13 @@ const Overview = () => {
               {/* Radial Indicator 1 */}
               <div className="registrations-in-period p-0 px-4 d-flex flex-row align-items-center">
                 <div className="radial-chart-container me-3">
-                  <div className="percentage-label">80%</div>
-                  <RadialChart value="80" />
+                  <div className="percentage-label">0%</div>
+                  <RadialChart value="0" />
                 </div>
 
                 <div className="limit-value-and-heading-conatiner">
                   <div className="consumed-value">
-                    1860{" "}
+                    0{" "}
                     <span className="limit-value-small-text">
                       {" "}
                       / 3k Available
@@ -183,13 +251,13 @@ const Overview = () => {
               {/* Radial Indicator 2 */}
               <div className="streaming-hours p-0 px-4 d-flex flex-row align-items-center">
                 <div className="radial-chart-container me-3">
-                  <div className="percentage-label">30%</div>
-                  <RadialChart value="30" />
+                  <div className="percentage-label">0%</div>
+                  <RadialChart value="0" />
                 </div>
 
                 <div className="limit-value-and-heading-conatiner">
                   <div className="consumed-value">
-                    21 hrs{" "}
+                    0 hrs{" "}
                     <span className="limit-value-small-text">
                       {" "}
                       / 72 Available
@@ -206,7 +274,8 @@ const Overview = () => {
                 Registration's Map
               </div>
               <div className="world-map-chart">
-                <WorldMapChart />
+                {/* // TODO Not enough data available (Make it properly) <WorldMapChart /> */}
+                <NotEnoughData />
               </div>
             </div>
           </div>
@@ -214,331 +283,193 @@ const Overview = () => {
           {/* Overview Right Grid */}
           <div className="overview-content-right">
             {/* Team Overview Card */}
-            
+
             <div className="team-overview-and-top-events-row-container mt-5">
-            <div className="team-overview mb-4 py-4">
-              {/* Team Overview Card Heading and See all link */}
-              <div className="d-flex flex-row justify-content-between px-4 mb-4">
-                <div className="team-overview-card-heading">Your Team (5)</div>
-                <div
-                  className="see-all-members"
-                  onClick={() => history.push("/community/team-management")}
-                >
-                  See all
-                </div>
-              </div>
-              <Divider />
-
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                <Avatar
-                  alt="Travis Howard"
-                  src={Faker.image.avatar()}
-                  className={classes.large}
-                />
-                <div className="team-member-name">Dean Clem</div>
-                <div className="team-member-permission-chip p-2">
-                  Super Admin
-                </div>
-              </div>
-              <Divider />
-
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                <Avatar
-                  alt="Travis Howard"
-                  src={Faker.image.avatar()}
-                  className={classes.large}
-                />
-                <div className="team-member-name">Dean Clem</div>
-              </div>
-              <Divider />
-
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                <Avatar
-                  alt="Travis Howard"
-                  src={Faker.image.avatar()}
-                  className={classes.large}
-                />
-                <div className="team-member-name">Dean Clem</div>
-              </div>
-              <Divider />
-
-              {/* Add New Member Button */}
-              <div className="mx-4">
-                <button
-                  className="btn btn-outline-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  onClick={handleAddNewMember}
-                >
-                  Add Member
-                </button>
-              </div>
-
-              {/* Plan Members Limit Message */}
-              <div className="add-more-info mt-3 mx-4">
-                You can onboard 2 more members.
-              </div>
-            </div>
-            {/* Top Events in this Period card */}
-            <div className="top-events-card">
-              {/* Top Events Heading */}
-              <div className="chart-heading-registrations mb-3 px-4 pt-4">
-                Top Events
-              </div>
-              {/* Donughnut Chart */}
-              <div className="d-flex flex-row justify-content-center align-items-center" style={{width: "100%"}}>
-                
-              <div className="center-label-and-doughnut-wrapper">
-                <div className="center-label-wrapper">
-                  12 <br />{" "}
-                  <span
-                    style={{
-                      color: "#7D9EB5",
-                      fontSize: "18px",
-                      lineHeight: "17px",
-                      letterSpacing: "0.6px",
-                    }}
-                  >
-                    {" "}
-                    Events <br /> Hosted
-                  </span>
-                </div>
-                <div className="donut-chart-wrapper">
-                  <DoughnutChart />
-                </div>
-              </div>
-              </div>
-
-              {/* Doughnut Chart Legends */}
-              <div className="custom-doughnut-datalabels-wrapper">
-                {/* Doughnut Chart Datalabel Row 1 */}
-                <div className="custom-doughnut-datalabel-row">
+              <div className="team-overview mb-4 py-4">
+                {/* Team Overview Card Heading and See all link */}
+                <div className="d-flex flex-row justify-content-between px-4 mb-4">
+                  <div className="team-overview-card-heading">
+                    Your Team (5)
+                  </div>
                   <div
-                    className="color-label"
-                    style={{ background: "#11A1FD" }}
-                  ></div>
-                  <div className="text-label">E - Summit 21'</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#11A1FD" }}
+                    className="see-all-members"
+                    onClick={() => history.push("/community/team-management")}
                   >
-                    55%
+                    See all
                   </div>
                 </div>
+                <Divider />
 
-                {/* Doughnut Chart Datalabel Row 2 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#A6CEE3" }}
-                  ></div>
-                  <div className="text-label">Eureka Road to enterprise</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#A6CEE3" }}
-                  >
-                    25%
+                {/* Team Overview Member Card */}
+                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                  <Avatar
+                    alt="Travis Howard"
+                    src={Faker.image.avatar()}
+                    className={classes.large}
+                  />
+                  <div className="team-member-name">Dean Clem</div>
+                  <div className="team-member-permission-chip p-2">
+                    Super Admin
                   </div>
                 </div>
-                {/* Doughnut Chart Datalabel Row 3 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#B2DF8A" }}
-                  ></div>
-                  <div className="text-label">ACT - A creative TechFest</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#B2DF8A" }}
-                  >
-                    15%
-                  </div>
+                <Divider />
+
+                {/* Team Overview Member Card */}
+                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                  <Avatar
+                    alt="Travis Howard"
+                    src={Faker.image.avatar()}
+                    className={classes.large}
+                  />
+                  <div className="team-member-name">Dean Clem</div>
                 </div>
-                {/* Doughnut Chart Datalabel Row 4 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#33A02C" }}
-                  ></div>
-                  <div className="text-label">Others</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#33A02C" }}
+                <Divider />
+
+                {/* Team Overview Member Card */}
+                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                  <Avatar
+                    alt="Travis Howard"
+                    src={Faker.image.avatar()}
+                    className={classes.large}
+                  />
+                  <div className="team-member-name">Dean Clem</div>
+                </div>
+                <Divider />
+
+                {/* Add New Member Button */}
+                <div className="mx-4">
+                  <button
+                    className="btn btn-outline-primary btn-outline-text"
+                    style={{ width: "100%" }}
+                    onClick={handleAddNewMember}
                   >
-                    5%
-                  </div>
+                    Add Member
+                  </button>
+                </div>
+
+                {/* Plan Members Limit Message */}
+                <div className="add-more-info mt-3 mx-4">
+                  You can onboard 2 more members.
                 </div>
               </div>
-            </div>
-
-
+              {/* Top Events in this Period card */}
+              <div className="top-events-card">
+                {/* Top Events Heading */}
+                <div className="chart-heading-registrations mb-3 px-4 pt-4">
+                  Top Events
+                </div>
+                <div className="py-5 my-5">
+                  <NotEnoughData />
+                </div>
+                {/* // TODO Switch on this doughnut <Doughnut /> */}
+              </div>
             </div>
             <div className="team-and-top-events-bg-container">
+              <div className="team-overview mb-4 py-4">
+                {/* Team Overview Card Heading and See all link */}
+                <div className="d-flex flex-row justify-content-between px-4 mb-4">
+                  <div
+                    className="team-overview-card-heading"
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    Your Team (1)
+                  </div>
+                  <div
+                    className="see-all-members"
+                    onClick={() => history.push("/community/team-management")}
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    See all
+                  </div>
+                </div>
+                <Divider />
 
-            <div className="team-overview mb-4 py-4">
-              {/* Team Overview Card Heading and See all link */}
-              <div className="d-flex flex-row justify-content-between px-4 mb-4">
-                <div className="team-overview-card-heading">Your Team (5)</div>
+                {/* Team Overview Member Card */}
                 <div
-                  className="see-all-members"
-                  onClick={() => history.push("/community/team-management")}
+                  className="team-members-overview-list-container"
+                  style={{ overflowY: "scroll", height: "84%" }}
                 >
-                  See all
+                  <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                    <Avatar
+                      alt="Travis Howard"
+                      variant="rounded"
+                      src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`}
+                      className={classes.large}
+                    />
+                    <div
+                      className="team-member-name"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      {superAdminName}
+                    </div>
+                    <div
+                      className="team-member-permission-chip p-2"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      Super Admin
+                    </div>
+                  </div>
+                  <Divider />
                 </div>
-              </div>
-              <Divider />
 
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                {/* Team Overview Member Card */}
+                {/* <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
                 <Avatar
                   alt="Travis Howard"
                   src={Faker.image.avatar()}
                   className={classes.large}
                 />
                 <div className="team-member-name">Dean Clem</div>
-                <div className="team-member-permission-chip p-2">
-                  Super Admin
+              </div>
+              <Divider /> */}
+
+                {/* Team Overview Member Card */}
+                {/* <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+              </div>
+              <Divider /> */}
+
+                {/* Add New Member Button */}
+                <div className="mx-4">
+                  <button
+                    className="btn btn-outline-primary btn-outline-text"
+                    style={{ width: "100%" }}
+                    onClick={handleAddNewMember}
+                  >
+                    Add Member
+                  </button>
                 </div>
-              </div>
-              <Divider />
 
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                <Avatar
-                  alt="Travis Howard"
-                  src={Faker.image.avatar()}
-                  className={classes.large}
-                />
-                <div className="team-member-name">Dean Clem</div>
-              </div>
-              <Divider />
-
-              {/* Team Overview Member Card */}
-              <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                <Avatar
-                  alt="Travis Howard"
-                  src={Faker.image.avatar()}
-                  className={classes.large}
-                />
-                <div className="team-member-name">Dean Clem</div>
-              </div>
-              <Divider />
-
-              {/* Add New Member Button */}
-              <div className="mx-4">
-                <button
-                  className="btn btn-outline-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  onClick={handleAddNewMember}
-                >
-                  Add Member
-                </button>
-              </div>
-
-              {/* Plan Members Limit Message */}
-              <div className="add-more-info mt-3 mx-4">
+                {/* Plan Members Limit Message */}
+                {/* <div className="add-more-info mt-3 mx-4">
                 You can onboard 2 more members.
+              </div> */}
               </div>
-            </div>
-            {/* Top Events in this Period card */}
-            <div className="top-events-card">
-              {/* Top Events Heading */}
-              <div className="chart-heading-registrations mb-3 px-4 pt-4">
-                Top Events
-              </div>
-              {/* Donughnut Chart */}
-              <div className="d-flex flex-row justify-content-center ">
-
-              <div className="center-label-and-doughnut-wrapper ">
-                <div className="center-label-wrapper">
-                  12 <br />{" "}
-                  <span
-                    style={{
-                      color: "#7D9EB5",
-                      fontSize: "18px",
-                      lineHeight: "17px",
-                      letterSpacing: "0.6px",
-                    }}
-                  >
-                    {" "}
-                    Events <br /> Hosted
-                  </span>
+              {/* Top Events in this Period card */}
+              <div className="top-events-card">
+                {/* Top Events Heading */}
+                <div className="chart-heading-registrations mb-3 px-4 pt-4">
+                  Top Events
                 </div>
-                <div className="donut-chart-wrapper">
-                  <DoughnutChart />
+                {/* // TODO Switch on this doughnut <Doughnut /> */}
+                <div className="py-5 my-5">
+                  <NotEnoughData />
                 </div>
               </div>
-              </div>
-
-              {/* Doughnut Chart Legends */}
-              <div className="custom-doughnut-datalabels-wrapper">
-                {/* Doughnut Chart Datalabel Row 1 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#11A1FD" }}
-                  ></div>
-                  <div className="text-label">E - Summit 21'</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#11A1FD" }}
-                  >
-                    55%
-                  </div>
-                </div>
-
-                {/* Doughnut Chart Datalabel Row 2 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#A6CEE3" }}
-                  ></div>
-                  <div className="text-label">Eureka Road to enterprise</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#A6CEE3" }}
-                  >
-                    25%
-                  </div>
-                </div>
-                {/* Doughnut Chart Datalabel Row 3 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#B2DF8A" }}
-                  ></div>
-                  <div className="text-label">ACT - A creative TechFest</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#B2DF8A" }}
-                  >
-                    15%
-                  </div>
-                </div>
-                {/* Doughnut Chart Datalabel Row 4 */}
-                <div className="custom-doughnut-datalabel-row">
-                  <div
-                    className="color-label"
-                    style={{ background: "#33A02C" }}
-                  ></div>
-                  <div className="text-label">Others</div>
-                  <div
-                    className="percentage-label-doughnut"
-                    style={{ color: "#33A02C" }}
-                  >
-                    5%
-                  </div>
-                </div>
-              </div>
-            </div>
             </div>
           </div>
         </div>
 
         {/* Recent Events Data Table Grid */}
-        <div className="recent-events-data-grid mx-3 mb-4" style={{minWidth: "1138px"}}>
+        <div
+          className="recent-events-data-grid mx-3 mb-4"
+          style={{ minWidth: "1138px" }}
+        >
           {/* Recent Events Heading */}
           <div className="chart-heading-registrations mb-3 px-4 pt-4">
             Recent Events
@@ -552,11 +483,7 @@ const Overview = () => {
             <Divider />
           </div>
           {/* Data Table Events Detail Cards Wrapper */}
-          <div>
-            <EventDetailCard />
-            <EventDetailCard />
-            <EventDetailCard />
-          </div>
+          <div>{renderRecentEvents(communityEvents)}</div>
         </div>
         {/* Add New Member Dialog Box ---- This Needs to be refactored into a single component with it's own open / close state. */}
         <AddNewMember

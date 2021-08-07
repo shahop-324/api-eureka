@@ -546,7 +546,8 @@ $font-family: 'Inter';
 
   .revenue-chart-container,
   .registrations-map-chart-container {
-    height: 370px;
+    height: auto;
+    min-height: 420px;
   }
 
   .top-events-card {
@@ -556,16 +557,20 @@ $font-family: 'Inter';
   .center-label-and-doughnut-wrapper {
     width: 65%;
     max-width: 350px;
-
     margin-bottom: 1rem;
   }
 
   .team-and-top-events-bg-container {
     display: none;
   }
+
+  .team-overview-and-top-events-row-container {
+    margin-top: 0 !important;
+  }
 }
 @media only screen and (min-width: '1480px') {
   .team-overview-and-top-events-row-container {
     display: none;
+    margin-top: 0 !important;
   }
 }

@@ -256,11 +256,12 @@ const communitySchema = new mongoose.Schema(
         default: 0,
       },
 
-      revenueThisMonth: {
+      totalRevenue: {
         type: Number,
         default: 0,
       },
-      totalRevenue: {
+
+      revenueThisMonth: {
         type: Number,
         default: 0,
       },
@@ -268,7 +269,7 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-      revenueThisMonth: {
+      revenueThisDay: {
         type: Number,
         default: 0,
       },
@@ -276,17 +277,27 @@ const communitySchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-
-      revenueThisDay: {
-        type: Number,
-        default: 0,
-      },
       revenuePreviousYear: {
         type: Number,
         default: 0,
       },
-
       revenueThisYear: {
+        type: Number,
+        default: 0,
+      },
+      revenuePreviousWeek: {
+        type: Number,
+        default: 0,
+      },
+      revenueThisWeek: {
+        type: Number,
+        default: 0,
+      },
+      revenueYesterday: {
+        type: Number,
+        default: 0,
+      },
+      revenueToday: {
         type: Number,
         default: 0,
       },
