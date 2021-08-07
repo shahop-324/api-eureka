@@ -6,46 +6,17 @@ import Conference from "./../../../assets/images/conference.jpg";
 import OnlineTraining from "./../../../assets/images/OnlineTraining.png";
 import HappyHours from "./../../../assets/images/happyHours.jpg";
 import TradeShow from "./../../../assets/images/tradeShow.png";
-
-
-
+import TownHall from "./../../../assets/images/townHall.png";
+import YogaTraining from "./../../../assets/images/YogaTraining.png";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
 import CancelIcon from "@material-ui/icons/Cancel";
+import PreFooter from "../../PreFooter";
 
 
 
-class PreFooter extends React.Component {
-  render() {
-    return (
-      <div className="row pre-footer">
-        <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
-          <div className="col-1 col-xl-2"></div>
-          <div className="col-10 col-xl-8">
-            <div className="pre-footer-hero-text">
-              Amaze Your Audience with Your Next-Gen Virtual Event.
-            </div>
-            <div className="pre-footer-sub-hero-text">
-              Memorable events don’t just happen. They happen to be our
-              business.
-            </div>
-            <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
-              <button type="button" class="btn btn-light pre-footer-btn-light">
-                Host a free event
-              </button>
-            </div>
-          </div>
-          <div className="col-1 col-xl-2"></div>
-        </div>
-        <div
-          className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
-          style={{ maxHeight: "50vh" }}
-        ></div>
-      </div>
-    );
-  }
-}
+
 
 const UseCases = () => {
   const [hambergerOpen, setHambergerOpen] = useState(false);
@@ -147,7 +118,7 @@ const UseCases = () => {
             <div className="pricing-heading-primary mt-5 mb-4">
               How people use <span color="#ffffff">Evenz</span>
             </div>
-            <div className="pricing-heading-secondary mb-4">
+            <div className="pricing-heading-secondary mb-4 px-4">
               See how you and your community can get most out of Evenz.
             </div>
           <div
@@ -173,23 +144,24 @@ const UseCases = () => {
             style={{ height: "auto", alignItems: "center" }}
           >
             <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4">
+              <div className="section-heading-primary mb-4" style={{color: "#117380", fontWeight: "700"}}>
                 Conferences
               </div>
 
-              <div className="home-text-description">
+              <div className="home-text-description my-4">
                 Evenz is designed to smoothly create, manage and Host memorable
                 and most interactive event, no matter whatever Scale it is.
               </div>
 
-              <div className="action-btn-home">
+              <div className="action-btn-home pt-5">
                 <button
                   type="button"
-                  className="btn btn-light btn-outline-text px-3 py-2 me-3"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
                     maxWidth: "200px",
                     boxShadow:
                       "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
                   }}
                 >
                   Sign up today
@@ -231,7 +203,7 @@ const UseCases = () => {
                 />
               </div>
               <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div className="section-heading-primary pb-2">
+                <div className="section-heading-primary pb-2" style={{color: "#A313B6", fontWeight: "700"}}>
                   Online Workshops & Training sessions
                 </div>
 
@@ -242,17 +214,18 @@ const UseCases = () => {
                 </div>
 
                 <div className="action-btn-home py-3">
-                  <button
-                    type="button"
-                    className="btn btn-light btn-outline-text px-3 py-2 me-3"
-                    style={{
-                      maxWidth: "200px",
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
-                    }}
-                  >
-                    Sign up today
-                  </button>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
+                  style={{
+                    maxWidth: "200px",
+                    boxShadow:
+                      "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
+                  }}
+                >
+                  Sign up today
+                </button>
                 </div>
               </div>
 
@@ -269,7 +242,7 @@ const UseCases = () => {
             style={{ height: "auto", alignItems: "center" }}
           >
             <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4">
+              <div className="section-heading-primary mb-4" style={{color: "#807813", fontWeight: "700"}}>
                 Happy Hours
               </div>
 
@@ -278,14 +251,15 @@ const UseCases = () => {
                 and most interactive event, no matter whatever Scale it is.
               </div>
 
-              <div className="action-btn-home">
-                <button
+              <div className="action-btn-home py-5">
+              <button
                   type="button"
-                  className="btn btn-light btn-outline-text px-3 py-2 me-3"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
                     maxWidth: "200px",
                     boxShadow:
                       "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
                   }}
                 >
                   Sign up today
@@ -317,6 +291,103 @@ const UseCases = () => {
                 style={{ alignSelf: "center" }}
               >
                 <img
+                  src={TownHall}
+                  alt="amazing event"
+                  style={{
+                    alignSelf: "center",
+                    maxHeight: "100%",
+                    maxWidth: "100%",
+                  }}
+                />
+              </div>
+              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
+                <div className="section-heading-primary pb-2" style={{color: "#487E51", fontWeight: "700"}}>
+                  Town Halls
+                </div>
+
+                <div className="home-text-description my-5">
+                  Everyone in your event can join a room and start discussing
+                  what they always wanted to. These are fully customisable and
+                  you have power to control them as you wish to.
+                </div>
+
+                <div className="action-btn-home py-3">
+                <button
+                  type="button"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
+                  style={{
+                    maxWidth: "200px",
+                    boxShadow:
+                      "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
+                  }}
+                >
+                  Sign up today
+                </button>
+                </div>
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+
+
+
+        <div className="home-section-3 px-5 py-5" style={{backgroundColor: "#ffffff"}}>
+          <div
+            className="grid-of-2"
+            style={{ height: "auto", alignItems: "center" }}
+          >
+            <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
+              <div className="section-heading-primary mb-4" style={{color: "#DD4C32", fontWeight: "700"}}>
+                Online Fitness Training
+              </div>
+
+              <div className="home-text-description">
+                Evenz is designed to smoothly create, manage and Host memorable
+                and most interactive event, no matter whatever Scale it is.
+              </div>
+
+              <div className="action-btn-home py-5">
+              <button
+                  type="button"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
+                  style={{
+                    maxWidth: "200px",
+                    boxShadow:
+                      "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
+                  }}
+                >
+                  Sign up today
+                </button>
+              </div>
+            </div>
+            <div
+              className="grid-2-of-2 d-flex flex-row align-items-center"
+              style={{ alignSelf: "center" }}
+            >
+              <img
+                src={YogaTraining}
+                alt="amazing event"
+                style={{ maxHeight: "100%", maxWidth: "100%" }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="home-section-5 p-4" style={{backgroundColor: "#ffffff"}}>
+          <div className="mt-3">
+            <div
+              className="grid-of-2"
+              style={{ height: "auto", alignItems: "center" }}
+            >
+                <div
+                className="grid-2-of-2 d-flex flex-row align-items-center"
+                style={{ alignSelf: "center" }}
+              >
+                <img
                   src={TradeShow}
                   alt="amazing event"
                   style={{
@@ -327,7 +398,7 @@ const UseCases = () => {
                 />
               </div>
               <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div className="section-heading-primary pb-2">
+                <div className="section-heading-primary pb-2" style={{color: "#094577", fontWeight: "700"}}>
                   Trade shows & Expos
                 </div>
 
@@ -338,17 +409,18 @@ const UseCases = () => {
                 </div>
 
                 <div className="action-btn-home py-3">
-                  <button
-                    type="button"
-                    className="btn btn-light btn-outline-text px-3 py-2 me-3"
-                    style={{
-                      maxWidth: "200px",
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
-                    }}
-                  >
-                    Sign up today
-                  </button>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
+                  style={{
+                    maxWidth: "200px",
+                    boxShadow:
+                      "inset 0px 3px 19px #00000029, 0px 0px 10px #538BF7",
+                     borderRadius: "15px",
+                  }}
+                >
+                  Sign up today
+                </button>
                 </div>
               </div>
 

@@ -142,3 +142,25 @@ code {
 .profile-tabs-container {
   padding-bottom: 2.2rem;
 }
+
+@media only screen and (max-width: 998px) {
+  .pre-footer-img-wrapper {
+    display: none;
+  }
+  .pre-footer-hero-btn {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media only screen and (min-width: 998px) {
+  .pre-footer-img-wrapper {
+    display: none;
+  }
+  .pre-footer-hero-btn {
+    width: 100%;
+    align-items: center;
+    justify-content: start;
+  }
+}
