@@ -53,9 +53,13 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
 
-
     .populate("communities")
-    .populate("registeredInEvents");
+    .populate({
+      path: "registeredInEvents",
+      populate: {
+        path: "speaker tickets coupon sponsors session booths",
+      },
+    });
   res.status(200).json({
     status: "SUCCESSS",
     data: {
@@ -516,12 +520,29 @@ exports.IsUserRegistred = catchAsync(async (req, res, next) => {
   });
 });
 
+// exports.getMe = catchAsync(async (req, res, next) => {
+//   const userId = req.user.id;
+//   const userDoc = await User.findById(userId).populate({
+//     path: "registredInEvents queries",
+//     select:
+//       "startDate endDate eventName shortDescription createdAt queryIs questionText",
+//   });
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       userData: userDoc,
+//     },
+//   });
+// });
+
 exports.getMe = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const userDoc = await User.findById(userId).populate({
-    path: "registredInEvents queries",
-    select:
-      "startDate endDate eventName shortDescription createdAt queryIs questionText",
+    path: "registredInEvents",
+
+    populate: {
+      path: "speaker tickets coupon sponsors session booths",
+    },
   });
   res.status(200).json({
     status: "success",

@@ -193,6 +193,14 @@ color: #212121;
   }
 }
 
+@media only screen and (max-width: 1560px) {
+  .user-account-booked-event-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 35px;
+  }
+}
+
 @media only screen and (max-width: 1428px) {
   .user-account-events-event-card-grid {
     display: grid;
@@ -207,6 +215,8 @@ color: #212121;
   }
 
   
+
+  
   
 }
 
@@ -216,11 +226,7 @@ color: #212121;
     padding-right: 15px;
   }
 
-  .user-account-booked-event-card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 35px;
-  }
+  
 }
 
 /* .form-control {

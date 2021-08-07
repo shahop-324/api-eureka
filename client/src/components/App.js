@@ -35,7 +35,6 @@ import UseCases from "./StaticScreens/Screens/UseCases";
 import AboutUs from "./StaticScreens/Screens/AboutUs";
 import ContactUs from "./StaticScreens/Screens/ContactUs";
 
-
 class App extends React.Component {
   render() {
     const { isSignedIn } = this.props;
@@ -65,10 +64,14 @@ class App extends React.Component {
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route path="/contact-us" exact component={ContactUs} />
-              
+
               <Route path="/pricing" exact component={Pricing} />
               <Route path="/not-found" exact component={NotFoundPage} />
-              <Route path="/internal-server-error" exact component={InternalServerError} />
+              <Route
+                path="/internal-server-error"
+                exact
+                component={InternalServerError}
+              />
               <Route path="/home" exact component={Home} />
               <Route path="/" exact component={Home} />
               <Route
@@ -88,8 +91,12 @@ class App extends React.Component {
                 exact
                 component={EventLandingPage}
               />
-              <Route path="/search-events/" exact component={SearchEvents} />
 
+              {/* <Route path="/search-events">
+                <Redirect to="/search-events/" />
+              </Route> */}
+
+              <Route path="/search-events/" exact component={SearchEvents} />
               <Route path="/user/home" exact component={UserAccountHome} />
 
               <Route path="/user/events" exact component={UserAccountHome} />

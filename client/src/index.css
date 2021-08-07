@@ -5,13 +5,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: none;
 }
 
 html {
   overflow: scroll;
   overflow-x: hidden;
+  scrollbar-width: none;
 }
 ::-webkit-scrollbar {
+  display: none;
   width: 0;  /* Remove scrollbar space */
   background: transparent;  /* Optional: just make scrollbar invisible */
 }

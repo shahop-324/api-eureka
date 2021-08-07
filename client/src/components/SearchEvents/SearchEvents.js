@@ -21,6 +21,7 @@ import dateFormat from "dateformat";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
+import PreFooter from "../PreFooter";
 
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
@@ -38,62 +39,23 @@ const categories = [
   { title: "Business & Entrepreneurship" },
 ];
 
-// class PreFooter extends React.Component {
-//   render() {
-//     return (
-//       <div className="row pre-footer">
-//         <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
-//           <div className="col-1 col-xl-2"></div>
-//           <div className="col-10 col-xl-8">
-//             <div className="pre-footer-hero-text">
-//               Amaze Your Audience with Your Next-Gen Virtual Event.
-//             </div>
-//             <div className="pre-footer-sub-hero-text">
-//               Memorable events don’t just happen. They happen to be our
-//               business.
-//             </div>
-//             <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
-//               <button type="button" class="btn btn-light pre-footer-btn-light">
-//                 Host a free event
-//               </button>
-//             </div>
-//           </div>
-//           <div className="col-1 col-xl-2"></div>
-//         </div>
-//         <div
-//           className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
-//           style={{ maxHeight: "50vh" }}
-//         ></div>
-//       </div>
-//     );
-//   }
-// }
-
 const SearchEvents = () => {
   const dispatch = useDispatch();
 
   const {isSignedIn} = useSelector((state) => state.auth);
 
-  // const innerWidth = window.innerWidth;
-
-  // const collapseFilter = () => {
-  //   document.getElementsByClassName('collapse').collapse('toggle');
-  // }
-
   const { error, isLoading } = useSelector((state) => state.event);
 
   const location = useLocation();
   console.log(location);
-  // useEffect(()=>{
-  //   dispatch(fetchEvents(location.search));
-
-  // },[])
+  
   useEffect(() => {
     dispatch(fetchEvents(location.search));
   }, [location.search, dispatch]);
 
   const [text, setText] = useState("");
-  const [priceFilter, setPriceFilter] = useState("");
+  const [priceFilter, setPriceFilter] = useState("Free");
+
 
   let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
@@ -638,7 +600,7 @@ const SearchEvents = () => {
           </div>
           <div className="col-0 col-lg-2"></div>
         </div>
-        {/* <PreFooter /> */}
+        <PreFooter />
         <Footer />
       </div>
     </>
