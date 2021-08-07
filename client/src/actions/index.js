@@ -495,10 +495,10 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
     console.log(err.response.data);
   }
 };
-// export const errorTrackerForFetchEvent= () => async (dispatch, getState) => {
-//   dispatch(eventActions.disabledError());
+export const errorTrackerForFetchEvent= () => async (dispatch, getState) => {
+  dispatch(eventActions.disabledError());
 
-// };
+};
 export const fetchParticularEventOfCommunity =
   (id) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
@@ -1816,6 +1816,7 @@ export const fetchSponsors =
       console.log(err.response.data);
     }
   };
+
 export const editSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoading());
@@ -1853,8 +1854,6 @@ export const editSponsor =
             "Content-Type": file.type,
           },
         });
-        // const amazoneFile = await awsRes.json();
-        // console.log(amazoneFile);
         console.log(awsRes);
 
         let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
@@ -2641,10 +2640,12 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     dispatch(communityActions.hasError(err.message));
   }
 };
+
 export const errorTrackerForEditCommunity =
   () => async (dispatch, getState) => {
     dispatch(communityActions.disabledError());
   };
+
 export const deleteCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {

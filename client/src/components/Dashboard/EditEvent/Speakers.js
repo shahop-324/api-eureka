@@ -17,7 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddNewSpeaker from "./FormComponents/EditSpeakersForms/AddNewSpeaker";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import { fetchSessions, fetchSpeakers } from "../../../actions";
+import { errorTrackerForFetchSpeakers, fetchSessions, fetchSpeakers } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
@@ -149,7 +149,6 @@ const Speakers = () => {
         .map((speaker) => {
           const { id, firstName, lastName, email, image, sessions, headline } =
             speaker;
-          // console.log(id);
           let imgUrl = " #";
           const imgKey = image;
           if (imgKey) {
@@ -174,7 +173,9 @@ const Speakers = () => {
   const classes = useStyles();
 
   if (error) {
-    return <div>{error}</div>;
+    dispatch(errorTrackerForFetchSpeakers());
+    alert(error);
+    return;
   }
 
   return (

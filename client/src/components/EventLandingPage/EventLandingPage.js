@@ -10,7 +10,11 @@ import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
-import { createQuery, fetchEvent } from "../../actions/index";
+import {
+  createQuery,
+  errorTrackerForFetchEvent,
+  fetchEvent,
+} from "../../actions/index";
 
 import SessionCard from "./HelperComponent/SessionCard";
 import SpeakerCard from "./HelperComponent/SpeakerCard";
@@ -119,15 +123,12 @@ const EventLandingPage = (props) => {
   const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
+
   useEffect(() => {
-   
     dispatch(fetchEvent(id));
-   
   }, [dispatch, id]);
   const classes = useStyles();
-  const { isLoading, error } = useSelector(
-    (state) => state.event
-  );
+  const { isLoading, error } = useSelector((state) => state.event);
 
   const [selectedSection, setSelectedSection] = useState(0);
 
@@ -156,9 +157,6 @@ const EventLandingPage = (props) => {
     console.log(i);
   };
 
- 
-
-  
   // const convertFromJSONToHTML = (text) => {
   //   return stateToHTML(convertFromRaw(JSON.parse(text)));
   // };
@@ -171,8 +169,6 @@ const EventLandingPage = (props) => {
     });
   });
 
- 
-
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
   if (isLoading) {
@@ -184,10 +180,12 @@ const EventLandingPage = (props) => {
         <Loader />{" "}
       </div>
     ); // TODO
-  } 
-  if(error)
-  {
-    return <div>{error}</div>
+  }
+  if (error) {
+    dispatch(errorTrackerForFetchEvent());
+    alert(error);
+
+    return;
   }
   console.log(event);
 

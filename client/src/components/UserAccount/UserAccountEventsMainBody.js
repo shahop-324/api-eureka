@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import EventCard from "../EventCard";
 import { useSelector, useDispatch } from "react-redux";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
-import { madeJustForYou } from "../../actions";
+import { errorTrackerForMadeJustForYou, madeJustForYou } from "../../actions";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
 const UserAccountEventsMainBody = () => {
@@ -14,11 +14,9 @@ const UserAccountEventsMainBody = () => {
   console.log(events);
 
   if (error) {
-    return (
-      <section>
-        <p>{error}</p>
-      </section>
-    );
+    dispatch(errorTrackerForMadeJustForYou());
+    alert(error);
+    return;
   }
 
   const renderSuggestedEventsList = () => {

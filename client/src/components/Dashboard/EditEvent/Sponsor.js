@@ -149,6 +149,7 @@ const Sponsors = () => {
   const classes = useStyles();
 
   if (error) {
+    // dispatch(errorTrackerForFetchSponsor());
     return <div>{error}</div>;
   }
 

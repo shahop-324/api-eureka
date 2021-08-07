@@ -13,7 +13,7 @@ import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import QueryCard from "./HelperComponent/QueryCard";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchQueriesForCommunity } from "../../actions";
+import { errorTrackerForfetchQueriesForCommunity, fetchQueriesForCommunity } from "../../actions";
 
 const ratingOptions = [
   { value: "all", label: "All Queries" },
@@ -166,7 +166,9 @@ const Queries = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   } else if (error) {
-    return <div>{error}</div>;
+    dispatch(errorTrackerForfetchQueriesForCommunity());
+    alert(error);
+    return ;
   }
 
   return (

@@ -4,7 +4,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import { communitySignIn } from "../../actions";
+import { communitySignIn, errorTrackerForPersonalData } from "../../actions";
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
@@ -66,7 +66,8 @@ const UserAccountSideNav = () => {
   const { isLoading, error } = useSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
 
-  //use open to rerender
+  const dispatch = useDispatch();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -85,22 +86,15 @@ const UserAccountSideNav = () => {
     );
   }
   if (error) {
-    return (
-      <section>
-        <p>{error}</p>
-      </section>
-    );
+    dispatch(errorTrackerForPersonalData());
+    alert(error);
+    return;
   }
-  // const dispatch = useDispatch();
 
   const { firstName, lastName, email, image } = userDetails;
 
   const name = `${firstName} ${lastName}`;
-  // const redirectToCommunity = (id) => {
-  //   dispatch(communitySignIn(id));
-  // };
 
-  // onClick={redirectToCommunity(community.communityId.id)}
   const renderCommunitiesList = () => {
     if (communities) {
       return communities.map((community) => {
