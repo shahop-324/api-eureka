@@ -14,9 +14,10 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editSponsor } from "../../../../../actions";
+import { editSponsor, errorTrackerForEditSponsor } from "../../../../../actions";
 
 import { connect } from "react-redux";
+import Loader from "../../../../Loader";
 
 const styles = {
   control: (base) => ({
@@ -117,7 +118,7 @@ const renderReactSelect = ({
 );
 const EditSponosor = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-
+  const {error, isLoading} = useSelector((state) => state.sponsor);
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -166,6 +167,16 @@ const EditSponosor = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForEditSponsor());
+    alert(error);
+    return;
+  }
 
   return (
     <>

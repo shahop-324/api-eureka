@@ -11,8 +11,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useDispatch } from "react-redux";
-import { deleteSponsor } from "../../../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteSponsor, errorTrackerForDeleteSponsor } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -20,6 +21,7 @@ function Alert(props) {
 
 const DeleteSponsor = (props) => {
   const dispatch = useDispatch();
+  const {error, isLoading} = useSelector((state) => state.sponsor);
   const [state, setState] = React.useState({
     open: false,
     vertical: "top",
@@ -34,6 +36,20 @@ const DeleteSponsor = (props) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForDeleteSponsor());
+    alert(error);
+    return;
+  }
+
+
+
   return (
     <>
       <Dialog

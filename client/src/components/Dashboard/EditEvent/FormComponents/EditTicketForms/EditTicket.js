@@ -9,9 +9,10 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editTicket } from "../../../../../actions";
+import { editTicket, errorTrackerForEditTicket } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 const styles = {
   control: (base) => ({
@@ -133,6 +134,7 @@ const renderReactSelect = ({
 );
 const EditTicket = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
+  const {error, isLoading} = useSelector((state) => state.ticket);
 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
@@ -185,6 +187,16 @@ const EditTicket = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForEditTicket());
+    alert(error);
+    return;
+  }
 
   return (
     <>

@@ -13,15 +13,17 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
 import {
   createBooth,
+  errorTrackerForCreateBooth,
   fetchParticularEventOfCommunity,
 } from "../../../../../actions";
 import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
+import Loader from "../../../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -162,7 +164,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 
 const AddNewBooth = (props) => {
   const { handleSubmit, pristine, submitting } = props;
-
+const {error, isLoading} = useSelector((state) => state.booth);
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -219,6 +221,16 @@ const AddNewBooth = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForCreateBooth());
+    alert(error);
+    return;
+  }
 
   return (
     <>

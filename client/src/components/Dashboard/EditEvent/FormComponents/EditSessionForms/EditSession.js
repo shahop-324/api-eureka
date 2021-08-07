@@ -15,8 +15,10 @@ import { useDispatch } from "react-redux";
 // import { useParams } from "react-router";
 import {
   editSession,
+  errorTrackerForEditSession,
   fetchParticularSessionOfEvent,
 } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 const renderInput = ({
   input,
@@ -142,6 +144,7 @@ const styles = {
 
 const EditSession = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
+  const {error, isLoading} = useSelector((state) => state.session);
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -193,6 +196,15 @@ const EditSession = (props) => {
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForEditSession());
+    alert(error);
+    return;
+  }
   return (
     <>
       <Dialog

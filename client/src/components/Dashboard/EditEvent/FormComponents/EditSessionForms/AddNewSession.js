@@ -11,11 +11,12 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
-import { createSession } from "../../../../../actions";
+import { createSession, errorTrackerForCreateSession } from "../../../../../actions";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import MuiAlert from "@material-ui/lab/Alert";
+import Loader from "../../../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -149,7 +150,7 @@ const renderReactSelect = ({
 
 const AddNewSession = (props) => {
   let speakerOptions = [];
-
+const {error, isLoading} = useSelector((state) => state.session);
   const [state, setState] = React.useState({
     open: false,
     vertical: "top",
@@ -210,6 +211,18 @@ const AddNewSession = (props) => {
   const theme = useTheme();
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForCreateSession());
+    alert(error);
+    return;
+  }
+
+
   return (
     <>
       <Dialog

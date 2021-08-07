@@ -13,10 +13,11 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
-import { editBooth } from "../../../../../actions";
+import { editBooth, errorTrackerForEditBooth } from "../../../../../actions";
 
 import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
+import Loader from "../../../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,7 +162,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 
 const EditBooth = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-
+  const {error, isLoading} = useSelector((state) => state.booth);
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -181,7 +182,7 @@ const EditBooth = (props) => {
     state.booth.boothDetails ? state.booth.boothDetails.image : false
   );
 
-  let imgUrl = " #";
+  let imgUrl = "#";
   if (imgKey) {
     imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
   }
@@ -216,6 +217,16 @@ const EditBooth = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForEditBooth());
+    alert(error);
+    return;
+  }
 
   return (
     <>

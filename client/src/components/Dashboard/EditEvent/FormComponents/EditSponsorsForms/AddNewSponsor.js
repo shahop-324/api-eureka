@@ -12,9 +12,10 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { createSponsor } from "../../../../../actions";
+import { createSponsor, errorTrackerForCreateSponsor } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 const styles = {
   control: (base) => ({
@@ -116,7 +117,7 @@ const renderReactSelect = ({
 );
 const AddNewSponsor = (props) => {
   const { handleSubmit } = props;
-
+const {error, isLoading} = useSelector((state) => state.sponsor);
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -160,6 +161,16 @@ const AddNewSponsor = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForCreateSponsor());
+    alert(error);
+    return;
+  }
 
   return (
     <>
