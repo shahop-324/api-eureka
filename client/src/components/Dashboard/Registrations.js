@@ -9,16 +9,16 @@ import Divider from "@material-ui/core/Divider";
 // import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RegistrationsListFields from "./HelperComponent/RegistrationsListFields";
 import RegistrationDetailsCard from "./HelperComponent/RegistrationDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import { fetchRegistrationsOfParticularCommunity } from "../../actions";
+import { errorTrackerForfetchRegistrationsOfParticularCommunity, fetchRegistrationsOfParticularCommunity } from "../../actions";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import { Avatar, IconButton } from "@material-ui/core";
+import { alpha, Avatar, IconButton } from "@material-ui/core";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
 
@@ -73,9 +73,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -170,8 +170,9 @@ const Registrations = () => {
       });
   };
 
-   if (error) {
-   return  <div>{error}</div>;
+   if (error) {dispatch(errorTrackerForfetchRegistrationsOfParticularCommunity());
+    alert(error);
+   return;
   }
 
   return (

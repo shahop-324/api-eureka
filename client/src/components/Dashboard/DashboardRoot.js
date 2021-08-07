@@ -24,11 +24,13 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-
-
+import Loader from "../Loader";
 
 const DashboardRoot = () => {
   const params = useParams();
+
+  const { error, isLoading } = useSelector((state) => state.community);
+
   const dispatch = useDispatch();
   const id = params.id;
   const userId = params.userId;
@@ -99,6 +101,23 @@ const DashboardRoot = () => {
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
+
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-row justify-content-center"
+        style={{ height: "100vh", width: "100vw" }}
+      >
+        <Loader />
+      </div>
+    );
+  }
+  if(error) {
+    // dispatch()
+    alert(error);
+    return;
+  }
+
   return (
     <>
       <div className="dashboard-position-fixed-non-scrollable-container">

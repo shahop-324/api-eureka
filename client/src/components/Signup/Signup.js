@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
-import { googleLinkClicked, resetAuthError } from "../../actions/index";
+import { errorTrackerForSignUp, googleLinkClicked, resetAuthError } from "../../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../actions/index";
 import { Link } from "react-router-dom";
@@ -100,6 +100,12 @@ const Signup = (props) => {
   const onClickHandle = () => {
     dispatch(googleLinkClicked());
   };
+
+  if(error) {
+    dispatch(errorTrackerForSignUp());
+    alert(error);
+    return; 
+  }
 
   return (
     <>

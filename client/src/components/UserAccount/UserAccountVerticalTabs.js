@@ -11,9 +11,9 @@ import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 import dateFormat from "dateformat";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchUserRegisteredEvents } from "../../actions";
+import { errorTrackerForRegisteredEvents, fetchUserRegisteredEvents } from "../../actions";
 import Loader from "../Loader";
-import history from "../../history";
+// import history from "../../history";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -76,25 +76,6 @@ export default function VerticalTabs() {
 
   console.log(events);
 
-  // if(isLoading)
-  // {
-
-  //   return (
-  //     <section >
-  //       <p>Loading...</p>
-  //     </section>
-  //   );
-
-  // }
-  //  if(error)
-  // {
-  //   return (
-  //     <section >
-  //       <p>{error}</p>
-  //     </section>
-  //   );
-  // }
-
   let registeredInEvents = events.filter(
     (event) => new Date(event.endDate) > Date.now()
   );
@@ -148,8 +129,7 @@ export default function VerticalTabs() {
         if (new Date(event.endDate) <= date) {
           const now = new Date(event.startDate);
           const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
-          // console.log(x);
-
+          
           return (
             <EventCard
               image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
@@ -175,7 +155,6 @@ export default function VerticalTabs() {
       return registeredInEvents.map((event) => {
         const now = new Date(event.startDate);
         const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
-        // console.log(x);
 
         return (
           <EventCard
@@ -196,36 +175,6 @@ export default function VerticalTabs() {
     }
   };
 
-  const handleError = (error) => {
-    console.log(typeof error, error);
-    switch (error) {
-      
-      case "401":
-        history.push("/not-found");
-        return <div></div>;
-      case "403":
-        history.push("/not-found");
-        return <div></div>;
-      case "404":
-        history.push("/not-found");
-        return <div></div>;
-      case "405":
-        history.push("/not-found");
-        return <div></div>;
-      case "409":
-        history.push("/not-found");
-        return <div></div>;
-      case "500":
-        history.push("/internal-server-error");
-        return <div></div>;
-
-      default:
-        // history.push("/home"); // TODO SNACKBAR
-        window.location.href = `www.evenz.in/home`;
-        return <div></div>;
-    }
-  };
-
   if (isLoading) {
     return (
       <div
@@ -236,8 +185,9 @@ export default function VerticalTabs() {
       </div>
     );
   } else if (error) {
-    handleError(error);
-    return <div>{error}</div>;
+    dispatch(errorTrackerForRegisteredEvents());
+    alert(error);
+    return;
   }
 
   return (

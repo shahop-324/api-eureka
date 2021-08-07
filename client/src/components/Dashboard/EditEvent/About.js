@@ -80,15 +80,8 @@ const About = (props) => {
                 className="rich-text-editor-wrapper p-3"
                 style={{ minHeight: "500px", border: "1px solid #CACACA" }}
               >
-                {/* <Field
-                  editorState={editorState}
-                  toolbarClassName="toolbarClassName"
-                  wrapperClassName="wrapperClassName"
-                  editorClassName="editorClassName"
-                  onEditorStateChange={onEditorStateChange}
-                /> */}
+                
                 <Field
-                  // name="editing"
                   component={renderEditor}
                   id={id}
                 />
@@ -113,7 +106,6 @@ const About = (props) => {
                   Save changes
                 </button>
               </div>
-              {/* <CreateNewEventForm hideFormHeading="1" showBlockButton="false" /> */}
             </div>
           </form>
           <div className="basic-form-right px-4 py-2">

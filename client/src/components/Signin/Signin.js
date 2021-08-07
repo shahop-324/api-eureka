@@ -4,7 +4,7 @@ import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
-import { googleLinkClicked, resetAuthError } from "../../actions/index";
+import { errorTrackerForSignIn, googleLinkClicked, resetAuthError } from "../../actions/index";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
@@ -89,6 +89,12 @@ const Signin = (props) => {
         <p>Sending...</p>
       </section>
     );
+  }
+
+  if(error) {
+    dispatch(errorTrackerForSignIn());
+    alert(error);
+    return;
   }
 
   return (

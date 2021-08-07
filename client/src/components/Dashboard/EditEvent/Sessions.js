@@ -14,7 +14,7 @@ import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import AddNewSession from "./FormComponents/EditSessionForms/AddNewSession";
-import { fetchSessions, fetchSpeakers } from "../../../actions";
+import { errorTrackerForFetchSessions, fetchSessions, fetchSpeakers } from "../../../actions";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -129,12 +129,7 @@ const Sessions = () => {
           description,
           speaker,
         } = session;
-        // console.log(id);
-        // let imgUrl = " #";
-        // const imgKey = communityEvent.image;
-        // if (imgKey) {
-        //   imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
-        // }
+        
         return (
           <SessionDetailCard
             key={id}
@@ -153,7 +148,9 @@ const Sessions = () => {
   const classes = useStyles();
 
   if (error) {
-    return <div>{error}</div>;
+    dispatch(errorTrackerForFetchSessions());
+    alert(error);
+    return;
   }
 
   return (

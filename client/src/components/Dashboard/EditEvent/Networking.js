@@ -18,9 +18,14 @@ const Networking = () => {
   const id = params.id;
   const dispatch = useDispatch();
 
+  
+
   useEffect(() => {
     dispatch(fetchNetworking(id));
   }, [dispatch, id]);
+
+
+
 
   return (
     <>

@@ -9,9 +9,9 @@ import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
 import {
+  errorTrackerForPersonalData,
   fetchUserAllPersonalData,
   googleSignIn,
-  signOut,
 } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 
@@ -69,11 +69,9 @@ const UserAccountHome = () => {
   const { currentIndex } = useSelector((state) => state.navigation);
 
   if (error) {
+    dispatch(errorTrackerForPersonalData());
     alert(error);
-    // Clearing Local Storage
-    dispatch(signOut());
-    window.location.href = "/home";
-    return <div></div>;
+    return; 
   }
 
   return (

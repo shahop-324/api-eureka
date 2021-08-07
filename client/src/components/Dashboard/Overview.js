@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import AddNewMember from "./FormComponents/AddNewMember";
 import Doughnut from "./ChartComponents/Doughnut";
 import NotEnoughData from "../NotEnoughData";
+import Loader from "../Loader";
 
 const options = [
   { value: "Today", label: "Today" },
@@ -70,6 +71,7 @@ const styles = {
 const Overview = () => {
   const [term, setTerm] = React.useState("");
 
+
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
@@ -88,6 +90,7 @@ const Overview = () => {
       clearTimeout(timeoutId);
     };
   }, [dispatch, term]);
+
 
   const { analytics, superAdminImage, superAdminName } = useSelector(
     (state) => state.community.communityDetails
@@ -153,6 +156,21 @@ const Overview = () => {
       return community.id === id;
     });
   });
+
+  if(isLoading) {
+    return (<div
+    className="d-flex flex-row align-items-row justify-content-center"
+    style={{ height: "100vh", width: "100%" }}
+  >
+   <Loader />
+  </div>);
+  }
+
+  if(error) {
+    // dispatch();
+    alert(error);
+    return;
+  }
 
   console.log(community);
   return (

@@ -16,6 +16,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
 import {
+  errorTrackerForFetchEventsOfParticularCommunity,
   fetchEventsOfParticularCommunity,
 } from "../../actions";
 import { useParams } from "react-router";
@@ -156,7 +157,9 @@ const EventManagement = () => {
   
 
   if(error){
-   return  <div>{error}</div>
+    dispatch(errorTrackerForFetchEventsOfParticularCommunity())
+    alert(error);
+   return;
   }
 
   return (
