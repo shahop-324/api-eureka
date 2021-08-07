@@ -3362,6 +3362,14 @@ export const getEventRegistrationCheckoutSession =
           },
         }
       );
+      if (!checkoutSession.ok) {
+        if (!checkoutSession.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(checkoutSession.message);
+        }
+      }
+
       const res = await checkoutSession.json();
 
       console.log(res);
@@ -3503,6 +3511,8 @@ export const errorTrackerForfetchQueriesForCommunity =
   };
 
 export const answerQuery = (answerText, id) => async (dispatch, getState) => {
+  dispatch(queriesActions.startLoading());
+
   try {
     let res = await fetch(
       `http://localhost:3000/eureka/v1/community/queries/createAnswer`,
@@ -3519,7 +3529,13 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -3530,7 +3546,12 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(queriesActions.hasError(err.message));
   }
+};
+export const errorTrackerForAnswerQuery = () => async (dispatch, getState) => {
+  dispatch(queriesActions.disabledError());
 };
 
 export const googleLinkClicked = () => async (dispatch, getState) => {
@@ -3571,6 +3592,8 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
 };
 export const resetPassword =
   (formValues, token) => async (dispatch, getState) => {
+    dispatch(authActions.startLoading());
+    dispatch(userActions.startLoading());
     try {
       let res = await fetch(
         `http://localhost:3000/eureka/v1/users/resetPassword/${token}`,
@@ -3585,7 +3608,13 @@ export const resetPassword =
           },
         }
       );
-
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
       res = await res.json();
       console.log(res);
 
@@ -3604,9 +3633,15 @@ export const resetPassword =
       history.push("/user/home");
     } catch (err) {
       console.log(err);
+      dispatch(userActions.hasError(err.message));
+      dispatch(authActions.hasError(err.message));
     }
   };
-
+export const errorTrackerForResetPassword =
+  () => async (dispatch, getState) => {
+    dispatch(userActions.disabledError());
+    dispatch(authActions.disabledError());
+  };
 export const fetchRegistrationsOfParticularCommunity =
   (communityId) => async (dispatch, getState) => {
     dispatch(registrationActions.startLoading());
@@ -3658,6 +3693,7 @@ export const errorTrackerForfetchRegistrationsOfParticularCommunity =
 
 export const fetchParticularRegistration =
   (id) => async (dispatch, getState) => {
+    dispatch(registrationActions.startLoading());
     try {
       console.log(id);
 
@@ -3672,7 +3708,13 @@ export const fetchParticularRegistration =
           },
         }
       );
-
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
       res = await res.json();
       console.log(res);
 
@@ -3683,7 +3725,12 @@ export const fetchParticularRegistration =
       );
     } catch (err) {
       console.log(err);
+      dispatch(registrationActions.hasError(err.message));
     }
+  };
+export const errorTrackerForFetchParticularRegistration =
+  () => async (dispatch, getState) => {
+    dispatch(registrationActions.disabledError());
   };
 
 export const createNewInvitation =
@@ -3739,6 +3786,7 @@ export const generateEventAccessToken =
 export const setSessionRoleAndJoinSession =
   (sessionRole, sessionId, eventId, communityId) =>
   async (dispatch, getState) => {
+    // dispatch(eventAccessActions.startLoading())
     try {
       console.log(sessionRole, sessionId);
 
@@ -3749,6 +3797,7 @@ export const setSessionRoleAndJoinSession =
       );
     } catch (err) {
       console.log(err);
+      // dispatch(eventAccessActions.hasError(err.message))
     }
   };
 
@@ -3896,6 +3945,7 @@ export const errorTrackerForfetchEventChats =
 
 export const fetchPreviousEventChatMessages =
   (eventId) => async (dispatch, getState) => {
+    dispatch(eventChatActions.startLoading());
     try {
       console.log(eventId);
 
@@ -3910,7 +3960,13 @@ export const fetchPreviousEventChatMessages =
           },
         }
       );
-
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
       res = await res.json();
       console.log(res);
 
@@ -3922,6 +3978,10 @@ export const fetchPreviousEventChatMessages =
     } catch (err) {
       console.log(err);
     }
+  };
+export const errorTrackerForFetchPreviousEventChatMessages =
+  () => async (dispatch, getState) => {
+    dispatch(eventChatActions.disabledError());
   };
 
 export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
