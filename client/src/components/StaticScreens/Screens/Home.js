@@ -89,7 +89,7 @@ const Home = () => {
 
   useEffect(() => {
     window.localStorage.clear();
-  })
+  });
 
   const openHamberger = () => {
     setHambergerOpen(true);
@@ -137,28 +137,48 @@ const Home = () => {
                 </button>
                 <div
                   class="collapse navbar-collapse navbar-collapse-dark"
-                  
                   id="navbarSupportedContent"
                 >
                   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                    {/* <li class="nav-item" style={{ alignSelf: "center" }}>
                       <div className="nav-link-btn nav-link-btn-dark me-4">
                         Features
                       </div>
-                    </li>
+                    </li> */}
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Use Cases
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link
+                          to="/use-cases/"
+                          style={{ textDecoration: "none", color: "#ffffff" }}
+                        >
+                          Use Cases
+                        </Link>
                       </div>
                     </li>
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Explore Events
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link
+                          to="/search-events/"
+                          style={{ textDecoration: "none", color: "#ffffff" }}
+                        >
+                          Explore Events
+                        </Link>
                       </div>
                     </li>
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Pricing
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link to="/pricing/" style={{ textDecoration: "none", color: "#ffffff" }}>
+                          Pricing
+                        </Link>
                       </div>
                     </li>
 
@@ -182,7 +202,7 @@ const Home = () => {
           </div>
 
           <div className="header-content-section container d-flex">
-            <div className="grid-of-2 my-4" style={{width: "100%"}}>
+            <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
                 <div className="header-main-heading-and-action-btn">
                   <div className="hero-heading mb-5">
