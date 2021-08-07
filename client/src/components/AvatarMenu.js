@@ -61,9 +61,10 @@ const AvatarMenu = () => {
 
   const dispatch = useDispatch();
   const onClickLoggedOut = () => {
-    while (!window.localStorage.length === 0) {
+    while (window.localStorage.length !== 0) {
       window.localStorage.clear();
     }
+
     if (window.localStorage.length === 0) {
       dispatch(signOut());
     }
