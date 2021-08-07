@@ -11,14 +11,16 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useDispatch } from "react-redux";
-import { deleteTicket } from "../../../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTicket, errorTrackerForDeleteTicket } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const DeleteTicket = (props) => {
+  const {error, isLoading} = useSelector((state) => state.ticket);
   const [state, setState] = React.useState({
     open: false,
     vertical: "top",
@@ -34,6 +36,18 @@ const DeleteTicket = (props) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForDeleteTicket());
+    alert(error);
+    return;
+  }
+
+
   return (
     <>
       <Dialog

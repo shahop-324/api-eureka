@@ -53,6 +53,10 @@ const SearchEvents = () => {
     dispatch(fetchEvents(location.search));
   }, [location.search, dispatch]);
 
+  useEffect(() => {
+    history.push('/search-events/');
+  }, []);
+
   const [text, setText] = useState("");
   const [priceFilter, setPriceFilter] = useState("Free");
 

@@ -3,10 +3,11 @@ import dateFormat from "dateformat";
 import { useParams } from "react-router";
 import Select from "react-select";
 import "./../../../../index.css";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { editEvent } from "../../../../actions";
+import { editEvent, errorTrackerForeditEvent } from "../../../../actions";
+import Loader from "../../../Loader";
 
 const renderInput = ({
   input,
@@ -179,6 +180,7 @@ const styles = {
 
 const EditBasicDetailsForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
+  const {error, isLoading} = useSelector((state) => state.event);
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
@@ -214,6 +216,17 @@ const EditBasicDetailsForm = (props) => {
 
     props.openSavedChangesSnack();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForeditEvent());
+    alert(error);
+    return;
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

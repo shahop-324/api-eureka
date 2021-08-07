@@ -4,9 +4,10 @@ import "./../Style/uploadEventImage.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { uploadEventImage } from "../../../../actions";
+import { errorTrackerForeditEvent, errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
+import Loader from "../../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
 
 const UploadEventImageForm = (props) => {
   const { handleSubmit } = props;
+
+  const {error, isLoading} = useSelector((state) => state.event);
+
+  const classes = useStyles();
 
   const params = useParams();
 
@@ -60,7 +65,17 @@ const UploadEventImageForm = (props) => {
     console.log(file);
   };
 
-  const classes = useStyles();
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForUploadEventImage());
+    alert(error);
+    return;
+  }
+
+  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
