@@ -68,6 +68,10 @@ const renderInput = ({
 
 const NetworkingFormLeft = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
+  
+  const { networkingSettings, isLoading, error } = useSelector(
+    (state) => state.networking
+  );
 
   const params = useParams();
   const id = params.id;
@@ -79,9 +83,7 @@ const NetworkingFormLeft = (props) => {
 
   const dispatch = useDispatch();
 
-  const { networkingSettings, isLoading, error } = useSelector(
-    (state) => state.networking
-  );
+  
 
   const onSubmit = (formValues) => {
     console.log(formValues);
