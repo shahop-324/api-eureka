@@ -242,17 +242,14 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
 
   const loginCommunity = async () => {
-    let res = await fetch(
-      `http://localhost:3000/eureka/v1/users/${id}`,
-      {
-        method: "POST",
+    let res = await fetch(`http://localhost:3000/eureka/v1/users/${id}`, {
+      method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
     if (!res.ok) {
       if (!res.message) {
@@ -1718,7 +1715,7 @@ export const createSponsor =
       }
     } catch (err) {
       console.log(err);
-      dispatch(sponsorActions.hasError(err.chatMessages));
+      dispatch(sponsorActions.hasError(err.message));
     }
   };
 
@@ -1836,6 +1833,13 @@ export const editSponsor =
             },
           }
         );
+        if (!uploadConfig.ok) {
+          if (!uploadConfig.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(uploadConfig.message);
+          }
+        }
 
         uploadConfig = await uploadConfig.json();
         console.log(uploadConfig);
@@ -1865,7 +1869,13 @@ export const editSponsor =
             Authorization: `Bearer ${getState().communityAuth.token}`,
           },
         });
-
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
         res = await res.json();
         console.log(res);
 
@@ -1888,7 +1898,13 @@ export const editSponsor =
             Authorization: `Bearer ${getState().communityAuth.token}`,
           },
         });
-
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
         res = await res.json();
         console.log(res);
 
@@ -1899,11 +1915,15 @@ export const editSponsor =
         );
       }
     } catch (err) {
-      console.log(err);
+      dispatch(sponsorActions.hasError(err.chatMessages));
     }
   };
+export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
+  dispatch(sponsorActions.disabledError());
+};
 
 export const deleteSponsor = (id) => async (dispatch, getState) => {
+  dispatch(sponsorActions.startLoading());
   try {
     let res = await fetch(`${BaseURL}sponsors/${id}/delete`, {
       method: "DELETE",
@@ -1913,6 +1933,13 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${getState().communityAuth.token}`,
       },
     });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
 
     res = await res.json();
     console.log(res);
@@ -1924,12 +1951,18 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+    dispatch(sponsorActions.hasError(err.message));
   }
 };
+export const errorTrackerForDeleteSponsor =
+  () => async (dispatch, getState) => {
+    dispatch(sponsorActions.disabledError());
+  };
 
 //tickets actions
 
 export const createTicket = (formValues, id) => async (dispatch, getState) => {
+  dispatch(ticketActions.startLoading());
   try {
     console.log(id);
     console.log(formValues);
@@ -1947,7 +1980,13 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -1958,7 +1997,11 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+    dispatch(ticketActions.hasError(err.message));
   }
+};
+export const errorTrackerForCreateTicket = () => async (dispatch, getState) => {
+  dispatch(ticketActions.disabledError());
 };
 
 export const fetchTickets = (id, term) => async (dispatch, getState) => {
@@ -2020,6 +2063,8 @@ export const errorTrackerForFetchTickets = () => async (dispatch, getState) => {
 };
 
 export const fetchTicket = (id) => async (dispatch, getState) => {
+  dispatch(ticketActions.startLoading());
+
   try {
     console.log(id);
 
@@ -2034,7 +2079,13 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2044,11 +2095,14 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    console.log(err);
+    dispatch(ticketActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForFetchTicket = () => async (dispatch, getState) => {
+  dispatch(ticketActions.disabledError());
+};
 export const editTicket = (formValues, id) => async (dispatch, getState) => {
+  dispatch(ticketActions.startLoading());
   try {
     console.log(id);
     console.log(formValues);
@@ -2066,7 +2120,13 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2076,11 +2136,16 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    console.log(err);
+    dispatch(ticketActions.hasError(err.message));
   }
+};
+export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
+  dispatch(ticketActions.disabledError());
 };
 
 export const deleteTicket = (id) => async (dispatch, getState) => {
+  dispatch(ticketActions.startLoading());
+
   try {
     console.log(id);
 
@@ -2095,7 +2160,13 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2105,10 +2176,12 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    console.log(err);
+    dispatch(ticketActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForDeleteTicket = () => async (dispatch, getState) => {
+  dispatch(ticketActions.disabledError());
+};
 //navigations actions
 
 export const navigationIndex = (activeIndex) => (dispatch) => {
@@ -2171,39 +2244,51 @@ export const errorTrackerForMadeJustForYou =
   };
 //user actions
 
-export const createUser = (formValues, id) => async (dispatch, getState) => {
-  console.log(id);
-  console.log(formValues);
-  try {
-    console.log(id);
-    console.log(formValues);
-    let res = await fetch(
-      `http://localhost:3000/eureka/v1/events/${id}/addSpeaker`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+// export const createUser = (formValues, id) => async (dispatch, getState) => {
+//   console.log(id);
+//   console.log(formValues);
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+//   dispatch( speakerActions.startLoading());
+//   try {
+//     console.log(id);
+//     console.log(formValues);
+//     let res = await fetch(
+//       `http://localhost:3000/eureka/v1/events/${id}/addSpeaker`,
+//       {
+//         method: "POST",
+//         body: JSON.stringify({
+//           ...formValues,
+//         }),
 
-    res = await res.json();
-    console.log(res);
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${getState().auth.token}`,
+//         },
+//       }
+//     );
+//     if (!res.ok) {
+//       if (!res.message) {
+//         throw new Error("Something went wrong");
+//       } else {
+//         throw new Error(res.message);
+//       }
+//     }
+//     res = await res.json();
+//     console.log(res);
 
-    dispatch(
-      speakerActions.CreateSpeaker({
-        speaker: res.data,
-      })
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
+//     dispatch(
+//       speakerActions.CreateSpeaker({
+//         speaker: res.data,
+//       })
+//     );
+//   } catch (err) {
+//     dispatch( speakerActions.startLoading());
+//   }
+// };
+
+// export const errorTrackerForCreateSpeaker = () => async (dispatch, getState) => {
+//   dispatch(ticketActions.disabledError());
+// };
 
 export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
   try {
@@ -2233,7 +2318,13 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2244,20 +2335,32 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(speakerActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForFetchSpeakers2 =
+  () => async (dispatch, getState) => {
+    dispatch(speakerActions.disabledError());
+  };
 export const fetchUser = (formValues) => async (dispatch, getState) => {
+  dispatch(userActions.startLoading());
+
   try {
-    const res = await fetch(
-      "http://localhost:3000/eureka/v1/users/Me",
-      {
-        headers: {
-          //  "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
+    const res = await fetch("http://localhost:3000/eureka/v1/users/Me", {
+      headers: {
+        //  "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
       }
-    );
+    }
 
     const result = await res.json();
     console.log(result);
@@ -2270,8 +2373,14 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(userActions.hasError(err.message));
   }
 };
+export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
+  dispatch(speakerActions.disabledError());
+};
+
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
   const editingUser = async () => {
@@ -2291,6 +2400,13 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
 
       if (!uploadConfig.ok) {
         throw new Error("Editing user details failed!");
+      }
+      if (!uploadConfig.ok) {
+        if (!uploadConfig.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(uploadConfig.message);
+        }
       }
 
       uploadConfig = await uploadConfig.json();
@@ -2394,6 +2510,8 @@ export const errorTrackerForEditUser = () => async (dispatch, getState) => {
 };
 
 export const editUserPassword = (formValues) => async (dispatch, getState) => {
+  dispatch(userActions.startLoading());
+  dispatch(authActions.startLoading());
   try {
     console.log(formValues);
     const res = await fetch(
@@ -2410,22 +2528,38 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
         },
       }
     );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     const result = await res.json();
     console.log(result);
     dispatch(
-      authActions.SignIn({
-        token: result.token,
-      }),
-
       userActions.EditUser({
         user: result.data.userData,
       })
     );
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
   } catch (err) {
-    console.log(err);
+    dispatch(userActions.hasError(err.message));
+    dispatch(authActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForEditUserPassword =
+  () => async (dispatch, getState) => {
+    dispatch(userActions.disabledError());
+  };
+export const errorTrackerForEditUserPassword2 =
+  () => async (dispatch, getState) => {
+    dispatch(userActions.disabledError());
+  };
 export const deleteUser = () => (dispatch, getState) => {
   //not implemented yet
 };
@@ -2433,6 +2567,7 @@ export const deleteUser = () => (dispatch, getState) => {
 //community actions
 
 export const fetchCommunity = (id) => async (dispatch, getState) => {
+  dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
       `http://localhost:3000/eureka/v1/community/${id}/getCommunity`,
@@ -2444,6 +2579,14 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
         },
       }
     );
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     const result = await res.json();
     console.log(result);
 
@@ -2453,11 +2596,17 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(communityActions.hasError(err.message));
     console.log(err);
   }
 };
+export const errorTrackerForFetchCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
 
 export const editCommunity = (id, formValues) => async (dispatch, getState) => {
+  dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
       `http://localhost:3000/eureka/v1/community/${id}/updateCommunity`,
@@ -2473,6 +2622,13 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
         },
       }
     );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     const result = await res.json();
 
     console.log(result);
@@ -2482,17 +2638,26 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    console.log(err);
+    dispatch(communityActions.hasError(err.message));
   }
 };
+export const errorTrackerForEditCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
 export const deleteCommunity = (id) => async (dispatch, getState) => {
+  dispatch(communityActions.startLoading());
   try {
-    const res = await fetch(
-      `http://localhost:3000/eureka/v1/community/${id}`,
-      {
-        method: "GET",
+    const res = await fetch(`http://localhost:3000/eureka/v1/community/${id}`, {
+      method: "GET",
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
       }
-    );
+    }
     const result = await res.json();
 
     console.log(result);
@@ -2502,12 +2667,16 @@ export const deleteCommunity = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    console.log(err);
+    dispatch(communityActions.hasError(err.message));
   }
 };
 ///session actions
-
+export const errorTrackerForDeleteCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
 export const createSession = (formValues, id) => async (dispatch, getState) => {
+  dispatch(sessionActions.startLoading());
   try {
     console.log(id);
     console.log(formValues);
@@ -2525,7 +2694,13 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2536,9 +2711,14 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(sessionActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForCreateSession =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
 export const fetchSessions = (id, term) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   const getSessions = async () => {
@@ -2636,6 +2816,7 @@ export const fetchSessionsForUser =
   };
 
 export const fetchSession = (id) => async (dispatch, getState) => {
+  dispatch(sessionActions.startLoading());
   try {
     console.log(id);
 
@@ -2650,7 +2831,13 @@ export const fetchSession = (id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2661,9 +2848,12 @@ export const fetchSession = (id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+    dispatch(sessionActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForFetchSession = () => async (dispatch, getState) => {
+  dispatch(sessionActions.disabledError());
+};
 export const fetchSessionForSessionStage =
   (id) => async (dispatch, getState) => {
     try {
@@ -2692,9 +2882,14 @@ export const fetchSessionForSessionStage =
       );
     } catch (err) {
       console.log(err);
+
+      dispatch(sessionActions.hasError(err.message));
     }
   };
-
+export const errorTrackerForFetchSessionForSessionStage =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.disabledError());
+  };
 export const fetchParticularSessionOfEvent =
   (id) => async (dispatch, getState) => {
     try {
@@ -2907,17 +3102,14 @@ export const fetchCoupons = () => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
   const getCoupons = async () => {
-    let res = await fetch(
-      `http://localhost:3000/eureka/v1/community/coupons`,
-      {
-        method: "GET",
+    let res = await fetch(`http://localhost:3000/eureka/v1/community/coupons`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
 
     if (!res.ok) {
       if (!res.message) {
@@ -3524,20 +3716,17 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
   const fetchingRTMToken = async () => {
-    let res = await fetch(
-      "http://localhost:3000/eureka/v1/getRTMToken",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          eventId: eventId,
-        }),
+    let res = await fetch("http://localhost:3000/eureka/v1/getRTMToken", {
+      method: "POST",
+      body: JSON.stringify({
+        eventId: eventId,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
