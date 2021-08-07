@@ -5,53 +5,29 @@ class apiFeatures {
     this.query = query;
     this.queryString = queryString;
   }
-  answerStatusFilter()
-  {
-        if(this.queryString.answerStatus)
-        {
-
-             this.query=this.query.find({
-              queryIs:this.queryString.answerStatus
-
-             })
-
-
-        }
-        return this;
-
-
+  answerStatusFilter() {
+    if (this.queryString.answerStatus) {
+      this.query = this.query.find({
+        queryIs: this.queryString.answerStatus,
+      });
+    }
+    return this;
   }
-  userRegistrationFilter()
-  {
-        if(this.queryString.userRegistrationStatus)
-        {
-
-             this.query=this.query.find({
-              userIs:this.queryString.userRegistrationStatus
-
-             })
-
-
-        }
-        return this;
-
-
+  userRegistrationFilter() {
+    if (this.queryString.userRegistrationStatus) {
+      this.query = this.query.find({
+        userIs: this.queryString.userRegistrationStatus,
+      });
+    }
+    return this;
   }
-  eventWiseFilter()
-  {
-        if(this.queryString.event)
-        {
-
-             this.query=this.query.find({
-              createdForEventId:mongoose.Types.ObjectId(this.queryString.event)
-
-             })
-
-
-        }
-        return this;
-
-
+  eventWiseFilter() {
+    if (this.queryString.event) {
+      this.query = this.query.find({
+        createdForEventId: mongoose.Types.ObjectId(this.queryString.event),
+      });
+    }
+    return this;
   }
   sort() {
     console.log("me sort function has sent the response okay");
@@ -63,16 +39,21 @@ class apiFeatures {
     return this;
   }
   ratingFilter() {
+    console.log("hey passing from rating filter");
     if (this.queryString.communityRating) {
       const queryObj = this.queryString.communityRating;
       let queryStr = JSON.stringify(queryObj);
+
+      // let queryStr = queryObj;
       queryStr = queryStr.replace(
         /\b(gte|gt|lte|lt)\b/g,
         (match) => `$${match}`
       );
       console.log(queryStr);
       console.log(JSON.parse(queryStr));
-      this.query = this.query.find(JSON.parse(queryStr));
+
+      const rating = JSON.parse(queryStr);
+      this.query = this.query.find({ communityRating: rating });
     }
     return this;
   }
