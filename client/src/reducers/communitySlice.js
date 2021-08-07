@@ -1,48 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-
 const communitySlice = createSlice({
   name: "Community",
 
-  initialState:{
-     
-     communities:[],
-     communityDetails: null,
-     
-      error:false,
-      isLoading:true
-  
+  initialState: {
+    communities: [],
+    communityDetails: null,
+
+    error: false,
+    isLoading: true,
   },
   reducers: {
     ResetError(state, action) {
       state.error = false;
+      state.isLoading = false;
     },
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-  hasError(state,action){
+    hasError(state, action) {
+      state.error = action.payload;
+    },
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
 
-   state.error = action.payload;
-  
-   },
-
-  CreateCommunity(state,action){
+    CreateCommunity(state, action) {
       state.communities.push(action.payload.community);
-     
+      state.isLoading = false;
+    },
 
-   },
-     
     FetchCommunities(state, action) {
-     
-      state.communities=action.payload.communities;
-      state.isLoading =false
-    
-       
+      state.communities = action.payload.communities;
+      state.isLoading = false;
     },
     FetchCommunity(state, action) {
-     
       const newCommunity = action.payload.community;
       const existingCommunity = state.communities.find(
         (community) => community.id === newCommunity.id
@@ -50,30 +44,20 @@ const communitySlice = createSlice({
 
       if (!existingCommunity) {
         state.community.push(action.payload.community);
-
-
       }
-       
+
       state.communityDetails = action.payload.community;
-      state.isLoading=false;
-        
+      state.isLoading = false;
     },
 
-
-
-    EditCommunity(state,action)
-    {
-
-         state.community=action.payload.community
-
-         
-
+    EditCommunity(state, action) {
+      state.community = action.payload.community;
+      state.isLoading = false;
     },
-    DeleteCommunity(state,action)
-    {
-      state.community=null
+    DeleteCommunity(state, action) {
+      state.community = null;
+      state.isLoading = false;
     },
-
   },
 });
 export const communityActions = communitySlice.actions;

@@ -6,24 +6,27 @@ const sponsorSlice = createSlice({
   initialState: {
     sponsors: [],
     sponsorDetails: null,
-    isLoading:true,
-      error:false,
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
 
-state.error = action.payload;
-   state.isLoading = false;
-
-
-},
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     CreateSponsor(state, action) {
       state.sponsors.push(action.payload.sponsor);
+      state.isLoading = false;
     },
     FetchSponsors(state, action) {
       state.sponsors = action.payload.sponsors;
@@ -40,6 +43,7 @@ state.error = action.payload;
       }
 
       state.sponsorDetails = action.payload.sponsor;
+      state.isLoading = false;
     },
 
     EditSponsor(state, action) {
@@ -48,24 +52,14 @@ state.error = action.payload;
           ? action.payload.sponsor
           : sponsor
       );
+      state.isLoading = false;
     },
     DeleteSponsor(state, action) {
       state.sponsors = state.sponsors.filter(
         (sponsor) => sponsor._id !== action.payload.id
       );
+      state.isLoading = false;
     },
-
-    // addSessionOfParticularSponsor(state,action){
-
-    //   state.allSessionsOfParticularSponsor=action.payload.allSessions;
-
-    // },
-
-    // addSpeakerOfParticularSponsor(state,action){
-
-    //   state.allSpeakersOfParticularSponsor=action.payload.speakers
-
-    // }
   },
 });
 export const sponsorActions = sponsorSlice.actions;

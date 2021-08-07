@@ -17,22 +17,30 @@ const userSlice = createSlice({
   reducers: {
     ResetError(state, action) {
       state.error = false;
+      state.isLoading = false;
     },
 
     startLoading(state) {
       state.isLoading = true;
+      state.isLoading = false;
     },
 
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
     },
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
 
     FetchPeopleInSession(state, action) {
       state.peopleInThisSession = action.payload.peopleInThisSession;
+      state.isLoading = false;
     },
     FetchPeopleInEvent(state, action) {
       state.peopleInThisEvent = action.payload.peopleInThisEvent;
+      state.isLoading = false;
     },
     CreateUser(state, action) {
       state.userDetails = action.payload.user;
@@ -40,6 +48,7 @@ const userSlice = createSlice({
     },
     EditCurrentlyJoinedChair(state, action) {
       state.currentlyJoinedChair = action.payload.chairId;
+      state.isLoading = false;
     },
 
     FetchUsers(state, action) {
@@ -49,12 +58,14 @@ const userSlice = createSlice({
 
     FetchUser(state, action) {
       state.users.push(action.payload.user);
+      state.isLoading = false;
     },
 
     DeleteUser(state, action) {
       state.users = state.users.filter(
         (user) => user.id !== action.payload.user.id
       );
+      state.isLoading = false;
     },
 
     EditUser(state, action) {
@@ -64,7 +75,6 @@ const userSlice = createSlice({
 
       state.userDetails = action.payload.user;
       state.isLoading = false;
-
     },
   },
 });

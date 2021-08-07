@@ -11,7 +11,7 @@ import history from "../../history";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import { fetchEvents } from "../../actions/index";
+import { errorTrackerForFetchEvents, fetchEvents } from "../../actions/index";
 // you will need the css that comes with bootstrap@3. if you are using
 // a tool like webpack, you can do the following:
 import "bootstrap/dist/css/bootstrap.css";
@@ -38,41 +38,10 @@ const categories = [
   { title: "Business & Entrepreneurship" },
 ];
 
-// class PreFooter extends React.Component {
-//   render() {
-//     return (
-//       <div className="row pre-footer">
-//         <div className="col-12 col-lg-6 d-flex flex-row justify-content-center align-items-center pre-footer-left-wrapper">
-//           <div className="col-1 col-xl-2"></div>
-//           <div className="col-10 col-xl-8">
-//             <div className="pre-footer-hero-text">
-//               Amaze Your Audience with Your Next-Gen Virtual Event.
-//             </div>
-//             <div className="pre-footer-sub-hero-text">
-//               Memorable events don’t just happen. They happen to be our
-//               business.
-//             </div>
-//             <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
-//               <button type="button" class="btn btn-light pre-footer-btn-light">
-//                 Host a free event
-//               </button>
-//             </div>
-//           </div>
-//           <div className="col-1 col-xl-2"></div>
-//         </div>
-//         <div
-//           className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
-//           style={{ maxHeight: "50vh" }}
-//         ></div>
-//       </div>
-//     );
-//   }
-// }
-
 const SearchEvents = () => {
   const dispatch = useDispatch();
 
-  const {isSignedIn} = useSelector((state) => state.auth);
+  const { isSignedIn } = useSelector((state) => state.auth);
 
   // const innerWidth = window.innerWidth;
 
@@ -301,7 +270,9 @@ const SearchEvents = () => {
   };
 
   if (error) {
-    return <div>{error}</div>;
+    dispatch(errorTrackerForFetchEvents());
+    alert(error);
+    return;
   }
 
   return (
@@ -345,25 +316,33 @@ const SearchEvents = () => {
                   </button>
                 </form>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  
-                  {isSignedIn ? <div className="me-5"><AvatarMenu /></div>  : <div className="d-flex flex-row align-items-center justify-content-center"> <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <Link
-                      to="/signin"
-                      type="button"
-                      class="btn btn-outline-primary btn-outline-text me-3"
-                    >
-                      Login
-                    </Link>
-                  </li>
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <Link
-                      to="/signup"
-                      type="button"
-                      class="btn btn-primary btn-outline-text"
-                    >
-                      Get Started
-                    </Link>
-                  </li> </div>  }
+                  {isSignedIn ? (
+                    <div className="me-5">
+                      <AvatarMenu />
+                    </div>
+                  ) : (
+                    <div className="d-flex flex-row align-items-center justify-content-center">
+                      {" "}
+                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                        <Link
+                          to="/signin"
+                          type="button"
+                          class="btn btn-outline-primary btn-outline-text me-3"
+                        >
+                          Login
+                        </Link>
+                      </li>
+                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                        <Link
+                          to="/signup"
+                          type="button"
+                          class="btn btn-primary btn-outline-text"
+                        >
+                          Get Started
+                        </Link>
+                      </li>{" "}
+                    </div>
+                  )}
                 </ul>
               </div>
             </div>

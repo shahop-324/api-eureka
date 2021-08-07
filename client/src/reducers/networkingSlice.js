@@ -5,22 +5,23 @@ const networkingSlice = createSlice({
 
   initialState: {
     networkingSettings: null,
-    isLoading:true,
-    error:false,
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
-
-state.error = action.payload;
-   state.isLoading = false;
-
-
-},
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     FetchNetworking(state, action) {
       state.networkingSettings = action.payload.settings;
       state.isLoading = false;
@@ -28,6 +29,7 @@ state.error = action.payload;
 
     EditNetworking(state, action) {
       state.networkingSettings = action.payload.settings;
+      state.isLoading = false;
     },
   },
 });

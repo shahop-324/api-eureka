@@ -57,6 +57,9 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     alert(err.response.data.message);
   }
 };
+export const errorTrackerForSignIn = () => async (dispatch, getState) => {
+  dispatch(authActions.disabledError());
+};
 
 export const signUp = (formValues) => async (dispatch) => {
   try {
@@ -79,6 +82,10 @@ export const signUp = (formValues) => async (dispatch) => {
     dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
   }
+};
+
+export const errorTrackerForSignUp = () => async (dispatch, getState) => {
+  dispatch(authActions.disabledError());
 };
 export const signOut = () => async (dispatch, getState) => {
   // while (window.localStorage.length !== 0) {
@@ -143,8 +150,6 @@ export const createCommunity =
           );
           if (!res.ok) {
             if (!res.message) {
-              
-
               throw new Error("creating community failed");
             } else {
               throw new Error(res.message);
@@ -228,7 +233,11 @@ export const createCommunity =
       console.log(err);
     }
   };
-//Yet to be implemented
+export const errorTrackerForCreateCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
+
 export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
 
@@ -273,13 +282,17 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
     // /user/:userId/community/overview/:id
     history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
   } catch (e) {
-    communityActions.hasError(e.message);
+    dispatch(communityActions.hasError(e.message));
   }
 };
 
+export const errorTrackerForCommunitySignIn =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
+  };
 // authentication with google auth
 export const googleSignIn = () => async (dispatch) => {
-  try {
+  const signIn = async () => {
     console.log("mai yaha se gujara hue");
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -297,7 +310,20 @@ export const googleSignIn = () => async (dispatch) => {
       params
     );
 
+    if (!response.ok) {
+      if (!response.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(response.message);
+      }
+    }
+
     const res = await response.json();
+    return res;
+  };
+
+  try {
+    const res = await signIn();
     console.log(res);
 
     dispatch(
@@ -317,13 +343,15 @@ export const googleSignIn = () => async (dispatch) => {
     );
   } catch (err) {
     alert(err.message);
+    dispatch(authActions.hasError(err.message));
   }
 };
-export const googleSignOut = () => async (dispatch, getState) => {
-  // while (window.localStorage.length !== 0) {
-  //   window.localStorage.clear();
-  // }
 
+export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
+  dispatch(authActions.disabledError());
+  dispatch(googleAuthActions.disabledError());
+};
+export const googleSignOut = () => async (dispatch, getState) => {
   dispatch(authActions.SignOut());
 };
 
@@ -345,6 +373,10 @@ export const fetchEvents = (query) => async (dispatch) => {
     console.log(e);
     dispatch(eventActions.hasError(e.message));
   }
+};
+
+export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
+  dispatch(eventActions.disabledError());
 };
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
@@ -399,6 +431,9 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
     dispatch(eventActions.hasError(e.message));
   }
 };
+export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
+  dispatch(eventActions.disabledError());
+};
 
 export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
@@ -441,6 +476,12 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
     dispatch(eventActions.hasError(err.message));
   }
 };
+
+export const errorTrackerForRegisteredEvents =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
+  };
+
 export const fetchEvent = (id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
 
@@ -457,9 +498,13 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
     console.log(err.response.data);
   }
 };
+// export const errorTrackerForFetchEvent= () => async (dispatch, getState) => {
+//   dispatch(eventActions.disabledError());
 
+// };
 export const fetchParticularEventOfCommunity =
   (id) => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
     try {
       const existingEvent = getState().event.events.find((event) => {
         console.log(id);
@@ -477,6 +522,15 @@ export const fetchParticularEventOfCommunity =
             },
           }
         );
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
         const result = await res.json();
 
         console.log(result);
@@ -494,8 +548,14 @@ export const fetchParticularEventOfCommunity =
         );
       }
     } catch (err) {
+      dispatch(eventActions.hasError(err.message));
       console.log(err);
     }
+  };
+
+export const errorTrackerForFetchParticularEventOfCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
   };
 export const fetchEventsOfParticularCommunity =
   (term) => async (dispatch, getState) => {
@@ -542,8 +602,14 @@ export const fetchEventsOfParticularCommunity =
     }
   };
 
+export const errorTrackerForFetchEventsOfParticularCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
+  };
+
 export const createEvent = (formValues) => async (dispatch, getState) => {
-  try {
+  dispatch(eventActions.startLoading());
+  const creatingEvent = async () => {
     console.log(formValues);
     let res = await fetch(
       "https://damp-taiga-71545.herokuapp.com/eureka/v1/community/events/new",
@@ -559,8 +625,20 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
         },
       }
     );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
 
     res = await res.json();
+    return res;
+  };
+
+  try {
+    const res = await creatingEvent();
     console.log(res);
 
     dispatch(
@@ -570,11 +648,16 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+    dispatch(eventActions.hasError(err.message));
   }
+};
+export const errorTrackerForCreateEvent = () => async (dispatch, getState) => {
+  dispatch(eventActions.disabledError());
 };
 
 export const editEvent = (formValues, id) => async (dispatch, getState) => {
-  try {
+  dispatch(eventActions.startLoading());
+  const editingEvent = async () => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
@@ -591,8 +674,18 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
+    return res;
+  };
+  try {
+    const res = await editingEvent();
     console.log(res);
 
     dispatch(
@@ -602,11 +695,17 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(eventActions.hasError(err.message));
   }
+};
+export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
+  dispatch(eventActions.disabledError());
 };
 
 export const uploadEventImage = (file, id) => async (dispatch, getState) => {
-  try {
+  dispatch(eventActions.startLoading());
+  const uploadingImage = async () => {
     console.log(file);
 
     let uploadConfig = await fetch(
@@ -649,6 +748,10 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     );
 
     const result = await res.json();
+    return result;
+  };
+  try {
+    const result = await uploadingImage();
 
     console.log(result);
 
@@ -658,13 +761,21 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    eventActions.hasError(err.message);
+
     console.log(err);
   }
 };
 
+export const errorTrackerForUploadEventImage =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
+  };
+
 export const editEventDescription =
   (formValues, id) => async (dispatch, getState) => {
-    try {
+    dispatch(eventActions.startLoading());
+    const editingEvent = async () => {
       console.log(id);
       console.log(formValues);
       let res = await fetch(
@@ -681,8 +792,19 @@ export const editEventDescription =
           },
         }
       );
-
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
       res = await res.json();
+      return res;
+    };
+
+    try {
+      const res = await editingEvent();
       console.log(res);
 
       dispatch(
@@ -691,8 +813,13 @@ export const editEventDescription =
         })
       );
     } catch (err) {
-      console.log(err);
+      dispatch(eventActions.hasError(err.message));
     }
+  };
+
+export const errorTrackerForEditEventDiscription =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
   };
 
 export const deleteEvent = () => (dispatch, getState) => {
@@ -748,7 +875,13 @@ export const createSpeaker =
             },
           }
         );
-
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
         res = await res.json();
         console.log(res);
 
@@ -775,7 +908,13 @@ export const createSpeaker =
           }
         );
         console.log(res);
-
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
         res = await res.json();
         console.log(res);
 
@@ -786,7 +925,7 @@ export const createSpeaker =
         );
       }
     } catch (err) {
-      console.log(err);
+      dispatch(speakerActions.hasError(err.message));
     }
   };
 
@@ -843,6 +982,11 @@ export const fetchSpeakers =
       console.log(err);
     }
   };
+export const errorTrackerForFetchSpeakers =
+  () => async (dispatch, getState) => {
+    dispatch(speakerActions.disabledError());
+  };
+
 export const fetchParticularSpeakerOfEvent =
   (id) => async (dispatch, getState) => {
     try {
@@ -1147,6 +1291,10 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
   }
+};
+
+export const errorTrackerForFetchBooths = () => async (dispatch, getState) => {
+  dispatch(boothActions.disabledError());
 };
 
 export const fetchBooth = (id) => async (dispatch, getState) => {
@@ -1648,6 +1796,10 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
   }
 };
 
+export const errorTrackerForFetchTickets = () => async (dispatch, getState) => {
+  dispatch(ticketActions.disabledError());
+};
+
 export const fetchTicket = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
@@ -1793,6 +1945,11 @@ export const madeJustForYou = () => async (dispatch) => {
     dispatch(eventActions.hasError(err.message));
   }
 };
+
+export const errorTrackerForMadeJustForYou =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.disabledError());
+  };
 //user actions
 
 export const createUser = (formValues, id) => async (dispatch, getState) => {
@@ -2013,6 +2170,10 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
   }
 };
 
+export const errorTrackerForEditUser = () => async (dispatch, getState) => {
+  dispatch(userActions.disabledError());
+};
+
 export const editUserPassword = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
@@ -2210,6 +2371,11 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
     console.log(err);
   }
 };
+
+export const errorTrackerForFetchSessions =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.disabledError());
+  };
 
 export const fetchSessionsForUser =
   (id, term) => async (dispatch, getState) => {
@@ -2448,6 +2614,10 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
     console.log(err);
   }
 };
+export const errorTrackerForFetchNetworking =
+  () => async (dispatch, getState) => {
+    dispatch(networkingActions.disabledError());
+  };
 
 export const editNetworking =
   (formValues, id) => async (dispatch, getState) => {
@@ -2553,6 +2723,9 @@ export const fetchCoupons = () => async (dispatch, getState) => {
     dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
+};
+export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
+  dispatch(couponActions.disabledError());
 };
 
 export const fetchCoupon = (id) => async (dispatch, getState) => {
@@ -2816,6 +2989,10 @@ export const fetchQueriesForCommunity =
       console.log(err.response.data);
     }
   };
+export const errorTrackerForfetchQueriesForCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(queriesActions.disabledError());
+  };
 
 export const answerQuery = (answerText, id) => async (dispatch, getState) => {
   try {
@@ -2965,6 +3142,10 @@ export const fetchRegistrationsOfParticularCommunity =
       dispatch(registrationActions.hasError(err.message));
       console.log(err);
     }
+  };
+export const errorTrackerForfetchRegistrationsOfParticularCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(registrationActions.disabledError());
   };
 
 export const fetchParticularRegistration =
@@ -3174,6 +3355,9 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
     dispatch(RTMActions.hasError(err.message));
   }
 };
+export const errorTrackerForgetRTMToken = () => async (dispatch, getState) => {
+  dispatch(RTMActions.disabledError());
+};
 
 export const channelJoinedTracker = () => async (dispatch, getState) => {
   dispatch(RTMActions.joinChannelTracker());
@@ -3199,6 +3383,11 @@ export const fetchEventChats = (chats) => async (dispatch, getState) => {
     dispatch(eventChatActions.hasError(err.message));
   }
 };
+
+export const errorTrackerForfetchEventChats =
+  () => async (dispatch, getState) => {
+    dispatch(eventChatActions.disabledError());
+  };
 
 export const fetchPreviousEventChatMessages =
   (eventId) => async (dispatch, getState) => {
@@ -3273,7 +3462,10 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
     dispatch(RTCActions.hasError(err.message));
   }
 };
-
+export const errorTrackerForFetchingRTCToken =
+  () => async (dispatch, getState) => {
+    dispatch(RTCActions.disabledError());
+  };
 export const resetAuthError = () => async (dispatch, getState) => {
   dispatch(authActions.ResetError());
 };

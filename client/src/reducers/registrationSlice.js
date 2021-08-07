@@ -7,8 +7,8 @@ const registrationSlice = createSlice({
     registrations: [],
     registrationDetails: null,
 
-    isLoading:true,
-      error:false,
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
@@ -16,17 +16,19 @@ const registrationSlice = createSlice({
     //   state.registrations.push(action.payload.registration);
     // },
 
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
 
-state.error = action.payload;
-   state.isLoading = false;
-
-
-},
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     FetchRegistrations(state, action) {
       state.registrations = action.payload.registrations;
       state.isLoading = false;
@@ -41,36 +43,8 @@ state.error = action.payload;
         state.registrations.push(action.payload.registration);
       }
       state.registrationDetails = action.payload.registration;
+      state.isLoading = false;
     },
-
-    // EditSession(state, action) {
-    //   console.log(state);
-    //   console.log(action.payload.registration);
-    //   const sessionsArr = state.registrations.map((registration) =>
-    //     registration.id === action.payload.registration.id
-    //       ? action.payload.registration
-    //       : registration
-    //   );
-    //   console.log(sessionsArr);
-    //   state.registrations = sessionsArr;
-    // },
-    // DeleteSession(state, action) {
-    //   state.registrations = state.registrations.filter(
-    //     (registration) => registration.id !== action.payload.id
-    //   );
-    // },
-
-    // addSessionOfParticularSession(state,action){
-
-    //   state.allSessionsOfParticularSession=action.payload.allSessions;
-
-    // },
-
-    // addSpeakerOfParticularSession(state,action){
-
-    //   state.allSpeakersOfParticularSession=action.payload.speakers
-
-    // }
   },
 });
 export const registrationActions = registrationSlice.actions;

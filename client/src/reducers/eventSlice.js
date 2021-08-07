@@ -20,9 +20,13 @@ const eventSlice = createSlice({
       state.error = action.payload;
       state.isLoading = false;
     },
-
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     CreateEvent(state, action) {
       state.events.push(action.payload.event);
+      state.isLoading = false;
     },
     FetchEvents(state, action) {
       state.events = action.payload.events;
@@ -50,11 +54,13 @@ const eventSlice = createSlice({
         event.id === action.payload.event.id ? action.payload.event : event
       );
       state.eventDetails = action.payload.event;
+      state.isLoading = false;
     },
     DeleteEvent(state, action) {
       state.events = state.events.filter(
         (event) => event.id !== action.payload.event.id
       );
+      state.isLoading = false;
     },
   },
 });

@@ -4,48 +4,39 @@ const googleAuthSlice = createSlice({
   name: "GoogleAuth",
 
   initialState: {
-   
-    googleId:"",
-    isClicked:false,
-    isLoading:true,
-      error:false,
-    
+    googleId: "",
+    isClicked: false,
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
-
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
 
-   state.error = action.payload;
-   state.isLoading = false;
-
-
-},
-
-    TrackerGoogleLogin(state,action){
-
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
+    TrackerGoogleLogin(state, action) {
       state.isClicked = action.payload.isClicked;
-      
+
+      state.isLoading = false;
     },
     SignIn(state, action) {
-     
-     
-     
-     
-    
-     
-      state.googleId=action.payload.googleId;
-
+      state.googleId = action.payload.googleId;
+      state.isLoading = false;
     },
-    SignOut(state,action)
-    {
-        
-      state.googleId="";
-    }
+    SignOut(state, action) {
+      state.googleId = "";
+      state.isLoading = false;
+    },
   },
 });
 

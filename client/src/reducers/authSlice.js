@@ -6,7 +6,6 @@ const authSlice = createSlice({
   initialState: {
     isSignedIn: false,
     token: "",
-
     error: false,
   },
 
@@ -17,9 +16,15 @@ const authSlice = createSlice({
     hasError(state, action) {
       state.error = action.payload;
     },
+
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     SignIn(state, action) {
       state.token = action.payload.token;
       state.isSignedIn = action.payload.isSignedIn;
+      state.isLoading = false;
     },
     SignOut(state, action) {
       state.token = null;

@@ -6,29 +6,30 @@ const couponSlice = createSlice({
   initialState: {
     coupons: [],
     couponDetails: null,
-    isLoading:true,
-    error:false,
+    isLoading: true,
+    error: false,
   },
 
   reducers: {
-
-    startLoading( state ){
+    startLoading(state) {
       state.isLoading = true;
-   },
+    },
 
-hasError(state,action){
-
-state.error = action.payload;
-   state.isLoading = false;
-
-
-},
+    hasError(state, action) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    disabledError(state, action) {
+      state.error = false;
+      state.isLoading = false;
+    },
     CreateCoupon(state, action) {
       state.coupons.push(action.payload.coupon);
+      state.isLoading = false;
     },
     FetchCoupons(state, action) {
       state.coupons = action.payload.coupons;
-      state.isLoading=false
+      state.isLoading = false;
     },
     FetchCoupon(state, action) {
       const newCoupon = action.payload.coupon;
@@ -41,17 +42,20 @@ state.error = action.payload;
       }
 
       state.couponDetails = action.payload.coupon;
+      state.isLoading = false;
     },
 
     EditCoupon(state, action) {
       state.coupons = state.coupons.map((coupon) =>
         coupon.id === action.payload.coupon._id ? action.payload.coupon : coupon
       );
+      state.isLoading = false;
     },
     DeleteCoupon(state, action) {
       state.coupons = state.coupons.filter(
         (coupon) => coupon.id !== action.payload.id
       );
+      state.isLoading = false;
     },
 
     // addSessionOfParticularCoupon(state,action){
