@@ -17,7 +17,7 @@ import CustomizedSwitchForNetworking from "../../ToggleSwitch";
 import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { editNetworking } from "../../../../../actions";
+import { editNetworking, errorTrackerForEditNetworking, errorTrackerForFetchNetworking } from "../../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../../Loader";
 
@@ -133,7 +133,10 @@ const NetworkingFormLeft = (props) => {
   };
 
   if (error) {
-    return <div>{error}</div>
+    dispatch(errorTrackerForEditNetworking());
+    dispatch(errorTrackerForFetchNetworking());
+    alert(error);
+    return;
   }
 
   return (
@@ -354,6 +357,9 @@ const mapStateToProps = (state) => ({
         : 0,
   },
 });
+
+
+
 
 export default connect(mapStateToProps)(
   reduxForm({
