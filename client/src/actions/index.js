@@ -24,7 +24,7 @@ import AgoraRTM from "agora-rtm-sdk";
 import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 
-const BaseURL = "https://damp-taiga-71545.herokuapp.com/eureka/v1/";
+const BaseURL = "http://localhost:3000/eureka/v1/";
 
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
@@ -109,7 +109,7 @@ export const createCommunity =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -134,7 +134,7 @@ export const createCommunity =
 
         const communityCreating = async () => {
           let res = await fetch(
-            "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
+            "http://localhost:3000/eureka/v1/users/newCommunity",
             {
               method: "POST",
               body: JSON.stringify({
@@ -182,7 +182,7 @@ export const createCommunity =
       } else {
         const communityCreating = async () => {
           let res = await fetch(
-            "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/newCommunity",
+            "http://localhost:3000/eureka/v1/users/newCommunity",
             {
               method: "POST",
               body: JSON.stringify({
@@ -243,7 +243,7 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
 
   const loginCommunity = async () => {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/${id}`,
+      `http://localhost:3000/eureka/v1/users/${id}`,
       {
         method: "POST",
 
@@ -306,7 +306,7 @@ export const googleSignIn = () => async (dispatch) => {
       credentials: "include",
     };
     const response = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/current_user",
+      "http://localhost:3000/eureka/v1/current_user",
       params
     );
 
@@ -384,7 +384,7 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
 
   const fetchData = async () => {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/personalData`,
+      `http://localhost:3000/eureka/v1/users/personalData`,
       {
         method: "GET",
 
@@ -439,7 +439,7 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const fetchData = async () => {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/registeredEvents`,
+      `http://localhost:3000/eureka/v1/users/registeredEvents`,
       {
         method: "GET",
 
@@ -514,7 +514,7 @@ export const fetchParticularEventOfCommunity =
       if (!existingEvent) {
         console.log(id, "I am passing from particularEvent action");
         const res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/events/${id}`,
+          `http://localhost:3000/eureka/v1/community/events/${id}`,
           {
             method: "GET",
             headers: {
@@ -562,7 +562,7 @@ export const fetchEventsOfParticularCommunity =
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
-      let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/events`;
+      let fullLocation = `http://localhost:3000/eureka/v1/community/events`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -612,7 +612,7 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
   const creatingEvent = async () => {
     console.log(formValues);
     let res = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/community/events/new",
+      "http://localhost:3000/eureka/v1/community/events/new",
       {
         method: "POST",
         body: JSON.stringify({
@@ -661,7 +661,7 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/update`,
+      `http://localhost:3000/eureka/v1/events/${id}/update`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -709,7 +709,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(file);
 
     let uploadConfig = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+      "http://localhost:3000/eureka/v1/upload/user/img",
       {
         headers: {
           Authorization: `Bearer ${getState().auth.token}`,
@@ -733,7 +733,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(awsRes);
 
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/update`,
+      `http://localhost:3000/eureka/v1/events/${id}/update`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -779,7 +779,7 @@ export const editEventDescription =
       console.log(id);
       console.log(formValues);
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/updateEventDescription`,
+        `http://localhost:3000/eureka/v1/events/${id}/updateEventDescription`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -838,7 +838,7 @@ export const createSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -869,7 +869,7 @@ export const createSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/addSpeaker`,
+          `http://localhost:3000/eureka/v1/events/${id}/addSpeaker`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -902,7 +902,7 @@ export const createSpeaker =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/addSpeaker`,
+          `http://localhost:3000/eureka/v1/events/${id}/addSpeaker`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -946,7 +946,7 @@ export const fetchSpeakers =
     dispatch(speakerActions.startLoading());
 
     const getSpeakers = async () => {
-      let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/speakers`;
+      let fullLocation = `http://localhost:3000/eureka/v1/events/${id}/speakers`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -1006,7 +1006,7 @@ export const fetchParticularSpeakerOfEvent =
     const fetchingSpeaker = async () => {
       //console.log(id, "I am passing from particularEvent action");
       const res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/speakers/${id}`,
+        `http://localhost:3000/eureka/v1/speakers/${id}`,
         {
           method: "GET",
           headers: {
@@ -1052,7 +1052,7 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
   const fetchingSpeaker = async () => {
     //console.log(id, "I am passing from particularEvent action");
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/speakers/${id}/getSpeaker`,
+      `http://localhost:3000/eureka/v1/speakers/${id}/getSpeaker`,
       {
         method: "GET",
         headers: {
@@ -1103,7 +1103,7 @@ export const editSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1135,7 +1135,7 @@ export const editSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/speakers/${id}/update`,
+          `http://localhost:3000/eureka/v1/speakers/${id}/update`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1169,7 +1169,7 @@ export const editSpeaker =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/speakers/${id}/update`,
+          `http://localhost:3000/eureka/v1/speakers/${id}/update`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1261,7 +1261,7 @@ export const createBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1293,7 +1293,7 @@ export const createBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/addBooth`,
+          `http://localhost:3000/eureka/v1/booths/${id}/addBooth`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -1324,7 +1324,7 @@ export const createBooth =
         );
       } else {
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/addBooth`,
+          `http://localhost:3000/eureka/v1/booths/${id}/addBooth`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -1366,7 +1366,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
   const getBooths = async () => {
     console.log(id);
 
-    let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/getAllbooths`;
+    let fullLocation = `http://localhost:3000/eureka/v1/booths/${id}/getAllbooths`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -1426,7 +1426,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/getBoothDetails`,
+      `http://localhost:3000/eureka/v1/booths/${id}/getBoothDetails`,
       {
         method: "GET",
 
@@ -1476,7 +1476,7 @@ export const editBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1508,7 +1508,7 @@ export const editBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/updateBooth`,
+          `http://localhost:3000/eureka/v1/booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1541,7 +1541,7 @@ export const editBooth =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/booths/${id}/updateBooth`,
+          `http://localhost:3000/eureka/v1/booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1626,7 +1626,7 @@ export const createSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1772,7 +1772,7 @@ export const fetchSponsors =
     dispatch(sponsorActions.startLoading());
 
     const getSponsors = async () => {
-      let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/sponsors/${id}`;
+      let fullLocation = `http://localhost:3000/eureka/v1/sponsors/${id}`;
 
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
@@ -1829,7 +1829,7 @@ export const editSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+          "http://localhost:3000/eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1934,7 +1934,7 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}/addTicket`,
+      `http://localhost:3000/eureka/v1/community/${id}/addTicket`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -1966,7 +1966,7 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
 
   const getTickets = async () => {
     console.log(id);
-    let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/tickets`;
+    let fullLocation = `http://localhost:3000/eureka/v1/events/${id}/tickets`;
 
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
@@ -2024,7 +2024,7 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/ticket`,
+      `http://localhost:3000/eureka/v1/events/${id}/ticket`,
       {
         method: "GET",
 
@@ -2053,7 +2053,7 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/updateTicket`,
+      `http://localhost:3000/eureka/v1/events/${id}/updateTicket`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2085,7 +2085,7 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/deleteTicket`,
+      `http://localhost:3000/eureka/v1/events/${id}/deleteTicket`,
       {
         method: "DELETE",
 
@@ -2178,7 +2178,7 @@ export const createUser = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/addSpeaker`,
+      `http://localhost:3000/eureka/v1/events/${id}/addSpeaker`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2223,7 +2223,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/speakers`,
+      `http://localhost:3000/eureka/v1/events/${id}/speakers`,
       {
         method: "GET",
 
@@ -2250,7 +2250,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
 export const fetchUser = (formValues) => async (dispatch, getState) => {
   try {
     const res = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/Me",
+      "http://localhost:3000/eureka/v1/users/Me",
       {
         headers: {
           //  "Content-Type": "application/json",
@@ -2281,7 +2281,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(file);
 
       let uploadConfig = await fetch(
-        "https://damp-taiga-71545.herokuapp.com/eureka/v1/upload/user/img",
+        "http://localhost:3000/eureka/v1/upload/user/img",
         {
           headers: {
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2310,7 +2310,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(awsRes);
 
       const res = await fetch(
-        "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updateMe",
+        "http://localhost:3000/eureka/v1/users/updateMe",
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2347,7 +2347,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // );
     } else {
       const res = await fetch(
-        "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updateMe",
+        "http://localhost:3000/eureka/v1/users/updateMe",
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2397,7 +2397,7 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     const res = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/users/updatePassword",
+      "http://localhost:3000/eureka/v1/users/updatePassword",
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2435,7 +2435,7 @@ export const deleteUser = () => (dispatch, getState) => {
 export const fetchCommunity = (id) => async (dispatch, getState) => {
   try {
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}/getCommunity`,
+      `http://localhost:3000/eureka/v1/community/${id}/getCommunity`,
       {
         method: "GET",
         headers: {
@@ -2460,7 +2460,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
 export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   try {
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}/updateCommunity`,
+      `http://localhost:3000/eureka/v1/community/${id}/updateCommunity`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2488,7 +2488,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
 export const deleteCommunity = (id) => async (dispatch, getState) => {
   try {
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}`,
+      `http://localhost:3000/eureka/v1/community/${id}`,
       {
         method: "GET",
       }
@@ -2512,7 +2512,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/addSession`,
+      `http://localhost:3000/eureka/v1/events/${id}/addSession`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2543,7 +2543,7 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   const getSessions = async () => {
     console.log(id);
-    let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/sessions`;
+    let fullLocation = `http://localhost:3000/eureka/v1/events/${id}/sessions`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -2600,7 +2600,7 @@ export const fetchSessionsForUser =
   (id, term) => async (dispatch, getState) => {
     try {
       console.log(id);
-      let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/sessionsForUser`;
+      let fullLocation = `http://localhost:3000/eureka/v1/events/${id}/sessionsForUser`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -2640,7 +2640,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/sessions`,
+      `http://localhost:3000/eureka/v1/events/${id}/sessions`,
       {
         method: "GET",
 
@@ -2670,7 +2670,7 @@ export const fetchSessionForSessionStage =
       console.log(id);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/sessions/${id}/getOneSession`,
+        `http://localhost:3000/eureka/v1/sessions/${id}/getOneSession`,
         {
           method: "GET",
 
@@ -2706,7 +2706,7 @@ export const fetchParticularSessionOfEvent =
       if (!existingSession) {
         //console.log(id, "I am passing from particularEvent action");
         const res = await fetch(
-          `https://damp-taiga-71545.herokuapp.com/eureka/v1/sessions/${id}`,
+          `http://localhost:3000/eureka/v1/sessions/${id}`,
           {
             method: "GET",
             headers: {
@@ -2739,7 +2739,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     const res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/sessions/${id}/update`,
+      `http://localhost:3000/eureka/v1/sessions/${id}/update`,
       {
         method: "POST",
         // body: {...formValues},
@@ -2844,7 +2844,7 @@ export const editNetworking =
       console.log(id);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/events/${id}/updateNetworking`,
+        `http://localhost:3000/eureka/v1/events/${id}/updateNetworking`,
         {
           method: "PATCH",
 
@@ -2876,7 +2876,7 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/coupons/createNew`,
+      `http://localhost:3000/eureka/v1/community/coupons/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2908,7 +2908,7 @@ export const fetchCoupons = () => async (dispatch, getState) => {
 
   const getCoupons = async () => {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/coupons`,
+      `http://localhost:3000/eureka/v1/community/coupons`,
       {
         method: "GET",
 
@@ -2952,7 +2952,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}/getOneCoupon`,
+      `http://localhost:3000/eureka/v1/community/${id}/getOneCoupon`,
       {
         method: "GET",
 
@@ -2979,7 +2979,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   try {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/${id}/updateCoupon`,
+      `http://localhost:3000/eureka/v1/community/${id}/updateCoupon`,
       {
         method: "PATCH",
 
@@ -3061,7 +3061,7 @@ export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
     try {
       const checkoutSession = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/stripe/getEventRegistrationCheckoutSession`,
+        `http://localhost:3000/eureka/v1/stripe/getEventRegistrationCheckoutSession`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3087,7 +3087,7 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/query/createNew`,
+      `http://localhost:3000/eureka/v1/users/query/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3119,7 +3119,7 @@ export const createCommunityFeedback =
     try {
       console.log(formValues);
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/feedback/community`,
+        `http://localhost:3000/eureka/v1/feedback/community`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3153,7 +3153,7 @@ export const fetchQueriesForCommunity =
 
     console.log(term, event, answerStatus, userRegistrationStatus);
     const fetchQueries = async () => {
-      let fullLocation = `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/queries/getAll`;
+      let fullLocation = `http://localhost:3000/eureka/v1/community/queries/getAll`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -3216,7 +3216,7 @@ export const errorTrackerForfetchQueriesForCommunity =
 export const answerQuery = (answerText, id) => async (dispatch, getState) => {
   try {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/community/queries/createAnswer`,
+      `http://localhost:3000/eureka/v1/community/queries/createAnswer`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -3255,7 +3255,7 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
     let res = await fetch(
-      `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/forgotPassword`,
+      `http://localhost:3000/eureka/v1/users/forgotPassword`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3284,7 +3284,7 @@ export const resetPassword =
   (formValues, token) => async (dispatch, getState) => {
     try {
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/users/resetPassword/${token}`,
+        `http://localhost:3000/eureka/v1/users/resetPassword/${token}`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -3326,7 +3326,7 @@ export const fetchRegistrationsOfParticularCommunity =
       console.log(communityId);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/registrations/community/getAll`,
+        `http://localhost:3000/eureka/v1/registrations/community/getAll`,
         {
           method: "GET",
 
@@ -3373,7 +3373,7 @@ export const fetchParticularRegistration =
       console.log(id);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/registrations/${id}/getOne`,
+        `http://localhost:3000/eureka/v1/registrations/${id}/getOne`,
         {
           method: "GET",
 
@@ -3403,7 +3403,7 @@ export const createNewInvitation =
       console.log(formValues);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/team-invites/create-new`,
+        `http://localhost:3000/eureka/v1/team-invites/create-new`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3480,7 +3480,7 @@ export const createSocket = (socket) => async (dispatch, getState) => {
 //       console.log(eventId);
 
 //       let res = await fetch(
-//         `https://damp-taiga-71545.herokuapp.com/eureka/v1/getCurrentUsers/${eventId}`,
+//         `http://localhost:3000/eureka/v1/getCurrentUsers/${eventId}`,
 //         {
 //           method: "GET",
 
@@ -3525,7 +3525,7 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
 
   const fetchingRTMToken = async () => {
     let res = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/getRTMToken",
+      "http://localhost:3000/eureka/v1/getRTMToken",
       {
         method: "POST",
         body: JSON.stringify({
@@ -3614,7 +3614,7 @@ export const fetchPreviousEventChatMessages =
       console.log(eventId);
 
       let res = await fetch(
-        `https://damp-taiga-71545.herokuapp.com/eureka/v1/getPreviousEventMsg/${eventId}`,
+        `http://localhost:3000/eureka/v1/getPreviousEventMsg/${eventId}`,
         {
           method: "GET",
 
@@ -3643,7 +3643,7 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
 
   const fetchingRTCToken = async () => {
     let res = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/getLiveStreamingToken",
+      "http://localhost:3000/eureka/v1/getLiveStreamingToken",
       {
         method: "POST",
         body: JSON.stringify({
