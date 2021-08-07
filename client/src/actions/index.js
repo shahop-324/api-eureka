@@ -2892,6 +2892,7 @@ export const errorTrackerForFetchSessionForSessionStage =
   };
 export const fetchParticularSessionOfEvent =
   (id) => async (dispatch, getState) => {
+    dispatch(sessionActions.startLoading());
     try {
       const existingSession = getState().session.sessions.find((session) => {
         return session.id === id;
@@ -2909,6 +2910,15 @@ export const fetchParticularSessionOfEvent =
             },
           }
         );
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
         const result = await res.json();
 
         console.log(result);
@@ -2926,10 +2936,18 @@ export const fetchParticularSessionOfEvent =
         );
       }
     } catch (err) {
+      dispatch(sessionActions.hasError(err.message));
       console.log(err);
     }
   };
+
+export const errorTrackerForFetchParticularSessionOfEvent =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.disabledError());
+  };
+
 export const editSession = (formValues, id) => async (dispatch, getState) => {
+  dispatch(sessionActions.startLoading());
   try {
     console.log(formValues);
 
@@ -2948,6 +2966,13 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     const result = await res.json();
 
     console.log(result, result.data);
@@ -2958,11 +2983,16 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(sessionActions.hasError(err.message));
     console.log(err);
   }
 };
-
+export const errorTrackerForEditSession = () => async (dispatch, getState) => {
+  dispatch(sessionActions.disabledError());
+};
 export const deleteSession = (id) => async (dispatch, getState) => {
+  dispatch(sessionActions.startLoading());
+
   try {
     console.log(id);
 
@@ -2975,6 +3005,13 @@ export const deleteSession = (id) => async (dispatch, getState) => {
       },
     });
 
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -2984,10 +3021,14 @@ export const deleteSession = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(sessionActions.hasError(err.message));
     console.log(err);
   }
 };
-
+export const errorTrackerForDeleteSession =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.disabledError());
+  };
 export const fetchNetworking = (id) => async (dispatch, getState) => {
   dispatch(networkingActions.startLoading());
 
@@ -3036,6 +3077,20 @@ export const errorTrackerForFetchNetworking =
 export const editNetworking =
   (formValues, id) => async (dispatch, getState) => {
     try {
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
       console.log(id);
 
       let res = await fetch(
