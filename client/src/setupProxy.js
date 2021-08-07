@@ -3,7 +3,7 @@ module.exports = function (app) {
   app.use(
     "/eureka/v1/auth/google",
     createProxyMiddleware({
-      target: "https://damp-taiga-71545.herokuapp.com",
+      target: "http://localhost:3000",
     })
   );
 };

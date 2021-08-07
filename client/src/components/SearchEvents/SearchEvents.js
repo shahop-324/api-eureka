@@ -21,6 +21,7 @@ import dateFormat from "dateformat";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
+import PreFooter from "../PreFooter";
 
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
@@ -43,26 +44,18 @@ const SearchEvents = () => {
 
   const { isSignedIn } = useSelector((state) => state.auth);
 
-  // const innerWidth = window.innerWidth;
-
-  // const collapseFilter = () => {
-  //   document.getElementsByClassName('collapse').collapse('toggle');
-  // }
-
   const { error, isLoading } = useSelector((state) => state.event);
 
   const location = useLocation();
   console.log(location);
-  // useEffect(()=>{
-  //   dispatch(fetchEvents(location.search));
-
-  // },[])
+  
   useEffect(() => {
     dispatch(fetchEvents(location.search));
   }, [location.search, dispatch]);
 
   const [text, setText] = useState("");
-  const [priceFilter, setPriceFilter] = useState("");
+  const [priceFilter, setPriceFilter] = useState("Free");
+
 
   let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
@@ -617,7 +610,7 @@ const SearchEvents = () => {
           </div>
           <div className="col-0 col-lg-2"></div>
         </div>
-        {/* <PreFooter /> */}
+        <PreFooter />
         <Footer />
       </div>
     </>

@@ -130,13 +130,11 @@ img {
   padding: 2rem 1.5rem 2.5rem;
   border-radius: 1.75rem;
   box-shadow: 0 12px 24px hsla(var(--hue-color), 61%, 16%, 0.1);
-  transition: 0.4s;
-
+  
   background: rgba(255, 255, 255, 0.931);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-
   border: 1px solid rgba(255, 255, 255, 0.116);
 }
 
@@ -344,7 +342,6 @@ img {
 @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
 * {
   box-sizing: border-box;
-  transition: 0.25s;
 }
 
 h2 {

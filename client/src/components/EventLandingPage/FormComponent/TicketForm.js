@@ -133,7 +133,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
     }
 
     let order = await fetch(
-      "https://damp-taiga-71545.herokuapp.com/eureka/v1/razorpay/createRazorpayOrder",
+      "http://localhost:3000/eureka/v1/razorpay/createRazorpayOrder",
       {
         method: "POST",
         body: JSON.stringify({
