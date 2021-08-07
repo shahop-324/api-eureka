@@ -39,7 +39,6 @@ const DeleteSession = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.openDeleteDialog}
-        onClose={props.handleCloseDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">

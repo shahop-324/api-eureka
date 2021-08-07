@@ -290,6 +290,7 @@ footer {
 
 .footer-container {
   height: 100%;
+  margin: 0 auto;
 
   display: grid;
   grid-template-columns: 0.5fr 1fr 1fr 1fr 2fr;
@@ -461,4 +462,12 @@ footer {
   }
 
   
+}
+
+@media only screen and (max-width: 540px) {
+  .footer-container {
+    
+    grid-template-columns: 1fr;
+    
+  }
 }

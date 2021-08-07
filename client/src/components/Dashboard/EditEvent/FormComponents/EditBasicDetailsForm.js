@@ -8,25 +8,15 @@ import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { editEvent } from "../../../../actions";
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -36,24 +26,38 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
+  
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+      rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -62,7 +66,20 @@ const renderTextArea = ({
         required
       />
 
-      {renderError(meta)}
+{touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -167,17 +184,9 @@ const EditBasicDetailsForm = (props) => {
   const id = params.id;
   console.log(id)
 
-  //  useEffect(()=>{
-  //  dispatch(fetchParticularEventOfCommunity(id))
-  //    },[])
   const showResults = (formValues) => {
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
-
-  //const state = useSelector((state) => state);
-  // console.log(
-  //   dateFormat(new Date(state.event.eventDetails.startDate), "yyyy-mm-dd")
-  // );
 
   const onSubmit = (formValues) => {
     const categories = [];
@@ -445,17 +454,7 @@ const EditBasicDetailsForm = (props) => {
   );
 };
 
-// var now = new Date();
-
-// // Basic usage
-// dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-// dateFormat(new Date(state.event.eventDetails.startDate),"yyyy-mm-dd")
-// // Saturday, June 9th, 2007, 5:46:21 PM
-
 const mapStateToProps = (state) => ({
-  // initialValues:{ startDate:  "2021-07-12"}
-
-  // initialValues:state.event.event,
   initialValues: {
     eventName:
       state.event.eventDetails && state.event.eventDetails.eventName
@@ -503,12 +502,45 @@ const mapStateToProps = (state) => ({
   },
 });
 
+
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.eventName) {
+    errors.eventName = "Event name is required";
+  }
+  if (!formValues.shortDescription) {
+    errors.description = "Event description is required";
+  }
+  if (!formValues.startDate) {
+    errors.startDate = "Start Date is required";
+  }
+  if (!formValues.startTime) {
+    errors.startTime = "Start Time is required";
+  }
+  if (!formValues.endDate) {
+    errors.endDate = "End Date is required";
+  }
+  if (!formValues.endTime) {
+    errors.endTime = "End Time is required";
+  }
+  if (!formValues.selectTimeZone) {
+    errors.selectTimeZone = "Timezone is required";
+  }
+  if (!formValues.selectCategories) {
+    errors.selectCategories = "Categories is required";
+  }
+  if (!formValues.visibility) {
+    errors.visibility = "Event visibility is required";
+  }
+  return errors;
+};
+
 export default connect(mapStateToProps)(
   reduxForm({
     form: "EditBasicDetails",
+    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(EditBasicDetailsForm)
 );
-
-//export default CreateNewEventForm;

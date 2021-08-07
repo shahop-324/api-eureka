@@ -31,26 +31,16 @@ const styles = {
   }),
 };
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
-
 const renderInput = ({
   input,
   value,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -61,7 +51,20 @@ const renderInput = ({
         placeholder={placeholder}
         required
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -99,7 +102,7 @@ const AddNewCoupon = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit } = props;
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -120,14 +123,7 @@ const AddNewCoupon = (props) => {
 
   const onSubmit = (formValues) => {
     console.log(formValues);
-    // const speakersArray = [];
-    // if (formValues.speaker !== undefined)
-    //   for (let element of formValues.speaker) {
-    //     speakersArray.push(element.value);
-    //   }
-
-    // console.log(speakersArray);
-
+   
     const ModifiedFormValues = {};
     ModifiedFormValues.discountForEventId = formValues.eventName.value;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
@@ -136,11 +132,9 @@ const AddNewCoupon = (props) => {
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted = formValues.numberOfDiscountsAvailable;
     
-    // console.log(ModifiedFormValues);
     showResults(ModifiedFormValues);
     dispatch(createCoupon(ModifiedFormValues));
     props.handleClose();
-    // setState({ open: true, vertical: "top", horizontal: "center" });
   };
 
   return (
@@ -148,10 +142,9 @@ const AddNewCoupon = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -230,12 +223,6 @@ const AddNewCoupon = (props) => {
                 placeholder="50"
                 component={renderInput}
               />
-              {/* <input
-              type="number"
-              class="form-control"
-              id="communityName"
-              aria-describedby="communityName"
-            /> */}
             </div>
             <div class="mb-4 overlay-form-input-row">
               <label
@@ -276,7 +263,7 @@ const AddNewCoupon = (props) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Create New Coupon
               </button>
@@ -288,6 +275,31 @@ const AddNewCoupon = (props) => {
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.eventName) {
+    errors.eventName = "Event name is required";
+  }
+  if (!formValues.expiryDate) {
+    errors.expiryDate = "Expiry Date is required";
+  }
+  if (!formValues.expiryTime) {
+    errors.expiryTime = "Expiry Time is required";
+  }
+  if (!formValues.discountPercentage) {
+    errors.discountPercentage = "Discount percentage is required";
+  }
+  if (!formValues.couponCode) {
+    errors.couponCode = "Coupon code is required";
+  }
+  if (!formValues.numberOfDiscountsAvailable) {
+    errors.numberOfDiscountsAvailable = "Number of discounts available is required";
+  }
+  return errors;
+};
+
 export default reduxForm({
   form: "newCouponForm",
+  validate,
 })(AddNewCoupon);

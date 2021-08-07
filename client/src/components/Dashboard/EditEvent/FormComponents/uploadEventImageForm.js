@@ -4,7 +4,7 @@ import "./../Style/uploadEventImage.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import {  uploadEventImage } from "../../../../actions";
+import { uploadEventImage } from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
 
@@ -31,26 +31,16 @@ const UploadEventImageForm = (props) => {
   const params = useParams();
 
   const id = params.id;
-//   useEffect(()=>{
-//     dispatch(fetchParticularEventOfCommunity(id));
-
-//  },[])
-
-     const event=useSelector((state)=>{
-       return state.event.events.find((event)=>{
-
-
-        return event.id===id
-       })
-
-
-     })
+  const event = useSelector((state) => {
+    return state.event.events.find((event) => {
+      return event.id === id;
+    });
+  });
   const imgKey = event.image;
   let imgUrl = " #";
   if (imgKey) {
     imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
   }
-  
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
@@ -120,7 +110,6 @@ const UploadEventImageForm = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  // console.log(state.user.userDetails);
   initialValues: {
     imgUrl:
       state.event.eventDetails && state.event.eventDetails.image

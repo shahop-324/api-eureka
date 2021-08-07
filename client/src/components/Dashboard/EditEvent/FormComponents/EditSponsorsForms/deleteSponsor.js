@@ -39,7 +39,6 @@ const DeleteSponsor = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.openDeleteDialog}
-        onClose={props.handleCloseDeleteSponsor}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
@@ -47,7 +46,7 @@ const DeleteSponsor = (props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-             You are about to remove this sponsor. Are you sure ?
+            You are about to remove this sponsor. Are you sure ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -56,7 +55,7 @@ const DeleteSponsor = (props) => {
           </Button>
           <Button
             onClick={() => {
-              dispatch(deleteSponsor(props.id))
+              dispatch(deleteSponsor(props.id));
               props.handleCloseDeleteSponsor();
               setState({ open: true, vertical: "top", horizontal: "center" });
             }}

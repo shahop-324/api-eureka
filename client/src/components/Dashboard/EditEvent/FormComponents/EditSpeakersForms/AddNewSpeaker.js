@@ -69,14 +69,20 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-        {error}
-      </div>) ||
-          (warning && <div
-            className="my-1"
-            style={{ color: "#8B780D", fontWeight: "500" }}
-          > {warning}
-          </div>))}
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {" "}
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -100,16 +106,21 @@ const renderTextArea = ({
         className={classes}
         placeholder={placeholder}
       />
- {touched &&
-        ((error && <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-        {error}
-      </div>) ||
-          (warning && <div
-            className="my-1"
-            style={{ color: "#8B780D", fontWeight: "500" }}
-          > {warning}
-          </div>))}
-      
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {" "}
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -137,7 +148,6 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      
     </div>
   </div>
 );
@@ -217,7 +227,6 @@ const AddNewSpeaker = (props) => {
         fullScreen={fullScreen}
         scroll="paper"
         open={props.open}
-        // onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">

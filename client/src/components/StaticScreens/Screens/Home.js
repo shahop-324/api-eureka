@@ -16,8 +16,6 @@ import BoostYourEvents from "./../../../assets/images/section-9-home.png";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-
-
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 
 import CancelIcon from "@material-ui/icons/Cancel";

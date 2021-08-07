@@ -37,26 +37,18 @@ const styles = {
   }),
 };
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
+
 
 const renderInput = ({
   input,
   value,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -67,7 +59,20 @@ const renderInput = ({
         placeholder={placeholder}
         required
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -137,14 +142,7 @@ const EditCoupon = (props) => {
 
   const onSubmit = (formValues) => {
     console.log(formValues);
-    // const speakersArray = [];
-    // if (formValues.speaker !== undefined)
-    //   for (let element of formValues.speaker) {
-    //     speakersArray.push(element.value);
-    //   }
-
-    // console.log(speakersArray);
-
+   
     const ModifiedFormValues = {};
     ModifiedFormValues.discountForEventId = formValues.eventName.value;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
@@ -154,11 +152,11 @@ const EditCoupon = (props) => {
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
 
-    // console.log(ModifiedFormValues);
+    
     showResults(ModifiedFormValues);
     dispatch(editCoupon(ModifiedFormValues, props.id));
     props.handleClose();
-    // setState({ open: true, vertical: "top", horizontal: "center" });
+    
   };
 
   return (
@@ -166,10 +164,9 @@ const EditCoupon = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -312,7 +309,7 @@ const EditCoupon = (props) => {
                     horizontal: "center",
                   });
                 }}
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
               >
                 Save Changes
               </button>
@@ -373,16 +370,37 @@ const mapStateToProps = (state) => ({
       state.coupon.couponDetails.maxNumOfDiscountPermitted
         ? state.coupon.couponDetails.maxNumOfDiscountPermitted
         : "",
-    // description:
-    //   state.session.sessionDetails && state.session.sessionDetails.description
-    //     ? state.session.sessionDetails.description
-    //     : "",
   },
 });
+
+const validate = (formValues) => {
+  const errors = {};
+  
+  if (!formValues.eventName) {
+    errors.eventName = "Event name is required";
+  }
+  if (!formValues.expiryDate) {
+    errors.expiryDate = "Expiry Date is required";
+  }
+  if (!formValues.expiryTime) {
+    errors.expiryTime = "Expiry Time is required";
+  }
+  if (!formValues.discountPercentage) {
+    errors.discountPercentage = "Discount percentage is required";
+  }
+  if (!formValues.couponCode) {
+    errors.couponCode = "Coupon code is required";
+  }
+  if (!formValues.numberOfDiscountsAvailable) {
+    errors.numberOfDiscountsAvailable = "Number of discounts available is required";
+  }
+  return errors;
+};
 
 export default connect(mapStateToProps)(
   reduxForm({
     form: "EditCouponDetails",
+    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(EditCoupon)

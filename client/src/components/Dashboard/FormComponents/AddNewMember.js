@@ -4,36 +4,33 @@ import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 
-
 const teamPosition = [
-    { value: "Super Admin", label: "Super Admin" },
-    { value: "Admin", label: "Admin" },
-    { value: "Community Manager", label: "Community Manager" },
-    { value: "Event Host", label: "Event Host" },
-  ];
-  
-  const styles = {
-    control: (base) => ({
-      ...base,
-      fontFamily: "Inter",
-      fontWeight: "600",
-      color: "#757575",
-    }),
-    menu: (base) => ({
-      ...base,
-      fontFamily: "Inter",
-      fontWeight: "600",
-      color: "#757575",
-    }),
-  };
+  { value: "Super Admin", label: "Super Admin" },
+  { value: "Admin", label: "Admin" },
+  { value: "Community Manager", label: "Community Manager" },
+  { value: "Event Host", label: "Event Host" },
+];
+
+const styles = {
+  control: (base) => ({
+    ...base,
+    fontFamily: "Inter",
+    fontWeight: "600",
+    color: "#757575",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Inter",
+    fontWeight: "600",
+    color: "#757575",
+  }),
+};
 
 const AddNewMember = (props) => {
-
-    
-  return <>
-  <Dialog
+  return (
+    <>
+      <Dialog
         open={props.openAddToTeamDialog}
-        onClose={props.handleCloseAddToTeamDialog}
         aria-labelledby="responsive-dialog-title"
       >
         <div className="add-new-member-form px-4 py-4">
@@ -92,7 +89,8 @@ const AddNewMember = (props) => {
           </div>
         </div>
       </Dialog>
-  </>;
+    </>
+  );
 };
 
 export default AddNewMember;

@@ -131,7 +131,7 @@ const RevenueManagement = () => {
           <div className="sec-heading-text">Manage Revenue Flow</div>
           <div className="sec-heading-action-button d-flex flex-row"></div>
         </div>
-        <div className="event-management-content-grid px-4 mx-3 mb-4 py-4">
+        <div className="event-management-content-grid px-4 mx-3 mb-4 py-4" style={{height: "auto"}}>
           <div className="btn-outline-text" style={{ color: "#626262" }}>
             Select your payment service provider (Caution: You cannot change
             your preference after this.)

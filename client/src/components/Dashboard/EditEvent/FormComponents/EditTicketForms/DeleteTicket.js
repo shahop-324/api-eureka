@@ -39,7 +39,6 @@ const DeleteTicket = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.openDeleteDialog}
-        onClose={props.handleCloseDeleteTicket}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
@@ -47,8 +46,9 @@ const DeleteTicket = (props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-         By doing so, no one will be
-            able to register using this ticket anymore. But previously registered users can still access this event. Are you sure ?
+            By doing so, no one will be able to register using this ticket
+            anymore. But previously registered users can still access this
+            event. Are you sure ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

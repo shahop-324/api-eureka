@@ -14,9 +14,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import {
-  editSpeaker,
-} from "../../../../../actions";
+import { editSpeaker } from "../../../../../actions";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -57,50 +55,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -110,51 +73,37 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
 
-// const renderFileInput = ({
-//   input,
-//   meta,
-//   type,
-//   ariadescribedby,
-//   classes,
-//   onFileChange
-// }) => {
-//   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
-//   return (
-//     <div className={className}>
-//       <input
-//       onChange={(e) => {
-//         input.onChange(onFileChange(e))
-//       }}
-//       onBlur={input.onBlur()}
-//         type={type}
-//         {...input}
-//         aria-describedby={ariadescribedby}
-//         className={classes}
-//       />
-//       {renderError(meta)}
-//     </div>
-//   );
-// };
-
-
 const renderTextArea = ({
   input,
-
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -162,7 +111,20 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -190,16 +152,13 @@ const renderReactSelect = ({
         onChange={(value) => input.onChange(value)}
         onBlur={() => input.onBlur()}
       />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
     </div>
   </div>
 );
 const EditSpeakerForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-const params =useParams();
-const id =params.id
+  const params = useParams();
+  const id = params.id;
 
   const dispatch = useDispatch();
 
@@ -211,16 +170,12 @@ const id =params.id
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const event=useSelector((state)=>{
-    return state.event.events.find((event)=>{
-
-
-     return event.id===id
-    })
-
-
-  })
-const imgKey = event.image;
+  const event = useSelector((state) => {
+    return state.event.events.find((event) => {
+      return event.id === id;
+    });
+  });
+  const imgKey = event.image;
   //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
@@ -290,10 +245,9 @@ const imgKey = event.image;
         fullScreen={fullScreen}
         scroll="paper"
         open={props.open}
-        onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div
             className="create-new-coupon-form px-4 py-4"
             style={{ minHeight: "100vh" }}
@@ -327,14 +281,6 @@ const imgKey = event.image;
               >
                 Avatar
               </label>
-              {/* <Field
-                name="imgUpload"
-                type="file"
-                accept="image/*"
-                onFileChange={onFileChange}
-                classes="form-control"
-                component={renderFileInput}
-              /> */}
               <input
                 name="imgUpload"
                 type="file"
@@ -618,9 +564,42 @@ const mapStateToProps = (state) => ({
   },
 });
 
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.firstName) {
+    errors.firstName = "Required";
+  }
+
+  if (!formValues.lastName) {
+    errors.lastName = "Required";
+  }
+
+  if (!formValues.email) {
+    errors.email = "email is required";
+  }
+
+  if (
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+  ) {
+    errors.email = "Invalid Email address";
+  }
+
+  if (!formValues.organisation) {
+    errors.organisation = "Organisation is required";
+  }
+  if (!formValues.headline) {
+    errors.headline = "Headline is required";
+  }
+
+  return errors;
+};
+
 export default connect(mapStateToProps)(
   reduxForm({
     form: "EditSpeakerDetails",
+    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(EditSpeakerForm)

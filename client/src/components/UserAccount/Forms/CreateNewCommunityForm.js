@@ -130,19 +130,15 @@ const renderInputCheckbox = ({
 
 const renderTextArea = ({
   input,
-  // labelClass,
-  // labelFor,
   meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
-  // label
 }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      {/* <label class={labelClass} for={labelFor}>{label}</label> */}
       <textarea
         rows="3"
         type={type}
