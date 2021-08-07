@@ -11,14 +11,20 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useDispatch } from "react-redux";
-import { deleteSpeaker } from "../../../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteSpeaker,
+  errorTrackerForDeletingSpeaker,
+} from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const DeleteSpeaker = (props) => {
+  const { error, isLoading } = useSelector((state) => state.speaker);
+
   const dispatch = useDispatch();
   const [state, setState] = React.useState({
     open: false,
@@ -34,6 +40,25 @@ const DeleteSpeaker = (props) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
+  }
+
+  if (error) {
+    dispatch(errorTrackerForDeletingSpeaker());
+    alert(error);
+    return;
+  }
+
   return (
     <>
       <Dialog

@@ -7,6 +7,7 @@ import "./../../assets/Sass/DataGrid.scss";
 import Topnav from "./HelperComponent/TopNav";
 import SideNav from "./HelperComponent/SideNav";
 import {
+  errorTrackerForFetchCommunity,
   fetchCommunity,
   navigationIndexForCommunityDash,
 } from "../../actions/index";
@@ -24,7 +25,7 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-import Loader from "../Loader";
+
 
 const DashboardRoot = () => {
   const params = useParams();
@@ -102,18 +103,8 @@ const DashboardRoot = () => {
 
   console.log(currentIndex);
 
-  if (isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-row justify-content-center"
-        style={{ height: "100vh", width: "100vw" }}
-      >
-        <Loader />
-      </div>
-    );
-  }
   if(error) {
-    // dispatch()
+    dispatch(errorTrackerForFetchCommunity());
     alert(error);
     return;
   }

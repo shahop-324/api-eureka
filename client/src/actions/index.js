@@ -1816,6 +1816,10 @@ export const fetchSponsors =
     }
   };
 
+  export const errorTrackerForFetchSponsors = () => async (dispatch, getState) => {
+    dispatch(sponsorActions.disabledError());
+  };
+
 export const editSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoading());

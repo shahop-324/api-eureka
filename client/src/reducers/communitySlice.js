@@ -29,6 +29,7 @@ const communitySlice = createSlice({
 
     CreateCommunity(state, action) {
       state.communities.push(action.payload.community);
+      state.communityDetails = action.payload.community;
       state.isLoading = false;
     },
 

@@ -19,6 +19,7 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import {
+  errorTrackerForFetchCommunity,
   fetchCommunity,
   fetchEventsOfParticularCommunity,
 } from "../../actions/index";
@@ -92,9 +93,15 @@ const Overview = () => {
   }, [dispatch, term]);
 
 
-  const { analytics, superAdminImage, superAdminName } = useSelector(
-    (state) => state.community.communityDetails
-  );
+  
+
+  const community = useSelector((state) => {
+    return state.community.communities.find((community) => {
+      return community.id === id;
+    });
+  });
+
+  const { analytics, superAdminImage, superAdminName } = community;
 
   const { events, isLoading, error } = useSelector((state) => state.event);
 
@@ -151,23 +158,19 @@ const Overview = () => {
     setOpenAddToTeamDialog(false);
   };
 
-  const community = useSelector((state) => {
-    return state.community.communities.find((community) => {
-      return community.id === id;
-    });
-  });
+ 
 
   if(isLoading) {
     return (<div
     className="d-flex flex-row align-items-row justify-content-center"
-    style={{ height: "100vh", width: "100%" }}
+    style={{ height: "100vh", width: "90vh" }}
   >
    <Loader />
   </div>);
   }
 
   if(error) {
-    // dispatch();
+    dispatch(errorTrackerForFetchCommunity());
     alert(error);
     return;
   }
@@ -193,7 +196,7 @@ const Overview = () => {
           </div>
         </div>
         {/* Overview Content Grid */}
-        <div className="overview-content-grid px-3 mb-4">
+        <div className="overview-content-grid px-3 mb-4" style={{minWidth: "1168px"}}>
           {/* Overview Left Grid */}
           <div className="overview-content-left">
             {/* Number Card Row */}
@@ -303,15 +306,19 @@ const Overview = () => {
             {/* Team Overview Card */}
 
             <div className="team-overview-and-top-events-row-container mt-5">
-              <div className="team-overview mb-4 py-4">
+            <div className="team-overview mb-4 py-4">
                 {/* Team Overview Card Heading and See all link */}
                 <div className="d-flex flex-row justify-content-between px-4 mb-4">
-                  <div className="team-overview-card-heading">
-                    Your Team (5)
+                  <div
+                    className="team-overview-card-heading"
+                    style={{ fontFamily: "Inter" }}
+                  >
+                    Your Team (1)
                   </div>
                   <div
                     className="see-all-members"
                     onClick={() => history.push("/community/team-management")}
+                    style={{ fontFamily: "Inter" }}
                   >
                     See all
                   </div>
@@ -319,40 +326,54 @@ const Overview = () => {
                 <Divider />
 
                 {/* Team Overview Member Card */}
-                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                  <Avatar
-                    alt="Travis Howard"
-                    src={Faker.image.avatar()}
-                    className={classes.large}
-                  />
-                  <div className="team-member-name">Dean Clem</div>
-                  <div className="team-member-permission-chip p-2">
-                    Super Admin
+                <div
+                  className="team-members-overview-list-container"
+                  style={{ overflowY: "scroll", height: "84%" }}
+                >
+                  <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                    <Avatar
+                      alt="Travis Howard"
+                      variant="rounded"
+                      src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`}
+                      className={classes.large}
+                    />
+                    <div
+                      className="team-member-name"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      {superAdminName}
+                    </div>
+                    <div
+                      className="team-member-permission-chip p-2"
+                      style={{ fontFamily: "Inter" }}
+                    >
+                      Super Admin
+                    </div>
                   </div>
+                  <Divider />
                 </div>
-                <Divider />
 
                 {/* Team Overview Member Card */}
-                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                  <Avatar
-                    alt="Travis Howard"
-                    src={Faker.image.avatar()}
-                    className={classes.large}
-                  />
-                  <div className="team-member-name">Dean Clem</div>
-                </div>
-                <Divider />
+                {/* <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+              </div>
+              <Divider /> */}
 
                 {/* Team Overview Member Card */}
-                <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
-                  <Avatar
-                    alt="Travis Howard"
-                    src={Faker.image.avatar()}
-                    className={classes.large}
-                  />
-                  <div className="team-member-name">Dean Clem</div>
-                </div>
-                <Divider />
+                {/* <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
+                <Avatar
+                  alt="Travis Howard"
+                  src={Faker.image.avatar()}
+                  className={classes.large}
+                />
+                <div className="team-member-name">Dean Clem</div>
+              </div>
+              <Divider /> */}
 
                 {/* Add New Member Button */}
                 <div className="mx-4">
@@ -366,9 +387,9 @@ const Overview = () => {
                 </div>
 
                 {/* Plan Members Limit Message */}
-                <div className="add-more-info mt-3 mx-4">
-                  You can onboard 2 more members.
-                </div>
+                {/* <div className="add-more-info mt-3 mx-4">
+                You can onboard 2 more members.
+              </div> */}
               </div>
               {/* Top Events in this Period card */}
               <div className="top-events-card">

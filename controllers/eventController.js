@@ -23,9 +23,10 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-const newObj = {};
+
 
 const fillSocialMediaHandler = (object) => {
+  const newObj = {};
   for (let key in object) {
     const value = object[key];
     // 2) Check if value is a url
@@ -230,6 +231,8 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
+  console.log(req.body, "Line 233");
+  
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
@@ -238,7 +241,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
   console.log(sessionsMappedByCommunity);
 
-  const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
+  // const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
 
   // confirm if this session exist in this event
 
@@ -269,9 +272,11 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     headline: req.body.headline,
     organisation: req.body.organisation,
     eventId: eventGettingSpeaker.id,
-    socialMediaHandles: processedObj,
+    // socialMediaHandles: processedObj,
     image: req.body.image,
   });
+
+  console.log(speaker, "277");
 
   speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`;
 
@@ -531,56 +536,6 @@ exports.updateEventDescription = catchAsync(async (req, res, next) => {
     updatedEvent,
   });
 });
-
-// exports.getAllSessions = catchAsync(async (req, res, next) => {
-//   let sessions = await Event.findById(req.params.id)
-//     .select("session")
-//     .populate({
-//       path: "session",
-//       populate: { path: "speaker" },
-//     });
-//   console.log(sessions);
-//   sessions = sessions.session.filter((session) => session.status !== "Deleted");
-//   res.status(200).json({
-//     status: "Successs",
-
-//     data: {
-//       sessions,
-//     },
-//   });
-// });
-// exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-//   const query =  Event.findById(req.params.id)
-//     .select("speaker")
-//     .populate({
-//       path: "speaker",
-//       populate: { path: "sessions" },
-//     });
-//  //console.log(speakers);
-//  console.log(query,1)
-//  console.log(req.query,2);
-//  const features = new apiFeatures(query, req.query).textFilter()
-// //  .priceWiseFilter()
-// //  .textFilter()
-// //  .categoryWiseFilter()
-// //  .dateWiseFilter()
-// //  .paginate()
-// //  .ratingFilter()
-// //  .sort();
-
-// let speakers = await features.query;
-//  console.log(speakers,3)
-
-//  // speakers = speakers.speaker.filter((speaker) => speaker.status !== "Deleted");
-
-//   res.status(200).json({
-//     status: "Successs",
-
-//     data: {
-//       speakers,
-//     },
-//   });
-// });
 
 exports.getNetworkSettings = catchAsync(async (req, res, next) => {
   const eventId = req.params.id;

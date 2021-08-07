@@ -15,7 +15,7 @@ import TicketingListFields from "./TicketingListFields";
 import TicketingDetailsCard from "./TicketingDetailsCard";
 import AddNewTicket from "./FormComponents/EditTicketForms/AddNewTicket";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTickets } from "../../../actions";
+import { errorTrackerForFetchTickets, fetchTickets } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
 import Loader from "../../Loader";
@@ -135,12 +135,14 @@ const Ticketing = () => {
   const classes = useStyles();
 
   if (error) {
-    return <div>{error}</div>;
+    dispatch(errorTrackerForFetchTickets());
+    alert(error);
+    return;
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pb-4 pt-4">
           <div className="sec-heading-text">All Tickets</div>
           <div className="drop-selector d-flex flex-row justify-content-end">

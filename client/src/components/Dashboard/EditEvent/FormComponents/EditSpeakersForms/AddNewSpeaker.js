@@ -15,7 +15,8 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { createSpeaker } from "../../../../../actions";
+import { createSpeaker, errorTrackerForCreateSpeaker } from "../../../../../actions";
+import Loader from "../../../../Loader";
 
 const styles = {
   control: (base) => ({
@@ -154,6 +155,8 @@ const renderReactSelect = ({
 const AddNewSpeaker = (props) => {
   const { handleSubmit, pristine, submitting } = props;
 
+  const {error , isLoading} = useSelector((state) => state.speaker);
+
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -220,6 +223,17 @@ const AddNewSpeaker = (props) => {
     showResults(ModifiedFormValues);
     props.handleClose();
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForCreateSpeaker());
+    alert(error);
+    return;
+  }
+
 
   return (
     <>

@@ -14,10 +14,11 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editSpeaker } from "../../../../../actions";
+import { editSpeaker, errorTrackerForEditSpeaker } from "../../../../../actions";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Loader from "../../../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -157,6 +158,10 @@ const renderReactSelect = ({
 );
 const EditSpeakerForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
+
+  const {error, isLoading} = useSelector((state) => state.speaker);
+
+
   const params = useParams();
   const id = params.id;
 
@@ -238,6 +243,17 @@ const EditSpeakerForm = (props) => {
     dispatch(editSpeaker(ModifiedFormValues, file, props.id));
     console.log(file);
   };
+
+  
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForEditSpeaker());
+    alert(error);
+    return;
+  }
 
   return (
     <>
