@@ -30,6 +30,8 @@ import Home from "./StaticScreens/Screens/Home";
 import TermsOfService from "./StaticScreens/Screens/TermsOfService";
 import PrivacyPolicy from "./StaticScreens/Screens/PrivacyPolicy";
 import InternalServerError from "./StaticScreens/Screens/InternalServerError";
+import Pricing from "./StaticScreens/Screens/Pricing";
+import UseCases from "./StaticScreens/Screens/UseCases";
 
 
 class App extends React.Component {
@@ -59,6 +61,8 @@ class App extends React.Component {
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
               
+              <Route path="/use-cases" exact component={UseCases} />
+              <Route path="/pricing" exact component={Pricing} />
               <Route path="/not-found" exact component={NotFoundPage} />
               <Route path="/internal-server-error" exact component={InternalServerError} />
               <Route path="/home" exact component={Home} />
