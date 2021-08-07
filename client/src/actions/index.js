@@ -495,9 +495,8 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
     console.log(err.response.data);
   }
 };
-export const errorTrackerForFetchEvent= () => async (dispatch, getState) => {
+export const errorTrackerForFetchEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
-
 };
 export const fetchParticularEventOfCommunity =
   (id) => async (dispatch, getState) => {
@@ -3077,21 +3076,8 @@ export const errorTrackerForFetchNetworking =
 
 export const editNetworking =
   (formValues, id) => async (dispatch, getState) => {
+    dispatch(networkingActions.startLoading());
     try {
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
       console.log(id);
 
       let res = await fetch(
@@ -3109,7 +3095,13 @@ export const editNetworking =
           },
         }
       );
-
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
       res = await res.json();
       console.log(res.data);
 
@@ -3120,10 +3112,17 @@ export const editNetworking =
       );
     } catch (err) {
       console.log(err);
+
+      networkingActions.hasError(err.message);
     }
+  };
+export const errorTrackerForEditNetworking =
+  () => async (dispatch, getState) => {
+    dispatch(networkingActions.disabledError());
   };
 
 export const createCoupon = (formValues) => async (dispatch, getState) => {
+  dispatch(couponActions.startLoading());
   try {
     console.log(formValues);
     let res = await fetch(
@@ -3140,7 +3139,13 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -3150,8 +3155,12 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
+};
+export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
+  dispatch(couponActions.disabledError());
 };
 
 export const fetchCoupons = () => async (dispatch, getState) => {
@@ -3196,6 +3205,8 @@ export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
 };
 
 export const fetchCoupon = (id) => async (dispatch, getState) => {
+  dispatch(couponActions.startLoading());
+
   try {
     console.log(id);
 
@@ -3210,7 +3221,13 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -3220,11 +3237,16 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
 };
+export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
+  dispatch(couponActions.disabledError());
+};
 
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
+  dispatch(couponActions.startLoading());
   try {
     let res = await fetch(
       `http://localhost:3000/eureka/v1/community/${id}/updateCoupon`,
@@ -3241,7 +3263,13 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
         },
       }
     );
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res.data);
 
@@ -3251,11 +3279,14 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
 };
 
 export const deleteCoupon = (id) => async (dispatch, getState) => {
+  dispatch(couponActions.startLoading());
+
   try {
     console.log(id);
 
@@ -3267,7 +3298,13 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${getState().communityAuth.token}`,
       },
     });
-
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
     res = await res.json();
     console.log(res);
 
@@ -3277,33 +3314,37 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
 };
-
-export const connectToStripe = (return_url) => async (dispatch, getState) => {
-  console.log("I entered connect to stripe action");
-  try {
-    let res = await fetch(`${BaseURL}stripe/createStripeAccount`, {
-      method: "POST",
-
-      body: JSON.stringify({
-        return_url: return_url,
-      }),
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
-      },
-    });
-
-    res = await res.json();
-    console.log(res);
-    window.location.href = res.data.url;
-  } catch (err) {
-    console.log(err);
-  }
+export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
+  dispatch(couponActions.disabledError());
 };
+
+// export const connectToStripe = (return_url) => async (dispatch, getState) => {
+//   console.log("I entered connect to stripe action");
+//   try {
+//     let res = await fetch(`${BaseURL}stripe/createStripeAccount`, {
+//       method: "POST",
+
+//       body: JSON.stringify({
+//         return_url: return_url,
+//       }),
+
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${getState().communityAuth.token}`,
+//       },
+//     });
+
+//     res = await res.json();
+//     console.log(res);
+//     window.location.href = res.data.url;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
