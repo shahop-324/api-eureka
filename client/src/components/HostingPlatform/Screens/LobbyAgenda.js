@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import SessionDetailCardsList from '../HelperComponents/SessionDetailCardsList';
-import EventBanner from '../HelperComponents/EventBanner';
+import SessionDetailCardsList from "../HelperComponents/SessionDetailCardsList";
+import EventBanner from "../HelperComponents/EventBanner";
 
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import NoteIcon from '@material-ui/icons/Note';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import Button from '@material-ui/core/Button';
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import NoteIcon from "@material-ui/icons/Note";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
+import Button from "@material-ui/core/Button";
 
-import {fade, makeStyles} from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchSessionsForUser } from '../../../actions';
-import { useParams } from 'react-router-dom';
+import { alpha, makeStyles } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { errorTrackerForFetchSessionsForUser, fetchSessionsForUser } from "../../../actions";
+import { useParams } from "react-router-dom";
+import Loader from "../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -40,63 +41,68 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
-    color: '#ffffff',
-    backgroundColor: fade(theme.palette.common.white, 0.12),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+    color: "#ffffff",
+    backgroundColor: alpha(theme.palette.common.white, 0.12),
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
-      width: 'auto',
+      width: "auto",
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
   },
 }));
 
-const LobbyAgenda = ({socket}) => {
+const LobbyAgenda = ({ socket }) => {
+
+  const classes = useStyles();
+
   const dispatch = useDispatch();
+
+  const {error, isLoading} = useSelector((state) => state.session);
 
   const role = useSelector((state) => state.eventAccessToken.role);
   const id = useSelector((state) => state.eventAccessToken.id);
-  
+
   console.log(role, id);
 
   const params = useParams();
-  
+
   const eventId = params.eventId;
   const communityId = params.communityId;
 
@@ -108,7 +114,17 @@ const LobbyAgenda = ({socket}) => {
 
   console.log(sessions);
 
-  const classes = useStyles();
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForFetchSessionsForUser());
+    alert(error);
+    return;
+  }
+
+  
   return (
     <>
       <EventBanner />
@@ -149,13 +165,20 @@ const LobbyAgenda = ({socket}) => {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
-              inputProps={{'aria-label': 'search'}}
+              inputProps={{ "aria-label": "search" }}
             />
           </div>
         </div>
       </div>
 
-      <SessionDetailCardsList socket={socket} sessions={sessions} role={role} id={id} eventId={eventId} communityId={communityId} />
+      <SessionDetailCardsList
+        socket={socket}
+        sessions={sessions}
+        role={role}
+        id={id}
+        eventId={eventId}
+        communityId={communityId}
+      />
     </>
   );
 };

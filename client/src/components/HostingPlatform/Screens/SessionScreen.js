@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import SessionScreenTopNav from "../HelperComponents/SessionScreenTopNav";
 
-
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -23,7 +22,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
-import { fetchSessionForSessionStage, getRTCToken } from "../../../actions";
+import {
+  errorTrackerForFetchSessionForSessionStage,
+  errorTrackerForgetRTMToken,
+  fetchSessionForSessionStage,
+  getRTCToken,
+} from "../../../actions";
 
 import Like from "./../../../assets/images/like.png";
 import Clapping from "./../../../assets/images/clapping.png";
@@ -35,6 +39,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 // import { TabBar } from "../sessionComponents/TabBar";
 // import MainChatComponent from "../SideDrawerComponents/Chat/MainChatComponent";
 import SessionStageSideBarRoot from "../sessionComponents/SessionStageSideBarRoot";
+import Loader from "../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -104,6 +109,9 @@ const SessionScreen = () => {
 
   const { isLoading, error, token } = useSelector((state) => state.RTC);
 
+  const isLoadingSession = useSelector((state) => state.session.isLoading);
+  const sessionError = useSelector((state) => state.session.error);
+
   const sessionId = params.sessionId;
   const eventId = params.eventId;
   const communityId = params.communityId;
@@ -114,8 +122,6 @@ const SessionScreen = () => {
   });
 
   const [grid, setGrid] = useState(0);
-
-  
 
   let col = "1fr 1fr 1fr 1fr";
 
@@ -248,10 +254,26 @@ const SessionScreen = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  } else if (error) {
-    return <div>{error}</div>;
+  if (isLoading || isLoadingSession) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
+  }
+  if (error || sessionError) {
+    dispatch(errorTrackerForgetRTMToken());
+    alert(error);
+    return;
+  }
+  if (sessionError) {
+    dispatch(errorTrackerForFetchSessionForSessionStage());
+    alert(error);
+    return;
   }
 
   var options = {
