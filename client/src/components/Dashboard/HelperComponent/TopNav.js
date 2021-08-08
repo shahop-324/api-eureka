@@ -22,7 +22,8 @@ const Topnav = () => {
     <div className="row topnav-container px-3">
       <div className="col-6 left">
         <div className="brand-logo-text" style={{fontFamily: "Inter"}}>
-          Evenz <span>Communities</span>
+          
+          <a href="https://www.evenz.in/home" style={{textDecoration: "none", color: "#538BF7"}}>Evenz <span>Communities</span></a>
         </div>
       </div>
       <div className="col-6 right">
