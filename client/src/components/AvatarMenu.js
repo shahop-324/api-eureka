@@ -64,7 +64,7 @@ const AvatarMenu = () => {
     // while (window.localStorage.length !== 0) {
     //   window.localStorage.clear();
     // }
-    await window.localStorage.clear();
+    window.localStorage.clear();
     // if (window.localStorage.length === 0) {
     //   dispatch(signOut());
     // }
