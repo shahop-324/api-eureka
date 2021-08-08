@@ -14,10 +14,8 @@ import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
 import { navigationIndex, signOut } from "../actions/index";
-
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
