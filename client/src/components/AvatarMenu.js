@@ -59,13 +59,14 @@ const AvatarMenu = () => {
 
   const dispatch = useDispatch();
   const onClickLoggedOut = async () => {
-    // while (window.localStorage.length !== 0) {
-    //   window.localStorage.clear();
-    // }
-    window.localStorage.clear();
-    // if (window.localStorage.length === 0) {
-    //   dispatch(signOut());
-    // }
+    const allKeys = Object.keys(localStorage);
+
+    
+    
+    allKeys.forEach(value => {
+      localStorage.removeItem(value);
+    });
+
     dispatch(signOut());
   };
 

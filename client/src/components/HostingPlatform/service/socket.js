@@ -1,4 +1,4 @@
 import io from "socket.io-client";
-const socket = io("https://damp-taiga-71545.herokuapp.com/");
+const socket = io("http://localhost:3000/");
 
 export default socket;
