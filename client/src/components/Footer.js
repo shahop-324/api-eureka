@@ -28,22 +28,89 @@ const Footer = () => {
               Use Cases
             </div>
 
-            <div className="footer-section-link mb-2">Virtual Events</div>
-            <div className="footer-section-link mb-2">Conferences</div>
-            <div className="footer-section-link mb-2">Trade shows</div>
-            <div className="footer-section-link mb-2">Training Workshops</div>
-            <div className="footer-section-link mb-2">Product launch</div>
-            <div className="footer-section-link mb-2">Online Cohorts</div>
-            <div className="footer-section-link">Happy Hours</div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Virtual Events
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Conferences
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Trade shows
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Training workshops
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Product Launch
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Online cohorts
+              </a>
+            </div>
+            <div className="footer-section-link">
+              <a
+                href="/use-cases"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Happy hours
+              </a>
+            </div>
           </div>
           <div className="company px-3 py-4">
             <div className="footer-section-headline btn-outline-text mb-3">
               Company
             </div>
 
-            <div className="footer-section-link mb-2">About us</div>
-            <div className="footer-section-link mb-2">Careers</div>
-            <div className="footer-section-link mb-2">Contact us</div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/about-us"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                About us
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a href="/#" style={{ color: "#A8A8A8", textDecoration: "none" }}>
+                Careers
+              </a>
+            </div>
+            <div className="footer-section-link mb-2">
+              <a
+                href="/contact-us"
+                style={{ color: "#A8A8A8", textDecoration: "none" }}
+              >
+                Contact Us
+              </a>
+            </div>
           </div>
           <div className="further-nformation px-3 py-4">
             <div className="footer-section-headline btn-outline-text mb-3">

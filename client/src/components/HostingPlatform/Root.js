@@ -11,6 +11,7 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
+  errorTrackerForFetchingRTCToken,
   fetchEvent,
   fetchEventChats,
   fetchUserAllPersonalData,
@@ -25,10 +26,13 @@ import socket from "./../HostingPlatform/service/socket";
 import { sessionActions } from "../../reducers/sessionSlice";
 import { userActions } from "../../reducers/userSlice";
 import { roomsActions } from "../../reducers/roomsSlice";
+import Loader from "../Loader";
 
 const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
+
+  const { isLoading, error } = useSelector((state) => state.RTM);
 
   console.log(params);
 
@@ -52,6 +56,8 @@ const Root = () => {
     : "Vice President";
 
   console.log(role, id, email);
+
+
 
   useEffect(() => {
 
@@ -158,10 +164,6 @@ const Root = () => {
   console.log(event);
 
   useEffect(() => {
-    // dispatch(fetchParticularEventOfCommunity(eventId));
-  }, [dispatch, eventId]);
-
-  useEffect(() => {
     return () => {
       dispatch(navigationIndexForHostingPlatform(0));
     };
@@ -217,6 +219,16 @@ const Root = () => {
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader/> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForFetchingRTCToken());
+    alert(error);
+    return;
+  }
 
   return (
     <>

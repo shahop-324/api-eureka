@@ -4,7 +4,7 @@ import "./../Style/uploadEventImage.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { errorTrackerForeditEvent, errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
+import { errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
 import Loader from "../../../Loader";

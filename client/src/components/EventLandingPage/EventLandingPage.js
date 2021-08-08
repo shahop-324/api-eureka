@@ -120,6 +120,7 @@ const AccordionDetails = withStyles((theme) => ({
 
 const EventLandingPage = (props) => {
   const params = useParams();
+
   const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
@@ -187,6 +188,7 @@ const EventLandingPage = (props) => {
 
     return;
   }
+ 
   console.log(event);
 
   const handleQueryText = (event) => {

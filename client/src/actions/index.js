@@ -2782,6 +2782,7 @@ export const errorTrackerForFetchSessions =
 
 export const fetchSessionsForUser =
   (id, term) => async (dispatch, getState) => {
+    dispatch(sessionActions.startLoading());
     try {
       console.log(id);
       let fullLocation = `http://localhost:3000/eureka/v1/events/${id}/sessionsForUser`;
@@ -2805,6 +2806,13 @@ export const fetchSessionsForUser =
           Authorization: `Bearer ${getState().auth.token}`,
         },
       });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
 
       res = await res.json();
       console.log(res);
@@ -2816,9 +2824,13 @@ export const fetchSessionsForUser =
       );
     } catch (err) {
       console.log(err);
+      dispatch(sessionActions.hasError(err.message));
     }
   };
-
+  export const errorTrackerForFetchSessionsForUser =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.disabledError());
+  };
 export const fetchSession = (id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   try {

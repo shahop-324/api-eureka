@@ -4,13 +4,21 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 import "./../../Styles/root.scss";
 import AllChatsComponent from "./helper/AllChatsComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import './../../../../index.css';
+import { errorTrackerForgetRTMToken } from "../../../../actions";
 
 const MainChatComponent = (props) => {
+  const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState("all");
 
-  const {  isLoading } = useSelector((state) => state.RTM);
+  const { isLoading, error } = useSelector((state) => state.RTM);
+
+  if(error) {
+    dispatch(errorTrackerForgetRTMToken());
+    alert(error);
+    return;
+  }
 
   return (
     <>

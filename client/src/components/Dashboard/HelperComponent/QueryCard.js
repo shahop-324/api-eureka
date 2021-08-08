@@ -5,11 +5,12 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import SendRoundedIcon from "@material-ui/icons/SendRounded";
 import "./../../../assets/Sass/Reviews.scss";
-import { useDispatch } from "react-redux";
-import { answerQuery } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { answerQuery, errorTrackerForAnswerQuery } from "../../../actions";
 
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
+import Loader from "../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -27,6 +28,8 @@ const QueryCard = ({
 }) => {
   const dispatch = useDispatch();
 
+  const {error, isLoading} = useSelector((state) => state.query);
+
   const [answerText, setAnswerText] = React.useState(answer);
 
   const [state, setState] = React.useState({
@@ -40,6 +43,16 @@ const QueryCard = ({
   const handleCloseSuccess = () => {
     setState({ vertical: "top", horizontal: "center", openSuccess: false });
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForAnswerQuery());
+    alert(error);
+    return;
+  }
 
   return (
     <div className="review-card-wrapper px-4 py-3 mb-3">

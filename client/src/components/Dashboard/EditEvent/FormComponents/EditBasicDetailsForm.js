@@ -48,7 +48,7 @@ const renderInput = ({
 const renderTextArea = ({
   input,
   meta: { touched, error, warning },
-  
+
   type,
   ariadescribedby,
   classes,
@@ -58,7 +58,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -67,7 +67,7 @@ const renderTextArea = ({
         required
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -180,11 +180,11 @@ const styles = {
 
 const EditBasicDetailsForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const {error, isLoading} = useSelector((state) => state.event);
+  const { error, isLoading } = useSelector((state) => state.event);
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
-  console.log(id)
+  console.log(id);
 
   const showResults = (formValues) => {
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -217,11 +217,19 @@ const EditBasicDetailsForm = (props) => {
     props.openSavedChangesSnack();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForeditEvent());
     alert(error);
     return;
@@ -515,10 +523,9 @@ const mapStateToProps = (state) => ({
   },
 });
 
-
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.eventName) {
     errors.eventName = "Event name is required";
   }

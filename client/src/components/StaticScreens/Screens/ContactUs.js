@@ -14,6 +14,7 @@ import "./../Styles/ContactUs.scss";
 import MenuIcon from "@material-ui/icons/Menu";
 import CancelIcon from "@material-ui/icons/Cancel";
 import PreFooter from "../../PreFooter";
+import { Link } from "react-router-dom";
 
 const ContactUs = () => {
 
@@ -74,24 +75,45 @@ const ContactUs = () => {
                   id="navbarSupportedContent"
                 >
                   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
+                    {/* <li class="nav-item" style={{ alignSelf: "center" }}>
                       <div className="nav-link-btn nav-link-btn-dark me-4">
                         Features
                       </div>
-                    </li>
+                    </li> */}
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Use Cases
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link
+                          to="/use-cases/"
+                          style={{ textDecoration: "none", color: "#ffffff" }}
+                        >
+                          Use Cases
+                        </Link>
                       </div>
                     </li>
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Explore Events
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link
+                          to="/search-events/"
+                          style={{ textDecoration: "none", color: "#ffffff" }}
+                        >
+                          Explore Events
+                        </Link>
                       </div>
                     </li>
                     <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Pricing
+                      <div
+                        className="nav-link-btn nav-link-btn-dark me-4"
+                        style={{ fontWeight: "600" }}
+                      >
+                        <Link to="/pricing/" style={{ textDecoration: "none", color: "#ffffff" }}>
+                          Pricing
+                        </Link>
                       </div>
                     </li>
 

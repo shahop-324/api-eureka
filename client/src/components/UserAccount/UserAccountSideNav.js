@@ -4,10 +4,14 @@ import Avatar from "@material-ui/core/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import { communitySignIn, errorTrackerForPersonalData, fetchCommunity } from "../../actions";
+import { communitySignIn, errorTrackerForCommunitySignIn, errorTrackerForPersonalData } from "../../actions";
+import Loader from "../Loader";
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
+
+  const {error, isLoading} = useSelector((state) => state.community);
+
   const { id } = useSelector((state) => state.user.userDetails);
 
   const userId = id;
@@ -15,6 +19,17 @@ const CommunityProfileTab = (props) => {
     // dispatch(fetchCommunity(props.communityId));
     dispatch(communitySignIn(props.communityId, userId));
   };
+
+  if(isLoading) {
+    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader /> </div>);
+  }
+
+  if(error) {
+    dispatch(errorTrackerForCommunitySignIn());
+    alert(error);
+    return;
+  }
+
 
   return (
     <div
