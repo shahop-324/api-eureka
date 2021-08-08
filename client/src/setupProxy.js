@@ -3,7 +3,7 @@ module.exports = function (app) {
   app.use(
     "/eureka/v1/auth/google",
     createProxyMiddleware({
-      target: "http://localhost:3000",
+      target: "http://www.bez-app.com:3000",
     })
   );
 };

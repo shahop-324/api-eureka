@@ -133,7 +133,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
     }
 
     let order = await fetch(
-      "http://localhost:3000/eureka/v1/razorpay/createRazorpayOrder",
+      "http://www.bez-app.com:3000/eureka/v1/razorpay/createRazorpayOrder",
       {
         method: "POST",
         body: JSON.stringify({
