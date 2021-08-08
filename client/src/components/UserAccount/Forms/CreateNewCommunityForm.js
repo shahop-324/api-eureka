@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { reset } from "redux-form";
+// import { reset } from "redux-form";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -127,6 +127,31 @@ const renderInputCheckbox = ({
     </div>
   );
 };
+const renderInputImage = ({
+  input,
+
+  type,
+
+  classes,
+  handleChange,
+  accept,
+  meta: { touched, error, warning },
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        accept={accept}
+        onChange={() => input.onChange(handleChange)}
+        className={classes}
+
+        // required
+      />
+    </div>
+  );
+};
 
 const renderTextArea = ({
   input,
@@ -187,7 +212,7 @@ const CreateNewCommunityForm = (props) => {
 
   const { id } = useSelector((state) => state.user.userDetails);
   const userId = id;
-  const { handleSubmit, pristine, valid, submitting } = props;
+  const { handleSubmit, pristine, reset, valid, submitting } = props;
   const classes = useStyles();
 
   const theme = useTheme();
@@ -245,9 +270,11 @@ const CreateNewCommunityForm = (props) => {
                 // }
                 // }
               >
-                <IconButton aria-label="delete">
+                {/* <div> */}
+                <IconButton type="button" aria-label="delete" onClick={reset}>
                   <CancelRoundedIcon />
                 </IconButton>
+                {/* </div> */}
               </div>
             </div>
             <h5 className="overlay-sub-form-heading mb-5">
@@ -270,12 +297,13 @@ const CreateNewCommunityForm = (props) => {
               >
                 Avatar
               </label>
-              <input
-                className="form-control"
+              <Field
+                classes="form-control"
                 name="imgUpload"
                 type="file"
                 accept="image/*"
-                onChange={handleChange}
+                handleChange={handleChange}
+                component={renderInputImage}
               />
             </div>
             <div class="mb-4 overlay-form-input-row">
@@ -363,9 +391,14 @@ const CreateNewCommunityForm = (props) => {
               <button
                 type="submit"
                 class="btn btn-outline-primary outline-btn-text form-control"
-                disabled={createCommunityClicked && formIsvalidated && !error}
-                // onClick={props.closeHandler}
-                // disabled={pristine || submitting || !valid}
+                disabled={
+                  createCommunityClicked &&
+                  formIsvalidated &&
+                  !error &&
+                  (pristine || submitting || !valid)
+                }
+                //onClick={props.closeHandler}
+                //disabled={pristine || submitting || !valid}
               >
                 Create New Community
                 {createCommunityClicked && formIsvalidated && !error ? (

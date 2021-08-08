@@ -43,15 +43,17 @@ class App extends React.Component {
     //   window.localStorage.clear();
     //   console.log("i runned");
     // })();
+
+    console.log(isSignedIn);
     return (
       <>
         <Router history={history}>
           <div>
             <Switch>
-              {!isSignedIn && (
-                <Route path="/signin" exact component={Signin} />
+              {
+                !isSignedIn && <Route path="/signin" exact component={Signin} />
                 //  <Route path="/signup" exact component={Signup} />
-              )}
+              }
               {!isSignedIn && (
                 // <Route path="/signin" exact component={Signin} />
                 <Route path="/signup" exact component={Signup} />
@@ -79,6 +81,7 @@ class App extends React.Component {
                 exact
                 component={InternalServerError}
               />
+
               <Route path="/home" exact component={Home} />
               <Route path="/" exact component={Home} />
               <Route
