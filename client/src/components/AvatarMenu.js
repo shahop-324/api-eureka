@@ -60,14 +60,15 @@ const AvatarMenu = () => {
   }
 
   const dispatch = useDispatch();
-  const onClickLoggedOut = () => {
-    while (window.localStorage.length !== 0) {
-      window.localStorage.clear();
-    }
-
-    if (window.localStorage.length === 0) {
-      dispatch(signOut());
-    }
+  const onClickLoggedOut = async () => {
+    // while (window.localStorage.length !== 0) {
+    //   window.localStorage.clear();
+    // }
+    await window.localStorage.clear();
+    // if (window.localStorage.length === 0) {
+    //   dispatch(signOut());
+    // }
+    dispatch(signOut());
   };
 
   // return focus to the button when we transitioned from !open -> open
