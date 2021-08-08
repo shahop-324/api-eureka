@@ -50,14 +50,21 @@ class App extends React.Component {
             <Switch>
               {!isSignedIn && (
                 <Route path="/signin" exact component={Signin} />
-                // <Route path="/signup" exact component={Signup} />
+                //  <Route path="/signup" exact component={Signup} />
+              )}
+              {!isSignedIn && (
+                // <Route path="/signin" exact component={Signin} />
+                <Route path="/signup" exact component={Signup} />
               )}
 
-              <Route
-                path="/signin/:eventId"
-                exact
-                component={SignInForEventRegistration}
-              />
+              {!isSignedIn && (
+                // <Route path="/signin" exact component={Signin} />
+                <Route
+                  path="/signin/:eventId"
+                  exact
+                  component={SignInForEventRegistration}
+                />
+              )}
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
