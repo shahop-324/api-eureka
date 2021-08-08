@@ -31,7 +31,8 @@ class UserAccountNav extends React.Component {
               type="button"
               className="btn btn-primary btn-outline-text ms-3"
             >
-              Get Help
+              <Link to="/contact-us" style={{textDecoration: "none", color: "#ffffff"}}>Get Help</Link>
+              
             </button>
             <div>
               <AvatarMenu />

@@ -141,9 +141,9 @@ const UserAccountSideNav = () => {
           style={{ overflow: "auto", height: "77vh" }}
         >
           {renderCommunitiesList()}
-          <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center">
+          <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <button
-              className="btn btn-outline-text  btn-outline-primary mt-3 py-2"
+              className="btn btn-outline-text  btn-outline-primary  py-2"
               onClick={handleClickOpen}
             >
               Create New Community

@@ -88,14 +88,23 @@ export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 export const signOut = () => async (dispatch, getState) => {
-  // while (window.localStorage.length !== 0) {
-  //   window.localStorage.clear();
-  // }
+  const allKeys = Object.keys(localStorage);
+
+const toBeDeleted = allKeys.filter(value => {
+  return !this.doNotDeleteList.includes(value);
+});
+
+toBeDeleted.forEach(value => {
+  localStorage.removeItem(value);
+});
+
+if(window.localStorage.length === 0) {
 
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
-  history.push("/signin");
+  history.push("/home");
+}
   //TODO Home page
 };
 

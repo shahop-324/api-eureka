@@ -43,6 +43,8 @@ class App extends React.Component {
     //   window.localStorage.clear();
     //   console.log("i runned");
     // })();
+
+    console.log(isSignedIn);
     return (
       <>
         <Router history={history}>
