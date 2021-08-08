@@ -35,7 +35,7 @@ const Pricing = () => {
             <nav class="navbar navbar-expand-xxl navbar-light">
               <div class="container">
                 {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-                <span class="navbar-brand nav-brand-name-home">Evenz</span>
+                <span class="navbar-brand nav-brand-name-home"><a href="https://www.evenz.in/home" style={{textDecoration: "none", color: "#ffffff"}}>Evenz</a></span>
 
                 <button
                   class="navbar-toggler"
