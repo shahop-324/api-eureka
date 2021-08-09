@@ -132,23 +132,23 @@ app.use((req, res, next) => {
   next();
 });
 // All routes
-app.use("/eureka/v1/auth", authRoutes);
-app.use("/eureka/v1/upload", uploadRoutes);
-app.use("/eureka/v1/users", userRoutes);
-app.use("/eureka/v1/registrations", registrationRoutes);
-app.use("/eureka/v1/community", communityRoutes);
-app.use("/eureka/v1/feedback", feedbackRoutes);
-app.use("/eureka/v1/sales", salesDepartmentRoutes);
-app.use("/eureka/v1/customPlan", customPlanRoutes);
-app.use("/eureka/v1/events", eventRoutes);
-app.use("/eureka/v1/sessions", sessionRoutes);
-app.use("/eureka/v1/speakers", speakerRoutes);
-app.use("/eureka/v1/booths", boothRoutes);
-app.use("/eureka/v1/sponsors", sponsorRoutes);
-app.use("/eureka/v1/stripe", stripeRoutes);
-app.use("/eureka/v1/razorpay", razorpayRoutes);
-app.use("/eureka/v1/tickets", ticketRoutes);
-app.use("/eureka/v1/team-invites",teamInvite);
+app.use("/api-eureka/eureka/v1/auth", authRoutes);
+app.use("/api-eureka/eureka/v1/upload", uploadRoutes);
+app.use("/api-eureka/eureka/v1/users", userRoutes);
+app.use("/api-eureka/eureka/v1/registrations", registrationRoutes);
+app.use("/api-eureka/eureka/v1/community", communityRoutes);
+app.use("/api-eureka/eureka/v1/feedback", feedbackRoutes);
+app.use("/api-eureka/eureka/v1/sales", salesDepartmentRoutes);
+app.use("/api-eureka/eureka/v1/customPlan", customPlanRoutes);
+app.use("/api-eureka/eureka/v1/events", eventRoutes);
+app.use("/api-eureka/eureka/v1/sessions", sessionRoutes);
+app.use("/api-eureka/eureka/v1/speakers", speakerRoutes);
+app.use("/api-eureka/eureka/v1/booths", boothRoutes);
+app.use("/api-eureka/eureka/v1/sponsors", sponsorRoutes);
+app.use("/api-eureka/eureka/v1/stripe", stripeRoutes);
+app.use("/api-eureka/eureka/v1/razorpay", razorpayRoutes);
+app.use("/api-eureka/eureka/v1/tickets", ticketRoutes);
+app.use("/api-eureka/eureka/v1/team-invites",teamInvite);
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
 const createSendToken = (user, statusCode, req, res) => {
@@ -166,7 +166,7 @@ const createSendToken = (user, statusCode, req, res) => {
     },
   });
 };
-app.get("/eureka/v1/current_user", (req, res) => {
+app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
  // createSendToken(req.user,200,req,res)
  const token = signToken(req.user._id);
  
@@ -174,11 +174,11 @@ app.get("/eureka/v1/current_user", (req, res) => {
   res.send({user:req.user,token:token});
 });
 
-app.get("/eureka/v1/logout", (req, res) => {
+app.get("/api-eureka/eureka/v1/logout", (req, res) => {
   req.logout();
   res.redirect("/");
 });
-app.use("/eureka/v1", globalRoutes);
+app.use("/api-eureka/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
 module.exports = app;

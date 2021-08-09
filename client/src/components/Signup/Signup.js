@@ -156,7 +156,7 @@ const Signup = (props) => {
                         alt="google-signin"
                       />
                       <div className="sign-in-with-google-text ms-4">
-                        Sign in with google
+                      <a href="https://www.evenz.co.in/api-eureka/eureka/v1/auth/google">Sign up with google</a> 
                       </div>
                     </div>
                   </button>

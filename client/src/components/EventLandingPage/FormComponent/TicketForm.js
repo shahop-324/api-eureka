@@ -133,7 +133,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
     }
 
     let order = await fetch(
-      "https://www.evenz.co.in/eureka/v1/razorpay/createRazorpayOrder",
+      "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createRazorpayOrder",
       {
         method: "POST",
         body: JSON.stringify({
