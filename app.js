@@ -50,7 +50,7 @@ const app = express();
 
 app.use(
   cors({
-     origin: ["http://localhost:3001", "https://www.evenz.in"],
+     origin: ["http://localhost:3001", "https://www.evenz.in", "https://www.evenz.co.in", "https://evenz.co.in"],
     //origin: "*",
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
