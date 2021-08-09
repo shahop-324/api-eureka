@@ -3,7 +3,7 @@ module.exports = function (app) {
   app.use(
     "/eureka/v1/auth/google",
     createProxyMiddleware({
-      target: "http://3.7.249.139:3000",
+      target: "https://www.evenz.co.in",
     })
   );
 };

@@ -24,7 +24,7 @@ import AgoraRTM from "agora-rtm-sdk";
 import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 
-const BaseURL = "http://3.7.249.139:3000/eureka/v1/";
+const BaseURL = "https://www.evenz.co.in//eureka/v1/";
 
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
@@ -118,7 +118,7 @@ export const createCommunity =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -143,7 +143,7 @@ export const createCommunity =
 
         const communityCreating = async () => {
           let res = await fetch(
-            "http://3.7.249.139:3000/eureka/v1/users/newCommunity",
+            "https://www.evenz.co.in//eureka/v1/users/newCommunity",
             {
               method: "POST",
               body: JSON.stringify({
@@ -191,7 +191,7 @@ export const createCommunity =
       } else {
         const communityCreating = async () => {
           let res = await fetch(
-            "http://3.7.249.139:3000/eureka/v1/users/newCommunity",
+            "https://www.evenz.co.in//eureka/v1/users/newCommunity",
             {
               method: "POST",
               body: JSON.stringify({
@@ -251,7 +251,7 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
 
   const loginCommunity = async () => {
-    let res = await fetch(`http://3.7.249.139:3000/eureka/v1/users/${id}`, {
+    let res = await fetch(`https://www.evenz.co.in//eureka/v1/users/${id}`, {
       method: "POST",
 
       headers: {
@@ -312,7 +312,7 @@ export const googleSignIn = () => async (dispatch) => {
       credentials: "include",
     };
     const response = await fetch(
-      "http://3.7.249.139:3000/eureka/v1/current_user",
+      "https://www.evenz.co.in//eureka/v1/current_user",
       params
     );
 
@@ -390,7 +390,7 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
 
   const fetchData = async () => {
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/users/personalData`,
+      `https://www.evenz.co.in//eureka/v1/users/personalData`,
       {
         method: "GET",
 
@@ -445,7 +445,7 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const fetchData = async () => {
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/users/registeredEvents`,
+      `https://www.evenz.co.in//eureka/v1/users/registeredEvents`,
       {
         method: "GET",
 
@@ -519,7 +519,7 @@ export const fetchParticularEventOfCommunity =
       if (!existingEvent) {
         console.log(id, "I am passing from particularEvent action");
         const res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/community/events/${id}`,
+          `https://www.evenz.co.in//eureka/v1/community/events/${id}`,
           {
             method: "GET",
             headers: {
@@ -567,7 +567,7 @@ export const fetchEventsOfParticularCommunity =
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
-      let fullLocation = `http://3.7.249.139:3000/eureka/v1/community/events`;
+      let fullLocation = `https://www.evenz.co.in//eureka/v1/community/events`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -617,7 +617,7 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
   const creatingEvent = async () => {
     console.log(formValues);
     let res = await fetch(
-      "http://3.7.249.139:3000/eureka/v1/community/events/new",
+      "https://www.evenz.co.in//eureka/v1/community/events/new",
       {
         method: "POST",
         body: JSON.stringify({
@@ -666,7 +666,7 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/update`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/update`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -714,7 +714,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(file);
 
     let uploadConfig = await fetch(
-      "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+      "https://www.evenz.co.in//eureka/v1/upload/user/img",
       {
         headers: {
           Authorization: `Bearer ${getState().auth.token}`,
@@ -738,7 +738,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(awsRes);
 
     const res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/update`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/update`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -784,7 +784,7 @@ export const editEventDescription =
       console.log(id);
       console.log(formValues);
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/events/${id}/updateEventDescription`,
+        `https://www.evenz.co.in//eureka/v1/events/${id}/updateEventDescription`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -843,7 +843,7 @@ export const createSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -874,7 +874,7 @@ export const createSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/events/${id}/addSpeaker`,
+          `https://www.evenz.co.in//eureka/v1/events/${id}/addSpeaker`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -907,7 +907,7 @@ export const createSpeaker =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/events/${id}/addSpeaker`,
+          `https://www.evenz.co.in//eureka/v1/events/${id}/addSpeaker`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -951,7 +951,7 @@ export const fetchSpeakers =
     dispatch(speakerActions.startLoading());
 
     const getSpeakers = async () => {
-      let fullLocation = `http://3.7.249.139:3000/eureka/v1/events/${id}/speakers`;
+      let fullLocation = `https://www.evenz.co.in//eureka/v1/events/${id}/speakers`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -1011,7 +1011,7 @@ export const fetchParticularSpeakerOfEvent =
     const fetchingSpeaker = async () => {
       //console.log(id, "I am passing from particularEvent action");
       const res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/speakers/${id}`,
+        `https://www.evenz.co.in//eureka/v1/speakers/${id}`,
         {
           method: "GET",
           headers: {
@@ -1057,7 +1057,7 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
   const fetchingSpeaker = async () => {
     //console.log(id, "I am passing from particularEvent action");
     const res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/speakers/${id}/getSpeaker`,
+      `https://www.evenz.co.in//eureka/v1/speakers/${id}/getSpeaker`,
       {
         method: "GET",
         headers: {
@@ -1108,7 +1108,7 @@ export const editSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1140,7 +1140,7 @@ export const editSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/speakers/${id}/update`,
+          `https://www.evenz.co.in//eureka/v1/speakers/${id}/update`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1174,7 +1174,7 @@ export const editSpeaker =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/speakers/${id}/update`,
+          `https://www.evenz.co.in//eureka/v1/speakers/${id}/update`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1266,7 +1266,7 @@ export const createBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1298,7 +1298,7 @@ export const createBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/booths/${id}/addBooth`,
+          `https://www.evenz.co.in//eureka/v1/booths/${id}/addBooth`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -1329,7 +1329,7 @@ export const createBooth =
         );
       } else {
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/booths/${id}/addBooth`,
+          `https://www.evenz.co.in//eureka/v1/booths/${id}/addBooth`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -1371,7 +1371,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
   const getBooths = async () => {
     console.log(id);
 
-    let fullLocation = `http://3.7.249.139:3000/eureka/v1/booths/${id}/getAllbooths`;
+    let fullLocation = `https://www.evenz.co.in//eureka/v1/booths/${id}/getAllbooths`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -1431,7 +1431,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/booths/${id}/getBoothDetails`,
+      `https://www.evenz.co.in//eureka/v1/booths/${id}/getBoothDetails`,
       {
         method: "GET",
 
@@ -1481,7 +1481,7 @@ export const editBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1513,7 +1513,7 @@ export const editBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/booths/${id}/updateBooth`,
+          `https://www.evenz.co.in//eureka/v1/booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1546,7 +1546,7 @@ export const editBooth =
         console.log(id);
         console.log(formValues);
         let res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/booths/${id}/updateBooth`,
+          `https://www.evenz.co.in//eureka/v1/booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1631,7 +1631,7 @@ export const createSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1777,7 +1777,7 @@ export const fetchSponsors =
     dispatch(sponsorActions.startLoading());
 
     const getSponsors = async () => {
-      let fullLocation = `http://3.7.249.139:3000/eureka/v1/sponsors/${id}`;
+      let fullLocation = `https://www.evenz.co.in//eureka/v1/sponsors/${id}`;
 
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
@@ -1839,7 +1839,7 @@ export const editSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+          "https://www.evenz.co.in//eureka/v1/upload/user/img",
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1978,7 +1978,7 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/${id}/addTicket`,
+      `https://www.evenz.co.in//eureka/v1/community/${id}/addTicket`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2020,7 +2020,7 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
 
   const getTickets = async () => {
     console.log(id);
-    let fullLocation = `http://3.7.249.139:3000/eureka/v1/events/${id}/tickets`;
+    let fullLocation = `https://www.evenz.co.in//eureka/v1/events/${id}/tickets`;
 
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
@@ -2080,7 +2080,7 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/ticket`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/ticket`,
       {
         method: "GET",
 
@@ -2118,7 +2118,7 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/updateTicket`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/updateTicket`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2161,7 +2161,7 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/deleteTicket`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/deleteTicket`,
       {
         method: "DELETE",
 
@@ -2264,7 +2264,7 @@ export const errorTrackerForMadeJustForYou =
 //     console.log(id);
 //     console.log(formValues);
 //     let res = await fetch(
-//       `http://3.7.249.139:3000/eureka/v1/events/${id}/addSpeaker`,
+//       `https://www.evenz.co.in//eureka/v1/events/${id}/addSpeaker`,
 //       {
 //         method: "POST",
 //         body: JSON.stringify({
@@ -2319,7 +2319,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/speakers`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/speakers`,
       {
         method: "GET",
 
@@ -2358,7 +2358,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
 
   try {
-    const res = await fetch("http://3.7.249.139:3000/eureka/v1/users/Me", {
+    const res = await fetch("https://www.evenz.co.in//eureka/v1/users/Me", {
       headers: {
         //  "Content-Type": "application/json",
         Authorization: `Bearer ${getState().auth.token}`,
@@ -2401,7 +2401,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(file);
 
       let uploadConfig = await fetch(
-        "http://3.7.249.139:3000/eureka/v1/upload/user/img",
+        "https://www.evenz.co.in//eureka/v1/upload/user/img",
         {
           headers: {
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2437,7 +2437,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(awsRes);
 
       const res = await fetch(
-        "http://3.7.249.139:3000/eureka/v1/users/updateMe",
+        "https://www.evenz.co.in//eureka/v1/users/updateMe",
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2474,7 +2474,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // );
     } else {
       const res = await fetch(
-        "http://3.7.249.139:3000/eureka/v1/users/updateMe",
+        "https://www.evenz.co.in//eureka/v1/users/updateMe",
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2526,7 +2526,7 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     const res = await fetch(
-      "http://3.7.249.139:3000/eureka/v1/users/updatePassword",
+      "https://www.evenz.co.in//eureka/v1/users/updatePassword",
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2581,7 +2581,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/${id}/getCommunity`,
+      `https://www.evenz.co.in//eureka/v1/community/${id}/getCommunity`,
       {
         method: "GET",
         headers: {
@@ -2620,7 +2620,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/${id}/updateCommunity`,
+      `https://www.evenz.co.in//eureka/v1/community/${id}/updateCommunity`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2661,7 +2661,7 @@ export const errorTrackerForEditCommunity =
 export const deleteCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
-    const res = await fetch(`http://3.7.249.139:3000/eureka/v1/community/${id}`, {
+    const res = await fetch(`https://www.evenz.co.in//eureka/v1/community/${id}`, {
       method: "GET",
     });
     if (!res.ok) {
@@ -2694,7 +2694,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/addSession`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/addSession`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2736,7 +2736,7 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   const getSessions = async () => {
     console.log(id);
-    let fullLocation = `http://3.7.249.139:3000/eureka/v1/events/${id}/sessions`;
+    let fullLocation = `https://www.evenz.co.in//eureka/v1/events/${id}/sessions`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -2794,7 +2794,7 @@ export const fetchSessionsForUser =
     dispatch(sessionActions.startLoading());
     try {
       console.log(id);
-      let fullLocation = `http://3.7.249.139:3000/eureka/v1/events/${id}/sessionsForUser`;
+      let fullLocation = `https://www.evenz.co.in//eureka/v1/events/${id}/sessionsForUser`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -2846,7 +2846,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/events/${id}/sessions`,
+      `https://www.evenz.co.in//eureka/v1/events/${id}/sessions`,
       {
         method: "GET",
 
@@ -2885,7 +2885,7 @@ export const fetchSessionForSessionStage =
       console.log(id);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/sessions/${id}/getOneSession`,
+        `https://www.evenz.co.in//eureka/v1/sessions/${id}/getOneSession`,
         {
           method: "GET",
 
@@ -2927,7 +2927,7 @@ export const fetchParticularSessionOfEvent =
       if (!existingSession) {
         //console.log(id, "I am passing from particularEvent action");
         const res = await fetch(
-          `http://3.7.249.139:3000/eureka/v1/sessions/${id}`,
+          `https://www.evenz.co.in//eureka/v1/sessions/${id}`,
           {
             method: "GET",
             headers: {
@@ -2977,7 +2977,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     const res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/sessions/${id}/update`,
+      `https://www.evenz.co.in//eureka/v1/sessions/${id}/update`,
       {
         method: "POST",
         // body: {...formValues},
@@ -3106,7 +3106,7 @@ export const editNetworking =
       console.log(id);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/events/${id}/updateNetworking`,
+        `https://www.evenz.co.in//eureka/v1/events/${id}/updateNetworking`,
         {
           method: "PATCH",
 
@@ -3151,7 +3151,7 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/coupons/createNew`,
+      `https://www.evenz.co.in//eureka/v1/community/coupons/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3192,7 +3192,7 @@ export const fetchCoupons = () => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
   const getCoupons = async () => {
-    let res = await fetch(`http://3.7.249.139:3000/eureka/v1/community/coupons`, {
+    let res = await fetch(`https://www.evenz.co.in//eureka/v1/community/coupons`, {
       method: "GET",
 
       headers: {
@@ -3236,7 +3236,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/${id}/getOneCoupon`,
+      `https://www.evenz.co.in//eureka/v1/community/${id}/getOneCoupon`,
       {
         method: "GET",
 
@@ -3274,7 +3274,7 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
   try {
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/${id}/updateCoupon`,
+      `https://www.evenz.co.in//eureka/v1/community/${id}/updateCoupon`,
       {
         method: "PATCH",
 
@@ -3375,7 +3375,7 @@ export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
     try {
       const checkoutSession = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/stripe/getEventRegistrationCheckoutSession`,
+        `https://www.evenz.co.in//eureka/v1/stripe/getEventRegistrationCheckoutSession`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3409,7 +3409,7 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/users/query/createNew`,
+      `https://www.evenz.co.in//eureka/v1/users/query/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3441,7 +3441,7 @@ export const createCommunityFeedback =
     try {
       console.log(formValues);
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/feedback/community`,
+        `https://www.evenz.co.in//eureka/v1/feedback/community`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3475,7 +3475,7 @@ export const fetchQueriesForCommunity =
 
     console.log(term, event, answerStatus, userRegistrationStatus);
     const fetchQueries = async () => {
-      let fullLocation = `http://3.7.249.139:3000/eureka/v1/community/queries/getAll`;
+      let fullLocation = `https://www.evenz.co.in//eureka/v1/community/queries/getAll`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -3540,7 +3540,7 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
 
   try {
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/community/queries/createAnswer`,
+      `https://www.evenz.co.in//eureka/v1/community/queries/createAnswer`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -3590,7 +3590,7 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
     let res = await fetch(
-      `http://3.7.249.139:3000/eureka/v1/users/forgotPassword`,
+      `https://www.evenz.co.in//eureka/v1/users/forgotPassword`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3621,7 +3621,7 @@ export const resetPassword =
     dispatch(userActions.startLoading());
     try {
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/users/resetPassword/${token}`,
+        `https://www.evenz.co.in//eureka/v1/users/resetPassword/${token}`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -3675,7 +3675,7 @@ export const fetchRegistrationsOfParticularCommunity =
       console.log(communityId);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/registrations/community/getAll`,
+        `https://www.evenz.co.in//eureka/v1/registrations/community/getAll`,
         {
           method: "GET",
 
@@ -3723,7 +3723,7 @@ export const fetchParticularRegistration =
       console.log(id);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/registrations/${id}/getOne`,
+        `https://www.evenz.co.in//eureka/v1/registrations/${id}/getOne`,
         {
           method: "GET",
 
@@ -3764,7 +3764,7 @@ export const createNewInvitation =
       console.log(formValues);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/team-invites/create-new`,
+        `https://www.evenz.co.in//eureka/v1/team-invites/create-new`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3843,7 +3843,7 @@ export const createSocket = (socket) => async (dispatch, getState) => {
 //       console.log(eventId);
 
 //       let res = await fetch(
-//         `http://3.7.249.139:3000/eureka/v1/getCurrentUsers/${eventId}`,
+//         `https://www.evenz.co.in//eureka/v1/getCurrentUsers/${eventId}`,
 //         {
 //           method: "GET",
 
@@ -3887,7 +3887,7 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
   const fetchingRTMToken = async () => {
-    let res = await fetch("http://3.7.249.139:3000/eureka/v1/getRTMToken", {
+    let res = await fetch("https://www.evenz.co.in//eureka/v1/getRTMToken", {
       method: "POST",
       body: JSON.stringify({
         eventId: eventId,
@@ -3975,7 +3975,7 @@ export const fetchPreviousEventChatMessages =
       console.log(eventId);
 
       let res = await fetch(
-        `http://3.7.249.139:3000/eureka/v1/getPreviousEventMsg/${eventId}`,
+        `https://www.evenz.co.in//eureka/v1/getPreviousEventMsg/${eventId}`,
         {
           method: "GET",
 
@@ -4014,7 +4014,7 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
 
   const fetchingRTCToken = async () => {
     let res = await fetch(
-      "http://3.7.249.139:3000/eureka/v1/getLiveStreamingToken",
+      "https://www.evenz.co.in//eureka/v1/getLiveStreamingToken",
       {
         method: "POST",
         body: JSON.stringify({

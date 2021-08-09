@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://3.7.249.139:3000/",
+  baseURL: "https://www.evenz.co.in/",
 });
