@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import "./../../assets/css/googleBtn.scss";
@@ -79,9 +80,9 @@ const Signin = (props) => {
     dispatch(signIn(formValues));
   };
 
-  const onClickHandle = () => {
-    dispatch(googleLinkClicked());
-  };
+  // const onClickHandle = () => {
+  //   dispatch(googleLinkClicked());
+  // };
 
   if (isSending) {
     return (
@@ -130,7 +131,7 @@ const Signin = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
-                <div
+                {/* <div
                   className="row d-flex"
                   style={{
                     justifyContent: "space-between",
@@ -138,11 +139,7 @@ const Signin = (props) => {
                   }}
                 >
                   <div onClick={onClickHandle}>
-                    {/* <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">Login with Google</a> */}
-
-                    {/* <a href="https://damp-taiga-71545.herokuapp.com/eureka/v1/auth/google">
-                      Login with Google
-                    </a> */}
+                    
 
                     <button
                       type="button"
@@ -161,8 +158,10 @@ const Signin = (props) => {
                       </div>
                     </button>
                   </div>
-                </div>
-                <div
+                </div> */}
+
+
+                {/* <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
                 >
@@ -173,7 +172,8 @@ const Signin = (props) => {
                   <div className="col-5">
                     <hr />
                   </div>
-                </div>
+                </div> */}
+
                 <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
                   <div className="row">
                     <div className="mb-3">

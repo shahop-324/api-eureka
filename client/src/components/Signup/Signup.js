@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -97,9 +98,10 @@ const Signup = (props) => {
 
     dispatch(signUp(formValues));
   };
-  const onClickHandle = () => {
-    dispatch(googleLinkClicked());
-  };
+  
+  // const onClickHandle = () => {
+  //   dispatch(googleLinkClicked());
+  // };
 
   if(error) {
     dispatch(errorTrackerForSignUp());
@@ -143,7 +145,7 @@ const Signup = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Free forever. No credit card needed.
                 </div>
-                <div className="row d-flex flex-row justify-content-center px-2 mb-4">
+                {/* <div className="row d-flex flex-row justify-content-center px-2 mb-4">
                   <button
                     type="button"
                     onClick={onClickHandle}
@@ -160,10 +162,11 @@ const Signup = (props) => {
                       </div>
                     </div>
                   </button>
-                </div>
+                </div> */}
 
                 {/*  */}
-                <div
+
+                {/* <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
                 >
@@ -174,7 +177,8 @@ const Signup = (props) => {
                   <div className="col-5">
                     <hr />
                   </div>
-                </div>
+                </div> */}
+
                 <form
                 
                   className="ui form error"
