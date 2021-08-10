@@ -24,6 +24,7 @@ import AgoraRTM from "agora-rtm-sdk";
 import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
+import { contactUsActions } from "../reducers/contactSlice";
 
 const BaseURL = "https://www.evenz.co.in/api-eureka/eureka/v1/";
 
@@ -4148,3 +4149,42 @@ export const signupForEmailNewsletter =
       console.log(error);
     }
   };
+
+export const contactUs = (formValues) => async (dispatch, getState) => {
+  dispatch(contactUsActions.startLoading());
+  try {
+    let res = await fetch(
+      `https://www.evenz.co.in/api-eureka/eureka/v1/contactUs/contact`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res.data);
+
+    alert("Your contact request is recieved successfully.");
+    dispatch(contactUsActions.ContactUs());
+  } catch (err) {
+    dispatch(contactUsActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const errorTrackerForContactUs = () => async (dispatch, getState) => {
+  dispatch(contactUsActions.disabledError());
+};

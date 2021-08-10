@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
@@ -35,7 +36,7 @@ import { reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 
-import Loader from './../../Loader';
+// import Loader from './../../Loader';
 
 const options = [
   { value: "RGe_0001", label: "Asia" },

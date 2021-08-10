@@ -42,7 +42,7 @@ const razorpayRoutes = require("./routes/razorpayRoutes.js");
 const teamInvite = require("./routes/teamInviteRoutes");
 const demoRoutes = require("./routes/demoRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
-
+const contactUsRoutes = require("./routes/contactUsRoutes");
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -153,6 +153,7 @@ app.use("/api-eureka/eureka/v1/tickets", ticketRoutes);
 app.use("/api-eureka/eureka/v1/team-invites",teamInvite);
 app.use("/api-eureka/eureka/v1/demo",demoRoutes);
 app.use("/api-eureka/eureka/v1/newsletter",newsletterRoutes);
+app.use("/api-eureka/eureka/v1/contactUs",contactUsRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
