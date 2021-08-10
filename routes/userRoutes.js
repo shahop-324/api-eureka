@@ -7,13 +7,13 @@ const userController = require("../controllers/userController");
 const communityController = require("../controllers/communityController");
 const bodyParser = require("body-parser");
 
-
 const router = express.Router();
-
-router.post("/forgotPassword",  userController.forgotPassword); 
+router.post("/googleSignIn", authController.googleSignIn);
+router.post("/forgotPassword", userController.forgotPassword);
 
 // user signup router
 router.post("/signup", authController.signup);
+
 // user login router
 router.post("/login", authController.login);
 
@@ -34,18 +34,12 @@ router.use((req, res, next) => {
   }
 });
 
-
-
-
-router.get("/registeredEvents",userController.getAllRegisteredEvents);
-router.get("/personalData",userController.getAllPersonalData);
+router.get("/registeredEvents", userController.getAllRegisteredEvents);
+router.get("/personalData", userController.getAllPersonalData);
 // router.get("/registeredEvents",userController.getAllRegisteredEvents);
 // update Me
 router.patch("/updateMe", userController.updateMe);
 
-router.get("/auth", (req, res) => {
-  res.send("hey i am protected route");
-});
 // DONE Creating new Community
 router.post("/newCommunity", userController.createNewCommunity);
 
@@ -89,8 +83,6 @@ router.post(
 //Me
 router.get("/Me", userController.getMe);
 
-
-
 // delete Me
 router.delete("/Me", userController.deleteMe);
 
@@ -99,7 +91,5 @@ router.delete("/Me", userController.deleteMe);
 
 // reset Password
 router.patch("/updatePassword", authController.updatePassword);
-
-
 
 module.exports = router;

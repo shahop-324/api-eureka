@@ -237,6 +237,32 @@ const CreateNewCommunityForm = (props) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
+  const renderInputImage = ({
+    input,
+
+    type,
+
+    classes,
+
+    accept,
+    meta: { touched, error, warning },
+  }) => {
+    const className = `field ${error && touched ? "error" : ""}`;
+    return (
+      <div className={className}>
+        <input
+          type={type}
+          {...input}
+          accept={accept}
+          onChange={handleChange}
+          className={classes}
+
+          // required
+        />
+      </div>
+    );
+  };
+
   console.log(file);
   console.log(fileToPreview);
   // const dispatch=useDispatch();
@@ -302,7 +328,7 @@ const CreateNewCommunityForm = (props) => {
                 name="imgUpload"
                 type="file"
                 accept="image/*"
-                handleChange={handleChange}
+                // handleChange={handleChange}
                 component={renderInputImage}
               />
             </div>
@@ -392,10 +418,10 @@ const CreateNewCommunityForm = (props) => {
                 type="submit"
                 class="btn btn-outline-primary outline-btn-text form-control"
                 disabled={
-                  createCommunityClicked &&
-                  formIsvalidated &&
-                  !error &&
-                  (pristine || submitting || !valid)
+                  // createCommunityClicked &&
+                  // formIsvalidated &&
+                  // !error &&
+                  pristine || submitting || !valid
                 }
                 //onClick={props.closeHandler}
                 //disabled={pristine || submitting || !valid}
@@ -452,5 +478,5 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "newCreatedCommunity",
   validate,
-  destoryOnUnmount: true,
+  //destoryOnUnmount: true,
 })(CreateNewCommunityForm);

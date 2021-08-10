@@ -10,6 +10,8 @@ import {
   googleLinkClicked,
   resetAuthError,
 } from "../../actions/index";
+
+import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
@@ -95,8 +97,9 @@ const Signin = (props) => {
   }
 
   if (error) {
-    dispatch(errorTrackerForSignIn());
     alert(error);
+    dispatch(errorTrackerForSignIn());
+
     return;
   }
 
@@ -133,6 +136,8 @@ const Signin = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
+
+                <GoogleAuth />
                 {/* <div
                   className="row d-flex"
                   style={{

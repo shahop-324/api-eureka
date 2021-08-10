@@ -39,7 +39,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
-        isSignedIn: true,
       })
     );
     dispatch(
@@ -89,6 +88,34 @@ export const signUp = (formValues) => async (dispatch) => {
 export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
+
+export const googleSignIn = (formValues) => async (dispatch) => {
+  try {
+    const res = await eureka.post("/eureka/v1/users/googleSignIn", {
+      ...formValues,
+    });
+    console.log(res.data.data.user);
+    dispatch(
+      authActions.SignIn({
+        token: res.data.token,
+      })
+    );
+    dispatch(
+      userActions.CreateUser({
+        user: res.data.data.user,
+      })
+    );
+    history.push("/user/home");
+  } catch (err) {
+    dispatch(authActions.hasError(err.response.data.message));
+    alert(err.response.data.message);
+  }
+};
+
+export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
+  dispatch(authActions.disabledError());
+};
+
 export const signOut = () => async (dispatch, getState) => {
   window.localStorage.clear();
   dispatch(authActions.SignOut());
@@ -291,66 +318,67 @@ export const errorTrackerForCommunitySignIn =
     dispatch(communityActions.disabledError());
   };
 // authentication with google auth
-export const googleSignIn = () => async (dispatch) => {
-  const signIn = async () => {
-    console.log("mai yaha se gujara hue");
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
-    headers.append("Cache", "no-cache");
 
-    const params = {
-      dataType: "json",
-      method: "GET",
-      headers,
-      credentials: "include",
-    };
-    const response = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/current_user",
-      params
-    );
+// export const googleSignIn = () => async (dispatch) => {
+//   const signIn = async () => {
+//    // console.log("mai yaha se gujara hue");
+//     const headers = new Headers();
+//     headers.append("Content-Type", "application/json");
+//     headers.append("Accept", "application/json");
+//     headers.append("Cache", "no-cache");
 
-    if (!response.ok) {
-      if (!response.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(response.message);
-      }
-    }
+//     const params = {
+//       dataType: "json",
+//       method: "GET",
+//       headers,
+//       credentials: "include",
+//     };
+//     const response = await fetch(
+//       "https://www.evenz.co.in/api-eureka/eureka/v1/current_user",
+//       params
+//     );
 
-    const res = await response.json();
-    return res;
-  };
+//     if (!response.ok) {
+//       if (!response.message) {
+//         throw new Error("Something went wrong");
+//       } else {
+//         throw new Error(response.message);
+//       }
+//     }
 
-  try {
-    const res = await signIn();
-    console.log(res);
+//     const res = await response.json();
+//     return res;
+//   };
 
-    dispatch(
-      userActions.CreateUser({
-        user: res.user,
-      })
-    );
-    dispatch(
-      authActions.SignIn({
-        token: res.token,
-      })
-    );
-    dispatch(
-      googleAuthActions.TrackerGoogleLogin({
-        isClicked: false,
-      })
-    );
-  } catch (err) {
-    alert(err.message);
-    dispatch(authActions.hasError(err.message));
-  }
-};
+//   try {
+//     const res = await signIn();
+//     console.log(res);
 
-export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
-  dispatch(authActions.disabledError());
-  dispatch(googleAuthActions.disabledError());
-};
+//     dispatch(
+//       userActions.CreateUser({
+//         user: res.user,
+//       })
+//     );
+//     dispatch(
+//       authActions.SignIn({
+//         token: res.token,
+//       })
+//     );
+//     dispatch(
+//       googleAuthActions.TrackerGoogleLogin({
+//         isClicked: false,
+//       })
+//     );
+//   } catch (err) {
+//     alert(err.message);
+//     dispatch(authActions.hasError(err.message));
+//   }
+// };
+
+// export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
+//   dispatch(authActions.disabledError());
+//   dispatch(googleAuthActions.disabledError());
+// };
 export const googleSignOut = () => async (dispatch, getState) => {
   dispatch(authActions.SignOut());
 };
