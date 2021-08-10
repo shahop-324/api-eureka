@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
-import HomeHero from "./../../../assets/images/HomeHero.png";
+import EditEventHero from "./../../../assets/images/editEventHero@2x.png";
+import EditTicketsHero from "./../../../assets/images/ticketsHero@2x.png";
+import RegistrationsHero from "./../../../assets/images/registrationsHero@2x.png";
+import ReviewsHero from "./../../../assets/images/reviews@2x.png";
+import CouponsHero from "./../../../assets/images/Coupons@2x.png";
+
+
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
 import WorkflowStep3 from "./../../../assets/images/WorkflowStep3.png";
@@ -41,12 +47,10 @@ import "aos/dist/aos.css";
 
 import { Dropdown, Menu } from "semantic-ui-react";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import BuildIcon from '@material-ui/icons/Build';
-import AirplayIcon from '@material-ui/icons/Airplay';
-import AssessmentIcon from '@material-ui/icons/Assessment';
-import CallMergeIcon from '@material-ui/icons/CallMerge';
-
-
+import BuildIcon from "@material-ui/icons/Build";
+import AirplayIcon from "@material-ui/icons/Airplay";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import CallMergeIcon from "@material-ui/icons/CallMerge";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -256,7 +260,7 @@ script.onload = function () {
   alert("Script loaded and ready");
 };
 
-const Home = (props) => {
+const EventManagementHome = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -387,7 +391,7 @@ const Home = (props) => {
                           </Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item>
-                          <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
+                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
                               <BuildIcon
                                 style={{ fill: "#538BF7", fontSize: "28" }}
                                 className="nav-dropdown-item-active-icon"
@@ -401,7 +405,8 @@ const Home = (props) => {
                             </div>
                           </Dropdown.Item>
                           <Dropdown.Divider />
-                          <Dropdown.Item><div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
+                          <Dropdown.Item>
+                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
                               <AirplayIcon
                                 style={{ fill: "#538BF7", fontSize: "28" }}
                                 className="nav-dropdown-item-active-icon"
@@ -412,9 +417,11 @@ const Home = (props) => {
                               >
                                 Event Platform
                               </div>
-                            </div></Dropdown.Item>
+                            </div>
+                          </Dropdown.Item>
                           <Dropdown.Divider />
-                          <Dropdown.Item><div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
+                          <Dropdown.Item>
+                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
                               <AssessmentIcon
                                 style={{ fill: "#538BF7", fontSize: "28" }}
                                 className="nav-dropdown-item-active-icon"
@@ -425,10 +432,12 @@ const Home = (props) => {
                               >
                                 Analytics Tools
                               </div>
-                            </div></Dropdown.Item>
-                          
+                            </div>
+                          </Dropdown.Item>
+
                           <Dropdown.Divider />
-                          <Dropdown.Item><div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
+                          <Dropdown.Item>
+                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
                               <CallMergeIcon
                                 style={{ fill: "#538BF7", fontSize: "28" }}
                                 className="nav-dropdown-item-active-icon"
@@ -439,7 +448,8 @@ const Home = (props) => {
                               >
                                 Integrations
                               </div>
-                            </div></Dropdown.Item>
+                            </div>
+                          </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
                     </li>
@@ -503,20 +513,18 @@ const Home = (props) => {
             </nav>
           </div>
 
-          <div className="header-content-section container d-flex">
+          <div className="header-content-section d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
-              <div className="grid-1-of-2">
+              <div
+                className="grid-1-of-2 pe-5 me-5"
+                style={{ maxWidth: "560px", justifySelf: "end" }}
+              >
                 <div className="header-main-heading-and-action-btn">
-                  <div className="hero-heading mb-5">
-                    One stop solution <br /> for all{" "}
-                    <div
-                      class="typewrite"
-                      data-period="1000"
-                      data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                      style={{ color: "#ffffff", display: "inline-block" }}
-                    >
-                      {/* Virtual Events */}
-                    </div>
+                  <div
+                    className="hero-heading mb-5"
+                    style={{ lineHeight: "4rem" }}
+                  >
+                    Build to help you seamlessly manage all your events.
                   </div>
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
@@ -542,9 +550,8 @@ const Home = (props) => {
               <div className="grid-2-of-2 d-flex flex-row justify-content-center">
                 <img
                   className="section-hero-img"
-                  src={HomeHero}
+                  src={EditEventHero}
                   alt="home-hero"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
             </div>
@@ -557,62 +564,24 @@ const Home = (props) => {
           style={{ height: "auto" }}
         >
           <div className="centered-heading-primary mb-5">
-            Making Your event more <br />
-            engaging and effortless
+            Tools Catered with your <br />
+            needs in mind
           </div>
           <div className="centered-heading-secondary mb-5">
-            From exploration, management, hosting to post analysis and resource
-            distribution, <br /> we do all this for you, so you can rest
-            peacefully.
+            From inviting speakers, sponsors, booths, attendees, managing teams,
+            ticketing to getting feedback
+            <br /> and sharing recordings post event, we do it all for you. So,
+            you don’t have to. peacefully.
           </div>
 
-          <div
-            className="application-workflow-row py-5"
-            id="application-workflow"
-          >
-            <div className="workflow-container">
-              <div className="workflow-group-container-1 mb-3">
-                <img
-                  src={WorkflowStep1}
-                  alt="workflow step 1"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                Create and Manage <br /> Next Gen Events
-              </div>
-            </div>
-            <div className="workflow-container">
-              <div className="workflow-group-container-2 mb-3">
-                <img
-                  src={WorkflowStep2}
-                  alt="workflow step 2"
-                  className="zoom-in"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                Invite attendees, Sponsors <br /> And speakers
-              </div>
-            </div>
-            <div className="workflow-container">
-              <div className="workflow-group-container-3 mb-3">
-                <img
-                  src={WorkflowStep3}
-                  alt="workflow step 3"
-                  className="zoom-in"
-                  // data-aos="zoom-in"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                And then, No frills. <br /> Just a good time.
-              </div>
-            </div>
-          </div>
+          <img
+            // src={EditTicketsHero}
+            src={AmazingEvent}
+            alt="amazing event"
+            className="zoom-in"
+            data-aos="zoom-in"
+            style={{ maxHeight: "100%", maxWidth: "100%" }}
+          />
         </div>
 
         <div className="home-section-3 px-5 py-5" id="home-section-3">
@@ -621,79 +590,21 @@ const Home = (props) => {
             style={{ height: "auto", alignItems: "center" }}
           >
             <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4">
-                An amazing{" "}
-                <div
-                  class="typewrite"
-                  data-period="1000"
-                  data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                  style={{ color: "#538BF7", display: "inline-block" }}
-                ></div>{" "}
-                <br />
-                event begins with us.
+              <div className="section-heading-primary mb-4" style={{color: "#000000"}}>
+              Invite Speakers, attendees 
+              <br/>
+And sponsors
               </div>
 
               <div className="home-text-description" data-aos="slide-up">
-                Evenz is designed to smoothly create, manage and Host memorable
-                and most interactive event, no matter whatever Scale it is.
+              You can invite your speakers, attendees and sponsors to join you as soon as you publish your event and manage everything with just a click.
+
+
               </div>
 
-              <div className="my-5">
-                <div className="plan-features-offered-list">
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      SEO-optimized event registration pages{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Ticketing and payment processing{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Event Analytics Dashboard
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">Unlimited Events</div>
-                  </div>
-                </div>
-              </div>
+              
 
-              <div className="action-btn-home">
+              <div className="action-btn-home mt-5">
                 <button
                   type="button"
                   className="btn btn-dark btn-outline-text px-5 py-3 me-3"
@@ -712,7 +623,7 @@ const Home = (props) => {
               style={{ alignSelf: "center" }}
             >
               <img
-                src={AmazingEvent}
+                src={RegistrationsHero}
                 alt="amazing event"
                 className="zoom-in"
                 data-aos="zoom-in"
@@ -732,7 +643,7 @@ const Home = (props) => {
               style={{ alignSelf: "center" }}
             >
               <img
-                src={FirstEvent}
+                src={ReviewsHero}
                 alt="amazing event"
                 data-aos="zoom-in"
                 data-aos-easing="ease-in-sine"
@@ -752,8 +663,8 @@ const Home = (props) => {
                 data-aos-duration="500"
                 data-aos-delay="100"
               >
-                Your First Event is just <br />
-                few clicks away.
+                Get Feedback from your  <br />
+                attendees
               </div>
 
               <div
@@ -763,75 +674,11 @@ const Home = (props) => {
                 data-aos-duration="500"
                 data-aos-delay="100"
               >
-                It’s that simple. With Evenz you can setup your virtual event
-                with just one click and start getting registrations as soon as
-                you publish your event.
+                We know its the key to constantly improve your events to drive more meaningful connections and build values that stays. 
+So, you can hear to what your attendees have to say about your event using reviews feature built for your community.
               </div>
 
-              <div className="plan-features-offered-list">
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    SEO-optimized event registration pages{" "}
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    Ticketing and payment processing{" "}
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    Event Analytics Dashboard
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">Unlimited Events</div>
-                </div>
-              </div>
+              
 
               <div className="action-btn-home  pt-5">
                 <button
@@ -865,7 +712,7 @@ const Home = (props) => {
                   data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
-                  Rooms for open discussions
+                  Create coupons to boost your <br /> sale
                 </div>
 
                 <div
@@ -884,7 +731,6 @@ const Home = (props) => {
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
-                    
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -902,7 +748,7 @@ const Home = (props) => {
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={RoomsFeatures}
+                  src={CouponsHero}
                   alt="amazing event"
                   data-aos="zoom-in"
                   data-aos-easing="ease-in-sine"
@@ -930,7 +776,7 @@ const Home = (props) => {
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={ConnectionThatLasts}
+                  src={EditTicketsHero}
                   alt="amazing event"
                   className="zoom-in"
                   data-aos="zoom-in"
@@ -952,8 +798,8 @@ const Home = (props) => {
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Meet, greet and make <br />
-                  connections that lasts.
+                  Create and manage <br />
+                  ticket in minutes.
                 </div>
 
                 <div
@@ -1183,9 +1029,7 @@ const Home = (props) => {
 
         <div className="home-section-9">
           <div className="container py-5 mt-3">
-            <div
-              className="centered-heading-primary"
-            >
+            <div className="centered-heading-primary">
               Let’s give a boost to <br /> Your virtual events
             </div>
             <div
@@ -1195,7 +1039,6 @@ const Home = (props) => {
               <img
                 src={BoostYourEvents}
                 data-aos="zoom-in"
-                
                 data-aos-easing="ease-in-sine"
                 data-aos-delay="100"
                 alt="amazing event"
@@ -1498,4 +1341,4 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "requestDemoForm",
   validate,
-})(Home);
+})(EventManagementHome);

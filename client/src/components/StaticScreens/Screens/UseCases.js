@@ -15,12 +15,26 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import PreFooter from "../../PreFooter";
 import { Link } from "react-router-dom";
 
+import AOS from 'aos';
+import "aos/dist/aos.css";
+
+
+
+
 const UseCases = () => {
   const [hambergerOpen, setHambergerOpen] = useState(false);
 
   useEffect(() => {
     window.localStorage.clear();
   });
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1100,
+    });
+    AOS.refresh();
+  }, []);
+
 
   const openHamberger = () => {
     setHambergerOpen(true);
@@ -149,6 +163,7 @@ const UseCases = () => {
           >
             <img
               src={ExploringUseCases}
+              data-aos="zoom-in"
               alt="workflow step 1"
               style={{ maxWidth: "80%", maxHeight: "80%", margin: "0 auto" }}
             />
@@ -192,6 +207,9 @@ const UseCases = () => {
             >
               <img
                 src={Conference}
+                data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                 alt="amazing event"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
@@ -213,6 +231,9 @@ const UseCases = () => {
                 <img
                   src={OnlineTraining}
                   alt="amazing event"
+                  data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                   style={{
                     alignSelf: "center",
                     maxHeight: "100%",
@@ -290,6 +311,9 @@ const UseCases = () => {
             >
               <img
                 src={HappyHours}
+                data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                 alt="amazing event"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
@@ -311,6 +335,9 @@ const UseCases = () => {
                 <img
                   src={TownHall}
                   alt="amazing event"
+                  data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                   style={{
                     alignSelf: "center",
                     maxHeight: "100%",
@@ -387,6 +414,9 @@ const UseCases = () => {
               style={{ alignSelf: "center" }}
             >
               <img
+              data-aos="zoom-in"
+              data-aos-delay="100"
+              data-aos-easing="ease-in-sine"
                 src={YogaTraining}
                 alt="amazing event"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
@@ -407,6 +437,9 @@ const UseCases = () => {
               >
                 <img
                   src={TradeShow}
+                  data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                   alt="amazing event"
                   style={{
                     alignSelf: "center",

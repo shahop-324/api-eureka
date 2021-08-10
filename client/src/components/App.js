@@ -36,6 +36,12 @@ import AboutUs from "./StaticScreens/Screens/AboutUs";
 import ContactUs from "./StaticScreens/Screens/ContactUs";
 import AcceptSpeakerInvite from "./AcceptSpeakerInvite";
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+import EventManagementHome from "./StaticScreens/Screens/EventManagementHome";
+AOS.init();
+
+
 class App extends React.Component {
   render() {
     const { isSignedIn } = this.props;
@@ -74,6 +80,7 @@ class App extends React.Component {
               <Route path="/accept-speaker-invitation" exact component={AcceptSpeakerInvite} />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
+              <Route path="/event-management" exact component={EventManagementHome} />
               <Route path="/contact-us" exact component={ContactUs} />
 
               <Route path="/pricing" exact component={Pricing} />

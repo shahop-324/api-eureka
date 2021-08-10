@@ -135,9 +135,11 @@ const Pricing = () => {
             </div>
 
             <div className="pricing-cards-grid-wrapper py-5">
-              <div class="card__container grid" style={{ maxWidth: "1400px" }}>
+              <div class="card__container grid" style={{ maxWidth: "1600px" }}>
                 {/* <!--==================== CARD 1 ====================--> */}
-                <article class="card__content grid">
+                <article class="card__content grid px-5" data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine">
                   <div class="card__pricing">
                     <div class="card__pricing-number">
                       <span class="card__pricing-symbol">$</span>0
@@ -197,7 +199,10 @@ const Pricing = () => {
 
                 {/* <!--==================== CARD 2 ====================--> */}
                 <article
-                  class="card__content pricing-card-2 grid"
+                  class="card__content pricing-card-2 grid px-5"
+                  data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine"
                  
                 >
                   <div class="card__pricing">
@@ -263,7 +268,9 @@ const Pricing = () => {
                 </article>
 
                 {/* <!--==================== CARD 3 ====================--> */}
-                <article class="card__content grid">
+                <article class="card__content grid px-5" data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine">
                   {/* <div class="card__pricing">
                     <div class="card__pricing-number">
                       <span class="card__pricing-symbol">$</span>29

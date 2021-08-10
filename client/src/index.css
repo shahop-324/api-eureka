@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  height: auto !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -152,6 +153,17 @@ code {
 .blob-7:after {
   animation-delay: -1s;
 }
+
+.nav-dropdown-item-active-icon:hover {
+  fill: #538bf7;
+}
+
+.nav-dropdown-item-active-text:hover {
+  color: #538bf7;
+  
+}
+
+
 @keyframes bo7 {
   0% {
     transform: translate(0, 0);

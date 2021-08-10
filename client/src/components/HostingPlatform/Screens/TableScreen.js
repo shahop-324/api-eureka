@@ -106,7 +106,7 @@ const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
 
   const getToken = async () => {
     let res = await fetch(
-      "http://localhost:3000/eureka/v1/getRTCVideoCallToken",
+      "https://www.evenz.co.in/api-eureka/eureka/v1/getRTCVideoCallToken",
       {
         method: "POST",
         body: JSON.stringify({

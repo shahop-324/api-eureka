@@ -26,7 +26,10 @@ const EventCard = ({
   console.log(showBtn);
   const displayJoinBtn = showBtn ? "block" : "none";
   return (
-    <div className="event-card-main">
+    <div className="event-card-main" data-aos="zoom-in"
+    data-aos-delay="10"
+    data-aos-duration="300"
+    data-aos-easing="ease-in-sine">
       <div className="event-card-img-container">
         <Link
           onClick={() => dispatch(fetchEvent(id))}
