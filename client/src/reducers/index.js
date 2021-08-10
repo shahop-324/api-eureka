@@ -26,6 +26,7 @@ import roomsSlice from "./roomsSlice";
 import RTMSlice from "./RTMSlice";
 import eventChatSlice from "./eventChatSlice";
 import RTCSlice from "./RTCSlice";
+import demoSlice from "./demoSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -54,4 +55,5 @@ export default combineReducers({
   RTC: RTCSlice.reducer,
 
   chats:eventChatSlice.reducer,
+  demo: demoSlice.reducer,
 });

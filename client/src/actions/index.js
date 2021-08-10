@@ -23,6 +23,7 @@ import { RTMActions } from "../reducers/RTMSlice";
 import AgoraRTM from "agora-rtm-sdk";
 import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
+import { demoActions } from "../reducers/demoSlice";
 
 const BaseURL = "https://www.evenz.co.in/api-eureka/eureka/v1/";
 
@@ -4057,3 +4058,49 @@ export const resetUserError = () => async (dispatch, getState) => {
 export const resetCommunityError = () => async (dispatch, getState) => {
   dispatch(communityActions.ResetError());
 };
+
+
+export const createDemoRequest = (formValues) => async (dispatch, getState) => {
+  dispatch(demoActions.startLoading());
+  try {
+    let res = await fetch(
+      `https://www.evenz.co.in/api-eureka/eureka/v1/demo/requestDemo`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res.data);
+
+    dispatch(
+      demoActions.CreateDemo({
+        demo: res.data,
+      })
+    );
+  } catch (err) {
+    dispatch(demoActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const errorTrackerForCreateDemo =
+  () => async (dispatch, getState) => {
+    dispatch(demoActions.disabledError());
+  };
+
+

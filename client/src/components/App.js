@@ -34,6 +34,7 @@ import Pricing from "./StaticScreens/Screens/Pricing";
 import UseCases from "./StaticScreens/Screens/UseCases";
 import AboutUs from "./StaticScreens/Screens/AboutUs";
 import ContactUs from "./StaticScreens/Screens/ContactUs";
+import AcceptSpeakerInvite from "./AcceptSpeakerInvite";
 
 class App extends React.Component {
   render() {
@@ -70,6 +71,7 @@ class App extends React.Component {
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
+              <Route path="/accept-speaker-invitation" exact component={AcceptSpeakerInvite} />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route path="/contact-us" exact component={ContactUs} />
