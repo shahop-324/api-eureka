@@ -89,8 +89,7 @@ export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 export const signOut = () => async (dispatch, getState) => {
- 
-window.localStorage.clear();
+  window.localStorage.clear();
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
@@ -242,14 +241,17 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
 
   const loginCommunity = async () => {
-    let res = await fetch(`https://www.evenz.co.in/api-eureka/eureka/v1/users/${id}`, {
-      method: "POST",
+    let res = await fetch(
+      `https://www.evenz.co.in/api-eureka/eureka/v1/users/${id}`,
+      {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().auth.token}`,
-      },
-    });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
 
     if (!res.ok) {
       if (!res.message) {
@@ -1816,7 +1818,8 @@ export const fetchSponsors =
     }
   };
 
-  export const errorTrackerForFetchSponsors = () => async (dispatch, getState) => {
+export const errorTrackerForFetchSponsors =
+  () => async (dispatch, getState) => {
     dispatch(sponsorActions.disabledError());
   };
 
@@ -2349,12 +2352,15 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
 
   try {
-    const res = await fetch("https://www.evenz.co.in/api-eureka/eureka/v1/users/Me", {
-      headers: {
-        //  "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().auth.token}`,
-      },
-    });
+    const res = await fetch(
+      "https://www.evenz.co.in/api-eureka/eureka/v1/users/Me",
+      {
+        headers: {
+          //  "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
 
     if (!res.ok) {
       if (!res.message) {
@@ -2652,9 +2658,12 @@ export const errorTrackerForEditCommunity =
 export const deleteCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
-    const res = await fetch(`https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}`, {
-      method: "GET",
-    });
+    const res = await fetch(
+      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}`,
+      {
+        method: "GET",
+      }
+    );
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2827,7 +2836,7 @@ export const fetchSessionsForUser =
       dispatch(sessionActions.hasError(err.message));
     }
   };
-  export const errorTrackerForFetchSessionsForUser =
+export const errorTrackerForFetchSessionsForUser =
   () => async (dispatch, getState) => {
     dispatch(sessionActions.disabledError());
   };
@@ -3183,14 +3192,17 @@ export const fetchCoupons = () => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
   const getCoupons = async () => {
-    let res = await fetch(`https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons`, {
-      method: "GET",
+    let res = await fetch(
+      `https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons`,
+      {
+        method: "GET",
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
-      },
-    });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
 
     if (!res.ok) {
       if (!res.message) {
@@ -3878,17 +3890,20 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
   const fetchingRTMToken = async () => {
-    let res = await fetch("https://www.evenz.co.in/api-eureka/eureka/v1/getRTMToken", {
-      method: "POST",
-      body: JSON.stringify({
-        eventId: eventId,
-      }),
+    let res = await fetch(
+      "https://www.evenz.co.in/api-eureka/eureka/v1/getRTMToken",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          eventId: eventId,
+        }),
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().auth.token}`,
-      },
-    });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -4059,7 +4074,6 @@ export const resetCommunityError = () => async (dispatch, getState) => {
   dispatch(communityActions.ResetError());
 };
 
-
 export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   dispatch(demoActions.startLoading());
   try {
@@ -4087,6 +4101,7 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
     res = await res.json();
     console.log(res.data);
 
+    alert("Your demo request is recived successfully.");
     dispatch(
       demoActions.CreateDemo({
         demo: res.data,
@@ -4098,9 +4113,38 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   }
 };
 
-export const errorTrackerForCreateDemo =
-  () => async (dispatch, getState) => {
-    dispatch(demoActions.disabledError());
+export const errorTrackerForCreateDemo = () => async (dispatch, getState) => {
+  dispatch(demoActions.disabledError());
+};
+
+export const signupForEmailNewsletter =
+  (email) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `https://www.evenz.co.in/api-eureka/eureka/v1/newsletter/signUpViaEmail`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            email: email,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-

@@ -5,7 +5,11 @@ import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
-import { errorTrackerForSignIn, googleLinkClicked, resetAuthError } from "../../actions/index";
+import {
+  errorTrackerForSignIn,
+  googleLinkClicked,
+  resetAuthError,
+} from "../../actions/index";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
@@ -36,7 +40,7 @@ const renderInput = ({
         required
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -54,15 +58,13 @@ const renderInput = ({
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
-
-      
     </div>
   );
 };
 const Signin = (props) => {
   const { error } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
-  const { handleSubmit} = props;
+  const { handleSubmit } = props;
 
   const [signinClicked, setSigninClicked] = useState(false);
 
@@ -92,7 +94,7 @@ const Signin = (props) => {
     );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForSignIn());
     alert(error);
     return;
@@ -160,7 +162,6 @@ const Signin = (props) => {
                   </div>
                 </div> */}
 
-
                 {/* <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
@@ -174,7 +175,10 @@ const Signin = (props) => {
                   </div>
                 </div> */}
 
-                <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                  className="ui form error"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
                   <div className="row">
                     <div className="mb-3">
                       <div class="form-group">
@@ -243,7 +247,7 @@ const Signin = (props) => {
                       style={{
                         textAlign: "end",
                         color: "#538BF7",
-                        fontWeight: "bold",
+                        fontWeight: "500",
                         letterSpacing: "0.2px",
                         textDecoration: "none",
                       }}
@@ -265,14 +269,18 @@ const Signin = (props) => {
                       className="btn btn-primary"
                       disabled={signinClicked && formIsvalidated && !error}
                     >
-                      <span className="btn-text" >
+                      <span className="btn-text">
                         Login
-                        {signinClicked && formIsvalidated && !error ?   <div
-                          class="spinner-border text-light spinner-border-sm"
-                          role="status"
-                        >
-                          <span class="sr-only">Loading...</span>
-                        </div> : <div></div> }
+                        {signinClicked && formIsvalidated && !error ? (
+                          <div
+                            class="spinner-border text-light spinner-border-sm"
+                            role="status"
+                          >
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
                       </span>
                     </button>
                     <div
@@ -281,7 +289,8 @@ const Signin = (props) => {
                         marginTop: "4%",
                         padding: "0",
                         fontFamily: "Inter",
-                        fontWeight: "600",
+                        fontSize: "0.9rem",
+                        fontWeight: "500",
                       }}
                     >
                       Don't have an account?{" "}
@@ -304,12 +313,8 @@ const Signin = (props) => {
   );
 };
 
-
-
 const validate = (formValues) => {
   const errors = {};
-
-  
 
   if (!formValues.email) {
     errors.email = "email is required";
@@ -323,17 +328,14 @@ const validate = (formValues) => {
   if (!formValues.password) {
     errors.password = "password is required";
   }
-  if (formValues.password&&formValues.password.length<8) {
+  if (formValues.password && formValues.password.length < 8) {
     errors.password = "password length must be greater than 8";
   }
-  
-
-
 
   return errors;
 };
 
 export default reduxForm({
   form: "signInForm",
-  validate
+  validate,
 })(Signin);

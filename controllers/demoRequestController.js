@@ -9,7 +9,7 @@ exports.createDemoRequest = catchAsync(async (req, res, next) => {
     companyName: req.body.companyName,
     phoneNumber: req.body.phoneNumber,
     jobTitle: req.body.jobTitle,
-    isEventAgency: req.body.isEventAgency,
+    isEventAgency: req.body.isAnEventAgency,
     region: req.body.region,
   });
 

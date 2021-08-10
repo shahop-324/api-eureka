@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./StaticScreens/Styles/StaticScreenNav.scss";
 
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
+import { useDispatch } from "react-redux";
+import { signupForEmailNewsletter } from "../actions";
 
-const Footer = () => {
+const Footer = (props) => {
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+
   return (
     <>
       <footer>
@@ -159,8 +165,21 @@ const Footer = () => {
             <div className="footer-section-headline my-3 ">Newsletter</div>
 
             <div class="ui action input">
-              <input type="text" placeholder="Your email" />
-              <button class="ui blue icon button">
+              <input
+                type="text"
+                value={email}
+                placeholder="Your email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <button
+                type="button"
+                class="ui blue icon button"
+                onClick={() => {
+                  email && dispatch(signupForEmailNewsletter(email));
+                }}
+              >
                 <i class="send icon"></i>
               </button>
             </div>

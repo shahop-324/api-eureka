@@ -28,14 +28,14 @@ import Select from "react-select";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import PhoneInput from "react-phone-input-2";
-import {  IconButton } from "@material-ui/core";
-
+import { IconButton } from "@material-ui/core";
 
 import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
-import { useDispatch } from "react-redux";
-import { createDemoRequest } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 
+import Loader from './../../Loader';
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -124,25 +124,16 @@ window.onload = function () {
 window.onload();
 
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 
 const renderInput = ({
   input,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -152,7 +143,20 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -179,8 +183,19 @@ const renderPhoneInput = ({
         type={type}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   </div>
 );
@@ -203,8 +218,19 @@ const renderEventPreferences = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   </div>
 );
@@ -214,10 +240,10 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-
 const Home = (props) => {
-
   const dispatch = useDispatch();
+
+  const {error, isLoading} = useSelector((state) => state.demo);
 
   const [hambergerOpen, setHambergerOpen] = useState(false);
 
@@ -225,9 +251,9 @@ const Home = (props) => {
 
   const { handleSubmit, pristine, submitting } = props;
 
-  useEffect(() => {
-    window.localStorage.clear();
-  });
+  // useEffect(() => {
+  //   window.localStorage.clear();
+  // });
 
   const openHamberger = () => {
     setHambergerOpen(true);
@@ -239,9 +265,9 @@ const Home = (props) => {
 
   const onSubmit = (formValues) => {
     console.log(formValues);
-  
+
     const ModifiedFormValues = {};
-  
+
     ModifiedFormValues.firstName = formValues.firstName;
     ModifiedFormValues.lastName = formValues.lastName;
     ModifiedFormValues.email = formValues.email;
@@ -250,14 +276,25 @@ const Home = (props) => {
     ModifiedFormValues.jobTitle = formValues.jobTitle;
     ModifiedFormValues.isAnEventAgency = formValues.eventAgency;
     ModifiedFormValues.region = formValues.region.label;
-  
-  
-    
-  dispatch(createDemoRequest(ModifiedFormValues));
-  
+
+    dispatch(createDemoRequest(ModifiedFormValues));
+     
+    // window.location.href="http://localhost:3001/home";
     // dispatch(editUser(ModifiedFormValues, file));
     showResults(ModifiedFormValues);
+
+  
   };
+
+  // if(isLoading) {
+  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{height: "100vh", width: "100vw"}}><Loader /> </div>);
+  // }
+
+  if(error) {
+    alert(error);
+    dispatch(errorTrackerForCreateDemo());
+    return;
+  }
 
   return (
     <>
@@ -270,7 +307,14 @@ const Home = (props) => {
             <nav class="navbar navbar-expand-xxl navbar-light">
               <div class="container">
                 {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-                <span class="navbar-brand nav-brand-name-home"><a href="https://www.evenz.in/home" style={{textDecoration: "none", color: "#ffffff"}}>Evenz</a></span>
+                <span class="navbar-brand nav-brand-name-home">
+                  <a
+                    href="https://www.evenz.in/home"
+                    style={{ textDecoration: "none", color: "#ffffff" }}
+                  >
+                    Evenz
+                  </a>
+                </span>
 
                 <button
                   class="navbar-toggler"
@@ -336,7 +380,10 @@ const Home = (props) => {
                         className="nav-link-btn nav-link-btn-dark me-4"
                         style={{ fontWeight: "600" }}
                       >
-                        <Link to="/pricing/" style={{ textDecoration: "none", color: "#ffffff" }}>
+                        <Link
+                          to="/pricing/"
+                          style={{ textDecoration: "none", color: "#ffffff" }}
+                        >
                           Pricing
                         </Link>
                       </div>
@@ -913,11 +960,6 @@ const Home = (props) => {
         {/* Footer */}
       </div>
 
-
-
-
-
-
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer anchor="right" open={openDrawer}>
@@ -1075,45 +1117,44 @@ const Home = (props) => {
               </div>
 
               <div class="mb-4 overlay-form-input-row">
-              <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    Are you an event agency ?
+                <label
+                  for="communityHeadline"
+                  class="form-label form-label-customized"
+                >
+                  Are you an event agency ?
+                </label>
+
+                <div class="form-check mb-2">
+                  <Field
+                    name="eventAgency"
+                    class="form-check-input"
+                    type="radio"
+                    // name="flexRadioDefault"
+                    id="flexRadioDefault1"
+                    value="true"
+                    // component={renderInput}
+                    component="input"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    Yes
                   </label>
-           
-            <div class="form-check mb-2">
-              <Field
-                name="eventAgency"
-                class="form-check-input"
-                type="radio"
-                // name="flexRadioDefault"
-                id="flexRadioDefault1"
-                value="true"
-                // component={renderInput}
-                component="input"
-              />
-              <label class="form-check-label" for="flexRadioDefault1">
-                Yes
-              </label>
-              
-            </div>
-            <div class="form-check">
-              <Field
-                class="form-check-input"
-                type="radio"
-                name="eventAgency"
-                id="flexRadioDefault2"
-                // checked="true"
-                value="false"
-                // component={renderInput}
-                component="input"
-              />
-              <label class="form-check-label" for="flexRadioDefault2">
-                No
-              </label>
-            </div>
-          </div>
+                </div>
+                <div class="form-check">
+                  <Field
+                    class="form-check-input"
+                    type="radio"
+                    name="eventAgency"
+                    id="flexRadioDefault2"
+                    // checked="true"
+                    value="false"
+                    // component={renderInput}
+                    component="input"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    No
+                  </label>
+                </div>
+              </div>
 
               <div className="row">
                 <div className="col">
@@ -1142,6 +1183,9 @@ const Home = (props) => {
               <div style={{ width: "100%" }}>
                 <button
                   type="submit"
+                  onClick={() => {
+                    setOpenDrawer(false);
+                  }}
                   className="btn btn-primary btn-outline-text"
                   style={{ width: "100%" }}
                   disabled={pristine || submitting}
@@ -1153,15 +1197,48 @@ const Home = (props) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
-
-
-
-
-
     </>
   );
 };
 
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.firstName) {
+    errors.firstName = "Required";
+  }
+  if (!formValues.lastName) {
+    errors.lastName = "Required";
+  }
+  if (!formValues.email) {
+    errors.email = "Email is required";
+  }
+  if (
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+  ) {
+    errors.email = "Invalid email address";
+  }
+  if (!formValues.phoneNumber) {
+    errors.phoneNumber = "Contact no. is required";
+  }
+  if (!formValues.companyName) {
+    errors.companyName = "Associated company or organisation is required";
+  }
+  if (!formValues.jobTitle) {
+    errors.jobTitle = "Job title is required";
+  }
+  if (!formValues.region) {
+    errors.region = "Region is required";
+  }
+  if (!formValues.eventAgency) {
+    errors.eventAgency = "Required";
+  }
+
+  return errors;
+};
+
 export default reduxForm({
   form: "requestDemoForm",
+  validate,
 })(Home);
