@@ -252,10 +252,6 @@ const Home = (props) => {
 
   const { handleSubmit, pristine, submitting } = props;
 
-  // useEffect(() => {
-  //   window.localStorage.clear();
-  // });
-
   const openHamberger = () => {
     setHambergerOpen(true);
   };
@@ -474,6 +470,7 @@ const Home = (props) => {
                 <img
                   src={WorkflowStep1}
                   alt="workflow step 1"
+                  className="zoom-in"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
@@ -485,7 +482,8 @@ const Home = (props) => {
               <div className="workflow-group-container-2 mb-3">
                 <img
                   src={WorkflowStep2}
-                  alt="workflow step 1"
+                  alt="workflow step 2"
+                  className="zoom-in"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
@@ -497,7 +495,8 @@ const Home = (props) => {
               <div className="workflow-group-container-3 mb-3">
                 <img
                   src={WorkflowStep3}
-                  alt="workflow step 1"
+                  alt="workflow step 3"
+                  className="zoom-in"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
@@ -595,6 +594,7 @@ const Home = (props) => {
               <img
                 src={AmazingEvent}
                 alt="amazing event"
+                className="zoom-in"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
             </div>
@@ -613,6 +613,7 @@ const Home = (props) => {
               <img
                 src={FirstEvent}
                 alt="amazing event"
+                className="zoom-in"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
             </div>
@@ -728,6 +729,7 @@ const Home = (props) => {
                 <img
                   src={RoomsFeatures}
                   alt="amazing event"
+                  className="zoom-in"
                   style={{
                     alignSelf: "center",
                     maxHeight: "100%",
@@ -752,6 +754,7 @@ const Home = (props) => {
                 <img
                   src={ConnectionThatLasts}
                   alt="amazing event"
+                  className="zoom-in"
                   style={{
                     alignSelf: "center",
                     maxHeight: "100%",
@@ -836,6 +839,7 @@ const Home = (props) => {
               >
                 <img
                   src={PollsChatsAndQnA}
+                  className="zoom-in"
                   alt="amazing event"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
@@ -924,6 +928,7 @@ const Home = (props) => {
               >
                 <img
                   src={EndlessUseCases}
+                  className="slide-in"
                   alt="amazing event"
                   style={{ maxHeight: "100%", maxWidth: "100%" }}
                 />
@@ -943,6 +948,7 @@ const Home = (props) => {
             >
               <img
                 src={BoostYourEvents}
+                className="slide-up"
                 alt="amazing event"
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
