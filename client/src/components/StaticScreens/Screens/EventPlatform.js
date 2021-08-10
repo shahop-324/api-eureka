@@ -3,7 +3,14 @@ import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
-import HomeHero from "./../../../assets/images/HomeHero.png";
+import EventPlatformHero from "./../../../assets/images/eventPlatformHero@2x.png";
+import EventVenueHero from "./../../../assets/images/eventVenueHero@2x.png";
+import ScheduleHero from "./../../../assets/images/scheduleHero@2x.png";
+import AdditionalEventSettingsHero from "./../../../assets/images/additionalEventSettings@2x.png";
+
+import CouponsHero from "./../../../assets/images/Coupons@2x.png";
+import TradeShow from "./../../../assets/images/tradeShow.png";
+
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
 import WorkflowStep3 from "./../../../assets/images/WorkflowStep3.png";
@@ -45,6 +52,7 @@ import BuildIcon from "@material-ui/icons/Build";
 import AirplayIcon from "@material-ui/icons/Airplay";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import CallMergeIcon from "@material-ui/icons/CallMerge";
+import PreFooter from "../../PreFooter";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -70,67 +78,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-var TxtType = function (el, toRotate, period) {
-  this.toRotate = toRotate;
-  this.el = el;
-  this.loopNum = 0;
-  this.period = parseInt(period, 10) || 1000;
-  this.txt = "";
-  this.tick();
-  this.isDeleting = false;
-};
-
-TxtType.prototype.tick = function () {
-  var i = this.loopNum % this.toRotate.length;
-  var fullTxt = this.toRotate[i];
-
-  if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-  }
-
-  this.el.innerHTML = '<span class="wrap">' + this.txt + "</span>";
-
-  var that = this;
-  var delta = 100 - Math.random() * 100;
-
-  if (this.isDeleting) {
-    delta /= 2;
-  }
-
-  if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === "") {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-  }
-
-  setTimeout(function () {
-    that.tick();
-  }, delta);
-};
-
-window.onload = function () {
-  var elements = document.getElementsByClassName("typewrite");
-  for (var i = 0; i < elements.length; i++) {
-    var toRotate = elements[i].getAttribute("data-type");
-    var period = elements[i].getAttribute("data-period");
-    if (toRotate) {
-      new TxtType(elements[i], JSON.parse(toRotate), period);
-    }
-  }
-  // INJECT CSS
-  var css = document.createElement("style");
-  css.type = "text/css";
-  css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #ffffff}";
-  document.body.appendChild(css);
-};
-
-window.onload();
 
 const renderInput = ({
   input,
@@ -247,14 +194,7 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-let script = document.createElement("script");
-script.src = "./../../../script.js";
-
-script.onload = function () {
-  alert("Script loaded and ready");
-};
-
-const Home = (props) => {
+const EventPlatformHome = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -420,24 +360,12 @@ const Home = (props) => {
                                 style={{ fill: "#538BF7", fontSize: "28" }}
                                 className="nav-dropdown-item-active-icon"
                               />
-
                               <div
-                                class="ui"
-                                data-tooltip="Coming Soon"
-                                data-position="right center"
                                 className="mx-3 nav-dropdown-item-active-text"
                                 style={{ fontWeight: "600" }}
                               >
                                 Analytics Tools
                               </div>
-                              {/* <div
-                              data-content="Add users to your feed"
-                              
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Analytics Tools
-                              </div> */}
                             </div>
                           </Dropdown.Item>
 
@@ -449,9 +377,6 @@ const Home = (props) => {
                                 className="nav-dropdown-item-active-icon"
                               />
                               <div
-                                class="ui"
-                                data-tooltip="Coming soon"
-                                data-position="right center"
                                 className="mx-3 nav-dropdown-item-active-text"
                                 style={{ fontWeight: "600" }}
                               >
@@ -524,18 +449,15 @@ const Home = (props) => {
 
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
-              <div className="grid-1-of-2">
+              <div className="grid-1-of-2 pe-5 me-5">
                 <div className="header-main-heading-and-action-btn">
-                  <div className="hero-heading mb-5">
-                    One stop solution <br /> for all{" "}
-                    <div
-                      class="typewrite"
-                      data-period="1000"
-                      data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                      style={{ color: "#ffffff", display: "inline-block" }}
-                    >
-                      {/* Virtual Events */}
-                    </div>
+                  <div
+                    className="hero-heading mb-5"
+                    style={{ lineHeight: "4rem" }}
+                  >
+                    Virtual venue for a
+                    <br />
+                    Delightful experience.
                   </div>
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
@@ -561,9 +483,8 @@ const Home = (props) => {
               <div className="grid-2-of-2 d-flex flex-row justify-content-center">
                 <img
                   className="section-hero-img"
-                  src={HomeHero}
+                  src={EventPlatformHero}
                   alt="home-hero"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               </div>
             </div>
@@ -576,300 +497,29 @@ const Home = (props) => {
           style={{ height: "auto" }}
         >
           <div className="centered-heading-primary mb-5">
-            Making Your event more <br />
-            engaging and effortless
+            Experience that lasts
           </div>
           <div className="centered-heading-secondary mb-5">
-            From exploration, management, hosting to post analysis and resource
-            distribution, <br /> we do all this for you, so you can rest
-            peacefully.
+            We have carefully designed and developed virtual venue to suit your
+            requirements and
+            <br /> Provide a delightful and satisfactory experience for
+            everyone.
           </div>
 
-          <div
-            className="application-workflow-row py-5"
-            id="application-workflow"
-          >
-            <div className="workflow-container">
-              <div className="workflow-group-container-1 mb-3">
-                <img
-                  src={WorkflowStep1}
-                  alt="workflow step 1"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                Create and Manage <br /> Next Gen Events
-              </div>
-            </div>
-            <div className="workflow-container">
-              <div className="workflow-group-container-2 mb-3">
-                <img
-                  src={WorkflowStep2}
-                  alt="workflow step 2"
-                  className="zoom-in"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                Invite attendees, Sponsors <br /> And speakers
-              </div>
-            </div>
-            <div className="workflow-container">
-              <div className="workflow-group-container-3 mb-3">
-                <img
-                  src={WorkflowStep3}
-                  alt="workflow step 3"
-                  className="zoom-in"
-                  // data-aos="zoom-in"
-                  data-aos="zoom-in"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-              <div className="workflow-step-explanation">
-                And then, No frills. <br /> Just a good time.
-              </div>
-            </div>
-          </div>
+          <img
+            // src={EditTicketsHero}
+            src={EventVenueHero}
+            alt="amazing event"
+            className="zoom-in"
+            data-aos="zoom-in"
+            style={{ maxHeight: "100%", maxWidth: "100%" }}
+          />
         </div>
 
-        <div className="home-section-3 px-5 py-5" id="home-section-3">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4">
-                An amazing{" "}
-                <div
-                  class="typewrite"
-                  data-period="1000"
-                  data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                  style={{ color: "#538BF7", display: "inline-block" }}
-                ></div>{" "}
-                <br />
-                event begins with us.
-              </div>
-
-              <div className="home-text-description" data-aos="slide-up">
-                Evenz is designed to smoothly create, manage and Host memorable
-                and most interactive event, no matter whatever Scale it is.
-              </div>
-
-              <div className="my-5">
-                <div className="plan-features-offered-list">
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      SEO-optimized event registration pages{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Ticketing and payment processing{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Event Analytics Dashboard
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">Unlimited Events</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="action-btn-home">
-                <button
-                  type="button"
-                  className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                  style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
-                  }}
-                >
-                  Host a free event
-                </button>
-              </div>
-            </div>
-            <div
-              className="grid-2-of-2 d-flex flex-row align-items-center"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={AmazingEvent}
-                alt="amazing event"
-                className="zoom-in"
-                data-aos="zoom-in"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-4 p-5">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div
-              className="grid-1-of-2 d-flex flex-row align-items-center mb-3"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={FirstEvent}
-                alt="amazing event"
-                data-aos="zoom-in"
-                data-aos-easing="ease-in-sine"
-                data-aos-delay="100"
-                // className="zoom-in"
-                // data-aos="slide-left"
-
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-            <div className="grid-2-of-2 " style={{ alignSelf: "center" }}>
-              <div
-                className="section-heading-primary pb-2"
-                style={{ color: "black" }}
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
-              >
-                Your First Event is just <br />
-                few clicks away.
-              </div>
-
-              <div
-                className="home-text-description my-5"
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
-              >
-                It’s that simple. With Evenz you can setup your virtual event
-                with just one click and start getting registrations as soon as
-                you publish your event.
-              </div>
-
-              <div className="plan-features-offered-list">
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    SEO-optimized event registration pages{" "}
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    Ticketing and payment processing{" "}
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">
-                    Event Analytics Dashboard
-                  </div>
-                </div>
-                <div
-                  className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  <div className="me-3">
-                    <CheckRoundedIcon
-                      style={{ fontSize: "22", fill: "#212121" }}
-                    />
-                  </div>
-                  <div className="home-feature-text">Unlimited Events</div>
-                </div>
-              </div>
-
-              <div className="action-btn-home  pt-5">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                  style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
-                  }}
-                >
-                  Host a free event
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-5 p-4">
+        <div
+          className="home-section-5 p-4"
+          style={{ backgroundColor: "#E1E1BA" }}
+        >
           <div className="mt-3">
             <div
               className="grid-of-2"
@@ -1070,135 +720,6 @@ const Home = (props) => {
           </div>
         </div>
 
-        <div className="home-section-8 p-4">
-          <div className="pt-5">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                  style={{ color: "#000000" }}
-                >
-                  Endless Use Cases
-                </div>
-
-                <div
-                  className="home-text-description my-5"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  You can host almost any event you can think of, using Evenz.
-                  Here are some of them:
-                </div>
-
-                <div className="mb-5">
-                  <div className="plan-features-offered-list">
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        SEO-optimized event registration pages{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Ticketing and payment processing{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Event Analytics Dashboard
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">Unlimited Events</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="action-btn-home py-3">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #538bf7, 0px 0px 10px #505050",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
-
-              <div
-                className="grid-2-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={EndlessUseCases}
-                  className="slide-in"
-                  data-aos="slide-left"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  alt="amazing event"
-                  style={{ maxHeight: "100%", maxWidth: "100%" }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="home-section-9">
           <div className="container py-5 mt-3">
             <div className="centered-heading-primary">
@@ -1228,6 +749,7 @@ const Home = (props) => {
             </div>
           </div>
         </div>
+        <PreFooter />
         <Footer />
         {/* Footer */}
       </div>
@@ -1513,4 +1035,4 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "requestDemoForm",
   validate,
-})(Home);
+})(EventPlatformHome);

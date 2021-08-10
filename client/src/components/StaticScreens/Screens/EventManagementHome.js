@@ -8,6 +8,7 @@ import EditTicketsHero from "./../../../assets/images/ticketsHero@2x.png";
 import RegistrationsHero from "./../../../assets/images/registrationsHero@2x.png";
 import ReviewsHero from "./../../../assets/images/reviews@2x.png";
 import CouponsHero from "./../../../assets/images/Coupons@2x.png";
+import TradeShow from "./../../../assets/images/tradeShow.png";
 
 
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
@@ -76,67 +77,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-var TxtType = function (el, toRotate, period) {
-  this.toRotate = toRotate;
-  this.el = el;
-  this.loopNum = 0;
-  this.period = parseInt(period, 10) || 1000;
-  this.txt = "";
-  this.tick();
-  this.isDeleting = false;
-};
-
-TxtType.prototype.tick = function () {
-  var i = this.loopNum % this.toRotate.length;
-  var fullTxt = this.toRotate[i];
-
-  if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-  }
-
-  this.el.innerHTML = '<span class="wrap">' + this.txt + "</span>";
-
-  var that = this;
-  var delta = 100 - Math.random() * 100;
-
-  if (this.isDeleting) {
-    delta /= 2;
-  }
-
-  if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === "") {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-  }
-
-  setTimeout(function () {
-    that.tick();
-  }, delta);
-};
-
-window.onload = function () {
-  var elements = document.getElementsByClassName("typewrite");
-  for (var i = 0; i < elements.length; i++) {
-    var toRotate = elements[i].getAttribute("data-type");
-    var period = elements[i].getAttribute("data-period");
-    if (toRotate) {
-      new TxtType(elements[i], JSON.parse(toRotate), period);
-    }
-  }
-  // INJECT CSS
-  var css = document.createElement("style");
-  css.type = "text/css";
-  css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #ffffff}";
-  document.body.appendChild(css);
-};
-
-window.onload();
 
 const renderInput = ({
   input,
@@ -253,12 +193,7 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-let script = document.createElement("script");
-script.src = "./../../../script.js";
 
-script.onload = function () {
-  alert("Script loaded and ready");
-};
 
 const EventManagementHome = (props) => {
   const dispatch = useDispatch();
@@ -776,7 +711,8 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={EditTicketsHero}
+                  
+                  src={TradeShow}
                   alt="amazing event"
                   className="zoom-in"
                   data-aos="zoom-in"
@@ -798,8 +734,9 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Create and manage <br />
-                  ticket in minutes.
+                  Invite booths to 
+                  <br/>
+                  boost engagement.
                 </div>
 
                 <div
@@ -850,7 +787,8 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Engage your audience.
+                  Create and manage <br />
+                  ticket in minutes.
                 </div>
 
                 <div
@@ -885,7 +823,7 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={PollsChatsAndQnA}
+                  src={EditTicketsHero}
                   className="zoom-in"
                   data-aos="zoom-in"
                   data-aos-easing="ease-in-sine"
@@ -913,7 +851,7 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
-                  Endless Use Cases
+                  No we didn't forgot about<br />  sponsors.
                 </div>
 
                 <div
@@ -923,75 +861,8 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  You can host almost any event you can think of, using Evenz.
-                  Here are some of them:
-                </div>
-
-                <div className="mb-5">
-                  <div className="plan-features-offered-list">
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        SEO-optimized event registration pages{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Ticketing and payment processing{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Event Analytics Dashboard
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">Unlimited Events</div>
-                    </div>
-                  </div>
+                  Invite sponsors and your attendees can check thier listings and sites in your event.
+                  You can also give them shoutout as you wish.
                 </div>
 
                 <div className="action-btn-home py-3">

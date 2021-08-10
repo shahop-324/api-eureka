@@ -39,6 +39,8 @@ import AcceptSpeakerInvite from "./AcceptSpeakerInvite";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import EventManagementHome from "./StaticScreens/Screens/EventManagementHome";
+import EventBuilder from "./StaticScreens/Screens/EventBuilder";
+import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 AOS.init();
 
 
@@ -81,6 +83,8 @@ class App extends React.Component {
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route path="/event-management" exact component={EventManagementHome} />
+              <Route path="/event-builder" exact component={EventBuilder} />
+              <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
 
               <Route path="/pricing" exact component={Pricing} />
