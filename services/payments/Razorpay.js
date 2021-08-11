@@ -98,15 +98,15 @@ let priceToBeCharged = 0;
     priceToBeCharged = 0;
   }
   else if(planName === "Starter") {
-    priceToBeCharged = 49 * 75 * 100 * 1.025; // In INR (paise)
+    priceToBeCharged = 49 * 75 * 100 * 1; // In INR (paise)
   }
   else if(planName === "Professional") {
-    priceToBeCharged = 99 * 75 *100 * 1.025 // In INR (paise)
+    priceToBeCharged = 99 * 75 *100 * 1 // In INR (paise)
   }
 
   const newOrder = razorpay.orders.create(
     {
-      amount: priceToBeCharged,
+      amount: priceToBeCharged*1,
       currency: "INR",
       receipt: UUID(),
       notes: {

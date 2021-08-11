@@ -25,6 +25,55 @@ import YouHaveNoEventComing from "../../UserAccount/YouHaveNoEventsComing";
 import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
 
+const basicPlan = {
+  name: "Basic",
+  details: [
+    '1 organiser',
+    '100 registrations',
+    '4 hours event length',
+    'Ticketing and payment processing',
+    '1 Event Per Month',
+  ]
+};
+const starterPlan = {
+  name: "Starter",
+  details: [
+    '2 organiser',
+    '300 registrations',
+    '24 hours event length',
+    'Ticketing and payment processing',
+    '3 Event Per Month',
+    'Unlimited Coupons',
+    'Access to queries & Reviews',
+    'Basic Analytics',
+    'Sharable event recordings',
+  ]
+};
+const professionalPlan = {
+  name: "Professional",
+  details: [
+    '5 organiser',
+    '1200 registrations',
+    '72 hours event length',
+    'Ticketing and payment processing',
+    'SEO Optimized Landing page',
+    '5 Event Per Month',
+    'Unlimited Coupons',
+    'Access to queries & Reviews',
+    'Basic Analytics',
+    'Sharable event recordings',
+    'Stage Customisation',
+    'RTMP & Custom streaming',
+    'Full access to networking & booths',
+    'Marketing tools',
+    'Access to integrations',
+    'Real Time Analytics',
+    'Custom registration form',
+    'Sponsors and shoutouts',
+    'email customisation'
+  ]
+};
+
 const RoyalBlueRadio = withStyles({
   root: {
     color: "#538BF7",
@@ -58,16 +107,19 @@ const Pricing = () => {
       return;
     }
 
+    console.log(selectedCommunity);
+    console.log(user);
+
     let order = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createCommunityPlanOrder",
       {
         method: "POST",
         body: JSON.stringify({
-          planDetails: {name: "Starter"},
+          // planDetails: {name: "Starter"},
           planName: "Starter",
           // planDetails: selectedPlan,
           // planName: selectedPlan.name,
-          communityId: selectedCommunity._id,
+          communityId: selectedCommunity,
           userId: user._id,
         }),
 
@@ -96,10 +148,6 @@ const Pricing = () => {
       prefill: {
         name: `${userDetails.firstName} ${userDetails.lastName}`,
         email: userDetails.email,
-      },
-      notes: {
-        // We can add some notes here
-        transaction_for: "community_plan",
       },
       theme: {
         color: "#538BF7",
@@ -680,8 +728,10 @@ const Pricing = () => {
         open={openCommunityList}
         aria-labelledby="responsive-dialog-title"
       >
+        <div style={{height: "100%"}} className="d-flex flex-column">
+
         <div
-          className="select-community-list px-3 py-4"
+          className="select-community-list px-3 py-4 d-flex flex-column justify-content-center"
           style={{ minWidth: "480px" }}
         >
           <div className="select-community-heading">Select Your community</div>
@@ -726,6 +776,7 @@ const Pricing = () => {
               Cancel
             </button>
           </div>
+        </div>
         </div>
       </Dialog>
 
