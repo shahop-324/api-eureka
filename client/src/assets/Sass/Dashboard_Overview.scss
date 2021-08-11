@@ -69,6 +69,31 @@ $font-family: 'Inter';
   }
 }
 
+.side-nav-wrapper {
+  height: 100%;
+  min-width: 270px;
+  // border: 2px solid $color-primary-main;
+  background-color: $bg-color-white;
+}
+
+.dashboard-side-nav-btn {
+  width: 100%;
+  height: 45px;
+  background-color: $color-white;
+}
+
+.btn-active-d {
+  background-color: $color-primary-main;
+}
+
+.btn-icon-active-d {
+  color: $color-white;
+}
+
+.btn-text-active-d {
+  color: $color-white;
+}
+
 .button-text-dashboard-sidenav {
   font-family: Inter;
   font-style: normal;
@@ -572,5 +597,25 @@ $font-family: 'Inter';
   .team-overview-and-top-events-row-container {
     display: none;
     margin-top: 0 !important;
+  }
+}
+@media only screen and (min-width: '1380px') {
+  .dash-root-menu {
+    display: none;
+  }
+}
+@media only screen and (max-width: '1380px') {
+  .dashboard-body {
+    grid-template-columns: 1fr;
+  }
+
+  .side-nav-container {
+    display: none;
+  }
+
+  .whats-new-button,
+  .dash-notification,
+  .dash-settings {
+    display: none;
   }
 }

@@ -27,7 +27,6 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
 
-
 const DashboardRoot = () => {
   const params = useParams();
 
@@ -104,7 +103,7 @@ const DashboardRoot = () => {
 
   console.log(currentIndex);
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForFetchCommunity());
     alert(error);
     return;
@@ -114,8 +113,21 @@ const DashboardRoot = () => {
     <>
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
-        <Topnav />
+        <Topnav
+          activeIndex={currentIndex}
+          handleOverviewClick={handleOverviewClick}
+          handleEventManagementClick={handleEventManagementClick}
+          handleReviewsClick={handleReviewsClick}
+          handleQueriesClick={handleQueriesClick}
+          handleRegistrationsClick={handleRegistrationsClick}
+          handleCouponsClick={handleCouponsClick}
+          handleRecordingsClick={handleRecordingsClick}
+          handleBillingClick={handleBillingClick}
+          handleTeamManagementClick={handleTeamManagementClick}
+          handleRevenueManagementClick={handleRevenueManagementClick}
+        />
         <div className="dashboard-body">
+          <div className="side-nav-container">
           <SideNav
             activeIndex={currentIndex}
             handleOverviewClick={handleOverviewClick}
@@ -129,6 +141,8 @@ const DashboardRoot = () => {
             handleTeamManagementClick={handleTeamManagementClick}
             handleRevenueManagementClick={handleRevenueManagementClick}
           />
+
+          </div>
           <div className="main-content-wrapper">
             {(() => {
               switch (currentIndex) {
