@@ -16,7 +16,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
   const [open, setOpen] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const handleDeleteSpeaker = () => {
     setOpenDeleteDialog(true);
   };
@@ -27,7 +27,7 @@ const dispatch = useDispatch();
 
   const handleEditSpeaker = () => {
     setOpen(true);
-    dispatch(fetchParticularSpeakerOfEvent(id));
+    // dispatch(fetchParticularSpeakerOfEvent(id));
   };
 
   const handleClose = () => {
@@ -84,7 +84,7 @@ const dispatch = useDispatch();
             <div className="chip-text">
               {email}
               {/* {truncateText(email, 18)} */}
-              </div>
+            </div>
           </div>
         </div>
         <div
@@ -98,7 +98,8 @@ const dispatch = useDispatch();
               {sessions.map((session) => {
                 console.log(session);
                 return (
-                  <div key={session.id}
+                  <div
+                    key={session.id}
                     className="me-3 px-3 py-2 event-name-chip-review"
                     style={{ textAlign: "center" }}
                   >
