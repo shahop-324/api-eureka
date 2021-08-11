@@ -17,7 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddNewSpeaker from "./FormComponents/EditSpeakersForms/AddNewSpeaker";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import { editEvent, errorTrackerForFetchSpeakers, fetchEvent, fetchSessions, fetchSpeakers } from "../../../actions";
+import { errorTrackerForFetchSpeakers, fetchEvent, fetchSessions, fetchSpeakers } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
