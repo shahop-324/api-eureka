@@ -33,6 +33,8 @@ class SigninForBuyingPlan extends React.Component {
   };
 
   render() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
     return (
       <>
         <CssBaseline />
@@ -63,7 +65,7 @@ class SigninForBuyingPlan extends React.Component {
                   <div className="row sign-in-sub-heading px-2">
                     Enter your details below.
                   </div>
-                  <GoogleAuth />
+                  <GoogleAuth intent={params.intent} />
                   {/* <div
                     className="row d-flex"
                     style={{

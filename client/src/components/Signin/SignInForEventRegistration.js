@@ -33,6 +33,8 @@ class SignInForEventRegistration extends React.Component {
   };
 
   render() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
     return (
       <>
         <CssBaseline />
@@ -64,7 +66,10 @@ class SignInForEventRegistration extends React.Component {
                     Enter your details below.
                   </div>
 
-                  <GoogleAuth />
+                  <GoogleAuth
+                    intent={params.intent}
+                    eventId={this.props.match.params.eventId}
+                  />
                   {/* <div
                     className="row d-flex"
                     style={{

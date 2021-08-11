@@ -95,28 +95,38 @@ export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 
-export const googleSignIn = (formValues) => async (dispatch) => {
-  try {
-    const res = await eureka.post("/eureka/v1/users/googleSignIn", {
-      ...formValues,
-    });
-    console.log(res.data.data.user);
-    dispatch(
-      authActions.SignIn({
-        token: res.data.token,
-      })
-    );
-    dispatch(
-      userActions.CreateUser({
-        user: res.data.data.user,
-      })
-    );
-    history.push("/user/home");
-  } catch (err) {
-    dispatch(authActions.hasError(err.response.data.message));
-    alert(err.response.data.message);
-  }
-};
+export const googleSignIn =
+  (formValues, intent, eventId) => async (dispatch) => {
+    try {
+      const res = await eureka.post("/eureka/v1/users/googleSignIn", {
+        ...formValues,
+      });
+      console.log(res.data.data.user);
+      dispatch(
+        authActions.SignIn({
+          token: res.data.token,
+        })
+      );
+      dispatch(
+        userActions.CreateUser({
+          user: res.data.data.user,
+        })
+      );
+
+      if (intent === "eventRegistration") {
+        history.push(`/event-landing-page/${eventId}`);
+      } else if (intent === "buyPlan") {
+        history.push("/pricing");
+        dispatch(fetchUserAllPersonalData());
+      } else {
+        history.push("/user/home");
+      }
+      //history.push("/user/home");
+    } catch (err) {
+      dispatch(authActions.hasError(err.response.data.message));
+      alert(err.response.data.message);
+    }
+  };
 
 export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
