@@ -33,6 +33,7 @@
     "dotenv": "^8.2.0",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
+    "draftjs-to-html": "^0.9.1",
     "exchange-rates-api": "^1.1.0",
     "faker": "^5.5.3",
     "fusioncharts": "^3.17.0",

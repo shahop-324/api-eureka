@@ -7,42 +7,39 @@ import "./../../../assets/Sass/EditEvent/Basics.scss";
 import "./../../../assets/Sass/EditEvent/About.scss";
 import "./../../../index.css";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import TipsToWriteAbout from "./HelperComponents/TipsToWriteAbout";
 import { reduxForm, Field } from "redux-form";
-import { useDispatch } from "react-redux";
-import {
-  editEventDescription,
-} from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { editEventDescription } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+// import draftToHtml from "draftjs-to-html";
 
 const About = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
 
+  const aboutText = useSelector(
+    (state) => state.event.eventDetails.editingComment
+  );
+
+  console.log(aboutText);
+
   const [editorState, setEditorState] = React.useState(
-    EditorState.createEmpty()
+   aboutText ? EditorState.createWithContent(convertFromRaw(JSON.parse(aboutText))) : EditorState.createEmpty()
   );
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
-    // console.log(editorState.getCurrentContent().getPlainText());
   };
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
 
-  // useEffect(() => {
-  //   dispatch(fetchParticularEventOfCommunity(id));
-  // }, []);
-
-  //const JSONData = convertToRaw(editorState.getCurrentContent());
-  // console.log(JSONData);
   const onSubmit = () => {
     const JSONData = {
       editingComment: convertToRaw(editorState.getCurrentContent()),
     };
-    // console.log(JSONData);
     console.log(JSONData);
     dispatch(editEventDescription(JSONData, id));
   };
@@ -50,6 +47,7 @@ const About = (props) => {
   const renderEditor = ({ input, id }) => {
     return (
       <Editor
+      
         editorState={editorState}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
@@ -64,13 +62,18 @@ const About = (props) => {
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">About</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
-          <Link type="button" className="btn btn-outline-primary btn-outline-text me-3" to={`/event-landing-page/${id}`} target="_blank" >
-                Preview Landing Page
-              </Link>
+            <Link
+              type="button"
+              className="btn btn-outline-primary btn-outline-text me-3"
+              to={`/event-landing-page/${id}`}
+              target="_blank"
+            >
+              Preview Landing Page
+            </Link>
           </div>
         </div>
         <div className="basic-content-grid px-3 mb-4">
@@ -80,11 +83,7 @@ const About = (props) => {
                 className="rich-text-editor-wrapper p-3"
                 style={{ minHeight: "500px", border: "1px solid #CACACA" }}
               >
-                
-                <Field
-                  component={renderEditor}
-                  id={id}
-                />
+                <Field component={renderEditor} id={id} />
               </div>
               <div
                 className="d-flex flex-row justify-content-end mt-3"

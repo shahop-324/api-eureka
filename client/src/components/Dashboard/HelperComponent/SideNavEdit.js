@@ -18,11 +18,17 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { editEvent, fetchParticularEventOfCommunity } from "../../../actions";
+import {
+  editEvent,
+  errorTrackerForeditEvent,
+  fetchParticularEventOfCommunity,
+} from "../../../actions";
 
 const SideNavEdit = (props) => {
   const params = useParams();
   const dispatch = useDispatch();
+
+  const { error, isLoading } = useSelector((state) => state.event);
 
   const id = params.id;
   const communityId = params.communityId;
@@ -71,6 +77,12 @@ const SideNavEdit = (props) => {
     url = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`;
   }
 
+  if (error) {
+    alert(error);
+    dispatch(errorTrackerForeditEvent());
+    return;
+  }
+
   return (
     <>
       <div className="side-nav-wrapper py-4 pt-4">
@@ -84,7 +96,11 @@ const SideNavEdit = (props) => {
               </IconButton>
             </Link>
 
-            {isAlreadyPublished ? (
+            {isLoading ? (
+              <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only text-primary">Loading...</span>
+              </div>
+            ) : isAlreadyPublished ? (
               <button className="btn btn-outline-primary btn-outline-text me-2">
                 Published
               </button>
@@ -92,7 +108,7 @@ const SideNavEdit = (props) => {
               <button
                 onClick={() => {
                   isReadyToPublish
-                    ? dispatch(editEvent({publishedStatus: "Published"}, id))
+                    ? dispatch(editEvent({ publishedStatus: "Published" }, id))
                     : alert(
                         "Please add about event, session, speaker and ticket to publish."
                       );
