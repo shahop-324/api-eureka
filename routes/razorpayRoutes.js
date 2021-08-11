@@ -13,8 +13,8 @@ router.post(
 
 router.post(
   "/createCommunityPlanOrder",
-  authController.protectCommunity,
-  razorpay.createCommunityBillingPlanOrder
+  authController.protect,
+  razorpay.createOrderForCommunityPlan
 );
 
 router.post(

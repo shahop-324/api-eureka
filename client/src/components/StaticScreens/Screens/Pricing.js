@@ -35,9 +35,6 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-
-
-
 const Pricing = () => {
   const { communities } = useSelector((state) => state.community);
 
@@ -49,12 +46,9 @@ const Pricing = () => {
     communities[0] && communities[0].id
   );
 
-
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const [selectedPlan, setSelectedPlan] = useState("");
-
-
 
   const displayRazorpay = async () => {
     const res = await loadRazorpay();
@@ -65,7 +59,7 @@ const Pricing = () => {
     }
 
     let order = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createRazorpayOrder",
+      "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createCommunityPlanOrder",
       {
         method: "POST",
         body: JSON.stringify({
@@ -95,10 +89,7 @@ const Pricing = () => {
         "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg",
       order_id: order.data.id,
       handler: function (response) {
-        alert(
-          "Your registration was successful! Check your ticket in Email or Booked Tickets of user profile section."
-        );
-        
+        alert("Congratulations, Your plan purchase was successful!");
       },
       prefill: {
         name: `${userDetails.firstName} ${userDetails.lastName}`,
@@ -106,7 +97,7 @@ const Pricing = () => {
       },
       notes: {
         // We can add some notes here
-        transaction_for: "community_plan"
+        transaction_for: "community_plan",
       },
       theme: {
         color: "#538BF7",
@@ -138,9 +129,7 @@ const Pricing = () => {
       };
       document.body.appendChild(script);
     });
-
   };
-
 
   const handleChange = (event) => {
     setSelectedCommunity(event.target.value);
@@ -196,8 +185,6 @@ const Pricing = () => {
       />
     );
   };
-
-  
 
   const { isSignedIn } = useSelector((state) => state.auth);
 
@@ -872,7 +859,7 @@ const Pricing = () => {
               <div style={{ width: "100%" }}>
                 <button
                   onClick={() => {
-                     displayRazorpay();
+                    displayRazorpay();
                     setOpenDrawer(false);
                   }}
                   type="button"
@@ -888,6 +875,6 @@ const Pricing = () => {
       </React.Fragment>
     </>
   );
-                };
+};
 
 export default Pricing;
