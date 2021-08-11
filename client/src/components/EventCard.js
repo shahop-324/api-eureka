@@ -41,7 +41,7 @@ const EventCard = ({
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="d-flex flex-row align-items-center justify-content-between">
         <div className="event-card-date-main mb-3">{date} - {endDate}</div>
-        <div className="rating-indicator px-2 py-2">
+        <div className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2">
           <StarRateRoundedIcon className="me-1" />
           {rating}
         </div>

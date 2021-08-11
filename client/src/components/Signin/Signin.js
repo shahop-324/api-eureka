@@ -84,9 +84,9 @@ const Signin = (props) => {
     dispatch(signIn(formValues));
   };
 
-  // const onClickHandle = () => {
-  //   dispatch(googleLinkClicked());
-  // };
+  const onClickHandle = () => {
+    dispatch(googleLinkClicked());
+  };
 
   if (isSending) {
     return (
@@ -138,36 +138,9 @@ const Signin = (props) => {
                 </div>
 
                 <GoogleAuth />
-                {/* <div
-                  className="row d-flex"
-                  style={{
-                    justifyContent: "space-between",
-                    marginBottom: "4%",
-                  }}
-                >
-                  <div onClick={onClickHandle}>
-                    
+                
 
-                    <button
-                      type="button"
-                      className="btn btn-light py-2"
-                      style={{ width: "100%" }}
-                    >
-                      <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
-                        <img
-                          class=""
-                          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                          alt="google-signin"
-                        />
-                        <div className="sign-in-with-google-text ms-4">
-                         <a href="https://www.evenz.co.in/api-eureka/eureka/v1/auth/google">Sign in with google</a> 
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div> */}
-
-                {/* <div
+                <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
                 >
@@ -178,7 +151,7 @@ const Signin = (props) => {
                   <div className="col-5">
                     <hr />
                   </div>
-                </div> */}
+                </div>
 
                 <form
                   className="ui form error"

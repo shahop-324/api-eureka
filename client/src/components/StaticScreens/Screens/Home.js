@@ -117,9 +117,10 @@ window.onload = function () {
   css.type = "text/css";
   css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #ffffff}";
   document.body.appendChild(css);
+
 };
 
-window.onload();
+// window.onload();
 
 const renderInput = ({
   input,
@@ -244,6 +245,9 @@ const Home = (props) => {
       duration: 1100,
     });
     AOS.refresh();
+
+    // window.onload();
+
   }, []);
 
   const { error, isLoading } = useSelector((state) => state.demo);
