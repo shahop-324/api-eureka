@@ -45,7 +45,53 @@ const useStyles = makeStyles((theme) => ({
 //     );
 //   }
 // };
-
+const renderInputName = ({
+  input,
+  labelClass,
+  labelFor,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+  id,
+  label,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        id={id}
+        required
+      />
+      <label class={labelClass} for={labelFor}>
+        {label}
+      </label>
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
+    </div>
+  );
+};
 const renderInput = ({
   input,
   labelClass,
@@ -345,7 +391,7 @@ const CreateNewCommunityForm = (props) => {
                 classes="form-control"
                 id="communityName"
                 ariadescribedby="communityName"
-                component={renderInput}
+                component={renderInputName}
               />
             </div>
 
