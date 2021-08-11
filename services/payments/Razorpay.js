@@ -82,6 +82,70 @@ exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
   );
 });
 
+
+
+exports.createOrderForCommunityPlan = catchAsync(async(req, res, next) => {
+  const planDetails = req.body.planDetails;
+  const planName = req.body.planName;
+
+  const communityId = req.body.communityId;
+
+  const userId = req.body.userId;
+
+let priceToBeCharged = 0;
+
+  if(planName === "Basic") {
+    priceToBeCharged = 0;
+  }
+  else if(planName === "Starter") {
+    priceToBeCharged = 49 * 75 * 100 * 1; // In INR (paise)
+  }
+  else if(planName === "Professional") {
+    priceToBeCharged = 99 * 75 *100 * 1 // In INR (paise)
+  }
+
+  const newOrder = razorpay.orders.create(
+    {
+      amount: priceToBeCharged*1,
+      currency: "INR",
+      receipt: UUID(),
+      notes: {
+        userId: userId,
+        planName: planName,
+        communityId: communityId,
+        transactionType: "community plan purchase",
+      },
+    },
+    async (err, order) => {
+
+      if(err) {
+        console.log(err);
+      }
+      // console.log("userId", userId);
+      // console.log("ticketId", ticketId);
+      // console.log("eventId", eventId);
+      // console.log("couponId", couponId);
+      // console.log("communityId", communityId);
+
+      // const newEventOrder = await EventOrder.create({
+      //   eventOrderEntity: order,
+      //   order_id: order.id,
+      //   created_by: userId,
+      //   created_for_event: eventId,
+      //   created_for_community: communityId,
+      //   created_for_ticket: ticketId,
+      //   created_at: Date.now(),
+      // });
+
+      res.status(200).json({
+        status: "success",
+        data: order,
+      });
+    }
+  );
+});
+
+
 exports.createCommunityBillingPlanOrder = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
   const selectedPlanId = req.body.selectedPlanId;

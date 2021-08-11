@@ -124,6 +124,7 @@ export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
 
 export const signOut = () => async (dispatch, getState) => {
   window.localStorage.clear();
+<<<<<<< HEAD
 
   window.gapi.load("client:auth2", () => {
     window.gapi.client
@@ -139,6 +140,10 @@ export const signOut = () => async (dispatch, getState) => {
         // this.auth.isSignedIn.listen(this.onAuthChange);
       });
   });
+=======
+  
+  //window.gapi.auth2.getAuthInstance().
+>>>>>>> 040ae308139c14d74c2fa7b0d4fdba194792b1b7
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
