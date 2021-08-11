@@ -52,13 +52,10 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
 
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
-    } 
-    else if(intent === "buyPlan")
-    {
-      history.push('/pricing');
+    } else if (intent === "buyPlan") {
+      history.push("/pricing");
       dispatch(fetchUserAllPersonalData());
-    }
-    else {
+    } else {
       history.push("/user/home");
     }
   } catch (err) {
@@ -127,6 +124,21 @@ export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
 
 export const signOut = () => async (dispatch, getState) => {
   window.localStorage.clear();
+
+  window.gapi.load("client:auth2", () => {
+    window.gapi.client
+      .init({
+        clientId:
+          "438235916836-6oaj1fbnqqrcd9ba30348fbe2ebn6lt0.apps.googleusercontent.com",
+        scope: "profile email",
+      })
+      .then(() => {
+        window.gapi.auth2.getAuthInstance().signOut();
+
+        // this.onAuthChange(this.auth.isSignedIn.get());
+        // this.auth.isSignedIn.listen(this.onAuthChange);
+      });
+  });
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 
@@ -144,8 +156,13 @@ export const createCommunity =
       if (file) {
         console.log(file);
 
+        const params = {
+          credentials: "include",
+        };
+
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          params,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -156,7 +173,7 @@ export const createCommunity =
         uploadConfig = await uploadConfig.json();
         console.log(uploadConfig);
 
-        const awsRes = await fetch(uploadConfig.url, {
+        const awsRes = await fetch(uploadConfig.url, params, {
           method: "PUT",
 
           body: file,
@@ -169,8 +186,12 @@ export const createCommunity =
         console.log(awsRes);
 
         const communityCreating = async () => {
+          const params = {
+            credentials: "include",
+          };
           let res = await fetch(
             "https://www.evenz.co.in/api-eureka/eureka/v1/users/newCommunity",
+            params,
             {
               method: "POST",
               body: JSON.stringify({
@@ -217,6 +238,9 @@ export const createCommunity =
         }
       } else {
         const communityCreating = async () => {
+          const params = {
+            credentials: "include",
+          };
           let res = await fetch(
             "https://www.evenz.co.in/api-eureka/eureka/v1/users/newCommunity",
             {
@@ -224,6 +248,7 @@ export const createCommunity =
               body: JSON.stringify({
                 ...formValues,
               }),
+              params,
 
               headers: {
                 "Content-Type": "application/json",
@@ -278,8 +303,12 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
   dispatch(communityAuthActions.startLoading());
 
   const loginCommunity = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/users/${id}`,
+      params,
       {
         method: "POST",
 
@@ -420,8 +449,12 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
 
   const fetchData = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/users/personalData`,
+      params,
       {
         method: "GET",
 
@@ -475,8 +508,12 @@ export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
 export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const fetchData = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/users/registeredEvents`,
+      params,
       {
         method: "GET",
 
@@ -549,8 +586,12 @@ export const fetchParticularEventOfCommunity =
 
       if (!existingEvent) {
         console.log(id, "I am passing from particularEvent action");
+        const params = {
+          credentials: "include",
+        };
         const res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/community/events/${id}`,
+          params,
           {
             method: "GET",
             headers: {
@@ -610,9 +651,12 @@ export const fetchEventsOfParticularCommunity =
       let new_url = url.toString();
 
       console.log(new_url);
-
+      const params = {
+        credentials: "include",
+      };
       const communityEvents = await fetch(new_url, {
         method: "GET",
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -647,8 +691,13 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const creatingEvent = async () => {
     console.log(formValues);
+
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/community/events/new",
+      params,
       {
         method: "POST",
         body: JSON.stringify({
@@ -696,8 +745,12 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
   const editingEvent = async () => {
     console.log(id);
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/update`,
+      params,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -743,9 +796,12 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const uploadingImage = async () => {
     console.log(file);
-
+    const params = {
+      credentials: "include",
+    };
     let uploadConfig = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+      params,
       {
         headers: {
           Authorization: `Bearer ${getState().auth.token}`,
@@ -756,7 +812,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     uploadConfig = await uploadConfig.json();
     console.log(uploadConfig);
 
-    const awsRes = await fetch(uploadConfig.url, {
+    const awsRes = await fetch(uploadConfig.url, params, {
       method: "PUT",
 
       body: file,
@@ -770,6 +826,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
 
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/update`,
+      params,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -814,8 +871,12 @@ export const editEventDescription =
     const editingEvent = async () => {
       console.log(id);
       console.log(formValues);
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateEventDescription`,
+        params,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -872,9 +933,12 @@ export const createSpeaker =
         console.log(formValues);
 
         console.log(file);
-
+        const params = {
+          credentials: "include",
+        };
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          params,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -892,7 +956,7 @@ export const createSpeaker =
         uploadConfig = await uploadConfig.json();
         console.log(uploadConfig);
 
-        const awsRes = await fetch(uploadConfig.url, {
+        const awsRes = await fetch(uploadConfig.url, params, {
           method: "PUT",
 
           body: file,
@@ -906,6 +970,7 @@ export const createSpeaker =
 
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSpeaker`,
+          params,
           {
             method: "POST",
             body: JSON.stringify({
@@ -937,8 +1002,12 @@ export const createSpeaker =
       } else {
         console.log(id);
         console.log(formValues);
+        const params = {
+          credentials: "include",
+        };
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSpeaker`,
+          params,
           {
             method: "POST",
             body: JSON.stringify({
@@ -996,9 +1065,12 @@ export const fetchSpeakers =
       let new_url = url.toString();
 
       console.log(new_url);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(new_url, {
         method: "GET",
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -1041,8 +1113,12 @@ export const fetchParticularSpeakerOfEvent =
 
     const fetchingSpeaker = async () => {
       //console.log(id, "I am passing from particularEvent action");
+      const params = {
+        credentials: "include",
+      };
       const res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}`,
+        params,
         {
           method: "GET",
           headers: {
@@ -1087,8 +1163,12 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
 
   const fetchingSpeaker = async () => {
     //console.log(id, "I am passing from particularEvent action");
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/getSpeaker`,
+      params,
       {
         method: "GET",
         headers: {
@@ -1137,9 +1217,12 @@ export const editSpeaker =
         console.log(formValues);
 
         console.log(file);
-
+        const params = {
+          credentials: "include",
+        };
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          params,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1158,7 +1241,7 @@ export const editSpeaker =
         uploadConfig = await uploadConfig.json();
         console.log(uploadConfig);
 
-        const awsRes = await fetch(uploadConfig.url, {
+        const awsRes = await fetch(uploadConfig.url, params, {
           method: "PUT",
 
           body: file,
@@ -1172,6 +1255,7 @@ export const editSpeaker =
 
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/update`,
+          params,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1204,8 +1288,13 @@ export const editSpeaker =
       } else {
         console.log(id);
         console.log(formValues);
+        const params = {
+          credentials: "include",
+        };
+
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/update`,
+          params,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1247,9 +1336,12 @@ export const errorTrackerForEditSpeaker = () => async (dispatch, getState) => {
 export const deleteSpeaker = (id) => async (dispatch, getState) => {
   dispatch(speakerActions.startLoading());
   const deletingSpeaker = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}speakers/${id}/delete`, {
       method: "DELETE",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1295,7 +1387,9 @@ export const createBooth =
       if (file) {
         console.log(formValues);
         console.log(file);
-
+        const params = {
+          credentials: "include",
+        };
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
           {
@@ -1315,7 +1409,7 @@ export const createBooth =
         uploadConfig = await uploadConfig.json();
         console.log(uploadConfig);
 
-        const awsRes = await fetch(uploadConfig.url, {
+        const awsRes = await fetch(uploadConfig.url, params, {
           method: "PUT",
 
           body: file,
@@ -1330,13 +1424,14 @@ export const createBooth =
 
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/addBooth`,
+
           {
             method: "POST",
             body: JSON.stringify({
               ...formValues,
               image: uploadConfig.key,
             }),
-
+            params,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1359,8 +1454,12 @@ export const createBooth =
           })
         );
       } else {
+        const params = {
+          credentials: "include",
+        };
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/addBooth`,
+          params,
           {
             method: "POST",
             body: JSON.stringify({
@@ -1416,10 +1515,12 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
     let new_url = url.toString();
 
     console.log(new_url);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(new_url, {
       method: "GET",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1460,12 +1561,14 @@ export const errorTrackerForFetchBooths = () => async (dispatch, getState) => {
 export const fetchBooth = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/getBoothDetails`,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1510,10 +1613,13 @@ export const editBooth =
         console.log(formValues);
 
         console.log(file);
-
+        const params = {
+          credentials: "include",
+        };
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
           {
+            params,
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
             },
@@ -1534,7 +1640,7 @@ export const editBooth =
           method: "PUT",
 
           body: file,
-
+          params,
           headers: {
             "Content-Type": file.type,
           },
@@ -1551,7 +1657,7 @@ export const editBooth =
               ...formValues,
               image: uploadConfig.key,
             }),
-
+            params,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1576,6 +1682,9 @@ export const editBooth =
       } else {
         console.log(id);
         console.log(formValues);
+        const params = {
+          credentials: "include",
+        };
         let res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/updateBooth`,
           {
@@ -1583,7 +1692,7 @@ export const editBooth =
             body: JSON.stringify({
               ...formValues,
             }),
-
+            params,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1618,9 +1727,12 @@ export const errorTrackerForEditBooth = () => async (dispatch, getState) => {
 
 export const deleteBooth = (id) => async (dispatch, getState) => {
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}booths/${id}/deleteBooth`, {
       method: "DELETE",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1660,9 +1772,12 @@ export const createSponsor =
       if (file) {
         console.log(formValues);
         console.log(file);
-
+        const params = {
+          credentials: "include",
+        };
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          params,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1685,7 +1800,7 @@ export const createSponsor =
           method: "PUT",
 
           body: file,
-
+          params,
           headers: {
             "Content-Type": file.type,
           },
@@ -1700,7 +1815,7 @@ export const createSponsor =
             ...formValues,
             image: uploadConfig.key,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1724,12 +1839,15 @@ export const createSponsor =
       } else {
         console.log(id);
         console.log(formValues);
+        const params = {
+          credentials: "include",
+        };
         let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
           method: "POST",
           body: JSON.stringify({
             ...formValues,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1767,10 +1885,12 @@ export const fetchSponsor = (id) => async (dispatch, getState) => {
   dispatch(sponsorActions.startLoading());
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}sponsors/${id}/getOne`, {
       method: "GET",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1821,11 +1941,13 @@ export const fetchSponsors =
       }
       url.search = search_params.toString();
       let new_url = url.toString();
-
+      const params = {
+        credentials: "include",
+      };
       console.log(new_url);
       let res = await fetch(new_url, {
         method: "GET",
-
+        params,
         headers: {
           // "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1870,9 +1992,14 @@ export const editSponsor =
 
         console.log(file);
 
+        const params = {
+          credentials: "include",
+        };
+
         let uploadConfig = await fetch(
           "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
           {
+            params,
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
             },
@@ -1893,7 +2020,7 @@ export const editSponsor =
           method: "PUT",
 
           body: file,
-
+          params,
           headers: {
             "Content-Type": file.type,
           },
@@ -1906,7 +2033,7 @@ export const editSponsor =
             ...formValues,
             image: uploadConfig.key,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -1930,11 +2057,15 @@ export const editSponsor =
       } else {
         console.log(id);
         console.log(formValues);
+        const params = {
+          credentials: "include",
+        };
         let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
           method: "PATCH",
           body: JSON.stringify({
             ...formValues,
           }),
+          params,
 
           headers: {
             "Content-Type": "application/json",
@@ -1968,9 +2099,12 @@ export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
 export const deleteSponsor = (id) => async (dispatch, getState) => {
   dispatch(sponsorActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}sponsors/${id}/delete`, {
       method: "DELETE",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2009,6 +2143,9 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
   try {
     console.log(id);
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/addTicket`,
       {
@@ -2016,6 +2153,7 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -2065,10 +2203,12 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
     let new_url = url.toString();
 
     console.log(new_url);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(new_url, {
       method: "GET",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2110,12 +2250,14 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
 
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/ticket`,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2149,6 +2291,9 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
   try {
     console.log(id);
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateTicket`,
       {
@@ -2156,7 +2301,7 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2191,12 +2336,14 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
 
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/deleteTicket`,
       {
         method: "DELETE",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2349,12 +2496,14 @@ export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
 export const fetchUsers = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/speakers`,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -2390,9 +2539,13 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
 
   try {
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/users/Me",
       {
+        params,
         headers: {
           //  "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -2434,10 +2587,13 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(formValues);
 
       console.log(file);
-
+      const params = {
+        credentials: "include",
+      };
       let uploadConfig = await fetch(
         "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
         {
+          params,
           headers: {
             Authorization: `Bearer ${getState().auth.token}`,
           },
@@ -2462,7 +2618,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         method: "PUT",
 
         body: file,
-
+        params,
         headers: {
           "Content-Type": file.type,
         },
@@ -2479,7 +2635,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
             ...formValues,
             image: uploadConfig.key,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2508,6 +2664,9 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       //   })
       // );
     } else {
+      const params = {
+        credentials: "include",
+      };
       const res = await fetch(
         "https://www.evenz.co.in/api-eureka/eureka/v1/users/updateMe",
         {
@@ -2515,7 +2674,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
           body: JSON.stringify({
             ...formValues,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2560,6 +2719,9 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
   dispatch(authActions.startLoading());
   try {
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/users/updatePassword",
       {
@@ -2567,7 +2729,7 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -2615,10 +2777,14 @@ export const deleteUser = () => (dispatch, getState) => {
 export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/getCommunity`,
       {
         method: "GET",
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2654,6 +2820,9 @@ export const errorTrackerForFetchCommunity =
 export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/updateCommunity`,
       {
@@ -2661,7 +2830,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2696,8 +2865,12 @@ export const errorTrackerForEditCommunity =
 export const deleteCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}`,
+      params,
       {
         method: "GET",
       }
@@ -2731,6 +2904,9 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
   try {
     console.log(id);
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSession`,
       {
@@ -2738,6 +2914,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -2786,10 +2963,12 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
     let new_url = url.toString();
 
     console.log(new_url);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(new_url, {
       method: "GET",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2844,10 +3023,12 @@ export const fetchSessionsForUser =
       let new_url = url.toString();
 
       console.log(new_url);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(new_url, {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -2882,12 +3063,15 @@ export const fetchSession = (id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/sessions`,
+      params,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -2921,12 +3105,15 @@ export const fetchSessionForSessionStage =
   (id) => async (dispatch, getState) => {
     try {
       console.log(id);
+      const params = {
+        credentials: "include",
+      };
 
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}/getOneSession`,
         {
           method: "GET",
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2964,8 +3151,12 @@ export const fetchParticularSessionOfEvent =
       console.log(existingSession);
       if (!existingSession) {
         //console.log(id, "I am passing from particularEvent action");
+        const params = {
+          credentials: "include",
+        };
         const res = await fetch(
           `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}`,
+          params,
           {
             method: "GET",
             headers: {
@@ -3013,7 +3204,9 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   try {
     console.log(formValues);
-
+    const params = {
+      credentials: "include",
+    };
     const res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}/update`,
       {
@@ -3022,7 +3215,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3058,10 +3251,12 @@ export const deleteSession = (id) => async (dispatch, getState) => {
 
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}sessions/${id}/delete`, {
       method: "DELETE",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3097,10 +3292,12 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
 
   const getNetworkSettings = async () => {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(`${BaseURL}events/${id}/getNetworkSettings`, {
       method: "GET",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3142,12 +3339,14 @@ export const editNetworking =
     dispatch(networkingActions.startLoading());
     try {
       console.log(id);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateNetworking`,
         {
           method: "PATCH",
-
+          params,
           body: JSON.stringify({
             ...formValues,
           }),
@@ -3188,6 +3387,9 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
   try {
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons/createNew`,
       {
@@ -3195,6 +3397,7 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -3228,13 +3431,15 @@ export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
 
 export const fetchCoupons = () => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
-
+  const params = {
+    credentials: "include",
+  };
   const getCoupons = async () => {
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons`,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3275,12 +3480,14 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
 
   try {
     console.log(id);
-
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/getOneCoupon`,
       {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3314,6 +3521,9 @@ export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/updateCoupon`,
       {
@@ -3322,6 +3532,7 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -3355,10 +3566,13 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
 
   try {
     console.log(id);
+    const params = {
+      credentials: "include",
+    };
 
     let res = await fetch(`${BaseURL}community/${id}/deleteCoupon`, {
       method: "DELETE",
-
+      params,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3415,6 +3629,9 @@ export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
 export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
     try {
+      const params = {
+        credentials: "include",
+      };
       const checkoutSession = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/stripe/getEventRegistrationCheckoutSession`,
         {
@@ -3422,6 +3639,7 @@ export const getEventRegistrationCheckoutSession =
           body: JSON.stringify({
             ...formValues,
           }),
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
@@ -3449,6 +3667,9 @@ export const getEventRegistrationCheckoutSession =
 export const createQuery = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/users/query/createNew`,
       {
@@ -3456,7 +3677,7 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -3481,6 +3702,9 @@ export const createCommunityFeedback =
   (formValues) => async (dispatch, getState) => {
     try {
       console.log(formValues);
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/feedback/community`,
         {
@@ -3488,7 +3712,7 @@ export const createCommunityFeedback =
           body: JSON.stringify({
             ...formValues,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3535,11 +3759,13 @@ export const fetchQueriesForCommunity =
 
       url.search = search_params.toString();
       let new_url = url.toString();
-
+      const params = {
+        credentials: "include",
+      };
       console.log(new_url);
       let res = await fetch(new_url, {
         method: "GET",
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3580,6 +3806,9 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
   dispatch(queriesActions.startLoading());
 
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/community/queries/createAnswer`,
       {
@@ -3588,6 +3817,7 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
           answerText: answerText,
           queryId: id,
         }),
+        params,
 
         headers: {
           "Content-Type": "application/json",
@@ -3630,6 +3860,9 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/users/forgotPassword`,
       {
@@ -3637,7 +3870,7 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
         },
@@ -3660,7 +3893,11 @@ export const resetPassword =
   (formValues, token) => async (dispatch, getState) => {
     dispatch(authActions.startLoading());
     dispatch(userActions.startLoading());
+
     try {
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/users/resetPassword/${token}`,
         {
@@ -3668,7 +3905,7 @@ export const resetPassword =
           body: JSON.stringify({
             ...formValues,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
           },
@@ -3714,12 +3951,14 @@ export const fetchRegistrationsOfParticularCommunity =
 
     const fetchRegistration = async () => {
       console.log(communityId);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/registrations/community/getAll`,
         {
           method: "GET",
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3762,12 +4001,14 @@ export const fetchParticularRegistration =
     dispatch(registrationActions.startLoading());
     try {
       console.log(id);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/registrations/${id}/getOne`,
         {
           method: "GET",
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3803,7 +4044,9 @@ export const createNewInvitation =
   (formValues) => async (dispatch, getState) => {
     try {
       console.log(formValues);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/team-invites/create-new`,
         {
@@ -3811,7 +4054,7 @@ export const createNewInvitation =
           body: JSON.stringify({
             ...formValues,
           }),
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().communityAuth.token}`,
@@ -3928,6 +4171,9 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
   const fetchingRTMToken = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/getRTMToken",
       {
@@ -3935,7 +4181,7 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
         body: JSON.stringify({
           eventId: eventId,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -4017,12 +4263,14 @@ export const fetchPreviousEventChatMessages =
     dispatch(eventChatActions.startLoading());
     try {
       console.log(eventId);
-
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/getPreviousEventMsg/${eventId}`,
         {
           method: "GET",
-
+          params,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
@@ -4057,6 +4305,9 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
   dispatch(RTCActions.startLoading());
 
   const fetchingRTCToken = async () => {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       "https://www.evenz.co.in/api-eureka/eureka/v1/getLiveStreamingToken",
       {
@@ -4065,7 +4316,7 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
           sessionId: sessionId,
           role: role,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState().auth.token}`,
@@ -4115,6 +4366,9 @@ export const resetCommunityError = () => async (dispatch, getState) => {
 export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   dispatch(demoActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/demo/requestDemo`,
       {
@@ -4123,7 +4377,7 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
         },
@@ -4158,6 +4412,9 @@ export const errorTrackerForCreateDemo = () => async (dispatch, getState) => {
 export const signupForEmailNewsletter =
   (email) => async (dispatch, getState) => {
     try {
+      const params = {
+        credentials: "include",
+      };
       let res = await fetch(
         `https://www.evenz.co.in/api-eureka/eureka/v1/newsletter/signUpViaEmail`,
         {
@@ -4166,6 +4423,7 @@ export const signupForEmailNewsletter =
           body: JSON.stringify({
             email: email,
           }),
+          params,
 
           headers: {
             "Content-Type": "application/json",
@@ -4190,6 +4448,9 @@ export const signupForEmailNewsletter =
 export const contactUs = (formValues) => async (dispatch, getState) => {
   dispatch(contactUsActions.startLoading());
   try {
+    const params = {
+      credentials: "include",
+    };
     let res = await fetch(
       `https://www.evenz.co.in/api-eureka/eureka/v1/contactUs/contact`,
       {
@@ -4198,7 +4459,7 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
         body: JSON.stringify({
           ...formValues,
         }),
-
+        params,
         headers: {
           "Content-Type": "application/json",
         },

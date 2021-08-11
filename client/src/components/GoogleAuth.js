@@ -34,8 +34,6 @@ class GoogleAuth extends React.Component {
       ModifiedFormValues.googleId = profile.getId();
       ModifiedFormValues.email = profile.getEmail();
       this.props.googleSignIn(ModifiedFormValues);
-    } else {
-      this.props.signOut();
     }
   };
 
