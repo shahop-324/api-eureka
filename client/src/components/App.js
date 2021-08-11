@@ -44,7 +44,6 @@ import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 AOS.init();
 
-
 class App extends React.Component {
   render() {
     const { isSignedIn } = this.props;
@@ -61,37 +60,44 @@ class App extends React.Component {
           <div>
             <Switch>
               {
-                 <Route path="/signin" exact component={Signin} />
+                <Route path="/signin" exact component={Signin} />
                 //  <Route path="/signup" exact component={Signup} />
               }
-              { (
+              {
                 // <Route path="/signin" exact component={Signin} />
                 <Route path="/signup" exact component={Signup} />
-              )}
-              { (
+              }
+              {
                 // <Route path="/signin" exact component={Signin} />
                 <Route
                   path="/signin/:eventId"
                   exact
                   component={SignInForEventRegistration}
                 />
-              )}
-              {(
+              }
+              {
                 // <Route path="/signin" exact component={Signin} />
                 <Route
                   path="/login/buy-plan"
                   exact
                   component={SigninForBuyingPlan}
                 />
-              )}
-
+              }
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
-              <Route path="/accept-speaker-invitation" exact component={AcceptSpeakerInvite} />
+              <Route
+                path="/accept-speaker-invitation"
+                exact
+                component={AcceptSpeakerInvite}
+              />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
-              <Route path="/event-management" exact component={EventManagementHome} />
+              <Route
+                path="/event-management"
+                exact
+                component={EventManagementHome}
+              />
               <Route path="/event-builder" exact component={EventBuilder} />
               <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
