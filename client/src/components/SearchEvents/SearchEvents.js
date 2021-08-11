@@ -242,7 +242,7 @@ const SearchEvents = () => {
     // setFullLocation(new_url);
     let regex = /(?<=search-events\/).+/;
     const result = new_url.match(regex);
-
+console.log(result);
     if (result === null) {
       history.push("/search-events/");
     } else {
