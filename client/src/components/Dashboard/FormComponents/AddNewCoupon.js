@@ -12,7 +12,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import {createCoupon} from "./../../../actions";
+import { createCoupon } from "./../../../actions";
 
 let eventOptions = [];
 
@@ -123,15 +123,16 @@ const AddNewCoupon = (props) => {
 
   const onSubmit = (formValues) => {
     console.log(formValues);
-   
+
     const ModifiedFormValues = {};
     ModifiedFormValues.discountForEventId = formValues.eventName.value;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
     ModifiedFormValues.validTillTime = `${formValues.expiryDate}T${formValues.expiryTime}:00Z`;
     ModifiedFormValues.discountPercentage = formValues.discountPercentage;
     ModifiedFormValues.discountCode = formValues.couponCode;
-    ModifiedFormValues.maxNumOfDiscountPermitted = formValues.numberOfDiscountsAvailable;
-    
+    ModifiedFormValues.maxNumOfDiscountPermitted =
+      formValues.numberOfDiscountsAvailable;
+
     showResults(ModifiedFormValues);
     dispatch(createCoupon(ModifiedFormValues));
     props.handleClose();
@@ -277,7 +278,7 @@ const AddNewCoupon = (props) => {
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.eventName) {
     errors.eventName = "Event name is required";
   }
@@ -294,7 +295,8 @@ const validate = (formValues) => {
     errors.couponCode = "Coupon code is required";
   }
   if (!formValues.numberOfDiscountsAvailable) {
-    errors.numberOfDiscountsAvailable = "Number of discounts available is required";
+    errors.numberOfDiscountsAvailable =
+      "Number of discounts available is required";
   }
   return errors;
 };

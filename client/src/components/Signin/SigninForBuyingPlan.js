@@ -7,6 +7,7 @@ import { signIn } from "../../actions/index";
 
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import GoogleAuth from "../GoogleAuth";
 class SigninForBuyingPlan extends React.Component {
   state = { email: "", password: "" };
 
@@ -17,8 +18,8 @@ class SigninForBuyingPlan extends React.Component {
     console.log(params.intent);
     this.props.signIn(
       this.state,
-      params.intent,
-    //   this.props.match.params.eventId
+      params.intent
+      //   this.props.match.params.eventId
     );
   };
 
@@ -62,6 +63,7 @@ class SigninForBuyingPlan extends React.Component {
                   <div className="row sign-in-sub-heading px-2">
                     Enter your details below.
                   </div>
+                  <GoogleAuth />
                   {/* <div
                     className="row d-flex"
                     style={{
@@ -89,7 +91,12 @@ class SigninForBuyingPlan extends React.Component {
                     <div className="row">
                       <div className="mb-3">
                         <div class="form-group">
-                          <label for="emailAddress" className="form-label form-label-customized">Email address</label>
+                          <label
+                            for="emailAddress"
+                            className="form-label form-label-customized"
+                          >
+                            Email address
+                          </label>
                           <input
                             type="email"
                             class="form-control"
@@ -107,7 +114,12 @@ class SigninForBuyingPlan extends React.Component {
                     <div className="row mb-3">
                       <div className="mb-3">
                         <div class="form-group">
-                          <label for="UserPassword" className="form-label form-label-customized">Password</label>
+                          <label
+                            for="UserPassword"
+                            className="form-label form-label-customized"
+                          >
+                            Password
+                          </label>
                           <input
                             type="password"
                             class="form-control"
@@ -143,28 +155,28 @@ class SigninForBuyingPlan extends React.Component {
                         </div>
                       </div> */}
                       <div
-                      className="col"
-                      style={{
-                        textAlign: "end",
-                        color: "#538BF7",
-                        fontWeight: "500",
-                        letterSpacing: "0.2px",
-                        textDecoration: "none",
-                      }}
-                    >
-                      <Link
-                        to="/forgot-password"
-                        style={{ textDecoration: "none" }}
+                        className="col"
+                        style={{
+                          textAlign: "end",
+                          color: "#538BF7",
+                          fontWeight: "500",
+                          letterSpacing: "0.2px",
+                          textDecoration: "none",
+                        }}
                       >
-                        Forgot Password?
-                      </Link>
-                    </div>
+                        <Link
+                          to="/forgot-password"
+                          style={{ textDecoration: "none" }}
+                        >
+                          Forgot Password?
+                        </Link>
+                      </div>
                     </div>
                     <button
-                    style={{width: "100%"}}
+                      style={{ width: "100%" }}
                       type="submit"
                       className="btn btn-primary"
-                    //   disabled={signinClicked && formIsvalidated && !error}
+                      //   disabled={signinClicked && formIsvalidated && !error}
                     >
                       <span className="btn-text">
                         Login

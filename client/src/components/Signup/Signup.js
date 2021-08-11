@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
-import { errorTrackerForSignUp, googleLinkClicked, resetAuthError } from "../../actions/index";
+import {
+  errorTrackerForSignUp,
+  googleLinkClicked,
+  resetAuthError,
+} from "../../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { reduxForm, Field } from "redux-form";
+import GoogleAuth from "../GoogleAuth";
 
 let formIsvalidated = false;
 
@@ -20,7 +25,7 @@ const renderInput = ({
   placeholder,
   meta: { touched, error, warning },
 }) => {
-   const className = `field ${error && touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -74,7 +79,6 @@ const renderInputCheckbox = ({
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
-      
     </div>
   );
 };
@@ -98,15 +102,15 @@ const Signup = (props) => {
 
     dispatch(signUp(formValues));
   };
-  
+
   // const onClickHandle = () => {
   //   dispatch(googleLinkClicked());
   // };
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForSignUp());
     alert(error);
-    return; 
+    return;
   }
 
   return (
@@ -145,6 +149,8 @@ const Signup = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Free forever. No credit card needed.
                 </div>
+
+                <GoogleAuth />
                 {/* <div className="row d-flex flex-row justify-content-center px-2 mb-4">
                   <button
                     type="button"
@@ -180,7 +186,6 @@ const Signup = (props) => {
                 </div> */}
 
                 <form
-                
                   className="ui form error"
                   onSubmit={handleSubmit(onSubmit)}
                 >
@@ -202,7 +207,7 @@ const Signup = (props) => {
                           ariadescribedby="Enter First Name "
                           placeholder="John"
                           component={renderInput}
-                          
+
                           //required
                           //onChange={this.onFirstNameChange}
                         />
@@ -228,7 +233,6 @@ const Signup = (props) => {
                             placeholder="Doe"
                             //required
                             // onChange={this.onLastNameChange}
-                            
                           />
                         </div>
                       </div>
@@ -255,7 +259,6 @@ const Signup = (props) => {
                           // value={this.state.email}
                           // onChange={this.onEmailAddressChange}
                           //required
-                         
                         />
                       </div>
                     </div>
@@ -280,9 +283,6 @@ const Signup = (props) => {
                           ariadescribedby="emailHelp"
                           placeholder="Enter email"
                           component={renderInput}
-                         
-
-                          
                         />
                       </div>
                     </div>
@@ -293,13 +293,10 @@ const Signup = (props) => {
                         <Field
                           classes="form-check-input"
                           type="checkbox"
-                          
                           name="policySigned"
                           required
                           id="defaultCheck1"
-                          
                           component={renderInputCheckbox}
-                         
                         />
                         <label
                           className="form-check-label"
@@ -346,8 +343,6 @@ const Signup = (props) => {
                       </div>
                     </div>
                   </div>
-
-                  
 
                   <div
                     className="row"
@@ -434,16 +429,12 @@ const validate = (formValues) => {
   if (!formValues.password) {
     errors.password = "password is required";
   }
-  if (formValues.password&&formValues.password.length<8) {
+  if (formValues.password && formValues.password.length < 8) {
     errors.password = "password length must be greater than 8";
   }
-  if(!formValues.policySigned)
-  {
-  errors.policySigned="required"
-
+  if (!formValues.policySigned) {
+    errors.policySigned = "required";
   }
-
-
 
   return errors;
 };
@@ -453,4 +444,3 @@ export default reduxForm({
 
   validate,
 })(Signup);
-
