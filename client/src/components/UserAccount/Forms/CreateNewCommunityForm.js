@@ -374,7 +374,8 @@ const CreateNewCommunityForm = (props) => {
                 name="imgUpload"
                 type="file"
                 accept="image/*"
-                handleChange={handleChange}
+                onChange={handleChange}
+                // handleChange={handleChange}
                 //component={renderInputImage}
               />
             </div>
