@@ -17,7 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddNewSpeaker from "./FormComponents/EditSpeakersForms/AddNewSpeaker";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import { errorTrackerForFetchSpeakers, fetchSessions, fetchSpeakers } from "../../../actions";
+import { editEvent, errorTrackerForFetchSpeakers, fetchEvent, fetchSessions, fetchSpeakers } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
@@ -213,6 +213,7 @@ const Speakers = () => {
               />
             </div>
             <Link
+             onClick={() => dispatch(fetchEvent(id))}
               type="button"
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}`}
