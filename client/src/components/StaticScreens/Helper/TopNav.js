@@ -1,0 +1,392 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+import "./../../../index.css";
+
+import { Dropdown } from "semantic-ui-react";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import BuildIcon from "@material-ui/icons/Build";
+import AirplayIcon from "@material-ui/icons/Airplay";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import CallMergeIcon from "@material-ui/icons/CallMerge";
+import history from "../../../history";
+
+import { IconButton } from "@material-ui/core";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+
+import CancelIcon from "@material-ui/icons/Cancel";
+import MenuIcon from "@material-ui/icons/Menu";
+import AvatarMenu from "../../AvatarMenu";
+import { useSelector } from "react-redux";
+
+const TopNav = () => {
+
+  const {isSignedIn} = useSelector((state) => state.auth);
+
+  const [hambergerOpen, setHambergerOpen] = useState(false);
+
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+
+  const openHamberger = () => {
+    setHambergerOpen(true);
+  };
+
+  const closeHamberger = () => {
+    setHambergerOpen(false);
+  };
+
+  return (
+    <>
+      <div
+        className="row nav-section"
+        style={{ marginLeft: "auto", marginRight: "auto" }}
+      >
+        <nav class="navbar navbar-expand-xxl navbar-light">
+          <div class="container">
+            {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
+            <span class="navbar-brand nav-brand-name-home">
+              <a
+                href="https://www.evenz.in/home"
+                style={{ textDecoration: "none", color: "#ffffff" }}
+              >
+                Evenz
+              </a>
+            </span>
+
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              // data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              onClick={() => {
+                setOpenDrawer(true);
+              }}
+            >
+              {hambergerOpen ? (
+                <CancelIcon
+                  onClick={closeHamberger}
+                  style={{ fill: "#ffffff" }}
+                  className="navbar-toggler-icon"
+                />
+              ) : (
+                <MenuIcon
+                  onClick={openHamberger}
+                  style={{ fill: "#ffffff" }}
+                  className="navbar-toggler-icon"
+                />
+              )}
+            </button>
+            <div
+              class="collapse navbar-collapse navbar-collapse-dark"
+              id="navbarSupportedContent"
+            >
+              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  {/* <div className="nav-link-btn nav-link-btn-dark me-4">
+                        Features
+                      </div> */}
+
+                  <Dropdown
+                    text="Features"
+                    style={{ fontWeight: "600", color: "#ffffff" }}
+                    className="link item nav-link-btn nav-link-btn-dark me-4"
+                  >
+                    <Dropdown.Menu className="mt-3">
+                      <Dropdown.Item>
+                        <div
+                          className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          onClick={() => {
+                            history.push("/event-management");
+                          }}
+                        >
+                          <DashboardIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Event Management
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <div
+                          className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          onClick={() => {
+                            history.push("/event-builder");
+                          }}
+                        >
+                          <BuildIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Event Builder
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <div
+                          className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          onClick={() => {
+                            history.push("/event-platform");
+                          }}
+                        >
+                          <AirplayIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Event Platform
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <div
+                          className="ui home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          data-tooltip="Coming Soon"
+                          data-position="right center"
+                        >
+                          <AssessmentIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            data-content="Add users to your feed"
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Analytics Tools
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <div
+                          className="ui home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          data-tooltip="Coming soon"
+                          data-position="right center"
+                        >
+                          <CallMergeIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            data-content="Add users to your feed"
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Integrations
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </li>
+
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  <div
+                    className="nav-link-btn nav-link-btn-dark me-4"
+                    style={{ fontWeight: "600" }}
+                  >
+                    <Link
+                      to="/use-cases/"
+                      style={{ textDecoration: "none", color: "#ffffff" }}
+                    >
+                      Use Cases
+                    </Link>
+                  </div>
+                </li>
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  <div
+                    className="nav-link-btn nav-link-btn-dark me-4"
+                    style={{ fontWeight: "600" }}
+                  >
+                    <Link
+                      to="/search-events/"
+                      style={{ textDecoration: "none", color: "#ffffff" }}
+                    >
+                      Explore Events
+                    </Link>
+                  </div>
+                </li>
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  <div
+                    className="nav-link-btn nav-link-btn-dark me-4"
+                    style={{ fontWeight: "600" }}
+                  >
+                    <Link
+                      to="/pricing/"
+                      style={{ textDecoration: "none", color: "#ffffff" }}
+                    >
+                      Pricing
+                    </Link>
+                  </div>
+                </li>
+
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                { !isSignedIn ?  <a
+                href="/signin"
+                type="button"
+                style={{ width: "100%" }}
+                className=" btn btn-primary btn-outline-text me-4 mt-4"
+              >
+                Login
+              </a> : <AvatarMenu />  }
+                </li>
+
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  {/* <AvatarMenu /> */}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <React.Fragment key="right">
+        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
+        <SwipeableDrawer anchor="right" open={openDrawer}>
+          <div
+            className="registration-more-details-right-drawer px-4 py-4"
+            style={{ width: "100vw" }}
+          >
+            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
+              <div className="side-drawer-heading"></div>
+              <div
+                onClick={() => {
+                  setOpenDrawer(false);
+                  closeHamberger();
+                }}
+              >
+                <IconButton aria-label="close-drawer">
+                  <CancelOutlinedIcon
+                    style={{ fontSize: "26", color: "#4D4D4D" }}
+                  />
+                </IconButton>
+              </div>
+            </div>
+            <div className="my-3">{/* <hr /> */}</div>
+
+            <div className="d-flex flex-column align-items-center">
+              <Link
+                to="/use-cases/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Use Cases
+                </div>
+              </Link>
+
+              <Link
+                to="/search-events/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Explore Events
+                </div>
+              </Link>
+
+              <Link
+                to="/pricing/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Pricing
+                </div>
+              </Link>
+
+              <Link
+                to="/event-management/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Event Management
+                </div>
+              </Link>
+              <Link
+                to="/event-builder/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Event Builder
+                </div>
+              </Link>
+              <Link
+                to="/event-platform/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Event Platform
+                </div>
+              </Link>
+
+              { !isSignedIn ?  <a
+                href="/signin"
+                type="button"
+                style={{ width: "100%" }}
+                className=" btn btn-primary btn-outline-text me-4 mt-4"
+              >
+                Login
+              </a> : <AvatarMenu />  }
+            </div>
+          </div>
+        </SwipeableDrawer>
+      </React.Fragment>
+    </>
+  );
+};
+
+export default TopNav;

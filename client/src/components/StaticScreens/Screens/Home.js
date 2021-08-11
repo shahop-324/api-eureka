@@ -15,17 +15,13 @@ import PollsChatsAndQnA from "./../../../assets/images/section-7-home.png";
 import EndlessUseCases from "./../../../assets/images/section-8-home.png";
 import BoostYourEvents from "./../../../assets/images/section-9-home.png";
 
-import MenuIcon from "@material-ui/icons/Menu";
-
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 
-import CancelIcon from "@material-ui/icons/Cancel";
 
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 import Select from "react-select";
 
-// import { Divider } from "@material-ui/core";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import PhoneInput from "react-phone-input-2";
@@ -38,13 +34,9 @@ import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
+import TopNav from "../Helper/TopNav";
 
-import { Dropdown, Menu } from "semantic-ui-react";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import BuildIcon from "@material-ui/icons/Build";
-import AirplayIcon from "@material-ui/icons/Airplay";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import CallMergeIcon from "@material-ui/icons/CallMerge";
+
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -247,13 +239,6 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-let script = document.createElement("script");
-script.src = "./../../../script.js";
-
-script.onload = function () {
-  alert("Script loaded and ready");
-};
-
 const Home = (props) => {
   const dispatch = useDispatch();
 
@@ -266,20 +251,13 @@ const Home = (props) => {
 
   const { error, isLoading } = useSelector((state) => state.demo);
 
-  const [hambergerOpen, setHambergerOpen] = useState(false);
+  
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const { handleSubmit, pristine, submitting } = props;
 
-  const openHamberger = () => {
-    setHambergerOpen(true);
-  };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
-
+ 
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -295,9 +273,6 @@ const Home = (props) => {
     ModifiedFormValues.region = formValues.region.label;
 
     dispatch(createDemoRequest(ModifiedFormValues));
-
-    // window.location.href="http://localhost:3001/home";
-    // dispatch(editUser(ModifiedFormValues, file));
     showResults(ModifiedFormValues);
   };
 
@@ -315,213 +290,8 @@ const Home = (props) => {
     <>
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
-          <div
-            className="row nav-section"
-            style={{ marginLeft: "auto", marginRight: "auto" }}
-          >
-            <nav class="navbar navbar-expand-xxl navbar-light">
-              <div class="container">
-                {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-                <span class="navbar-brand nav-brand-name-home">
-                  <a
-                    href="https://www.evenz.in/home"
-                    style={{ textDecoration: "none", color: "#ffffff" }}
-                  >
-                    Evenz
-                  </a>
-                </span>
-
-                <button
-                  class="navbar-toggler"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  {hambergerOpen ? (
-                    <CancelIcon
-                      onClick={closeHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  ) : (
-                    <MenuIcon
-                      onClick={openHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  )}
-                </button>
-                <div
-                  class="collapse navbar-collapse navbar-collapse-dark"
-                  id="navbarSupportedContent"
-                >
-                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      {/* <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Features
-                      </div> */}
-
-                      <Dropdown
-                        text="Features"
-                        className="link item nav-link-btn nav-link-btn-dark me-4"
-                      >
-                        <Dropdown.Menu className="mt-3">
-                          <Dropdown.Item>
-                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
-                              <DashboardIcon
-                                style={{ fill: "#538BF7", fontSize: "28" }}
-                                className="nav-dropdown-item-active-icon"
-                              />
-                              <div
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Event Management
-                              </div>
-                            </div>
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item>
-                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
-                              <BuildIcon
-                                style={{ fill: "#538BF7", fontSize: "28" }}
-                                className="nav-dropdown-item-active-icon"
-                              />
-                              <div
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Event Builder
-                              </div>
-                            </div>
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item>
-                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
-                              <AirplayIcon
-                                style={{ fill: "#538BF7", fontSize: "28" }}
-                                className="nav-dropdown-item-active-icon"
-                              />
-                              <div
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Event Platform
-                              </div>
-                            </div>
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item>
-                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
-                              <AssessmentIcon
-                                style={{ fill: "#538BF7", fontSize: "28" }}
-                                className="nav-dropdown-item-active-icon"
-                              />
-
-                              <div
-                                class="ui"
-                                data-tooltip="Coming Soon"
-                                data-position="right center"
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Analytics Tools
-                              </div>
-                              {/* <div
-                              data-content="Add users to your feed"
-                              
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Analytics Tools
-                              </div> */}
-                            </div>
-                          </Dropdown.Item>
-
-                          <Dropdown.Divider />
-                          <Dropdown.Item>
-                            <div className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active">
-                              <CallMergeIcon
-                                style={{ fill: "#538BF7", fontSize: "28" }}
-                                className="nav-dropdown-item-active-icon"
-                              />
-                              <div
-                                class="ui"
-                                data-tooltip="Coming soon"
-                                data-position="right center"
-                                className="mx-3 nav-dropdown-item-active-text"
-                                style={{ fontWeight: "600" }}
-                              >
-                                Integrations
-                              </div>
-                            </div>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/use-cases/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Use Cases
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/search-events/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Explore Events
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/pricing/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Pricing
-                        </Link>
-                      </div>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <a
-                        href="/signin"
-                        type="button"
-                        className=" btn btn-light btn-outline-text me-4"
-                      >
-                        Login
-                      </a>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      {/* <AvatarMenu /> */}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </div>
-
+          {/* Here goes Top Nav */}
+<TopNav />
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
@@ -561,6 +331,7 @@ const Home = (props) => {
               <div className="grid-2-of-2 d-flex flex-row justify-content-center">
                 <img
                   className="section-hero-img"
+                  data-aos="zoom-in"
                   src={HomeHero}
                   alt="home-hero"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}

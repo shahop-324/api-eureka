@@ -41,6 +41,7 @@ import "aos/dist/aos.css";
 import EventManagementHome from "./StaticScreens/Screens/EventManagementHome";
 import EventBuilder from "./StaticScreens/Screens/EventBuilder";
 import EventPlatform from "./StaticScreens/Screens/EventPlatform";
+import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 AOS.init();
 
 
@@ -60,19 +61,27 @@ class App extends React.Component {
           <div>
             <Switch>
               {
-                !isSignedIn && <Route path="/signin" exact component={Signin} />
+                 <Route path="/signin" exact component={Signin} />
                 //  <Route path="/signup" exact component={Signup} />
               }
-              {!isSignedIn && (
+              { (
                 // <Route path="/signin" exact component={Signin} />
                 <Route path="/signup" exact component={Signup} />
               )}
-              {!isSignedIn && (
+              { (
                 // <Route path="/signin" exact component={Signin} />
                 <Route
                   path="/signin/:eventId"
                   exact
                   component={SignInForEventRegistration}
+                />
+              )}
+              {(
+                // <Route path="/signin" exact component={Signin} />
+                <Route
+                  path="/login/buy-plan"
+                  exact
+                  component={SigninForBuyingPlan}
                 />
               )}
 

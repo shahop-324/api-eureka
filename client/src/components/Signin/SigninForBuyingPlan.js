@@ -7,7 +7,7 @@ import { signIn } from "../../actions/index";
 
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-class SignInForEventRegistration extends React.Component {
+class SigninForBuyingPlan extends React.Component {
   state = { email: "", password: "" };
 
   onSubmit = (e) => {
@@ -18,7 +18,7 @@ class SignInForEventRegistration extends React.Component {
     this.props.signIn(
       this.state,
       params.intent,
-      this.props.match.params.eventId
+    //   this.props.match.params.eventId
     );
   };
 
@@ -55,9 +55,9 @@ class SignInForEventRegistration extends React.Component {
             </div>
             <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
               <div className="col signin-form">
-                <div className="container">
+                <div className="container ">
                   <div className="row sign-in-heading px-2">
-                    Sign in to Evenz to register
+                    Sign in to buy your plan
                   </div>
                   <div className="row sign-in-sub-heading px-2">
                     Enter your details below.
@@ -72,8 +72,8 @@ class SignInForEventRegistration extends React.Component {
                     <li>
                       <a href="/eureka/v1/auth/google">Login with Google</a>
                     </li>
-                  </div>
-                  <div
+                  </div> */}
+                  {/* <div
                     className="row d-flex"
                     style={{ alignItems: "center", marginBottom: "6%" }}
                   >
@@ -209,4 +209,4 @@ class SignInForEventRegistration extends React.Component {
   }
 }
 
-export default connect(null, { signIn })(SignInForEventRegistration);
+export default connect(null, { signIn })(SigninForBuyingPlan);

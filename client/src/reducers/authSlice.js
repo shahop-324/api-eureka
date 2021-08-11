@@ -12,6 +12,7 @@ const authSlice = createSlice({
   reducers: {
     ResetError(state, action) {
       state.error = false;
+     // state.isSignedIn = false;
     },
     hasError(state, action) {
       state.error = action.payload;
@@ -19,11 +20,12 @@ const authSlice = createSlice({
 
     disabledError(state, action) {
       state.error = false;
+      state.isSignedIn = false;
       
     },
     SignIn(state, action) {
       state.token = action.payload.token;
-      state.isSignedIn = action.payload.isSignedIn;
+      state.isSignedIn = true
       
     },
     SignOut(state, action) {
