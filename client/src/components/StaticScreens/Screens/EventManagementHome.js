@@ -356,6 +356,9 @@ And sponsors
               <div className="action-btn-home mt-5">
                 <button
                   type="button"
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                   className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                   style={{
                     boxShadow:
@@ -432,6 +435,9 @@ So, you can hear to what your attendees have to say about your event using revie
               <div className="action-btn-home  pt-5">
                 <button
                   type="button"
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                   className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
                     boxShadow:
@@ -480,6 +486,9 @@ So, you can hear to what your attendees have to say about your event using revie
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -569,6 +578,9 @@ So, you can hear to what your attendees have to say about your event using revie
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -621,6 +633,9 @@ So, you can hear to what your attendees have to say about your event using revie
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-light btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -682,6 +697,9 @@ So, you can hear to what your attendees have to say about your event using revie
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:

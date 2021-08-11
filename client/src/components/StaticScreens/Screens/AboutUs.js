@@ -405,7 +405,7 @@ const AboutUs = () => {
           <div className="d-flex flex-column align-items-center" data-aos="zoom-in">
             <div
               className="mission-statement-container p-5"
-              style={{ width: "700px" }}
+              
             >
               <p className="mission-text mb-5" style={{fontFamily: "Ubuntu", fontWeight: "500", color: "#ffffff"}} >
                 Evenz is designed and developed to cater to the ever growing

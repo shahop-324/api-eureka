@@ -23,7 +23,10 @@ const UserAccountEventsMainBody = () => {
     if (events.length !== 0) {
       return events.map((event) => {
         const now = new Date(event.startDate);
-        const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
+        const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+
+        const end = new Date(event.endDate);
+        const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
         return (
           <EventCard
@@ -33,6 +36,8 @@ const UserAccountEventsMainBody = () => {
             eventName={event.eventName}
             minPrice={event.minTicketPrice}
             maxPrice={event.maxTicketPrice}
+            endDate={formatedEndDate}
+            rating={(event.communityRating * 1 ).toFixed(1)}
           />
         );
       });

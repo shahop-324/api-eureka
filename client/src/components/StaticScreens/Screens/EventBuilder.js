@@ -354,6 +354,9 @@ const EventBuilderHome = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                     type="button"
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -440,6 +443,9 @@ const EventBuilderHome = (props) => {
               <div className="action-btn-home  pt-5">
                 <button
                   type="button"
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                   className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
                     boxShadow:
