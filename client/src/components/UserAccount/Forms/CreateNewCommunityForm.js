@@ -127,31 +127,31 @@ const renderInputCheckbox = ({
     </div>
   );
 };
-const renderInputImage = ({
-  input,
+// const renderInputImage = ({
+//   input,
 
-  type,
+//   type,
 
-  classes,
-  handleChange,
-  accept,
-  meta: { touched, error, warning },
-}) => {
-  const className = `field ${error && touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <input
-        type={type}
-        {...input}
-        accept={accept}
-        onChange={() => input.onChange(handleChange)}
-        className={classes}
+//   classes,
+//   handleChange,
+//   accept,
+//   meta: { touched, error, warning },
+// }) => {
+//   const className = `field ${error && touched ? "error" : ""}`;
+//   return (
+//     <div className={className}>
+//       <input
+//         type={type}
+//         {...input}
+//         accept={accept}
+//         onChange={() => input.onChange(handleChange)}
+//         className={classes}
 
-        // required
-      />
-    </div>
-  );
-};
+//         // required
+//       />
+//     </div>
+//   );
+// };
 
 const renderTextArea = ({
   input,
@@ -237,31 +237,31 @@ const CreateNewCommunityForm = (props) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
-  const renderInputImage = ({
-    input,
+  // const renderInputImage = ({
+  //   input,
 
-    type,
+  //   type,
 
-    classes,
+  //   classes,
 
-    accept,
-    meta: { touched, error, warning },
-  }) => {
-    const className = `field ${error && touched ? "error" : ""}`;
-    return (
-      <div className={className}>
-        <input
-          type={type}
-          {...input}
-          accept={accept}
-          onChange={handleChange}
-          className={classes}
+  //   accept,
+  //   meta: { touched, error, warning },
+  // }) => {
+  //   const className = `field ${error && touched ? "error" : ""}`;
+  //   return (
+  //     <div className={className}>
+  //       <input
+  //         type={type}
+  //         {...input}
+  //         accept={accept}
+  //         onChange={handleChange}
+  //         className={classes}
 
-          // required
-        />
-      </div>
-    );
-  };
+  //         // required
+  //       />
+  //     </div>
+  //   );
+  // };
 
   console.log(file);
   console.log(fileToPreview);
@@ -323,13 +323,13 @@ const CreateNewCommunityForm = (props) => {
               >
                 Avatar
               </label>
-              <Field
-                classes="form-control"
+              <input
+                class="form-control"
                 name="imgUpload"
                 type="file"
                 accept="image/*"
-                // handleChange={handleChange}
-                component={renderInputImage}
+                handleChange={handleChange}
+                //component={renderInputImage}
               />
             </div>
             <div class="mb-4 overlay-form-input-row">
