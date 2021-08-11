@@ -94,11 +94,13 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     })
     .populate("sponsors")
     .populate("booths")
-    .populate("session")
+    .populate({path: "session", populate: {
+      path: "speaker"
+    }})
     .populate("speaker")
     .populate({
       path: "createdBy",
-      select: "name logo socialMediaHandles",
+      select: "name logo socialMediaHandles image",
     })
     .populate({
       path: "coupon",
