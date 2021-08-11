@@ -1,6 +1,7 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Faker from 'faker';
+import React from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Faker from "faker";
+import { Tooltip } from "@material-ui/core";
 
 const SessionCard = ({
   startDate,
@@ -9,14 +10,21 @@ const SessionCard = ({
   sessionName,
   sessionDescription,
   speakerAvatarList,
-  id
+  id,
 }) => {
   const renderSpeakerAvatarList = (speakerAvatarList) => {
-    
     console.log(speakerAvatarList);
     if (speakerAvatarList[0]) {
       return speakerAvatarList.map((speaker) => {
-        return <Avatar alt={speaker.name} src={Faker.image.avatar()} />;
+        return (
+          <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
+            <Avatar
+              variant="rounded"
+              alt={speaker.firstName}
+              src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+            />
+          </Tooltip>
+        );
       });
     }
     return <div />;
@@ -30,7 +38,7 @@ const SessionCard = ({
       <div className="session-name mb-2">{sessionName}</div>
       <div className="session-description mb-2">{sessionDescription}</div>
 
-      <div className="session-speakers-grid">
+      <div className="session-speakers-grid pt-3">
         {renderSpeakerAvatarList(speakerAvatarList)}
       </div>
     </div>
