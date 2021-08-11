@@ -16,11 +16,11 @@ const UserBookedTickets = () => {
         // var newDate = new Date(date.setMonth(date.getMonth() + 1));
         // console.log(newDate);
 
-        const end = new Date(event.ednDate);
-        const formatedEndDate = dateFormat(end,  "mmmm dS, h:MM TT");
+        const end = new Date(event.endDate);
+        const formatedEndDate = dateFormat(end,  "mmm dS, h:MM TT");
 
         const now = new Date(event.startDate);
-        const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
+        const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
 
         return (
           <EventCard
@@ -34,6 +34,7 @@ const UserBookedTickets = () => {
             showBtn={true}
             communityId={event.createdBy}
             endDate={formatedEndDate}
+            rating={(event.communityRating * 1 ).toFixed(1)}
           />
         );
       });

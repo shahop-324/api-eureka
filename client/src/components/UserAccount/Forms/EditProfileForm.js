@@ -137,8 +137,6 @@ const renderPhoneInput = ({
           enableSearch: true,
         }}
         country={"us"}
-        // value={state.phone}
-        //   onChange={phone => setState({ phone })}
         {...input}
         type={type}
       />
@@ -177,7 +175,7 @@ let EditProfileForm = (props) => {
   const { error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  // const imgKey = useSelector((state) => state.user.userDetails.image);
+  
   const { userDetails } = useSelector((state) => state.user);
   let imgKey;
   if (userDetails) {
@@ -200,12 +198,7 @@ let EditProfileForm = (props) => {
 
   const { handleSubmit, pristine, reset, submitting } = props;
   const classes = useStyles();
-  // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  // const showResults = (formValues) => {
-  //   // await sleep(500); // simulate server latency
-  //   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  // };
-
+  
   const onSubmit = (formValues) => {
     setEditProfileClicked(true);
     console.log(formValues);
@@ -237,18 +230,9 @@ let EditProfileForm = (props) => {
     ModifiedFormValues.interests = modifiedInterests;
 
     console.log(ModifiedFormValues);
-console.log(file);
+    console.log(file);
     dispatch(editUser(ModifiedFormValues, file));
-    // showResults(ModifiedFormValues);
   };
-  // const renderButton = ({  input,type,classes,sty,value}) => {
-
-  //   return (
-
-  //       <button {...input} type={type} className={classes} style={{...sty}} >{value}</button>
-
-  //   );
-  // };
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -260,10 +244,9 @@ console.log(file);
     <>
       <div className="user-account-edit-profile px-2 py-2">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-          <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4">
+          <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4 px-2">
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
-                children=""
                 variant="rounded"
                 alt="Travis Howard"
                 src={fileToPreview}

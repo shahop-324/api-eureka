@@ -92,8 +92,11 @@ export default function VerticalTabs() {
         console.log(newDate);
         if (new Date(event.endDate) <= newDate) {
           const now = new Date(event.startDate);
-          const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
+          const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
           // console.log(x);
+
+          const end = new Date(event.endDate);
+          const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
           return (
             <EventCard
@@ -106,6 +109,8 @@ export default function VerticalTabs() {
               id={event.id}
               showBtn={true}
               communityId={event.createdBy}
+              endDate={formatedEndDate}
+            rating={(event.communityRating * 1 ).toFixed(1)}
             />
           );
         }
@@ -128,7 +133,10 @@ export default function VerticalTabs() {
 
         if (new Date(event.endDate) <= date) {
           const now = new Date(event.startDate);
-          const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
+          const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+
+          const end = new Date(event.endDate);
+          const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
           
           return (
             <EventCard
@@ -141,6 +149,8 @@ export default function VerticalTabs() {
               id={event.id}
               showBtn={true}
               communityId={event.createdBy}
+              endDate={formatedEndDate}
+            rating={(event.communityRating * 1 ).toFixed(1)}
             />
           );
         }
@@ -154,7 +164,9 @@ export default function VerticalTabs() {
     if (registeredInEvents.length !== 0) {
       return registeredInEvents.map((event) => {
         const now = new Date(event.startDate);
-        const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
+        const end = new Date(event.endDate);
+        const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+        const formatedEndDate = dateFormat(end,"mmm dS, h:MM TT" );
 
         return (
           <EventCard
@@ -167,6 +179,8 @@ export default function VerticalTabs() {
             id={event.id}
             showBtn={true}
             communityId={event.createdBy}
+            endDate={formatedEndDate}
+            rating={(event.communityRating * 1 ).toFixed(1)}
           />
         );
       });
