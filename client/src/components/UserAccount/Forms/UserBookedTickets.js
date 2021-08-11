@@ -16,6 +16,9 @@ const UserBookedTickets = () => {
         // var newDate = new Date(date.setMonth(date.getMonth() + 1));
         // console.log(newDate);
 
+        const end = new Date(event.ednDate);
+        const formatedEndDate = dateFormat(end,  "mmmm dS, h:MM TT");
+
         const now = new Date(event.startDate);
         const formatedDate = dateFormat(now, "mmmm dS, h:MM TT");
 
@@ -30,6 +33,7 @@ const UserBookedTickets = () => {
             id={event.id}
             showBtn={true}
             communityId={event.createdBy}
+            endDate={formatedEndDate}
           />
         );
       });

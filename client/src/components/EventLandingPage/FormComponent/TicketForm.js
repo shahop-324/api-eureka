@@ -7,7 +7,6 @@ import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Link } from "react-router-dom";
 
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -29,7 +28,6 @@ const RoyalBlueRadio = withStyles({
 const TicketForm = ({ eventId, tickets, coupon }) => {
   console.log(tickets);
   console.log(eventId);
-  
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -73,17 +71,21 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
   const user = useSelector((state) => state.user.userDetails);
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const couponsArray = coupon && coupon.map((coupon) => {
-    return {
-      id: coupon.id,
-      code: coupon.discountCode,
-      percentage: coupon.discountPercentage,
-    };
-  });
+  const couponsArray =
+    coupon &&
+    coupon.map((coupon) => {
+      return {
+        id: coupon.id,
+        code: coupon.discountCode,
+        percentage: coupon.discountPercentage,
+      };
+    });
 
   const [factor, setFactor] = useState(1);
 
-  const [selectedTicket, setSelectedTicket] = React.useState(tickets[0] && tickets[0].id);
+  const [selectedTicket, setSelectedTicket] = React.useState(
+    tickets[0] && tickets[0].id
+  );
 
   const [couponText, setCouponText] = useState("");
 
@@ -170,7 +172,6 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
         alert(
           "Your registration was successful! Check your ticket in Email or Booked Tickets of user profile section."
         );
-        
       },
       prefill: {
         name: `${userDetails.firstName} ${userDetails.lastName}`,
@@ -209,20 +210,6 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       };
       document.body.appendChild(script);
     });
-
-    // console.log("Reserve Your spot button was clicked");
-
-    // let formValues = {};
-    // formValues.eventId = eventId;
-    // formValues.ticketId = selectedTicket;
-    // formValues.couponId =
-    //   couponToBeApplied && couponToBeApplied[0]
-    //     ? couponToBeApplied[0].id
-    //     : null;
-
-    // console.log(formValues);
-
-    // dispatch(getEventRegistrationCheckoutSession(formValues));
   };
 
   const renderTicketsList = (tickets) => {
@@ -232,16 +219,15 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       return (
         <div className="ticket-card mb-2 px-3 py-4">
           <div className="d-flex flex-row align-items-center">
-
-          <RoyalBlueRadio
-            color="primary"
-            style={{ fill: "#538BF7", maxHeight: "fit-content" }}
-            checked={selectedTicket === ticket.id}
-            onChange={handleChange}
-            value={ticket.id}
-            name="radio-button-demo"
-            inputProps={{ "aria-label": "A" }}
-          />
+            <RoyalBlueRadio
+              color="primary"
+              style={{ fill: "#538BF7", maxHeight: "fit-content" }}
+              checked={selectedTicket === ticket.id}
+              onChange={handleChange}
+              value={ticket.id}
+              name="radio-button-demo"
+              inputProps={{ "aria-label": "A" }}
+            />
           </div>
           <div className="ticket-name-and-description">
             <div className="ticket-name mb-1">{ticket.name}</div>
@@ -278,7 +264,12 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
 
       <hr className="mb-3" />
       <div className="mb-4">
-        <div className="got-a-coupon-code mb-3" style={{fontWeight: "500", fontFamily: "Inter" }}>Got a coupon code?</div>
+        <div
+          className="got-a-coupon-code mb-3"
+          style={{ fontWeight: "500", fontFamily: "Inter" }}
+        >
+          Got a coupon code?
+        </div>
         <div
           class="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
           style={{ width: "100%" }}
