@@ -17,7 +17,6 @@ import BoostYourEvents from "./../../../assets/images/section-9-home.png";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 
-
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 import Select from "react-select";
@@ -35,8 +34,6 @@ import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import TopNav from "../Helper/TopNav";
-
-
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -251,13 +248,10 @@ const Home = (props) => {
 
   const { error, isLoading } = useSelector((state) => state.demo);
 
-  
-
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const { handleSubmit, pristine, submitting } = props;
 
- 
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -291,7 +285,7 @@ const Home = (props) => {
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here goes Top Nav */}
-<TopNav />
+          <TopNav />
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
@@ -485,6 +479,9 @@ const Home = (props) => {
 
               <div className="action-btn-home">
                 <button
+                 onClick={() => {
+                  setOpenDrawer(true);
+                }}
                   type="button"
                   className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                   style={{
@@ -626,6 +623,9 @@ const Home = (props) => {
               <div className="action-btn-home  pt-5">
                 <button
                   type="button"
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                   className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
                     boxShadow:
@@ -674,6 +674,9 @@ const Home = (props) => {
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -761,6 +764,9 @@ const Home = (props) => {
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -812,6 +818,9 @@ const Home = (props) => {
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-light btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -940,6 +949,9 @@ const Home = (props) => {
                 <div className="action-btn-home py-3">
                   <button
                     type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
                     className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:

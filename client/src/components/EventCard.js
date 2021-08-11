@@ -17,6 +17,7 @@ const EventCard = ({
   maxPrice,
   showBtn,
   communityId,
+  rating
 }) => {
   const dispatch = useDispatch();
   const eventId = id;
@@ -40,7 +41,7 @@ const EventCard = ({
         <div className="d-flex flex-row align-items-center justify-content-between">
         <div className="event-card-date-main mb-3">{date} - {endDate}</div>
         <div className="rating-indicator px-3 py-2">
-          4.7
+          {rating}
         </div>
         </div>
         <div className="event-card-name-main mb-3">

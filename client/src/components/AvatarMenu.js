@@ -107,7 +107,7 @@ const AvatarMenu = () => {
             );
           }}
         >
-          <div className="avatar-menu-community-tab d-flex flex-row align-items-center">
+          <div className="avatar-menu-community-tab d-flex flex-row align-items-center" style={{maxWidth: "160px"}}>
             <Avatar
               className={`me-4`}
               variant="rounded"
@@ -144,7 +144,7 @@ const AvatarMenu = () => {
             zIndex: 10000,
             textAlign: "center",
             marginTop: "20px",
-            maxWidth: "250px",
+            // maxWidth: "250px",
             marginRight: "2.5rem",
           }}
           open={open}
