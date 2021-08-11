@@ -10,6 +10,7 @@ import { sponsorActions } from "../reducers/sponsorSlice";
 import { boothActions } from "../reducers/boothSlice";
 import { userActions } from "../reducers/userSlice";
 import history from "../history";
+
 import { googleAuthActions } from "../reducers/googleAuthSlice";
 import { communityAuthActions } from "../reducers/communityAuthSlice";
 import { networkingActions } from "../reducers/networkingSlice";
@@ -26,8 +27,10 @@ import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
 
-const BaseURL = "https://www.evenz.co.in/api-eureka/eureka/v1/";
-
+const { REACT_APP_MY_ENV_ } = process.env;
+const BaseURL = REACT_APP_MY_ENV_
+  ? "http://localhost:3000/api-eureka"
+  : "https://www.evenz.co.in/api-eureka";
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   console.log({ ...formValues });

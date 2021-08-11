@@ -111,25 +111,27 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.googleSignIn = catchAsync(async (req, res, next) => {
-  const { profile } = req.body;
-  console.log(profile);
+  // const { profile } = req.body;
+  // console.log(profile);
   // 1) Check if email and password exist
-  const existingUser = await User.findOne({ googleId: profile.id });
-  if (existingUser) {
-    //  we already have a record with the given profile ID
-    //done(null, existingUser);
+  console.log(req.body);
 
+  const existingUser = await User.findOne({ googleId: req.body.googleId });
+  if (existingUser) {
+    //  we already have a record with the given req.body ID
+    //done(null, existingUser);
+    console.log(existingUser);
     createSendToken(existingUser, 200, req, res);
   } else {
-    const newUser = await User.create({
+    const user = await new User({
+      googleId: req.body.googleId,
+      email: req.body.email,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      email: req.body.email,
-      initialisedAt: Date.now(),
-      //  password: req.body.password,
-
       policySigned: true,
-    });
+      subscribedToMailList: true,
+      image: req.body.image,
+    }).save({ validateModifiedOnly: true });
 
     const name = `${req.body.firstName} ${req.body.lastName}`;
     await MailList.create({
@@ -137,7 +139,7 @@ exports.googleSignIn = catchAsync(async (req, res, next) => {
       email: req.body.email,
     });
 
-    createSendToken(newUser, 201, req, res);
+    createSendToken(user, 201, req, res);
   }
 
   // 3) If everything is ok, send json web token to client

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { googleSignIn, signOut, errorTrackerForGoogleSignIn } from "../actions";
+import { googleSignIn } from "../actions";
 
 class GoogleAuth extends React.Component {
   componentDidMount() {
@@ -14,25 +14,33 @@ class GoogleAuth extends React.Component {
         .then(() => {
           this.auth = window.gapi.auth2.getAuthInstance();
 
-          // this.onAuthChange(this.auth.isSignedIn.get());
-          // this.auth.isSignedIn.listen(this.onAuthChange);
+          this.onAuthChange(this.auth.isSignedIn.get());
+          this.auth.isSignedIn.listen(this.onAuthChange);
         });
     });
   }
 
-  // onAuthChange = (isSignedIn) => {
-  //   if (isSignedIn) {
-  //     this.props.googleSignIn(this.auth.currentUser.get().getBasicProfile());
-  //   } else {
-  //     this.props.signOut();
-  //   }
-  // };
+  onAuthChange = (isSignedIn) => {
+    if (isSignedIn) {
+      let profile = this.auth.currentUser.get().getBasicProfile();
+
+      //this.props.googleSignIn();
+
+      const ModifiedFormValues = {};
+
+      ModifiedFormValues.firstName = profile.getGivenName();
+      ModifiedFormValues.lastName = profile.getFamilyName();
+      ModifiedFormValues.image = profile.getImageUrl();
+      ModifiedFormValues.googleId = profile.getId();
+      ModifiedFormValues.email = profile.getEmail();
+      this.props.googleSignIn(ModifiedFormValues);
+    } else {
+      this.props.signOut();
+    }
+  };
 
   onSignInClick = () => {
     this.auth.signIn();
-    if (this.auth.isSignedIn.get()) {
-      this.props.googleSignIn(this.auth.currentUser.get().getBasicProfile());
-    }
   };
 
   // onSignOutClick = () => {

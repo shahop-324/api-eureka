@@ -85,6 +85,7 @@
     "webfontloader": "^1.6.28"
   },
   "scripts": {
+    "start:dev": "REACT_APP_MY_ENV=development PORT=3001 react-scripts start",
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
