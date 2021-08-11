@@ -118,6 +118,7 @@ let priceToBeCharged = 0;
       },
     },
     async (err, order) => {
+      console.log(err);
       // console.log("userId", userId);
       // console.log("ticketId", ticketId);
       // console.log("eventId", eventId);

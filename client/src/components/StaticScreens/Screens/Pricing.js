@@ -63,8 +63,10 @@ const Pricing = () => {
       {
         method: "POST",
         body: JSON.stringify({
-          planDetails: selectedPlan,
-          planName: selectedPlan.name,
+          planDetails: {name: "Starter"},
+          planName: "Starter",
+          // planDetails: selectedPlan,
+          // planName: selectedPlan.name,
           communityId: selectedCommunity._id,
           userId: user._id,
         }),
