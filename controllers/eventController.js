@@ -406,6 +406,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     data: updatedSpeaker,
   });
 });
+
+
 exports.updateSession = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
   const sessionGettingUpdate = req.params.sessionId;

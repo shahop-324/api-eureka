@@ -144,7 +144,7 @@ const styles = {
 
 const EditSession = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const {error, isLoading} = useSelector((state) => state.session);
+  const { error, isLoading } = useSelector((state) => state.session);
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -182,6 +182,7 @@ const EditSession = (props) => {
     const categories = [];
 
     console.log(categories);
+    console.log(formValues);
 
     const ModifiedFormValues = {};
     ModifiedFormValues.name = formValues.name;
@@ -191,16 +192,28 @@ const EditSession = (props) => {
     ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
 
+    ModifiedFormValues.speaker = formValues.speaker.map((speaker) => {
+      return speaker.value;
+    });
+
     console.log(ModifiedFormValues);
     showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForEditSession());
     alert(error);
     return;

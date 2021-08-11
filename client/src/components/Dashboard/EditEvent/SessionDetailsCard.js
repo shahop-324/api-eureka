@@ -67,7 +67,7 @@ const SessionDetailCard = ({
   const renderSessionSpeakersList = (sessionSpeakers) => {
     return sessionSpeakers.map((speaker) => {
       return (
-        <Tooltip title={speaker.name} aria-label={speaker.name}>
+        <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
           <Avatar
             alt={speaker.name}
             src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}

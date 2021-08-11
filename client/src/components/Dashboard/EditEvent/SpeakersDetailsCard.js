@@ -26,8 +26,8 @@ const dispatch = useDispatch();
   };
 
   const handleEditSpeaker = () => {
-    dispatch(fetchParticularSpeakerOfEvent(id));
     setOpen(true);
+    dispatch(fetchParticularSpeakerOfEvent(id));
   };
 
   const handleClose = () => {

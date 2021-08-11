@@ -1,6 +1,6 @@
 import React from 'react';
-// import Avatar from '@material-ui/core/Avatar';
-// import Faker from 'faker';
+import Avatar from '@material-ui/core/Avatar';
+import Faker from 'faker';
 
 const SessionCard = ({
   startDate,
@@ -11,14 +11,15 @@ const SessionCard = ({
   speakerAvatarList,
   id
 }) => {
-  // const renderSpeakerAvatarList = () => {
-  //   if (speakerAvatarList.length !== 0) {
-  //     return speakerAvatarList.map((speaker) => {
-  //       return <Avatar alt={speaker.name} src={Faker.image.avatar()} />;
-  //     });
-  //   }
-  //   return <div />;
-  // };
+  const renderSpeakerAvatarList = (speakerAvatarList) => {
+    console.log(speakerAvatarList);
+    if (speakerAvatarList[0]) {
+      return speakerAvatarList.map((speaker) => {
+        return <Avatar alt={speaker.name} src={Faker.image.avatar()} />;
+      });
+    }
+    return <div />;
+  };
 
   return (
     <div key={id} className="session-card mb-3 px-3 py-4">
@@ -29,7 +30,7 @@ const SessionCard = ({
       <div className="session-description mb-2">{sessionDescription}</div>
 
       <div className="session-speakers-grid">
-        {/* {renderSpeakerAvatarList()} */}
+        {renderSpeakerAvatarList(speakerAvatarList)}
       </div>
     </div>
   );
