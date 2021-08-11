@@ -14,6 +14,28 @@ const renderError = ({ touched, error }) => {
     );
   }
 };
+
+const renderInputOldPass = ({
+  type,
+  placeholder,
+  input,
+  meta,
+
+  classes,
+}) => {
+  return (
+    <div>
+      <input
+        type={type}
+        placeholder={placeholder}
+        {...input}
+        className={classes}
+        required
+      />
+      {renderError(meta)}
+    </div>
+  );
+};
 const renderInput = ({
   type,
   placeholder,
@@ -60,18 +82,22 @@ const ResetPasswordAndDeactivation = (props) => {
                 name="oldPass"
                 type="password"
                 classes="form-control mb-1"
-                component={renderInput}
+                component={renderInputOldPass}
                 placeholder="Old password"
               />
 
               <small
                 id="emailHelp"
                 class="form-text"
-                style={{ color: "#538BF7", cursor: "pointer", fontWeight: "500", fontFamily: "Inter" }}
+                style={{
+                  color: "#538BF7",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                  fontFamily: "Inter",
+                }}
               >
                 <Link to="/forgot-password" style={{ textDecoration: "none" }}>
-                
-                Forgot Password?
+                  Forgot Password?
                 </Link>
               </small>
             </div>
