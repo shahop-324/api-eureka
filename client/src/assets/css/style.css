@@ -709,7 +709,6 @@ html {
 .event-landing-secondary-nav {
   border-bottom: 1px solid #414141;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .event-landing-secondary-nav-item {

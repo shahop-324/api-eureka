@@ -163,12 +163,12 @@ const EventLandingPage = (props) => {
   // };
 
   const { userDetails } = useSelector((state) => state.user);
-
-  let event = useSelector((state) => {
-    return state.event.events.find((event) => {
-      return event.id === id;
-    });
-  });
+let event=useSelector((state)=>state.event.eventDetails)
+  // let event = useSelector((state) => {
+  //   return state.event.events.find((event) => {
+  //     return event.id === id;
+  //   });
+  // });
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -188,7 +188,7 @@ const EventLandingPage = (props) => {
 
     return;
   }
- 
+
   console.log(event);
 
   const handleQueryText = (event) => {
@@ -210,6 +210,51 @@ const EventLandingPage = (props) => {
     setState({ openSuccess: true, vertical: "top", horizontal: "center" });
   };
 
+  let col = 2;
+  let secNavCol = "1fr 1fr 1fr 1fr 1fr";
+  let sessionIsPresent = false; // Session will always be there!
+  let speakerIsPresent = false;
+  let sponsorIsPresent = false;
+  let boothsIsPresent = false;
+
+  let diamondIsPresent = false;
+  let platinumIsPresent = false;
+  let goldIsPresent = false;
+
+  console.log(event.speaker);
+
+  event.session[0] && (sessionIsPresent = true);
+  event.speaker[0] && (speakerIsPresent = true);
+  event.sponsors[0] && (sponsorIsPresent = true);
+  event.booths[0] && (boothsIsPresent = true);
+
+  if (speakerIsPresent) {
+    col = col + 1;
+  }
+  if (sponsorIsPresent) {
+    col = col + 1;
+  }
+  if (boothsIsPresent) {
+    col = col + 1;
+  }
+
+  switch (col) {
+    case 2:
+      secNavCol = "1fr 1fr";
+      break;
+    case 3:
+      secNavCol = "1fr 1fr 1fr";
+      break;
+    case 4:
+      secNavCol = "1fr 1fr 1fr 1fr";
+      break;
+    case 5:
+      secNavCol = "1fr 1fr 1fr 1fr 1fr";
+      break;
+    default:
+      secNavCol = "1fr 1fr 1fr 1fr 1fr";
+  }
+
   const renderSessionList = () => {
     return event.session.map((session) => {
       let startDate = new Date(session.startDate);
@@ -218,6 +263,7 @@ const EventLandingPage = (props) => {
       startTime = dateFormat("h:MM TT");
       let endTime = new Date(session.startTime);
       endTime = dateFormat("h:MM TT");
+      console.log(session.speaker)
       return (
         <SessionCard
           startDate={startDate}
@@ -231,6 +277,7 @@ const EventLandingPage = (props) => {
       );
     });
   };
+
   const renderSpeakerList = () => {
     return event.speaker.map((speaker) => {
       return (
@@ -244,10 +291,11 @@ const EventLandingPage = (props) => {
       );
     });
   };
-  // <DiamondSponsorCard />
+
   const renderDiamondSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       if (sponsor.status === "Diamond") {
+        diamondIsPresent = true;
         return <DiamondSponsorCard id={sponsor.id} />;
       }
       return <></>;
@@ -256,6 +304,7 @@ const EventLandingPage = (props) => {
   const renderPlatinumSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       if (sponsor.status === "Platinum") {
+        platinumIsPresent = true;
         return <PlatinumSponsorCard id={sponsor.id} />;
       }
       return <></>;
@@ -264,6 +313,7 @@ const EventLandingPage = (props) => {
   const renderGoldSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       if (sponsor.status === "Gold") {
+        goldIsPresent = true;
         return <GoldSponsorCard id={sponsor.id} />;
       }
       return <></>;
@@ -457,7 +507,11 @@ const EventLandingPage = (props) => {
 
               <div
                 className="event-landing-secondary-nav mb-3"
-                style={{ position: "sticky", top: "2rem" }}
+                style={{
+                  position: "sticky",
+                  top: "2rem",
+                  gridTemplateColumns: secNavCol,
+                }}
               >
                 <a
                   onClick={() => {
@@ -495,60 +549,72 @@ const EventLandingPage = (props) => {
                     Schedule
                   </div>
                 </a>
-                <a
-                  onClick={() => {
-                    handleSecNav(2);
-                  }}
-                  href="#speakers-section"
-                  style={{ textDecoration: "none", fontWeight: "600" }}
-                >
-                  <div
-                    className={`event-landing-secondary-nav-item  ${
-                      selectedSection === 2
-                        ? "active-secondary-nav-item py-1"
-                        : ""
-                    }`}
-                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                {speakerIsPresent ? (
+                  <a
+                    onClick={() => {
+                      handleSecNav(2);
+                    }}
+                    href="#speakers-section"
+                    style={{ textDecoration: "none", fontWeight: "600" }}
                   >
-                    Speakers
-                  </div>
-                </a>
-                <a
-                  onClick={() => {
-                    handleSecNav(3);
-                  }}
-                  href="#sponsors-section"
-                  style={{ textDecoration: "none", fontWeight: "600" }}
-                >
-                  <div
-                    className={`event-landing-secondary-nav-item  ${
-                      selectedSection === 3
-                        ? "active-secondary-nav-item py-1"
-                        : ""
-                    }`}
-                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    <div
+                      className={`event-landing-secondary-nav-item  ${
+                        selectedSection === 2
+                          ? "active-secondary-nav-item py-1"
+                          : ""
+                      }`}
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    >
+                      Speakers
+                    </div>
+                  </a>
+                ) : (
+                  <></>
+                )}
+                {sponsorIsPresent ? (
+                  <a
+                    onClick={() => {
+                      handleSecNav(3);
+                    }}
+                    href="#sponsors-section"
+                    style={{ textDecoration: "none", fontWeight: "600" }}
                   >
-                    Sponsors
-                  </div>
-                </a>
-                <a
-                  onClick={() => {
-                    handleSecNav(4);
-                  }}
-                  href="#booths-section"
-                  style={{ textDecoration: "none", fontWeight: "600" }}
-                >
-                  <div
-                    className={`event-landing-secondary-nav-item  ${
-                      selectedSection === 4
-                        ? "active-secondary-nav-item py-1"
-                        : ""
-                    }`}
-                    style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    <div
+                      className={`event-landing-secondary-nav-item  ${
+                        selectedSection === 3
+                          ? "active-secondary-nav-item py-1"
+                          : ""
+                      }`}
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    >
+                      Sponsors
+                    </div>
+                  </a>
+                ) : (
+                  <></>
+                )}
+                {boothsIsPresent ? (
+                  <a
+                    onClick={() => {
+                      handleSecNav(4);
+                    }}
+                    href="#booths-section"
+                    style={{ textDecoration: "none", fontWeight: "600" }}
                   >
-                    Booths
-                  </div>
-                </a>
+                    <div
+                      className={`event-landing-secondary-nav-item  ${
+                        selectedSection === 4
+                          ? "active-secondary-nav-item py-1"
+                          : ""
+                      }`}
+                      style={{ fontFamily: "Inter", fontWeight: "500" }}
+                    >
+                      Booths
+                    </div>
+                  </a>
+                ) : (
+                  <></>
+                )}
               </div>
 
               <div
@@ -563,119 +629,161 @@ const EventLandingPage = (props) => {
 
               <hr className="my-5" />
 
-              <div
-                className="schedule-section mb-5 mt-3 pt-4"
-                id="schedule-section"
-              >
-                <div className="event-landing-page-section-headline mb-5">
-                  <div className="section-headline">Schedule</div>
+              {sessionIsPresent ? (
+                <>
+                <div
+                  className="schedule-section mb-5 mt-3 pt-4"
+                  id="schedule-section"
+                >
+                  <div className="event-landing-page-section-headline mb-5">
+                    <div className="section-headline">Schedule</div>
+                  </div>
+
+                  <div className="session-card-row ">{renderSessionList()}</div>
                 </div>
+                 <hr className="my-5" />
+                </>
+              ) : (
+                <div></div>
+              )}
 
-                <div className="session-card-row ">{renderSessionList()}</div>
-              </div>
+             
 
-              <hr className="my-5" />
+              {speakerIsPresent ? (
 
-              <div
-                className="speakers-section mb-3 mt-3 pt-4"
-                id="speakers-section"
-              >
-                <div className="event-landing-page-section-headline mb-5">
-                  <div className="section-headline">Speakers</div>
+                <> 
+                <div
+                  className="speakers-section mb-3 mt-3 pt-4"
+                  id="speakers-section"
+                >
+                  <div className="event-landing-page-section-headline mb-5">
+                    <div className="section-headline">Speakers</div>
+                  </div>
+                  <div className="speakers-card-grid">
+                    {renderSpeakerList()}
+                  </div>
                 </div>
-                <div className="speakers-card-grid">{renderSpeakerList()}</div>
-              </div>
+                
+                <hr className="my-5" />
 
-              <hr className="my-5" />
+                 </>
+              ) : (
+                <div></div>
+              )}
 
-              <div
-                className="sponsor-section mb-3 mt-3 pt-4"
-                id="sponsors-section"
-              >
-                <div className="event-landing-page-section-headline mb-5">
-                  <div className="section-headline">Sponsors</div>
-                </div>
+              
 
-                <div className="diamond-sponsors mb-3">
-                  <div className="diamond-sponsor-headline mb-4">
-                    <hr style={{ color: "#538BF7" }} />
-                    <div
-                      style={{
-                        justifySelf: "center",
-                        alignSelf: "center",
-                        font: "normal normal normal 1rem/1.5rem Helvetica",
-                        letterSpacing: "0.38px",
-                        color: "#414141",
-                      }}
-                    >
-                      Diamond
+              {sponsorIsPresent ? (
+                <div
+                  className="sponsor-section mb-3 mt-3 pt-4"
+                  id="sponsors-section"
+                >
+                  <div className="event-landing-page-section-headline mb-5">
+                    <div className="section-headline">Sponsors</div>
+                  </div>
+
+                  {diamondIsPresent ? (
+                    <div className="diamond-sponsors mb-3">
+                      <div className="diamond-sponsor-headline mb-4">
+                        <hr style={{ color: "#538BF7" }} />
+                        <div
+                          style={{
+                            justifySelf: "center",
+                            alignSelf: "center",
+                            font: "normal normal normal 1rem/1.5rem Helvetica",
+                            letterSpacing: "0.38px",
+                            color: "#414141",
+                          }}
+                        >
+                          Diamond
+                        </div>
+                        <hr style={{ color: "#538BF7" }} />
+                      </div>
+
+                      <div className="diamond-sponsor-card-grid">
+                        {renderDiamondSponsorCard()}
+                      </div>
                     </div>
-                    <hr style={{ color: "#538BF7" }} />
-                  </div>
+                  ) : (
+                    <div></div>
+                  )}
 
-                  <div className="diamond-sponsor-card-grid">
-                    {renderDiamondSponsorCard()}
-                  </div>
-                </div>
+                  {platinumIsPresent ? (
+                    <div className="platinum-sponsors mb-3">
+                      <div className="platinum-sponsor-headline mb-4">
+                        <hr style={{ color: "#E6B822" }} />
+                        <div
+                          style={{
+                            justifySelf: "center",
+                            alignSelf: "center",
+                            font: "normal normal normal 1rem/1.5rem Helvetica",
+                            letterSpacing: "0.38px",
+                            color: "#414141",
+                          }}
+                        >
+                          Platinum
+                        </div>
+                        <hr style={{ color: "#E6B822" }} />
+                      </div>
 
-                <div className="platinum-sponsors mb-3">
-                  <div className="platinum-sponsor-headline mb-4">
-                    <hr style={{ color: "#E6B822" }} />
-                    <div
-                      style={{
-                        justifySelf: "center",
-                        alignSelf: "center",
-                        font: "normal normal normal 1rem/1.5rem Helvetica",
-                        letterSpacing: "0.38px",
-                        color: "#414141",
-                      }}
-                    >
-                      Platinum
+                      <div className="platinum-sponsor-card-grid">
+                        {renderPlatinumSponsorCard()}
+                      </div>
                     </div>
-                    <hr style={{ color: "#E6B822" }} />
-                  </div>
+                  ) : (
+                    <div></div>
+                  )}
 
-                  <div className="platinum-sponsor-card-grid">
-                    {renderPlatinumSponsorCard()}
-                  </div>
-                </div>
+                  {goldIsPresent ? (
+                    <div className="gold-sponsors mb-3">
+                      <div className="gold-sponsor-headline mb-4">
+                        <hr style={{ color: "#94952D" }} />
+                        <div
+                          style={{
+                            justifySelf: "center",
+                            alignSelf: "center",
+                            font: "normal normal normal 1rem/1.5rem Helvetica",
+                            letterSpacing: "0.38px",
+                            color: "#414141",
+                          }}
+                        >
+                          Gold
+                        </div>
+                        <hr style={{ color: "#DADD26" }} />
+                      </div>
 
-                <div className="gold-sponsors mb-3">
-                  <div className="gold-sponsor-headline mb-4">
-                    <hr style={{ color: "#94952D" }} />
-                    <div
-                      style={{
-                        justifySelf: "center",
-                        alignSelf: "center",
-                        font: "normal normal normal 1rem/1.5rem Helvetica",
-                        letterSpacing: "0.38px",
-                        color: "#414141",
-                      }}
-                    >
-                      Gold
+                      <div className="gold-sponsor-card-grid">
+                        {renderGoldSponsorCard()}
+                      </div>
                     </div>
-                    <hr style={{ color: "#DADD26" }} />
-                  </div>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              ) : (
+                <div></div>
+              )}
 
-                  <div className="gold-sponsor-card-grid">
-                    {renderGoldSponsorCard()}
+              {boothsIsPresent ? (
+                <div
+                  className="booth-section mb-3 mt-3 pt-4 ps-0 ms-0"
+                  id="booths-section"
+                >
+                  <div className="event-landing-page-section-headline mb-5">
+                    <div
+                      className="section-headline"
+                      style={{ fontSize: "1.8rem" }}
+                    >
+                      Booths
+                    </div>
+                  </div>
+                  <div className="booth-section-card-grid">
+                    {renderBoothCardList()}
                   </div>
                 </div>
-              </div>
-
-              <div className="booth-section mb-3 mt-3 pt-4" id="booths-section">
-                <div className="event-landing-page-section-headline mb-5">
-                  <div
-                    className="section-headline"
-                    style={{ fontSize: "1.8rem" }}
-                  >
-                    Booths
-                  </div>
-                </div>
-                <div className="booth-section-card-grid">
-                  {renderBoothCardList()}
-                </div>
-              </div>
+              ) : (
+                <div></div>
+              )}
             </div>
             <div className="event-landing-other-info">
               <div className="event-info-card-1">
