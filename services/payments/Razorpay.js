@@ -112,13 +112,15 @@ let priceToBeCharged = 0;
       notes: {
         userId: userId,
         planName: planName,
-        planDetails: planDetails,
         communityId: communityId,
         transactionType: "community plan purchase",
       },
     },
     async (err, order) => {
-      console.log(err);
+
+      if(err) {
+        console.log(err);
+      }
       // console.log("userId", userId);
       // console.log("ticketId", ticketId);
       // console.log("eventId", eventId);
@@ -141,9 +143,6 @@ let priceToBeCharged = 0;
       });
     }
   );
-
-
-
 });
 
 

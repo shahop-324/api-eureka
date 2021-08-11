@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Footer from "../../Footer";
 
 import "./../Styles/pricing.scss";
-import Faker from "faker";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
@@ -21,58 +20,63 @@ import {
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import YouHaveNoEventComing from "../../UserAccount/YouHaveNoEventsComing";
 import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
+import dateFormat from 'dateformat';
 
 const basicPlan = {
   name: "Basic",
+  price: "0",
   details: [
-    '1 organiser',
-    '100 registrations',
-    '4 hours event length',
-    'Ticketing and payment processing',
-    '1 Event Per Month',
-  ]
+    "1 organiser",
+    "100 registrations",
+    "4 hours event length",
+    "Ticketing and payment processing",
+    "1 Event Per Month",
+  ],
 };
 const starterPlan = {
   name: "Starter",
+  price: "49",
   details: [
-    '2 organiser',
-    '300 registrations',
-    '24 hours event length',
-    'Ticketing and payment processing',
-    '3 Event Per Month',
-    'Unlimited Coupons',
-    'Access to queries & Reviews',
-    'Basic Analytics',
-    'Sharable event recordings',
-  ]
+    "2 organiser",
+    "300 registrations",
+    "24 hours event length",
+    "Ticketing and payment processing",
+    "3 Event Per Month",
+    "Unlimited Coupons",
+    "Access to queries & Reviews",
+    "Basic Analytics",
+    "Sharable event recordings",
+  ],
 };
 const professionalPlan = {
   name: "Professional",
+  price: "99",
   details: [
-    '5 organiser',
-    '1200 registrations',
-    '72 hours event length',
-    'Ticketing and payment processing',
-    'SEO Optimized Landing page',
-    '5 Event Per Month',
-    'Unlimited Coupons',
-    'Access to queries & Reviews',
-    'Basic Analytics',
-    'Sharable event recordings',
-    'Stage Customisation',
-    'RTMP & Custom streaming',
-    'Full access to networking & booths',
-    'Marketing tools',
-    'Access to integrations',
-    'Real Time Analytics',
-    'Custom registration form',
-    'Sponsors and shoutouts',
-    'email customisation'
-  ]
+    "5 organiser",
+    "1200 registrations",
+    "72 hours event length",
+    "Ticketing and payment processing",
+    "SEO Optimized Landing page",
+    "5 Event Per Month",
+    "Unlimited Coupons",
+    "Access to queries & Reviews",
+    "Basic Analytics",
+    "Sharable event recordings",
+    "Stage Customisation",
+    "RTMP & Custom streaming",
+    "Full access to networking & booths",
+    "Marketing tools",
+    "Access to integrations",
+    "Real Time Analytics",
+    "Custom registration form",
+    "Sponsors and shoutouts",
+    "email customisation",
+  ],
 };
+
+const expirationDate = dateFormat(Date.now() + 30*24*60*60*1000);
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -92,7 +96,7 @@ const Pricing = () => {
   const userDetails = useSelector((state) => state.user.userDetails);
 
   const [selectedCommunity, setSelectedCommunity] = useState(
-    communities[0] && communities[0].id
+    communities && communities[0]
   );
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
@@ -115,11 +119,10 @@ const Pricing = () => {
       {
         method: "POST",
         body: JSON.stringify({
-          // planDetails: {name: "Starter"},
-          planName: "Starter",
-          // planDetails: selectedPlan,
-          // planName: selectedPlan.name,
-          communityId: selectedCommunity,
+          planName: selectedPlan.name,
+          planDetails: selectedPlan,
+          communityId: selectedCommunity._id,
+          transaction_type: "community_plan",
           userId: user._id,
         }),
 
@@ -200,9 +203,9 @@ const Pricing = () => {
             <RoyalBlueRadio
               color="primary"
               style={{ fill: "#538BF7", maxHeight: "fit-content" }}
-              checked={selectedCommunity === community.id}
+              checked={selectedCommunity === community}
               onChange={handleChange}
-              value={community.id}
+              value={selectedCommunity}
               name="radio-button-demo"
               inputProps={{ "aria-label": "A" }}
             />
@@ -212,6 +215,21 @@ const Pricing = () => {
             <div className="ticket-name mb-1">{name}</div>
           </div>
         </div>
+      );
+    });
+  };
+
+  const renderOrderSummaryList = (selectedPlan) => {
+    return selectedPlan.details.map((detail) => {
+      return (
+        <>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">{detail}</div>
+          </div>
+        </>
       );
     });
   };
@@ -235,6 +253,8 @@ const Pricing = () => {
       />
     );
   };
+
+  console.log(selectedCommunity);
 
   const { isSignedIn } = useSelector((state) => state.auth);
 
@@ -321,7 +341,7 @@ const Pricing = () => {
                   <button
                     onClick={() => {
                       isSignedIn
-                        ? handleOpenCommunityList()
+                        ? handleOpenCommunityList(basicPlan)
                         : history.push("/login/buy-plan/?intent=buyPlan");
                     }}
                     class="card__button btn btn-outline-primary btn-outline-text"
@@ -428,7 +448,7 @@ const Pricing = () => {
                   <button
                     onClick={() => {
                       isSignedIn
-                        ? handleOpenCommunityList()
+                        ? handleOpenCommunityList(starterPlan)
                         : history.push("/login/buy-plan/?intent=buyPlan");
                     }}
                     class="card__button btn btn-outline-primary btn-outline-text"
@@ -557,7 +577,7 @@ const Pricing = () => {
                   <button
                     onClick={() => {
                       isSignedIn
-                        ? handleOpenCommunityList()
+                        ? handleOpenCommunityList(professionalPlan)
                         : history.push("/login/buy-plan/?intent=buyPlan");
                     }}
                     class="card__button btn btn-primary btn-outline-text"
@@ -728,55 +748,56 @@ const Pricing = () => {
         open={openCommunityList}
         aria-labelledby="responsive-dialog-title"
       >
-        <div style={{height: "100%"}} className="d-flex flex-column">
+        <div style={{ height: "100%" }} className="d-flex flex-column">
+          <div
+            className="select-community-list px-3 py-4 d-flex flex-column justify-content-center"
+            style={{ minWidth: "480px" }}
+          >
+            <div className="select-community-heading">
+              Select Your community
+            </div>
+            {communities ? (
+              renderCommunitiesList(communities)
+            ) : (
+              <>
+                <div className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5">
+                  <img src={Bored} alt="Bored" className="mb-4" />
+                  <div className="you-have-no-event-coming-text mb-4">
+                    You have not created or joined any community yet.
+                  </div>
 
-        <div
-          className="select-community-list px-3 py-4 d-flex flex-column justify-content-center"
-          style={{ minWidth: "480px" }}
-        >
-          <div className="select-community-heading">Select Your community</div>
-          {communities ? (
-            renderCommunitiesList(communities)
-          ) : (
-            <>
-              <div className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5">
-                <img src={Bored} alt="Bored" className="mb-4" />
-                <div className="you-have-no-event-coming-text mb-4">
-                  You have not created or joined any community yet.
+                  <Link
+                    to={"/user/home"}
+                    className="btn btn-text-customised btn-color-customised btn-primary btn-outline-text"
+                  >
+                    Create New Community
+                  </Link>
                 </div>
+              </>
+            )}
 
-                <Link
-                  to={"/user/home"}
-                  className="btn btn-text-customised btn-color-customised btn-primary btn-outline-text"
-                >
-                  Create New Community
-                </Link>
-              </div>
-            </>
-          )}
-
-          <div className="d-flex flex-row align-items-center justify-content-center mt-2">
-            <button
-              onClick={() => {
-                setOpenDrawer(true);
-                handleCloseCommunityList();
-              }}
-              className="btn btn-primary btn-outline-text me-2"
-              style={{ width: "100%" }}
-            >
-              Proceed
-            </button>
-            <button
-              onClick={() => {
-                handleCloseCommunityList();
-              }}
-              className="btn btn-outline-primary btn-outline-text me-2"
-              style={{ width: "100%" }}
-            >
-              Cancel
-            </button>
+            <div className="d-flex flex-row align-items-center justify-content-center mt-2">
+              <button
+                onClick={() => {
+                  setOpenDrawer(true);
+                  handleCloseCommunityList();
+                }}
+                className="btn btn-primary btn-outline-text me-2"
+                style={{ width: "100%" }}
+              >
+                Proceed
+              </button>
+              <button
+                onClick={() => {
+                  handleCloseCommunityList();
+                }}
+                className="btn btn-outline-primary btn-outline-text me-2"
+                style={{ width: "100%" }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </Dialog>
 
@@ -804,17 +825,25 @@ const Pricing = () => {
             <div className="side-drawer-more-details-content-section">
               <div className="side-drawer-content-row mb-4">
                 <div className="content-heading btn-outline-text">
+                  Community Name
+                </div>
+                <div className="side-drawer-main-content-text ms-5 ps-5">
+                  { selectedCommunity && selectedCommunity.name}
+                </div>
+              </div>
+              <div className="side-drawer-content-row mb-4">
+                <div className="content-heading btn-outline-text">
                   Plan Name
                 </div>
                 <div className="side-drawer-main-content-text ms-5 ps-5">
-                  Basics
+                  {selectedPlan && selectedPlan.name}
                 </div>
               </div>
 
               <div className="side-drawer-content-row mb-4">
                 <div className="content-heading btn-outline-text">Price</div>
                 <div className="side-drawer-main-content-text ms-5 ps-5">
-                  99 USD /
+                {selectedPlan && selectedPlan.price} USD /
                   <div className="plan-tax-text">month + applicable Tax</div>
                 </div>
               </div>
@@ -824,73 +853,10 @@ const Pricing = () => {
               </div>
 
               <div className="plan-features-offered-list">
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">2 organizer included</div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    12000 registrations included per year
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Full access to Evenz Event Platform
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">72 hours of streaming</div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Livestream and custom RTMP{" "}
-                  </div>
-                </div>
-
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    SEO-optimized event registration pages{" "}
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Ticketing and payment processing{" "}
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Event Analytics Dashboard
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">Unlimited Events</div>
-                </div>
+                
+                { selectedPlan && renderOrderSummaryList(selectedPlan)}
+                
+                
               </div>
 
               <div
@@ -902,9 +868,9 @@ const Pricing = () => {
                 }}
               >
                 Your plan will start immediately after this checkout and will
-                end on 23 Aug 2021. <br />{" "}
+                end on {expirationDate}. <br />{" "}
                 <div className="my-1">
-                  By continuing, you agree to follow evenz terms & conditions
+                  By continuing, you agree to follow Evenz <Link to="/terms-of-service">Terms & Conditions</Link> 
                   for communities.
                 </div>{" "}
               </div>
@@ -912,7 +878,7 @@ const Pricing = () => {
               <div style={{ width: "100%" }}>
                 <button
                   onClick={() => {
-                    displayRazorpay();
+                    selectedPlan.name !== "Basic" ? displayRazorpay() : alert("Successfully switched to free plan.");
                     setOpenDrawer(false);
                   }}
                   type="button"
