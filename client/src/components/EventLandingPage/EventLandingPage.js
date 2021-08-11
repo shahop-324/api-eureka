@@ -164,11 +164,6 @@ const EventLandingPage = (props) => {
 
   const { userDetails } = useSelector((state) => state.user);
 let event=useSelector((state)=>state.event.eventDetails)
-  // let event = useSelector((state) => {
-  //   return state.event.events.find((event) => {
-  //     return event.id === id;
-  //   });
-  // });
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -273,6 +268,7 @@ let event=useSelector((state)=>state.event.eventDetails)
           sessionDescription={session.description}
           speakerAvatarList={session.speaker}
           id={session.id}
+          
         />
       );
     });
@@ -284,9 +280,10 @@ let event=useSelector((state)=>state.event.eventDetails)
         <SpeakerCard
           firstName={speaker.firstName}
           lastName={speaker.lastName}
-          bio={speaker.bio}
+          bio={`${speaker.designation} at ${speaker.organisation}`}
           speakerSocialHandles={speaker.socialMediaHandles}
           id={speaker.id}
+          imgURL={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
         />
       );
     });

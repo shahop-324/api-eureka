@@ -1615,3 +1615,9 @@ html {
 .form-control:focus {
   border: 1px solid #162e5c;
 }
+
+@media only screen and (min-width: 1560px) {
+  .event-landing-grid {
+    grid-template-columns: 0.8fr 6.5fr 5fr;
+  }
+}
