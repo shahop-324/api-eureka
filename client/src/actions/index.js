@@ -140,8 +140,6 @@ export const signOut = () => async (dispatch, getState) => {
       });
   });
 
-  //window.gapi.auth2.getAuthInstance().
-
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
 

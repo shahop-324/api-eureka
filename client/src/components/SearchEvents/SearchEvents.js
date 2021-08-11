@@ -201,6 +201,7 @@ const SearchEvents = () => {
           minPrice={event.minTicketPrice}
           maxPrice={event.maxTicketPrice}
           key={event.id}
+          rating={(event.communityRating * 1.0).toFixed(1)}
         />
       );
     });
@@ -283,10 +284,9 @@ const SearchEvents = () => {
         <div className="row nav-section">
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              <span class="navbar-brand" style={{ color: "#538BF7" }}>
+              <Link to="/home" class="navbar-brand" style={{ color: "#538BF7", textDecoration: "none" }}>
                 Evenz
-              </span>
-
+              </Link>
               <button
                 class="navbar-toggler"
                 type="button"

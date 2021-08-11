@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './../index.css';
 
@@ -26,7 +27,7 @@ const PreFooter = () => {
                      borderRadius: "15px",
                   }}
                 >
-                  Host a free event
+                 <Link to="/signup" style={{textDecoration: "none", color: "#000000"}}>Host a free event</Link> 
                 </button>
             </div>
           </div>

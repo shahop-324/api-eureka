@@ -121,7 +121,7 @@ const Pricing = () => {
         body: JSON.stringify({
           planName: selectedPlan.name,
           planDetails: selectedPlan,
-          communityId: selectedCommunity._id,
+          communityId: selectedCommunity,
           transaction_type: "community_plan",
           userId: user._id,
         }),
@@ -203,9 +203,9 @@ const Pricing = () => {
             <RoyalBlueRadio
               color="primary"
               style={{ fill: "#538BF7", maxHeight: "fit-content" }}
-              checked={selectedCommunity === community}
+              checked={selectedCommunity === community._id}
               onChange={handleChange}
-              value={selectedCommunity}
+              value={community._id}
               name="radio-button-demo"
               inputProps={{ "aria-label": "A" }}
             />
@@ -823,14 +823,7 @@ const Pricing = () => {
               <hr />
             </div>
             <div className="side-drawer-more-details-content-section">
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Community Name
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  { selectedCommunity && selectedCommunity.name}
-                </div>
-              </div>
+              
               <div className="side-drawer-content-row mb-4">
                 <div className="content-heading btn-outline-text">
                   Plan Name
