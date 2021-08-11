@@ -42,7 +42,7 @@ const TopNav = () => {
         className="row nav-section"
         style={{ marginLeft: "auto", marginRight: "auto" }}
       >
-        <nav class="navbar navbar-expand-xxl navbar-light">
+        <nav class="navbar navbar-expand-xxl navbar-light pt-3">
           <div class="container">
             {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
             <span class="navbar-brand nav-brand-name-home">
@@ -245,15 +245,13 @@ const TopNav = () => {
                 href="/signin"
                 type="button"
                 style={{ width: "100%" }}
-                className=" btn btn-primary btn-outline-text me-4 mt-4"
+                className=" btn btn-light btn-outline-text"
               >
                 Login
               </a> : <AvatarMenu />  }
                 </li>
 
-                <li class="nav-item" style={{ alignSelf: "center" }}>
-                  {/* <AvatarMenu /> */}
-                </li>
+                
               </ul>
             </div>
           </div>
