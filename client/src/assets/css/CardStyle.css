@@ -118,3 +118,11 @@ color: #FFFFFF;
   cursor: pointer;
   /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.2)); */
 }
+
+.rating-indicator  {
+  background-color: #538BF7;
+  border-radius: 5px;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.8rem;
+}

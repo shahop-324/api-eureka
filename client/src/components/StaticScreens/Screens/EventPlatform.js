@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 
-import EditEventHero from "./../../../assets/images/editEventHero@2x.png";
-import EditTicketsHero from "./../../../assets/images/ticketsHero@2x.png";
-import RegistrationsHero from "./../../../assets/images/registrationsHero@2x.png";
-import ReviewsHero from "./../../../assets/images/reviews@2x.png";
+import EventPlatformHero from "./../../../assets/images/eventPlatformHero@2x.png";
+import EventVenueHero from "./../../../assets/images/eventVenueHero@2x.png";
+import ScheduleHero from "./../../../assets/images/scheduleHero@2x.png";
+import AdditionalEventSettingsHero from "./../../../assets/images/additionalEventSettings@2x.png";
+
 import CouponsHero from "./../../../assets/images/Coupons@2x.png";
 import TradeShow from "./../../../assets/images/tradeShow.png";
-
 
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
@@ -52,6 +52,7 @@ import BuildIcon from "@material-ui/icons/Build";
 import AirplayIcon from "@material-ui/icons/Airplay";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import CallMergeIcon from "@material-ui/icons/CallMerge";
+import PreFooter from "../../PreFooter";
 import TopNav from "../Helper/TopNav";
 
 const options = [
@@ -194,9 +195,7 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-
-
-const EventManagementHome = (props) => {
+const EventPlatformHome = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -258,21 +257,19 @@ const EventManagementHome = (props) => {
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}
-
           <TopNav />
 
-          <div className="header-content-section d-flex">
+          <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
-              <div
-                className="grid-1-of-2 pe-5 me-5"
-                style={{ maxWidth: "560px", justifySelf: "end" }}
-              >
+              <div className="grid-1-of-2">
                 <div className="header-main-heading-and-action-btn">
                   <div
                     className="hero-heading mb-5"
                     style={{ lineHeight: "4rem" }}
                   >
-                    Build to help you seamlessly manage all your events.
+                    Virtual venue for a
+                    <br />
+                    Delightful experience.
                   </div>
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
@@ -299,7 +296,7 @@ const EventManagementHome = (props) => {
                 <img
                   className="section-hero-img"
                   data-aos="zoom-in"
-                  src={EditEventHero}
+                  src={EventPlatformHero}
                   alt="home-hero"
                 />
               </div>
@@ -313,19 +310,18 @@ const EventManagementHome = (props) => {
           style={{ height: "auto" }}
         >
           <div className="centered-heading-primary mb-5">
-            Tools Catered with your <br />
-            needs in mind
+            Experience that lasts
           </div>
           <div className="centered-heading-secondary mb-5">
-            From inviting speakers, sponsors, booths, attendees, managing teams,
-            ticketing to getting feedback
-            <br /> and sharing recordings post event, we do it all for you. So,
-            you don’t have to. peacefully.
+            We have carefully designed and developed virtual venue to suit your
+            requirements and
+            <br /> Provide a delightful and satisfactory experience for
+            everyone.
           </div>
 
           <img
             // src={EditTicketsHero}
-            src={AmazingEvent}
+            src={EventVenueHero}
             alt="amazing event"
             className="zoom-in"
             data-aos="zoom-in"
@@ -333,120 +329,10 @@ const EventManagementHome = (props) => {
           />
         </div>
 
-        <div className="home-section-3 px-5 py-5" id="home-section-3">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4" style={{color: "#000000"}}>
-              Invite Speakers, attendees 
-              <br/>
-And sponsors
-              </div>
-
-              <div className="home-text-description" data-aos="slide-up">
-              You can invite your speakers, attendees and sponsors to join you as soon as you publish your event and manage everything with just a click.
-
-
-              </div>
-
-              
-
-              <div className="action-btn-home mt-5">
-                <button
-                  type="button"
-                  className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                  style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
-                  }}
-                >
-                  Host a free event
-                </button>
-              </div>
-            </div>
-            <div
-              className="grid-2-of-2 d-flex flex-row align-items-center"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={RegistrationsHero}
-                alt="amazing event"
-                className="zoom-in"
-                data-aos="zoom-in"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-4 p-5">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div
-              className="grid-1-of-2 d-flex flex-row align-items-center mb-3"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={ReviewsHero}
-                alt="amazing event"
-                data-aos="zoom-in"
-                data-aos-easing="ease-in-sine"
-                data-aos-delay="100"
-                // className="zoom-in"
-                // data-aos="slide-left"
-
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-            <div className="grid-2-of-2 " style={{ alignSelf: "center" }}>
-              <div
-                className="section-heading-primary pb-2"
-                style={{ color: "black" }}
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
-              >
-                Get Feedback from your  <br />
-                attendees
-              </div>
-
-              <div
-                className="home-text-description my-5"
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
-              >
-                We know its the key to constantly improve your events to drive more meaningful connections and build values that stays. 
-So, you can hear to what your attendees have to say about your event using reviews feature built for your community.
-              </div>
-
-              
-
-              <div className="action-btn-home  pt-5">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                  style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
-                  }}
-                >
-                  Host a free event
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-5 p-4">
+        <div
+          className="home-section-5 p-4"
+          style={{ backgroundColor: "#E1E1BA" }}
+        >
           <div className="mt-3">
             <div
               className="grid-of-2"
@@ -461,7 +347,7 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
-                  Create coupons to boost your <br /> sale
+                  Rooms for open discussions
                 </div>
 
                 <div
@@ -497,7 +383,7 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={CouponsHero}
+                  src={RoomsFeatures}
                   alt="amazing event"
                   data-aos="zoom-in"
                   data-aos-easing="ease-in-sine"
@@ -525,8 +411,7 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  
-                  src={TradeShow}
+                  src={ConnectionThatLasts}
                   alt="amazing event"
                   className="zoom-in"
                   data-aos="zoom-in"
@@ -548,9 +433,8 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Invite booths to 
-                  <br/>
-                  boost engagement.
+                  Meet, greet and make <br />
+                  connections that lasts.
                 </div>
 
                 <div
@@ -601,8 +485,7 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Create and manage <br />
-                  ticket in minutes.
+                  Engage your audience.
                 </div>
 
                 <div
@@ -637,75 +520,13 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  src={EditTicketsHero}
+                  src={PollsChatsAndQnA}
                   className="zoom-in"
                   data-aos="zoom-in"
                   data-aos-easing="ease-in-sine"
                   data-aos-delay="100"
                   alt="amazing event"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-8 p-4">
-          <div className="pt-5">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                  style={{ color: "#000000" }}
-                >
-                  No we didn't forgot about<br />  sponsors.
-                </div>
-
-                <div
-                  className="home-text-description my-5"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
-                >
-                  Invite sponsors and your attendees can check thier listings and sites in your event.
-                  You can also give them shoutout as you wish.
-                </div>
-
-                <div className="action-btn-home py-3">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #538bf7, 0px 0px 10px #505050",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
-
-              <div
-                className="grid-2-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={EndlessUseCases}
-                  className="slide-in"
-                  data-aos="slide-left"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  alt="amazing event"
-                  style={{ maxHeight: "100%", maxWidth: "100%" }}
                 />
               </div>
             </div>
@@ -741,6 +562,7 @@ So, you can hear to what your attendees have to say about your event using revie
             </div>
           </div>
         </div>
+        <PreFooter />
         <Footer />
         {/* Footer */}
       </div>
@@ -1026,4 +848,4 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "requestDemoForm",
   validate,
-})(EventManagementHome);
+})(EventPlatformHome);

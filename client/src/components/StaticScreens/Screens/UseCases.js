@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Footer from "../../Footer";
+import TopNav from "../Helper/TopNav";
 
 import ExploringUseCases from "./../../../assets/images/ExploreUseCases.png";
 import Conference from "./../../../assets/images/conference.jpg";
@@ -9,20 +10,13 @@ import TradeShow from "./../../../assets/images/tradeShow.png";
 import TownHall from "./../../../assets/images/townHall.png";
 import YogaTraining from "./../../../assets/images/YogaTraining.png";
 
-import MenuIcon from "@material-ui/icons/Menu";
-
-import CancelIcon from "@material-ui/icons/Cancel";
 import PreFooter from "../../PreFooter";
-import { Link } from "react-router-dom";
 
 import AOS from 'aos';
 import "aos/dist/aos.css";
 
-
-
-
 const UseCases = () => {
-  const [hambergerOpen, setHambergerOpen] = useState(false);
+ 
 
   useEffect(() => {
     window.localStorage.clear();
@@ -35,116 +29,12 @@ const UseCases = () => {
     AOS.refresh();
   }, []);
 
-
-  const openHamberger = () => {
-    setHambergerOpen(true);
-  };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
-
   return (
     <>
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
-          <div
-            className="row nav-section"
-            style={{ marginLeft: "auto", marginRight: "auto" }}
-          >
-            <nav class="navbar navbar-expand-xxl navbar-light">
-              <div class="container">
-                {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-                <span class="navbar-brand nav-brand-name-home"><a href="https://www.evenz.in/home" style={{textDecoration: "none", color: "#ffffff"}}>Evenz</a></span>
-
-                <button
-                  class="navbar-toggler"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  {hambergerOpen ? (
-                    <CancelIcon
-                      onClick={closeHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  ) : (
-                    <MenuIcon
-                      onClick={openHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  )}
-                </button>
-                <div
-                  class="collapse navbar-collapse navbar-collapse-dark"
-                  id="navbarSupportedContent"
-                >
-                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {/* <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Features
-                      </div>
-                    </li> */}
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/use-cases/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Use Cases
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/search-events/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Explore Events
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link to="/pricing/" style={{ textDecoration: "none", color: "#ffffff" }}>
-                          Pricing
-                        </Link>
-                      </div>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <a
-                        href="/signin"
-                        type="button"
-                        className=" btn btn-light btn-outline-text me-4"
-                      >
-                        Login
-                      </a>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      {/* <AvatarMenu /> */}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </div>
+          {/* Here Goes Top Nav */}
+          <TopNav />
 
           <div className="pricing-section  py-4">
             <div className="pricing-heading-primary mt-5 mb-4">

@@ -16,8 +16,8 @@ html {
 }
 ::-webkit-scrollbar {
   display: none;
-  width: 0;  /* Remove scrollbar space */
-  background: transparent;  /* Optional: just make scrollbar invisible */
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in transparent */
 ::-webkit-scrollbar-thumb {
@@ -160,9 +160,7 @@ code {
 
 .nav-dropdown-item-active-text:hover {
   color: #538bf7;
-  
 }
-
 
 @keyframes bo7 {
   0% {
@@ -190,6 +188,11 @@ code {
   padding-bottom: 2.2rem;
 }
 
+.nav-tab-mb:hover {
+  background-color: #e2e2e2;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 998px) {
   .pre-footer-img-wrapper {
     display: none;
@@ -210,4 +213,9 @@ code {
     align-items: center;
     justify-content: start;
   }
+}
+
+.nav-link-btn:hover {
+  color: #538bf7;
+  border-bottom: 1px solid #538bf7;
 }

@@ -10,6 +10,7 @@ import { fetchEvent, generateEventAccessToken } from "../actions";
 const EventCard = ({
   image,
   date,
+  endDate,
   id,
   eventName,
   minPrice,
@@ -26,10 +27,7 @@ const EventCard = ({
   console.log(showBtn);
   const displayJoinBtn = showBtn ? "block" : "none";
   return (
-    <div className="event-card-main" data-aos="zoom-in"
-    data-aos-delay="10"
-    data-aos-duration="300"
-    data-aos-easing="ease-in-sine">
+    <div className="event-card-main">
       <div className="event-card-img-container">
         <Link
           onClick={() => dispatch(fetchEvent(id))}
@@ -39,7 +37,12 @@ const EventCard = ({
         </Link>
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
-        <div className="event-card-date-main mb-3">{date}</div>
+        <div className="d-flex flex-row align-items-center justify-content-between">
+        <div className="event-card-date-main mb-3">{date} - {endDate}</div>
+        <div className="rating-indicator px-3 py-2">
+          4.7
+        </div>
+        </div>
         <div className="event-card-name-main mb-3">
           {" "}
           <Link

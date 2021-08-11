@@ -1,134 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Footer from "../../Footer";
 
-import MenuIcon from "@material-ui/icons/Menu";
-
-import CancelIcon from "@material-ui/icons/Cancel";
 import "./../Styles/pricing.scss";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-import { Link } from "react-router-dom";
+import TopNav from "../Helper/TopNav";
+import { useSelector } from "react-redux";
+import history from "../../../history";
 
 const Pricing = () => {
-  const [hambergerOpen, setHambergerOpen] = useState(false);
-
   useEffect(() => {
     window.localStorage.clear();
   });
 
-  const openHamberger = () => {
-    setHambergerOpen(true);
-  };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
+  const {isSignedIn} = useSelector((state) => state.auth);
 
   return (
     <>
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
-          <div
-            className="row nav-section"
-            style={{ marginLeft: "auto", marginRight: "auto" }}
-          >
-            <nav class="navbar navbar-expand-xxl navbar-light">
-              <div class="container">
-                {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-                <span class="navbar-brand nav-brand-name-home"><a href="https://www.evenz.in/home" style={{textDecoration: "none", color: "#ffffff"}}>Evenz</a></span>
+          {/* Here Goes Top Nav */}
 
-                <button
-                  class="navbar-toggler"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  {hambergerOpen ? (
-                    <CancelIcon
-                      onClick={closeHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  ) : (
-                    <MenuIcon
-                      onClick={openHamberger}
-                      style={{ fill: "#ffffff" }}
-                      className="navbar-toggler-icon"
-                    />
-                  )}
-                </button>
-                <div
-                  class="collapse navbar-collapse navbar-collapse-dark"
-                  id="navbarSupportedContent"
-                >
-                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {/* <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Features
-                      </div>
-                    </li> */}
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/use-cases/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Use Cases
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link
-                          to="/search-events/"
-                          style={{ textDecoration: "none", color: "#ffffff" }}
-                        >
-                          Explore Events
-                        </Link>
-                      </div>
-                    </li>
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div
-                        className="nav-link-btn nav-link-btn-dark me-4"
-                        style={{ fontWeight: "600" }}
-                      >
-                        <Link to="/pricing/" style={{ textDecoration: "none", color: "#ffffff" }}>
-                          Pricing
-                        </Link>
-                      </div>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <a
-                        href="/signin"
-                        type="button"
-                        className=" btn btn-light btn-outline-text me-4"
-                      >
-                        Login
-                      </a>
-                    </li>
-
-                    <li class="nav-item" style={{ alignSelf: "center" }}>
-                      {/* <AvatarMenu /> */}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </div>
+          <TopNav />
 
           <div className="pricing-section  py-4">
             <div className="pricing-heading-primary mt-5 mb-4">
-              Built For Everyone
+              Built For <span style={{color: "#ffffff"}}>Everyone</span> 
             </div>
             <div className="pricing-heading-secondary mb-4">
               Choose a plan that works for you
@@ -165,31 +62,135 @@ const Pricing = () => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">3 user request</p>
+                      <p class="card__list-description">1 organiser</p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">10 downloads por day</p>
+                      <p class="card__list-description">100 registrations</p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p class="card__list-description">
-                        Daily content updates
+                        4 hours event length
                       </p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">Fully editable files</p>
+                      <p class="card__list-description">Ticketing and payment processing</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">1 Event Per Month</p>
                     </li>
                   </ul>
 
                   <button
+                  onClick={() => {
+                    isSignedIn ? alert("Show option to choose community from") : history.push('/login/buy-plan/?intent=buyPlan');
+                  }}
+                    class="card__button btn btn-outline-primary btn-outline-text"
+                    style={{ backgroundColor: "#ffffff" }}
+                  >
+                    Start my journey
+                  </button>
+                </article>
+
+
+                {/* <!--==================== CARD 1 ====================--> */}
+                <article class="card__content grid px-5" data-aos="zoom-in"
+                data-aos-delay="100"
+                data-aos-easing="ease-in-sine">
+                  <div class="card__pricing">
+                    <div class="card__pricing-number">
+                      <span class="card__pricing-symbol">$</span>49
+                    </div>
+                    <span class="card__pricing-month">/month</span>
+                  </div>
+
+                  <header class="card__header">
+                    <div class="card__header-circle grid">
+                      <img
+                        src="https://fadzrinmadu.github.io/hosted-assets/responsive-pricing-card-using-html-and-css/free-coin.png"
+                        alt=""
+                        class="card__header-img"
+                      />
+                    </div>
+
+                    <span class="card__header-subtitle mb-3">FOR INDIVIDUALS</span>
+                    <h1 class="card__header-title mb-4">Starter</h1>
+                  </header>
+
+                  <ul class="card__list grid">
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Everything in basic and</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">2 organisers</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">
+                        300 registrations
+                      </p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">24 hours event length</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Unlimited Coupons</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Access to Queries & Reviews</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Basic Analytics</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">3 Events per month</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Sharable Event Recordings</p>
+                    </li>
+                  </ul>
+
+                  <button
+                  onClick={() => {
+                    isSignedIn ? alert("Show option to choose community from") : history.push('/login/buy-plan/?intent=buyPlan');
+                  }}
                     class="card__button btn btn-outline-primary btn-outline-text"
                     style={{ backgroundColor: "#ffffff" }}
                   >
@@ -207,7 +208,7 @@ const Pricing = () => {
                 >
                   <div class="card__pricing">
                     <div class="card__pricing-number">
-                      <span class="card__pricing-symbol">$</span>79
+                      <span class="card__pricing-symbol">$</span>99
                     </div>
                     <span class="card__pricing-month">/month</span>
                   </div>
@@ -230,20 +231,20 @@ const Pricing = () => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">100 user request</p>
+                      <p class="card__list-description">Everything in starter and</p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">Unlimited downloads</p>
+                      <p class="card__list-description">4 organisers</p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p class="card__list-description">
-                        Unlock all features from our site
+                        1200 Registrations
                       </p>
                     </li>
                     <li class="card__list-item">
@@ -251,18 +252,62 @@ const Pricing = () => {
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p class="card__list-description">
-                        Daily content updates
+                        72 hours event length
                       </p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">Fully editable files</p>
+                      <p class="card__list-description">Stage Customisation</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">RTMP & Custom streaming</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Full Access to networking and booths</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Marketing tools</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Access to integrations</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Real Time analytics</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Custom registration form</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Sponsors and shoutouts</p>
                     </li>
                   </ul>
 
-                  <button class="card__button btn btn-primary btn-outline-text">
+                  <button onClick={() => {
+                    isSignedIn ? alert("Show option to choose community from") : history.push('/login/buy-plan/?intent=buyPlan');
+                  }} class="card__button btn btn-primary btn-outline-text">
                     Choose this plan
                   </button>
                 </article>
@@ -297,36 +342,55 @@ const Pricing = () => {
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p class="card__list-description">
-                        Unlimited user request
+                        Everything in Professional and
                       </p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p class="card__list-description">Unlimited downloads</p>
+                      <p class="card__list-description">Unlimited events</p>
+                    </li>
+                    
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">
+                        upto 1,00,000 registrations
+                      </p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">SEO optimised Landing page</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">24 * 7 Support</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">Onboarding session</p>
+                    </li>
+                    <li class="card__list-item">
+                      <CheckRoundedIcon
+                        style={{ fill: "#538BF7", marginRight: "1rem" }}
+                      />
+                      <p class="card__list-description">99.99% Uptime SLA</p>
                     </li>
                     <li class="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p class="card__list-description">
-                        Unlock all features from our site
+                        Unlock all features from evenz 
                       </p>
-                    </li>
-                    <li class="card__list-item">
-                      <CheckRoundedIcon
-                        style={{ fill: "#538BF7", marginRight: "1rem" }}
-                      />
-                      <p class="card__list-description">
-                        Daily content updates
-                      </p>
-                    </li>
-                    <li class="card__list-item">
-                      <CheckRoundedIcon
-                        style={{ fill: "#538BF7", marginRight: "1rem" }}
-                      />
-                      <p class="card__list-description">Fully editable files</p>
                     </li>
                   </ul>
 

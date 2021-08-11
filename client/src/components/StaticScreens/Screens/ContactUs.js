@@ -12,13 +12,12 @@ import Instagram from "@material-ui/icons/Instagram";
 
 import "./../Styles/ContactUs.scss";
 
-import MenuIcon from "@material-ui/icons/Menu";
-import CancelIcon from "@material-ui/icons/Cancel";
 import PreFooter from "../../PreFooter";
-import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { contactUs, errorTrackerForContactUs } from "../../../actions";
+
+import TopNav from "../Helper/TopNav";
 
 const renderInput = ({
   input,
@@ -105,21 +104,13 @@ const ContactUs = (props) => {
 
   const {error, isLoading} = useSelector((state) => state.contact);
 
-  const [hambergerOpen, setHambergerOpen] = useState(false);
+
 
   const { handleSubmit, pristine, submitting } = props;
 
   useEffect(() => {
     window.localStorage.clear();
   });
-
-  const openHamberger = () => {
-    setHambergerOpen(true);
-  };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -141,122 +132,18 @@ const ContactUs = (props) => {
         className="container-fluid p-0"
         style={{ backgroundColor: "#474747", width: "100vw" }}
       >
-        <div
-          className="row nav-section"
-          style={{ marginLeft: "auto", marginRight: "auto" }}
-        >
-          <nav class="navbar navbar-expand-xxl navbar-light">
-            <div class="container">
-              {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-              <span class="navbar-brand nav-brand-name-home">
-                <a
-                  href="https://www.evenz.in/home"
-                  style={{ textDecoration: "none", color: "#ffffff" }}
-                >
-                  Evenz
-                </a>
-              </span>
+        {/* Here Goes Top Nav Bar */}
 
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                {hambergerOpen ? (
-                  <CancelIcon
-                    onClick={closeHamberger}
-                    style={{ fill: "#ffffff" }}
-                    className="navbar-toggler-icon"
-                  />
-                ) : (
-                  <MenuIcon
-                    onClick={openHamberger}
-                    style={{ fill: "#ffffff" }}
-                    className="navbar-toggler-icon"
-                  />
-                )}
-              </button>
-              <div
-                class="collapse navbar-collapse navbar-collapse-dark"
-                id="navbarSupportedContent"
-              >
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  {/* <li class="nav-item" style={{ alignSelf: "center" }}>
-                      <div className="nav-link-btn nav-link-btn-dark me-4">
-                        Features
-                      </div>
-                    </li> */}
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <div
-                      className="nav-link-btn nav-link-btn-dark me-4"
-                      style={{ fontWeight: "600" }}
-                    >
-                      <Link
-                        to="/use-cases/"
-                        style={{ textDecoration: "none", color: "#ffffff" }}
-                      >
-                        Use Cases
-                      </Link>
-                    </div>
-                  </li>
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <div
-                      className="nav-link-btn nav-link-btn-dark me-4"
-                      style={{ fontWeight: "600" }}
-                    >
-                      <Link
-                        to="/search-events/"
-                        style={{ textDecoration: "none", color: "#ffffff" }}
-                      >
-                        Explore Events
-                      </Link>
-                    </div>
-                  </li>
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <div
-                      className="nav-link-btn nav-link-btn-dark me-4"
-                      style={{ fontWeight: "600" }}
-                    >
-                      <Link
-                        to="/pricing/"
-                        style={{ textDecoration: "none", color: "#ffffff" }}
-                      >
-                        Pricing
-                      </Link>
-                    </div>
-                  </li>
+        <TopNav />
 
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    <a
-                      href="/signin"
-                      type="button"
-                      className=" btn btn-light btn-outline-text me-4"
-                    >
-                      Login
-                    </a>
-                  </li>
-
-                  <li class="nav-item" style={{ alignSelf: "center" }}>
-                    {/* <AvatarMenu /> */}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </div>
-
-        <div className="contact-us-container d-flex flex-column my-5">
+        <div className="contact-us-container d-flex flex-column my-5" >
           <div
             className="centered-heading-primary my-3"
             style={{ color: "#D3D4D8" }}
           >
             <span style={{ color: "#538BF7" }}>Contact</span> Us
           </div>
-          <div className="container pt-3">
+          <div className="container pt-3" data-aos="zoom-in">
             <div className="contact-form-and-info-container">
               <div className="contact-us-info-container px-5 py-4 d-flex flex-column justify-content-evenly">
                 <div className="contact-info-heading">Contact Information</div>

@@ -39,6 +39,9 @@ import AcceptSpeakerInvite from "./AcceptSpeakerInvite";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import EventManagementHome from "./StaticScreens/Screens/EventManagementHome";
+import EventBuilder from "./StaticScreens/Screens/EventBuilder";
+import EventPlatform from "./StaticScreens/Screens/EventPlatform";
+import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 AOS.init();
 
 
@@ -58,19 +61,27 @@ class App extends React.Component {
           <div>
             <Switch>
               {
-                !isSignedIn && <Route path="/signin" exact component={Signin} />
+                 <Route path="/signin" exact component={Signin} />
                 //  <Route path="/signup" exact component={Signup} />
               }
-              {!isSignedIn && (
+              { (
                 // <Route path="/signin" exact component={Signin} />
                 <Route path="/signup" exact component={Signup} />
               )}
-              {!isSignedIn && (
+              { (
                 // <Route path="/signin" exact component={Signin} />
                 <Route
                   path="/signin/:eventId"
                   exact
                   component={SignInForEventRegistration}
+                />
+              )}
+              {(
+                // <Route path="/signin" exact component={Signin} />
+                <Route
+                  path="/login/buy-plan"
+                  exact
+                  component={SigninForBuyingPlan}
                 />
               )}
 
@@ -81,6 +92,8 @@ class App extends React.Component {
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route path="/event-management" exact component={EventManagementHome} />
+              <Route path="/event-builder" exact component={EventBuilder} />
+              <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
 
               <Route path="/pricing" exact component={Pricing} />

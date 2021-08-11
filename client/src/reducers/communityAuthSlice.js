@@ -22,6 +22,7 @@ const communityAuthSlice = createSlice({
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+      state.isSignedIn = false;
     },
 
     CommunitySignIn(state, action) {

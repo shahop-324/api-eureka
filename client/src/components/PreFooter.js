@@ -33,9 +33,6 @@ const PreFooter = () => {
           <div className="col-1 col-xl-2"></div>
         </div>
         <div
-        data-aos="zoom-in"
-        data-aos-delay="100"
-        data-aos-easing="ease-in-sine"
           className="col-12 col-lg-6 d-flex justify-content-center pre-footer-img-wrapper"
           style={{ maxHeight: "50vh" }}
         ></div>

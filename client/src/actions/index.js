@@ -52,7 +52,13 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
 
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
-    } else {
+    } 
+    else if(intent === "buyPlan")
+    {
+      history.push('/pricing');
+      dispatch(fetchUserAllPersonalData());
+    }
+    else {
       history.push("/user/home");
     }
   } catch (err) {
