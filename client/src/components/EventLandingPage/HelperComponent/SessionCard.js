@@ -12,6 +12,7 @@ const SessionCard = ({
   id
 }) => {
   const renderSpeakerAvatarList = (speakerAvatarList) => {
+    
     console.log(speakerAvatarList);
     if (speakerAvatarList[0]) {
       return speakerAvatarList.map((speaker) => {
