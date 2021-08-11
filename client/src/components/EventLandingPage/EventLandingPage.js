@@ -26,8 +26,8 @@ import BoothCard from "./HelperComponent/BoothCard";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-// import { stateToHTML } from "draft-js-export-html";
-// import { convertFromRaw } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+import { convertFromRaw } from "draft-js";
 import { useEffect } from "react";
 import dateFormat from "dateformat";
 import { reduxForm } from "redux-form";
@@ -158,11 +158,11 @@ const EventLandingPage = (props) => {
     console.log(i);
   };
 
-  // const convertFromJSONToHTML = (text) => {
-  //   return stateToHTML(convertFromRaw(JSON.parse(text)));
-  // };
+  const convertFromJSONToHTML = (text) => {
+    return stateToHTML(convertFromRaw(JSON.parse(text)));
+  };
 
-  const { userDetails } = useSelector((state) => state.user);
+const { userDetails } = useSelector((state) => state.user);
 let event=useSelector((state)=>state.event.eventDetails)
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
@@ -614,14 +614,16 @@ let event=useSelector((state)=>state.event.eventDetails)
                 )}
               </div>
 
+              {console.log(event.editingComment)}
+
               <div
                 id="overview-section"
                 className="overview-content mb-5 mt-3 pt-4"
-                // dangerouslySetInnerHTML={{
-                //   __html: convertFromJSONToHTML(
-                //     event.editingComment
-                //   ),
-                // }}
+                dangerouslySetInnerHTML={{
+                  __html: convertFromJSONToHTML(
+                    event.editingComment
+                  ),
+                }}
               ></div>
 
               <hr className="my-5" />

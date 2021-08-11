@@ -503,7 +503,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "selectCategories",
     "visibility",
     "editingComment",
-    "image"
+    "image",
+    "publishedStatus",
   );
 
   const updatedEvent = await Event.findByIdAndUpdate(

@@ -4,7 +4,7 @@ import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
 
 import IconButton from "@material-ui/core/IconButton";
-import { Divider } from "@material-ui/core";
+import { Divider, Tooltip } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@material-ui/icons/Category";
@@ -18,7 +18,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchParticularEventOfCommunity } from "../../../actions";
+import { editEvent, fetchParticularEventOfCommunity } from "../../../actions";
 
 const SideNavEdit = (props) => {
   const params = useParams();
@@ -28,6 +28,7 @@ const SideNavEdit = (props) => {
   const communityId = params.communityId;
 
   const userId = useSelector((state) => state.user.userDetails._id);
+
   useEffect(() => {
     dispatch(fetchParticularEventOfCommunity(id));
   }, [id, dispatch]);
@@ -37,6 +38,33 @@ const SideNavEdit = (props) => {
       return event.id === id;
     });
   });
+
+  let isAlreadyPublished = true;
+
+  let isDescriptionPresent = false;
+  let isSessionPresent = false;
+  let isTicketPresent = false;
+  let isSpeakerPresent = false;
+
+  event.session[0] && (isSessionPresent = true);
+  event.speaker[0] && (isSpeakerPresent = true);
+  event.tickets[0] && (isTicketPresent = true);
+  event.editingComment && (isDescriptionPresent = true);
+
+  let isReadyToPublish = false;
+
+  if (event.publishedStatus === "Draft") {
+    isAlreadyPublished = false;
+  }
+
+  if (
+    isSessionPresent &&
+    isSpeakerPresent &&
+    isTicketPresent &&
+    isDescriptionPresent
+  ) {
+    isReadyToPublish = true;
+  }
 
   let url = " #";
   if (event) {
@@ -55,9 +83,25 @@ const SideNavEdit = (props) => {
                 <ArrowBackIosIcon style={{ fontSize: 18 }} />
               </IconButton>
             </Link>
-            <button className="btn btn-outline-primary btn-outline-text me-2">
-              Publish
-            </button>
+
+            {isAlreadyPublished ? (
+              <button className="btn btn-outline-primary btn-outline-text me-2">
+                Published
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  isReadyToPublish
+                    ? dispatch(editEvent({publishedStatus: "Published"}, id))
+                    : alert(
+                        "Please add about event, session, speaker and ticket to publish."
+                      );
+                }}
+                className="btn btn-outline-primary btn-outline-text me-2"
+              >
+                Publish
+              </button>
+            )}
           </div>
 
           <div className="px-4 mb-3 sidenav-poster-container">
@@ -65,9 +109,9 @@ const SideNavEdit = (props) => {
           </div>
           <div className="px-4 d-flex flex-row justify-content-between">
             <div className="sidenav-event-name">The Craft Workshop</div>
-            <div className=" px-3 py-2 user-registration-status-chip">
+            {/* <div className=" px-3 py-2 user-registration-status-chip">
               Draft
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
