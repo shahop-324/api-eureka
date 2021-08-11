@@ -47,7 +47,8 @@ const SearchEvents = () => {
   const { error, isLoading } = useSelector((state) => state.event);
 
   const location = useLocation();
-  console.log(location);
+
+
   
   useEffect(() => {
     dispatch(fetchEvents(location.search));
@@ -71,9 +72,9 @@ const SearchEvents = () => {
 
   const eventsList = useSelector((state) => state.event.events);
   console.log(eventsList);
-
   const onPriceFilterChange = (e) => {
     const price = e.target.value;
+    console.log(price);
     setPriceFilter(e.target.value);
     if (price === "Free") {
       search_params.set("max_price", 0);
@@ -81,30 +82,51 @@ const SearchEvents = () => {
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      let regex = /(?<=search-events\/).+/;
-      const result = new_url.match(regex);
+      
 
+     const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
+console.log(typeof result);
+console.log(result);
       // props.fetchEvents(event.target.value);
-      if (result === null) {
+      // if (result !== null) {
+      //   history.push("/search-events/");
+      // }
+      // // } else {
+      // //   history.push(result);
+      // // }
+      // console.log(location.search)
+      // if (location.search===null) {
+      //   history.push("/search-events/");
+      // } else {
+      //   history.push(result);
+      // }
+      if (result === "") {
         history.push("/search-events/");
       } else {
-        history.push(result[0]);
+        history.push(result);
       }
+     // history.push(result);
     } else if (price === "Any Price") {
       search_params.delete("max_price");
       search_params.delete("min_price");
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      let regex = /(?<=search-events\/).+/;
-      const result = new_url.match(regex);
+      const len = (new_url.split('?')[0].length);
 
+     const result = new_url.substring(len);
+  console.log(typeof 
+    result);
       // props.fetchEvents(event.target.value);
-      if (result === null) {
+      if (result === "") {
         history.push("/search-events/");
       } else {
-        history.push(result[0]);
+        history.push(result);
       }
+      // if(result)
+      // history.push(result);
     }
   };
 
@@ -117,14 +139,15 @@ const SearchEvents = () => {
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      let regex = /(?<=search-events\/).+/;
-      const result = new_url.match(regex);
+      const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
-      if (result === null) {
+      if (result === "") {
         history.push("/search-events/");
       } else {
-        history.push(result[0]);
+        history.push(result);
       }
     } else if (rating === "Above 3") {
       search_params.set("communityRating[gt]", 3);
@@ -132,14 +155,15 @@ const SearchEvents = () => {
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      let regex = /(?<=search-events\/).+/;
-      const result = new_url.match(regex);
+      const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
-      if (result === null) {
+      if (result === "") {
         history.push("/search-events/");
       } else {
-        history.push(result[0]);
+        history.push(result);
       }
     } else if (rating === "Any Rating") {
       search_params.delete("communityRating[gt]");
@@ -147,14 +171,15 @@ const SearchEvents = () => {
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      let regex = /(?<=search-events\/).+/;
-      const result = new_url.match(regex);
+      const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
-      if (result === null) {
+      if (result === "") {
         history.push("/search-events/");
       } else {
-        history.push(result[0]);
+        history.push(result);
       }
     }
   };
@@ -172,13 +197,14 @@ const SearchEvents = () => {
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    let regex = /(?<=search-events\/).+/;
-    const result = new_url.match(regex);
+    const len = (new_url.split('?')[0].length);
 
-    if (result === null) {
+     const result = new_url.substring(len);
+
+    if (result === "") {
       history.push("/search-events/");
     } else {
-      history.push(result[0]);
+      history.push(result);
     }
   };
 
@@ -214,14 +240,15 @@ const SearchEvents = () => {
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    let regex = /(?<=search-events\/).+/;
-    const result = new_url.match(regex);
+    const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 
     // props.fetchEvents(event.target.value);
-    if (result === null) {
+    if (result === "") {
       history.push("/search-events/");
     } else {
-      history.push(result[0]);
+      history.push(result);
     }
   };
 
@@ -240,13 +267,14 @@ const SearchEvents = () => {
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    let regex = /(?<=search-events\/).+/;
-    const result = new_url.match(regex);
+    const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 console.log(result);
-    if (result === null) {
+    if (result === "") {
       history.push("/search-events/");
     } else {
-      history.push(result[0]);
+      history.push(result);
     }
   };
 
@@ -260,16 +288,19 @@ console.log(result);
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    let regex = /(?<=search-events\/).+/;
-    const result = new_url.match(regex);
+    const len = (new_url.split('?')[0].length);
+
+     const result = new_url.substring(len);
 
     // props.fetchEvents(event.target.value);
-    if (result === null) {
+    if (result === "") {
       history.push("/search-events/");
     } else {
-      history.push(result[0]);
+      history.push(result);
     }
   };
+
+ 
 
   if (error) {
     dispatch(errorTrackerForFetchEvents());

@@ -398,7 +398,7 @@ const SessionScreen = () => {
     await rtc.client.leave();
   };
 
-  // TODO startBasicCall();
+startBasicCall();
 
   return (
     <>

@@ -6,6 +6,7 @@ import "./../assets/css/CardStyle.css";
 import { Divider } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvent, generateEventAccessToken } from "../actions";
+import StarRateRoundedIcon from '@material-ui/icons/StarRateRounded';
 
 const EventCard = ({
   image,
@@ -40,7 +41,8 @@ const EventCard = ({
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="d-flex flex-row align-items-center justify-content-between">
         <div className="event-card-date-main mb-3">{date} - {endDate}</div>
-        <div className="rating-indicator px-3 py-2">
+        <div className="rating-indicator px-2 py-2">
+          <StarRateRoundedIcon className="me-1" />
           {rating}
         </div>
         </div>

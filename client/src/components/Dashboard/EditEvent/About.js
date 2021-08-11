@@ -24,8 +24,6 @@ const About = (props) => {
     (state) => state.event.eventDetails.editingComment
   );
 
-  console.log(aboutText);
-
   const [editorState, setEditorState] = React.useState(
    aboutText ? EditorState.createWithContent(convertFromRaw(JSON.parse(aboutText))) : EditorState.createEmpty()
   );
@@ -40,7 +38,6 @@ const About = (props) => {
     const JSONData = {
       editingComment: convertToRaw(editorState.getCurrentContent()),
     };
-    console.log(JSONData);
     dispatch(editEventDescription(JSONData, id));
   };
 
