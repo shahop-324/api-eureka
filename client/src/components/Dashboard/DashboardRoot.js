@@ -26,7 +26,7 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-
+import ErrorBoundary from "../../components/ErrorBoundaries";
 const DashboardRoot = () => {
   const params = useParams();
 
@@ -104,9 +104,8 @@ const DashboardRoot = () => {
   console.log(currentIndex);
 
   if (error) {
-    alert(error);
     dispatch(errorTrackerForFetchCommunity());
-    return;
+    throw new Error(error);
   }
 
   return (
@@ -128,53 +127,92 @@ const DashboardRoot = () => {
         />
         <div className="dashboard-body">
           <div className="side-nav-container">
-          <SideNav
-            activeIndex={currentIndex}
-            handleOverviewClick={handleOverviewClick}
-            handleEventManagementClick={handleEventManagementClick}
-            handleReviewsClick={handleReviewsClick}
-            handleQueriesClick={handleQueriesClick}
-            handleRegistrationsClick={handleRegistrationsClick}
-            handleCouponsClick={handleCouponsClick}
-            handleRecordingsClick={handleRecordingsClick}
-            handleBillingClick={handleBillingClick}
-            handleTeamManagementClick={handleTeamManagementClick}
-            handleRevenueManagementClick={handleRevenueManagementClick}
-          />
-
+            <SideNav
+              activeIndex={currentIndex}
+              handleOverviewClick={handleOverviewClick}
+              handleEventManagementClick={handleEventManagementClick}
+              handleReviewsClick={handleReviewsClick}
+              handleQueriesClick={handleQueriesClick}
+              handleRegistrationsClick={handleRegistrationsClick}
+              handleCouponsClick={handleCouponsClick}
+              handleRecordingsClick={handleRecordingsClick}
+              handleBillingClick={handleBillingClick}
+              handleTeamManagementClick={handleTeamManagementClick}
+              handleRevenueManagementClick={handleRevenueManagementClick}
+            />
           </div>
-          <div className="main-content-wrapper" style={{minHeight: "90vh"}}>
+          <div className="main-content-wrapper" style={{ minHeight: "90vh" }}>
             {(() => {
               switch (currentIndex) {
                 case "0":
-                  return <Overview />;
+                  return (
+                    <ErrorBoundary>
+                      <Overview />
+                    </ErrorBoundary>
+                  );
 
                 case "1":
-                  return <EventManagement />;
+                  return (
+                    <ErrorBoundary>
+                      <EventManagement />
+                    </ErrorBoundary>
+                  );
 
                 case "2":
-                  return <Reviews />;
+                  return (
+                    <ErrorBoundary>
+                      <Reviews />
+                    </ErrorBoundary>
+                  );
 
                 case "3":
-                  return <Queries />;
+                  return (
+                    <ErrorBoundary>
+                      <Queries />
+                    </ErrorBoundary>
+                  );
 
                 case "4":
-                  return <Registrations />;
+                  return (
+                    <ErrorBoundary>
+                      <Registrations />
+                    </ErrorBoundary>
+                  );
 
                 case "5":
-                  return <Coupons />;
+                  return (
+                    <ErrorBoundary>
+                      <Coupons />
+                    </ErrorBoundary>
+                  );
 
                 case "6":
-                  return <Recordings />;
+                  return (
+                    <ErrorBoundary>
+                      <Recordings />
+                    </ErrorBoundary>
+                  );
 
                 case "7":
-                  return <Billing />;
+                  return (
+                    <ErrorBoundary>
+                      <Billing />
+                    </ErrorBoundary>
+                  );
 
                 case "8":
-                  return <TeamManagement />;
+                  return (
+                    <ErrorBoundary>
+                      <TeamManagement />
+                    </ErrorBoundary>
+                  );
 
                 case "9":
-                  return <RevenueManagement />;
+                  return (
+                    <ErrorBoundary>
+                      <RevenueManagement />
+                    </ErrorBoundary>
+                  );
 
                 default:
                   return <div>You are a community.</div>;
