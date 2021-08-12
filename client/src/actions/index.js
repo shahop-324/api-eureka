@@ -61,7 +61,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
     console.log(err.response);
-    alert(err.response.data.message);
   }
 };
 export const errorTrackerForSignIn = () => async (dispatch, getState) => {

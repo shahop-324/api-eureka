@@ -4,13 +4,17 @@ import Avatar from "@material-ui/core/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import { communitySignIn, errorTrackerForCommunitySignIn, errorTrackerForPersonalData } from "../../actions";
+import {
+  communitySignIn,
+  errorTrackerForCommunitySignIn,
+  errorTrackerForPersonalData,
+} from "../../actions";
 import Loader from "../Loader";
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-  const {error, isLoading} = useSelector((state) => state.community);
+  const { error, isLoading } = useSelector((state) => state.community);
 
   const { id } = useSelector((state) => state.user.userDetails);
 
@@ -20,16 +24,23 @@ const CommunityProfileTab = (props) => {
     dispatch(communitySignIn(props.communityId, userId));
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100vw", height: "100vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForCommunitySignIn());
     alert(error);
     return;
   }
-
 
   return (
     <div
@@ -62,7 +73,7 @@ class UserProfileTab extends React.Component {
     return (
       <div className="user-profile-tab px-4 py-2 mb-4">
         <Avatar
-          alt="shreyansh shah"
+          alt={name}
           variant="rounded"
           src={imageURL}
           style={{ alignSelf: "center" }}

@@ -97,9 +97,10 @@ const Signin = (props) => {
   }
 
   if (error) {
+    // dispatch(resetAuthError());
     alert(error);
+    setSigninClicked(false);
     dispatch(errorTrackerForSignIn());
-
     return;
   }
 
@@ -138,7 +139,6 @@ const Signin = (props) => {
                 </div>
 
                 <GoogleAuth />
-                
 
                 <div
                   className="row d-flex"

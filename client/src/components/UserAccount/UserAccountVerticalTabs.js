@@ -74,6 +74,21 @@ export default function VerticalTabs() {
     }
   }, [userLoading, dispatch]);
 
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ height: "80vh", width: "100%" }}
+      >
+        <Loader />
+      </div>
+    );
+  } else if (error) {
+    dispatch(errorTrackerForRegisteredEvents());
+    alert(error);
+    return;
+  }
+
   console.log(events);
 
   let registeredInEvents = events.filter(
@@ -189,20 +204,7 @@ export default function VerticalTabs() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ height: "80vh", width: "100%" }}
-      >
-        <Loader />
-      </div>
-    );
-  } else if (error) {
-    dispatch(errorTrackerForRegisteredEvents());
-    alert(error);
-    return;
-  }
+  
 
   return (
     <div className={classes.root}>

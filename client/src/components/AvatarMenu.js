@@ -76,7 +76,6 @@ const AvatarMenu = () => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
-
     prevOpen.current = open;
   }, [open]);
 
@@ -91,6 +90,7 @@ const AvatarMenu = () => {
     return alert(error);
   }
   const image = user.userDetails.image;
+  const userName = user.userDetails.firstName;
 
   const communities = user.userDetails.communities;
   const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
@@ -134,7 +134,7 @@ const AvatarMenu = () => {
           disableElevation={true}
         >
           <div className="avatar-menu-h-wrapper d-flex flex-row me-3 ms-3 align-items-center ps-3 py-2">
-            <Avatar variant="rounded" alt="Travis Howard" src={imgURL} />
+            <Avatar variant="rounded" alt={userName} src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>
         </Button>

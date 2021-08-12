@@ -104,8 +104,8 @@ const DashboardRoot = () => {
   console.log(currentIndex);
 
   if (error) {
-    dispatch(errorTrackerForFetchCommunity());
     alert(error);
+    dispatch(errorTrackerForFetchCommunity());
     return;
   }
 
@@ -143,7 +143,7 @@ const DashboardRoot = () => {
           />
 
           </div>
-          <div className="main-content-wrapper">
+          <div className="main-content-wrapper" style={{minHeight: "90vh"}}>
             {(() => {
               switch (currentIndex) {
                 case "0":
