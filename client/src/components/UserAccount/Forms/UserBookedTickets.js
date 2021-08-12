@@ -21,6 +21,7 @@ const UserBookedTickets = () => {
 
         const now = new Date(event.startDate);
         const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+        console.log(event.createdBy)
 
         return (
           <EventCard
@@ -32,7 +33,7 @@ const UserBookedTickets = () => {
             maxPrice={event.maxTicketPrice}
             id={event.id}
             showBtn={true}
-            communityId={event.createdBy}
+            communityId={event.createdBy._id}
             endDate={formatedEndDate}
             rating={(event.communityRating * 1 ).toFixed(1)}
           />

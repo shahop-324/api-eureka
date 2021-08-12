@@ -183,6 +183,8 @@ export default function VerticalTabs() {
         const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
         const formatedEndDate = dateFormat(end,"mmm dS, h:MM TT" );
 
+        console.log(event.createdBy)
+
         return (
           <EventCard
             image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
