@@ -7,8 +7,8 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
 import EditSpeaker from "./FormComponents/EditSpeakersForms/EditSpeaker";
 import DeleteSpeaker from "./FormComponents/EditSpeakersForms/DeleteSpeaker";
-import { useDispatch } from "react-redux";
-import { fetchParticularSpeakerOfEvent } from "../../../actions";
+// import { useDispatch } from "react-redux";
+// import { fetchParticularSpeakerOfEvent } from "../../../actions";
 
 const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
   console.log(sessions);
@@ -16,7 +16,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
   const [open, setOpen] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const handleDeleteSpeaker = () => {
     setOpenDeleteDialog(true);
   };

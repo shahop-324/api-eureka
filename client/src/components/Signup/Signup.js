@@ -300,7 +300,7 @@ const Signup = (props) => {
                           style={{
                             color: "grey",
                             fontFamily: "Inter",
-                            fontSize: "14px",
+                            fontSize: "0.87rem",
                           }}
                         >
                           By registering, I agree to Evenz{" "}

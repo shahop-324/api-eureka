@@ -25,6 +25,7 @@ import PreFooter from "../PreFooter";
 
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
+import NoResultsFound from "../NoResultsFound";
 
 const categories = [
   { title: "Technology" },
@@ -208,7 +209,7 @@ console.log(result);
     }
   };
 
-  const renderedList = () => {
+  const renderedList = (eventsList) => {
     return eventsList.map((event) => {
       const now = new Date(event.startDate);
       const end = new Date(event.endDate);
@@ -634,7 +635,7 @@ console.log(result);
                   <Loader />{" "}
                 </div>
               ) : (
-                renderedList()
+              eventsList[0] ? renderedList(eventsList) : <NoResultsFound />
               )}
             </div>
           </div>

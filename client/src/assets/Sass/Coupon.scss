@@ -133,8 +133,9 @@ color: #223345;
 
 .form-heading-and-close-button {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 0.3fr 1fr 0.3fr;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 .overlay-form-close-button {
