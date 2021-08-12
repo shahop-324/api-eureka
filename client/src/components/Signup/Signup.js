@@ -189,8 +189,8 @@ const Signup = (props) => {
                   className="ui form error"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  <div className="row">
-                    <div className="col-6">
+                  <div className="row" style={{display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "0.6rem"}}>
+                    <div className="">
                       <div class="form-group">
                         <label
                           for="firstName"
@@ -202,18 +202,14 @@ const Signup = (props) => {
                           type="text"
                           classes="form-control"
                           id="firstName"
-                          //value={this.state.firstName}
                           name="firstName"
                           ariadescribedby="Enter First Name "
                           placeholder="John"
                           component={renderInput}
-
-                          //required
-                          //onChange={this.onFirstNameChange}
                         />
                       </div>
                     </div>
-                    <div className="col-6">
+                    <div className="">
                       <div className="mb-3">
                         <div class="form-group">
                           <label
@@ -346,7 +342,7 @@ const Signup = (props) => {
 
                   <div
                     className="row"
-                    style={{ padding: "0 2%", marginTop: "3%" }}
+                    style={{ padding: "0 0%", marginTop: "3%" }}
                   >
                     <button
                       type="submit"

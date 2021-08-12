@@ -244,7 +244,7 @@ let EditProfileForm = (props) => {
     <>
       <div className="user-account-edit-profile px-2 py-2">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-          <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4 px-2">
+          <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4">
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
                 variant="rounded"
@@ -471,16 +471,6 @@ let EditProfileForm = (props) => {
               style={{ textAlign: "center" }}
             >
               Save Changes
-              {editProfileClicked && !error ? (
-                <div
-                  class="spinner-border text-light spinner-border-sm ms-3"
-                  role="status"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-              ) : (
-                <div></div>
-              )}
             </button>
             <button
               type="button"

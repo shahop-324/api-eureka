@@ -1,4 +1,4 @@
 import io from "socket.io-client";
-const socket = io("http://65.2.56.203:3000/");
+const socket = io("https://www.evenz.co.in/api-eureka");
 
 export default socket;

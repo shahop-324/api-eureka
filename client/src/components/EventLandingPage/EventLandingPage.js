@@ -162,8 +162,8 @@ const EventLandingPage = (props) => {
     return stateToHTML(convertFromRaw(JSON.parse(text)));
   };
 
-const { userDetails } = useSelector((state) => state.user);
-let event=useSelector((state)=>state.event.eventDetails)
+  const { userDetails } = useSelector((state) => state.user);
+  let event = useSelector((state) => state.event.eventDetails);
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
@@ -218,10 +218,10 @@ let event=useSelector((state)=>state.event.eventDetails)
 
   console.log(event.speaker);
 
-  event.session[0] && (sessionIsPresent = true);
-  event.speaker[0] && (speakerIsPresent = true);
-  event.sponsors[0] && (sponsorIsPresent = true);
-  event.booths[0] && (boothsIsPresent = true);
+  event.session && event.session[0] && (sessionIsPresent = true);
+  event.speaker && event.speaker[0] && (speakerIsPresent = true);
+  event.sponsors && event.sponsors[0] && (sponsorIsPresent = true);
+  event.booths && event.booths[0] && (boothsIsPresent = true);
 
   if (speakerIsPresent) {
     col = col + 1;
@@ -258,7 +258,7 @@ let event=useSelector((state)=>state.event.eventDetails)
       startTime = dateFormat("h:MM TT");
       let endTime = new Date(session.startTime);
       endTime = dateFormat("h:MM TT");
-      console.log(session.speaker)
+      console.log(session.speaker);
       return (
         <SessionCard
           startDate={startDate}
@@ -268,7 +268,6 @@ let event=useSelector((state)=>state.event.eventDetails)
           sessionDescription={session.description}
           speakerAvatarList={session.speaker}
           id={session.id}
-          
         />
       );
     });
@@ -620,9 +619,7 @@ let event=useSelector((state)=>state.event.eventDetails)
                 id="overview-section"
                 className="overview-content mb-5 mt-3 pt-4"
                 dangerouslySetInnerHTML={{
-                  __html: convertFromJSONToHTML(
-                    event.editingComment
-                  ),
+                 __html: convertFromJSONToHTML(event.editingComment),
                 }}
               ></div>
 
@@ -630,47 +627,43 @@ let event=useSelector((state)=>state.event.eventDetails)
 
               {sessionIsPresent ? (
                 <>
-                <div
-                  className="schedule-section mb-5 mt-3 pt-4"
-                  id="schedule-section"
-                >
-                  <div className="event-landing-page-section-headline mb-5">
-                    <div className="section-headline">Schedule</div>
-                  </div>
+                  <div
+                    className="schedule-section mb-5 mt-3 pt-4"
+                    id="schedule-section"
+                  >
+                    <div className="event-landing-page-section-headline mb-5">
+                      <div className="section-headline">Schedule</div>
+                    </div>
 
-                  <div className="session-card-row ">{renderSessionList()}</div>
-                </div>
-                 <hr className="my-5" />
+                    <div className="session-card-row ">
+                      {renderSessionList()}
+                    </div>
+                  </div>
+                  <hr className="my-5" />
                 </>
               ) : (
                 <div></div>
               )}
 
-             
-
               {speakerIsPresent ? (
-
-                <> 
-                <div
-                  className="speakers-section mb-3 mt-3 pt-4"
-                  id="speakers-section"
-                >
-                  <div className="event-landing-page-section-headline mb-5">
-                    <div className="section-headline">Speakers</div>
+                <>
+                  <div
+                    className="speakers-section mb-3 mt-3 pt-4"
+                    id="speakers-section"
+                  >
+                    <div className="event-landing-page-section-headline mb-5">
+                      <div className="section-headline">Speakers</div>
+                    </div>
+                    <div className="speakers-card-grid">
+                      {renderSpeakerList()}
+                    </div>
                   </div>
-                  <div className="speakers-card-grid">
-                    {renderSpeakerList()}
-                  </div>
-                </div>
-                
-                <hr className="my-5" />
 
-                 </>
+                  <hr className="my-5" />
+                </>
               ) : (
                 <div></div>
               )}
-
-              
 
               {sponsorIsPresent ? (
                 <div

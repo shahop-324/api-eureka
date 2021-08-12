@@ -294,6 +294,7 @@ const EditCoupon = (props) => {
                 className="btn btn-outline-primary btn-outline-text me-3"
                 onClick={reset}
                 disabled={pristine || submitting}
+                style={{textAlign: "center"}}
               >
                 Discard
               </button>
@@ -301,6 +302,7 @@ const EditCoupon = (props) => {
               <button
                 type="submit"
                 className="btn btn-primary btn-outline-text"
+                style={{textAlign: "center"}}
                 onClick={() => {
                   props.handleClose();
                   setState({
