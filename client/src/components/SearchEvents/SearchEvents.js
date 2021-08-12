@@ -618,7 +618,7 @@ console.log(result);
           </div>
           <div className="col-12 col-lg-9 search-results-section px-5">
             <div className="row search-result-heading pb-4">Top Picks</div>
-            <div
+            { eventsList[0] ? <div
               className="row search-result-grid"
               style={{
                 display: "grid",
@@ -635,9 +635,11 @@ console.log(result);
                   <Loader />{" "}
                 </div>
               ) : (
-              eventsList[0] ? renderedList(eventsList) : <NoResultsFound />
+              renderedList(eventsList)
               )}
-            </div>
+            </div> : <div className="d-flex flex-row align-items-center justify-content-center me-5" style={{textAlign: "center"}}><NoResultsFound /></div>  }
+            
+            
           </div>
         </div>
         <div className="row show-more-search-page " style={{ height: "auto" }}>

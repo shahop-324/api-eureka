@@ -239,17 +239,17 @@ $k-right-ear: (
     background: $color-primary;
     border-radius: 0.5vmin;
     top: 100%;
-    left: 5%;
+    // left: 5%;
     z-index: 2;
   }
   
-  &:after {
-    width: 100%;
-    height: 10%;
-    top: calc(100% + 0.5vmin);
-    z-index: 3;
-    background: $color-bg;
-  }
+//   &:after {
+//     width: 100%;
+//     height: 10%;
+//     top: calc(100% + 0.5vmin);
+//     z-index: 3;
+//     background: $color-bg;
+//   }
 }
 
 div:before, div:after {

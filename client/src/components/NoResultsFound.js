@@ -1,6 +1,6 @@
 import React from "react";
-import './../assets/Sass/Husky.scss';
-import './../index.css';
+import "./../assets/Sass/Husky.scss";
+import "./../index.css";
 
 const Husky = () => {
   return (
@@ -117,13 +117,25 @@ const Husky = () => {
 };
 
 const NoResultsFound = () => {
-  return <>
-  <div className="husky-container">
+  return (
+    <>
+      <div className="husky-container">
+        <Husky />
 
-  <Husky />
-  </div>
-  
-  </>;
+        <div
+          className="mt-5"
+          style={{
+            textAlign: "center",
+            fontWeight: "600",
+            fontFamily: "Inter",
+            fontSize: "1rem",
+          }}
+        >
+          No search results found
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default NoResultsFound;
