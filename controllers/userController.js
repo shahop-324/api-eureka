@@ -722,7 +722,7 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
     registrationsDocIdCommunityWise: registrationsIdsDocument._id,
     eventTransactionDocIdCommunityWise: eventTransactionIdsDocument._id,
     superAdmin: req.user.id,
-    superAdminName: `${req.user.firstName} ${req.user.firstName}`,
+    superAdminName: `${req.user.firstName} ${req.user.lastName}`,
     superAdminEmail: req.user.email,
     superAdminImage: req.user.image,
     paypalTrackingId: UUID(),

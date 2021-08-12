@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
@@ -14,7 +14,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editSpeaker, errorTrackerForEditSpeaker } from "../../../../../actions";
+import { editSpeaker, errorTrackerForEditSpeaker, fetchParticularSpeakerOfEvent } from "../../../../../actions";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -166,6 +166,10 @@ const EditSpeakerForm = (props) => {
   const id = params.id;
 
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchParticularSpeakerOfEvent(props.id));
+  // }, []);
 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency

@@ -22,6 +22,7 @@ import {
   errorTrackerForFetchCommunity,
   fetchCommunity,
   fetchEventsOfParticularCommunity,
+  navigationIndexForCommunityDash,
 } from "../../actions/index";
 import { useSelector } from "react-redux";
 import AddNewMember from "./FormComponents/AddNewMember";
@@ -76,11 +77,15 @@ const Overview = () => {
   const dispatch = useDispatch();
   const id = params.id;
 
+  console.log(id);
+
   const community = useSelector((state) => {
     return state.community.communities.find((community) => {
       return community.id === id;
     });
   });
+
+  const userId = useSelector((state) => state.user.userDetails._id);
 
   const { analytics, superAdminImage, superAdminName } = community;
 
@@ -111,6 +116,7 @@ const Overview = () => {
     alert(error);
     return;
   }
+
 
   const communityEvents = events
     .slice(0)
@@ -167,7 +173,7 @@ const Overview = () => {
     <>
       {isLoading ? (
         <div
-          className="d-flex flex-row align-items-row justify-content-center"
+          className="d-flex flex-row align-items-center justify-content-center"
           style={{ height: "100vh", width: "80vw" }}
         >
           <Loader />
@@ -317,7 +323,12 @@ const Overview = () => {
                     </div>
                     <div
                       className="see-all-members"
-                      onClick={() => history.push("/community/team-management")}
+                      onClick={() => {
+                        dispatch(navigationIndexForCommunityDash(8));
+                        history.push(
+                          `/user/${userId}/community/team-management/${id}`
+                        );
+                      }}
                       style={{ fontFamily: "Inter" }}
                     >
                       See all
@@ -334,7 +345,13 @@ const Overview = () => {
                       <Avatar
                         alt="Travis Howard"
                         variant="rounded"
-                        src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`}
+                        src={
+                          superAdminImage.startsWith(
+                            "https://lh3.googleusercontent.com"
+                          )
+                            ? superAdminImage
+                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                        }
                         className={classes.large}
                       />
                       <div
@@ -415,7 +432,12 @@ const Overview = () => {
                     </div>
                     <div
                       className="see-all-members"
-                      onClick={() => history.push("/community/team-management")}
+                      onClick={() => {
+                        dispatch(navigationIndexForCommunityDash(8));
+                        history.push(
+                          `/user/${userId}/community/team-management/${id}`
+                        );
+                      }}
                       style={{ fontFamily: "Inter" }}
                     >
                       See all
@@ -432,7 +454,13 @@ const Overview = () => {
                       <Avatar
                         alt="Travis Howard"
                         variant="rounded"
-                        src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`}
+                        src={
+                          superAdminImage.startsWith(
+                            "https://lh3.googleusercontent.com"
+                          )
+                            ? superAdminImage
+                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                        }
                         className={classes.large}
                       />
                       <div

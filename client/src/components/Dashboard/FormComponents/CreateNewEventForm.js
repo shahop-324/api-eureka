@@ -6,6 +6,11 @@ import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { createEvent } from "../../../actions";
 
+import { IconButton } from "@material-ui/core";
+
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
+
 const renderInput = ({
   input,
   meta: { touched, error, warning },
@@ -55,7 +60,7 @@ const renderTextArea = ({
   return (
     <div className={className}>
       <textarea
-      rows="2"
+        rows="2"
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -64,7 +69,7 @@ const renderTextArea = ({
         required
       />
 
-{touched &&
+      {touched &&
         ((error && (
           <div style={{ color: "red", fontWeight: "500" }} className="my-1">
             {error}
@@ -205,28 +210,41 @@ const CreateNewEventForm = (props) => {
     showResults(ModifiedFormValues);
     dispatch(createEvent(ModifiedFormValues));
 
-   
     props.handleClose();
   };
   return (
     <>
       <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
         <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
-          <h2
-            className={
-              `overlay-form-heading ` +
-              (props.hideFormHeading === "1" ? "hide" : "")
-            }
-            style={{fontFamily: "Inter", fontWeight: "600"}}
-          >
-            New Event
-          </h2>
+        <div
+              className="form-heading-and-close-button "
+              style={{ width: "100%" }}
+            >
+              <div></div>
+              <h2 className="overlay-form-heading" style={{fontFamily: "Inter"}}>New Event</h2>
+              <div
+                className="overlay-form-close-button"
+                onClick={props.closeHandler}
+                // onClick={(props)=>{
+                //   props.closeHandler,
+                //   dispatch(reset(form:"newCreatedCommunity")),
+
+                // }
+                // }
+              >
+                {/* <div> */}
+                <IconButton type="button" aria-label="delete" onClick={props.handleClose}>
+                  <CancelRoundedIcon />
+                </IconButton>
+                {/* </div> */}
+              </div>
+            </div>
           <h5
             className={
               `overlay-sub-form-heading mb-5 ` +
               (props.hideFormHeading === "1" ? "hide" : "")
             }
-            style={{fontFamily: "Inter"}}
+            style={{ fontFamily: "Inter" }}
           >
             Let's create an all new event for your community.
           </h5>
@@ -292,6 +310,7 @@ const CreateNewEventForm = (props) => {
                 component={renderInput}
                 min={Date.now()}
               />
+              
             </div>
           </div>
           <div class="mb-4 overlay-form-input-row form-row-2-in-1">
@@ -414,7 +433,7 @@ const CreateNewEventForm = (props) => {
                 `btn btn-outline-primary btn-outline-text me-3 ` +
                 (props.showInlineButton === "false" ? "hide" : "")
               }
-              style={{textAlign: "center"}}
+              style={{ textAlign: "center" }}
             >
               Discard
             </button>
@@ -424,7 +443,7 @@ const CreateNewEventForm = (props) => {
                 `btn btn-primary btn-outline-text ` +
                 (props.showInlineButton === "false" ? "hide" : "")
               }
-              style={{textAlign: "center"}}
+              style={{ textAlign: "center" }}
             >
               Save changes
             </button>
@@ -453,7 +472,7 @@ const CreateNewEventForm = (props) => {
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.eventName) {
     errors.eventName = "Event name is required";
   }
@@ -481,7 +500,7 @@ const validate = (formValues) => {
   if (!formValues.visibility) {
     errors.visibility = "Event visibility is required";
   }
-  
+
   return errors;
 };
 
@@ -489,4 +508,3 @@ export default reduxForm({
   form: " createNewEventForm",
   validate,
 })(CreateNewEventForm);
-

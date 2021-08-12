@@ -211,7 +211,7 @@ const EventManagement = () => {
       <Dialog
         fullScreen={fullScreen}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <CreateNewEventForm

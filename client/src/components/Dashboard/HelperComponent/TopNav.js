@@ -56,7 +56,7 @@ const Topnav = ({
               href="https://www.evenz.in/home"
               style={{ textDecoration: "none", color: "#538BF7" }}
             >
-              Evenz <span>Communities</span>
+              Evenz
             </a>
           </div>
         </div>
