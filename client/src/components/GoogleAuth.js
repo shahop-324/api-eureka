@@ -77,7 +77,7 @@ class GoogleAuth extends React.Component {
                           alt="google-signin"
                         />
                         <div className="sign-in-with-google-text ms-4">
-                         <a href="https://www.evenz.co.in/api-eureka/eureka/v1/auth/google" style={{textDecoration: "none"}}>Sign in with google</a> 
+                         Sign in with google
                         </div>
                       </div>
                     </button>
