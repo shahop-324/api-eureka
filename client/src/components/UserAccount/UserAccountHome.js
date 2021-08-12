@@ -20,20 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 import history from "../../history";
 import Loader from "../Loader";
 const UserAccountHome = () => {
-  const { isClicked } = useSelector((state) => state.googleAuth);
-
   const { isLoading, error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  if (isClicked) {
-    dispatch(googleSignIn());
-  }
 
   useEffect(() => {
-    if (!isClicked) {
-      dispatch(fetchUserAllPersonalData());
-    }
-  }, [isClicked, dispatch]);
+    dispatch(fetchUserAllPersonalData());
+  }, [dispatch]);
   useEffect(() => {
     return () => {
       console.log("cleaned up");
@@ -71,7 +64,7 @@ const UserAccountHome = () => {
   if (error) {
     dispatch(errorTrackerForPersonalData());
     alert(error);
-    return; 
+    return;
   }
 
   return (

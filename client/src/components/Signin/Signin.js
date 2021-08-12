@@ -97,9 +97,10 @@ const Signin = (props) => {
   }
 
   if (error) {
+    // dispatch(resetAuthError());
     alert(error);
+    setSigninClicked(false);
     dispatch(errorTrackerForSignIn());
-
     return;
   }
 
@@ -138,7 +139,6 @@ const Signin = (props) => {
                 </div>
 
                 <GoogleAuth />
-                
 
                 <div
                   className="row d-flex"
@@ -240,7 +240,7 @@ const Signin = (props) => {
                   </div>
                   <div
                     className="row"
-                    style={{ padding: "0 2%", marginTop: "3%" }}
+                    style={{ padding: "0 0%", marginTop: "3%" }}
                   >
                     <button
                       type="submit"

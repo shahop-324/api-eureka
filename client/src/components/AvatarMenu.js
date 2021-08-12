@@ -13,7 +13,7 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import { navigationIndex, signOut } from "../actions/index";
+import { communitySignIn, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 const useStyles = makeStyles((theme) => ({
@@ -76,7 +76,6 @@ const AvatarMenu = () => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
-
     prevOpen.current = open;
   }, [open]);
 
@@ -91,6 +90,7 @@ const AvatarMenu = () => {
     return alert(error);
   }
   const image = user.userDetails.image;
+  const userName = user.userDetails.firstName;
 
   const communities = user.userDetails.communities;
   const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
@@ -102,9 +102,7 @@ const AvatarMenu = () => {
           className="px-3 me-2 menulist-community-tab"
           style={{ width: "100%" }}
           onClick={() => {
-            history.push(
-              `/user/${user.userDetails._id}/community/overview/${community._id}`
-            );
+            dispatch(communitySignIn(community._id, user.userDetails._id));
           }}
         >
           <div className="avatar-menu-community-tab d-flex flex-row align-items-center" style={{maxWidth: "160px"}}>
@@ -134,7 +132,7 @@ const AvatarMenu = () => {
           disableElevation={true}
         >
           <div className="avatar-menu-h-wrapper d-flex flex-row me-3 ms-3 align-items-center ps-3 py-2">
-            <Avatar variant="rounded" alt="Travis Howard" src={imgURL} />
+            <Avatar variant="rounded" alt={userName} src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>
         </Button>

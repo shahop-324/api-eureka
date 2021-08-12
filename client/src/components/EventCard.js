@@ -40,7 +40,7 @@ const EventCard = ({
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="d-flex flex-row align-items-center justify-content-between">
-        <div className="event-card-date-main mb-3">{date} - {endDate}</div>
+        <div className="event-card-date-main mb-3" style={{fontWeight: "600", fontSize: "0.8rem"}}>{date} - {endDate}</div>
         <div className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2">
           <StarRateRoundedIcon className="me-1" />
           {rating}
@@ -53,16 +53,16 @@ const EventCard = ({
             to={`/event-Landing-page/${id}`}
             style={{
               textDecoration: "none",
-              color: "#212121",
+              color: "#353535",
               fontWeight: "600",
               fontFamily: "ubuntu",
-              fontSize: "1.1rem",
+              fontSize: "1rem",
             }}
           >
             {eventName}
           </Link>
         </div>
-        <div className="event-card-price-main">
+        <div className="event-card-price-main" style={{fontWeight: "600", fontSize: "0.9rem"}}>
           $ {minPrice} - $ {maxPrice}
         </div>
 

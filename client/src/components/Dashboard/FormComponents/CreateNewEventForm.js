@@ -217,6 +217,7 @@ const CreateNewEventForm = (props) => {
               `overlay-form-heading ` +
               (props.hideFormHeading === "1" ? "hide" : "")
             }
+            style={{fontFamily: "Inter", fontWeight: "600"}}
           >
             New Event
           </h2>
@@ -225,6 +226,7 @@ const CreateNewEventForm = (props) => {
               `overlay-sub-form-heading mb-5 ` +
               (props.hideFormHeading === "1" ? "hide" : "")
             }
+            style={{fontFamily: "Inter"}}
           >
             Let's create an all new event for your community.
           </h5>
@@ -412,6 +414,7 @@ const CreateNewEventForm = (props) => {
                 `btn btn-outline-primary btn-outline-text me-3 ` +
                 (props.showInlineButton === "false" ? "hide" : "")
               }
+              style={{textAlign: "center"}}
             >
               Discard
             </button>
@@ -421,6 +424,7 @@ const CreateNewEventForm = (props) => {
                 `btn btn-primary btn-outline-text ` +
                 (props.showInlineButton === "false" ? "hide" : "")
               }
+              style={{textAlign: "center"}}
             >
               Save changes
             </button>
@@ -436,7 +440,7 @@ const CreateNewEventForm = (props) => {
                 `btn btn-primary btn-outline-text ` +
                 (props.showBlockButton === "false" ? "hide" : "")
               }
-              style={{ width: "100%" }}
+              style={{ width: "100%", textAlign: "center" }}
             >
               Create New Event
             </button>

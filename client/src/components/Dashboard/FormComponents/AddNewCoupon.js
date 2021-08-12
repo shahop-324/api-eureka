@@ -263,7 +263,7 @@ const AddNewCoupon = (props) => {
               <button
                 type="submit"
                 className="btn btn-primary btn-outline-text"
-                style={{ width: "100%" }}
+                style={{ width: "100%", textAlign: "center" }}
                 // disabled={pristine || submitting}
               >
                 Create New Coupon

@@ -61,7 +61,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
     console.log(err.response);
-    alert(err.response.data.message);
   }
 };
 export const errorTrackerForSignIn = () => async (dispatch, getState) => {
@@ -3165,7 +3164,7 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
   const getNetworkSettings = async () => {
     console.log(id);
 
-    let res = await fetch(`${BaseURL}events/${id}/getNetworkSettings`, {
+    let res = await fetch(`${BaseURL}/events/${id}/getNetworkSettings`, {
       method: "GET",
 
       headers: {
