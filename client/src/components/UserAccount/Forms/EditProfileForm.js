@@ -182,9 +182,12 @@ let EditProfileForm = (props) => {
     imgKey = userDetails.image;
   }
 
-  let imgUrl = " #";
-  if (imgKey) {
+  let imgUrl;
+  if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
     imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+  }
+  else {
+    imgUrl = imgKey;
   }
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
@@ -248,7 +251,7 @@ let EditProfileForm = (props) => {
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
                 variant="rounded"
-                alt="Travis Howard"
+                alt={"Travis Howard"}
                 src={fileToPreview}
                 className={classes.large}
               />
