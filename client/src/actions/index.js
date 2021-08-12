@@ -105,6 +105,7 @@ export const googleSignIn =
       dispatch(
         authActions.SignIn({
           token: res.data.token,
+          isSignedInThroughGoogle: true,
         })
       );
       dispatch(
