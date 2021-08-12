@@ -13,7 +13,7 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import { navigationIndex, signOut } from "../actions/index";
+import { communitySignIn, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 const useStyles = makeStyles((theme) => ({
@@ -102,9 +102,7 @@ const AvatarMenu = () => {
           className="px-3 me-2 menulist-community-tab"
           style={{ width: "100%" }}
           onClick={() => {
-            history.push(
-              `/user/${user.userDetails._id}/community/overview/${community._id}`
-            );
+            dispatch(communitySignIn(community._id, user.userDetails._id));
           }}
         >
           <div className="avatar-menu-community-tab d-flex flex-row align-items-center" style={{maxWidth: "160px"}}>
