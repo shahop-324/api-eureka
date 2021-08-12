@@ -615,13 +615,17 @@ const EventLandingPage = (props) => {
 
               {console.log(event.editingComment)}
 
-              <div
-                id="overview-section"
-                className="overview-content mb-5 mt-3 pt-4"
-                dangerouslySetInnerHTML={{
-                 __html: convertFromJSONToHTML(event.editingComment),
-                }}
-              ></div>
+              {event.editingComment ? (
+                <div
+                  id="overview-section"
+                  className="overview-content mb-5 mt-3 pt-4"
+                  dangerouslySetInnerHTML={{
+                    __html: convertFromJSONToHTML(event.editingComment),
+                  }}
+                ></div>
+              ) : (
+                <></>
+              )}
 
               <hr className="my-5" />
 
