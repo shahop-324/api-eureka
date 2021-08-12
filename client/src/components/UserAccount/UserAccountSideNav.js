@@ -132,11 +132,7 @@ const UserAccountSideNav = () => {
             // TODO ALLOW COMMUNITY TO UPLOAD AND EDIT ITS LOGO
             communityId={community.id}
             key={community.id}
-            communityImage={
-              image.startsWith("https://lh3.googleusercontent.com")
-                ? image
-                : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`
-            }
+            communityImage={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`}
           />
         );
       });
