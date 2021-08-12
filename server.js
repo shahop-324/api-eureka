@@ -12,7 +12,7 @@ process.on("uncaughtException", (err) => {
 });
 
 dotenv.config({ path: "./config.env" });
-
+const cors = require("cors");
 const app = require("./app");
 const http = require("http");
 const server = http.createServer(app);
@@ -26,11 +26,11 @@ const io = require("socket.io")(server, {
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
-    credentials: true,
+    
   },
 });
 
-const cors = require("cors");
+
 const Event = require("./models/eventModel");
 const User = require("./models/userModel");
 

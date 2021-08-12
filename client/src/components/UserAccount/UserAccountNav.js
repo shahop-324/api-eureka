@@ -10,6 +10,7 @@ class UserAccountNav extends React.Component {
         style={{ marginLeft: "auto", marginRight: "auto", minWidth: "1256px", overflow: "visible" }}
       >
         <div className="custom-nav-bar d-flex flex-row align-items-center justify-content-between px-3 py-2">
+          
           <a
             href="https://www.evenz.in/home"
             className="navbar-brand"

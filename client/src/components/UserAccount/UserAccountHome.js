@@ -89,10 +89,9 @@ const UserAccountHome = () => {
 
             overflow: "scroll",
             width: "auto",
-            // whiteSpace: "nowrap",
           }}
         >
-          <UserAccountNav />
+          <UserAccountNav  />
           <div className="user-account-body">
             <UserAccountSideNav />
             <div

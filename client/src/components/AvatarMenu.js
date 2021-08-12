@@ -93,7 +93,15 @@ const AvatarMenu = () => {
   const userName = user.userDetails.firstName;
 
   const communities = user.userDetails.communities;
-  const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+
+  let imgURL;
+
+  if(image.startsWith("https://lh3.googleusercontent.com")) {
+    imgURL = image;
+  }
+ else {
+   imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+  }
 
   const renderCommunities = (communities, handleClose) => {
     return communities.map((community) => {
