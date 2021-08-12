@@ -33,29 +33,55 @@ const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { isLoading, error } = useSelector((state) => state.RTM);
-
-  const isEventLoading = useSelector((state) => state.event.isLoading);
-  const eventError = useSelector((state) => state.event.error);
-
   console.log(params);
 
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  useEffect(() => {
-    dispatch(fetchEvent(eventId));
-  }, [dispatch, eventId]);
+  const { isLoading, error } = useSelector((state) => state.RTM);
 
-  const {eventName, createdBy} = useSelector((state) => state.event.eventDetails);
+  const isEventLoading = useSelector((state) => state.event.isLoading);
+  const eventError = useSelector((state) => state.event.error);
 
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const communityLogo = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${createdBy.image}`;
+  const eventDetails = useSelector((state) => state.event.eventDetails);
 
-  const communityName = createdBy.name;
+  let currentIndex = useSelector(
+    (state) => state.navigation.currentIndexForHostingPlatform
+  );
+
+
+  const speaker = useSelector((state) => {
+    return state.speaker.speakers.find((speaker) => {
+      return speaker.id === id;
+    });
+  });
+
+  // TODO USER OR HOST
+
+  const event = useSelector((state) => {
+    return state.event.events.find((event) => {
+      return event.id === eventId;
+    });
+  });
+
+  console.log(speaker);
+  console.log(event);
+
+
+  useEffect(() => {
+    return () => {
+      dispatch(navigationIndexForHostingPlatform(0));
+    };
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    dispatch(fetchEvent(eventId));
+  }, [dispatch, eventId]);
 
   const userId = userDetails._id;
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
@@ -70,8 +96,6 @@ const Root = () => {
     : "Vice President";
 
   console.log(role, id, email);
-
-
 
   useEffect(() => {
 
@@ -98,18 +122,18 @@ const Root = () => {
       );
     });
 
-    socket.on("updatedSession", ({ session }) => {
-      console.log(session);
+    // socket.on("updatedSession", ({ session }) => {
+    //   console.log(session);
 
-      dispatch(
-        sessionActions.EditSession({
-          session: session,
-        })
-      );
-    });
+    //   dispatch(
+    //     sessionActions.EditSession({
+    //       session: session,
+    //     })
+    //   );
+    // });
 
     // dispatch(getCurrentUsers(eventId));
-    console.log(eventId);
+    
     // socket = io("http://localhost:3000");
 
     // dispatch(createSocket(socket));
@@ -141,8 +165,6 @@ const Root = () => {
     } else if (role === "audience" || role === "host") {
       dispatch(fetchUserAllPersonalData(id));
     }
-    dispatch(fetchEvent(eventId));
-
     // return ()=>{
     //  socket.emit('disconnection')
     //  socket.off();
@@ -160,28 +182,37 @@ const Root = () => {
     });
   }, [dispatch]);
 
-  const speaker = useSelector((state) => {
-    return state.speaker.speakers.find((speaker) => {
-      return speaker.id === id;
-    });
-  });
 
-  // TODO USER OR HOST
 
-  const event = useSelector((state) => {
-    return state.event.events.find((event) => {
-      return event.id === eventId;
-    });
-  });
+  ////////////////
 
-  console.log(speaker);
-  console.log(event);
 
-  useEffect(() => {
-    return () => {
-      dispatch(navigationIndexForHostingPlatform(0));
-    };
-  }, [dispatch]);
+  // if(isEventLoading ) {
+  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader/> </div>);
+  // }
+
+  // if(eventError) {
+  //   alert(error);
+  //   dispatch(errorTrackerForFetchEvent());
+  //   return;
+  // }
+
+  if( eventError) {
+    alert(error);
+    dispatch(errorTrackerForFetchingRTCToken());
+    return;
+  }
+
+
+  const eventName =  eventDetails.eventName;
+
+  const createdBy = eventDetails.createdBy;
+
+
+  const communityLogo = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${createdBy.image}`;
+
+  const communityName = createdBy.name;
+
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
@@ -227,22 +258,12 @@ const Root = () => {
     // write logic for logging out here
   };
 
-  let currentIndex = useSelector(
-    (state) => state.navigation.currentIndexForHostingPlatform
-  );
+ 
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader/> </div>);
-  }
-
-  if(error) {
-    dispatch(errorTrackerForFetchingRTCToken());
-    alert(error);
-    return;
-  }
+  
 
   return (
     <>

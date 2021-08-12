@@ -44,7 +44,7 @@ const renderSpeakerList = (speakers) => {
     return (
       <SessionSpeakerCard
         image={
-          speaker.image.startsWith("https://lh3.googleusercontent.com")
+          speaker.image && speaker.image.startsWith("https://lh3.googleusercontent.com")
             ? speaker.image
             : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`
         }
