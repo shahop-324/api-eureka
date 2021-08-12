@@ -95,15 +95,14 @@ const SideNavEdit = (props) => {
                 <ArrowBackIosIcon style={{ fontSize: 18 }} />
               </IconButton>
             </Link>
-
             {isLoading ? (
               <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only text-primary">Loading...</span>
               </div>
             ) : isAlreadyPublished ? (
-              <button className="btn btn-outline-primary btn-outline-text me-2">
+              <div className="me-3 px-3 py-2 answered-status-chip">
                 Published
-              </button>
+              </div>
             ) : (
               <button
                 onClick={() => {
