@@ -11,6 +11,7 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
+  errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
   fetchEventChats,
@@ -34,14 +35,27 @@ const Root = () => {
 
   const { isLoading, error } = useSelector((state) => state.RTM);
 
+  const isEventLoading = useSelector((state) => state.event.isLoading);
+  const eventError = useSelector((state) => state.event.error);
+
   console.log(params);
 
   const eventId = params.eventId;
   const communityId = params.communityId;
 
+  useEffect(() => {
+    dispatch(fetchEvent(eventId));
+  }, [dispatch, eventId]);
+
+  const {eventName, createdBy} = useSelector((state) => state.event.eventDetails);
+
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
+
+  const communityLogo = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${createdBy.image}`;
+
+  const communityName = createdBy.name;
 
   const userId = userDetails._id;
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
@@ -235,6 +249,8 @@ const Root = () => {
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
+        communityLogo={communityLogo}
+        communityName={communityName}
           socket={socket}
           activeIndex={currentIndex}
           handleLobbyClick={handleLobbyClick}
@@ -247,7 +263,9 @@ const Root = () => {
 
         {/* Mid container */}
         <div style={{ height: "100vh" }}>
-          <MidTopNav />
+          <MidTopNav 
+          eventName={eventName}
+          />
           <div className="main-body-content-h">
             <div className="layer-3-mh py-4 px-5">
               <div style={{ maxWidth: "1360px" }}>

@@ -65,7 +65,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleOverviewClick();
-            handleCloseDrawer();
+            handleCloseDrawer &&  handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -95,7 +95,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleEventManagementClick();
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -123,7 +123,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleReviewsClick();
-            handleCloseDrawer();
+            handleCloseDrawer &&  handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -150,8 +150,8 @@ const SideNav = (props) => {
 
         <div
           onClick={() => {
-            handleCloseDrawer();
             props.handleQueriesClick();
+            handleCloseDrawer &&  handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -180,7 +180,7 @@ const SideNav = (props) => {
           onClick={() => {
             props.handleRegistrationsClick();
 
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -209,7 +209,7 @@ const SideNav = (props) => {
           onClick={() => {
             props.handleCouponsClick();
 
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -237,7 +237,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleRecordingsClick();
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -267,7 +267,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleBillingClick();
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -295,7 +295,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleTeamManagementClick();
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -322,7 +322,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleRevenueManagementClick();
-            handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -401,7 +401,7 @@ const SideNav = (props) => {
           <Button
             onClick={() => {
               handleClose();
-              handleCloseDrawer();
+              handleCloseDrawer &&  handleCloseDrawer();
             }}
             color="primary"
           >
@@ -420,7 +420,7 @@ const SideNav = (props) => {
                 });
               }
               handleClose();
-              handleCloseDrawer();
+              handleCloseDrawer && handleCloseDrawer();
             }}
             color="primary"
           >

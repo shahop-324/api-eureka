@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-const EventBanner = () => {
+const EventBanner = ({eventName, shortDescription, createdBy}) => {
+ const communityName = createdBy.name;
+
+ const imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${createdBy.image}`;
+
+
     const classes = useStyles();
     return (
         <>
@@ -28,17 +33,16 @@ const EventBanner = () => {
                 <div className="banner-side-l px-5 mx-3">
                   <div className="welcome-to-text mb-2">Welcome to,</div>
                   <div className="event-big-name mb-2">
-                    Virtual Career Fair India 21'
+                    {eventName}
                   </div>
                   <div className="event-banner-short-description mb-4">
-                    Because of such shift, virtual career fair platforms have
-                    become indispensable to talent acquisition teams.
+                    {shortDescription}
                   </div>
                   <div className="hosted-by-wrapper d-flex flex-row align-items-center">
                     <div className="hosted-by-l me-3">
                       <Avatar
-                        alt="Travis Howard"
-                        src={Faker.image.avatar()}
+                        alt={communityName}
+                        src={imgURL}
                         className={classes.large}
                         variant="rounded"
                       />
@@ -46,7 +50,7 @@ const EventBanner = () => {
                     <div className="hosted-by-r">
                       <div className="hosted-by-text">Hosted by</div>
                       <div className="hosted-by-community-name">
-                        Gypsy Harghwey
+                       {communityName}
                       </div>
                     </div>
                   </div>
