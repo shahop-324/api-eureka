@@ -4039,10 +4039,18 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
 
     const client = AgoraRTM.createInstance(appID);
 
-    await client.login({
-      uid: getState().user.userDetails._id,
-      token: res.token,
-    });
+    await client.login(
+      {
+        uid: getState().user.userDetails._id,
+        token: res.token,
+      },
+      () => {
+        console.log("logged In Successfully");
+      },
+      () => {
+        console.log("log in failed");
+      }
+    );
     dispatch(
       RTMActions.fetchRTMToken({
         token: res.token,

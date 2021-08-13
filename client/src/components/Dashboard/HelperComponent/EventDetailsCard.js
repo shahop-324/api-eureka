@@ -5,10 +5,7 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import Ripple from "./../../ActiveStatusRipple";
 import "./../../../assets/Sass/DataGrid.scss";
 
-import {
-  
-  generateEventAccessToken,
-} from "../../../actions";
+import { fetchEvent, generateEventAccessToken } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -36,7 +33,7 @@ const EventDetailCard = ({
   const userId = params.userId;
   const email = useSelector((state) => state.user.userDetails.email);
   console.log(userId);
-  
+
   return (
     <>
       <div className="events-field-value-container">
@@ -45,9 +42,8 @@ const EventDetailCard = ({
             className="event-field-label event-edit-icon "
             to={`/community/${communityId}/edit-event/${id}/basics`}
           >
-            <IconButton >
-
-            <EditRoundedIcon />
+            <IconButton>
+              <EditRoundedIcon />
             </IconButton>
           </Link>
         </div>
@@ -57,7 +53,6 @@ const EventDetailCard = ({
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
           >
-
             <img
               src={imgUrl}
               alt="event-poster"
@@ -68,13 +63,18 @@ const EventDetailCard = ({
                 to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
-                <div className="event-name-d" style={{ fontFamily: "Inter" }}>{eventName}</div>
+                <div className="event-name-d" style={{ fontFamily: "Inter" }}>
+                  {eventName}
+                </div>
               </Link>
               <Link
                 to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
-                <div className="event-short-description-d" style={{ fontFamily: "Inter" }}>
+                <div
+                  className="event-short-description-d"
+                  style={{ fontFamily: "Inter" }}
+                >
                   {shortDescription}
                 </div>
               </Link>
@@ -83,22 +83,35 @@ const EventDetailCard = ({
         </div>
 
         <div className="event-visibility-field">
-          <div className="event-field-label field-label-value" style={{ fontFamily: "Inter" }}>
+          <div
+            className="event-field-label field-label-value"
+            style={{ fontFamily: "Inter" }}
+          >
             {visibility}
           </div>
         </div>
         <div className="event-status-field">
           <div className="event-field-label field-label-value">
             <div className="chip-container">
-              <div className="chip-text" style={{ fontFamily: "Inter" }}>{publishedStatus}</div>
+              <div className="chip-text" style={{ fontFamily: "Inter" }}>
+                {publishedStatus}
+              </div>
             </div>
           </div>
         </div>
         <div className="event-views-field">
-          <div className="event-field-label field-label-value" style={{ fontFamily: "Inter" }}>{views}</div>
+          <div
+            className="event-field-label field-label-value"
+            style={{ fontFamily: "Inter" }}
+          >
+            {views}
+          </div>
         </div>
         <div className="event-registrations-field">
-          <div className="event-field-label field-label-value" style={{ fontFamily: "Inter" }}>
+          <div
+            className="event-field-label field-label-value"
+            style={{ fontFamily: "Inter" }}
+          >
             {registrations}
           </div>
         </div>
@@ -112,7 +125,15 @@ const EventDetailCard = ({
                 <Ripple /> Active{" "}
               </div>
             ) : (
-              <div style={{fontFamily:"Inter", fontWeight: "500", color: "#D64329"}}>Inactive</div>
+              <div
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  color: "#D64329",
+                }}
+              >
+                Inactive
+              </div>
             )}
           </div>
         </div>
@@ -120,7 +141,10 @@ const EventDetailCard = ({
           <div className="event-field-label field-label-value">
             <div className="visit-stage-button">
               <Link
-                to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
+                onClick={() => {
+                  dispatch(fetchEvent(eventId));
+                }}
+                to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
                   onClick={() => {

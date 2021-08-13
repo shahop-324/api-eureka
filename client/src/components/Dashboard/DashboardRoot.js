@@ -26,6 +26,7 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
+
 import ErrorBoundriesDashboardOverview from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
 
 import ErrorBoundriesBilling from "../ErrorBoundries.js/ErrorBoundriesDashboardBilling";
@@ -37,6 +38,9 @@ import ErrorBoundriesReviews from "../ErrorBoundries.js/ErrorBoundariesDashboard
 import ErrorBoundriesTeamManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardTeamManagement";
 import ErrorBoundriesQueries from "../ErrorBoundries.js/ErrorBoundriesDashboardQueries";
 import ErrorBoundriesEventManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardEventManagement";
+
+import ErrorBoundary from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
+
 const DashboardRoot = () => {
   const params = useParams();
 

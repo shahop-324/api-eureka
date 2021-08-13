@@ -608,6 +608,9 @@ $font-family: 'Inter';
   .dashboard-body {
     grid-template-columns: 1fr;
   }
+  .dashboard-body-edit {
+    grid-template-columns: 2fr 9fr !important;
+  }
 
   .side-nav-container {
     display: none;

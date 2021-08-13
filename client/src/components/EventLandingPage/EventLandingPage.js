@@ -783,7 +783,10 @@ const EventLandingPage = (props) => {
             </div>
             <div className="event-landing-other-info">
               <div className="event-info-card-1">
-                <div className="event-info-card-1-primary px-4 py-2" style={{zIndex: "10000"}}>
+                <div
+                  className="event-info-card-1-primary px-4 py-2"
+                  style={{ zIndex: "10000" }}
+                >
                   <div className="month-main mb-3">{startMonth}</div>
                   <div className="date-duration-main mb-3">
                     {startDate} - {endDate}
