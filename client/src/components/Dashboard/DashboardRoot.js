@@ -26,7 +26,9 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-import ErrorBoundary from "../../components/ErrorBoundaries";
+import ErrorBoundary  from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
+
+
 const DashboardRoot = () => {
   const params = useParams();
 
@@ -211,7 +213,7 @@ const DashboardRoot = () => {
                   return (
                     <ErrorBoundary>
                       <RevenueManagement />
-                    </ErrorBoundary>
+                      </ErrorBoundary>
                   );
 
                 default:

@@ -42,6 +42,7 @@ import EventManagementHome from "./StaticScreens/Screens/EventManagementHome";
 import EventBuilder from "./StaticScreens/Screens/EventBuilder";
 import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
+import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 AOS.init();
 
 class App extends React.Component {
@@ -91,6 +92,7 @@ class App extends React.Component {
                 exact
                 component={AcceptSpeakerInvite}
               />
+              <Route path="/compatibility-test/:eventId" exact component={CompatibilityTest} />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route
