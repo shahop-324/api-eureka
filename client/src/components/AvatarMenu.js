@@ -139,7 +139,7 @@ const AvatarMenu = () => {
           onClick={handleToggle}
           disableElevation={true}
         >
-          <div className="avatar-menu-h-wrapper d-flex flex-row ms-3 align-items-center ps-3 py-2">
+          <div className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2">
             <Avatar variant="rounded" alt={userName} src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>

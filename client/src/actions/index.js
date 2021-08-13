@@ -629,7 +629,7 @@ export const fetchEventsOfParticularCommunity =
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/event`;
+      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/events`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 

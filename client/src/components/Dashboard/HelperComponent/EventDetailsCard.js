@@ -7,6 +7,7 @@ import "./../../../assets/Sass/DataGrid.scss";
 
 import {
   
+  fetchEvent,
   generateEventAccessToken,
 } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -120,6 +121,11 @@ const EventDetailCard = ({
           <div className="event-field-label field-label-value">
             <div className="visit-stage-button">
               <Link
+
+onClick={() => {
+  dispatch(fetchEvent(eventId));
+}}
+
                 to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
               >
                 <button
@@ -133,6 +139,9 @@ const EventDetailCard = ({
                         communityId
                       )
                     );
+
+
+
                   }}
                   className="btn btn-primary event-field-label py-2"
                   style={{ color: "#ffffff" }}

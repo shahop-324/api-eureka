@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 
@@ -12,6 +13,7 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
+  errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
   fetchEventChats,
@@ -35,12 +37,17 @@ const Root = () => {
 
   console.log(params);
 
+  useEffect(() => {
+    dispatch(fetchEvent(eventId));
+  }, []);
+
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  const { isLoading, error } = useSelector((state) => state.RTM);
-
+  const isEventLoading = useSelector((state) => state.event.isLoading);
   const eventError = useSelector((state) => state.event.error);
+
+  const { isLoading, error } = useSelector((state) => state.RTM);
 
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
@@ -51,7 +58,6 @@ const Root = () => {
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForHostingPlatform
   );
-
 
   const speaker = useSelector((state) => {
     return state.speaker.speakers.find((speaker) => {
@@ -70,17 +76,11 @@ const Root = () => {
   console.log(speaker);
   console.log(event);
 
-
   useEffect(() => {
     return () => {
       dispatch(navigationIndexForHostingPlatform(0));
     };
   }, [dispatch]);
-
-
-  useEffect(() => {
-    dispatch(fetchEvent(eventId));
-  }, [dispatch, eventId]);
 
   const userId = userDetails._id;
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
@@ -97,19 +97,20 @@ const Root = () => {
   console.log(role, id, email);
 
   useEffect(() => {
-
     dispatch(getRTMToken(eventId));
 
-    socket.on("previousEventMessages", ({chats}) => {
+    socket.on("previousEventMessages", ({ chats }) => {
       console.log(chats);
-     dispatch(fetchEventChats(chats));
-    })
+      dispatch(fetchEventChats(chats));
+    });
 
-    socket.on("roomChairData", ({roomChairs}) => {
+    socket.on("roomChairData", ({ roomChairs }) => {
       console.log(roomChairs);
-      dispatch(roomsActions.FetchRoomsChairs({
-        chairs: roomChairs,
-      }))
+      dispatch(
+        roomsActions.FetchRoomsChairs({
+          chairs: roomChairs,
+        })
+      );
     });
 
     socket.on("roomSessionData", ({ sessions }) => {
@@ -132,7 +133,7 @@ const Root = () => {
     // });
 
     // dispatch(getCurrentUsers(eventId));
-    
+
     // socket = io("http://localhost:3000");
 
     // dispatch(createSocket(socket));
@@ -168,7 +169,20 @@ const Root = () => {
     //  socket.emit('disconnection')
     //  socket.off();
     // }
-  }, [dispatch, email, eventId, id, role, userCity, userCountry, userName, userImage, userId, userDesignation, userOrganisation]);
+  }, [
+    dispatch,
+    email,
+    eventId,
+    id,
+    role,
+    userCity,
+    userCountry,
+    userName,
+    userImage,
+    userId,
+    userDesignation,
+    userOrganisation,
+  ]);
 
   useEffect(() => {
     socket.on("roomData", ({ users }) => {
@@ -181,14 +195,7 @@ const Root = () => {
     });
   }, [dispatch]);
 
-
-
   ////////////////
-
-
-  // if(isEventLoading ) {
-  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100vw", height: "100vh"}}> <Loader/> </div>);
-  // }
 
   // if(eventError) {
   //   alert(error);
@@ -196,22 +203,25 @@ const Root = () => {
   //   return;
   // }
 
-  if( eventError) {
-    alert(error);
-    dispatch(errorTrackerForFetchingRTCToken());
-    return;
+  console.log(isEventLoading);
+
+  if (isEventLoading || isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100vw", height: "100vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-
-  const eventName =  eventDetails.eventName;
-
-  const createdBy = eventDetails.createdBy;
-
-
-  const communityLogo = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${createdBy.image}`;
-
-  const communityName = createdBy.name;
-
+  if (eventError) {
+    alert(error);
+    dispatch(errorTrackerForFetchEvent());
+    return;
+  }
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
@@ -257,20 +267,17 @@ const Root = () => {
     // write logic for logging out here
   };
 
- 
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
-
-  
 
   return (
     <>
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
-        communityLogo={communityLogo}
-        communityName={communityName}
+          communityLogo={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${eventDetails.createdBy.image}`}
+          communityName={eventDetails.createdBy.name}
           socket={socket}
           activeIndex={currentIndex}
           handleLobbyClick={handleLobbyClick}
@@ -283,9 +290,7 @@ const Root = () => {
 
         {/* Mid container */}
         <div style={{ height: "100vh" }}>
-          <MidTopNav 
-          eventName={eventName}
-          />
+          <MidTopNav eventName={eventDetails.eventName} />
           <div className="main-body-content-h">
             <div className="layer-3-mh py-4 px-5">
               <div style={{ maxWidth: "1360px" }}>
