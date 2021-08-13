@@ -11,7 +11,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
 import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
@@ -22,7 +21,7 @@ import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
-import AttachMoneyRoundedIcon from '@material-ui/icons/AttachMoneyRounded';
+import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
 import { useDispatch } from "react-redux";
 import { createCommunityFeedback } from "./../../../actions";
 
@@ -33,9 +32,9 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-
 const SideNav = (props) => {
   const dispatch = useDispatch();
+  const handleCloseDrawer = props.handleCloseDrawer;
 
   const [feedbackText, setFeedbackText] = React.useState(null);
 
@@ -64,7 +63,10 @@ const SideNav = (props) => {
     <>
       <div className="side-nav-wrapper py-4">
         <div
-          onClick={props.handleOverviewClick}
+          onClick={() => {
+            props.handleOverviewClick();
+            handleCloseDrawer &&  handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "0" ? "btn-active-d" : " ")
@@ -91,7 +93,10 @@ const SideNav = (props) => {
         <div className="sidenav-group-headline ps-4 pe-4 my-4">Management</div>
 
         <div
-          onClick={props.handleEventManagementClick}
+          onClick={() => {
+            props.handleEventManagementClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "1" ? "btn-active-d" : " ")
@@ -116,7 +121,10 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleReviewsClick}
+          onClick={() => {
+            props.handleReviewsClick();
+            handleCloseDrawer &&  handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "2" ? "btn-active-d" : " ")
@@ -141,7 +149,10 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleQueriesClick}
+          onClick={() => {
+            props.handleQueriesClick();
+            handleCloseDrawer &&  handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "3" ? "btn-active-d" : " ")
@@ -166,7 +177,11 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleRegistrationsClick}
+          onClick={() => {
+            props.handleRegistrationsClick();
+
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "4" ? "btn-active-d" : " ")
@@ -191,7 +206,11 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleCouponsClick}
+          onClick={() => {
+            props.handleCouponsClick();
+
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "5" ? "btn-active-d" : " ")
@@ -216,7 +235,10 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleRecordingsClick}
+          onClick={() => {
+            props.handleRecordingsClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "6" ? "btn-active-d" : " ")
@@ -243,7 +265,10 @@ const SideNav = (props) => {
         <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
 
         <div
-          onClick={props.handleBillingClick}
+          onClick={() => {
+            props.handleBillingClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "7" ? "btn-active-d" : " ")
@@ -268,7 +293,10 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleTeamManagementClick}
+          onClick={() => {
+            props.handleTeamManagementClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "8" ? "btn-active-d" : " ")
@@ -292,7 +320,10 @@ const SideNav = (props) => {
           </div>
         </div>
         <div
-          onClick={props.handleRevenueManagementClick}
+          onClick={() => {
+            props.handleRevenueManagementClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "9" ? "btn-active-d" : " ")
@@ -317,7 +348,9 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={handleClickOpen}
+          onClick={() => {
+            handleClickOpen();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (props.activeIndex === "10" ? "btn-active-d" : " ")
@@ -365,7 +398,13 @@ const SideNav = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={() => {
+              handleClose();
+              handleCloseDrawer &&  handleCloseDrawer();
+            }}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button
@@ -374,9 +413,14 @@ const SideNav = (props) => {
                 dispatch(
                   createCommunityFeedback({ feedbackText: feedbackText })
                 );
-                setState({ vertical: "top", horizontal: "center", openSuccess: true });
+                setState({
+                  vertical: "top",
+                  horizontal: "center",
+                  openSuccess: true,
+                });
               }
               handleClose();
+              handleCloseDrawer && handleCloseDrawer();
             }}
             color="primary"
           >
@@ -390,10 +434,7 @@ const SideNav = (props) => {
         onClose={handleCloseSuccess}
         autoHideDuration={4000}
       >
-        <Alert
-          onClose={handleCloseSuccess}
-          severity="success"
-        >
+        <Alert onClose={handleCloseSuccess} severity="success">
           Thanks for providing your valuable feedback! We have recieved it.
         </Alert>
       </Snackbar>

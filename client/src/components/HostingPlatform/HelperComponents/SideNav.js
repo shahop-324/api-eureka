@@ -12,6 +12,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { signOut } from "../../../actions"; 
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { Avatar } from "@material-ui/core";
 
 
 
@@ -28,11 +29,9 @@ const SideNav = (props) => {
   return (
     <>
       <div className="h-side-nav">
-        <div className="community-logo-container py-2 px-3">
-          <img
-            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-            alt="logo"
-          ></img>
+        <div className="community-logo-container d-flex flex-row align-items-center justify-content-center py-2 px-3" style={{height: "9vh"}}>
+          {/* Community Logo */}
+          <Avatar   src={props.communityLogo} alt={props.communityName} variant="rounded"/>
         </div>
         <div className="main-icon-btn-container py-3">
           <div

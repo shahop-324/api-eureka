@@ -11,7 +11,12 @@ import Button from "@material-ui/core/Button";
 
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForFetchSessionsForUser, fetchSessionsForUser } from "../../../actions";
+import {
+  errorTrackerForFetchEvent,
+  errorTrackerForFetchSessionsForUser,
+  fetchEvent,
+  fetchSessionsForUser,
+} from "../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../Loader";
 
@@ -89,12 +94,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LobbyAgenda = ({ socket }) => {
-
   const classes = useStyles();
 
   const dispatch = useDispatch();
 
-  const {error, isLoading} = useSelector((state) => state.session);
+  const eventError = useSelector((state) => state.event.error);
+  const isEventLoading = useSelector((state) => state.event.isLoading);
+
+  const { error, isLoading } = useSelector((state) => state.session);
 
   const role = useSelector((state) => state.eventAccessToken.role);
   const id = useSelector((state) => state.eventAccessToken.id);
@@ -107,27 +114,40 @@ const LobbyAgenda = ({ socket }) => {
   const communityId = params.communityId;
 
   useEffect(() => {
+    dispatch(fetchEvent(eventId));
+  }, [dispatch, eventId]);
+
+  useEffect(() => {
     dispatch(fetchSessionsForUser(eventId));
   }, [dispatch, eventId]);
 
   const sessions = useSelector((state) => state.session.sessions);
 
+  const {eventName, shortDescription, createdBy} = useSelector((state) => state.event.eventDetails);
+
   console.log(sessions);
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  if (isLoading ) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
-    dispatch(errorTrackerForFetchSessionsForUser());
+  if (error) {
     alert(error);
+    dispatch(errorTrackerForFetchSessionsForUser());
     return;
   }
 
-  
   return (
     <>
-      <EventBanner />
+      <EventBanner eventName={eventName} shortDescription={shortDescription} createdBy={createdBy} />
 
       <div className="lobby-navigation-wrapper d-flex flex-row mb-4">
         <div className="me-5 lobby-nav-btn lobby-nav-btn-active">Agenda</div>
@@ -136,22 +156,8 @@ const LobbyAgenda = ({ socket }) => {
 
       <div className="session-btn-and-filter-search-wrapper d-flex flex-row justify-content-between mb-5">
         <div className="all-and-my-sessions-w d-flex flex-row">
-          <Button
-            variant="contained"
-            color="primary"
-            className="session-switch session-switch-active me-3"
-            startIcon={<CalendarTodayIcon />}
-          >
-            All Sessions
-          </Button>
-
-          <Button
-            variant="contained"
-            className="session-switch"
-            startIcon={<NoteIcon />}
-          >
-            My Sessions
-          </Button>
+          <button className="btn btn-primary btn-outline-text me-4">All Sessions</button>
+          <button className="btn btn-light btn-outline-text me-4">My Sessions</button>
         </div>
 
         <div className="search-box-and-filter-icon-btn-w d-flex flex-row">

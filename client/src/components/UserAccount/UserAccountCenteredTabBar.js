@@ -27,7 +27,10 @@ export default function CenteredTabs(props) {
         <Tab label="Home" />
         <Tab label="Events" />
         <Tab label="Recordings" />
+        
         <Tab label="Profile" />
+        <Tab label="Reviews" />
+        <Tab label="Queries" />
       </Tabs>
     </Paper>
   );

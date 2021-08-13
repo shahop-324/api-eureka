@@ -36,6 +36,10 @@ const Topnav = ({
 }) => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const classes = useStyles();
+
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+  }
   return (
     <>
       <div className="row topnav-container px-3">
@@ -96,7 +100,7 @@ const Topnav = ({
 
       <React.Fragment key="left">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="left" open={openDrawer}>
+        <SwipeableDrawer anchor="left" open={openDrawer} >
           <div className="registration-more-details-right-drawer py-4" style={{minWidth: "18.18vw"}}>
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading"></div>
@@ -128,6 +132,7 @@ const Topnav = ({
               handleBillingClick={handleBillingClick}
               handleTeamManagementClick={handleTeamManagementClick}
               handleRevenueManagementClick={handleRevenueManagementClick}
+              handleCloseDrawer={handleCloseDrawer}
             />
           </div>
         </SwipeableDrawer>

@@ -21,14 +21,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SessionSpeakerCard = ({ name, headline }) => {
+const SessionSpeakerCard = ({ name, headline, image }) => {
   const classes = useStyles();
   return (
     <div className="session-speaker-card d-flex flex-row align-items-center px-4 py-3">
       <Avatar
-        alt="Travis Howard"
-        src={Faker.image.avatar()}
+        alt={name}
+        src={image}
         className={classes.large}
+        variant="rounded"
       />
       <div className="mx-3">
         <div className="speaker-card-name-h">{name}</div>
@@ -42,6 +43,11 @@ const renderSpeakerList = (speakers) => {
   return speakers.map((speaker) => {
     return (
       <SessionSpeakerCard
+        image={
+          speaker.image && speaker.image.startsWith("https://lh3.googleusercontent.com")
+            ? speaker.image
+            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`
+        }
         name={`${speaker.firstName} ${speaker.lastName}`}
         headline={speaker.headline}
       />
@@ -169,7 +175,7 @@ const SessionDetailCard = ({
                     }
                   }
                 );
-                
+
                 dispatch(
                   setSessionRoleAndJoinSession(
                     sessionRole,
@@ -180,7 +186,7 @@ const SessionDetailCard = ({
                 );
               }}
               className="btn-filled-h px-4 py-3 ms-3 join-session-btn"
-              style={{ backgroundColor: bgColor }}
+              style={{ backgroundColor: bgColor, textDecoration: "none" }}
             >
               {btnText}
             </Link>

@@ -69,10 +69,9 @@ export default function VerticalTabs() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userLoading) {
+   
       dispatch(fetchUserRegisteredEvents());
-    }
-  }, [userLoading, dispatch]);
+  }, [ dispatch]);
 
   if (isLoading) {
     return (
@@ -87,6 +86,14 @@ export default function VerticalTabs() {
     dispatch(errorTrackerForRegisteredEvents());
     alert(error);
     return;
+  }
+  else if(Array.isArray(events) && events.length) {
+    <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ height: "80vh", width: "100%" }}
+      >
+        <Loader />
+      </div>
   }
 
   console.log(events);
@@ -182,6 +189,8 @@ export default function VerticalTabs() {
         const end = new Date(event.endDate);
         const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
         const formatedEndDate = dateFormat(end,"mmm dS, h:MM TT" );
+
+        console.log(event.createdBy)
 
         return (
           <EventCard
