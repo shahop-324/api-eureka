@@ -58,14 +58,12 @@ const Coupons = () => {
       </div>
     );
   } else if (error) {
-    dispatch(errorTrackerForFetchCoupons());
-    alert(error);
-    return;
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Coupons</div>
           <div className="sec-heading-action-button d-flex flex-row">

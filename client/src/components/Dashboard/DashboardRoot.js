@@ -26,7 +26,17 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-import ErrorBoundary from "../../components/ErrorBoundaries";
+import ErrorBoundaryDashboardOverview from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+
+import ErrorBoundaryBilling from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryCoupons from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryRecordings from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryRegistrations from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryRevenueManagement from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryReviews from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryTeamManagement from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundaryQueries from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundriesEventManagement from "../ErrorBoundries.js/ErrorBoundriesEventManagement";
 const DashboardRoot = () => {
   const params = useParams();
 
@@ -146,72 +156,72 @@ const DashboardRoot = () => {
               switch (currentIndex) {
                 case "0":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryDashboardOverview>
                       <Overview />
-                    </ErrorBoundary>
+                    </ErrorBoundaryDashboardOverview>
                   );
 
                 case "1":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundriesEventManagement>
                       <EventManagement />
-                    </ErrorBoundary>
+                    </ErrorBoundriesEventManagement>
                   );
 
                 case "2":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryReviews>
                       <Reviews />
-                    </ErrorBoundary>
+                    </ErrorBoundaryReviews>
                   );
 
                 case "3":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryQueries>
                       <Queries />
-                    </ErrorBoundary>
+                    </ErrorBoundaryQueries>
                   );
 
                 case "4":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryRegistrations>
                       <Registrations />
-                    </ErrorBoundary>
+                    </ErrorBoundaryRegistrations>
                   );
 
                 case "5":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryCoupons>
                       <Coupons />
-                    </ErrorBoundary>
+                    </ErrorBoundaryCoupons>
                   );
 
                 case "6":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryRecordings>
                       <Recordings />
-                    </ErrorBoundary>
+                    </ErrorBoundaryRecordings>
                   );
 
                 case "7":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryBilling>
                       <Billing />
-                    </ErrorBoundary>
+                    </ErrorBoundaryBilling>
                   );
 
                 case "8":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryTeamManagement>
                       <TeamManagement />
-                    </ErrorBoundary>
+                    </ErrorBoundaryTeamManagement>
                   );
 
                 case "9":
                   return (
-                    <ErrorBoundary>
+                    <ErrorBoundaryRevenueManagement>
                       <RevenueManagement />
-                    </ErrorBoundary>
+                    </ErrorBoundaryRevenueManagement>
                   );
 
                 default:

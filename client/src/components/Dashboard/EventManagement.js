@@ -155,9 +155,8 @@ const EventManagement = () => {
   };
 
   if (error) {
-    let newError = error;
-    dispatch(errorTrackerForFetchEventsOfParticularCommunity());
-    throw new Error(newError);
+    // dispatch(errorTrackerForFetchEventsOfParticularCommunity());
+    throw new Error(error);
     // dispatch(navigationIndex)
     // alert(error);
   }

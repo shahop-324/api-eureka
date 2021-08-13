@@ -19,10 +19,7 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 import { Field } from "redux-form";
 import Select from "react-select";
-
 import { useDispatch } from "react-redux";
-
-
 import { reduxForm } from "redux-form";
 import { createNewInvitation } from "../../actions";
 
@@ -179,11 +176,9 @@ const renderEventPreferences = ({
   </div>
 );
 const showResults = (formValues) => {
-  
   // await sleep(500); // simulate server latency
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
-
 
 const TeamManagement = (props) => {
   const dispatch = useDispatch();
@@ -200,20 +195,20 @@ const TeamManagement = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
     const ModifiedformValues = {};
-  
+
     ModifiedformValues.email = formValues.email;
-  
+
     ModifiedformValues.permissions = formValues.permissions.map((object) => {
       return object.value;
-    })
-  
+    });
+
     dispatch(createNewInvitation(ModifiedformValues));
     showResults(ModifiedformValues);
   };
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Members (4)</div>
           <div className="sec-heading-action-button d-flex flex-row">

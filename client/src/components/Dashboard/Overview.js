@@ -72,6 +72,10 @@ const styles = {
 
 const Overview = () => {
   const [term, setTerm] = React.useState("");
+  const { events, isLoading, error } = useSelector((state) => state.event);
+
+const communityLoading=useSelector((state)=>state.community.isLoading)
+const communityError=useSelector((state)=>state.community.error)
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -89,7 +93,7 @@ const Overview = () => {
 
   const { analytics, superAdminImage, superAdminName } = community;
 
-  const { events, isLoading, error } = useSelector((state) => state.event);
+ 
 
   const classes = useStyles();
 
@@ -112,9 +116,15 @@ const Overview = () => {
   }, [dispatch, term]);
 
   if (error) {
-    let newError = error;
+   
 
-    throw new Error(newError);
+    throw new Error(error);
+
+  }
+  else if(communityError)
+  {
+
+    throw new Error(communityError);
   }
 
   const communityEvents = events

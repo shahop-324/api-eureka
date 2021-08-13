@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { errorTrackerForFetchCommunity } from "../../actions";
+// import { errorTrackerForFetchCommunity } from "../../actions";
 
-import { errorTrackerForFetchEventsOfParticularCommunity } from "../../actions";
+import { errorTrackerForfetchQueriesForCommunity } from "../../actions";
 class ErrorBoundaryDashboardOverview extends React.Component {
   constructor(props) {
     super(props);
@@ -16,8 +16,8 @@ class ErrorBoundaryDashboardOverview extends React.Component {
       errorInfo: errorInfo,
     });
     // You can also log error messages to an error reporting service here
-    this.props.errorTrackerForFetchCommunity();
-    this.props.errorTrackerForFetchEventsOfParticularCommunity();
+
+    this.props.errorTrackerForfetchQueriesForCommunity();
   }
 
   render() {
@@ -42,6 +42,6 @@ class ErrorBoundaryDashboardOverview extends React.Component {
 }
 
 export default connect(null, {
-  errorTrackerForFetchCommunity,
-  errorTrackerForFetchEventsOfParticularCommunity,
+  // errorTrackerForFetchCommunity,
+  errorTrackerForfetchQueriesForCommunity,
 })(ErrorBoundaryDashboardOverview);

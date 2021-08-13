@@ -56,7 +56,7 @@ const RevenueManagement = () => {
       console.log(res);
       return res.access_token;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
 
@@ -126,12 +126,15 @@ const RevenueManagement = () => {
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Manage Revenue Flow</div>
           <div className="sec-heading-action-button d-flex flex-row"></div>
         </div>
-        <div className="event-management-content-grid px-4 mx-3 mb-4 py-4" style={{height: "auto"}}>
+        <div
+          className="event-management-content-grid px-4 mx-3 mb-4 py-4"
+          style={{ height: "auto" }}
+        >
           <div className="btn-outline-text" style={{ color: "#626262" }}>
             Select your payment service provider (Caution: You cannot change
             your preference after this.)

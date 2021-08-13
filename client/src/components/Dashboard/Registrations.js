@@ -16,7 +16,10 @@ import RegistrationDetailsCard from "./HelperComponent/RegistrationDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import { errorTrackerForfetchRegistrationsOfParticularCommunity, fetchRegistrationsOfParticularCommunity } from "../../actions";
+import {
+  errorTrackerForfetchRegistrationsOfParticularCommunity,
+  fetchRegistrationsOfParticularCommunity,
+} from "../../actions";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { alpha, Avatar, IconButton } from "@material-ui/core";
 import dateFormat from "dateformat";
@@ -170,14 +173,13 @@ const Registrations = () => {
       });
   };
 
-   if (error) {dispatch(errorTrackerForfetchRegistrationsOfParticularCommunity());
-    alert(error);
-   return;
+  if (error) {
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Registrations</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -222,13 +224,21 @@ const Registrations = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          {isLoading ? <div className="d-flex flex-row align-items-center justify-content-center" style={{height: "60vh"}}><Loader /></div> : renderRegistrationsList(communityRegistrations)}
+          {isLoading ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "60vh" }}
+            >
+              <Loader />
+            </div>
+          ) : (
+            renderRegistrationsList(communityRegistrations)
+          )}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}
       </div>
       <React.Fragment key="right">
-        
         <SwipeableDrawer
           anchor="right"
           open={openDrawer}

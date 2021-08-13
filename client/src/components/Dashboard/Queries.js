@@ -13,7 +13,10 @@ import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import QueryCard from "./HelperComponent/QueryCard";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForfetchQueriesForCommunity, fetchQueriesForCommunity } from "../../actions";
+import {
+  errorTrackerForfetchQueriesForCommunity,
+  fetchQueriesForCommunity,
+} from "../../actions";
 
 const ratingOptions = [
   { value: "all", label: "All Queries" },
@@ -166,14 +169,12 @@ const Queries = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   } else if (error) {
-    dispatch(errorTrackerForfetchQueriesForCommunity());
-    alert(error);
-    return ;
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Queries (16)</div>
           <div className="sec-heading-action-button d-flex flex-row">
