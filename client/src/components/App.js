@@ -92,7 +92,7 @@ class App extends React.Component {
                 exact
                 component={AcceptSpeakerInvite}
               />
-              <Route path="/compatibility-test/:eventId" exact component={CompatibilityTest} />
+              <Route path="/compatibility-test/community/:communityId/event/:eventId/" exact component={CompatibilityTest} />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route

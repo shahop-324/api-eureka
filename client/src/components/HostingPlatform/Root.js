@@ -122,23 +122,7 @@ const Root = () => {
       );
     });
 
-    // socket.on("updatedSession", ({ session }) => {
-    //   console.log(session);
-
-    //   dispatch(
-    //     sessionActions.EditSession({
-    //       session: session,
-    //     })
-    //   );
-    // });
-
-    // dispatch(getCurrentUsers(eventId));
-
-    // socket = io("http://localhost:3000");
-
-    // dispatch(createSocket(socket));
-
-    //console.log(socket);
+    
     socket.emit(
       "join",
       {
@@ -197,15 +181,11 @@ const Root = () => {
 
   ////////////////
 
-  // if(eventError) {
-  //   alert(error);
-  //   dispatch(errorTrackerForFetchEvent());
-  //   return;
-  // }
+
 
   console.log(isEventLoading);
 
-  if (isEventLoading || isLoading) {
+  if ( isLoading) {
     return (
       <div
         className="d-flex flex-row align-items-center justify-content-center"

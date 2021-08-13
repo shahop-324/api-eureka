@@ -3,8 +3,18 @@ import wifiLottie from "./../../../assets/videos/wifi.mp4";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 
 import "./../Styles/Compatibility.scss";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const NetworkTest = ({ handleBack, handleNext }) => {
+
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  console.log(params);
+
+  const eventId = params.eventId;
+  const communityId = params.communityId;
   return (
     <>
       <div className="centered-box d-flex flex-column align-items-center justify-content-center">
@@ -32,12 +42,17 @@ const NetworkTest = ({ handleBack, handleNext }) => {
             </div>
 
             <div className="test-actions-btns d-flex flex-column justify-content-center px-5">
+              <Link to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`} style={{width: "100%"}}>
+
               <button
                 className="btn btn-outline-text btn-primary mb-4"
-                onClick={handleNext}
+                // onClick={handleNext}
               >
                 Proceed
               </button>
+
+
+              </Link>
               <button
                 className="btn btn-outline-text btn-outline-primary"
                 onClick={handleBack}

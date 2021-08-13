@@ -144,7 +144,7 @@ const EventDetailCard = ({
                 onClick={() => {
                   dispatch(fetchEvent(eventId));
                 }}
-                to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
+                to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
                   onClick={() => {
