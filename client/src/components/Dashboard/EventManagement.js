@@ -86,7 +86,7 @@ const EventManagement = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const communityId = params.id;
- 
+
   useEffect(() => {
     console.log(term);
 
@@ -111,7 +111,7 @@ const EventManagement = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const {events, isLoading, error} = useSelector((state) => state.event);
+  const { events, isLoading, error } = useSelector((state) => state.event);
 
   const communityEvents = events;
 
@@ -154,17 +154,17 @@ const EventManagement = () => {
       });
   };
 
-  
-
-  if(error){
-    dispatch(errorTrackerForFetchEventsOfParticularCommunity())
-    alert(error);
-   return;
+  if (error) {
+    let newError = error;
+    dispatch(errorTrackerForFetchEventsOfParticularCommunity());
+    throw new Error(newError);
+    // dispatch(navigationIndex)
+    // alert(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Events</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -202,8 +202,16 @@ const EventManagement = () => {
             <Divider />
           </div>
 
-
-          { isLoading ? <div className="d-flex flex-row align-items-center justify-content-center" style={{height: "60vh"}}><Loader /></div> : renderCommunityEventsList(communityEvents) }
+          {isLoading ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "60vh" }}
+            >
+              <Loader />
+            </div>
+          ) : (
+            renderCommunityEventsList(communityEvents)
+          )}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}

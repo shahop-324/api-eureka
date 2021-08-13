@@ -628,7 +628,7 @@ export const fetchEventsOfParticularCommunity =
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/events`;
+      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/event`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -649,6 +649,13 @@ export const fetchEventsOfParticularCommunity =
           Authorization: `Bearer ${getState().communityAuth.token}`,
         },
       });
+      if (!communityEvents.ok) {
+        if (!communityEvents.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(communityEvents.message);
+        }
+      }
       const eventsResult = await communityEvents.json();
       console.log(eventsResult);
 

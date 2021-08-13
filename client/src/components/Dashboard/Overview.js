@@ -112,11 +112,12 @@ const Overview = () => {
   }, [dispatch, term]);
 
   if (error) {
-    dispatch(errorTrackerForFetchCommunity());
-    alert(error);
-    return;
-  }
+    let newError = error;
 
+    dispatch(errorTrackerForFetchCommunity());
+
+    throw new Error(newError);
+  }
 
   const communityEvents = events
     .slice(0)

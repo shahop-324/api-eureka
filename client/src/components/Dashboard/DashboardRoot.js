@@ -103,10 +103,10 @@ const DashboardRoot = () => {
 
   console.log(currentIndex);
 
-  if (error) {
-    dispatch(errorTrackerForFetchCommunity());
-    throw new Error(error);
-  }
+  // if (error) {
+  //   dispatch(errorTrackerForFetchCommunity());
+  //   throw new Error(error);
+  // }
 
   return (
     <>
