@@ -259,9 +259,6 @@ const SessionScreen = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
- 
-  
-
   var options = {
     // Pass your app ID here.
     appId: "6877e158655f4810968b19e65d0bbb23",
@@ -272,7 +269,6 @@ const SessionScreen = () => {
     // Set the user role in the channel.
     role: agoraRole,
   };
-
 
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
@@ -319,131 +315,131 @@ const SessionScreen = () => {
     return;
   }
 
-  const shareScreen = async() => {
-
+  const shareScreen = async () => {
     // Unpublish the video, the audio is still being published
-  await rtc.client.unpublish(rtc.localVideoTrack);
-  
-    rtc.localScreenTrack =  await AgoraRTC.createScreenVideoTrack({
-      encoderConfig: "1080p_1",
-    }).then(async(localScreenTrack)=> {
-      console.log("screen sharing is enabled");
-  
-      // Publish the local audio and screen tracks to the RTC channel.
-    await rtc.client.publish(localScreenTrack);
+    await rtc.client.unpublish(rtc.localVideoTrack, async () => {
+      console.log("RTC client unpublished successfully!");
+
+      // now create local screen video track
+      rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack({
+        encoderConfig: "1080p_1",
+      }).then(async (localScreenTrack) => {
+        console.log("screen sharing is enabled");
+
+        // Publish the local audio and screen tracks to the RTC channel.
+        await rtc.client.publish(localScreenTrack);
+      });
     });
-  
-      console.log("publish success!");
-  }
+
+    console.log("publish success!");
+  };
 
   const startBasicCall = async () => {
     rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
-    rtc.client.setClientRole(options.role);
+    rtc.client.setClientRole(
+      options.role,
+      () => {
+        console.log("Client role set successfully!");
+      },
+      (e) => {
+        console.log("Some error occured");
+      }
+    );
 
-    const uid = userId;
-const clientJoined=async()=>{
+    // const uid = userId;
+    // console.log(uid);
 
+    await rtc.client
+      .join(options.appId, options.channel, token, null)
+      .then(async (uid) => {
+        console.log(uid);
+        if (agoraRole === "host") {
+          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
-  await rtc.client.join(options.appId, options.channel, token, uid);
+          await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
-  rtc.client.on("user-published", async (user, mediaType) => {
-    // Subscribe to the remote user when the SDK triggers the "user-published" event
-    await rtc.client.subscribe(user, mediaType);
-    console.log("subscribe success");
+          const localPlayerContainer = document.createElement("div");
+          localPlayerContainer.id = uid;
 
-    // If the remote user publishes a video track.
-    if (mediaType === "video") {
-      // Get the RemoteVideoTrack object in the AgoraRTCRemoteUser object.
-      const remoteVideoTrack = user.videoTrack;
-      // Dynamically create a container in the form of a DIV element for playing the remote video track.
-      const remotePlayerContainer = document.createElement("div");
-      // Specify the ID of the DIV container. You can use the uid of the remote user.
-      remotePlayerContainer.id = user.uid.toString();
-      remotePlayerContainer.style.borderRadius = "10px";
-      remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-      remotePlayerContainer.style.backdropFilter = "blur( 4px )";
-      // remotePlayerContainer.style.border =
-      //   "1px solid rgba( 255, 255, 255, 0.18 )";
+          localPlayerContainer.style.borderRadius = "10px";
+          localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+          localPlayerContainer.style.backdropFilter = "blur( 4px )";
 
-      document
-        .getElementById("session-stage-video-layout-grid")
-        .append(remotePlayerContainer);
+          document
+            .getElementById("session-stage-video-layout-grid")
+            .append(localPlayerContainer);
 
-      setGrid(
-        document.getElementById("session-stage-video-layout-grid")
-          .childElementCount
-      );
-      // Play the remote video track.
-      // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
-      remoteVideoTrack.play(remotePlayerContainer);
+          setGrid(
+            document.getElementById("session-stage-video-layout-grid")
+              .childElementCount
+          );
 
-      // Or just pass the ID of the DIV container.
-      // remoteVideoTrack.play(playerContainer.id);
-    }
+          rtc.localVideoTrack.play(localPlayerContainer);
+          console.log("publish success!");
+          console.log("op");
+          console.log(uid);
+        }
+      });
 
-    // If the remote user publishes an audio track.
-    if (mediaType === "audio") {
-      // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-      const remoteAudioTrack = user.audioTrack;
-      // Play the remote audio track. No need to pass any DOM element.
-      remoteAudioTrack.play();
-    }
+    rtc.client.on("user-published", async (user, mediaType) => {
+      // Subscribe to the remote user when the SDK triggers the "user-published" event
+      await rtc.client.subscribe(user, mediaType);
+      console.log("subscribe success");
 
-    // Listen for the "user-unpublished" event
-    rtc.client.on("user-unpublished", (user) => {
-      // Get the dynamically created DIV container.
-      const remotePlayerContainer = document.getElementById(user.uid);
-      // Destroy the container.
-      remotePlayerContainer && remotePlayerContainer.remove();
+      // If the remote user publishes a video track.
+      if (mediaType === "video") {
+        // Get the RemoteVideoTrack object in the AgoraRTCRemoteUser object.
+        const remoteVideoTrack = user.videoTrack;
+        // Dynamically create a container in the form of a DIV element for playing the remote video track.
+        const remotePlayerContainer = document.createElement("div");
+        // Specify the ID of the DIV container. You can use the uid of the remote user.
+        remotePlayerContainer.id = user.uid.toString();
+        remotePlayerContainer.style.borderRadius = "10px";
+        remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+        remotePlayerContainer.style.backdropFilter = "blur( 4px )";
+        // remotePlayerContainer.style.border =
+        //   "1px solid rgba( 255, 255, 255, 0.18 )";
 
-      setGrid(
-        document.getElementById("session-stage-video-layout-grid")
-          .childElementCount
-      );
+        document
+          .getElementById("session-stage-video-layout-grid")
+          .append(remotePlayerContainer);
+
+        setGrid(
+          document.getElementById("session-stage-video-layout-grid")
+            .childElementCount
+        );
+        // Play the remote video track.
+        // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
+        remoteVideoTrack.play(remotePlayerContainer);
+
+        // Or just pass the ID of the DIV container.
+        // remoteVideoTrack.play(playerContainer.id);
+      }
+
+      // If the remote user publishes an audio track.
+      if (mediaType === "audio") {
+        // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
+        const remoteAudioTrack = user.audioTrack;
+        // Play the remote audio track. No need to pass any DOM element.
+        remoteAudioTrack.play();
+      }
+
+      // Listen for the "user-unpublished" event
+      rtc.client.on("user-unpublished", (user) => {
+        // Get the dynamically created DIV container.
+        const remotePlayerContainer = document.getElementById(user.uid);
+        // Destroy the container.
+        remotePlayerContainer && remotePlayerContainer.remove();
+
+        setGrid(
+          document.getElementById("session-stage-video-layout-grid")
+            .childElementCount
+        );
+      });
     });
-  });
-///
-
-
-
-}
-
-
-try{
-                 await clientJoined();
-    if (agoraRole === "host") {
-      rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-      rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-
-      await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-
-      const localPlayerContainer = document.createElement("div");
-      localPlayerContainer.id = uid;
-
-      localPlayerContainer.style.borderRadius = "10px";
-      localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-      localPlayerContainer.style.backdropFilter = "blur( 4px )";
-
-      document
-        .getElementById("session-stage-video-layout-grid")
-        .append(localPlayerContainer);
-
-      setGrid(
-        document.getElementById("session-stage-video-layout-grid")
-          .childElementCount
-      );
-
-      rtc.localVideoTrack.play(localPlayerContainer);
-      console.log("publish success!");
-    }
-  }
-  catch(err)
-  {
-
-    console.log(err);
-  }
-
+    ///
   };
 
   /////
@@ -466,7 +462,7 @@ try{
     await rtc.client.leave();
   };
 
-startBasicCall();
+  startBasicCall();
 
   return (
     <>
@@ -560,20 +556,22 @@ startBasicCall();
                   //   />
                   // </IconButton>
                   <IconButton
-                  onClick={() => {
-                    videoIsEnabled ? turnOffVideo() : turnOnVideo();
-                  }}
-                  aria-label="video"
-                  className={classes.margin}
-                >
-                  {videoIsEnabled ? (
-                    <VideocamRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  ) : (
-                    <VideocamOffIcon style={{ fill: "#C72E2E", size: "24" }} />
-                  )}
-                </IconButton>
+                    onClick={() => {
+                      videoIsEnabled ? turnOffVideo() : turnOnVideo();
+                    }}
+                    aria-label="video"
+                    className={classes.margin}
+                  >
+                    {videoIsEnabled ? (
+                      <VideocamRoundedIcon
+                        style={{ fill: "#D3D3D3", size: "24" }}
+                      />
+                    ) : (
+                      <VideocamOffIcon
+                        style={{ fill: "#C72E2E", size: "24" }}
+                      />
+                    )}
+                  </IconButton>
                 )}
 
                 {showEmoji ? (
@@ -591,18 +589,18 @@ startBasicCall();
                   // </IconButton>
 
                   <IconButton
-                  onClick={() => {
-                    audioIsEnabled ? turnOffAudio() : turnOnAudio();
-                  }}
-                  aria-label="audio"
-                  className={classes.margin}
-                >
-                  {audioIsEnabled ? (
-                    <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  ) : (
-                    <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
-                  )}
-                </IconButton>
+                    onClick={() => {
+                      audioIsEnabled ? turnOffAudio() : turnOnAudio();
+                    }}
+                    aria-label="audio"
+                    className={classes.margin}
+                  >
+                    {audioIsEnabled ? (
+                      <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
+                    ) : (
+                      <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
+                    )}
+                  </IconButton>
                 )}
 
                 {showEmoji ? (
@@ -616,17 +614,17 @@ startBasicCall();
                   </IconButton>
                 ) : (
                   <IconButton
-                onClick={() => {
-                  shareScreen();
-                  setScreenSharingIsEnabled(true);
-                }}
-                  aria-label="share screen"
-                  className={classes.margin}
-                >
-                  <ScreenShareRoundedIcon
-                    style={{ fill: "#D3D3D3", size: "24" }}
-                  />
-                </IconButton>
+                    onClick={() => {
+                      shareScreen();
+                      setScreenSharingIsEnabled(true);
+                    }}
+                    aria-label="share screen"
+                    className={classes.margin}
+                  >
+                    <ScreenShareRoundedIcon
+                      style={{ fill: "#D3D3D3", size: "24" }}
+                    />
+                  </IconButton>
                 )}
 
                 {showEmoji ? (
