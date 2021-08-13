@@ -114,8 +114,6 @@ const Overview = () => {
   if (error) {
     let newError = error;
 
-    dispatch(errorTrackerForFetchCommunity());
-
     throw new Error(newError);
   }
 
