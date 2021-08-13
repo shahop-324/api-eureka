@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AgoraRTC from "agora-rtc-sdk-ng";
@@ -82,7 +84,7 @@ const DeviceTest = ({ handleBack, handleNext }) => {
         setInterval(() => {
           const level = audioTrack.getVolumeLevel();
           setAudioLevel(level * 100);
-          console.log("local stream audio level", level);
+          // console.log("local stream audio level", level);
         }, 1000);
       });
   };
@@ -109,7 +111,7 @@ const DeviceTest = ({ handleBack, handleNext }) => {
     return alert(error);
   }
   const image = user.userDetails.image;
-  const userName = user.userDetails.firstName;
+  
 
   let imgURL;
 
@@ -170,7 +172,7 @@ const DeviceTest = ({ handleBack, handleNext }) => {
                   <Dropdown.Menu>{renderVideoDevices()}</Dropdown.Menu>
                 </Dropdown>
 
-                {/* ///////// */}
+                
                 <Dropdown
                   text="Audio"
                   icon="microphone icon"

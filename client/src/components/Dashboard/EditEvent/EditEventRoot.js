@@ -92,7 +92,7 @@ const EditEventRoot = () => {
         {/* TOP NAV */}
         <Topnav />
         {/* Body section - left(side nav) & right(body content) */}
-        <div className="dashboard-body">
+        <div className="dashboard-body dashboard-body-edit">
           <SideNavEdit
             activeIndex={currentIndex}
             handleBasicsClick={handleBasicsClick}

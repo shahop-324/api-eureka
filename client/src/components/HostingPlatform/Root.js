@@ -47,7 +47,7 @@ const Root = () => {
   const isEventLoading = useSelector((state) => state.event.isLoading);
   const eventError = useSelector((state) => state.event.error);
 
-  const { isLoading, error } = useSelector((state) => state.RTM);
+
 
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
@@ -97,7 +97,7 @@ const Root = () => {
   console.log(role, id, email);
 
   useEffect(() => {
-    dispatch(getRTMToken(eventId));
+    
 
     socket.on("previousEventMessages", ({ chats }) => {
       console.log(chats);
@@ -179,29 +179,21 @@ const Root = () => {
     });
   }, [dispatch]);
 
-  ////////////////
-
-
-
   console.log(isEventLoading);
 
-  if ( isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100vw", height: "100vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div
+  //       className="d-flex flex-row align-items-center justify-content-center"
+  //       style={{ width: "100vw", height: "100vh" }}
+  //     >
+  //       {" "}
+  //       <Loader />{" "}
+  //     </div>
+  //   );
+  // }
 
-  if (eventError) {
-    alert(error);
-    dispatch(errorTrackerForFetchEvent());
-    return;
-  }
+  
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
