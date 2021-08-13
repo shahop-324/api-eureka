@@ -10,8 +10,7 @@ import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
 import {
   errorTrackerForPersonalData,
-  fetchUserAllPersonalData,
-  googleSignIn,
+  fetchUserAllPersonalData
 } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 

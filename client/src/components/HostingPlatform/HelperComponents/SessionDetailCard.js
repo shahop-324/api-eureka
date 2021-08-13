@@ -3,7 +3,6 @@ import "./../../../index.css";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
 import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { useDispatch, useSelector } from "react-redux";

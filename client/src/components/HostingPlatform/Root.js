@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 
 import SideNav from "./HelperComponents/SideNav";
@@ -11,7 +12,6 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
-  errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
   fetchEventChats,
@@ -40,7 +40,6 @@ const Root = () => {
 
   const { isLoading, error } = useSelector((state) => state.RTM);
 
-  const isEventLoading = useSelector((state) => state.event.isLoading);
   const eventError = useSelector((state) => state.event.error);
 
   const { role, id, email } = useSelector((state) => state.eventAccessToken);

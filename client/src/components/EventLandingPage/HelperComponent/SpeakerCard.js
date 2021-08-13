@@ -5,7 +5,6 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import LanguageRoundedIcon from "@material-ui/icons/LanguageRounded";
 import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 

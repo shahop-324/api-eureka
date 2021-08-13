@@ -65,7 +65,7 @@ export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
 
   const { events, isLoading, error } = useSelector((state) => state.event);
-  const userLoading = useSelector((state) => state.user.isLoading);
+  // const userLoading = useSelector((state) => state.user.isLoading);
   const dispatch = useDispatch();
 
   useEffect(() => {

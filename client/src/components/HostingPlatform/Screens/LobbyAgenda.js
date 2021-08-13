@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 
 import SessionDetailCardsList from "../HelperComponents/SessionDetailCardsList";
@@ -98,8 +99,8 @@ const LobbyAgenda = ({ socket }) => {
 
   const dispatch = useDispatch();
 
-  const eventError = useSelector((state) => state.event.error);
-  const isEventLoading = useSelector((state) => state.event.isLoading);
+  // const eventError = useSelector((state) => state.event.error);
+  // const isEventLoading = useSelector((state) => state.event.isLoading);
 
   const { error, isLoading } = useSelector((state) => state.session);
 

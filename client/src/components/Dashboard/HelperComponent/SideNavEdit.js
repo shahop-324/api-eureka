@@ -4,7 +4,7 @@ import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
 
 import IconButton from "@material-ui/core/IconButton";
-import { Divider, Tooltip } from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@material-ui/icons/Category";
