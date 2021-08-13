@@ -123,8 +123,9 @@ export const googleSignIn =
       }
       //history.push("/user/home");
     } catch (err) {
-      dispatch(authActions.hasError(err.response.data.message));
-      alert(err.response.data.message);
+      console.log(err);
+      // dispatch(authActions.hasError(err.response.data.message));
+      // alert(err.response.data.message);
     }
   };
 

@@ -53,7 +53,7 @@ const UserAccountHome = () => {
         break;
       }
       default: {
-        history.push("/user/home");
+        // history.push("/user/home");
         break;
       }
     }
