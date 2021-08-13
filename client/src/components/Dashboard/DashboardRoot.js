@@ -26,17 +26,17 @@ import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
-import ErrorBoundaryDashboardOverview from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
+import ErrorBoundriesDashboardOverview from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
 
-import ErrorBoundaryBilling from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryCoupons from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryRecordings from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryRegistrations from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryRevenueManagement from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryReviews from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryTeamManagement from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundaryQueries from "../ErrorBoundries.js/ErrorBoundaryDashboardOverview";
-import ErrorBoundriesEventManagement from "../ErrorBoundries.js/ErrorBoundriesEventManagement";
+import ErrorBoundriesBilling from "../ErrorBoundries.js/ErrorBoundriesDashboardBilling";
+import ErrorBoundriesCoupons from "../ErrorBoundries.js/ErrorBoundriesDashboardCoupons";
+import ErrorBoundriesRecordings from "../ErrorBoundries.js/ErrorBoundriesDashboardRecordings";
+import ErrorBoundriesRegistrations from "../ErrorBoundries.js/ErrorBoundriesDashboardRegistrations";
+import ErrorBoundriesRevenueManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardRevenueManagement";
+import ErrorBoundriesReviews from "../ErrorBoundries.js/ErrorBoundariesDashboardReviews";
+import ErrorBoundriesTeamManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardTeamManagement";
+import ErrorBoundriesQueries from "../ErrorBoundries.js/ErrorBoundriesDashboardQueries";
+import ErrorBoundriesEventManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardEventManagement";
 const DashboardRoot = () => {
   const params = useParams();
 
@@ -156,9 +156,9 @@ const DashboardRoot = () => {
               switch (currentIndex) {
                 case "0":
                   return (
-                    <ErrorBoundaryDashboardOverview>
+                    <ErrorBoundriesDashboardOverview>
                       <Overview />
-                    </ErrorBoundaryDashboardOverview>
+                    </ErrorBoundriesDashboardOverview>
                   );
 
                 case "1":
@@ -170,58 +170,58 @@ const DashboardRoot = () => {
 
                 case "2":
                   return (
-                    <ErrorBoundaryReviews>
+                    <ErrorBoundriesReviews>
                       <Reviews />
-                    </ErrorBoundaryReviews>
+                    </ErrorBoundriesReviews>
                   );
 
                 case "3":
                   return (
-                    <ErrorBoundaryQueries>
+                    <ErrorBoundriesQueries>
                       <Queries />
-                    </ErrorBoundaryQueries>
+                    </ErrorBoundriesQueries>
                   );
 
                 case "4":
                   return (
-                    <ErrorBoundaryRegistrations>
+                    <ErrorBoundriesRegistrations>
                       <Registrations />
-                    </ErrorBoundaryRegistrations>
+                    </ErrorBoundriesRegistrations>
                   );
 
                 case "5":
                   return (
-                    <ErrorBoundaryCoupons>
+                    <ErrorBoundriesCoupons>
                       <Coupons />
-                    </ErrorBoundaryCoupons>
+                    </ErrorBoundriesCoupons>
                   );
 
                 case "6":
                   return (
-                    <ErrorBoundaryRecordings>
+                    <ErrorBoundriesRecordings>
                       <Recordings />
-                    </ErrorBoundaryRecordings>
+                    </ErrorBoundriesRecordings>
                   );
 
                 case "7":
                   return (
-                    <ErrorBoundaryBilling>
+                    <ErrorBoundriesBilling>
                       <Billing />
-                    </ErrorBoundaryBilling>
+                    </ErrorBoundriesBilling>
                   );
 
                 case "8":
                   return (
-                    <ErrorBoundaryTeamManagement>
+                    <ErrorBoundriesTeamManagement>
                       <TeamManagement />
-                    </ErrorBoundaryTeamManagement>
+                    </ErrorBoundriesTeamManagement>
                   );
 
                 case "9":
                   return (
-                    <ErrorBoundaryRevenueManagement>
+                    <ErrorBoundriesRevenueManagement>
                       <RevenueManagement />
-                    </ErrorBoundaryRevenueManagement>
+                    </ErrorBoundriesRevenueManagement>
                   );
 
                 default:
