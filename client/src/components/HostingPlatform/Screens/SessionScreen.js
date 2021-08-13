@@ -347,11 +347,11 @@ const SessionScreen = () => {
       }
     );
 
-    // const uid = userId;
-    // console.log(uid);
+    const uid = userId;
+    console.log(uid);
 
     await rtc.client
-      .join(options.appId, options.channel, token, null)
+      .join(options.appId, options.channel, token, uid)
       .then(async (uid) => {
         console.log(uid);
         if (agoraRole === "host") {

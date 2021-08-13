@@ -224,7 +224,7 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const appID = "6877e158655f4810968b19e65d0bbb23";
   const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
   const channelName = channel;
-  const uid = null;
+  const uid = userId;
   const account = "2882341273";
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
