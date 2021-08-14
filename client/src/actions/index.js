@@ -4140,7 +4140,7 @@ export const errorTrackerForFetchPreviousEventChatMessages =
     dispatch(eventChatActions.disabledError());
   };
 
-export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
+export const getRTCToken = (sessionId, role,eventId,communityId) => async (dispatch, getState) => {
   dispatch(RTCActions.startLoading());
 
   const fetchingRTCToken = async () => {
@@ -4179,7 +4179,11 @@ export const getRTCToken = (sessionId, role) => async (dispatch, getState) => {
         token: res.token,
       })
     );
+
+
+    history.push(`/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`)
   } catch (err) {
+    alert(err);
     dispatch(RTCActions.hasError(err.message));
   }
 };

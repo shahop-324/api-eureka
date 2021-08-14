@@ -7,7 +7,8 @@ import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { setSessionRoleAndJoinSession } from "../../../actions";
+import { getRTCToken, setSessionRoleAndJoinSession } from "../../../actions";
+import history from "../../../history";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +72,7 @@ const SessionDetailCard = ({
 
   const eventId = params.eventId;
   const communityId = params.communityId;
-
+     const {token } = useSelector((state)=>state.RTC)
   const role = useSelector((state) => state.eventAccessToken.role);
   const userId = useSelector((state) => state.eventAccessToken.id);
 
@@ -114,7 +115,7 @@ const SessionDetailCard = ({
     if (bool) {
       sessionRole = "speaker";
     } else {
-      sessionRole = "attendee";
+      sessionRole = "audience";
     }
   }
 
@@ -122,7 +123,50 @@ const SessionDetailCard = ({
     btnText = "Backstage";
     bgColor = "#538BF7";
   }
+  
+  // const readFilePro = file => {
+  //   return new Promise((resolve, reject) => {
+  //     fs.readFile(file, (err, data) => {
+  //       if (err) reject('I could not find that file 😢');
+  //       resolve(data);
+  //     });
+  //   });
+  // };
+  // const writeFilePro = (file, data) => {
+  //   return new Promise((resolve, reject) => {
+  //     fs.writeFile(file, data, err => {
+  //       if (err) reject('Could not write file 😢');
+  //       resolve('success');
+  //     });
+  //   });
+  // };
 
+//   const joining =()=>{
+//       return new Promise((resolve,reject)=>{
+//           dispatch(getRTCToken(id,sessionRole))
+           
+
+
+//       }).then(()=>{
+
+
+//         if(token)
+//         {
+
+//           console.log(token)
+       
+//         }
+// else{
+
+
+//     alert("joining session failed")
+// }
+
+//       })
+
+
+//   }
+  
 
   
 
@@ -156,10 +200,10 @@ const SessionDetailCard = ({
               <NotificationsNoneOutlinedIcon />
             </IconButton>
             <Link
-              to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
+             // to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
               onClick={() => {
                 
-
+                dispatch(getRTCToken(id,sessionRole,eventId,communityId));
                 socket.emit(
                   "joinSession",
                   {
