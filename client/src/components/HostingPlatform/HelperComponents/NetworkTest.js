@@ -44,6 +44,7 @@ const NetworkTest = ({ handleBack, handleNext }) => {
                 style={{ width: "100%" }}
               >
                 <button
+                style={{ width: "100%" }}
                   className="btn btn-outline-text btn-primary mb-4"
                   // onClick={handleNext}
                 >

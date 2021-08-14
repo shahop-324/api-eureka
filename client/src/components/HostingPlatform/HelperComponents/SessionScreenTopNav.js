@@ -12,6 +12,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Link, useParams } from "react-router-dom";
 import socket from "../service/socket";
 import { useSelector } from "react-redux";
+import history from "../../../history";
 
 const useStyles = makeStyles((theme) => ({
   margin: {

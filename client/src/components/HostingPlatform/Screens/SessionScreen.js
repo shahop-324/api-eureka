@@ -3,6 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import SessionScreenTopNav from "../HelperComponents/SessionScreenTopNav";
+import { v4 as uuidv4 } from "uuid";
 
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -25,8 +26,8 @@ import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
 import {
+  errorTrackerForFetchingRTCToken,
   errorTrackerForFetchSessionForSessionStage,
-  errorTrackerForgetRTMToken,
   fetchSessionForSessionStage,
   getRTCToken,
 } from "../../../actions";
@@ -37,9 +38,6 @@ import Love from "./../../../assets/images/love.png";
 import Smile from "./../../../assets/images/Smile.png";
 
 import AgoraRTC from "agora-rtc-sdk-ng";
-// import RightContent from "../HelperComponents/RightContent";
-// import { TabBar } from "../sessionComponents/TabBar";
-// import MainChatComponent from "../SideDrawerComponents/Chat/MainChatComponent";
 import SessionStageSideBarRoot from "../sessionComponents/SessionStageSideBarRoot";
 import Loader from "../../Loader";
 
@@ -150,6 +148,8 @@ const SessionScreen = () => {
     row = "1fr 1fr";
   }
 
+  // RTC Configuration setting up
+
   var rtc = {
     // For the local client.
     client: null,
@@ -170,10 +170,23 @@ const SessionScreen = () => {
 
   const agoraRole = sessionRole !== "audience" ? "host" : "audience";
 
+  // Defined options for connecting to Agora RTC server
+
+  var options = {
+    // Pass your app ID here.
+    appId: "6877e158655f4810968b19e65d0bbb23",
+    // Set the channel name.
+    channel: sessionId,
+    // Pass a token if your project enables the App Certificate.
+    token: token,
+    // Set the user role in the channel.
+    role: agoraRole,
+  };
+
+  // const uid = uuidv4();
+
   useEffect(() => {
     dispatch(getRTCToken(sessionId, agoraRole));
-
-    
   }, [agoraRole, dispatch, sessionId]);
 
   const sessionRunningStatus = sessionDetails
@@ -203,10 +216,6 @@ const SessionScreen = () => {
   const showSessionEnded = sessionRunningStatus === "Ended" ? true : false;
 
   const showEmoji = sessionRole === "audience" ? true : false;
-
-  useEffect(() => {
-    startBasicCall();
-  }, []);
 
   useEffect(() => {
     dispatch(fetchSessionForSessionStage(sessionId));
@@ -262,17 +271,6 @@ const SessionScreen = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  var options = {
-    // Pass your app ID here.
-    appId: "6877e158655f4810968b19e65d0bbb23",
-    // Set the channel name.
-    channel: sessionId,
-    // Pass a token if your project enables the App Certificate.
-    token: token,
-    // Set the user role in the channel.
-    role: agoraRole,
-  };
-
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
   const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
@@ -295,188 +293,67 @@ const SessionScreen = () => {
     setAudioIsEnabled(true);
   };
 
-  if (isLoading || isLoadingSession) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "80vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
 
-  if (error || sessionError) {
-    dispatch(errorTrackerForgetRTMToken());
-    alert(error);
-    return;
-  }
-  if (sessionError) {
-    dispatch(errorTrackerForFetchSessionForSessionStage());
-    alert(error);
-    return;
-  }
+  
+  console.log("This is our RTC token to join RTC channel.", token);
 
-  const shareScreen = async () => {
-    // Unpublish the video, the audio is still being published
-    await rtc.client.unpublish(rtc.localVideoTrack, async () => {
-      console.log("RTC client unpublished successfully!");
+  // Created client object using Agora SDK
 
-      // now create local screen video track
-      rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack({
-        encoderConfig: "1080p_1",
-      }).then(async (localScreenTrack) => {
-        console.log("screen sharing is enabled");
+  rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
-        // Publish the local audio and screen tracks to the RTC channel.
-        await rtc.client.publish(localScreenTrack);
-      });
-    });
+  const startStreaming = async () => {
+    const result = await rtc.client.setClientRole(options.role);
+    // .then(console.log("Client role set successfully!"))
+    // .catch(console.log("Some error occured"));
 
-    console.log("publish success!");
-  };
+    console.log(result);
 
-  const startBasicCall = async () => {
-    rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    const createAndPublishStream = async () => {
+      if (agoraRole === "host") {
+        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
-    rtc.client.setClientRole(
-      options.role,
-      () => {
-        console.log("Client role set successfully!");
-      },
-      (e) => {
-        console.log("Some error occured");
-      }
-    );
+        await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
-    // const uid = userId;
-    // console.log(uid);
+        const localPlayerContainer = document.createElement("div");
+        localPlayerContainer.id = 12345678;
 
-    await rtc.client
-      .join(options.appId, options.channel, token, 12345678)
-      .then(async (uid) => {
-        console.log(uid);
-        if (agoraRole === "host") {
-          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-
-          await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-
-          const localPlayerContainer = document.createElement("div");
-          localPlayerContainer.id = uid;
-
-          localPlayerContainer.style.borderRadius = "10px";
-          localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-          localPlayerContainer.style.backdropFilter = "blur( 4px )";
-
-          document
-            .getElementById("session-stage-video-layout-grid")
-            .append(localPlayerContainer);
-
-          setGrid(
-            document.getElementById("session-stage-video-layout-grid")
-              .childElementCount
-          );
-
-          rtc.localVideoTrack.play(localPlayerContainer);
-          console.log("publish success!");
-          console.log("op");
-          console.log(uid);
-        }
-      });
-
-    rtc.client.on("user-published", async (user, mediaType) => {
-      // Subscribe to the remote user when the SDK triggers the "user-published" event
-      await rtc.client.subscribe(user, mediaType);
-      console.log("subscribe success");
-
-      // If the remote user publishes a video track.
-      if (mediaType === "video") {
-        // Get the RemoteVideoTrack object in the AgoraRTCRemoteUser object.
-        const remoteVideoTrack = user.videoTrack;
-        // Dynamically create a container in the form of a DIV element for playing the remote video track.
-        const remotePlayerContainer = document.createElement("div");
-        // Specify the ID of the DIV container. You can use the uid of the remote user.
-        remotePlayerContainer.id = user.uid.toString();
-        remotePlayerContainer.style.borderRadius = "10px";
-        remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-        remotePlayerContainer.style.backdropFilter = "blur( 4px )";
-        // remotePlayerContainer.style.border =
-        //   "1px solid rgba( 255, 255, 255, 0.18 )";
+        localPlayerContainer.style.borderRadius = "10px";
+        localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+        localPlayerContainer.style.backdropFilter = "blur( 4px )";
 
         document
           .getElementById("session-stage-video-layout-grid")
-          .append(remotePlayerContainer);
+          .append(localPlayerContainer);
 
         setGrid(
           document.getElementById("session-stage-video-layout-grid")
             .childElementCount
         );
-        // Play the remote video track.
-        // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
-        remoteVideoTrack.play(remotePlayerContainer);
 
-        // Or just pass the ID of the DIV container.
-        // remoteVideoTrack.play(playerContainer.id);
+        rtc.localVideoTrack.play(localPlayerContainer);
+        console.log("publish success!");
+        console.log("op");
+        console.log(12345678);
       }
+    };
 
-      // If the remote user publishes an audio track.
-      if (mediaType === "audio") {
-        // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-        const remoteAudioTrack = user.audioTrack;
-        // Play the remote audio track. No need to pass any DOM element.
-        remoteAudioTrack.play();
-      }
-
-      // Listen for the "user-unpublished" event
-      rtc.client.on("user-unpublished", (user) => {
-        // Get the dynamically created DIV container.
-        const remotePlayerContainer = document.getElementById(user.uid);
-        // Destroy the container.
-        remotePlayerContainer && remotePlayerContainer.remove();
-
-        setGrid(
-          document.getElementById("session-stage-video-layout-grid")
-            .childElementCount
-        );
+    await rtc.client
+      .join("702d57c3092c4fd389eb7ea5a505d471", options.channel, token, userId)
+      .then(() => {
+        console.log("Joined RTC channel");
+        createAndPublishStream();
       });
 
-
-
-      rtc.client.on('peer-leave', function(evt) {
-        let stream = evt.stream;
-        let streamId = String(stream.getId);
-        stream.close();
-        // removeVideoStream(streamId);
-      });
-
-    });
-    ///
+    //
   };
 
-const successLeaving = () => {
-  console.log("Leaved successfully!.");
-
-
-
-  history.push(`/community/${communityId}/event/${eventId}/hosting-platform/lobby`);
-
-}
-
-const errorInLeaving = () => {
-  console.log("Some error occured while trying to leave. Please try leaving again.")
-}
- 
-
-  /////
-
   const leaveStreaming = async () => {
-    // Destroy the local audio and video tracks.
-    if (agoraRole === "host") {
-      rtc.localAudioTrack && rtc.localAudioTrack.close();
-      rtc.localVideoTrack && rtc.localVideoTrack.close();
-    }
+    // Destroy the local audio and video tracks.'
+
+    rtc.localAudioTrack.close();
+       rtc.localVideoTrack.close();
+    
 
     // Traverse all remote users.
     rtc.client.remoteUsers.forEach((user) => {
@@ -486,13 +363,16 @@ const errorInLeaving = () => {
     });
 
     // Leave the channel.
-    await rtc.client.leave().then(successLeaving).catch(errorInLeaving);
+    await rtc.client.leave();
   };
 
- 
-  
+  useEffect(() => {
+    startStreaming();
+  }, []);
 
-  
+  // console.log(rtc.client.leave);
+
+  // leaveStreaming();
 
   return (
     <>
@@ -580,11 +460,12 @@ const errorInLeaving = () => {
                     />
                   </IconButton>
                 ) : (
-                  // <IconButton aria-label="video" className={classes.margin}>
-                  //   <VideocamRoundedIcon
-                  //     style={{ fill: "#D3D3D3", size: "24" }}
-                  //   />
-                  // </IconButton>
+                  <>
+                  {/* <IconButton aria-label="video" className={classes.margin}>
+                    <VideocamRoundedIcon
+                      style={{ fill: "#D3D3D3", size: "24" }}
+                    />
+                  </IconButton> */}
                   <IconButton
                     onClick={() => {
                       videoIsEnabled ? turnOffVideo() : turnOnVideo();
@@ -602,6 +483,7 @@ const errorInLeaving = () => {
                       />
                     )}
                   </IconButton>
+                  </>
                 )}
 
                 {showEmoji ? (
@@ -614,9 +496,10 @@ const errorInLeaving = () => {
                     />
                   </IconButton>
                 ) : (
-                  // <IconButton aria-label="audio" className={classes.margin}>
-                  //   <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  // </IconButton>
+                  <>
+                  {/* <IconButton aria-label="audio" className={classes.margin}>
+                    <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
+                  </IconButton> */}
 
                   <IconButton
                     onClick={() => {
@@ -631,6 +514,7 @@ const errorInLeaving = () => {
                       <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
                     )}
                   </IconButton>
+                    </>
                 )}
 
                 {showEmoji ? (
@@ -645,7 +529,7 @@ const errorInLeaving = () => {
                 ) : (
                   <IconButton
                     onClick={() => {
-                      shareScreen();
+                      // shareScreen();
                       setScreenSharingIsEnabled(true);
                     }}
                     aria-label="share screen"
