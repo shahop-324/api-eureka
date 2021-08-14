@@ -150,12 +150,11 @@ const SessionScreen = () => {
 
   // RTC Configuration setting up
 
-  var rtc = {
-    // For the local client.
-    client: null,
+  let rtc = {
     // For the local audio and video tracks.
     localAudioTrack: null,
     localVideoTrack: null,
+    client: null,
   };
 
   const sessionDetails = useSelector((state) =>
@@ -172,15 +171,17 @@ const SessionScreen = () => {
 
   // Defined options for connecting to Agora RTC server
 
-  var options = {
+  let options = {
     // Pass your app ID here.
     appId: "6877e158655f4810968b19e65d0bbb23",
     // Set the channel name.
     channel: sessionId,
-    // Pass a token if your project enables the App Certificate.
-    token: token,
     // Set the user role in the channel.
-    role: agoraRole,
+    role: "host",
+    // Use a temp token
+    token: token,
+    // Uid
+    uid: userId,
   };
 
   // const uid = uuidv4();
@@ -293,30 +294,39 @@ const SessionScreen = () => {
     setAudioIsEnabled(true);
   };
 
-
-  
   console.log("This is our RTC token to join RTC channel.", token);
 
-  // Created client object using Agora SDK
+  let clientRoleOptions = {
+    // Set latency level to low latency
+    level: 1,
+  };
 
-  rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+  async function startBasicLiveStreaming() {
+    // Created client object using Agora SDK
+    rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
-  const startStreaming = async () => {
-    const result = await rtc.client.setClientRole(options.role);
-    // .then(console.log("Client role set successfully!"))
-    // .catch(console.log("Some error occured"));
+   
+      rtc.client.setClientRole(options.role);
+      
 
-    console.log(result);
+      await rtc.client
+      .join(options.appId,
+        options.channel,
+        options.token,
+        0)
+      .then(async () => {
+        console.log("Joined RTC channel");
 
-    const createAndPublishStream = async () => {
-      if (agoraRole === "host") {
         rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+        console.log(rtc);
+        console.log(rtc.localVideoTrack);
 
         await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
         const localPlayerContainer = document.createElement("div");
-        localPlayerContainer.id = 12345678;
+        localPlayerContainer.id = userId;
 
         localPlayerContainer.style.borderRadius = "10px";
         localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
@@ -335,40 +345,88 @@ const SessionScreen = () => {
         console.log("publish success!");
         console.log("op");
         console.log(12345678);
-      }
-    };
-
-    await rtc.client
-      .join("702d57c3092c4fd389eb7ea5a505d471", options.channel, token, userId)
-      .then(() => {
-        console.log("Joined RTC channel");
-        createAndPublishStream();
       });
 
-    //
-  };
 
-  const leaveStreaming = async () => {
-    // Destroy the local audio and video tracks.'
+      document.getElementById("leave").onclick = async function () {
+        rtc.localAudioTrack.close();
+        rtc.localVideoTrack.close();
 
-    rtc.localAudioTrack.close();
-       rtc.localVideoTrack.close();
-    
+        // Traverse all remote users.
+        rtc.client.remoteUsers.forEach((user) => {
+          // Destroy the dynamically created DIV containers.
+          const playerContainer = document.getElementById(user.uid);
+          playerContainer && playerContainer.remove();
+        });
 
-    // Traverse all remote users.
-    rtc.client.remoteUsers.forEach((user) => {
-      // Destroy the dynamically created DIV containers.
-      const playerContainer = document.getElementById(user.uid);
-      playerContainer && playerContainer.remove();
+        // Leave the channel.
+        await rtc.client.leave();
+        history.push('/home');
+      };
+
+      rtc.client.on("user-published", async (user, mediaType) => {
+        // Subscribe to a remote user.
+        await rtc.client.subscribe(user, mediaType);
+        console.log("subscribe success");
+
+        // If the subscribed track is video.
+        if (mediaType === "video") {
+            // Get `RemoteVideoTrack` in the `user` object.
+            const remoteVideoTrack = user.videoTrack;
+            // Dynamically create a container in the form of a DIV element for playing the remote video track.
+            const remotePlayerContainer = document.createElement("div");
+            // Specify the ID of the DIV container. You can use the `uid` of the remote user.
+            remotePlayerContainer.id = user.uid.toString();
+            
+            remotePlayerContainer.style.borderRadius = "10px";
+        remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+        remotePlayerContainer.style.backdropFilter = "blur( 4px )";
+            document.body.append(remotePlayerContainer);
+
+            document
+          .getElementById("session-stage-video-layout-grid")
+          .append(remotePlayerContainer);
+        setGrid(
+          document.getElementById("session-stage-video-layout-grid")
+            .childElementCount
+        );
+
+            // Play the remote video track.
+            // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
+            remoteVideoTrack.play(remotePlayerContainer);
+
+            // Or just pass the ID of the DIV container.
+            // remoteVideoTrack.play(playerContainer.id);
+        }
+
+        // If the subscribed track is audio.
+        if (mediaType === "audio") {
+            // Get `RemoteAudioTrack` in the `user` object.
+            const remoteAudioTrack = user.audioTrack;
+            // Play the audio track. No need to pass any DOM element.
+            remoteAudioTrack.play();
+        }
     });
 
-    // Leave the channel.
-    await rtc.client.leave();
-  };
 
-  useEffect(() => {
-    startStreaming();
-  }, []);
+
+
+      rtc.client.on("user-unpublished", user => {
+        // Get the dynamically created DIV container.
+        const remotePlayerContainer = document.getElementById(user.uid);
+        // Destroy the container.
+        remotePlayerContainer.remove();
+    });
+  
+  }
+
+ 
+  
+ 
+
+   useEffect(() => {
+    startBasicLiveStreaming()
+   }, []);
 
   // console.log(rtc.client.leave);
 
@@ -386,7 +444,7 @@ const SessionScreen = () => {
           sessionId={sessionId}
           eventId={eventId}
           communityId={communityId}
-          leaveStreaming={leaveStreaming}
+          // leaveStreaming={leaveStreaming}
         />
       </div>
       <div className="session-screen-body-container px-4 py-4">
@@ -461,28 +519,28 @@ const SessionScreen = () => {
                   </IconButton>
                 ) : (
                   <>
-                  {/* <IconButton aria-label="video" className={classes.margin}>
+                    {/* <IconButton aria-label="video" className={classes.margin}>
                     <VideocamRoundedIcon
                       style={{ fill: "#D3D3D3", size: "24" }}
                     />
                   </IconButton> */}
-                  <IconButton
-                    onClick={() => {
-                      videoIsEnabled ? turnOffVideo() : turnOnVideo();
-                    }}
-                    aria-label="video"
-                    className={classes.margin}
-                  >
-                    {videoIsEnabled ? (
-                      <VideocamRoundedIcon
-                        style={{ fill: "#D3D3D3", size: "24" }}
-                      />
-                    ) : (
-                      <VideocamOffIcon
-                        style={{ fill: "#C72E2E", size: "24" }}
-                      />
-                    )}
-                  </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        videoIsEnabled ? turnOffVideo() : turnOnVideo();
+                      }}
+                      aria-label="video"
+                      className={classes.margin}
+                    >
+                      {videoIsEnabled ? (
+                        <VideocamRoundedIcon
+                          style={{ fill: "#D3D3D3", size: "24" }}
+                        />
+                      ) : (
+                        <VideocamOffIcon
+                          style={{ fill: "#C72E2E", size: "24" }}
+                        />
+                      )}
+                    </IconButton>
                   </>
                 )}
 
@@ -497,24 +555,26 @@ const SessionScreen = () => {
                   </IconButton>
                 ) : (
                   <>
-                  {/* <IconButton aria-label="audio" className={classes.margin}>
+                    {/* <IconButton aria-label="audio" className={classes.margin}>
                     <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
                   </IconButton> */}
 
-                  <IconButton
-                    onClick={() => {
-                      audioIsEnabled ? turnOffAudio() : turnOnAudio();
-                    }}
-                    aria-label="audio"
-                    className={classes.margin}
-                  >
-                    {audioIsEnabled ? (
-                      <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                    ) : (
-                      <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
-                    )}
-                  </IconButton>
-                    </>
+                    <IconButton
+                      onClick={() => {
+                        audioIsEnabled ? turnOffAudio() : turnOnAudio();
+                      }}
+                      aria-label="audio"
+                      className={classes.margin}
+                    >
+                      {audioIsEnabled ? (
+                        <MicRoundedIcon
+                          style={{ fill: "#D3D3D3", size: "24" }}
+                        />
+                      ) : (
+                        <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
+                      )}
+                    </IconButton>
+                  </>
                 )}
 
                 {showEmoji ? (
@@ -566,27 +626,34 @@ const SessionScreen = () => {
                   style={{ justifySelf: "end" }}
                 >
                   {sessionRunningStatus === "Not Yet Started" ? (
-                    <div
-                      className="btn-filled-h-stage start-session-btn  px-3 py-2 ms-4"
-                      onClick={() => {
-                        socket.emit(
-                          "setSessionRunningStatus",
-                          {
-                            sessionId,
-                            eventId,
-                            sessionRunningStatus: "Started",
-                          },
-                          // enum: ["Not Yet Started", "Started", "Paused", "Ended"],
-                          (error) => {
-                            if (error) {
-                              alert(error);
-                            }
-                          }
-                        );
-                      }}
+                    // <div
+                    //   className="btn-filled-h-stage start-session-btn  px-3 py-2 ms-4"
+                    //   onClick={() => {
+                    //     socket.emit(
+                    //       "setSessionRunningStatus",
+                    //       {
+                    //         sessionId,
+                    //         eventId,
+                    //         sessionRunningStatus: "Started",
+                    //       },
+                    //       // enum: ["Not Yet Started", "Started", "Paused", "Ended"],
+                    //       (error) => {
+                    //         if (error) {
+                    //           alert(error);
+                    //         }
+                    //       }
+                    //     );
+                    //   }}
+                    // >
+                    //   Start Session
+                    // </div>
+
+                    <button
+                      className="btn btn-danger btn-outline-text"
+                      id="leave"
                     >
-                      Start Session
-                    </div>
+                      Leave
+                    </button>
                   ) : (
                     <div className="d-flex flex-row align-items-center">
                       {sessionRunningStatus === "Paused" ? (
