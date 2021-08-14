@@ -4,18 +4,12 @@ import { errorTrackerForFetchCommunity } from "../../actions";
 
 import { errorTrackerForFetchEventsOfParticularCommunity } from "../../actions";
 class ErrorBoundaryDashboardOverview extends React.Component {
-<<<<<<< HEAD
-=======
 
->>>>>>> e3fab14b4e83f1a6512435a4c7e16cd37ab0497c
   constructor(props) {
     super(props);
     this.state = { error: null, errorInfo: null };
   }
-<<<<<<< HEAD
-=======
-      
->>>>>>> e3fab14b4e83f1a6512435a4c7e16cd37ab0497c
+
 
   componentDidCatch(error, errorInfo) {
     // Catch errors in any components below and re-render with error message
