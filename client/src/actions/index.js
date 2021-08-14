@@ -4140,53 +4140,55 @@ export const errorTrackerForFetchPreviousEventChatMessages =
     dispatch(eventChatActions.disabledError());
   };
 
-export const getRTCToken = (sessionId, role,eventId,communityId) => async (dispatch, getState) => {
-  dispatch(RTCActions.startLoading());
+export const getRTCToken =
+  (sessionId, role, eventId, communityId) => async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
 
-  const fetchingRTCToken = async () => {
-    let res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/getLiveStreamingToken",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          sessionId: sessionId,
-          role: role,
-        }),
+    const fetchingRTCToken = async () => {
+      let res = await fetch(
+        "https://www.evenz.co.in/api-eureka/eureka/v1/getLiveStreamingToken",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            sessionId: sessionId,
+            role: role,
+          }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
-    );
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
-      }
+
+      res = await res.json();
+      return res;
+    };
+    try {
+      let res = await fetchingRTCToken();
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+      );
+    } catch (err) {
+      alert(err);
+      dispatch(RTCActions.hasError(err.message));
     }
-
-    res = await res.json();
-    return res;
   };
-  try {
-    let res = await fetchingRTCToken();
-    console.log(res);
-
-    dispatch(
-      RTCActions.fetchRTCToken({
-        token: res.token,
-      })
-    );
-
-
-    history.push(`/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`)
-  } catch (err) {
-    alert(err);
-    dispatch(RTCActions.hasError(err.message));
-  }
-};
 export const errorTrackerForFetchingRTCToken =
   () => async (dispatch, getState) => {
     dispatch(RTCActions.disabledError());
