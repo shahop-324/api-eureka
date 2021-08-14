@@ -181,7 +181,7 @@ const Root = () => {
 
   console.log(isEventLoading);
 
-  // if (isLoading) {
+  // if (isEventLoading) {
   //   return (
   //     <div
   //       className="d-flex flex-row align-items-center justify-content-center"
@@ -192,6 +192,12 @@ const Root = () => {
   //     </div>
   //   );
   // }
+
+  if(eventError) {
+    alert(eventError);
+    dispatch(errorTrackerForFetchEvent());
+    return null;
+  }
 
   
 
