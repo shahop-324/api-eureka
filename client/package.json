@@ -18,7 +18,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "agora-rtc-sdk-ng": "^4.6.2",
+    "agora-rtc-sdk-ng": "^4.6.3",
     "agora-rtm-sdk": "^1.4.3",
     "aos": "^2.3.4",
     "apexcharts": "^3.27.1",

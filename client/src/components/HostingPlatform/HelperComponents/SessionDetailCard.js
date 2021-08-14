@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { setSessionRoleAndJoinSession } from "../../../actions";
 
+
 const useStyles = makeStyles((theme) => ({
   small: {
     width: theme.spacing(3),
@@ -122,6 +123,9 @@ const SessionDetailCard = ({
     bgColor = "#538BF7";
   }
 
+
+  
+
   return (
     <>
       <div className="session-detail-card mb-3 px-4 py-5">
@@ -154,6 +158,8 @@ const SessionDetailCard = ({
             <Link
               to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
               onClick={() => {
+                
+
                 socket.emit(
                   "joinSession",
                   {
