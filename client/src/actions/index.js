@@ -3172,7 +3172,7 @@ export const fetchNetworking = (id) => async (dispatch, getState) => {
   const getNetworkSettings = async () => {
     console.log(id);
 
-    let res = await fetch(`${BaseURL}/events/${id}/getNetworkSettings`, {
+    let res = await fetch(`${BaseURL}events/${id}/getNetworkSettings`, {
       method: "GET",
 
       headers: {

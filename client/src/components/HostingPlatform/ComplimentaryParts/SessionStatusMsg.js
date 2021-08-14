@@ -1,26 +1,24 @@
-import React from 'react';
-import './../Styles/complimentary.scss';
-import NotYetStarted from './../../../assets/images/NotYetStarted.png';
+import React from "react";
+import "./../Styles/complimentary.scss";
 
+const SessionStatusMsg = ({ text, imgSrc }) => {
+  return (
+    <>
+      <div className="no-content-msg-card d-flex flex-column align-items-center justify-content-around p-5">
+        {/* Illustration */}
+        <img
+          src={imgSrc}
+          alt="card-message"
+          className="mb-3 no-content-illustration-img"
+        />
 
-const SessionStatusMsg = () => {
-    return (
-        <>
+        {/* Message */}
+        <div className="no-content-card-msg">{text}</div>
 
-<div className="no-content-msg-card d-flex flex-column align-items-center justify-content-around">
-
-    {/* Illustration */}
-    <img  src={NotYetStarted} alt="card-message"  className="mb-3 no-content-illustration-img"/>
-
-    {/* Message */}
-    <div className="no-content-card-msg">This session has not yet started</div>
-
-    {/* Action Button */}
-
-</div>
-
-        </>
-    );
-}
+        {/* Action Button */}
+      </div>
+    </>
+  );
+};
 
 export default SessionStatusMsg;

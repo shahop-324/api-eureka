@@ -44,6 +44,8 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import history from "../../../history";
 import SessionStatusMsg from "../ComplimentaryParts/SessionStatusMsg";
 
+import NotYetStarted from "./../../../assets/images/NotYetStarted.png";
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -453,19 +455,86 @@ const SessionScreen = () => {
       <div className="session-screen-body-container px-4 py-4">
         <div className="session-body-dark-container">
           <div className="d-flex flex-column justify-content-between px-3 py-4">
-            <div
-              className="session-video-layout-grid"
-              id="session-stage-video-layout-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: col,
-                gridTemplateRows: row,
-                gridGap: "10px",
-              }}
-            >
-              {/* Here Session video will go */}
-              <SessionStatusMsg />
-            </div>
+            {/* // enum: ["Not Yet Started", "Started", "Paused", "Ended"], */}
+            {(sessionRunningStatus !== "Started" ||
+              sessionRunningStatus !== "Resumed") &&
+            agoraRole !== "host" ? (
+              (() => {
+                switch (sessionRunningStatus) {
+                  case "Not Yet Started":
+                    return (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#212121",
+                          borderRadius: "10px",
+                        }}
+                        className="d-flex flex-row align-items-center justify-content-center"
+                      >
+                        <SessionStatusMsg
+                          text={"This session has not yet started"}
+                          imgSrc={NotYetStarted}
+                        />
+                      </div>
+                    );
+
+                  case "Paused":
+                    return (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#212121",
+                          borderRadius: "10px",
+                        }}
+                        className="d-flex flex-row align-items-center justify-content-center"
+                      >
+                        <SessionStatusMsg
+                          text={"This is paused for the time being"}
+                          imgSrc={NotYetStarted}
+                        />
+                      </div>
+                    );
+
+                  case "Ended":
+                    return (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#212121",
+                          borderRadius: "10px",
+                        }}
+                        className="d-flex flex-row align-items-center justify-content-center"
+                      >
+                        <SessionStatusMsg
+                          text={"Oops! seems like you were a little late."}
+                          imgSrc={NotYetStarted}
+                        />
+                      </div>
+                    );
+                  default:
+                    return (
+                      <div>You are a seeing sesion current running status.</div>
+                    );
+                }
+              })()
+            ) : (
+              <div
+                className="session-video-layout-grid"
+                id="session-stage-video-layout-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: col,
+                  gridTemplateRows: row,
+                  gridGap: "10px",
+                }}
+              >
+                {/* Here Session video will go */}
+              </div>
+            )}
+
             <div className="session-video-controls-grid ">
               <div
                 className="stage-left-controls d-flex flex-row justify-content-between align-items-center"

@@ -48,8 +48,8 @@ const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
 
   const eventId = params.eventId;
 
-  const [appToken, setAppToken] = useState(false);
-  const [appScreenToken, setAppScreenToken] = useState(false);
+  // const [appToken, setAppToken] = useState(false);
+  // const [appScreenToken, setAppScreenToken] = useState(false);
 
   const currentChairId = useSelector(
     (state) => state.user.currentlyJoinedChair
@@ -109,38 +109,38 @@ const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("lg");
 
-  const getToken = async () => {
-    let res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/getRTCVideoCallToken",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          tableId: table,
-        }),
+  // const getToken = async () => {
+  //   let res = await fetch(
+  //     "https://www.evenz.co.in/api-eureka/eureka/v1/getRTCVideoCallToken",
+  //     {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         tableId: table,
+  //       }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${userToken}`,
+  //       },
+  //     }
+  //   );
 
-    res = await res.json();
-    console.log(res);
+  //   res = await res.json();
+  //   console.log(res);
 
-    setAppToken(res.token);
-  };
+  //   setAppToken(res.token);
+  // };
 
   let options = {
-    appId: "6877e158655f4810968b19e65d0bbb23",
+    appId: "702d57c3092c4fd389eb7ea5a505d471",
 
     channel: table,
 
-    token: appToken,
+    token: null,
 
-    screenToken: appScreenToken,
+    screenToken: null,
 
-    uid: userId,
+    uid: null,
   };
 
   const shareScreen = async () => {
@@ -254,7 +254,7 @@ try{
  // Dynamically create a container in the form of a DIV element for playing the local video track.
  const localPlayerContainer = document.createElement("div");
  // Specify the ID of the DIV container. You can use the uid of the local user.
- localPlayerContainer.id = options.uid.toString();
+ localPlayerContainer.id = "12345";
  // localPlayerContainer.textContent = "Local user " + options.uid;
  localPlayerContainer.style.borderRadius = "10px";
  localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
@@ -306,9 +306,9 @@ catch(err)
   };
 
   useEffect(() => {
-    appToken ? joinTable() : console.log("Retriving App Token from server");
-    getToken();
-  }, [appToken, getToken]);
+     joinTable();
+    
+  }, []);
 
   return (
     <>
