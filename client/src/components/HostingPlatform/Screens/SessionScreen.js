@@ -293,10 +293,7 @@ const SessionScreen = () => {
   };
 
   useEffect(() => {
-  
-
-      startBasicLiveStreaming();
- 
+    startBasicLiveStreaming();
   }, []);
 
   // if (isLoading) {
@@ -334,43 +331,40 @@ const SessionScreen = () => {
       .then(async () => {
         console.log("Joined RTC channel");
 
-        if(agoraRole !== "audience"){
+        if (agoraRole !== "audience") {
           rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-  
+
           console.log(rtc);
           console.log(rtc.localVideoTrack);
-  
+
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-  
+
           const localPlayerContainer = document.createElement("div");
           localPlayerContainer.id = userId;
-  
+
           localPlayerContainer.style.borderRadius = "10px";
           localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
           localPlayerContainer.style.backdropFilter = "blur( 4px )";
-  
+
           document
             .getElementById("session-stage-video-layout-grid")
             .append(localPlayerContainer);
-  
+
           setGrid(
             document.getElementById("session-stage-video-layout-grid")
               .childElementCount
           );
-  
+
           rtc.localVideoTrack.play(localPlayerContainer);
           console.log("publish success!");
           console.log("op");
           console.log(12345678);
         }
-        
       });
 
-
     document.getElementById("leave").onclick = async function () {
-
-      if(agoraRole === "host") {
+      if (agoraRole === "host") {
         rtc.localAudioTrack.close();
         rtc.localVideoTrack.close();
       }
@@ -384,7 +378,7 @@ const SessionScreen = () => {
 
       // Leave the channel.
       await rtc.client.leave();
-      history.push("/home");
+      history.push(`/community/${communityId}/event/${eventId}/hosting-platform/lobby`);
     };
 
     rtc.client.on("user-published", async (user, mediaType) => {
@@ -437,10 +431,6 @@ const SessionScreen = () => {
       remotePlayerContainer && remotePlayerContainer.remove();
     });
   }
-
-  // console.log(rtc.client.leave);
-
-  // leaveStreaming();
 
   return (
     <>
@@ -628,13 +618,6 @@ const SessionScreen = () => {
                   </IconButton>
                 )}
               </div>
-
-              <button
-                      className="btn btn-danger btn-outline-text"
-                      id="leave"
-                    >
-                      Leave
-                    </button>
 
               {sessionRunningStatus !== "Ended" &&
               showStartPauseAndEndSessionButton ? (
