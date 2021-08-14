@@ -10,7 +10,15 @@ import DeleteCoupon from "../FormComponents/DeleteCoupon";
 import { useDispatch } from "react-redux";
 import { fetchCoupon } from "../../../actions";
 
-const CouponCard = ({id, url, percentage, onEvent, validTillDate, discountCode, status}) => {
+const CouponCard = ({
+  id,
+  url,
+  percentage,
+  onEvent,
+  validTillDate,
+  discountCode,
+  status,
+}) => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
@@ -34,25 +42,25 @@ const CouponCard = ({id, url, percentage, onEvent, validTillDate, discountCode, 
   return (
     <div className="coupon-card-wrapper">
       <div className="mb-3" style={{ position: "relative", height: "40%" }}>
-        <img
-          src={url}
-          alt="event-poster"
-        ></img>
+        <img src={url} alt="event-poster"></img>
         <div
           className="d-flex flex-column"
           style={{ position: "absolute", top: "0", right: "4.5%" }}
         >
-          <div className="fit-content" onClick={() => {
-dispatch(fetchCoupon(id));
-            handleEditCoupon()
-          }}>
-            <IconButton aria-label="delete" color="primary" >
-              <EditRoundedIcon style={{fill: "#538BF7"}}/>
+          <div
+            className="fit-content"
+            onClick={() => {
+              // dispatch(fetchCoupon(id));
+              handleEditCoupon();
+            }}
+          >
+            <IconButton aria-label="delete" color="primary">
+              <EditRoundedIcon style={{ fill: "#538BF7" }} />
             </IconButton>
           </div>
 
           <div className="fit-content" onClick={handleDeleteCoupon}>
-            <IconButton aria-label="delete" color="secondary" >
+            <IconButton aria-label="delete" color="secondary">
               <DeleteIcon />
             </IconButton>
           </div>
@@ -92,7 +100,7 @@ dispatch(fetchCoupon(id));
         </div>
       </div>
 
-      <EditCoupon open={open} handleClose={handleClose} id={id}/>
+      <EditCoupon open={open} handleClose={handleClose} id={id} />
 
       <DeleteCoupon
         openDeleteDialog={openDeleteDialog}
