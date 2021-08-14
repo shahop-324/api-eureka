@@ -27,19 +27,19 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import RevenueManagement from "./RevenueManagement";
 
-import ErrorBoundriesDashboardOverview from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
+import ErrorBoundriesDashboardOverview from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
 
-import ErrorBoundriesBilling from "../ErrorBoundries.js/ErrorBoundriesDashboardBilling";
-import ErrorBoundriesCoupons from "../ErrorBoundries.js/ErrorBoundriesDashboardCoupons";
-import ErrorBoundriesRecordings from "../ErrorBoundries.js/ErrorBoundriesDashboardRecordings";
-import ErrorBoundriesRegistrations from "../ErrorBoundries.js/ErrorBoundriesDashboardRegistrations";
-import ErrorBoundriesRevenueManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardRevenueManagement";
-import ErrorBoundriesReviews from "../ErrorBoundries.js/ErrorBoundariesDashboardReviews";
-import ErrorBoundriesTeamManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardTeamManagement";
-import ErrorBoundriesQueries from "../ErrorBoundries.js/ErrorBoundriesDashboardQueries";
-import ErrorBoundriesEventManagement from "../ErrorBoundries.js/ErrorBoundriesDashboardEventManagement";
+import ErrorBoundriesBilling from "../ErrorBoundries/ErrorBoundriesDashboardBilling";
+import ErrorBoundriesCoupons from "../ErrorBoundries/ErrorBoundriesDashboardCoupons";
+import ErrorBoundriesRecordings from "../ErrorBoundries/ErrorBoundriesDashboardRecordings";
+import ErrorBoundriesRegistrations from "../ErrorBoundries/ErrorBoundriesDashboardRegistrations";
+import ErrorBoundriesRevenueManagement from "../ErrorBoundries/ErrorBoundriesDashboardRevenueManagement";
+import ErrorBoundriesReviews from "../ErrorBoundries/ErrorBoundariesDashboardReviews";
+import ErrorBoundriesTeamManagement from "../ErrorBoundries/ErrorBoundriesDashboardTeamManagement";
+import ErrorBoundriesQueries from "../ErrorBoundries/ErrorBoundriesDashboardQueries";
+import ErrorBoundriesEventManagement from "../ErrorBoundries/ErrorBoundriesDashboardEventManagement";
 
-import ErrorBoundary from "../ErrorBoundries.js/ErrorBoundriesDashboardOverview";
+import ErrorBoundary from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
 
 const DashboardRoot = () => {
   const params = useParams();
