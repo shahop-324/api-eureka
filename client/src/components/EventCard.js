@@ -20,6 +20,7 @@ const EventCard = ({
   communityId,
   rating
 }) => {
+  console.log(communityId);
   const dispatch = useDispatch();
   const eventId = id;
   const userDetails = useSelector((state) =>
@@ -71,7 +72,7 @@ const EventCard = ({
         </div>
         <div className="d-flex flex-row justify-content-end align-items-center">
           <Link
-            to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
+            to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
           >
             <button
               type="button"
