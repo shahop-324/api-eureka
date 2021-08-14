@@ -18,30 +18,30 @@ import Ticketing from "./Ticketing";
 import Networking from "./Networking";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
-import {  fetchParticularEventOfCommunity } from "../../../actions";
+import { fetchParticularEventOfCommunity } from "../../../actions";
 
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { navigationIndexForEditEvent } from "../../../actions/index";
-
+import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries.js/ErrorBoundriesEditEventSession";
+import ErrorBoundriesEditEventSession from "../../ErrorBoundries.js/ErrorBoundriesEditEventSession";
 const EditEventRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
+  const id = params.id;
+  const communityId = params.communityId;
 
-  const id = params.id; 
-    const communityId=params.communityId;
-
-    console.log(id)
+  console.log(id);
   useEffect(() => {
     dispatch(fetchParticularEventOfCommunity(id));
   }, [dispatch, id]);
 
-  useEffect(()=>{
-    return ()=>{
-      dispatch(navigationIndexForEditEvent(0))
-    }
-  },[dispatch])
+  useEffect(() => {
+    return () => {
+      dispatch(navigationIndexForEditEvent(0));
+    };
+  }, [dispatch]);
 
   const handleBasicsClick = () => {
     dispatch(navigationIndexForEditEvent(0));
@@ -82,7 +82,9 @@ const EditEventRoot = () => {
     dispatch(navigationIndexForEditEvent(7));
     history.push(`/community/${communityId}/edit-event/${id}/networking`);
   };
-  let currentIndex = useSelector((state) => state.navigation.currentIndexForEditEvent);
+  let currentIndex = useSelector(
+    (state) => state.navigation.currentIndexForEditEvent
+  );
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
@@ -115,10 +117,18 @@ const EditEventRoot = () => {
                   return <About />;
 
                 case "2":
-                  return <Sessions />;
+                  return (
+                    <ErrorBoundriesEditEventSession>
+                      <Sessions />
+                    </ErrorBoundriesEditEventSession>
+                  );
 
                 case "3":
-                  return <Speakers />;
+                  return (
+                    <ErrorBoundriesEditEventSpeakers>
+                      <Speakers />
+                    </ErrorBoundriesEditEventSpeakers>
+                  );
 
                 case "4":
                   return <Booths />;

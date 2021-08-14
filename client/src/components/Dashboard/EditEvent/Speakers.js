@@ -17,7 +17,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddNewSpeaker from "./FormComponents/EditSpeakersForms/AddNewSpeaker";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import { errorTrackerForFetchSpeakers, fetchEvent, fetchSessions, fetchSpeakers } from "../../../actions";
+import {
+  errorTrackerForFetchSpeakers,
+  fetchEvent,
+  fetchSessions,
+  fetchSpeakers,
+} from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
@@ -173,14 +178,12 @@ const Speakers = () => {
   const classes = useStyles();
 
   if (error) {
-    dispatch(errorTrackerForFetchSpeakers());
-    alert(error);
-    return;
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Speakers</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
@@ -213,7 +216,7 @@ const Speakers = () => {
               />
             </div>
             <Link
-             onClick={() => dispatch(fetchEvent(id))}
+              onClick={() => dispatch(fetchEvent(id))}
               type="button"
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}`}

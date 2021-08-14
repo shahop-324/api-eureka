@@ -14,7 +14,11 @@ import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import AddNewSession from "./FormComponents/EditSessionForms/AddNewSession";
-import { errorTrackerForFetchSessions, fetchSessions, fetchSpeakers } from "../../../actions";
+import {
+  errorTrackerForFetchSessions,
+  fetchSessions,
+  fetchSpeakers,
+} from "../../../actions";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -129,7 +133,7 @@ const Sessions = () => {
           description,
           speaker,
         } = session;
-        
+
         return (
           <SessionDetailCard
             key={id}
@@ -148,14 +152,15 @@ const Sessions = () => {
   const classes = useStyles();
 
   if (error) {
-    dispatch(errorTrackerForFetchSessions());
-    alert(error);
-    return;
+    // dispatch(errorTrackerForFetchSessions());
+    throw new Error(error);
+    // alert(error);
+    // return;
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Sessions</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
