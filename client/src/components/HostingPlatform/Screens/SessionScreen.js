@@ -45,6 +45,7 @@ import Loader from "../../Loader";
 
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
+import history from "../../../history";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -172,9 +173,7 @@ const SessionScreen = () => {
   useEffect(() => {
     dispatch(getRTCToken(sessionId, agoraRole));
 
-    return () => {
-      leaveStreaming();
-    };
+    
   }, [agoraRole, dispatch, sessionId]);
 
   const sessionRunningStatus = sessionDetails
@@ -204,6 +203,10 @@ const SessionScreen = () => {
   const showSessionEnded = sessionRunningStatus === "Ended" ? true : false;
 
   const showEmoji = sessionRole === "audience" ? true : false;
+
+  useEffect(() => {
+    startBasicCall();
+  }, []);
 
   useEffect(() => {
     dispatch(fetchSessionForSessionStage(sessionId));
@@ -347,11 +350,11 @@ const SessionScreen = () => {
       }
     );
 
-    const uid = userId;
-    console.log(uid);
+    // const uid = userId;
+    // console.log(uid);
 
     await rtc.client
-      .join(options.appId, options.channel, token, uid)
+      .join(options.appId, options.channel, token, 12345678)
       .then(async (uid) => {
         console.log(uid);
         if (agoraRole === "host") {
@@ -438,17 +441,41 @@ const SessionScreen = () => {
             .childElementCount
         );
       });
+
+
+
+      rtc.client.on('peer-leave', function(evt) {
+        let stream = evt.stream;
+        let streamId = String(stream.getId);
+        stream.close();
+        // removeVideoStream(streamId);
+      });
+
     });
     ///
   };
+
+const successLeaving = () => {
+  console.log("Leaved successfully!.");
+
+
+
+  history.push(`/community/${communityId}/event/${eventId}/hosting-platform/lobby`);
+
+}
+
+const errorInLeaving = () => {
+  console.log("Some error occured while trying to leave. Please try leaving again.")
+}
+ 
 
   /////
 
   const leaveStreaming = async () => {
     // Destroy the local audio and video tracks.
     if (agoraRole === "host") {
-      rtc.localAudioTrack.close();
-      rtc.localVideoTrack.close();
+      rtc.localAudioTrack && rtc.localAudioTrack.close();
+      rtc.localVideoTrack && rtc.localVideoTrack.close();
     }
 
     // Traverse all remote users.
@@ -459,10 +486,13 @@ const SessionScreen = () => {
     });
 
     // Leave the channel.
-    await rtc.client.leave();
+    await rtc.client.leave().then(successLeaving).catch(errorInLeaving);
   };
 
-  startBasicCall();
+ 
+  
+
+  
 
   return (
     <>

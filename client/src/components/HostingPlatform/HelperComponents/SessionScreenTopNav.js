@@ -77,14 +77,15 @@ const SessionScreenTopNav = ({
                 // ! leaveStreaming();
               }}
             >
-              <Link
+              <IconButton onClick={async() => { await leaveStreaming()}} aria-label="delete" className={classes.margin}>
+                  <ArrowBackIcon style={{ fill: "#3C3A3A" }} />
+                </IconButton>
+              {/* <Link
                 style={{ textDecoration: "none" }}
                 to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
               >
-                <IconButton aria-label="delete" className={classes.margin}>
-                  <ArrowBackIcon style={{ fill: "#3C3A3A" }} />
-                </IconButton>
-              </Link>
+                
+              </Link> */}
             </div>
 
             <div className="event-name-l2 ms-2">{sessionName}</div>
