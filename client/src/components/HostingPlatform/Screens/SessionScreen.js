@@ -42,6 +42,7 @@ import Loader from "../../Loader";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import history from "../../../history";
+import SessionStatusMsg from "../ComplimentaryParts/SessionStatusMsg";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -378,7 +379,9 @@ const SessionScreen = () => {
 
       // Leave the channel.
       await rtc.client.leave();
-      history.push(`/community/${communityId}/event/${eventId}/hosting-platform/lobby`);
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+      );
     };
 
     rtc.client.on("user-published", async (user, mediaType) => {
@@ -461,6 +464,7 @@ const SessionScreen = () => {
               }}
             >
               {/* Here Session video will go */}
+              <SessionStatusMsg />
             </div>
             <div className="session-video-controls-grid ">
               <div
@@ -626,34 +630,36 @@ const SessionScreen = () => {
                   style={{ justifySelf: "end" }}
                 >
                   {sessionRunningStatus === "Not Yet Started" ? (
-                    // <div
-                    //   className="btn-filled-h-stage start-session-btn  px-3 py-2 ms-4"
-                    //   onClick={() => {
-                    //     socket.emit(
-                    //       "setSessionRunningStatus",
-                    //       {
-                    //         sessionId,
-                    //         eventId,
-                    //         sessionRunningStatus: "Started",
-                    //       },
-                    //       // enum: ["Not Yet Started", "Started", "Paused", "Ended"],
-                    //       (error) => {
-                    //         if (error) {
-                    //           alert(error);
-                    //         }
-                    //       }
-                    //     );
-                    //   }}
-                    // >
-                    //   Start Session
-                    // </div>
+                    <div className="d-flex flex-row align-items-center">
+                      <div
+                        className="btn-filled-h-stage start-session-btn  px-3 py-2 ms-4"
+                        onClick={() => {
+                          socket.emit(
+                            "setSessionRunningStatus",
+                            {
+                              sessionId,
+                              eventId,
+                              sessionRunningStatus: "Started",
+                            },
+                            // enum: ["Not Yet Started", "Started", "Paused", "Ended"],
+                            (error) => {
+                              if (error) {
+                                alert(error);
+                              }
+                            }
+                          );
+                        }}
+                      >
+                        Start Session
+                      </div>
 
-                    <button
-                      className="btn btn-danger btn-outline-text"
-                      id="leave"
-                    >
-                      Leave
-                    </button>
+                      {/* <button
+                        className="btn btn-danger btn-outline-text ms-4"
+                        id="leave"
+                      >
+                        Leave
+                      </button> */}
+                    </div>
                   ) : (
                     <div className="d-flex flex-row align-items-center">
                       {sessionRunningStatus === "Paused" ? (

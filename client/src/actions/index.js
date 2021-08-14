@@ -29,8 +29,8 @@ import { contactUsActions } from "../reducers/contactSlice";
 
 const { REACT_APP_MY_ENV_ } = process.env;
 const BaseURL = REACT_APP_MY_ENV_
-  ? "http://localhost:3000/api-eureka/"
-  : "https://www.evenz.co.in/api-eureka/";
+  ? "http://localhost:3000/api-eureka/eureka/v1/"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   console.log({ ...formValues });
