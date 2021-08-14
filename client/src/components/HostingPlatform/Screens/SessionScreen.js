@@ -381,7 +381,7 @@ const SessionScreen = () => {
             remotePlayerContainer.style.borderRadius = "10px";
         remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
         remotePlayerContainer.style.backdropFilter = "blur( 4px )";
-            document.body.append(remotePlayerContainer);
+            
 
             document
           .getElementById("session-stage-video-layout-grid")
