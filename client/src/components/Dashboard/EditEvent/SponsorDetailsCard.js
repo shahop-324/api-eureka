@@ -43,9 +43,8 @@ const SponsorDetailsCard = (props) => {
   };
 
   const handleEditSponsor = () => {
-    dispatch(fetchSponsor(props.id));
+    //  dispatch(fetchSponsor(props.id));
     setOpen(true);
-
   };
 
   const handleClose = () => {
@@ -118,20 +117,20 @@ const SponsorDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div onClick={() => {
-              handleEditSponsor()
-              dispatch(fetchSponsor(props.id));
-            }}>
-
-            <IconButton color="primary" aria-label="add to shopping cart">
-              <EditRoundedIcon />
-            </IconButton>
+            <div
+              onClick={() => {
+                handleEditSponsor();
+                dispatch(fetchSponsor(props.id));
+              }}
+            >
+              <IconButton color="primary" aria-label="add to shopping cart">
+                <EditRoundedIcon />
+              </IconButton>
             </div>
             <div onClick={handleDeleteSponsor}>
-
-            <IconButton color="secondary" aria-label="add to shopping cart">
-              <DeleteRoundedIcon />
-            </IconButton>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+                <DeleteRoundedIcon />
+              </IconButton>
             </div>
           </div>
         </div>
@@ -140,8 +139,12 @@ const SponsorDetailsCard = (props) => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
-      <EditSponsor open={open} handleClose={handleClose} id={props.id}/>
-      <DeleteSponsor openDeleteDialog={openDeleteDialog} handleCloseDeleteSponsor={handleCloseDeleteSponsor} id={props.id}/>
+      <EditSponsor open={open} handleClose={handleClose} id={props.id} />
+      <DeleteSponsor
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteSponsor={handleCloseDeleteSponsor}
+        id={props.id}
+      />
     </>
   );
 };

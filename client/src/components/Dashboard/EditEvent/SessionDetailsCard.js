@@ -29,10 +29,6 @@ const SessionDetailCard = ({
   speaker,
   id,
 }) => {
-
-
-  
-
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -52,7 +48,7 @@ const SessionDetailCard = ({
   const dispatch = useDispatch();
 
   const handleEditSession = () => {
-    dispatch(fetchParticularSessionOfEvent(id));
+    //dispatch(fetchParticularSessionOfEvent(id));
     setOpen(true);
   };
 
