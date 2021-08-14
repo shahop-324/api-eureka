@@ -28,16 +28,10 @@ const SessionScreenTopNav = ({
   sessionRunningStatus,
   rtc,
   agoraRole,
-  leaveStreaming
 }) => {
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const showGreenRoom =
-    sessionRole !== "audience" &&
-    sessionRunningStatus !== "Started" &&
-    sessionRunningStatus !== "Ended"
-      ? true
-      : false;
+  const showGreenRoom = sessionRole !== "audience" && sessionRunningStatus !== "Started" && sessionRunningStatus !== "Ended"  ? true : false;
 
   // const showLiveIndicator =
   //   sessionRunningStatus === "Started" || sessionRunningStatus === "Resumed"
@@ -78,7 +72,7 @@ const SessionScreenTopNav = ({
                 // ! leaveStreaming();
               }}
             >
-              <IconButton onClick={async() => { await leaveStreaming()}} aria-label="delete" className={classes.margin}>
+              <IconButton id="leave" aria-label="delete" className={classes.margin}>
                   <ArrowBackIcon style={{ fill: "#3C3A3A" }} />
                 </IconButton>
               {/* <Link
@@ -96,6 +90,7 @@ const SessionScreenTopNav = ({
               </div>
             ) : (
               <Link
+              id="leave"
                 style={{ textDecoration: "none" }}
                 to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
               >
