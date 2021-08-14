@@ -420,10 +420,6 @@ const SessionScreen = () => {
   
   }
 
- 
-  
- 
-
    useEffect(() => {
     startBasicLiveStreaming()
    }, []);

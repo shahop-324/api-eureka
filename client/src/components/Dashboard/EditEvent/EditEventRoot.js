@@ -23,8 +23,8 @@ import { fetchParticularEventOfCommunity } from "../../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { navigationIndexForEditEvent } from "../../../actions/index";
-import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries.js/ErrorBoundriesEditEventSession";
-import ErrorBoundriesEditEventSession from "../../ErrorBoundries.js/ErrorBoundriesEditEventSession";
+import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries/ErrorBoundriesEditEventSession";
+import ErrorBoundriesEditEventSession from "../../ErrorBoundries/ErrorBoundriesEditEventSession";
 const EditEventRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
