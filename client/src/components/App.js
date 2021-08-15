@@ -54,36 +54,40 @@ class App extends React.Component {
     //   console.log("i runned");
     // })();
 
-    console.log(isSignedIn);
+    console.log(typeof isSignedIn);
     return (
       <>
         <Router history={history}>
           <div>
             <Switch>
-              {
-                <Route path="/signin" exact component={Signin} />
-                //  <Route path="/signup" exact component={Signup} />
-              }
-              {
-                // <Route path="/signin" exact component={Signin} />
+            <Route path="/home" exact component={Home} />
+              <Route path="/" exact component={Home} />
+               
+            
                 <Route path="/signup" exact component={Signup} />
-              }
+              
               {
-                // <Route path="/signin" exact component={Signin} />
+              !isSignedIn&&<Route path="/signin" exact component={Signin} />
+                
+                
+              }
+             
+             
+               
                 <Route
                   path="/signin/:eventId"
                   exact
                   component={SignInForEventRegistration}
                 />
-              }
-              {
-                // <Route path="/signin" exact component={Signin} />
+              
+              
+               
                 <Route
                   path="/login/buy-plan"
                   exact
                   component={SigninForBuyingPlan}
                 />
-              }
+           
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
@@ -112,8 +116,7 @@ class App extends React.Component {
                 component={InternalServerError}
               />
 
-              <Route path="/home" exact component={Home} />
-              <Route path="/" exact component={Home} />
+            
               <Route
                 path="/terms-of-service"
                 exact
@@ -121,8 +124,7 @@ class App extends React.Component {
               />
               <Route path="/privacy-policy" exact component={PrivacyPolicy} />
 
-              <Route path="/signin" exact component={Signin} />
-              <Route path="/signup" exact component={Signup} />
+           
               <Route path="/accept-invite" exact component={AcceptInvite} />
 
               <Route path="/explore-events/" exact component={ExploreEvents} />
