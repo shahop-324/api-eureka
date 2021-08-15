@@ -15,23 +15,21 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 
-import {connect} from 'twilio-video';
+import {
+  connect,
+  createLocalTracks,
+  createLocalVideoTrack,
+} from "twilio-video";
 import { twillioActions } from "../../../reducers/twillioSlice";
 import { fetchTwillioVideoRoomToken } from "../../../actions";
 
-const connectToTwillioRoom = (token, table) => {
-  console.log(token, table);
+import AgoraRTC from "agora-rtc-sdk-ng";
 
-  connect(token, { name: table }).then(room => {
-    console.log(`Successfully joined a Room: ${room}`);
-    room.on('participantConnected', participant => {
-      console.log(`A remote Participant connected: ${participant}`);
-    });
-  }, error => {
-    console.error(`Unable to connect to Room: ${error.message}`);
-  });
-}
-
+let rtc = {
+  localAudioTrack: null,
+  localVideoTrack: null,
+  client: null,
+};
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -42,9 +40,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id }) => {
-
+const TableScreen = ({
+  openTableScreen,
+  launchTableScreen,
+  closeTableScreen,
+  id,
+}) => {
   const dispatch = useDispatch();
+
+  const token = useSelector((state) => state.RTC.token);
 
   const table = id;
 
@@ -54,14 +58,47 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
 
   const eventId = params.eventId;
 
+  let options = {
+    // Pass your App ID here.
+    appId: "c4e9f3e5cdf548f68d2f8417ad8a13eb",
+    // appId: "4f274729f9ab45139e509eb6efba14cc",
+    // Set the channel name.
+    channel: table,
+    // Pass your temp token here.
+    token: null,
+    // token: token,
+    // Set the user ID.
+    uid: null,
+  };
+
+  const [videoIsEnabled, setVideoIsEnabled] = useState(true);
+  const [audioIsEnabled, setAudioIsEnabled] = useState(true);
+  const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
+
+  const turnOffVideo = async () => {
+    await rtc.localVideoTrack.setEnabled(false);
+    setVideoIsEnabled(false);
+  };
+  const turnOnVideo = async () => {
+    await rtc.localVideoTrack.setEnabled(true);
+    setVideoIsEnabled(true);
+  };
+
+  const turnOffAudio = async () => {
+    await rtc.localAudioTrack.setEnabled(false);
+    setAudioIsEnabled(false);
+  };
+  const turnOnAudio = async () => {
+    await rtc.localAudioTrack.setEnabled(true);
+    setAudioIsEnabled(true);
+  };
+
   // const [appToken, setAppToken] = useState(false);
   // const [appScreenToken, setAppScreenToken] = useState(false);
 
   const currentChairId = useSelector(
     (state) => state.user.currentlyJoinedChair
   );
-
-  const token = useSelector((state) => state.twillio.videoRoomToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -72,8 +109,6 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
   let col = "1fr 1fr 1fr 1fr";
 
   let row = "1fr 1fr";
-
- 
 
   if (grid === 1) {
     col = "1fr";
@@ -97,10 +132,129 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("lg");
 
-  useEffect(() => {
-    connectToTwillioRoom(token, table);
-  }, []);
+  // useEffect(() => {
+  //   connectToTwillioRoom(token, table);
+  // }, []);
 
+  // createLocalVideoTrack().then(track => {
+  //   const localMediaContainer = document.getElementById('table-video-layout-grid');
+  //   localMediaContainer.appendChild(track.attach());
+  // });
+
+  async function startBasicCall() {
+    // Create an AgoraRTCClient object.
+    rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+    // Listen for the "user-published" event, from which you can get an AgoraRTCRemoteUser object.
+    rtc.client.on("user-published", async (user, mediaType) => {
+      // Subscribe to the remote user when the SDK triggers the "user-published" event
+      await rtc.client.subscribe(user, mediaType);
+      console.log("subscribe success");
+
+      // If the remote user publishes a video track.
+      if (mediaType === "video") {
+        // Get the RemoteVideoTrack object in the AgoraRTCRemoteUser object.
+        const remoteVideoTrack = user.videoTrack;
+        // Dynamically create a container in the form of a DIV element for playing the remote video track.
+        const remotePlayerContainer = document.createElement("div");
+        // // Specify the ID of the DIV container. You can use the uid of the remote user.
+        remotePlayerContainer.id = user.uid.toString();
+        remotePlayerContainer.style.borderRadius = "10px";
+        remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+        remotePlayerContainer.style.backdropFilter = "blur( 4px )";
+
+        document
+          .getElementById("table-video-layout-grid")
+          .append(remotePlayerContainer);
+        setGrid(
+          document.getElementById("table-video-layout-grid").childElementCount
+        );
+
+        // Play the remote video track.
+        // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
+        remoteVideoTrack.play(remotePlayerContainer);
+
+        // Or just pass the ID of the DIV container.
+        // remoteVideoTrack.play(playerContainer.id);
+      }
+
+      // If the remote user publishes an audio track.
+      if (mediaType === "audio") {
+        // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
+        const remoteAudioTrack = user.audioTrack;
+        // Play the remote audio track. No need to pass any DOM element.
+        remoteAudioTrack.play();
+      }
+
+      // Listen for the "user-unpublished" event
+      rtc.client.on("user-unpublished", (user) => {
+        // Get the dynamically created DIV container.
+        const remotePlayerContainer = document.getElementById(user.uid);
+        // Destroy the container.
+        remotePlayerContainer && remotePlayerContainer.remove();
+      });
+    });
+
+    // Join an RTC channel.
+    await rtc.client
+      .join(options.appId, options.channel, options.token, options.uid)
+      .then(async (uid) => {
+        console.log("Joined RTC channel");
+
+        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+        console.log(rtc.localAudioTrack);
+        console.log(rtc.localVideoTrack);
+
+        await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+
+        const localPlayerContainer = document.createElement("div");
+        localPlayerContainer.id = uid;
+
+        localPlayerContainer.style.borderRadius = "10px";
+        localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+        localPlayerContainer.style.backdropFilter = "blur( 4px )";
+
+        document
+          .getElementById("table-video-layout-grid")
+          .append(localPlayerContainer);
+
+        setGrid(
+          document.getElementById("table-video-layout-grid").childElementCount
+        );
+
+        rtc.localVideoTrack.play(localPlayerContainer);
+
+        rtc.localAudioTrack.play();
+
+        console.log("publish success!");
+        console.log("op");
+        console.log(12345678);
+      });
+
+    
+
+    document.getElementById("leave-table").onclick = async function () {
+      // Destroy the local audio and video tracks.
+      rtc.localAudioTrack.close();
+      rtc.localVideoTrack.close();
+
+      // Traverse all remote users.
+      rtc.client.remoteUsers.forEach((user) => {
+        // Destroy the dynamically created DIV containers.
+        const playerContainer = document.getElementById(user.uid);
+        playerContainer && playerContainer.remove();
+      });
+
+      // Leave the channel.
+      await rtc.client.leave();
+    };
+  }
+
+  useEffect(() => {
+    startBasicCall();
+  }, []);
 
   return (
     <>
@@ -141,12 +295,7 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
               }}
             >
               <div className="stage-left-controls d-flex flex-row justify-content-between align-items-center ms-3">
-                
-                <div className="room-no-text">
-
-                Table 1
-                </div>
-                
+                <div className="room-no-text">Table 1</div>
               </div>
 
               {/* This is Mid Stage Controls */}
@@ -155,28 +304,33 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
                 style={{ justifySelf: "center" }}
               >
                 <IconButton
-                  aria-label="video"
-                  className={classes.margin}
-                >
-                  
-                    <VideocamRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  
-                    {/* <VideocamOffIcon style={{ fill: "#C72E2E", size: "24" }} /> */}
-                 
-                </IconButton>
-
-                <IconButton
-                  
+                  onClick={() => {
+                    videoIsEnabled ? turnOffVideo() : turnOnVideo();
+                  }}
                   aria-label="audio"
                   className={classes.margin}
                 >
-                 
+                  {videoIsEnabled ? (
+                    <VideocamRoundedIcon
+                      style={{ fill: "#D3D3D3", size: "24" }}
+                    />
+                  ) : (
+                    <VideocamOffIcon style={{ fill: "#C72E2E", size: "24" }} />
+                  )}
+                </IconButton>
+
+                <IconButton
+                  onClick={() => {
+                    audioIsEnabled ? turnOffAudio() : turnOnAudio();
+                  }}
+                  aria-label="audio"
+                  className={classes.margin}
+                >
+                  {audioIsEnabled ? (
                     <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  
-                    {/* <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} /> */}
-                 
+                  ) : (
+                    <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
+                  )}
                 </IconButton>
 
                 <IconButton

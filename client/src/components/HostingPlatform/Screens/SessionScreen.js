@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
@@ -24,10 +25,8 @@ import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
 import {
-  errorTrackerForFetchingRTCToken,
   errorTrackerForFetchSessionForSessionStage,
   fetchSessionForSessionStage,
-  getRTCToken,
 } from "../../../actions";
 
 import Like from "./../../../assets/images/like.png";
@@ -45,6 +44,12 @@ import history from "../../../history";
 import SessionStatusMsg from "../ComplimentaryParts/SessionStatusMsg";
 
 import NotYetStarted from "./../../../assets/images/NotYetStarted.png";
+
+let rtc = {
+  localAudioTrack: null,
+  localVideoTrack: null,
+  client: null,
+};
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -112,7 +117,7 @@ const SessionScreen = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const { isLoading, error, token } = useSelector((state) => state.RTC);
+  const { token } = useSelector((state) => state.RTC);
 
   const isLoadingSession = useSelector((state) => state.session.isLoading);
   const sessionError = useSelector((state) => state.session.error);
@@ -149,15 +154,6 @@ const SessionScreen = () => {
     row = "1fr 1fr";
   }
 
-  // RTC Configuration setting up
-
-  let rtc = {
-    // For the local audio and video tracks.
-    localAudioTrack: null,
-    localVideoTrack: null,
-    client: null,
-  };
-
   const sessionDetails = useSelector((state) =>
     state.session.sessions.find((session) => session.id === params.sessionId)
   );
@@ -174,22 +170,16 @@ const SessionScreen = () => {
 
   let options = {
     // Pass your app ID here.
-    appId: "6877e158655f4810968b19e65d0bbb23",
+    appId: "c4e9f3e5cdf548f68d2f8417ad8a13eb",
     // Set the channel name.
     channel: sessionId,
     // Set the user role in the channel.
-    role: "host",
+    role: agoraRole,
     // Use a temp token
-    token: token,
+    token: null,
     // Uid
-    uid: userId,
+    uid: null,
   };
-
-  // const uid = uuidv4();
-
-  // useEffect(() => {
-  //   dispatch(getRTCToken(sessionId, agoraRole));
-  // }, [agoraRole, dispatch, sessionId]);
 
   const sessionRunningStatus = sessionDetails
     ? sessionDetails.runningStatus
@@ -299,92 +289,13 @@ const SessionScreen = () => {
     startBasicLiveStreaming();
   }, []);
 
-  // if (isLoading) {
-  //   return (
-  //     <div
-  //       className="d-flex flex-row align-items-center justify-content-center"
-  //       style={{ width: "100vw", height: "100vh" }}
-  //     >
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
-
-  // if (error) {
-  //   alert(error);
-  //   dispatch(errorTrackerForFetchingRTCToken());
-  //   return null;
-  // }
-
   console.log("This is our RTC token to join RTC channel.", token);
-
-  let clientRoleOptions = {
-    // Set latency level to low latency
-    level: 1,
-  };
 
   async function startBasicLiveStreaming() {
     // Created client object using Agora SDK
     rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
     rtc.client.setClientRole(options.role);
-
-    await rtc.client
-      .join(options.appId, options.channel, options.token, 0)
-      .then(async () => {
-        console.log("Joined RTC channel");
-
-        if (agoraRole !== "audience") {
-          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-
-          console.log(rtc);
-          console.log(rtc.localVideoTrack);
-
-          await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-
-          const localPlayerContainer = document.createElement("div");
-          localPlayerContainer.id = userId;
-
-          localPlayerContainer.style.borderRadius = "10px";
-          localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-          localPlayerContainer.style.backdropFilter = "blur( 4px )";
-
-          document
-            .getElementById("session-stage-video-layout-grid")
-            .append(localPlayerContainer);
-
-          setGrid(
-            document.getElementById("session-stage-video-layout-grid")
-              .childElementCount
-          );
-
-          rtc.localVideoTrack.play(localPlayerContainer);
-          console.log("publish success!");
-          console.log("op");
-          console.log(12345678);
-        }
-      });
-
-    document.getElementById("leave").onclick = async function () {
-      if (agoraRole === "host") {
-        rtc.localAudioTrack.close();
-        rtc.localVideoTrack.close();
-      }
-
-      // Traverse all remote users.
-      rtc.client.remoteUsers.forEach((user) => {
-        // Destroy the dynamically created DIV containers.
-        const playerContainer = document.getElementById(user.uid);
-        playerContainer && playerContainer.remove();
-      });
-
-      // Leave the channel.
-      await rtc.client.leave();
-      history.push(
-        `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
-      );
-    };
 
     rtc.client.on("user-published", async (user, mediaType) => {
       // Subscribe to a remote user.
@@ -437,6 +348,66 @@ const SessionScreen = () => {
       // Destroy the container.
       remotePlayerContainer && remotePlayerContainer.remove();
     });
+
+    await rtc.client
+      .join(options.appId, options.channel, options.token, options.uid)
+      .then(async () => {
+        console.log("Joined RTC channel");
+
+        if (agoraRole !== "audience") {
+          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+          console.log(rtc.localAudioTrack);
+          console.log(rtc.localVideoTrack);
+
+          await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+
+          const localPlayerContainer = document.createElement("div");
+          localPlayerContainer.id = userId;
+
+          localPlayerContainer.style.borderRadius = "10px";
+          localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+          localPlayerContainer.style.backdropFilter = "blur( 4px )";
+
+          document
+            .getElementById("session-stage-video-layout-grid")
+            .append(localPlayerContainer);
+
+          setGrid(
+            document.getElementById("session-stage-video-layout-grid")
+              .childElementCount
+          );
+
+          rtc.localVideoTrack.play(localPlayerContainer);
+
+          rtc.localAudioTrack.play();
+
+          console.log("publish success!");
+          console.log("op");
+          console.log(12345678);
+        }
+      });
+
+    document.getElementById("leave-session").onclick = async function () {
+      if (agoraRole === "host") {
+        rtc.localAudioTrack.close();
+        rtc.localVideoTrack.close();
+      }
+
+      // Traverse all remote users.
+      rtc.client.remoteUsers.forEach((user) => {
+        // Destroy the dynamically created DIV containers.
+        const playerContainer = document.getElementById(user.uid);
+        playerContainer && playerContainer.remove();
+      });
+
+      // Leave the channel.
+      await rtc.client.leave();
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+      );
+    };
   }
 
   return (
@@ -459,17 +430,17 @@ const SessionScreen = () => {
           <div className="d-flex flex-column justify-content-between px-3 py-4">
             {/* // enum: ["Not Yet Started", "Started", "Paused", "Ended"], */}
             <div
-                className="session-video-layout-grid"
-                id="session-stage-video-layout-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: col,
-                  gridTemplateRows: row,
-                  gridGap: "10px",
-                }}
-              >
-                {/* Here Session video will go */}
-              </div>
+              className="session-video-layout-grid"
+              id="session-stage-video-layout-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: col,
+                gridTemplateRows: row,
+                gridGap: "10px",
+              }}
+            >
+              {/* Here Session video will go */}
+            </div>
             <div className="session-video-controls-grid ">
               <div
                 className="stage-left-controls d-flex flex-row justify-content-between align-items-center"
@@ -527,16 +498,12 @@ const SessionScreen = () => {
                   </IconButton>
                 ) : (
                   <>
-                    {/* <IconButton aria-label="video" className={classes.margin}>
-                    <VideocamRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  </IconButton> */}
+                    
                     <IconButton
                       onClick={() => {
                         videoIsEnabled ? turnOffVideo() : turnOnVideo();
                       }}
-                      aria-label="video"
+                      aria-label="audio"
                       className={classes.margin}
                     >
                       {videoIsEnabled ? (
@@ -563,9 +530,7 @@ const SessionScreen = () => {
                   </IconButton>
                 ) : (
                   <>
-                    {/* <IconButton aria-label="audio" className={classes.margin}>
-                    <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  </IconButton> */}
+                    
 
                     <IconButton
                       onClick={() => {

@@ -154,8 +154,8 @@ exports.generateTokenForVideoCall = catchAsync(async (req, res, next) => {
   const channel = req.body.tableId;
   const userId = req.user._id;
 
-  const appID = "6877e158655f4810968b19e65d0bbb23";
-  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const appID = "4f274729f9ab45139e509eb6efba14cc";
+  const appCertificate = "f6e4b7f46711411c85bf1e303801f89a";
   const channelName = channel;
   const uid = userId;
   const account = "2882341273";

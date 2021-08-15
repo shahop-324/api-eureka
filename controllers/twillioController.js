@@ -7,8 +7,8 @@ const VideoGrant = AccessToken.VideoGrant;
 // Used when generating any kind of Access Token
 
 const twilioAccountSid = "AC7ed7b0172eb89a58b994f059c8016b3d";
-const twilioApiKey = "SK66dd51381995a63c1bc09b19c2e1cf29";
-const twilioApiSecret = "0xUrEi2EPeaIkRP9WjaXOZpQz5tDRuZV";
+const twilioApiKey = "SKb8e9a6ebe19fff9a6ccd4a447a324b0";
+const twilioApiSecret = "1Ytl4glaSsxQyTV8WlcsdFKPhaAso7EN";
 
 exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
     console.log(req.body.tableId);
@@ -26,7 +26,9 @@ exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
 
   // Create a Video grant which enables a client to use Video
   // and limits access to the specified Room (DailyStandup)
-  const videoGrant = new VideoGrant();
+  const videoGrant = new VideoGrant({
+    room: 'DailyStandup'
+  });
 
   // Add the grant to the token
   token.addGrant(videoGrant);

@@ -72,7 +72,7 @@ const SessionScreenTopNav = ({
                 // ! leaveStreaming();
               }}
             >
-              <IconButton id="leave" aria-label="delete" className={classes.margin}>
+              <IconButton id="leave-session" aria-label="delete" className={classes.margin}>
                   <ArrowBackIcon style={{ fill: "#3C3A3A" }} />
                 </IconButton>
               {/* <Link
