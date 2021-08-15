@@ -172,6 +172,9 @@ const renderEventPreferences = ({
 );
 
 let EditProfileForm = (props) => {
+
+  const { handleSubmit, pristine, reset, submitting } = props;
+
   const { error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -199,7 +202,7 @@ let EditProfileForm = (props) => {
     setEditProfileClicked(false);
   }, [dispatch, error]);
 
-  const { handleSubmit, pristine, reset, submitting } = props;
+ 
   const classes = useStyles();
   
   const onSubmit = (formValues) => {
