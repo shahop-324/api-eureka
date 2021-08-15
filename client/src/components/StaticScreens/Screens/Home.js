@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
-
+import {fetchReferralCode} from "../../../actions"
 import HomeHero from "./../../../assets/images/HomeHero.png";
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
@@ -245,6 +245,14 @@ const Home = (props) => {
       duration: 1100,
     });
     AOS.refresh();
+       
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+
+      if(params.ref)
+      {
+          dispatch(fetchReferralCode(params.ref))
+      }
 
     // window.onload();
 

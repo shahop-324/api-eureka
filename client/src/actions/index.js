@@ -43,6 +43,7 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
+        referralCode:res.data.data.user.referralCode
       })
     );
     dispatch(
@@ -68,6 +69,16 @@ export const errorTrackerForSignIn = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 
+export const fetchReferralCode=(referredUserId)=>async(dispatch,getState)=>{
+
+    dispatch(userActions.FetchReferralCode({referredUserId}));
+
+}
+
+
+
+
+
 export const signUp = (formValues) => async (dispatch) => {
   try {
     const res = await eureka.post("/eureka/v1/users/signup", {
@@ -79,7 +90,7 @@ export const signUp = (formValues) => async (dispatch) => {
         token: res.data.token,
 
 
-        referralCode:res.data.data.user.referralCode
+        
       })
     );
     dispatch(

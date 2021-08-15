@@ -12,6 +12,7 @@ const userSlice = createSlice({
     currentlyJoinedChair: null,
     isLoading: true,
     error: false,
+    referredId:null,
   },
 
   reducers: {
@@ -19,7 +20,10 @@ const userSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
-
+    FetchReferralCode(state,action)
+    {
+      state.referredUserId=action.payload.referredUserId
+    },
     startLoading(state) {
       state.isLoading = true;
       state.isLoading = false;
