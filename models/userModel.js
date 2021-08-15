@@ -16,6 +16,24 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please tell us your last name."],
       trim: true,
     },
+      referralCode:{
+           type:String
+
+      },
+      referrer:{
+        type:String
+
+   },
+
+   signups:{
+
+    type:Number
+   }   ,
+
+    upgrades:{
+
+    type:Number
+   } ,
     organisation: {
       type: String,
       default: "Google Inc.", // TODO This needs to fixed
