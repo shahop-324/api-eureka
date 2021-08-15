@@ -1,5 +1,8 @@
 // import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from "redux";
+
+import { persistentReducer } from "redux-pouchdb";
+
 import authSlice from "./authSlice";
 import eventSlice from "./eventSlice";
 import navigationSlice from "./navigationSlice";
@@ -28,9 +31,9 @@ import eventChatSlice from "./eventChatSlice";
 import RTCSlice from "./RTCSlice";
 import demoSlice from "./demoSlice";
 import contactUsSlice from "./contactSlice";
-import twillioSlice, { twillioActions } from "./twillioSlice";
+import twillioSlice from "./twillioSlice";
 
-export default combineReducers({
+const rootReducer = combineReducers({
   auth: authSlice.reducer,
   form: formReducer,
   event: eventSlice.reducer,
@@ -53,11 +56,13 @@ export default combineReducers({
   socket: socketSlice.reducer,
   stage: stageSlice.reducer,
   rooms: roomsSlice.reducer,
-  RTM: RTMSlice.reducer, 
+  RTM: RTMSlice.reducer,
   RTC: RTCSlice.reducer,
 
-  chats:eventChatSlice.reducer,
+  chats: eventChatSlice.reducer,
   demo: demoSlice.reducer,
   contact: contactUsSlice.reducer,
   twillio: twillioSlice.reducer,
 });
+
+export default persistentReducer(rootReducer);

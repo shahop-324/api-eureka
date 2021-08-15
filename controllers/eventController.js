@@ -633,14 +633,25 @@ exports.updateNetworking = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.generateReferralCode = catchAsaync(async (req, res, next) => {
+  const createdForEvent = req.body.body.eventId;
+  const createdForCommunity = req.body.communityId;
+  const referralCode = uniqid();
 
-exports.generateReferralCode =catchAsaync(async(req,res,next)=>{
+  const createdReferral = await EventReferral.create({
+    createdAt: Date.now(),
+    expiryTime: req.body.expiryTime,
+    expiryDate: req.body.expiryDate,
+    referralCode,
+    createdForEvent,
+    createdForCommunity,
+    discount: req.body.discount,
+  });
 
-     
-const  referralCode =uniqid();
-
-
-
-
-}
-)
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      createdReferral,
+    },
+  });
+});
