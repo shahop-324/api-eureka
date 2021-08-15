@@ -11,13 +11,15 @@ import { useParams } from "react-router";
 const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
 
-  const chair = useSelector((state) => state.rooms.chairs.find((chair) => {
-    return (chair && chair.chairId ? (chair.chairId === `${id}_chair_5` && chair.status === "Occupied" ? chair  : null) : null);
-   }) );
-
-   
-
-   
+  const chair = useSelector((state) =>
+    state.rooms.chairs.find((chair) => {
+      return chair && chair.chairId
+        ? chair.chairId === `${id}_chair_5` && chair.status === "Occupied"
+          ? chair
+          : null
+        : null;
+    })
+  );
 
   let chairIsOccupied;
   let userName5;
@@ -34,23 +36,22 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName5 = chair.userName;
-    userImage5 = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
+    userImage5 = chair.userImage.startsWith("https://lh3.googleusercontent.com")
+      ? chair.userImage
+      : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
     userCity5 = chair.userCity;
     userCountry5 = chair.userCountry;
     userOrganisation5 = chair.userOrganisation;
     userDesignation5 = chair.userDesignation;
-    
-  }
-  else {
+  } else {
     // What if chair_5 is not occupied
     chairIsOccupied = false;
 
-    
     displayPopUp = "none";
     displayAvatar = "none";
   }
 
-  const fetchImage = async(imgURL, id) => {
+  const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
 
     if (!response.ok) {
@@ -78,7 +79,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
         element.removeChild(element.firstChild);
       }
     }
-  }
+  };
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -96,9 +97,6 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     ? userDetails.designation
     : "Vice President";
 
-   
-
-
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage5, id).catch((e) => {
@@ -109,19 +107,12 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
     } else {
       document.getElementById(`${id}_chair_5_img_blob`).remove();
     }
-   
   }, [userImage5, id, userImage]);
-
-  
-
-
 
   const params = useParams();
   // console.log(params);
 
   const eventId = params.eventId;
-
-  
 
   return (
     <>
@@ -162,49 +153,61 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
           launchTableScreen();
         }}
       >
-            <div className="lower-chair chair pt-2">
-              <div style={{ transform: "translateY(0)" }}>
-                <Popup
-                  trigger={
-                    <div
-                    id={`${id}_chair_5_img`}
-                    style={{
-                      position: "relative",
-                      top: "0",
-                      left: "0",
-                      height: "100%",
-                      width: "100%",
-                      borderRadius: "10px",
-                    }}
-                  ></div>
-                  }
-                  position="bottom center"
+        <div className="lower-chair chair pt-2">
+          <div style={{ transform: "translateY(0)" }}>
+            <Popup
+              trigger={
+                <div
+                  id={`${id}_chair_5_img`}
+                  style={{
+                    position: "relative",
+                    top: "0",
+                    left: "0",
+                    height: "100%",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                ></div>
+              }
+              position="bottom center"
+            >
+              <div style={{ display: displayPopUp }}>
+                <div
+                  className="d-flex flex-row align-items-center"
+                  style={{ display: displayPopUp }}
                 >
-                  <div style={{display: displayPopUp}}>
-                    <div className="d-flex flex-row align-items-center" style={{display: displayPopUp}}>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={userImage5}
-                        variant="rounded" style={{display: displayPopUp}}
-                      />
-                      <div className="ms-3" style={{display: displayPopUp}}>
-                        <div
-                          className="btn-outline-text"
-                          style={{ fontSize: "14px", display: displayPopUp }}
-                        >
-                          {userName5}
-                        </div>
-                        <div className="people-headline" style={{display: displayPopUp}}>
-                          {userDesignation5} at {userOrganisation5}
-                        </div>
-                        <div className="people-location" style={{display: displayPopUp}}>{userCity5}, {userCountry5}</div>
-                      </div>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={userImage5}
+                    variant="rounded"
+                    style={{ display: displayPopUp }}
+                  />
+                  <div className="ms-3" style={{ display: displayPopUp }}>
+                    <div
+                      className="btn-outline-text"
+                      style={{ fontSize: "14px", display: displayPopUp }}
+                    >
+                      {userName5}
+                    </div>
+                    <div
+                      className="people-headline"
+                      style={{ display: displayPopUp }}
+                    >
+                      {userDesignation5} at {userOrganisation5}
+                    </div>
+                    <div
+                      className="people-location"
+                      style={{ display: displayPopUp }}
+                    >
+                      {userCity5}, {userCountry5}
                     </div>
                   </div>
-                </Popup>
+                </div>
               </div>
-            </div>
+            </Popup>
           </div>
+        </div>
+      </div>
     </>
   );
 };

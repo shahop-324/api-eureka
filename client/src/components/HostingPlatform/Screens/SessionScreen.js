@@ -439,8 +439,6 @@ const SessionScreen = () => {
     });
   }
 
-  
-
   return (
     <>
       <div className="session-screen-nav-container">

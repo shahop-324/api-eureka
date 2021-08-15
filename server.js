@@ -25,11 +25,8 @@ const io = require("socket.io")(server, {
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
-
-    
   },
 });
-
 
 const Event = require("./models/eventModel");
 const User = require("./models/userModel");
@@ -422,10 +419,9 @@ io.on("connect", (socket) => {
 
       const fetchCurrentUsers = async (eventId) => {
         await Event.findById(eventId, (err, doc) => {
-          if(err) {
+          if (err) {
             console.log(err);
-          }
-          else {
+          } else {
             console.log(doc.currentlyInEvent);
             io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
           }
