@@ -20,8 +20,6 @@ const LeftChair = ({ id, launchTableScreen }) => {
     })
   );
 
-  
-
   let chairIsOccupied;
   let userName8;
   let userImage8;
@@ -37,7 +35,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName8 = chair.userName;
-    userImage8 = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
+    userImage8 = chair.userImage.startsWith("https://lh3.googleusercontent.com")
+      ? chair.userImage
+      : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
     userCity8 = chair.userCity;
     userCountry8 = chair.userCountry;
     userOrganisation8 = chair.userOrganisation;
@@ -73,7 +73,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
     ? userDetails.designation
     : "Vice President";
 
-  const fetchImage = async(imgURL, id) => {
+  const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
 
     if (!response.ok) {
@@ -101,7 +101,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
         element.removeChild(element.firstChild);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (userImage) {

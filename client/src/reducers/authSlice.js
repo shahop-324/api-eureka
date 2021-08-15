@@ -8,6 +8,7 @@ const authSlice = createSlice({
     token: "",
     error: false,
     isSignedInThroughGoogle: false,
+    referralCode:null,
   },
 
   reducers: {
@@ -26,10 +27,15 @@ const authSlice = createSlice({
     SignIn(state, action) {
       state.token = action.payload.token;
       state.isSignedIn = true;
-
+      state.referralCode=action.payload.referralCode
       if (action.payload.isSignedThroughGoogle) {
         state.isSignedInThroughGoogle = action.payload.isSignedThroughGoogle;
       }
+        
+
+  
+
+
     },
     SignOut(state, action) {
       state.token = null;

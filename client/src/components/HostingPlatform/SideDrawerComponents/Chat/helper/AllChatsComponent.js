@@ -29,8 +29,6 @@ const AllChatsComponent = () => {
 
   const { RTMClient } = useSelector((state) => state.RTM);
 
-  
-
   let channel = RTMClient.createChannel(eventId.toString());
 
   const { firstName, lastName, email, image, _id } = useSelector(
@@ -61,8 +59,6 @@ const AllChatsComponent = () => {
     const sender = peopleInThisEvent.find((person) => person.userId === id);
     return sender;
   };
-
-  
 
   const joining = async () => {
     await channel.join();

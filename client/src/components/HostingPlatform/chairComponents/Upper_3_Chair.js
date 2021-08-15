@@ -11,11 +11,15 @@ import { useParams } from "react-router";
 const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
 
-  const chair = useSelector((state) => state.rooms.chairs.find((chair) => {
-    return (chair && chair.chairId ? (chair.chairId === `${id}_chair_3` && chair.status === "Occupied" ? chair  : null) : null);
-   }) );
-
-   
+  const chair = useSelector((state) =>
+    state.rooms.chairs.find((chair) => {
+      return chair && chair.chairId
+        ? chair.chairId === `${id}_chair_3` && chair.status === "Occupied"
+          ? chair
+          : null
+        : null;
+    })
+  );
 
   let chairIsOccupied;
   let userName3;
@@ -32,27 +36,25 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName3 = chair.userName;
-    userImage3 = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
+    userImage3 = chair.userImage.startsWith("https://lh3.googleusercontent.com")
+      ? chair.userImage
+      : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
     userCity3 = chair.userCity;
     userCountry3 = chair.userCountry;
     userOrganisation3 = chair.userOrganisation;
     userDesignation3 = chair.userDesignation;
-    
-  }
-  else {
+  } else {
     // What if chair_3 is not occupied
     chairIsOccupied = false;
 
-    
     displayPopUp = "none";
-    
   }
 
   const params = useParams();
   // console.log(params);
 
   const eventId = params.eventId;
-  
+
   const userDetails = useSelector((state) => state.user.userDetails);
 
   const { email } = useSelector((state) => state.eventAccessToken);
@@ -69,49 +71,47 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
     ? userDetails.designation
     : "Vice President";
 
-    const fetchImage = async(imgURL, id) => {
-      let response = await fetch(imgURL);
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      let myBlob = await response.blob();
-  
-      let objectURL = URL.createObjectURL(myBlob);
-  
-      let image = document.createElement("img");
-      image.src = objectURL;
-      image.style.width = "40px";
-      image.style.height = "35px";
-      image.style.objectFit = "cover";
-      image.style.borderTopLeftRadius = "5px";
-      image.style.borderTopRightRadius = "5px";
-      image.id = `${id}_chair_3_img_blob`;
-  
-      if (imgURL) {
-        document.getElementById(`${id}_chair_3_img`).appendChild(image);
-      } else {
-        let element = document.getElementById(`${id}_chair_3_img`);
-        while (element.firstChild) {
-          element.removeChild(element.firstChild);
-        }
-      }
+  const fetchImage = async (imgURL, id) => {
+    let response = await fetch(imgURL);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-  
-    useEffect(() => {
-      if (userImage) {
-        fetchImage(userImage3, id).catch((e) => {
-          console.log(
-            "There has been a problem with your fetch operation: " + e.message
-          );
-        });
-      } else {
-        document.getElementById(`${id}_chair_3_img_blob`).remove();
+    let myBlob = await response.blob();
+
+    let objectURL = URL.createObjectURL(myBlob);
+
+    let image = document.createElement("img");
+    image.src = objectURL;
+    image.style.width = "40px";
+    image.style.height = "35px";
+    image.style.objectFit = "cover";
+    image.style.borderTopLeftRadius = "5px";
+    image.style.borderTopRightRadius = "5px";
+    image.id = `${id}_chair_3_img_blob`;
+
+    if (imgURL) {
+      document.getElementById(`${id}_chair_3_img`).appendChild(image);
+    } else {
+      let element = document.getElementById(`${id}_chair_3_img`);
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
-      
-    }, [userImage3, userImage, id]);
+    }
+  };
+
+  useEffect(() => {
+    if (userImage) {
+      fetchImage(userImage3, id).catch((e) => {
+        console.log(
+          "There has been a problem with your fetch operation: " + e.message
+        );
+      });
+    } else {
+      document.getElementById(`${id}_chair_3_img_blob`).remove();
+    }
+  }, [userImage3, userImage, id]);
 
   return (
     <>
@@ -152,57 +152,61 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
           launchTableScreen();
         }}
       >
-
-            <div className="upper-chair chair pt-2">
-              <div style={{ transform: "translateY(-16.5px)" }}>
-                <Popup
-                  trigger={
-                    <div
-                    id={`${id}_chair_3_img`}
-                    style={{
-                      position: "relative",
-                      top: "0",
-                      left: "0",
-                      height: "100%",
-                      width: "100%",
-                      borderRadius: "10px",
-                    }}
-                  ></div>
-                  }
-                  position="top center"
+        <div className="upper-chair chair pt-2">
+          <div style={{ transform: "translateY(-16.5px)" }}>
+            <Popup
+              trigger={
+                <div
+                  id={`${id}_chair_3_img`}
+                  style={{
+                    position: "relative",
+                    top: "0",
+                    left: "0",
+                    height: "100%",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                ></div>
+              }
+              position="top center"
+            >
+              <div style={{ display: displayPopUp }}>
+                <div
+                  className="d-flex flex-row align-items-center"
+                  style={{ display: displayPopUp }}
                 >
-                  <div style={{display: displayPopUp}}>
-                    <div className="d-flex flex-row align-items-center" style={{display: displayPopUp}}>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={userImage3}
-                        variant="rounded"
-                        style={{display: displayPopUp}}
-                      />
-                      <div className="ms-3" style={{display: displayPopUp}}>
-                        <div
-                          className="btn-outline-text"
-                          style={{ fontSize: "14px", display: displayPopUp }}
-                        >
-                          {userName3}
-                        </div>
-                        <div className="people-headline" style={{display: displayPopUp}}>
-                          {userDesignation3} at {userOrganisation3}
-                        </div>
-                        <div className="people-location" style={{display: displayPopUp}}>{userCity3}, {userCountry3}</div>
-                      </div>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={userImage3}
+                    variant="rounded"
+                    style={{ display: displayPopUp }}
+                  />
+                  <div className="ms-3" style={{ display: displayPopUp }}>
+                    <div
+                      className="btn-outline-text"
+                      style={{ fontSize: "14px", display: displayPopUp }}
+                    >
+                      {userName3}
+                    </div>
+                    <div
+                      className="people-headline"
+                      style={{ display: displayPopUp }}
+                    >
+                      {userDesignation3} at {userOrganisation3}
+                    </div>
+                    <div
+                      className="people-location"
+                      style={{ display: displayPopUp }}
+                    >
+                      {userCity3}, {userCountry3}
                     </div>
                   </div>
-                </Popup>
+                </div>
               </div>
-            </div>
+            </Popup>
           </div>
-
-              
-
-
-
-            
+        </div>
+      </div>
     </>
   );
 };

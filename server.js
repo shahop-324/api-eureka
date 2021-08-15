@@ -25,11 +25,8 @@ const io = require("socket.io")(server, {
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
-
-    
   },
 });
-
 
 const Event = require("./models/eventModel");
 const User = require("./models/userModel");
@@ -398,6 +395,7 @@ io.on("connect", (socket) => {
         userCountry,
         userOrganisation,
         userDesignation,
+        userRole,
       },
       callback
     ) => {
@@ -421,8 +419,12 @@ io.on("connect", (socket) => {
 
       const fetchCurrentUsers = async (eventId) => {
         await Event.findById(eventId, (err, doc) => {
-          console.log(doc.currentlyInEvent);
-          io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(doc.currentlyInEvent);
+            io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
+          }
         })
           .select("currentlyInEvent")
           .populate({
