@@ -21,16 +21,19 @@ import { fetchTwillioVideoRoomToken } from "../../../actions";
 
 
 
+const connectToTwillioRoom = (token, table) => {
+  console.log(token, table);
 
+  // connect(token, { name: table }).then(room => {
+  //   console.log(`Successfully joined a Room: ${room}`);
+  //   room.on('participantConnected', participant => {
+  //     console.log(`A remote Participant connected: ${participant}`);
+  //   });
+  // }, error => {
+  //   console.error(`Unable to connect to Room: ${error.message}`);
+  // });
+}
 
-connect('$TOKEN', { name:'my-new-room' }).then(room => {
-  console.log(`Successfully joined a Room: ${room}`);
-  room.on('participantConnected', participant => {
-    console.log(`A remote Participant connected: ${participant}`);
-  });
-}, error => {
-  console.error(`Unable to connect to Room: ${error.message}`);
-});
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -59,6 +62,8 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
   const currentChairId = useSelector(
     (state) => state.user.currentlyJoinedChair
   );
+
+  const token = useSelector((state) => state.twillio.videoRoomToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -95,8 +100,9 @@ const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id 
   const [maxWidth, setMaxWidth] = React.useState("lg");
 
   useEffect(() => {
-      dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
+    connectToTwillioRoom(token, table);
   }, []);
+
 
   return (
     <>

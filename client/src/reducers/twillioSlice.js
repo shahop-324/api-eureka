@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const twillioSlice = createSlice({
-  name: "User",
+  name: "Twillio",
 
   initialState: {
     videoRoomToken: null,

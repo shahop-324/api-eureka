@@ -11,6 +11,8 @@ const twilioApiKey = "SK66dd51381995a63c1bc09b19c2e1cf29";
 const twilioApiSecret = "0xUrEi2EPeaIkRP9WjaXOZpQz5tDRuZV";
 
 exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
+    console.log(req.body.tableId);
+    console.log(req.user._id);
   const tableId = req.body.tableId;
   const userId = req.user._id;
   // Create an access token which we will sign and return to the client,

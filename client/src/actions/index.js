@@ -4355,6 +4355,7 @@ export const fetchTwillioVideoRoomToken =
       }
       res = await res.json();
       console.log(res);
+      
 
       dispatch(
         twillioActions.FetchVideoRoomToken({

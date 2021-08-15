@@ -28,7 +28,7 @@ import eventChatSlice from "./eventChatSlice";
 import RTCSlice from "./RTCSlice";
 import demoSlice from "./demoSlice";
 import contactUsSlice from "./contactSlice";
-import { twillioActions } from "./twillioSlice";
+import twillioSlice, { twillioActions } from "./twillioSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -59,5 +59,5 @@ export default combineReducers({
   chats:eventChatSlice.reducer,
   demo: demoSlice.reducer,
   contact: contactUsSlice.reducer,
-  twillio: twillioActions.reducer,
+  twillio: twillioSlice.reducer,
 });
