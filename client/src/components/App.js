@@ -46,8 +46,18 @@ import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 AOS.init();
 
 class App extends React.Component {
+
+
+
+  
+
+
+
   render() {
-    const { isSignedIn } = this.props;
+
+    const { isSignedIn,referralCode } = this.props;
+    const referralLink =`https://wwww.evenz.in/?refCode=${referralCode}`
+    
     // (() => {
     //   console.log("i run ");
     //   window.localStorage.clear();
@@ -526,6 +536,8 @@ class App extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
+  referralCode:state.auth.referralCode
+
 });
 
 export default connect(mapStateToProps)(App);

@@ -76,11 +76,16 @@ export const signUp = (formValues) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
+
+
+        referralCode:res.data.data.user.referralCode
       })
     );
     dispatch(
       userActions.CreateUser({
         user: res.data.data.user,
+
+
       })
     );
     history.push("/user/home");
