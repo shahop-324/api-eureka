@@ -10,6 +10,7 @@ const AppError = require("../utils/appError.js");
 const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
+const { nanoid } = require('nanoid')
 
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
@@ -73,14 +74,18 @@ const createSendTokenForCommunityLogin = async (
 // this function is signup function for users
 
 exports.signup = catchAsync(async (req, res) => {
-  const MyReferralCode = uniqid();
+
+  // Create new referral code
+  const MyReferralCode = nanoid(10);
+
+  // check if someone referred this new user
 
   let referrer;
   if (req.body.referralCode) {
     referrer = await User.findOneAndUpdate(
       { referralCode: req.body.referralCode },
 
-      { $inc: { signups: 1 } },
+      { $inc: { signupUsingReferral: 1 } },
 
       {
         new: true,
@@ -88,6 +93,8 @@ exports.signup = catchAsync(async (req, res) => {
       }
     );
   }
+
+  // create new user
 
   const newUser = await User.create({
     firstName: req.body.firstName,
@@ -98,7 +105,10 @@ exports.signup = catchAsync(async (req, res) => {
 
     policySigned: req.body.policySigned,
     referralCode: MyReferralCode,
-    referrer: referrer.id,
+    referrer: referrer && referrer._id,
+    signupUsingReferral: 0,
+    upgrades: 0,
+    credit: 0,
   });
 
   const name = `${req.body.firstName} ${req.body.lastName}`;

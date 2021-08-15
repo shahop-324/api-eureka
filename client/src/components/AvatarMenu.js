@@ -16,6 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { communitySignIn, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
+import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
+import { useTheme } from "@material-ui/core";
+import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -30,6 +34,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarMenu = () => {
+  const [openReferral, setOpenReferral] = React.useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleClickOpenReferral = () => {
+    setOpenReferral(true);
+  };
+
+  const handleCloseReferral = () => {
+    setOpenReferral(false);
+  };
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [maxWidth, setMaxWidth] = React.useState("lg");
+
   const user = useSelector((state) => state.user);
   const isLoading = user.isLoading;
   const error = user.error;
@@ -57,13 +77,10 @@ const AvatarMenu = () => {
     }
   }
 
-  const dispatch = useDispatch();
   const onClickLoggedOut = async () => {
     const allKeys = Object.keys(localStorage);
 
-    
-    
-    allKeys.forEach(value => {
+    allKeys.forEach((value) => {
       localStorage.removeItem(value);
     });
 
@@ -96,11 +113,10 @@ const AvatarMenu = () => {
 
   let imgURL;
 
-  if(image.startsWith("https://lh3.googleusercontent.com")) {
+  if (image.startsWith("https://lh3.googleusercontent.com")) {
     imgURL = image;
-  }
- else {
-   imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+  } else {
+    imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
   }
 
   const renderCommunities = (communities, handleClose) => {
@@ -113,7 +129,10 @@ const AvatarMenu = () => {
             dispatch(communitySignIn(community._id, user.userDetails._id));
           }}
         >
-          <div className="avatar-menu-community-tab d-flex flex-row align-items-center" style={{maxWidth: "160px"}}>
+          <div
+            className="avatar-menu-community-tab d-flex flex-row align-items-center"
+            style={{ maxWidth: "160px" }}
+          >
             <Avatar
               className={`me-4`}
               variant="rounded"
@@ -212,7 +231,7 @@ const AvatarMenu = () => {
                         Explore Events
                       </div>
                     </MenuItem>
-                    <MenuItem
+                    {/* <MenuItem
                       onClick={(event) => {
                         // dispatch(navigationIndex(3));
                         // history.push('/user/profile');
@@ -221,6 +240,18 @@ const AvatarMenu = () => {
                     >
                       <div className="avatar-menu-account-section-btns mb-2">
                         Announcements
+                      </div>
+                    </MenuItem> */}
+                    <MenuItem
+                      onClick={(event) => {
+                        handleClickOpenReferral();
+                        // dispatch(navigationIndex(3));
+                        // history.push('/user/profile');
+                        handleClose(event);
+                      }}
+                    >
+                      <div className="avatar-menu-account-section-btns mb-2">
+                        Referrals & Credit
                       </div>
                     </MenuItem>
 
@@ -248,6 +279,51 @@ const AvatarMenu = () => {
             </Grow>
           )}
         </Popper>
+
+        <Dialog
+          maxWidth={maxWidth}
+          fullScreen={fullScreen}
+          open={openReferral}
+          // onClose={props.closeHandler}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <div className="user-referral-container p-4">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 3fr 1fr",
+                alignItems: "center",
+              }}
+              className="px-4"
+            >
+              <div></div>
+              <div
+                style={{ textAlign: "center", fontSize: "1.1rem" }}
+                className="btn-outline-text"
+              >
+                Referral & Credits
+              </div>
+              <div style={{ justifySelf: "end" }}>
+                <IconButton
+                  onClick={handleCloseReferral}
+                  style={{ width: "fit-content" }}
+                  aria-label="delete"
+                >
+                  <HighlightOffRoundedIcon />
+                </IconButton>
+              </div>
+            </div>
+
+
+{/* Number cards indication credit, signups, and upgrades */}
+<div className="referral-3-cards-row">
+  <div className="referral-display-card">
+
+  </div>
+</div>
+
+          </div>
+        </Dialog>
       </div>
     </div>
   );

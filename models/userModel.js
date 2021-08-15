@@ -16,24 +16,6 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please tell us your last name."],
       trim: true,
     },
-      referralCode:{
-           type:String
-
-      },
-      referrer:{
-        type:String
-
-   },
-
-   signups:{
-
-    type:Number
-   }   ,
-
-    upgrades:{
-
-    type:Number
-   } ,
     organisation: {
       type: String,
       default: "Google Inc.", // TODO This needs to fixed
@@ -74,8 +56,7 @@ const userSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default:
-        "60e1c15b557681e9fc6af91e/20190907_105616.jpg",
+      // default: "60e1c15b557681e9fc6af91e/20190907_105616.jpg",
     },
     password: {
       type: String,
@@ -142,7 +123,7 @@ const userSchema = new mongoose.Schema(
         "Entertainment",
         "Health",
         "Crypto",
-        "Web Security"
+        "Web Security",
       ],
     },
     socialMediaHandles: {
@@ -204,6 +185,23 @@ const userSchema = new mongoose.Schema(
     notificationBasedOnMyPreference: {
       type: Boolean,
       default: false,
+    },
+    referralCode: {
+      type: String,
+    },
+    referrer: {
+      // Here store the user id of who ever referred this person and null by default
+      type: String,
+    },
+    signupUsingReferral: {
+      type: Number,
+    },
+    upgrades: {
+      type: Number,
+    },
+    credit: {
+      type: Number,
+      default: 0,
     },
   },
   {

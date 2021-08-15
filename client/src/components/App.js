@@ -46,18 +46,10 @@ import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 AOS.init();
 
 class App extends React.Component {
-
-
-
-  
-
-
-
   render() {
+    const { isSignedIn, referralCode } = this.props;
+    const referralLink = `https://wwww.evenz.in/?refCode=${referralCode}`;
 
-    const { isSignedIn,referralCode } = this.props;
-    const referralLink =`https://wwww.evenz.in/?refCode=${referralCode}`
-    
     // (() => {
     //   console.log("i run ");
     //   window.localStorage.clear();
@@ -70,34 +62,24 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-            <Route path="/home" exact component={Home} />
+              <Route path="/home" exact component={Home} />
               <Route path="/" exact component={Home} />
-               
-            
-                <Route path="/signup" exact component={Signup} />
-              
-              {
-              !isSignedIn&&<Route path="/signin" exact component={Signin} />
-                
-                
-              }
-             
-             
-               
-                <Route
-                  path="/signin/:eventId"
-                  exact
-                  component={SignInForEventRegistration}
-                />
-              
-              
-               
-                <Route
-                  path="/login/buy-plan"
-                  exact
-                  component={SigninForBuyingPlan}
-                />
-           
+
+              <Route path="/signup" exact component={Signup} />
+
+              {!isSignedIn && <Route path="/signin" exact component={Signin} />}
+
+              <Route
+                path="/signin/:eventId"
+                exact
+                component={SignInForEventRegistration}
+              />
+
+              <Route
+                path="/login/buy-plan"
+                exact
+                component={SigninForBuyingPlan}
+              />
 
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
@@ -106,7 +88,11 @@ class App extends React.Component {
                 exact
                 component={AcceptSpeakerInvite}
               />
-              <Route path="/compatibility-test/community/:communityId/event/:eventId/" exact component={CompatibilityTest} />
+              <Route
+                path="/compatibility-test/community/:communityId/event/:eventId/"
+                exact
+                component={CompatibilityTest}
+              />
               <Route path="/use-cases" exact component={UseCases} />
               <Route path="/about-us" exact component={AboutUs} />
               <Route
@@ -126,7 +112,6 @@ class App extends React.Component {
                 component={InternalServerError}
               />
 
-            
               <Route
                 path="/terms-of-service"
                 exact
@@ -134,7 +119,6 @@ class App extends React.Component {
               />
               <Route path="/privacy-policy" exact component={PrivacyPolicy} />
 
-           
               <Route path="/accept-invite" exact component={AcceptInvite} />
 
               <Route path="/explore-events/" exact component={ExploreEvents} />
@@ -536,8 +520,7 @@ class App extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
-  referralCode:state.auth.referralCode
-
+  referralCode: state.auth.referralCode,
 });
 
 export default connect(mapStateToProps)(App);

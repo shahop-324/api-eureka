@@ -4,6 +4,34 @@
   /* grid-column-gap: 25px; */
 }
 
+.user-referral-container {
+  min-width: 998px;
+  min-height: 600px;
+  
+  
+}
+
+.sec-heading-close-row {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1rem;
+}
+
+.referral-3-cards-row {
+  max-width: 580px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: "1.5rem";
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.referral-display-card {
+  height: 200px;
+  width: 100%;
+  background-color: #8d8989;
+}
+
 .user-account-side-nav-bar,
 .user-account-main-body {
   width: 100%;
