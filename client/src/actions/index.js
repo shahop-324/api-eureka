@@ -4331,20 +4331,8 @@ export const fetchTwillioVideoRoomToken =
     dispatch(twillioActions.startLoading());
     try {
       let res = await fetch(
-        `${BaseURL}twillio/getVideoAccessToken`,
-        {
-          method: "POST",
-
-          body: JSON.stringify({
-            userId: userId,
-            tableId: tableId,
-          }),
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
+        `https://token-service-1443-dev.twil.io/token?identity=${userId}&table=${tableId}`,
+        
       );
       if (!res.ok) {
         if (!res.message) {
@@ -4354,12 +4342,12 @@ export const fetchTwillioVideoRoomToken =
         }
       }
       res = await res.json();
-      console.log(res);
+      console.log(res.accessToken);
 
 
       dispatch(
         twillioActions.FetchVideoRoomToken({
-          videoRoomToken: res.data.twillioAccessToken,
+          videoRoomToken: res.accessToken,
         })
       );
       openTableScreen();

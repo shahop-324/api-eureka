@@ -58,7 +58,6 @@ router.get("/events", globalController.getAllEvents);
 // register in an event
 router.post(
   "/events/:eventId/:ticketId",
-
   globalController.IsUserAlreadyRegistred,
   userController.DoesTicketBelongToThisEvent,
   userController.registerInAnEvent

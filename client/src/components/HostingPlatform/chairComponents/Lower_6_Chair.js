@@ -7,6 +7,7 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
+import { fetchTwillioVideoRoomToken } from "../../../actions";
 
 const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -114,6 +115,8 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
     }
   }, [userImage6, id, userImage]);
 
+  const userId = useSelector((state) => state.user.userDetails._id);
+
   return (
     <>
       <div
@@ -150,7 +153,9 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
             }
           );
 
-          launchTableScreen();
+          // dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
+
+            launchTableScreen();
         }}
       >
         <div className="lower-chair chair pt-2">

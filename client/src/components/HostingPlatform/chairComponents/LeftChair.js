@@ -155,9 +155,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
               }
             );
 
-            dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
+            // dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
 
-            // launchTableScreen();
+            launchTableScreen();
           }}
         >
           <div className="left-chair chair pt-2">
