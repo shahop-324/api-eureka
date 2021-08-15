@@ -48,7 +48,7 @@ const AllChatsComponent = () => {
       return (
         <ChatMsgElement
           msgText={chat.textMessage}
-          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chat.userImage}`}
+          image={ chat.userImage.startsWith("https://") ? chat.userImage :   `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chat.userImage}`}
           name={chat.userName}
         />
       );

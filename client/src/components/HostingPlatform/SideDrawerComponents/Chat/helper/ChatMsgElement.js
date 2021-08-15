@@ -1,7 +1,5 @@
 import React from 'react';
 import { Avatar } from '@material-ui/core';
-
-
 import "./../../../Styles/root.scss";
 
 const ChatMsgElement = (props) => {
@@ -9,7 +7,7 @@ const ChatMsgElement = (props) => {
         <>
             <div className="chat-msg-element py-2">
               <div className="d-flex flex-row align-items-center">
-                <Avatar src={props.image} />
+                <Avatar src={props.image} alt={props.name} variant="rounded" />
                 <div className="chat-box-name ms-3">
                   {props.name}
                 </div>
