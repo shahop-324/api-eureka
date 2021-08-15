@@ -24,6 +24,14 @@ const eventSchema = new mongoose.Schema(
         "A Community name must have less or equal than 150 characters",
       ],
     },
+
+    referralIds: [
+      {
+        type: Mongoose.Schema.ObjectId,
+        ref: "EventReferral",
+      },
+    ],
+
     editingComment: {
       type: String,
       trim: true,

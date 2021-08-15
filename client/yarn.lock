@@ -2742,6 +2742,11 @@
   "resolved" "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz"
   "version" "1.1.2"
 
+"@twilio/webrtc@4.4.0":
+  "integrity" "sha512-UJ4jZVpnG6lS4RASSuzTIczg6FX6N2RjBj6Pf1/jI5MGznrW7p2PDJ8Ju/ITj4Mc65G1a7i9U9tEfvmSskpHvg=="
+  "resolved" "https://registry.npmjs.org/@twilio/webrtc/-/webrtc-4.4.0.tgz"
+  "version" "4.4.0"
+
 "@types/aria-query@^4.2.0":
   "integrity" "sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig=="
   "resolved" "https://registry.npmjs.org/@types/aria-query/-/aria-query-4.2.2.tgz"
@@ -3653,10 +3658,10 @@
     "clean-stack" "^2.0.0"
     "indent-string" "^4.0.0"
 
-"agora-rtc-sdk-ng@^4.6.2":
-  "integrity" "sha512-zNV0TJAk1ke0b3W/T5fzhebf7z7Bu7XcuVaTpQGgjZhAKhmC5CKQSRrdt6BYx9Uvn8kTIHOCTUMgvKhpgfK5+Q=="
-  "resolved" "https://registry.npmjs.org/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.6.2.tgz"
-  "version" "4.6.2"
+"agora-rtc-sdk-ng@^4.6.3":
+  "integrity" "sha512-/p+ZXhae1RnVVM4cXVZqnVCUhUrhtkccJdETxuJnhq49btaTLnkQSR9j4Xq9k5oRU4FqBxtgxwBNPzRgkFNGMA=="
+  "resolved" "https://registry.npmjs.org/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.6.3.tgz"
+  "version" "4.6.3"
 
 "agora-rtm-sdk@^1.4.3":
   "integrity" "sha512-0CwobiGaT+vlc594vby6vOAzbkhbW9D/v7rBYcTwC/2mDfDgPR9ZWAU/xHPW/vJkVHMMPxQ2J7WY0Gtag65U8w=="
@@ -4412,6 +4417,13 @@
   "integrity" "sha1-MasayLEpNjRj41s+u2n038+6eUc="
   "resolved" "https://registry.npmjs.org/backo2/-/backo2-1.0.2.tgz"
   "version" "1.0.2"
+
+"backoff@^2.5.0":
+  "integrity" "sha1-9hbtqdPktmuMp/ynn2lXIsX44m8="
+  "resolved" "https://registry.npmjs.org/backoff/-/backoff-2.5.0.tgz"
+  "version" "2.5.0"
+  dependencies:
+    "precond" "0.2"
 
 "balanced-match@^1.0.0":
   "integrity" "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
@@ -13597,6 +13609,11 @@
     "source-map" "^0.6.1"
     "supports-color" "^6.1.0"
 
+"precond@0.2":
+  "integrity" "sha1-qpWRvKokkj8eD0hJ0kD0fvwQdaw="
+  "resolved" "https://registry.npmjs.org/precond/-/precond-0.2.3.tgz"
+  "version" "0.2.3"
+
 "prelude-ls@^1.2.1":
   "integrity" "sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g=="
   "resolved" "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
@@ -16898,6 +16915,16 @@
   "resolved" "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.5.tgz"
   "version" "0.14.5"
 
+"twilio-video@^2.16.0":
+  "integrity" "sha512-R9PjCg6Unwo4dCekn4+KO8UA2XFxiHxEukhHT7dofFLpIFVF7FoW+yvdX78RFImJBdpHbL9NaHUCSoy4EYv29g=="
+  "resolved" "https://registry.npmjs.org/twilio-video/-/twilio-video-2.16.0.tgz"
+  "version" "2.16.0"
+  dependencies:
+    "@twilio/webrtc" "4.4.0"
+    "backoff" "^2.5.0"
+    "ws" "^7.4.6"
+    "xmlhttprequest" "^1.8.0"
+
 "type-check@^0.4.0", "type-check@~0.4.0":
   "integrity" "sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew=="
   "resolved" "https://registry.npmjs.org/type-check/-/type-check-0.4.0.tgz"
@@ -18086,7 +18113,7 @@
   dependencies:
     "async-limiter" "~1.0.0"
 
-"ws@^7.4.5":
+"ws@^7.4.5", "ws@^7.4.6":
   "integrity" "sha512-kQ/dHIzuLrS6Je9+uv81ueZomEwH0qVYstcAQ4/Z93K8zeko9gtAbttJWzoC5ukqXY1PpoouV3+VSOqEAFt5wg=="
   "resolved" "https://registry.npmjs.org/ws/-/ws-7.5.3.tgz"
   "version" "7.5.3"
@@ -18105,6 +18132,11 @@
   "integrity" "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw=="
   "resolved" "https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz"
   "version" "2.2.0"
+
+"xmlhttprequest@^1.8.0":
+  "integrity" "sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw="
+  "resolved" "https://registry.npmjs.org/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz"
+  "version" "1.8.0"
 
 "xtend@^4.0.0":
   "integrity" "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ=="
