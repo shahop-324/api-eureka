@@ -149,10 +149,7 @@ const Root = () => {
     } else if (role === "audience" || role === "host") {
       dispatch(fetchUserAllPersonalData(id));
     }
-    // return ()=>{
-    //  socket.emit('disconnection')
-    //  socket.off();
-    // }
+    
   }, [
     dispatch,
     email,

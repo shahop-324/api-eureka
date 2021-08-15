@@ -33,7 +33,7 @@ const MainPeopleComponent = (props) => {
 
   const renderPeopleList = (people) => {
     return people.map((person) => {
-      return <PeopleGridAvatar image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${person.userImage}`}  name={person.userName} designation={person.userDesignation} organisation={person.userOrganisation} city={person.userCity} country={person.userCountry}   />
+      return <PeopleGridAvatar image={ person.userImage.startsWith("https://lh3.googleusercontent.com") ?  person.userImage : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${person.userImage}`}  name={person.userName} designation={person.userDesignation} organisation={person.userOrganisation} city={person.userCity} country={person.userCountry}   />
     })
   }
   

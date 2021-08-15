@@ -427,6 +427,8 @@ const SessionScreen = () => {
         // Play the audio track. No need to pass any DOM element.
         remoteAudioTrack.play();
       }
+
+      console.log(rtc.client.getRemoteVideoStats());
     });
 
     rtc.client.on("user-unpublished", (user) => {
@@ -436,6 +438,8 @@ const SessionScreen = () => {
       remotePlayerContainer && remotePlayerContainer.remove();
     });
   }
+
+  
 
   return (
     <>

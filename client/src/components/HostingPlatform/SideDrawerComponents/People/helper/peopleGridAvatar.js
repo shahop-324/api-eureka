@@ -25,7 +25,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PeopleGridAvatar = ({image, name, designation, organisation, city, country}) => {
+const PeopleGridAvatar = ({
+  image,
+  name,
+  designation,
+  organisation,
+  city,
+  country,
+}) => {
+  console.log(name);
   const [display, setDisplay] = useState("none");
   const [cursor, setCursor] = useState("auto");
 
@@ -47,7 +55,7 @@ const PeopleGridAvatar = ({image, name, designation, organisation, city, country
           trigger={
             <div style={{ position: "relative" }}>
               <Avatar
-                alt="Remy Sharp"
+                alt={name}
                 src={image}
                 variant="rounded"
                 className={classes.large}
@@ -70,23 +78,30 @@ const PeopleGridAvatar = ({image, name, designation, organisation, city, country
           }
           position="bottom left"
         >
-          <div>
-              <div className="d-flex flex-row align-items-center">
+          <Popup.Content>
 
-          <Avatar
-                alt="Remy Sharp"
+          <div>
+            <div className="d-flex flex-row align-items-center">
+              <Avatar
+                alt={name}
                 src={image}
                 variant="rounded"
                 className={classes.large}
               />
               <div className="ms-3">
-
-              <div className="btn-outline-text" style={{fontSize: "14px"}}>{name}</div>
-              <div className="people-headline">{designation} at {organisation}</div>
-              <div className="people-location">{city}, {country}</div>
+                <div className="btn-outline-text" style={{ fontSize: "14px" }}>
+                  {name}
+                </div>
+                <div className="people-headline">
+                  {designation} at {organisation}
+                </div>
+                <div className="people-location">
+                  {city}, {country}
+                </div>
               </div>
-              </div>
+            </div>
           </div>
+          </Popup.Content>
         </Popup>
       </div>
     </>
