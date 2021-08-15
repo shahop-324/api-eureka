@@ -32,6 +32,7 @@ const eventSchema = new mongoose.Schema(
       type: Date,
       required: [true, "An event must have a start date."],
     },
+
     endDate: {
       type: Date,
       required: [true, "An event must have a start date."],
