@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarMenu = () => {
+
+  const referralCode = useSelector((state) => state.auth.referralCode);
+
   const [openReferral, setOpenReferral] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -115,6 +118,8 @@ const AvatarMenu = () => {
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;
 
+  
+
   const communities = user.userDetails.communities;
 
   let imgURL;
@@ -151,6 +156,8 @@ const AvatarMenu = () => {
       );
     });
   };
+
+  const referralLink = `https://wwww.evenz.in/?ref=${referralCode}`;
 
   return (
     <div className={classes.root}>
@@ -346,7 +353,7 @@ const AvatarMenu = () => {
               <div class="ui action input" style={{ minWidth: "400px" }}>
                 <input
                   type="text"
-                  value="https://www.evenz.in/?ref=wbuwhuh29"
+                  value={referralLink}
                   readOnly
                   placeholder="Search..."
                 />
@@ -354,7 +361,7 @@ const AvatarMenu = () => {
                   class="ui icon button"
                   onClick={() => {
                     navigator.clipboard.writeText(
-                      "https://www.evenz.in/wbuwhuh29"
+                      referralLink
                     );
                     alert("copied to clipboard!");
                   }}

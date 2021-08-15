@@ -47,8 +47,8 @@ AOS.init();
 
 class App extends React.Component {
   render() {
-    const { isSignedIn, referralCode } = this.props;
-    const referralLink = `https://wwww.evenz.in/?refCode=${referralCode}`;
+    const { isSignedIn } = this.props;
+  
 
     // (() => {
     //   console.log("i run ");
@@ -520,7 +520,7 @@ class App extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
-  referralCode: state.auth.referralCode,
+  
 });
 
 export default connect(mapStateToProps)(App);

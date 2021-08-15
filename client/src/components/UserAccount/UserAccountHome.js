@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import history from "../../history";
 import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
+import UserAccountQueries from "./UserAccountQueries";
 const UserAccountHome = () => {
   const { isLoading, error } = useSelector((state) => state.user);
 
@@ -119,8 +120,8 @@ const UserAccountHome = () => {
                     return <UserAccountProfileMainBody />;
                   case 4:
                     return <UserAccountReviews />;
-                  // case 3:
-                  //   return <UserAccountProfileMainBody />;
+                  case 5:
+                    return <UserAccountQueries />;
 
                   default:
                     return <div>You are a User.</div>;

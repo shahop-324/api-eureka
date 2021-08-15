@@ -105,7 +105,7 @@ exports.signup = catchAsync(async (req, res) => {
 
     policySigned: req.body.policySigned,
     referralCode: MyReferralCode,
-    referrer: referrer && referrer._id,
+    referrer: 7618278289,
     signupUsingReferral: 0,
     upgrades: 0,
     credit: 0,
