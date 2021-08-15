@@ -209,6 +209,12 @@ code {
   cursor: pointer;
 }
 
+.room-no-text {
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #ffffff;
+}
+
 @media only screen and (max-width: 998px) {
   .pre-footer-img-wrapper {
     display: none;

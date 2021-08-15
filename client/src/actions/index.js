@@ -26,6 +26,7 @@ import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
+import { twillioActions } from "../reducers/twillioSlice";
 
 const { REACT_APP_MY_ENV_ } = process.env;
 const BaseURL = REACT_APP_MY_ENV_
@@ -4323,3 +4324,50 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
 export const errorTrackerForContactUs = () => async (dispatch, getState) => {
   dispatch(contactUsActions.disabledError());
 };
+
+
+export const fetchTwillioVideoRoomToken =
+  (userId, tableId, openTableScreen) => async (dispatch, getState) => {
+    dispatch(twillioActions.startLoading());
+    try {
+      let res = await fetch(
+        `https://www.evenz.co.in/api-eureka/eureka/v1/twillio/getVideoAccessToken`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            userId: userId,
+            tableId: tableId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+      
+
+      dispatch(
+        twillioActions.FetchVideoRoomToken({
+          videoRoomToken: res.data.twillioAccessToken,
+        })
+      );
+      openTableScreen();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchTwillioVideoRoomToken =
+  () => async (dispatch, getState) => {
+    dispatch(twillioActions.disabledError());
+  };

@@ -6,6 +6,7 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
+import { fetchTwillioVideoRoomToken } from "../../../actions";
 
 const LeftChair = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -115,6 +116,8 @@ const LeftChair = ({ id, launchTableScreen }) => {
     }
   }, [userImage8, id, userImage]);
 
+  const userId = useSelector((state) => state.user.userDetails._id);
+
   return (
     <>
       <div className="reload">
@@ -152,7 +155,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
               }
             );
 
-            launchTableScreen();
+            dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
+
+            // launchTableScreen();
           }}
         >
           <div className="left-chair chair pt-2">

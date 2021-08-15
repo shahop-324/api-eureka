@@ -43,6 +43,7 @@ const teamInvite = require("./routes/teamInviteRoutes");
 const demoRoutes = require("./routes/demoRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
 const contactUsRoutes = require("./routes/contactUsRoutes");
+const twillioRoutes = require("./routes/twillioRoutes");
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -154,6 +155,7 @@ app.use("/api-eureka/eureka/v1/team-invites",teamInvite);
 app.use("/api-eureka/eureka/v1/demo",demoRoutes);
 app.use("/api-eureka/eureka/v1/newsletter",newsletterRoutes);
 app.use("/api-eureka/eureka/v1/contactUs",contactUsRoutes);
+app.use("/api-eureka/eureka/v1/twillio", twillioRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
