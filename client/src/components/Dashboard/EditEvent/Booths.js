@@ -157,14 +157,12 @@ const Booths = () => {
   const classes = useStyles();
 
   if (error) {
-    dispatch(errorTrackerForFetchBooths());
-    alert(error);
-    return;
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Booths</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
@@ -212,18 +210,16 @@ const Booths = () => {
         <div className="session-content-grid px-3 mb-4">
           <div className="basic-form-left-white px-4 py-4">
             <BoothsListFields />
-            {
-              isLoading ? (
-                <div
-                  className="d-flex flex-row align-items-center justify-content-center"
-                  style={{ height: "65vh" }}
-                >
-                  <Loader />
-                </div>
-              ) : (
-                renderBoothList(booths)
-              )
-            }
+            {isLoading ? (
+              <div
+                className="d-flex flex-row align-items-center justify-content-center"
+                style={{ height: "65vh" }}
+              >
+                <Loader />
+              </div>
+            ) : (
+              renderBoothList(booths)
+            )}
           </div>
         </div>
       </div>

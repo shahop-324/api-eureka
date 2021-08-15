@@ -149,14 +149,12 @@ const Sponsors = () => {
   const classes = useStyles();
 
   if (error) {
-    dispatch(errorTrackerForFetchSponsors());
-    alert(error);
-    return;
+    throw new Error(error);
   }
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Sponsors</div>
           <div className="drop-selector d-flex flex-row justify-content-end">

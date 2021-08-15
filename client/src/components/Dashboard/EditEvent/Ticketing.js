@@ -135,9 +135,7 @@ const Ticketing = () => {
   const classes = useStyles();
 
   if (error) {
-    dispatch(errorTrackerForFetchTickets());
-    alert(error);
-    return;
+    throw new Error(error);
   }
 
   return (
