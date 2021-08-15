@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const { REACT_APP_MY_ENV_ } = process.env;
-console.log(REACT_APP_MY_ENV_);
+const { REACT_APP_MY_ENV } = process.env;
+console.log(REACT_APP_MY_ENV);
 export default axios.create({
-  baseURL: REACT_APP_MY_ENV_
+  baseURL: REACT_APP_MY_ENV
     ? "http://localhost:3000/api-eureka"
     : "https://www.evenz.co.in/api-eureka",
 

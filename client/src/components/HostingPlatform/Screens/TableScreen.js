@@ -22,14 +22,14 @@ import { fetchTwillioVideoRoomToken } from "../../../actions";
 const connectToTwillioRoom = (token, table) => {
   console.log(token, table);
 
-  // connect(token, { name: table }).then(room => {
-  //   console.log(`Successfully joined a Room: ${room}`);
-  //   room.on('participantConnected', participant => {
-  //     console.log(`A remote Participant connected: ${participant}`);
-  //   });
-  // }, error => {
-  //   console.error(`Unable to connect to Room: ${error.message}`);
-  // });
+  connect(token, { name: table }).then(room => {
+    console.log(`Successfully joined a Room: ${room}`);
+    room.on('participantConnected', participant => {
+      console.log(`A remote Participant connected: ${participant}`);
+    });
+  }, error => {
+    console.error(`Unable to connect to Room: ${error.message}`);
+  });
 }
 
 

@@ -26,9 +26,7 @@ exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
 
   // Create a Video grant which enables a client to use Video
   // and limits access to the specified Room (DailyStandup)
-  const videoGrant = new VideoGrant({
-    room: tableId,
-  });
+  const videoGrant = new VideoGrant();
 
   // Add the grant to the token
   token.addGrant(videoGrant);

@@ -28,8 +28,8 @@ import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
 import { twillioActions } from "../reducers/twillioSlice";
 
-const { REACT_APP_MY_ENV_ } = process.env;
-const BaseURL = REACT_APP_MY_ENV_
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 // authentication with id and password
@@ -175,7 +175,7 @@ export const createCommunity =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
 
           {
             headers: {
@@ -201,7 +201,7 @@ export const createCommunity =
 
         const communityCreating = async () => {
           let res = await fetch(
-            "https://www.evenz.co.in/api-eureka/eureka/v1/users/newCommunity",
+            `${BaseURL}users/newCommunity`,
 
             {
               method: "POST",
@@ -250,7 +250,7 @@ export const createCommunity =
       } else {
         const communityCreating = async () => {
           let res = await fetch(
-            "https://www.evenz.co.in/api-eureka/eureka/v1/users/newCommunity",
+            `${BaseURL}users/newCommunity`,
             {
               method: "POST",
               body: JSON.stringify({
@@ -311,7 +311,7 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
 
   const loginCommunity = async () => {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/users/${id}`,
+      `${BaseURL}users/${id}`,
 
       {
         method: "POST",
@@ -376,7 +376,7 @@ export const errorTrackerForCommunitySignIn =
 //       credentials: "include",
 //     };
 //     const response = await fetch(
-//       "https://www.evenz.co.in/api-eureka/eureka/v1/current_user",
+//       "${BaseURL}current_user",
 //       params
 //     );
 
@@ -454,7 +454,7 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
 
   const fetchData = async () => {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/users/personalData`,
+      `${BaseURL}users/personalData`,
 
       {
         method: "GET",
@@ -510,7 +510,7 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
   const fetchData = async () => {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/users/registeredEvents`,
+      `${BaseURL}users/registeredEvents`,
 
       {
         method: "GET",
@@ -586,7 +586,7 @@ export const fetchParticularEventOfCommunity =
         console.log(id, "I am passing from particularEvent action");
 
         const res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/community/events/${id}`,
+          `${BaseURL}community/events/${id}`,
 
           {
             method: "GET",
@@ -635,7 +635,7 @@ export const fetchEventsOfParticularCommunity =
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/events`;
+      let fullLocation = `${BaseURL}community/events`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -694,7 +694,7 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/community/events/new",
+      `${BaseURL}community/events/new`,
 
       {
         method: "POST",
@@ -745,7 +745,7 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/update`,
+      `${BaseURL}events/${id}/update`,
 
       {
         method: "PATCH",
@@ -794,7 +794,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(file);
 
     let uploadConfig = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+      `${BaseURL}upload/user/img`,
 
       {
         headers: {
@@ -819,7 +819,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
     console.log(awsRes);
 
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/update`,
+      `${BaseURL}events/${id}/update`,
 
       {
         method: "PATCH",
@@ -867,7 +867,7 @@ export const editEventDescription =
       console.log(formValues);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateEventDescription`,
+        `${BaseURL}events/${id}/updateEventDescription`,
 
         {
           method: "PATCH",
@@ -927,7 +927,7 @@ export const createSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
 
           {
             headers: {
@@ -959,7 +959,7 @@ export const createSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSpeaker`,
+          `${BaseURL}events/${id}/addSpeaker`,
 
           {
             method: "POST",
@@ -994,7 +994,7 @@ export const createSpeaker =
         console.log(formValues);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSpeaker`,
+          `${BaseURL}events/${id}/addSpeaker`,
 
           {
             method: "POST",
@@ -1039,7 +1039,7 @@ export const fetchSpeakers =
     dispatch(speakerActions.startLoading());
 
     const getSpeakers = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/speakers`;
+      let fullLocation = `${BaseURL}events/${id}/speakers`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -1100,7 +1100,7 @@ export const fetchParticularSpeakerOfEvent =
       //console.log(id, "I am passing from particularEvent action");
 
       const res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}`,
+        `${BaseURL}speakers/${id}`,
 
         {
           method: "GET",
@@ -1148,7 +1148,7 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
     //console.log(id, "I am passing from particularEvent action");
 
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/getSpeaker`,
+      `${BaseURL}speakers/${id}/getSpeaker`,
 
       {
         method: "GET",
@@ -1200,7 +1200,7 @@ export const editSpeaker =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
 
           {
             headers: {
@@ -1233,7 +1233,7 @@ export const editSpeaker =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/update`,
+          `${BaseURL}speakers/${id}/update`,
 
           {
             method: "PATCH",
@@ -1269,7 +1269,7 @@ export const editSpeaker =
         console.log(formValues);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/speakers/${id}/update`,
+          `${BaseURL}speakers/${id}/update`,
 
           {
             method: "PATCH",
@@ -1362,7 +1362,7 @@ export const createBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1394,7 +1394,7 @@ export const createBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/addBooth`,
+          `${BaseURL}booths/${id}/addBooth`,
 
           {
             method: "POST",
@@ -1426,7 +1426,7 @@ export const createBooth =
         );
       } else {
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/addBooth`,
+          `${BaseURL}booths/${id}/addBooth`,
 
           {
             method: "POST",
@@ -1469,7 +1469,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
   const getBooths = async () => {
     console.log(id);
 
-    let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/getAllbooths`;
+    let fullLocation = `${BaseURL}booths/${id}/getAllbooths`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -1529,7 +1529,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/getBoothDetails`,
+      `${BaseURL}booths/${id}/getBoothDetails`,
       {
         method: "GET",
 
@@ -1579,7 +1579,7 @@ export const editBooth =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -1611,7 +1611,7 @@ export const editBooth =
         console.log(awsRes);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/updateBooth`,
+          `${BaseURL}booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1645,7 +1645,7 @@ export const editBooth =
         console.log(formValues);
 
         let res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/booths/${id}/updateBooth`,
+          `${BaseURL}booths/${id}/updateBooth`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -1730,7 +1730,7 @@ export const createSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
 
           {
             headers: {
@@ -1878,7 +1878,7 @@ export const fetchSponsors =
     dispatch(sponsorActions.startLoading());
 
     const getSponsors = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/sponsors/${id}`;
+      let fullLocation = `${BaseURL}sponsors/${id}`;
 
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
@@ -1941,7 +1941,7 @@ export const editSponsor =
         console.log(file);
 
         let uploadConfig = await fetch(
-          "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+          `${BaseURL}upload/user/img`,
           {
             headers: {
               Authorization: `Bearer ${getState().auth.token}`,
@@ -2082,7 +2082,7 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/addTicket`,
+      `${BaseURL}community/${id}/addTicket`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2124,7 +2124,7 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
 
   const getTickets = async () => {
     console.log(id);
-    let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/tickets`;
+    let fullLocation = `${BaseURL}events/${id}/tickets`;
 
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
@@ -2184,7 +2184,7 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/ticket`,
+      `${BaseURL}events/${id}/ticket`,
       {
         method: "GET",
 
@@ -2223,7 +2223,7 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateTicket`,
+      `${BaseURL}events/${id}/updateTicket`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2266,7 +2266,7 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/deleteTicket`,
+      `${BaseURL}events/${id}/deleteTicket`,
       {
         method: "DELETE",
 
@@ -2369,7 +2369,7 @@ export const errorTrackerForMadeJustForYou =
 //     console.log(id);
 //     console.log(formValues);
 //     let res = await fetch(
-//       `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSpeaker`,
+//       `${BaseURL}events/${id}/addSpeaker`,
 //       {
 //         method: "POST",
 //         body: JSON.stringify({
@@ -2424,7 +2424,7 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/speakers`,
+      `${BaseURL}events/${id}/speakers`,
       {
         method: "GET",
 
@@ -2464,7 +2464,7 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
 
   try {
     const res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/users/Me",
+      `${BaseURL}users/Me`,
       {
         headers: {
           //  "Content-Type": "application/json",
@@ -2509,7 +2509,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(file);
 
       let uploadConfig = await fetch(
-        "https://www.evenz.co.in/api-eureka/eureka/v1/upload/user/img",
+        `${BaseURL}upload/user/img`,
         {
           headers: {
             Authorization: `Bearer ${getState().auth.token}`,
@@ -2545,7 +2545,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       console.log(awsRes);
 
       const res = await fetch(
-        "https://www.evenz.co.in/api-eureka/eureka/v1/users/updateMe",
+        `${BaseURL}users/updateMe`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2582,7 +2582,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // );
     } else {
       const res = await fetch(
-        "https://www.evenz.co.in/api-eureka/eureka/v1/users/updateMe",
+        `${BaseURL}users/updateMe`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -2635,7 +2635,7 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     console.log(formValues);
 
     const res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/users/updatePassword",
+      `${BaseURL}users/updatePassword`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2690,7 +2690,7 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/getCommunity`,
+      `${BaseURL}community/${id}/getCommunity`,
       {
         method: "GET",
 
@@ -2730,7 +2730,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/updateCommunity`,
+      `${BaseURL}community/${id}/updateCommunity`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -2772,7 +2772,7 @@ export const deleteCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}`,
+      `${BaseURL}community/${id}`,
 
       {
         method: "GET",
@@ -2809,7 +2809,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/addSession`,
+      `${BaseURL}events/${id}/addSession`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -2851,7 +2851,7 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
   const getSessions = async () => {
     console.log(id);
-    let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/sessions`;
+    let fullLocation = `${BaseURL}events/${id}/sessions`;
     let url = new URL(fullLocation);
     let search_params = url.searchParams;
 
@@ -2909,7 +2909,7 @@ export const fetchSessionsForUser =
     dispatch(sessionActions.startLoading());
     try {
       console.log(id);
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/sessionsForUser`;
+      let fullLocation = `${BaseURL}events/${id}/sessionsForUser`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -2961,7 +2961,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/sessions`,
+      `${BaseURL}events/${id}/sessions`,
 
       {
         method: "GET",
@@ -3001,7 +3001,7 @@ export const fetchSessionForSessionStage =
       console.log(id);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}/getOneSession`,
+        `${BaseURL}sessions/${id}/getOneSession`,
         {
           method: "GET",
 
@@ -3044,7 +3044,7 @@ export const fetchParticularSessionOfEvent =
         //console.log(id, "I am passing from particularEvent action");
 
         const res = await fetch(
-          `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}`,
+          `${BaseURL}sessions/${id}`,
 
           {
             method: "GET",
@@ -3095,7 +3095,7 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
     console.log(formValues);
 
     const res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/sessions/${id}/update`,
+      `${BaseURL}sessions/${id}/update`,
       {
         method: "POST",
         // body: {...formValues},
@@ -3224,7 +3224,7 @@ export const editNetworking =
       console.log(id);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/events/${id}/updateNetworking`,
+        `${BaseURL}events/${id}/updateNetworking`,
         {
           method: "PATCH",
 
@@ -3270,7 +3270,7 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons/createNew`,
+      `${BaseURL}community/coupons/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3312,7 +3312,7 @@ export const fetchCoupons = () => async (dispatch, getState) => {
 
   const getCoupons = async () => {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/coupons`,
+      `${BaseURL}community/coupons`,
       {
         method: "GET",
 
@@ -3358,7 +3358,7 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
     console.log(id);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/getOneCoupon`,
+      `${BaseURL}community/${id}/getOneCoupon`,
       {
         method: "GET",
 
@@ -3396,7 +3396,7 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
   try {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/${id}/updateCoupon`,
+      `${BaseURL}community/${id}/updateCoupon`,
       {
         method: "PATCH",
 
@@ -3497,7 +3497,7 @@ export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
     try {
       const checkoutSession = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/stripe/getEventRegistrationCheckoutSession`,
+        `${BaseURL}stripe/getEventRegistrationCheckoutSession`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3533,7 +3533,7 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
     console.log(formValues);
 
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/users/query/createNew`,
+      `${BaseURL}users/query/createNew`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3566,7 +3566,7 @@ export const createCommunityFeedback =
       console.log(formValues);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/feedback/community`,
+        `${BaseURL}feedback/community`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3600,7 +3600,7 @@ export const fetchQueriesForCommunity =
 
     console.log(term, event, answerStatus, userRegistrationStatus);
     const fetchQueries = async () => {
-      let fullLocation = `https://www.evenz.co.in/api-eureka/eureka/v1/community/queries/getAll`;
+      let fullLocation = `${BaseURL}community/queries/getAll`;
       let url = new URL(fullLocation);
       let search_params = url.searchParams;
 
@@ -3665,7 +3665,7 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
 
   try {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/community/queries/createAnswer`,
+      `${BaseURL}community/queries/createAnswer`,
       {
         method: "PATCH",
         body: JSON.stringify({
@@ -3715,7 +3715,7 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/users/forgotPassword`,
+      `${BaseURL}users/forgotPassword`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -3747,7 +3747,7 @@ export const resetPassword =
 
     try {
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/users/resetPassword/${token}`,
+        `${BaseURL}users/resetPassword/${token}`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -3801,7 +3801,7 @@ export const fetchRegistrationsOfParticularCommunity =
       console.log(communityId);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/registrations/community/getAll`,
+        `${BaseURL}registrations/community/getAll`,
         {
           method: "GET",
 
@@ -3849,7 +3849,7 @@ export const fetchParticularRegistration =
       console.log(id);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/registrations/${id}/getOne`,
+        `${BaseURL}registrations/${id}/getOne`,
         {
           method: "GET",
 
@@ -3890,7 +3890,7 @@ export const createNewInvitation =
       console.log(formValues);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/team-invites/create-new`,
+        `${BaseURL}team-invites/create-new`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -3969,7 +3969,7 @@ export const createSocket = (socket) => async (dispatch, getState) => {
 //       console.log(eventId);
 
 //       let res = await fetch(
-//         `https://www.evenz.co.in/api-eureka/eureka/v1/getCurrentUsers/${eventId}`,
+//         `${BaseURL}getCurrentUsers/${eventId}`,
 //         {
 //           method: "GET",
 
@@ -4014,7 +4014,7 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
 
   const fetchingRTMToken = async () => {
     let res = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/getRTMToken",
+      `${BaseURL}getRTMToken`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -4112,7 +4112,7 @@ export const fetchPreviousEventChatMessages =
       console.log(eventId);
 
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/getPreviousEventMsg/${eventId}`,
+        `${BaseURL}getPreviousEventMsg/${eventId}`,
         {
           method: "GET",
 
@@ -4152,7 +4152,7 @@ export const getRTCToken =
 
     const fetchingRTCToken = async () => {
       let res = await fetch(
-        "https://www.evenz.co.in/api-eureka/eureka/v1/getLiveStreamingToken",
+        `${BaseURL}getLiveStreamingToken`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -4215,7 +4215,7 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   dispatch(demoActions.startLoading());
   try {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/demo/requestDemo`,
+      `${BaseURL}demo/requestDemo`,
       {
         method: "POST",
 
@@ -4258,7 +4258,7 @@ export const signupForEmailNewsletter =
   (email) => async (dispatch, getState) => {
     try {
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/newsletter/signUpViaEmail`,
+        `${BaseURL}newsletter/signUpViaEmail`,
         {
           method: "POST",
 
@@ -4290,7 +4290,7 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
   dispatch(contactUsActions.startLoading());
   try {
     let res = await fetch(
-      `https://www.evenz.co.in/api-eureka/eureka/v1/contactUs/contact`,
+      `${BaseURL}contactUs/contact`,
       {
         method: "POST",
 
@@ -4331,7 +4331,7 @@ export const fetchTwillioVideoRoomToken =
     dispatch(twillioActions.startLoading());
     try {
       let res = await fetch(
-        `https://www.evenz.co.in/api-eureka/eureka/v1/twillio/getVideoAccessToken`,
+        `${BaseURL}twillio/getVideoAccessToken`,
         {
           method: "POST",
 
@@ -4355,7 +4355,7 @@ export const fetchTwillioVideoRoomToken =
       }
       res = await res.json();
       console.log(res);
-      
+
 
       dispatch(
         twillioActions.FetchVideoRoomToken({
