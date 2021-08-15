@@ -6,6 +6,7 @@ const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseMode
 const Booth = require("../models/boothModel");
 const Sponsor = require("../models/sponsorModel");
 const Session = require("../models/sessionModel");
+const EventReferral = require("../models/referralModelForEvent");
 const Ticket = require("../models/ticketModel");
 const apiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
@@ -22,8 +23,6 @@ const filterObj = (obj, ...allowedFields) => {
   });
   return newObj;
 };
-
-
 
 const fillSocialMediaHandler = (object) => {
   const newObj = {};
@@ -232,7 +231,7 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
   console.log(req.body, "Line 233");
-  
+
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
@@ -407,7 +406,6 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
   });
 });
 
-
 exports.updateSession = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
   const sessionGettingUpdate = req.params.sessionId;
@@ -504,7 +502,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "visibility",
     "editingComment",
     "image",
-    "publishedStatus",
+    "publishedStatus"
   );
 
   const updatedEvent = await Event.findByIdAndUpdate(
