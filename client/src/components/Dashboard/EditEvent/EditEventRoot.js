@@ -6,7 +6,6 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Topnav from "../HelperComponent/TopNav";
 import "./../../../assets/Sass/EditEvent/Basics.scss";
 import SideNavEdit from "../HelperComponent/SideNavEdit";
-
 import "./../../../index.css";
 import Basics from "./Basics";
 import About from "./About";
@@ -23,8 +22,13 @@ import { fetchParticularEventOfCommunity } from "../../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { navigationIndexForEditEvent } from "../../../actions/index";
-import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries/ErrorBoundriesEditEventSession";
+import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries/ErrorBoundriesEditEventSpeakers";
 import ErrorBoundriesEditEventSession from "../../ErrorBoundries/ErrorBoundriesEditEventSession";
+
+import ErrorBoundriesEditEventBooths from "../../ErrorBoundries/ErrorBoundriesEditEventBooths";
+import ErrorBoundriesEditEventSponsors from "../../ErrorBoundries/ErrorBoundriesEditEventSponsors";
+import ErrorBoundriesEditEventTickets from "../../ErrorBoundries/ErrorBoundriesEditEventTicketing";
+
 const EditEventRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -131,13 +135,23 @@ const EditEventRoot = () => {
                   );
 
                 case "4":
-                  return <Booths />;
-
+                  return (
+                    <ErrorBoundriesEditEventBooths>
+                      <Booths />
+                    </ErrorBoundriesEditEventBooths>
+                  );
                 case "5":
-                  return <Sponsors />;
-
+                  return (
+                    <ErrorBoundriesEditEventSponsors>
+                      <Sponsors />
+                    </ErrorBoundriesEditEventSponsors>
+                  );
                 case "6":
-                  return <Ticketing />;
+                  return (
+                    <ErrorBoundriesEditEventTickets>
+                      <Ticketing />
+                    </ErrorBoundriesEditEventTickets>
+                  );
 
                 case "7":
                   return <Networking />;
