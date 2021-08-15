@@ -152,7 +152,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
               }
             );
 
-            launchTableScreen();
+            // launchTableScreen();
           }}
         >
           <div className="left-chair chair pt-2">

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import socket from "./../service/socket";
 import "./../../../index.css";
@@ -15,14 +15,22 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 
-import AgoraRTC from "agora-rtc-sdk-ng";
+import {connect} from 'twilio-video';
+import { twillioActions } from "../../../reducers/twillioSlice";
+import { fetchTwillioVideoRoomToken } from "../../../actions";
 
-let rtc = {
-  localAudioTrack: null,
-  localVideoTrack: null,
-  localScreenTrack: null,
-  client: null,
-};
+
+
+
+
+connect('$TOKEN', { name:'my-new-room' }).then(room => {
+  console.log(`Successfully joined a Room: ${room}`);
+  room.on('participantConnected', participant => {
+    console.log(`A remote Participant connected: ${participant}`);
+  });
+}, error => {
+  console.error(`Unable to connect to Room: ${error.message}`);
+});
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -33,14 +41,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
-  const table = id;
+const TableScreen = ({ openTableScreen, launchTableScreen, closeTableScreen, id }) => {
 
-  useEffect(() => {
-    return () => {
-      leaveStreaming();
-    };
-  }, []);
+  const dispatch = useDispatch();
+
+  const table = id;
 
   const classes = useStyles();
 
@@ -65,27 +70,7 @@ const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
 
   let row = "1fr 1fr";
 
-  const [videoIsEnabled, setVideoIsEnabled] = useState(true);
-  const [audioIsEnabled, setAudioIsEnabled] = useState(true);
-  const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
-
-  const turnOffVideo = async () => {
-    await rtc.localVideoTrack.setEnabled(false);
-    setVideoIsEnabled(false);
-  };
-  const turnOnVideo = async () => {
-    await rtc.localVideoTrack.setEnabled(true);
-    setVideoIsEnabled(true);
-  };
-
-  const turnOffAudio = async () => {
-    await rtc.localAudioTrack.setEnabled(false);
-    setAudioIsEnabled(false);
-  };
-  const turnOnAudio = async () => {
-    await rtc.localAudioTrack.setEnabled(true);
-    setAudioIsEnabled(true);
-  };
+ 
 
   if (grid === 1) {
     col = "1fr";
@@ -109,205 +94,8 @@ const TableScreen = ({ openTableScreen, closeTableScreen, id }) => {
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("lg");
 
-  // const getToken = async () => {
-  //   let res = await fetch(
-  //     "https://www.evenz.co.in/api-eureka/eureka/v1/getRTCVideoCallToken",
-  //     {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         tableId: table,
-  //       }),
-
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${userToken}`,
-  //       },
-  //     }
-  //   );
-
-  //   res = await res.json();
-  //   console.log(res);
-
-  //   setAppToken(res.token);
-  // };
-
-  let options = {
-    appId: "702d57c3092c4fd389eb7ea5a505d471",
-
-    channel: table,
-
-    token: null,
-
-    screenToken: null,
-
-    uid: null,
-  };
-
-  const shareScreen = async () => {
-    // Unpublish the video, the audio is still being published
-    await rtc.client.unpublish(rtc.localVideoTrack);
-
-    rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack({
-      encoderConfig: "1080p_1",
-    }).then(async (localScreenTrack) => {
-      console.log("screen sharing is enabled");
-
-      // Publish the local audio and screen tracks to the RTC channel.
-      await rtc.client.publish(localScreenTrack);
-    });
-
-    console.log("publish success!");
-  };
-
-  const joinTable = async () => {
-
-
-    const joinedTable=async()=>{
-      rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-
-      // Join an RTC channel.
-      await rtc.client.join(
-        options.appId,
-        options.channel,
-        options.token,
-        options.uid
-      );
-  
-      rtc.client.on("user-published", async (user, mediaType) => {
-        // Subscribe to the remote user when the SDK triggers the "user-published" event
-        await rtc.client.subscribe(user, mediaType);
-        console.log("subscribe success");
-  
-        // If the remote user publishes a video track.
-        if (mediaType === "video") {
-          // Get the RemoteVideoTrack object in the AgoraRTCRemoteUser object.
-          const remoteVideoTrack = user.videoTrack;
-          // Dynamically create a container in the form of a DIV element for playing the remote video track.
-          const remotePlayerContainer = document.createElement("div");
-          // Specify the ID of the DIV container. You can use the uid of the remote user.
-          remotePlayerContainer.id = user.uid.toString();
-          remotePlayerContainer.style.borderRadius = "10px";
-          remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-          remotePlayerContainer.style.backdropFilter = "blur( 4px )";
-          // remotePlayerContainer.style.border =
-          //   "1px solid rgba( 255, 255, 255, 0.18 )";
-  
-          document
-            .getElementById("table-video-layout-grid")
-            .append(remotePlayerContainer);
-  
-          setGrid(
-            document.getElementById("table-video-layout-grid").childElementCount
-          );
-          // Play the remote video track.
-          // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
-          remoteVideoTrack.play(remotePlayerContainer);
-  
-          // Or just pass the ID of the DIV container.
-          // remoteVideoTrack.play(playerContainer.id);
-        }
-  
-        // If the remote user publishes an audio track.
-        if (mediaType === "audio") {
-          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-          const remoteAudioTrack = user.audioTrack;
-          // Play the remote audio track. No need to pass any DOM element.
-          remoteAudioTrack.play();
-        }
-  
-        // Listen for the "user-unpublished" event
-        rtc.client.on("user-unpublished", (user) => {
-          // Get the dynamically created DIV container.
-          const remotePlayerContainer = document.getElementById(user.uid);
-          // Destroy the container.
-          remotePlayerContainer && remotePlayerContainer.remove();
-  
-          setGrid(
-            document.getElementById("table-video-layout-grid").childElementCount
-          );
-        });
-      });
-
-
-    }
-  
-////
-
-try{
-
-
-  const readyToPublish=async()=>   {
-    await joinedTable();
-
-
-
-  } 
-     
-
- await readyToPublish();
- // Create a local audio track from the audio sampled by a microphone.
- rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
- // Create a local video track from the video captured by a camera.
- rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
- // Publish the local audio and video tracks to the RTC channel.
- await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
- // Dynamically create a container in the form of a DIV element for playing the local video track.
- const localPlayerContainer = document.createElement("div");
- // Specify the ID of the DIV container. You can use the uid of the local user.
- localPlayerContainer.id = "12345";
- // localPlayerContainer.textContent = "Local user " + options.uid;
- localPlayerContainer.style.borderRadius = "10px";
- localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
- localPlayerContainer.style.backdropFilter = "blur( 4px )";
- // localPlayerContainer.style.border = "1px solid rgba( 255, 255, 255, 0.18 )";
-
- document
-   .getElementById("table-video-layout-grid")
-   .append(localPlayerContainer);
-
- setGrid(
-   document.getElementById("table-video-layout-grid").childElementCount
- );
-
- console.log(document.getElementById("table-video-layout-grid"));
-
- // Play the local video track.
- // Pass the DIV container and the SDK dynamically creates a player in the container for playing the local video track.
- rtc.localVideoTrack.play(localPlayerContainer);
- console.log("publish success!");
-
-
-
-}
-catch(err)
-{
-  console.log(err)
-
-
-}
-   
-    
-  };
-/////
-  const leaveStreaming = async () => {
-    // Destroy the local audio and video tracks.
-    rtc.localAudioTrack.close();
-    rtc.localVideoTrack.close();
-
-    // Traverse all remote users.
-    rtc.client.remoteUsers.forEach((user) => {
-      // Destroy the dynamically created DIV containers.
-      const playerContainer = document.getElementById(user.uid);
-      playerContainer && playerContainer.remove();
-    });
-
-    // Leave the channel.
-    await rtc.client.leave();
-  };
-
   useEffect(() => {
-     joinTable();
-    
+      dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
   }, []);
 
   return (
@@ -348,7 +136,14 @@ catch(err)
                 alignItems: "center",
               }}
             >
-              <div className="stage-left-controls d-flex flex-row justify-content-between align-items-center"></div>
+              <div className="stage-left-controls d-flex flex-row justify-content-between align-items-center ms-3">
+                
+                <div className="room-no-text">
+
+                Table 1
+                </div>
+                
+              </div>
 
               {/* This is Mid Stage Controls */}
               <div
@@ -356,40 +151,31 @@ catch(err)
                 style={{ justifySelf: "center" }}
               >
                 <IconButton
-                  onClick={() => {
-                    videoIsEnabled ? turnOffVideo() : turnOnVideo();
-                  }}
                   aria-label="video"
                   className={classes.margin}
                 >
-                  {videoIsEnabled ? (
+                  
                     <VideocamRoundedIcon
                       style={{ fill: "#D3D3D3", size: "24" }}
                     />
-                  ) : (
-                    <VideocamOffIcon style={{ fill: "#C72E2E", size: "24" }} />
-                  )}
+                  
+                    {/* <VideocamOffIcon style={{ fill: "#C72E2E", size: "24" }} /> */}
+                 
                 </IconButton>
 
                 <IconButton
-                  onClick={() => {
-                    audioIsEnabled ? turnOffAudio() : turnOnAudio();
-                  }}
+                  
                   aria-label="audio"
                   className={classes.margin}
                 >
-                  {audioIsEnabled ? (
+                 
                     <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  ) : (
-                    <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} />
-                  )}
+                  
+                    {/* <MicOffIcon style={{ fill: "#C72E2E", size: "24" }} /> */}
+                 
                 </IconButton>
 
                 <IconButton
-                  onClick={() => {
-                    shareScreen();
-                    setScreenSharingIsEnabled(true);
-                  }}
                   aria-label="share screen"
                   className={classes.margin}
                 >
@@ -419,9 +205,6 @@ catch(err)
                       }
                     }
                   );
-
-                  leaveStreaming();
-
                   closeTableScreen();
                 }}
               >
