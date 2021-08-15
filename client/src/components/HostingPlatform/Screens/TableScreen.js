@@ -19,8 +19,6 @@ import {connect} from 'twilio-video';
 import { twillioActions } from "../../../reducers/twillioSlice";
 import { fetchTwillioVideoRoomToken } from "../../../actions";
 
-
-
 const connectToTwillioRoom = (token, table) => {
   console.log(token, table);
 
