@@ -48,6 +48,8 @@ const TableScreen = ({
 }) => {
   const dispatch = useDispatch();
 
+  const token = useSelector((state) => state.RTC.token);
+
   const table = id;
 
   const classes = useStyles();
@@ -59,10 +61,12 @@ const TableScreen = ({
   let options = {
     // Pass your App ID here.
     appId: "c4e9f3e5cdf548f68d2f8417ad8a13eb",
+    // appId: "4f274729f9ab45139e509eb6efba14cc",
     // Set the channel name.
     channel: table,
     // Pass your temp token here.
     token: null,
+    // token: token,
     // Set the user ID.
     uid: null,
   };
@@ -95,8 +99,6 @@ const TableScreen = ({
   const currentChairId = useSelector(
     (state) => state.user.currentlyJoinedChair
   );
-
-  const token = useSelector((state) => state.twillio.videoRoomToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);
 

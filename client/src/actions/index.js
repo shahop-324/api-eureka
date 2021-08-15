@@ -4321,17 +4321,69 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
   }
 };
 
-export const errorTrackerForContactUs = () => async (dispatch, getState) => {
-  dispatch(contactUsActions.disabledError());
-};
+// export const errorTrackerForContactUs = () => async (dispatch, getState) => {
+//   dispatch(contactUsActions.disabledError());
+// };
 
 
-export const fetchTwillioVideoRoomToken =
+// export const fetchRoomVideoCallToken =
+//   (userId, tableId, openTableScreen) => async (dispatch, getState) => {
+//     dispatch(twillioActions.startLoading());
+//     try {
+//       let res = await fetch(
+//         `${BaseURL}getRTCVideoCallToken`
+//         ,
+//       {
+//         method: "POST",
+
+//         body: JSON.stringify({
+//           tableId,
+//           userId
+//         }),
+
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${getState().auth.token}`,
+
+//         },
+//       }
+        
+//       );
+//       if (!res.ok) {
+//         if (!res.message) {
+//           throw new Error("Something went wrong");
+//         } else {
+//           throw new Error(res.message);
+//         }
+//       }
+//       res = await res.json();
+//       console.log(res.accessToken);
+
+
+//       dispatch(
+//         twillioActions.FetchVideoRoomToken({
+//           videoRoomToken: res.accessToken,
+//         })
+//       );
+//       openTableScreen();
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+// export const errorTrackerForFetchTwillioVideoRoomToken =
+//   () => async (dispatch, getState) => {
+//     dispatch(twillioActions.disabledError());
+//   };
+
+
+export const fetchVideoCallToken =
   (userId, tableId, openTableScreen) => async (dispatch, getState) => {
-    dispatch(twillioActions.startLoading());
+    dispatch(RTCActions.startLoading());
     try {
       let res = await fetch(
         `https://token-service-1443-dev.twil.io/token?identity=${userId}&table=${tableId}`,
+
+
         
       );
       if (!res.ok) {
@@ -4342,12 +4394,12 @@ export const fetchTwillioVideoRoomToken =
         }
       }
       res = await res.json();
-      console.log(res.accessToken);
+      console.log(res.token);
 
 
       dispatch(
-        twillioActions.FetchVideoRoomToken({
-          videoRoomToken: res.accessToken,
+        RTCActions.fetchRTCToken({
+          token: res.token,
         })
       );
       openTableScreen();
@@ -4355,7 +4407,7 @@ export const fetchTwillioVideoRoomToken =
       console.log(err);
     }
   };
-export const errorTrackerForFetchTwillioVideoRoomToken =
+export const errorTrackerForFetchVideoCallToken =
   () => async (dispatch, getState) => {
-    dispatch(twillioActions.disabledError());
+    dispatch(RTCActions.disabledError());
   };
