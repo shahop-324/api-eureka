@@ -13,6 +13,7 @@ const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const mongoose = require("mongoose");
 
+const uniqid = require("uniqid");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -631,3 +632,15 @@ exports.updateNetworking = catchAsync(async (req, res, next) => {
     data: updatedSettings,
   });
 });
+
+
+exports.generateReferralCode =catchAsaync(async(req,res,next)=>{
+
+     
+const  referralCode =uniqid();
+
+
+
+
+}
+)
