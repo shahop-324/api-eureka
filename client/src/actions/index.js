@@ -4321,9 +4321,9 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
   }
 };
 
-// export const errorTrackerForContactUs = () => async (dispatch, getState) => {
-//   dispatch(contactUsActions.disabledError());
-// };
+export const errorTrackerForContactUs = () => async (dispatch, getState) => {
+  dispatch(contactUsActions.disabledError());
+};
 
 
 // export const fetchRoomVideoCallToken =
