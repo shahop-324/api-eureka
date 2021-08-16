@@ -20,6 +20,12 @@ import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import Instagram from "@material-ui/icons/Instagram";
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -34,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarMenu = () => {
+
+  const referralCode = useSelector((state) => state.auth.referralCode);
+
   const [openReferral, setOpenReferral] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -109,6 +118,8 @@ const AvatarMenu = () => {
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;
 
+  
+
   const communities = user.userDetails.communities;
 
   let imgURL;
@@ -145,6 +156,8 @@ const AvatarMenu = () => {
       );
     });
   };
+
+  const referralLink = `https://wwww.evenz.in/?ref=${referralCode}`;
 
   return (
     <div className={classes.root}>
@@ -288,6 +301,7 @@ const AvatarMenu = () => {
           aria-labelledby="responsive-dialog-title"
         >
           <div className="user-referral-container p-4">
+           
             <div
               style={{
                 display: "grid",
@@ -314,14 +328,81 @@ const AvatarMenu = () => {
               </div>
             </div>
 
+            {/* Number cards indication credit, signups, and upgrades */}
+            <div className="referral-3-cards-row my-5">
+              <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
+                <div className="mb-2" style={{fontFamily: "Ubuntu"}}>Credits</div>
+                <div className="bold-big-number">$100</div>
+              </div>
+              <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
+                <div className="mb-2" style={{fontFamily: "Ubuntu"}}>Signup</div>
+                <div className="bold-big-number d-flex flex-column align-item-center justify-content-center">
+                  20
+                </div>
+              </div>
+              <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
+                <div className="mb-2" style={{fontFamily: "Ubuntu"}}>Upgrades</div>
+                <div className="bold-big-number">10</div>
+              </div>
+            </div>
 
-{/* Number cards indication credit, signups, and upgrades */}
-<div className="referral-3-cards-row">
-  <div className="referral-display-card">
+            <div
+              className="referral-link-and-copy-to-clipboard"
+              style={{ textAlign: "center" }}
+            >
+              <div class="ui action input" style={{ minWidth: "400px" }}>
+                <input
+                  type="text"
+                  value={referralLink}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  class="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      referralLink
+                    );
+                    alert("copied to clipboard!");
+                  }}
+                >
+                  <i class="copy outline icon"></i>
+                </button>
+              </div>
+            </div>
 
-  </div>
-</div>
+            <div className="social-media-share-your-link mt-5" style={{textAlign: "center"}}>
+              <div className="btn-outline-text">Share your link</div>
+              <div className=" d-flex flex-row align-items-center justify-content-center" style={{width: "100%"}}>
+                <div className="shareon-icon p-3 ">
+                  <IconButton style={{height: "fit-content", width: "fit-content"}}>
+                  <WhatsAppIcon style={{ fontSize: "24", fill: "#0C881D" }} />
+                  </IconButton>
+                </div>
+                <div className="shareon-icon p-3 ">
+                  <IconButton>
+                    <FacebookIcon style={{ fontSize: "24", fill: "#1760A8" }} />
+                  </IconButton>
+                </div>
+                <div className="shareon-icon p-3 ">
+                  <IconButton>
+                    <LinkedInIcon style={{ fontSize: "24", fill: "#2565A5" }} />
+                  </IconButton>
+                </div>
+                <div className="shareon-icon p-3 ">
+                  <IconButton>
+                    <TwitterIcon style={{ fontSize: "24", fill: "#539FF7" }} />
+                  </IconButton>
+                </div>
 
+                <div className="shareon-icon p-3 ">
+                  <IconButton>
+                    <Instagram style={{ fontSize: "24", fill: "#841E8D" }} />
+                  </IconButton>
+                </div>
+              </div>
+            </div>
+            <div className="refer-and-earn-banner px-3 py-2 mt-3">Refer your network to Evenz — give $10, get $10.</div>
           </div>
         </Dialog>
       </div>

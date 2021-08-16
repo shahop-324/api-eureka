@@ -102,12 +102,11 @@ exports.signup = catchAsync(async (req, res) => {
 
         policySigned: req.body.policySigned,
         referralCode: MyReferralCode,
-        referrer: referrer.id,
+        referrer: referrer._id,
         signupUsingReferral: 0,
         upgrades: 0,
         credit: 0,
       });
-
       const name = `${req.body.firstName} ${req.body.lastName}`;
       await MailList.create({
         name: name,
@@ -126,12 +125,11 @@ exports.signup = catchAsync(async (req, res) => {
 
       policySigned: req.body.policySigned,
       referralCode: MyReferralCode,
-      // referrer: referrer && referrer._id,
+
       signupUsingReferral: 0,
       upgrades: 0,
       credit: 0,
     });
-
     const name = `${req.body.firstName} ${req.body.lastName}`;
     await MailList.create({
       name: name,
@@ -140,7 +138,6 @@ exports.signup = catchAsync(async (req, res) => {
 
     createSendToken(newUser, 201, req, res);
   }
-
   // create new user
 });
 

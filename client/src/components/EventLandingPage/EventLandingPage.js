@@ -45,7 +45,7 @@ import Typography from "@material-ui/core/Typography";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import Footer from "../Footer";
-import { IconButton } from "@material-ui/core";
+import { Avatar, IconButton } from "@material-ui/core";
 import StickyFooter from "./HelperComponent/StickyFooter";
 import Loader from "../Loader";
 
@@ -275,6 +275,7 @@ const EventLandingPage = (props) => {
 
   const renderSpeakerList = () => {
     return event.speaker.map((speaker) => {
+      console.log(speaker.socialMediaHandles);
       return (
         <SpeakerCard
           firstName={speaker.firstName}
@@ -433,27 +434,53 @@ const EventLandingPage = (props) => {
                 >
                   Share on
                 </div>
-                <div className="shareon-icon mb-3">
-                  <IconButton>
-                    {" "}
-                    <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
-                  </IconButton>
-                </div>
-                <div className="shareon-icon mb-3">
-                  <IconButton>
-                    <TwitterIcon style={{ fill: "#539FF7" }} />
-                  </IconButton>
-                </div>
-                <div className="shareon-icon mb-3">
-                  <IconButton>
-                    <FacebookIcon style={{ fill: "#1760A8" }} />
-                  </IconButton>
-                </div>
-                <div className="shareon-icon mb-3">
-                  <IconButton>
-                    <WhatsAppIcon style={{ fill: "#378D1E" }} />
-                  </IconButton>
-                </div>
+                <a
+                  href={`https://www.linkedin.com`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="shareon-icon mb-3">
+                    <IconButton>
+                      {" "}
+                      <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
+                    </IconButton>
+                  </div>
+                </a>
+
+                <a
+                  href={`https://www.twitter.com/`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="shareon-icon mb-3">
+                    <IconButton>
+                      <TwitterIcon style={{ fill: "#539FF7" }} />
+                    </IconButton>
+                  </div>
+                </a>
+
+                <a
+                  href={`https://www.facebook.com`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="shareon-icon mb-3">
+                    <IconButton>
+                      <FacebookIcon style={{ fill: "#1760A8" }} />
+                    </IconButton>
+                  </div>
+                </a>
+                <a
+                  href={`https://web.whatsapp.com/`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="shareon-icon mb-3">
+                    <IconButton>
+                      <WhatsAppIcon style={{ fill: "#378D1E" }} />
+                    </IconButton>
+                  </div>
+                </a>
               </div>
             </div>
             <div className="event-landing-main-content">
@@ -471,10 +498,11 @@ const EventLandingPage = (props) => {
                   2 Aug - 8 Aug 2021{" "}
                 </div>
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
-                  <img
-                    src={Faker.image.avatar()}
+                  <Avatar
+                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
                     className="hosted-by-community-logo"
-                    alt="community logo"
+                    alt={event.createdBy.name}
+                    variant="rounded"
                   />
                   <div className="hosted-by-community-name-sec">
                     <div
@@ -802,10 +830,12 @@ const EventLandingPage = (props) => {
               </div>
               <div className="event-info-card-2 px-4 py-4 mb-5">
                 <div className="hosted-by-community-grid  mb-4">
-                  <img
-                    src={Faker.image.avatar()}
-                    className="hosted-by-community-logo"
-                    alt="community logo"
+                  <Avatar
+                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
+                    // className="hosted-by-community-logo"
+                    style={{ height: "4rem", width: "4rem" }}
+                    alt={event.createdBy.name}
+                    variant="rounded"
                   />
                   <div className="hosted-by-community-name-sec">
                     <div
@@ -820,15 +850,20 @@ const EventLandingPage = (props) => {
                   </div>
                 </div>
                 <div className="hosted-by-social-grid mb-3">
-                  <IconButton>
+                  {/* <IconButton>
                     <LanguageIcon style={{ fill: "#4D4D4D" }} />
                   </IconButton>
                   <IconButton>
                     <LinkedInIcon style={{ fill: "#4D4D4D" }} />
-                  </IconButton>
-                  <IconButton>
-                    <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
-                  </IconButton>
+                  </IconButton> */}
+                  {console.log(event.createdBy.email)}
+                  <a href={`mailto:${event.createdBy.email}`}>
+                    
+                    {" "}
+                    <IconButton>
+                      <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
+                    </IconButton>
+                  </a>
                 </div>
               </div>
 
