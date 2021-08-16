@@ -120,9 +120,10 @@ const AvatarMenu = () => {
     );
   }
   if (error) {
-    alert(error);
-    dispatch(errorTrackerForPersonalData());
-    return null;
+    throw new Error(error);
+    // alert(error);
+    // dispatch(errorTrackerForPersonalData());
+    // return null;
   }
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;

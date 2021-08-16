@@ -1,16 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import AvatarMenu from "../AvatarMenu";
+import ErrorBoundriesAvatarMenu from "../ErrorBoundries/ErrorBoundriesAvatarMenu";
 
 class UserAccountNav extends React.Component {
   render() {
     return (
       <div
         className="row "
-        style={{ marginLeft: "auto", marginRight: "auto", minWidth: "1256px", overflow: "visible" }}
+        style={{
+          marginLeft: "auto",
+          marginRight: "auto",
+          minWidth: "1256px",
+          overflow: "visible",
+        }}
       >
         <div className="custom-nav-bar d-flex flex-row align-items-center justify-content-between px-3 py-2">
-          
           <a
             href="https://www.evenz.in/home"
             className="navbar-brand"
@@ -32,15 +37,20 @@ class UserAccountNav extends React.Component {
               type="button"
               className="btn btn-primary btn-outline-text ms-3"
             >
-              <Link to="/contact-us" style={{textDecoration: "none", color: "#ffffff"}}>Get Help</Link>
-              
+              <Link
+                to="/contact-us"
+                style={{ textDecoration: "none", color: "#ffffff" }}
+              >
+                Get Help
+              </Link>
             </button>
             <div>
-              <AvatarMenu />
+              <ErrorBoundriesAvatarMenu>
+                <AvatarMenu />
+              </ErrorBoundriesAvatarMenu>
             </div>
           </div>
         </div>
-        
       </div>
     );
   }
