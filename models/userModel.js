@@ -195,9 +195,11 @@ const userSchema = new mongoose.Schema(
     },
     signupUsingReferral: {
       type: Number,
+      default: 0,
     },
     upgrades: {
       type: Number,
+      default: 0,
     },
     credit: {
       type: Number,
