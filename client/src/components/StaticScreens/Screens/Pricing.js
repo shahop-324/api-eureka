@@ -332,6 +332,7 @@ const Pricing = (props) => {
         transaction_type: "community_plan",
         communityId: selectedCommunity,
         userId: userDetails._id,
+        planName: selectedPlan.name,
         referral: referral, // PASS REFERRAL CODE HERE (IF ANY)
       },
       theme: {
