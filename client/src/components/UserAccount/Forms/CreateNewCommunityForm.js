@@ -331,7 +331,12 @@ const CreateNewCommunityForm = (props) => {
               style={{ width: "100%" }}
             >
               <div></div>
-              <h2 className="overlay-form-heading" style={{fontFamily: "Inter"}}>New Community</h2>
+              <h2
+                className="overlay-form-heading"
+                style={{ fontFamily: "Inter" }}
+              >
+                New Community
+              </h2>
               <div
                 className="overlay-form-close-button"
                 onClick={props.closeHandler}
@@ -349,7 +354,10 @@ const CreateNewCommunityForm = (props) => {
                 {/* </div> */}
               </div>
             </div>
-            <h5 className="overlay-sub-form-heading mb-5" style={{fontFamily: "Inter"}}>
+            <h5
+              className="overlay-sub-form-heading mb-5"
+              style={{ fontFamily: "Inter" }}
+            >
               Let's take the first step in our jouney of hosting and managing
               events.
             </h5>
@@ -371,7 +379,7 @@ const CreateNewCommunityForm = (props) => {
                 Avatar
               </label>
               <input
-                class="form-control"
+                className="form-control"
                 name="imgUpload"
                 type="file"
                 accept="image/*"

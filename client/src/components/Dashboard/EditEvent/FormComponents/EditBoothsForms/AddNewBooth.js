@@ -164,7 +164,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 
 const AddNewBooth = (props) => {
   const { handleSubmit, pristine, submitting } = props;
-const {error, isLoading} = useSelector((state) => state.booth);
+  const { error, isLoading } = useSelector((state) => state.booth);
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -222,11 +222,19 @@ const {error, isLoading} = useSelector((state) => state.booth);
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForCreateBooth());
     alert(error);
     return;
@@ -277,6 +285,7 @@ const {error, isLoading} = useSelector((state) => state.booth);
                 accept="image/*"
                 onChange={onFileChange}
                 className="form-control"
+                required
               />
             </div>
 

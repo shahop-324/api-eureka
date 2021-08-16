@@ -14,7 +14,10 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { createSponsor, errorTrackerForCreateSponsor } from "../../../../../actions";
+import {
+  createSponsor,
+  errorTrackerForCreateSponsor,
+} from "../../../../../actions";
 import Loader from "../../../../Loader";
 
 const styles = {
@@ -117,7 +120,7 @@ const renderReactSelect = ({
 );
 const AddNewSponsor = (props) => {
   const { handleSubmit } = props;
-const {error, isLoading} = useSelector((state) => state.sponsor);
+  const { error, isLoading } = useSelector((state) => state.sponsor);
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -162,11 +165,19 @@ const {error, isLoading} = useSelector((state) => state.sponsor);
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForCreateSponsor());
     alert(error);
     return;
@@ -217,8 +228,9 @@ const {error, isLoading} = useSelector((state) => state.sponsor);
                 name="imgUpload"
                 type="file"
                 accept="image/*"
-                onChange={onFileChange}
                 className="form-control"
+                onChange={onFileChange}
+                required
               />
             </div>
 
