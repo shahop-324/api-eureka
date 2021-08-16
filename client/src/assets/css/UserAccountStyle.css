@@ -43,7 +43,8 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 .refer-and-earn-banner {
   text-align: center;
   font-family: "Ubuntu";
-  font-size: 0.84rem;
+  font-size: 0.94rem;
+  font-weight: 500;
 
 background: rgba( 255, 255, 255, 0.25 );
 box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.109);
