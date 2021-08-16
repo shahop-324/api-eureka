@@ -1,1 +1,0 @@
-mongo "mongodb+srv://cluster0.ghfnc.mongodb.net/Evenz" --username op23478

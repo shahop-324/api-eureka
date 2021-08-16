@@ -633,7 +633,7 @@ exports.updateNetworking = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.generateReferralCode = catchAsaync(async (req, res, next) => {
+exports.generateReferralCode = catchAsync(async (req, res, next) => {
   const createdForEvent = req.body.body.eventId;
   const createdForCommunity = req.body.communityId;
   const referralCode = uniqid();

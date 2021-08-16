@@ -10,7 +10,7 @@ const AppError = require("../utils/appError.js");
 const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
-const { nanoid } = require('nanoid')
+const { nanoid } = require("nanoid");
 
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
@@ -74,7 +74,6 @@ const createSendTokenForCommunityLogin = async (
 // this function is signup function for users
 
 exports.signup = catchAsync(async (req, res) => {
-
   // Create new referral code
   const MyReferralCode = nanoid(10);
 
@@ -92,32 +91,57 @@ exports.signup = catchAsync(async (req, res) => {
         validateModifiedOnly: true,
       }
     );
+
+    if (referrer) {
+      const newUser = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        initialisedAt: Date.now(),
+        password: req.body.password,
+
+        policySigned: req.body.policySigned,
+        referralCode: MyReferralCode,
+        referrer: referrer.id,
+        signupUsingReferral: 0,
+        upgrades: 0,
+        credit: 0,
+      });
+
+      const name = `${req.body.firstName} ${req.body.lastName}`;
+      await MailList.create({
+        name: name,
+        email: req.body.email,
+      });
+
+      createSendToken(newUser, 201, req, res);
+    }
+  } else {
+    const newUser = await User.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      initialisedAt: Date.now(),
+      password: req.body.password,
+
+      policySigned: req.body.policySigned,
+      referralCode: MyReferralCode,
+      // referrer: referrer && referrer._id,
+      signupUsingReferral: 0,
+      upgrades: 0,
+      credit: 0,
+    });
+
+    const name = `${req.body.firstName} ${req.body.lastName}`;
+    await MailList.create({
+      name: name,
+      email: req.body.email,
+    });
+
+    createSendToken(newUser, 201, req, res);
   }
 
   // create new user
-
-  const newUser = await User.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    initialisedAt: Date.now(),
-    password: req.body.password,
-
-    policySigned: req.body.policySigned,
-    referralCode: MyReferralCode,
-    referrer: referrer && referrer._id,
-    signupUsingReferral: 0,
-    upgrades: 0,
-    credit: 0,
-  });
-
-  const name = `${req.body.firstName} ${req.body.lastName}`;
-  await MailList.create({
-    name: name,
-    email: req.body.email,
-  });
-
-  createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
