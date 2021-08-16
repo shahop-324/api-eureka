@@ -13,7 +13,7 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import { communitySignIn, navigationIndex, signOut } from "../actions/index";
+import { communitySignIn, errorTrackerForPersonalData, fetchUserAllPersonalData, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
@@ -113,22 +113,26 @@ const AvatarMenu = () => {
     );
   }
   if (error) {
-    return alert(error);
+    alert(error);
+    dispatch(errorTrackerForPersonalData());
+    return null;
   }
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;
-
-  
 
   const communities = user.userDetails.communities;
 
   let imgURL;
 
-  if (image.startsWith("https://lh3.googleusercontent.com")) {
-    imgURL = image;
-  } else {
-    imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+  if(image) {
+    if (image.startsWith("https://lh3.googleusercontent.com")) {
+      imgURL = image;
+    } else {
+      imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+    }
+
   }
+
 
   const renderCommunities = (communities, handleClose) => {
     return communities.map((community) => {

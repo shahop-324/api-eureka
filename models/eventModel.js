@@ -25,14 +25,12 @@ const eventSchema = new mongoose.Schema(
       ],
     },
 
-
     referralIds: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "EventReferral",
       },
     ],
-
 
     editingComment: {
       type: String,
