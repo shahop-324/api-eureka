@@ -6,7 +6,7 @@ import "./../assets/css/CardStyle.css";
 import { Divider } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvent, generateEventAccessToken } from "../actions";
-import StarRateRoundedIcon from '@material-ui/icons/StarRateRounded';
+import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
 
 const EventCard = ({
   image,
@@ -18,7 +18,7 @@ const EventCard = ({
   maxPrice,
   showBtn,
   communityId,
-  rating
+  rating,
 }) => {
   console.log(communityId);
   const dispatch = useDispatch();
@@ -41,11 +41,22 @@ const EventCard = ({
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="d-flex flex-row align-items-center justify-content-between">
-        <div className="event-card-date-main mb-3" style={{fontWeight: "600", fontSize: "0.8rem"}}>{date} - {endDate}</div>
-        <div className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2">
-          <StarRateRoundedIcon className="me-1" />
-          {rating}
-        </div>
+          <div
+            className="event-card-date-main mb-3"
+            style={{ fontWeight: "600", fontSize: "0.8rem" }}
+          >
+            {date} - {endDate}
+          </div>
+          <div
+            className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2"
+            style={{ fontSize: "0.8rem" }}
+          >
+            <StarRateRoundedIcon
+              style={{ fontSize: "1rem" }}
+              className="me-1"
+            />
+            {rating}
+          </div>
         </div>
         <div className="event-card-name-main mb-3">
           {" "}
@@ -63,7 +74,10 @@ const EventCard = ({
             {eventName}
           </Link>
         </div>
-        <div className="event-card-price-main" style={{fontWeight: "600", fontSize: "0.9rem"}}>
+        <div
+          className="event-card-price-main"
+          style={{ fontWeight: "600", fontSize: "0.9rem" }}
+        >
           $ {minPrice} - $ {maxPrice}
         </div>
 

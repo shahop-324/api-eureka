@@ -23,12 +23,17 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
-import dateFormat from 'dateformat';
+import dateFormat from "dateformat";
 import { Field, reduxForm } from "redux-form";
 import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 import Select from "react-select";
 
 import PhoneInput from "react-phone-input-2";
+
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1/"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 
 const basicPlan = {
   name: "Basic",
@@ -107,7 +112,7 @@ const styles = {
   }),
 };
 
-const expirationDate = dateFormat(Date.now() + 30*24*60*60*1000);
+const expirationDate = dateFormat(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -235,7 +240,7 @@ const showResults = (formValues) => {
 };
 
 const Pricing = (props) => {
-
+  const referral = useSelector((state) => state.user.referredUserId)
   const dispatch = useDispatch();
 
   const { handleSubmit, pristine, submitting } = props;
@@ -276,9 +281,7 @@ const Pricing = (props) => {
     showResults(ModifiedFormValues);
   };
 
- 
-
-  const displayRazorpay = async () => {
+  const displayRazorpay = async (referral) => {
     const res = await loadRazorpay();
 
     if (!res) {
@@ -290,7 +293,7 @@ const Pricing = (props) => {
     console.log(user);
 
     let order = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createCommunityPlanOrder",
+      `${BaseURL}razorpay/createCommunityPlanOrder`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -326,6 +329,11 @@ const Pricing = (props) => {
       prefill: {
         name: `${userDetails.firstName} ${userDetails.lastName}`,
         email: userDetails.email,
+      },
+      notes: {
+        // We can add some notes here
+        transaction_type: "community_plan",
+        referral: referral, // PASS REFERRAL CODE HERE (IF ANY)
       },
       theme: {
         color: "#538BF7",
@@ -438,7 +446,7 @@ const Pricing = (props) => {
     dispatch(errorTrackerForCreateDemo());
     return;
   }
-  
+
   return (
     <>
       <div className="container-fluid p-0">
@@ -854,9 +862,12 @@ const Pricing = (props) => {
                     </li>
                   </ul>
 
-                  <button onClick={() => {
-                    setOpenDemoDrawer(true);
-                  }} class="card__button btn btn-primary btn-outline-text">
+                  <button
+                    onClick={() => {
+                      setOpenDemoDrawer(true);
+                    }}
+                    class="card__button btn btn-primary btn-outline-text"
+                  >
                     Talk to us
                   </button>
                 </article>
@@ -1006,7 +1017,6 @@ const Pricing = (props) => {
               <hr />
             </div>
             <div className="side-drawer-more-details-content-section">
-              
               <div className="side-drawer-content-row mb-4">
                 <div className="content-heading btn-outline-text">
                   Plan Name
@@ -1019,7 +1029,7 @@ const Pricing = (props) => {
               <div className="side-drawer-content-row mb-4">
                 <div className="content-heading btn-outline-text">Price</div>
                 <div className="side-drawer-main-content-text ms-5 ps-5">
-                {selectedPlan && selectedPlan.price} USD /
+                  {selectedPlan && selectedPlan.price} USD /
                   <div className="plan-tax-text">month + applicable Tax</div>
                 </div>
               </div>
@@ -1029,10 +1039,7 @@ const Pricing = (props) => {
               </div>
 
               <div className="plan-features-offered-list">
-                
-                { selectedPlan && renderOrderSummaryList(selectedPlan)}
-                
-                
+                {selectedPlan && renderOrderSummaryList(selectedPlan)}
               </div>
 
               <div
@@ -1046,7 +1053,8 @@ const Pricing = (props) => {
                 Your plan will start immediately after this checkout and will
                 end on {expirationDate}. <br />{" "}
                 <div className="my-1">
-                  By continuing, you agree to follow Evenz <Link to="/terms-of-service">Terms & Conditions</Link> 
+                  By continuing, you agree to follow Evenz{" "}
+                  <Link to="/terms-of-service">Terms & Conditions</Link>
                   for communities.
                 </div>{" "}
               </div>
@@ -1054,7 +1062,9 @@ const Pricing = (props) => {
               <div style={{ width: "100%" }}>
                 <button
                   onClick={() => {
-                    selectedPlan.name !== "Basic" ? displayRazorpay() : alert("Successfully switched to free plan.");
+                    selectedPlan.name !== "Basic"
+                      ? displayRazorpay()
+                      : alert("Successfully switched to free plan.");
                     setOpenDrawer(false);
                   }}
                   type="button"
@@ -1068,10 +1078,6 @@ const Pricing = (props) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
-
-
-
-
 
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
@@ -1310,11 +1316,9 @@ const Pricing = (props) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
-
     </>
   );
 };
-
 
 const validate = (formValues) => {
   const errors = {};
@@ -1352,7 +1356,6 @@ const validate = (formValues) => {
 
   return errors;
 };
-
 
 export default reduxForm({
   form: "requestDemoForm",

@@ -142,6 +142,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
           eventId: eventId,
           ticketId: selectedTicket,
           communityId: event.createdBy._id,
+          transaction_type: "event_registration",
           userId: user._id,
           couponId:
             couponToBeApplied && couponToBeApplied[0]
@@ -179,6 +180,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       },
       notes: {
         // We can add some notes here
+        transaction_type: "event_registration",
       },
       theme: {
         color: "#538BF7",

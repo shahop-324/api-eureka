@@ -360,6 +360,7 @@ const CreateNewCommunityForm = (props) => {
                     alt="Community Image"
                     src={fileToPreview}
                     className={classes.large}
+                    variant="rounded"
                   />
                 </div>
               </div>
@@ -463,7 +464,7 @@ const CreateNewCommunityForm = (props) => {
             <div class="mb-4 overlay-form-input-row d-flex flex-column">
               <button
                 type="submit"
-                class="btn btn-outline-primary outline-btn-text form-control"
+                class="btn btn-outline-primary btn-outline-text form-control"
                 disabled={
                   // createCommunityClicked &&
                   // formIsvalidated &&

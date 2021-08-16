@@ -1,12 +1,12 @@
 import React from 'react';
 import Faker from 'faker';
 
-const GoldSponsorCard = ({id}) => {
+const GoldSponsorCard = ({id, image}) => {
   return (
     <div key={id} style={{maxHeight: '180px'}}>
       <img
         className="sponsor-card"
-        src={Faker.image.abstract()}
+        src={image}
         alt="sponsor card"
       ></img>
     </div>

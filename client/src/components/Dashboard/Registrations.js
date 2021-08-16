@@ -153,9 +153,9 @@ const Registrations = () => {
             id={registration._id}
             key={registration._id}
             userImgURL={
-              registration.userImage
-                ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registration.userImage}`
-                : "#"
+              registration.userImage.startsWith("https:")
+                ? registration.userImage
+                : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registration.userImage}`
             }
             userName={registration.userName}
             userEmail={registration.userEmail}
@@ -272,10 +272,13 @@ const Registrations = () => {
                     }
                     src={
                       registrationDetails
-                        ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registrationDetails.userImage}`
+                        ? registrationDetails.userImage.startsWith("https://")
+                          ? registrationDetails.userImage
+                          : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registrationDetails.userImage}`
                         : ""
                     }
                     className={classes.large}
+                    variant="rounded"
                   />
                 </div>
               </div>
@@ -355,7 +358,7 @@ const Registrations = () => {
                 <div className="side-drawer-main-content-text ms-5 ps-5">
                   {`${
                     registrationDetails ? registrationDetails.currency : ""
-                  } 35`}
+                  } ---`}
                   {/* Platform fees and community credits are yet to be calculated */}
                 </div>
               </div>
@@ -393,7 +396,7 @@ const Registrations = () => {
                   Community Credit
                 </div>
                 <div className="side-drawer-main-content-text ms-5 ps-5">
-                  INR 446.00
+                  INR ---
                 </div>
               </div>
 
@@ -415,9 +418,10 @@ const Registrations = () => {
                     No refund created yet
                   </div>
                   <div className="ms-5 ps-5">
-                    <button className="btn btn-outline-primary btn-outline-text">
+                    {/* */}
+                    {/* <button className="btn btn-outline-primary btn-outline-text">
                       Issue Refund
-                    </button>
+                    </button> */}
                     {/* Refund functionality is yet to be implemented */}
                   </div>
                 </div>

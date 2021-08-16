@@ -202,7 +202,7 @@ export default function CustomizedStepper() {
                 return (
                   <BrowserTest
                     handleNext={handleNext}
-                    handleBack={handleBack}
+                    // handleBack={handleBack}
                   />
                 );
 

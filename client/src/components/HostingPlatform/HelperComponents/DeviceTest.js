@@ -9,22 +9,7 @@ import "./../Styles/Compatibility.scss";
 import { Dropdown } from "semantic-ui-react";
 import ProgressBar from "./VolumeIndicator";
 
-const DropdownAudioIcon = () => (
-  <Dropdown
-    text="Audio"
-    icon="microphone icon"
-    floating
-    labeled
-    button
-    className="icon"
-    style={{ fontSize: "14px" }}
-  >
-    <Dropdown.Menu>
-      <Dropdown.Item text="Microphone 1" />
-      <Dropdown.Item text="Microphone 2" />
-    </Dropdown.Menu>
-  </Dropdown>
-);
+
 
 const videoContainer = document.getElementById("camera-device-test-output");
 
@@ -89,11 +74,11 @@ const DeviceTest = ({ handleBack, handleNext }) => {
       });
   };
 
-  // useEffect(() => {
-  //   testDeviceHandler();
-  // }, []);
+  useEffect(() => {
+    testDeviceHandler();
+  }, []);
 
-  // console.log(typeof audioLevel, audioLevel);
+  console.log(typeof audioLevel, audioLevel);
 
   const user = useSelector((state) => state.user);
 

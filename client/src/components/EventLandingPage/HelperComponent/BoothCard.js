@@ -1,11 +1,11 @@
 import React from 'react';
 import Faker from 'faker';
 
-const BoothCard = ({name,description,id}) => {
+const BoothCard = ({name,description,id, image}) => {
   return (
     <div key={id} className="booth-card px-3 py-3">
       <img
-        src={Faker.image.image()}
+        src={image}
         className="booth-card-image mb-3"
         alt="booth-poster"
       />

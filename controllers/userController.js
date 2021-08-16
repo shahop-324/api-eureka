@@ -85,7 +85,10 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
 // Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
   console.log(req.user);
-  const response = await Event.findById(req.params.id)
+  
+  const response = await Event.findById(req.params.id, (err, data) => {
+    console.log(data, "89");
+  })
     .populate({
       path: "tickets",
       options: {
@@ -103,7 +106,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     .populate("speaker")
     .populate({
       path: "createdBy",
-      select: "name logo socialMediaHandles image email",
+      select: "name socialMediaHandles image email",
     })
     .populate({
       path: "coupon",
@@ -111,6 +114,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
         match: { status: "Active" },
       },
     });
+  console.log(response, "114");
 
   res.status(200).json({
     status: "SUCCESS",

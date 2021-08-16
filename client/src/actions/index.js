@@ -26,7 +26,6 @@ import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
-import { twillioActions } from "../reducers/twillioSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV

@@ -36,7 +36,7 @@ const dispatch = useDispatch();
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5 d-flex flex-row ">
             {/* attendee avatar and name */}
-            <Avatar alt="Travis Howard" src={userImgURL} />
+            <Avatar alt={userName} src={userImgURL} variant="rounded" />
             <div className="ms-3 px-2 registration-name-styled">{userName}</div>
           </div>
         </div>

@@ -8,7 +8,6 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
-import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   createQuery,
@@ -289,39 +288,68 @@ const EventLandingPage = (props) => {
     });
   };
 
+  diamondIsPresent = true;
+  platinumIsPresent = true;
+  goldIsPresent = true;
+
   const renderDiamondSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
+      console.log(sponsor);
       if (sponsor.status === "Diamond") {
         diamondIsPresent = true;
-        return <DiamondSponsorCard id={sponsor.id} />;
+
+        return (
+          <DiamondSponsorCard
+            id={sponsor.id}
+            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+          />
+        );
+      } else {
+        diamondIsPresent = false;
+        return <></>;
       }
-      return <></>;
     });
   };
   const renderPlatinumSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       if (sponsor.status === "Platinum") {
         platinumIsPresent = true;
-        return <PlatinumSponsorCard id={sponsor.id} />;
+        return (
+          <PlatinumSponsorCard
+            id={sponsor.id}
+            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+          />
+        );
+      } else {
+        platinumIsPresent = false;
+        return <></>;
       }
-      return <></>;
     });
   };
   const renderGoldSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       if (sponsor.status === "Gold") {
         goldIsPresent = true;
-        return <GoldSponsorCard id={sponsor.id} />;
+        return (
+          <GoldSponsorCard
+            id={sponsor.id}
+            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+          />
+        );
+      } else {
+        goldIsPresent = false;
+        return <></>;
       }
-      return <></>;
     });
   };
 
   const renderBoothCardList = () => {
     return event.booths.map((booth) => {
+      console.log(booth);
       return (
         <BoothCard
           name={booth.name}
+          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${booth.image}`}
           description={booth.description}
           id={booth.id}
         />
@@ -858,7 +886,6 @@ const EventLandingPage = (props) => {
                   </IconButton> */}
                   {console.log(event.createdBy.email)}
                   <a href={`mailto:${event.createdBy.email}`}>
-                    
                     {" "}
                     <IconButton>
                       <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
