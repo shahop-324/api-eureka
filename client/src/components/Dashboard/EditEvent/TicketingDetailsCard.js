@@ -14,7 +14,6 @@ import { useDispatch } from "react-redux";
 import { fetchTicket } from "../../../actions";
 
 const TicketingDetailsCard = (props) => {
-
   const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
@@ -131,18 +130,21 @@ const TicketingDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div onClick={() => {
-              handleEditTicket();
-              dispatch(fetchTicket(props.id));
-            }}>
+            <div
+              onClick={() => {
+                handleEditTicket();
+              }}
+            >
               <IconButton color="primary" aria-label="add to shopping cart">
                 <EditRoundedIcon />
               </IconButton>
             </div>
-            <div onClick={() => {
-              handleDeleteTicket();
-              // dispatch(deleteTicket(props.id));
-            }}>
+            <div
+              onClick={() => {
+                handleDeleteTicket();
+                // dispatch(deleteTicket(props.id));
+              }}
+            >
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
               </IconButton>

@@ -120,7 +120,6 @@ const SponsorDetailsCard = (props) => {
             <div
               onClick={() => {
                 handleEditSponsor();
-                dispatch(fetchSponsor(props.id));
               }}
             >
               <IconButton color="primary" aria-label="add to shopping cart">
