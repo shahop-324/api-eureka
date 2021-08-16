@@ -141,11 +141,14 @@ const UserAccountSideNav = () => {
 
   let userImageURL;
 
-  if (image.startsWith("https://lh3.googleusercontent.com")) {
-    userImageURL = image;
-  } else {
-    userImageURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+  if(image) {
+    if (image.startsWith("https://lh3.googleusercontent.com")) {
+      userImageURL = image;
+    } else {
+      userImageURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+    }
   }
+
 
   return (
     <div className="user-account-side-nav-bar">

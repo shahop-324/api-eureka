@@ -172,13 +172,12 @@ const renderEventPreferences = ({
 );
 
 let EditProfileForm = (props) => {
-
   const { handleSubmit, pristine, reset, submitting } = props;
 
   const { error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  
+
   const { userDetails } = useSelector((state) => state.user);
   let imgKey;
   if (userDetails) {
@@ -186,11 +185,13 @@ let EditProfileForm = (props) => {
   }
 
   let imgUrl;
-  if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
-  }
-  else {
-    imgUrl = imgKey;
+
+  if (imgKey) {
+    if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
+      imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    } else {
+      imgUrl = imgKey;
+    }
   }
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
@@ -202,9 +203,8 @@ let EditProfileForm = (props) => {
     setEditProfileClicked(false);
   }, [dispatch, error]);
 
- 
   const classes = useStyles();
-  
+
   const onSubmit = (formValues) => {
     setEditProfileClicked(true);
     console.log(formValues);
