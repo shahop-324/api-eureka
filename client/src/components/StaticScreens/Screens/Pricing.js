@@ -321,7 +321,7 @@ const Pricing = (props) => {
       name: "Evenz",
       description: `This is a community plan purchase for communityId ${selectedCommunity._id} which is made by user ${userDetails._id}.`,
       image:
-        "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg",
+        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/evenz_logo.png",
       order_id: order.data.id,
       handler: function (response) {
         alert("Congratulations, Your plan purchase was successful!");

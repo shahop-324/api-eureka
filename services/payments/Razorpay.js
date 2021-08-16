@@ -102,7 +102,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
 
   const newOrder = razorpay.orders.create(
     {
-      amount: priceToBeCharged * 1,
+      amount: 200 * 1,
       currency: "INR",
       receipt: UUID(),
       notes: {
@@ -233,6 +233,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
     if (paymentEntity.notes.transaction_type === "community_plan") {
       try {
         // Process community plan purchase
+        console.info("This was a community plan purchase");
+        console.log("This was a community plan purchase");
       } catch (err) {
         // Handle any error that may happen when processing plan for a community
       }
