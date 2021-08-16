@@ -8,7 +8,7 @@ import "./../../assets/Sass/DataGrid.scss";
 // import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
@@ -61,9 +61,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -127,7 +127,7 @@ const Reviews = () => {
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
               />
@@ -136,7 +136,7 @@ const Reviews = () => {
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={ratingOptions}
                 defaultValue={ratingOptions[0]}
               />
