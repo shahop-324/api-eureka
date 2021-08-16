@@ -240,7 +240,7 @@ const showResults = (formValues) => {
 };
 
 const Pricing = (props) => {
-  const referral = useSelector((state) => state.user.referredUserId)
+  const referral = useSelector((state) => state.user.referredUserId);
   const dispatch = useDispatch();
 
   const { handleSubmit, pristine, submitting } = props;
@@ -292,24 +292,21 @@ const Pricing = (props) => {
     console.log(selectedCommunity);
     console.log(user);
 
-    let order = await fetch(
-      `${BaseURL}razorpay/createCommunityPlanOrder`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          planName: selectedPlan.name,
-          planDetails: selectedPlan,
-          communityId: selectedCommunity,
-          transaction_type: "community_plan",
-          userId: user._id,
-        }),
+    let order = await fetch(`${BaseURL}razorpay/createCommunityPlanOrder`, {
+      method: "POST",
+      body: JSON.stringify({
+        planName: selectedPlan.name,
+        planDetails: selectedPlan,
+        communityId: selectedCommunity,
+        transaction_type: "community_plan",
+        userId: user._id,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
 
     order = await order.json();
     console.log(order);
@@ -319,7 +316,7 @@ const Pricing = (props) => {
       amount: order.data.amount,
       currency: "INR",
       name: "Evenz",
-      description: `This is a community plan purchase for communityId ${selectedCommunity._id} which is made by user ${userDetails._id}.`,
+      description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
       image:
         "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/evenz_logo.png",
       order_id: order.data.id,
@@ -333,6 +330,8 @@ const Pricing = (props) => {
       notes: {
         // We can add some notes here
         transaction_type: "community_plan",
+        communityId: selectedCommunity,
+        userId: userDetails._id,
         referral: referral, // PASS REFERRAL CODE HERE (IF ANY)
       },
       theme: {

@@ -474,6 +474,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         await eventGettingEventTransaction.save({ validateModifiedOnly: true });
         await ticketBeingPurchased.save({ validateModifiedOnly: true });
 
+        console.log("This is a payment made for event registration.");
+        console.info("This is a payment made for event registration.");
+        
         // TODO VVIP Add revenue in community account
       } catch (err) {
         console.log(err);

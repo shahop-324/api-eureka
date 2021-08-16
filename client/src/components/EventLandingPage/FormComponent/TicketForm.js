@@ -11,6 +11,11 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1/"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+
 // const convertFromJSONToHTML = (text) => {
 //   return stateToHTML(convertFromRaw(JSON.parse(text)));
 // };
@@ -134,28 +139,25 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       return;
     }
 
-    let order = await fetch(
-      "https://www.evenz.co.in/api-eureka/eureka/v1/razorpay/createRazorpayOrder",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          eventId: eventId,
-          ticketId: selectedTicket,
-          communityId: event.createdBy._id,
-          transaction_type: "event_registration",
-          userId: user._id,
-          couponId:
-            couponToBeApplied && couponToBeApplied[0]
-              ? couponToBeApplied[0].id
-              : null,
-        }),
+    let order = await fetch(`${BaseURL}razorpay/createRazorpayOrder`, {
+      method: "POST",
+      body: JSON.stringify({
+        eventId: eventId,
+        ticketId: selectedTicket,
+        communityId: event.createdBy._id,
+        transaction_type: "event_registration",
+        userId: user._id,
+        couponId:
+          couponToBeApplied && couponToBeApplied[0]
+            ? couponToBeApplied[0].id
+            : null,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
 
     order = await order.json();
     console.log(order);
@@ -167,7 +169,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       name: "Evenz",
       description: `This is a event ticket booking for eventId ${eventId} which is made by user ${userDetails._id} and ticket Id is ${selectedTicket}.`,
       image:
-        "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg",
+        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/evenz_logo.png",
       order_id: order.data.id,
       handler: function (response) {
         alert(
@@ -180,7 +182,16 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       },
       notes: {
         // We can add some notes here
+
+        eventId: eventId,
+        ticketId: selectedTicket,
+        communityId: event.createdBy._id,
         transaction_type: "event_registration",
+        userId: user._id,
+        couponId:
+          couponToBeApplied && couponToBeApplied[0]
+            ? couponToBeApplied[0].id
+            : null,
       },
       theme: {
         color: "#538BF7",
