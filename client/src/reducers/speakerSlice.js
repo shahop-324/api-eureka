@@ -27,6 +27,8 @@ const speakerSlice = createSlice({
     CreateSpeaker(state, action) {
       state.speakers.push(action.payload.speaker);
       state.isLoading = false;
+
+      state.speakerDetails = action.payload.speaker;
     },
     FetchSpeakers(state, action) {
       state.speakers = action.payload.speakers;
