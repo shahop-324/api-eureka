@@ -18,18 +18,13 @@ const Networking = () => {
   const id = params.id;
   const dispatch = useDispatch();
 
-  
-
   useEffect(() => {
     dispatch(fetchNetworking(id));
   }, [dispatch, id]);
 
-
-
-
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Networking</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
@@ -40,12 +35,11 @@ const Networking = () => {
         </div>
         <div className="networking-content-grid px-3 mb-4">
           <div className="networking-form-left networking-form px-4 py-4">
-            <NetworkingFormLeft
-            />
+            <NetworkingFormLeft />
           </div>
 
           <div className="networking-form-right networking-form px-4 py-4">
-            <NetworkingFormRight  />
+            <NetworkingFormRight />
           </div>
         </div>
       </div>

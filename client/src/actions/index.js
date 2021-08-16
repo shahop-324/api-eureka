@@ -59,7 +59,9 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       history.push("/pricing");
       dispatch(fetchUserAllPersonalData());
     } else {
-      history.push("/user/home");
+      window.location.href = REACT_APP_MY_ENV
+        ? "http://localhost:3001/user/home"
+        : "https://www.evenz.in/user/home";
     }
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
@@ -93,7 +95,9 @@ export const signUp = (formValues) => async (dispatch) => {
         user: res.data.data.user,
       })
     );
-    history.push("/user/home");
+    window.location.href = REACT_APP_MY_ENV
+      ? "http://localhost:3001/user/home"
+      : "https://www.evenz.in/user/home";
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
@@ -129,7 +133,10 @@ export const googleSignIn =
         history.push("/pricing");
         dispatch(fetchUserAllPersonalData());
       } else {
-        history.push("/user/home");
+        // history.push("/user/home");
+        window.location.href = REACT_APP_MY_ENV
+          ? "http://localhost:3001/user/home"
+          : "https://www.evenz.in/user/home";
       }
       //history.push("/user/home");
     } catch (err) {
@@ -3689,7 +3696,9 @@ export const resetPassword =
           user: res.data.user,
         })
       );
-      history.push("/user/home");
+      window.location.href = REACT_APP_MY_ENV
+        ? "http://localhost:3001/user/home"
+        : "https://www.evenz.in/user/home";
     } catch (err) {
       console.log(err);
       dispatch(userActions.hasError(err.message));
