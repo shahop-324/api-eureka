@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   communitySignIn,
   errorTrackerForPersonalData,
-  fetchUserAllPersonalData,
   navigationIndex,
   signOut,
 } from "../actions/index";
@@ -365,7 +364,7 @@ const AvatarMenu = () => {
               className="referral-link-and-copy-to-clipboard"
               style={{ textAlign: "center" }}
             >
-              <div class="ui action input" style={{ minWidth: "400px" }}>
+              {/* <div class="ui action input" style={{ minWidth: "400px" }}>
                 <input
                   type="text"
                   value={referralLink}
@@ -380,6 +379,20 @@ const AvatarMenu = () => {
                   }}
                 >
                   <i class="copy outline icon"></i>
+                </button>
+              </div> */}
+
+              <div class="ui action input" style={{ minWidth: "450px" }}>
+                <input type="text" value={referralLink} />
+                <button
+                  class="ui blue right labeled icon button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(referralLink);
+                    alert("copied to clipboard!");
+                  }}
+                >
+                  <i class="copy icon"></i>
+                  Copy
                 </button>
               </div>
             </div>

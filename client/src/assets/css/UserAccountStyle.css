@@ -7,15 +7,12 @@
 .user-referral-container {
   min-width: 998px;
   min-height: 600px;
-  
-  
 }
 
 .sec-heading-close-row {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   grid-template-columns: 1rem;
-  
 }
 
 .referral-3-cards-row {
@@ -29,15 +26,15 @@
 
 .referral-display-card {
   text-align: center;
-  
+
   height: 200px;
   width: 100%;
-  background: rgba( 255, 255, 255, 0.25 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.17 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
-border-radius: 10px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.17);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .refer-and-earn-banner {
@@ -46,12 +43,12 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   font-size: 0.94rem;
   font-weight: 500;
 
-background: rgba( 255, 255, 255, 0.25 );
-box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.109);
-backdrop-filter: blur( 1px );
--webkit-backdrop-filter: blur( 1px );
-border-radius: 5px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.109);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .bold-big-number {
@@ -192,15 +189,15 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   /* /* width: 100%; */
   min-width: 768px;
   max-width: 1100px;
-  min-height: 100vh; 
+  min-height: 100vh;
 }
 
 .booked-ticket-sub-heading {
   text-align: left;
-font: normal normal bold 1.15rem/2.5rem Helvetica;
-letter-spacing: 0.68px;
-color: #2F2E2E;
-opacity: 1;
+  font: normal normal bold 1.15rem/2.5rem Helvetica;
+  letter-spacing: 0.68px;
+  color: #2f2e2e;
+  opacity: 1;
 }
 
 .user-account-main-body-home-content {
@@ -213,12 +210,12 @@ opacity: 1;
 
 .overlay-form-heading {
   font-family: Montserrat;
-font-style: normal;
-font-weight: bold;
-font-size: 1.5rem;
-/* or 67px */
-text-align: center;
-color: #538BF7;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1.5rem;
+  /* or 67px */
+  text-align: center;
+  color: #538bf7;
 }
 
 .overlay-sub-form-heading {
@@ -233,12 +230,12 @@ color: #538BF7;
 
 .form-check-label-consent {
   font-family: Inter;
-font-style: normal;
-font-weight: normal;
-font-size: 13.7px;
-line-height: 18px;
-/* identical to box height, or 129% */
-color: #212121;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13.7px;
+  line-height: 18px;
+  /* identical to box height, or 129% */
+  color: #212121;
 }
 
 @media only screen and (max-width: 1700px) {
@@ -269,11 +266,6 @@ color: #212121;
     grid-template-columns: 1fr;
     grid-gap: 20px;
   }
-
-  
-
-  
-  
 }
 
 @media only screen and (max-width: 1260px) {
@@ -281,8 +273,6 @@ color: #212121;
     padding-left: 15px;
     padding-right: 15px;
   }
-
-  
 }
 
 /* .form-control {
@@ -296,4 +286,3 @@ color: #212121;
 input[type="tel"] {
   width: 100% !important;
 }
-
