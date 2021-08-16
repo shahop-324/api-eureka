@@ -42,7 +42,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
-        referralCode:res.data.data.user.referralCode
       })
     );
     dispatch(
@@ -68,15 +67,10 @@ export const errorTrackerForSignIn = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 
-export const fetchReferralCode=(referredUserId)=>async(dispatch,getState)=>{
-
-    dispatch(userActions.FetchReferralCode({referredUserId}));
-
-}
-
-
-
-
+export const fetchReferralCode =
+  (referredUserId) => async (dispatch, getState) => {
+    dispatch(userActions.FetchReferralCode({ referredUserId }));
+  };
 
 export const signUp = (formValues) => async (dispatch) => {
   try {
@@ -88,15 +82,12 @@ export const signUp = (formValues) => async (dispatch) => {
       authActions.SignIn({
         token: res.data.token,
 
-
-        
+        referralCode: res.data.data.user.referralCode,
       })
     );
     dispatch(
       userActions.CreateUser({
         user: res.data.data.user,
-
-
       })
     );
     history.push("/user/home");
@@ -259,20 +250,17 @@ export const createCommunity =
         }
       } else {
         const communityCreating = async () => {
-          let res = await fetch(
-            `${BaseURL}users/newCommunity`,
-            {
-              method: "POST",
-              body: JSON.stringify({
-                ...formValues,
-              }),
+          let res = await fetch(`${BaseURL}users/newCommunity`, {
+            method: "POST",
+            body: JSON.stringify({
+              ...formValues,
+            }),
 
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().auth.token}`,
-              },
-            }
-          );
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
 
           if (!res.ok) {
             if (!res.message) {
@@ -1371,14 +1359,11 @@ export const createBooth =
         console.log(formValues);
         console.log(file);
 
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
-          {
-            headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          }
-        );
+        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
+          headers: {
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
 
         if (!uploadConfig.ok) {
           if (!uploadConfig.message) {
@@ -1538,17 +1523,14 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
 
-    let res = await fetch(
-      `${BaseURL}booths/${id}/getBoothDetails`,
-      {
-        method: "GET",
+    let res = await fetch(`${BaseURL}booths/${id}/getBoothDetails`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -1588,14 +1570,11 @@ export const editBooth =
 
         console.log(file);
 
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
-          {
-            headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          }
-        );
+        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
+          headers: {
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
 
         if (!uploadConfig.ok) {
           if (!uploadConfig.message) {
@@ -1620,21 +1599,18 @@ export const editBooth =
         // console.log(amazoneFile);
         console.log(awsRes);
 
-        let res = await fetch(
-          `${BaseURL}booths/${id}/updateBooth`,
-          {
-            method: "PATCH",
-            body: JSON.stringify({
-              ...formValues,
-              image: uploadConfig.key,
-            }),
+        let res = await fetch(`${BaseURL}booths/${id}/updateBooth`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+            image: uploadConfig.key,
+          }),
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
-          }
-        );
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        });
         if (!res.ok) {
           if (!res.message) {
             throw new Error("Something went wrong");
@@ -1654,20 +1630,17 @@ export const editBooth =
         console.log(id);
         console.log(formValues);
 
-        let res = await fetch(
-          `${BaseURL}booths/${id}/updateBooth`,
-          {
-            method: "PATCH",
-            body: JSON.stringify({
-              ...formValues,
-            }),
+        let res = await fetch(`${BaseURL}booths/${id}/updateBooth`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
-          }
-        );
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        });
 
         if (!res.ok) {
           if (!res.message) {
@@ -1950,14 +1923,11 @@ export const editSponsor =
 
         console.log(file);
 
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
-          {
-            headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          }
-        );
+        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
+          headers: {
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
         if (!uploadConfig.ok) {
           if (!uploadConfig.message) {
             throw new Error("Something went wrong");
@@ -2091,20 +2061,17 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}community/${id}/addTicket`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}community/${id}/addTicket`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2193,17 +2160,14 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/ticket`,
-      {
-        method: "GET",
+    let res = await fetch(`${BaseURL}events/${id}/ticket`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2232,20 +2196,17 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/updateTicket`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}events/${id}/updateTicket`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2275,17 +2236,14 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/deleteTicket`,
-      {
-        method: "DELETE",
+    let res = await fetch(`${BaseURL}events/${id}/deleteTicket`, {
+      method: "DELETE",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2433,17 +2391,14 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/speakers`,
-      {
-        method: "GET",
+    let res = await fetch(`${BaseURL}events/${id}/speakers`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2473,15 +2428,12 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
 
   try {
-    const res = await fetch(
-      `${BaseURL}users/Me`,
-      {
-        headers: {
-          //  "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+    const res = await fetch(`${BaseURL}users/Me`, {
+      headers: {
+        //  "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
     if (!res.ok) {
       if (!res.message) {
@@ -2518,14 +2470,11 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
 
       console.log(file);
 
-      let uploadConfig = await fetch(
-        `${BaseURL}upload/user/img`,
-        {
-          headers: {
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+      let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
+        headers: {
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
       if (!uploadConfig.ok) {
         throw new Error("Editing user details failed!");
@@ -2554,21 +2503,18 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       // console.log(amazoneFile);
       console.log(awsRes);
 
-      const res = await fetch(
-        `${BaseURL}users/updateMe`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...formValues,
-            image: uploadConfig.key,
-          }),
+      const res = await fetch(`${BaseURL}users/updateMe`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...formValues,
+          image: uploadConfig.key,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
       if (!res.ok) {
         if (!res.message) {
@@ -2591,20 +2537,17 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       //   })
       // );
     } else {
-      const res = await fetch(
-        `${BaseURL}users/updateMe`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      const res = await fetch(`${BaseURL}users/updateMe`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...formValues,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
       if (!res.ok) {
         if (!res.message) {
@@ -2644,20 +2587,17 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
 
-    const res = await fetch(
-      `${BaseURL}users/updatePassword`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    const res = await fetch(`${BaseURL}users/updatePassword`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2699,17 +2639,14 @@ export const deleteUser = () => (dispatch, getState) => {
 export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
-    const res = await fetch(
-      `${BaseURL}community/${id}/getCommunity`,
-      {
-        method: "GET",
+    const res = await fetch(`${BaseURL}community/${id}/getCommunity`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
 
     if (!res.ok) {
       if (!res.message) {
@@ -2739,20 +2676,17 @@ export const errorTrackerForFetchCommunity =
 export const editCommunity = (id, formValues) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
   try {
-    const res = await fetch(
-      `${BaseURL}community/${id}/updateCommunity`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    const res = await fetch(`${BaseURL}community/${id}/updateCommunity`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -2818,20 +2752,17 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     console.log(id);
     console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/addSession`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}events/${id}/addSession`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3010,17 +2941,14 @@ export const fetchSessionForSessionStage =
     try {
       console.log(id);
 
-      let res = await fetch(
-        `${BaseURL}sessions/${id}/getOneSession`,
-        {
-          method: "GET",
+      let res = await fetch(`${BaseURL}sessions/${id}/getOneSession`, {
+        method: "GET",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
       res = await res.json();
       console.log(res);
@@ -3104,21 +3032,18 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
   try {
     console.log(formValues);
 
-    const res = await fetch(
-      `${BaseURL}sessions/${id}/update`,
-      {
-        method: "POST",
-        // body: {...formValues},
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    const res = await fetch(`${BaseURL}sessions/${id}/update`, {
+      method: "POST",
+      // body: {...formValues},
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3233,21 +3158,18 @@ export const editNetworking =
     try {
       console.log(id);
 
-      let res = await fetch(
-        `${BaseURL}events/${id}/updateNetworking`,
-        {
-          method: "PATCH",
+      let res = await fetch(`${BaseURL}events/${id}/updateNetworking`, {
+        method: "PATCH",
 
-          body: JSON.stringify({
-            ...formValues,
-          }),
+        body: JSON.stringify({
+          ...formValues,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Something went wrong");
@@ -3279,20 +3201,17 @@ export const createCoupon = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}community/coupons/createNew`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}community/coupons/createNew`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3321,17 +3240,14 @@ export const fetchCoupons = () => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
   const getCoupons = async () => {
-    let res = await fetch(
-      `${BaseURL}community/coupons`,
-      {
-        method: "GET",
+    let res = await fetch(`${BaseURL}community/coupons`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
 
     if (!res.ok) {
       if (!res.message) {
@@ -3367,17 +3283,14 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
   try {
     console.log(id);
 
-    let res = await fetch(
-      `${BaseURL}community/${id}/getOneCoupon`,
-      {
-        method: "GET",
+    let res = await fetch(`${BaseURL}community/${id}/getOneCoupon`, {
+      method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3405,21 +3318,18 @@ export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
   try {
-    let res = await fetch(
-      `${BaseURL}community/${id}/updateCoupon`,
-      {
-        method: "PATCH",
+    let res = await fetch(`${BaseURL}community/${id}/updateCoupon`, {
+      method: "PATCH",
 
-        body: JSON.stringify({
-          ...formValues,
-        }),
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3542,20 +3452,17 @@ export const createQuery = (formValues) => async (dispatch, getState) => {
   try {
     console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}users/query/createNew`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}users/query/createNew`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
     res = await res.json();
     console.log(res);
@@ -3575,20 +3482,17 @@ export const createCommunityFeedback =
     try {
       console.log(formValues);
 
-      let res = await fetch(
-        `${BaseURL}feedback/community`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      let res = await fetch(`${BaseURL}feedback/community`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...formValues,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
       res = await res.json();
       console.log(res);
@@ -3674,21 +3578,18 @@ export const answerQuery = (answerText, id) => async (dispatch, getState) => {
   dispatch(queriesActions.startLoading());
 
   try {
-    let res = await fetch(
-      `${BaseURL}community/queries/createAnswer`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          answerText: answerText,
-          queryId: id,
-        }),
+    let res = await fetch(`${BaseURL}community/queries/createAnswer`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        answerText: answerText,
+        queryId: id,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -3724,19 +3625,16 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
-    let res = await fetch(
-      `${BaseURL}users/forgotPassword`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+    let res = await fetch(`${BaseURL}users/forgotPassword`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     res = await res.json();
     console.log(res);
@@ -3756,19 +3654,16 @@ export const resetPassword =
     dispatch(userActions.startLoading());
 
     try {
-      let res = await fetch(
-        `${BaseURL}users/resetPassword/${token}`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      let res = await fetch(`${BaseURL}users/resetPassword/${token}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...formValues,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Something went wrong");
@@ -3810,17 +3705,14 @@ export const fetchRegistrationsOfParticularCommunity =
     const fetchRegistration = async () => {
       console.log(communityId);
 
-      let res = await fetch(
-        `${BaseURL}registrations/community/getAll`,
-        {
-          method: "GET",
+      let res = await fetch(`${BaseURL}registrations/community/getAll`, {
+        method: "GET",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
       if (!res.ok) {
         if (!res.message) {
@@ -3858,17 +3750,14 @@ export const fetchParticularRegistration =
     try {
       console.log(id);
 
-      let res = await fetch(
-        `${BaseURL}registrations/${id}/getOne`,
-        {
-          method: "GET",
+      let res = await fetch(`${BaseURL}registrations/${id}/getOne`, {
+        method: "GET",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Something went wrong");
@@ -3899,20 +3788,17 @@ export const createNewInvitation =
     try {
       console.log(formValues);
 
-      let res = await fetch(
-        `${BaseURL}team-invites/create-new`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      let res = await fetch(`${BaseURL}team-invites/create-new`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...formValues,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
       res = await res.json();
       console.log(res);
@@ -4023,20 +3909,17 @@ export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
   const fetchingRTMToken = async () => {
-    let res = await fetch(
-      `${BaseURL}getRTMToken`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          eventId: eventId,
-        }),
+    let res = await fetch(`${BaseURL}getRTMToken`, {
+      method: "POST",
+      body: JSON.stringify({
+        eventId: eventId,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -4121,17 +4004,14 @@ export const fetchPreviousEventChatMessages =
     try {
       console.log(eventId);
 
-      let res = await fetch(
-        `${BaseURL}getPreviousEventMsg/${eventId}`,
-        {
-          method: "GET",
+      let res = await fetch(`${BaseURL}getPreviousEventMsg/${eventId}`, {
+        method: "GET",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Something went wrong");
@@ -4161,21 +4041,18 @@ export const getRTCToken =
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
-      let res = await fetch(
-        `${BaseURL}getLiveStreamingToken`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            sessionId: sessionId,
-            role: role,
-          }),
+      let res = await fetch(`${BaseURL}getLiveStreamingToken`, {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: sessionId,
+          role: role,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Something went wrong");
@@ -4224,20 +4101,17 @@ export const resetCommunityError = () => async (dispatch, getState) => {
 export const createDemoRequest = (formValues) => async (dispatch, getState) => {
   dispatch(demoActions.startLoading());
   try {
-    let res = await fetch(
-      `${BaseURL}demo/requestDemo`,
-      {
-        method: "POST",
+    let res = await fetch(`${BaseURL}demo/requestDemo`, {
+      method: "POST",
 
-        body: JSON.stringify({
-          ...formValues,
-        }),
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -4267,20 +4141,17 @@ export const errorTrackerForCreateDemo = () => async (dispatch, getState) => {
 export const signupForEmailNewsletter =
   (email) => async (dispatch, getState) => {
     try {
-      let res = await fetch(
-        `${BaseURL}newsletter/signUpViaEmail`,
-        {
-          method: "POST",
+      let res = await fetch(`${BaseURL}newsletter/signUpViaEmail`, {
+        method: "POST",
 
-          body: JSON.stringify({
-            email: email,
-          }),
+        body: JSON.stringify({
+          email: email,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         if (!res.message) {
@@ -4299,20 +4170,17 @@ export const signupForEmailNewsletter =
 export const contactUs = (formValues) => async (dispatch, getState) => {
   dispatch(contactUsActions.startLoading());
   try {
-    let res = await fetch(
-      `${BaseURL}contactUs/contact`,
-      {
-        method: "POST",
+    let res = await fetch(`${BaseURL}contactUs/contact`, {
+      method: "POST",
 
-        body: JSON.stringify({
-          ...formValues,
-        }),
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -4335,7 +4203,6 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
   dispatch(contactUsActions.disabledError());
 };
 
-
 // export const fetchRoomVideoCallToken =
 //   (userId, tableId, openTableScreen) => async (dispatch, getState) => {
 //     dispatch(twillioActions.startLoading());
@@ -4357,7 +4224,7 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
 
 //         },
 //       }
-        
+
 //       );
 //       if (!res.ok) {
 //         if (!res.message) {
@@ -4368,7 +4235,6 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
 //       }
 //       res = await res.json();
 //       console.log(res.accessToken);
-
 
 //       dispatch(
 //         twillioActions.FetchVideoRoomToken({
@@ -4385,16 +4251,12 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
 //     dispatch(twillioActions.disabledError());
 //   };
 
-
 export const fetchVideoCallToken =
   (userId, tableId, openTableScreen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
     try {
       let res = await fetch(
-        `https://token-service-1443-dev.twil.io/token?identity=${userId}&table=${tableId}`,
-
-
-        
+        `https://token-service-1443-dev.twil.io/token?identity=${userId}&table=${tableId}`
       );
       if (!res.ok) {
         if (!res.message) {
@@ -4405,7 +4267,6 @@ export const fetchVideoCallToken =
       }
       res = await res.json();
       console.log(res.token);
-
 
       dispatch(
         RTCActions.fetchRTCToken({
