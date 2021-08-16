@@ -229,12 +229,68 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
     console.log("Transaction Status", paymentEntity.status);
     console.log("Transaction Description", paymentEntity.description);
     console.log("Transaction Created At", paymentEntity.created_at);
+    console.log("Plan Name", paymentEntity.notes.planName);
 
     if (paymentEntity.notes.transaction_type === "community_plan") {
       try {
         // Process community plan purchase
         console.info("This was a community plan purchase");
         console.log("This was a community plan purchase");
+
+        // communityId: selectedCommunity,
+        // userId: userDetails._id,
+        // referral: referral,
+
+        console.log("communityId", paymentEntity.notes.communityId);
+        console.log("referral", paymentEntity.notes.referral);
+        console.log("userId", paymentEntity.notes.userId);
+        console.log("Plan Name", paymentEntity.notes.planName);
+
+        //       let referrer;
+        // if (req.body.referralCode) {
+        //   referrer = await User.findOneAndUpdate(
+        //     { referralCode: req.body.referralCode },
+
+        //     { $inc: { signupUsingReferral: 1 } },
+
+        //     {
+        //       new: true,
+        //       validateModifiedOnly: true,
+        //     }
+        //   );
+        let referrer;
+
+        if (paymentEntity.notes.referral) {
+          referrer = await User.findOneAndUpdate(
+            { referralCode: paymentEntity.notes.referral },
+
+            { $inc: { upgrades: 1, credit: 5 } },
+
+            {
+              new: true,
+              validateModifiedOnly: true,
+            }
+          );
+
+          await User.findByIdAndUpdate(
+            paymentEntity.notes.userId,
+            { $inc: { credit: 5, hasUsedAnyReferral: 1 } },
+            {
+              new: true,
+              validateModifiedOnly: true,
+            }
+          );
+
+          // Assign plan to community
+          await Community.findByIdAndUpdate(
+            communityId,
+            { planName: paymentEntity.notes.planName },
+            {
+              new: true,
+              validateModifiedOnly: true,
+            }
+          );
+        }
       } catch (err) {
         // Handle any error that may happen when processing plan for a community
       }
@@ -476,7 +532,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         console.log("This is a payment made for event registration.");
         console.info("This is a payment made for event registration.");
-        
+
         // TODO VVIP Add revenue in community account
       } catch (err) {
         console.log(err);

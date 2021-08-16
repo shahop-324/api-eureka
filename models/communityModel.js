@@ -45,6 +45,10 @@ const communitySchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    planName: {
+      type: String,
+      default: "Free",
+    },
     planDetails: {
       planName: {
         type: String,

@@ -42,6 +42,10 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
     dispatch(
       authActions.SignIn({
         token: res.data.token,
+<<<<<<< HEAD
+=======
+         referralCode:res.data.data.user.hasUsedAnyReferral?null:res.data.data.user.referralCode  
+>>>>>>> 6cda7675256d4c573c51048655f48f2019013639
       })
     );
     dispatch(
@@ -82,7 +86,12 @@ export const signUp = (formValues) => async (dispatch) => {
       authActions.SignIn({
         token: res.data.token,
 
+<<<<<<< HEAD
         referralCode: res.data.data.user.referralCode,
+=======
+
+        referralCode:res.data.data.user.referralCode  
+>>>>>>> 6cda7675256d4c573c51048655f48f2019013639
       })
     );
     dispatch(
