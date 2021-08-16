@@ -10,7 +10,7 @@ import "./../../assets/Sass/Payout.scss";
 import { Divider } from "@material-ui/core";
 // import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import { useDispatch, useSelector } from "react-redux";
-import { editCommunity } from "../../actions";
+import { editCommunity, fundTransferRequest, generatePayoutLink } from "../../actions";
 import { useParams } from "react-router";
 import Select from "react-select";
 
@@ -23,7 +23,7 @@ import PayoutDetailsCard from "./HelperComponent/PayoutDetailsCard";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import { reduxForm,Field } from "redux-form";
+import { reduxForm, Field } from "redux-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -57,7 +57,6 @@ const styles = {
   }),
 };
 
-
 const renderInput = ({
   input,
   meta: { touched, error, warning },
@@ -70,6 +69,45 @@ const renderInput = ({
   return (
     <div className={className}>
       <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
+};
+
+const renderAmountInput = ({
+  input,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        step="1"
+        min="1"
+        style={{ width: "100%" }}
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -183,14 +221,15 @@ const Secret =
 const RevenueManagement = (props) => {
   const classes = useStyles();
 
+  const params = useParams();
+  const communityId = params.id;
+
   const { handleSubmit } = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [maxWidth, setMaxWidth] = React.useState("md");
 
   const dispatch = useDispatch();
-  const params = useParams();
-  const communityId = params.id;
 
   const community = useSelector((state) => state.community.communityDetails);
 
@@ -308,20 +347,25 @@ const RevenueManagement = (props) => {
   };
 
   const onSubmit = (formValues) => {
-    console.log(formValues);
+    
 
-    // const ModifiedFormValues = {};
-    // ModifiedFormValues.discountForEventId = formValues.eventName.value;
-    // ModifiedFormValues.validTillDate = formValues.expiryDate;
-    // ModifiedFormValues.validTillTime = `${formValues.expiryDate}T${formValues.expiryTime}:00Z`;
-    // ModifiedFormValues.discountPercentage = formValues.discountPercentage;
-    // ModifiedFormValues.discountCode = formValues.couponCode;
-    // ModifiedFormValues.maxNumOfDiscountPermitted =
-    //   formValues.numberOfDiscountsAvailable;
+    const ModifiedFormValues = {};
 
-    showResults(formValues);
-    // dispatch(createCoupon(ModifiedFormValues));
+    ModifiedFormValues.communityId = communityId;
+    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
+    ModifiedFormValues.amount = formValues.amount;
+    ModifiedFormValues.communityName = community.name;
+
+    ModifiedFormValues.account = formValues.accountNumber;
+    ModifiedFormValues.ifsc = formValues.ifsc;
+    ModifiedFormValues.beneficiaryName = formValues.beneficiaryName;
     handleCloseGeneratePayoutLink();
+    showResults(ModifiedFormValues);
+    console.log(ModifiedFormValues);
+    // dispatch(generatePayoutLink(ModifiedFormValues));
+
+    dispatch(fundTransferRequest(ModifiedFormValues));
+    
   };
 
   return (
@@ -334,7 +378,7 @@ const RevenueManagement = (props) => {
               onClick={handleClickOpenGeneratePayoutLink}
               className="btn btn-primary btn-outline-text"
             >
-              Generate Payout Link
+              Request fund transfer
             </button>
           </div>
         </div>
@@ -456,99 +500,149 @@ const RevenueManagement = (props) => {
         aria-labelledby="responsive-dialog-title"
       >
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-        <div className="generate-payout-link-modal p-4">
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "0.5fr 3fr 0.5fr",
-              alignItems: "center",
-            }}
-            className="px-4"
-          >
-            <div></div>
+          <div className="generate-payout-link-modal p-4">
             <div
-              style={{ textAlign: "center", fontSize: "1.1rem" }}
-              className="btn-outline-text"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "0.5fr 3fr 0.5fr",
+                alignItems: "center",
+              }}
+              className="px-4"
             >
-              Generate Payout Link
-            </div>
-            <div style={{ justifySelf: "end" }}>
-              <IconButton
-                onClick={handleCloseGeneratePayoutLink}
-                style={{ width: "fit-content" }}
-                aria-label="delete"
+              <div></div>
+              <div
+                style={{ textAlign: "center", fontSize: "1.1rem" }}
+                className="btn-outline-text"
               >
-                <HighlightOffRoundedIcon />
-              </IconButton>
+                Fund transfer
+              </div>
+              <div style={{ justifySelf: "end" }}>
+                <IconButton
+                  onClick={handleCloseGeneratePayoutLink}
+                  style={{ width: "fit-content" }}
+                  aria-label="delete"
+                >
+                  <HighlightOffRoundedIcon />
+                </IconButton>
+              </div>
+            </div>
+
+            {/* Number cards indication credit, signups, and upgrades */}
+          </div>
+
+          <div class="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <label
+              Forhtml="eventEndDate"
+              class="form-label form-label-customized"
+            >
+              Amount
+            </label>
+            <div class="right labeled input">
+              <div class="form-group">
+                <Field
+                  name="amount"
+                  type="number"
+                  placeholder="Amount"
+                  id="amount"
+                  component={renderAmountInput}
+                />
+                <small style={{ fontWeight: "500", fontFamily: "Inter" }}>
+                  Enter amount in INR
+                </small>
+              </div>
             </div>
           </div>
 
-          {/* Number cards indication credit, signups, and upgrades */}
-        </div>
-
-        <div class="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <label
-            Forhtml="eventEndDate"
-            class="form-label form-label-customized"
-          >
-            Enter Amount
-          </label>
-          <div class="ui right labeled input">
-            <label for="amount" class="ui label">
-              $
-            </label>
-            <input name="amount" type="number" placeholder="Amount" id="amount"  />
-            <div class="ui basic label">.00</div>
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                Account Number
+              </label>
+              <Field
+                name="accountNumber"
+                type="number"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                // placeholder="johndoe@gmail.com"
+                label="Email"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
-            <label
-              for="communityHeadline"
-              class="form-label form-label-customized"
-            >
-              E-mail
-            </label>
-            <Field
-              name="email"
-              type="email"
-              classes="form-control"
-              component={renderInput}
-              ariadescribedby="emailHelp"
-              // placeholder="johndoe@gmail.com"
-              label="Email"
-            />
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                IFSC Code
+              </label>
+              <Field
+                name="ifsc"
+                type="string"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                // placeholder="johndoe@gmail.com"
+                label="Email"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
-            <label
-              for="communityHeadline"
-              class="form-label form-label-customized"
-            >
-              contact Number
-            </label>
-            <Field
-              name="phoneNumber"
-              component={renderPhoneInput}
-              type="number"
-            /> 
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                Benificiary Name
+              </label>
+              <Field
+                name="beneficiaryName"
+                type="text"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                // placeholder="johndoe@gmail.com"
+                label="Email"
+              />
+            </div>
           </div>
-          {/* <Field
+
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                contact Number
+              </label>
+              <Field
+                name="phoneNumber"
+                component={renderPhoneInput}
+                type="number"
+              />
+            </div>
+            {/* <Field
               name="phoneNumber"
               component={renderPhoneInput}
               type="number"
             /> */}
-        </div>
+          </div>
 
-        <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <button type="submit" style={{ textAlign: "center" }} className="btn btn-primary btn-outline-text mt-2">
-            Generate Payout Link
-          </button>
-        </div>
-
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <button
+              type="submit"
+              style={{ textAlign: "center" }}
+              className="btn btn-primary btn-outline-text mt-2"
+            >
+              Request Fund Transfer
+            </button>
+          </div>
         </form>
       </Dialog>
     </>
@@ -558,12 +652,16 @@ const RevenueManagement = (props) => {
 const validate = (formValues) => {
   const errors = {};
 
-  if(!formValues.amount) {
-    errors.amount = "Amount is required"
+  if (!formValues.amount) {
+    errors.amount = "Amount is required";
   }
 
-  if(!formValues.amount <= 0) {
-    errors.amount = "Amount must be greater than 0"
+  if (formValues.amount <= 0) {
+    errors.amount = "Amount must be greater than 0";
+  }
+
+  if (formValues.amount && formValues.amount.startsWith("0")) {
+    errors.amount = "Amount can not start with 0";
   }
 
   if (!formValues.email) {
@@ -576,8 +674,7 @@ const validate = (formValues) => {
   ) {
     errors.email = "Invalid email address";
   }
-  
-  
+
   return errors;
 };
 

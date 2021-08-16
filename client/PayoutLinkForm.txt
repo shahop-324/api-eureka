@@ -1,0 +1,111 @@
+<Dialog
+        maxWidth={maxWidth}
+        fullScreen={fullScreen}
+        open={openGeneratePayoutLink}
+        // onClose={props.closeHandler}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+          <div className="generate-payout-link-modal p-4">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "0.5fr 3fr 0.5fr",
+                alignItems: "center",
+              }}
+              className="px-4"
+            >
+              <div></div>
+              <div
+                style={{ textAlign: "center", fontSize: "1.1rem" }}
+                className="btn-outline-text"
+              >
+                Generate Payout Link
+              </div>
+              <div style={{ justifySelf: "end" }}>
+                <IconButton
+                  onClick={handleCloseGeneratePayoutLink}
+                  style={{ width: "fit-content" }}
+                  aria-label="delete"
+                >
+                  <HighlightOffRoundedIcon />
+                </IconButton>
+              </div>
+            </div>
+
+            {/* Number cards indication credit, signups, and upgrades */}
+          </div>
+
+          <div class="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <label
+              Forhtml="eventEndDate"
+              class="form-label form-label-customized"
+            >
+              Enter Amount
+            </label>
+            <div class="right labeled input">
+              <div class="form-group">
+                <Field
+                  name="amount"
+                  type="number"
+                  placeholder="Amount"
+                  id="amount"
+                  component={renderAmountInput}
+                />
+                <small style={{fontWeight: "500", fontFamily: "Inter"}}>Enter amount in INR</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                E-mail
+              </label>
+              <Field
+                name="email"
+                type="email"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                // placeholder="johndoe@gmail.com"
+                label="Email"
+              />
+            </div>
+          </div>
+
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <div class="form-group">
+              <label
+                for="communityHeadline"
+                class="form-label form-label-customized"
+              >
+                contact Number
+              </label>
+              <Field
+                name="phoneNumber"
+                component={renderPhoneInput}
+                type="number"
+              />
+            </div>
+            {/* <Field
+              name="phoneNumber"
+              component={renderPhoneInput}
+              type="number"
+            /> */}
+          </div>
+
+          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
+            <button
+              type="submit"
+              style={{ textAlign: "center" }}
+              className="btn btn-primary btn-outline-text mt-2"
+            >
+              Generate Payout Link
+            </button>
+          </div>
+        </form>
+      </Dialog>

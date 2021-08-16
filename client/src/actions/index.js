@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-concat */
 import eureka from "../apis/eureka";
 import { authActions } from "../reducers/authSlice";
 import { eventActions } from "../reducers/eventSlice";
@@ -4294,3 +4295,100 @@ export const errorTrackerForFetchVideoCallToken =
   () => async (dispatch, getState) => {
     dispatch(RTCActions.disabledError());
   };
+
+  
+export const generatePayoutLink = ({communityId, communityName, phoneNumber, email, amount}) => async (dispatch) => {
+  console.log(communityId, phoneNumber, email, amount);
+  // dispatch(eventActions.startLoading());
+
+  // https://api.razorpay.com/v1/payout-links
+
+ const reqBody = {
+   "account_number": "HbV3YvH7Zo0cDj",
+   "contact": {
+     "name": communityName,
+     "type": "customer",
+     "contact": phoneNumber,
+     "email": email
+   },
+   "amount": amount * 100,
+   "currency": "INR",
+   "purpose": "payout",
+   "description": `Payout link for ${communityName}`,
+   "send_sms": true,
+   "send_email": true,
+   "receipt": "Recipet for Payout",
+   "notes": {
+     "communityId": communityId,
+      "payout_amount": amount
+   }
+ }
+
+  const authToken = btoa("rzp_live_bDVAURs4oXxSGi" + ":" + "TFitnOVh9eOIFK3qdZsfCLfQ");
+
+  
+
+  try {
+
+    let res = await fetch(`https://api.razorpay.com/v1/payout-links`, {
+    method: "POST",
+
+    body: JSON.stringify(reqBody),
+
+    headers: {
+      "Content-Type": "application/json",
+
+      Authorization: `Basic ${authToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    if (!res.message) {
+      throw new Error("Something went wrong");
+    } else {
+      throw new Error(res.message);
+    }
+  }
+  res = await res.json();
+  console.log(res.token);
+    
+  } catch (e) {
+    console.log(e);
+    // dispatch(eventActions.hasError(e.message));
+  }
+};
+
+export const fundTransferRequest = (formValues) => async (dispatch, getState) => {
+  // dispatch(contactUsActions.startLoading());
+  try {
+    let res = await fetch(`${BaseURL}fund/transferRequest`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+          
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res.data);
+
+    alert("Your fund transfer request is recieved successfully! Please check your email.");
+    // dispatch(contactUsActions.ContactUs());
+  } catch (err) {
+    // dispatch(contactUsActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
