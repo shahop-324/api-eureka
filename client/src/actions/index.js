@@ -32,10 +32,7 @@ const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
-
-
 // const BaseURL = "https://www.evenz.co.in/api-eureka/eureka/v1/";
-
 
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
