@@ -15,7 +15,7 @@ import TicketingListFields from "./TicketingListFields";
 import TicketingDetailsCard from "./TicketingDetailsCard";
 import AddNewTicket from "./FormComponents/EditTicketForms/AddNewTicket";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForFetchTickets, fetchTickets } from "../../../actions";
+import { fetchTickets } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
 import Loader from "../../Loader";

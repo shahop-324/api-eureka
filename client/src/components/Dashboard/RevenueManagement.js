@@ -5,247 +5,30 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Billing.scss";
-import "./../../assets/Sass/Payout.scss";
-
-import { Divider } from "@material-ui/core";
+import RazorPayPNG from "./../../assets/images/Razorpay_logo.svg";
+import PayPalPNG from "./../../assets/images/paypal_logo.png";
+import IndianFlagPNG from "./../../assets/images/Indian_flag.png";
+import Zoom from "@material-ui/core/Zoom";
+import { Divider, Tooltip } from "@material-ui/core";
 // import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import { useDispatch, useSelector } from "react-redux";
-import { editCommunity, fundTransferRequest, generatePayoutLink } from "../../actions";
+import { editCommunity } from "../../actions";
 import { useParams } from "react-router";
-import Select from "react-select";
-
-import InputBase from "@material-ui/core/InputBase";
-import { alpha, makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import PayoutListFields from "./HelperComponent/PayoutListFields";
-import PayoutDetailsCard from "./HelperComponent/PayoutDetailsCard";
-
-import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
-import { useTheme } from "@material-ui/core";
-import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import { reduxForm, Field } from "redux-form";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-
-const options = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
-
-const payOutStatus = [
-  { value: "All", label: "All" },
-  { value: "Issued", label: "Issued" },
-  { value: "Processed", label: "Processed" },
-  { value: "Cancelled", label: "Cancelled" },
-];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
-
-const renderInput = ({
-  input,
-  meta: { touched, error, warning },
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-}) => {
-  const className = `field ${error && touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <input
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className={classes}
-        placeholder={placeholder}
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  );
-};
-
-const renderAmountInput = ({
-  input,
-  meta: { touched, error, warning },
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-}) => {
-  const className = `field ${error && touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <input
-        step="1"
-        min="1"
-        style={{ width: "100%" }}
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className={classes}
-        placeholder={placeholder}
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  );
-};
-
-const renderPhoneInput = ({
-  input,
-  meta: { touched, error, warning },
-  label,
-  type,
-}) => (
-  <div>
-    <div>
-      <PhoneInput
-        inputStyle={{
-          paddingLeft: "50px",
-        }}
-        inputProps={{
-          enableSearch: true,
-        }}
-        country={"us"}
-        {...input}
-        type={type}
-      />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
 
 const ClientId =
   "AXmtL1lLDHZcErLRu07uJ8Ok5PzRANo5dBrkaTn5dGQ8UAiV9hAp3Ottmao0wUHzxiMkW8wA32FRIDLL";
 const Secret =
   "EKJaRnyfLY7MPEr94GiEU8Ob2nRyVuFV3Zlr_RVSacBYNGI5RVcYJcGIwTQ4nCkDZQGHPuv-o1-fSlMc";
 
-const RevenueManagement = (props) => {
-  const classes = useStyles();
-
+const RevenueManagement = () => {
+  const dispatch = useDispatch();
   const params = useParams();
   const communityId = params.id;
-
-  const { handleSubmit } = props;
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [maxWidth, setMaxWidth] = React.useState("md");
-
-  const dispatch = useDispatch();
 
   const community = useSelector((state) => state.community.communityDetails);
 
   const urlSearchParams = new URLSearchParams(window.location.search);
   const urlparams = Object.fromEntries(urlSearchParams.entries());
-
-  const [openGeneratePayoutLink, setOpenGeneratePayoutLink] =
-    React.useState(false);
-
-  const handleClickOpenGeneratePayoutLink = () => {
-    setOpenGeneratePayoutLink(true);
-  };
-
-  const handleCloseGeneratePayoutLink = () => {
-    setOpenGeneratePayoutLink(false);
-  };
 
   if (urlparams.merchantId === community.paypalTrackingId && urlparams) {
     console.log(urlparams);
@@ -341,344 +124,213 @@ const RevenueManagement = (props) => {
     console.log(signUpLink);
   };
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
-  const onSubmit = (formValues) => {
-    
-
-    const ModifiedFormValues = {};
-
-    ModifiedFormValues.communityId = communityId;
-    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-    ModifiedFormValues.amount = formValues.amount;
-    ModifiedFormValues.communityName = community.name;
-
-    ModifiedFormValues.account = formValues.accountNumber;
-    ModifiedFormValues.ifsc = formValues.ifsc;
-    ModifiedFormValues.beneficiaryName = formValues.beneficiaryName;
-    handleCloseGeneratePayoutLink();
-    showResults(ModifiedFormValues);
-    console.log(ModifiedFormValues);
-    // dispatch(generatePayoutLink(ModifiedFormValues));
-
-    dispatch(fundTransferRequest(ModifiedFormValues));
-    
-  };
-
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Manage Revenue Flow</div>
-          <div className="sec-heading-action-button d-flex flex-row">
-            <button
-              onClick={handleClickOpenGeneratePayoutLink}
-              className="btn btn-primary btn-outline-text"
-            >
-              Request fund transfer
-            </button>
-          </div>
+          <div className="sec-heading-action-button d-flex flex-row"></div>
         </div>
-
-        <div className="payout-number-cards-grid mx-3 mb-4 py-4">
-          <div className="total-revenue-card p-4">
-            <div className="d-flex flex-row justify-content-end">
-              <div className="drop-selector" style={{ maxWidth: "200px" }}>
-                <Select
-                  styles={styles}
-                  options={options}
-                  defaultValue={options[1]}
-                />
-              </div>
-            </div>
-
-            <div
-              className="d-flex flex-column justify-content-center align-items-center"
-              style={{ height: "80%" }}
-            >
-              <div
-                className="number-card-heading mb-4"
-                style={{ fontWeight: "bold", textAlign: "left" }}
-              >
-                Revenue
-              </div>
-              <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
-                <div className="num-text me-3" style={{ fontSize: "3rem" }}>
-                  $ 89202
-                </div>
-                <div className="num-percent increment">+100%</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="total-current-balance-card p-4">
-            <div className="d-flex flex-row justify-content-end">
-              {/* <div className="drop-selector" style={{ maxWidth: "200px" }}>
-                <Select
-                  styles={styles}
-                  options={options}
-                  defaultValue={options[1]}
-                />
-              </div> */}
-            </div>
-
-            <div
-              className="d-flex flex-column justify-content-center align-items-center"
-              style={{ height: "100%" }}
-            >
-              <div
-                className="number-card-heading mb-4"
-                style={{ fontWeight: "bold", textAlign: "left" }}
-              >
-                Current Balance
-              </div>
-              <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
-                <div className="num-text me-3" style={{ fontSize: "3rem" }}>
-                  $ 1.2 M
-                </div>
-                {/* <div className="num-percent increment">+100%</div> */}
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div
           className="event-management-content-grid px-4 mx-3 mb-4 py-4"
           style={{ height: "auto" }}
         >
-          <div className="sec-heading-action-button d-flex flex-row mb-3">
-            <div className="me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="auto"
-                options={payOutStatus}
-                defaultValue={payOutStatus[0]}
-              />
-            </div>
-            <div
-              className={`${classes.search}`}
-              style={{ backgroundColor: "#EBEBEBB6" }}
-            >
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
+          <div className="btn-outline-text" style={{ color: "#626262" }}>
+            Select your payment service provider (Caution: You cannot change
+            your preference after this.)
+          </div>
+
+          <div
+            className="pricing-cards-section pt-4"
+            style={{ gridTemplateColumns: "1fr 1fr" }}
+          >
+            <div className="pricing-plan-card p-4">
+              <div
+                className="payment-service-provider-logo "
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "0.4fr 3fr 0.4fr",
+                  alignItems: "center",
                 }}
-                inputProps={{ "aria-label": "search" }}
-              />
+              >
+                <div></div>
+                <img
+                  src={RazorPayPNG}
+                  style={{ height: "40px", justifySelf: "center" }}
+                  alt="razorpay-service-provider"
+                ></img>
+
+                <div className="Indian-flag">
+                  <Tooltip
+                    style={{ fontSize: "26px" }}
+                    title="This payment service is available only for Indian customers."
+                    TransitionComponent={Zoom}
+                  >
+                    <img
+                      src={IndianFlagPNG}
+                      style={{ height: "15px", justifySelf: "center" }}
+                      alt="service-offered-for-indian-customers"
+                    ></img>
+                  </Tooltip>
+                </div>
+              </div>
+
+              <div className="my-4">
+                <Divider />
+              </div>
+
+              <div className="plan-features-offered-list d-flex flex-column justify-content-center align-items-center">
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">
+                    Withdraw money anytime using payout link
+                  </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">
+                    Payment Methods: Credit ,Debit Cards, Netbanking, UPI and
+                    more.
+                  </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">
+                    Service fees as applicable
+                  </div>
+                </div>
+              </div>
+              <div
+                className="my-4"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <button className="btn btn-outline-primary btn-outline-text">
+                  View Account Balance
+                </button>
+              </div>
+              <div
+                className="my-4"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <button className="btn btn-outline-primary btn-outline-text">
+                  Generate Payout Link
+                </button>
+              </div>
+              <div
+                className="my-4"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <button className="btn btn-outline-primary btn-outline-text">
+                  View transactions
+                </button>
+              </div>
+              <div
+                className=""
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  marginTop: "150px",
+                }}
+              >
+                <button
+                  className="btn btn-primary btn-outline-text"
+                  style={{
+                    backgroundColor: "#538BF7",
+                    border: "none",
+                    width: "80%",
+                  }}
+                >
+                  Start using Razorpay
+                </button>
+              </div>
             </div>
-          </div>
 
-          <Divider />
+            <div className="pricing-plan-card p-4">
+              <div
+                className="payment-service-provider-logo "
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "0.4fr 3fr 0.4fr",
+                  alignItems: "center",
+                }}
+              >
+                <div></div>
+                <img
+                  src={PayPalPNG}
+                  style={{ height: "40px", justifySelf: "center" }}
+                  alt="razorpay-service-provider"
+                ></img>
+                <div></div>
+              </div>
+              <div className="my-4">
+                <Divider />
+              </div>
 
-          <div className="my-3">
-            <PayoutListFields />
-            <div className="my-2">
-              <Divider />
+              <div className="plan-features-offered-list d-flex flex-column justify-content-center align-items-center">
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">Get Instant Payout</div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">
+                    Payment Methods: Credit and Debit Cards
+                  </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-3">
+                  <div className="me-3"></div>
+                  <div className="plan-feature-text">
+                    Service fees as applicable
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="my-4"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <button className="btn btn-outline-primary btn-outline-text">
+                  View transactions
+                </button>
+              </div>
+
+              <div
+                className="my-4"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <button className="btn btn-outline-primary btn-outline-text">
+                  Update Account Info
+                </button>
+              </div>
+
+              <div
+                className=""
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  marginTop: "210px",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={handleConnectWithPaypal}
+                  className="btn btn-primary btn-outline-text"
+                  style={{
+                    backgroundColor: "#538BF7",
+                    border: "none",
+                    width: "80%",
+                  }}
+                >
+                  Connect with Paypal
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div>
-            <PayoutDetailsCard />
           </div>
         </div>
         {/* Give a FAQ section here. */}
       </div>
-
-      <Dialog
-        maxWidth={maxWidth}
-        fullScreen={fullScreen}
-        open={openGeneratePayoutLink}
-        // onClose={props.closeHandler}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="generate-payout-link-modal p-4">
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "0.5fr 3fr 0.5fr",
-                alignItems: "center",
-              }}
-              className="px-4"
-            >
-              <div></div>
-              <div
-                style={{ textAlign: "center", fontSize: "1.1rem" }}
-                className="btn-outline-text"
-              >
-                Fund transfer
-              </div>
-              <div style={{ justifySelf: "end" }}>
-                <IconButton
-                  onClick={handleCloseGeneratePayoutLink}
-                  style={{ width: "fit-content" }}
-                  aria-label="delete"
-                >
-                  <HighlightOffRoundedIcon />
-                </IconButton>
-              </div>
-            </div>
-
-            {/* Number cards indication credit, signups, and upgrades */}
-          </div>
-
-          <div class="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <label
-              Forhtml="eventEndDate"
-              class="form-label form-label-customized"
-            >
-              Amount
-            </label>
-            <div class="right labeled input">
-              <div class="form-group">
-                <Field
-                  name="amount"
-                  type="number"
-                  placeholder="Amount"
-                  id="amount"
-                  component={renderAmountInput}
-                />
-                <small style={{ fontWeight: "500", fontFamily: "Inter" }}>
-                  Enter amount in INR
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <div class="form-group">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Account Number
-              </label>
-              <Field
-                name="accountNumber"
-                type="number"
-                classes="form-control"
-                component={renderInput}
-                ariadescribedby="emailHelp"
-                // placeholder="johndoe@gmail.com"
-                label="Email"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <div class="form-group">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                IFSC Code
-              </label>
-              <Field
-                name="ifsc"
-                type="string"
-                classes="form-control"
-                component={renderInput}
-                ariadescribedby="emailHelp"
-                // placeholder="johndoe@gmail.com"
-                label="Email"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <div class="form-group">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Benificiary Name
-              </label>
-              <Field
-                name="beneficiaryName"
-                type="text"
-                classes="form-control"
-                component={renderInput}
-                ariadescribedby="emailHelp"
-                // placeholder="johndoe@gmail.com"
-                label="Email"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <div class="form-group">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                contact Number
-              </label>
-              <Field
-                name="phoneNumber"
-                component={renderPhoneInput}
-                type="number"
-              />
-            </div>
-            {/* <Field
-              name="phoneNumber"
-              component={renderPhoneInput}
-              type="number"
-            /> */}
-          </div>
-
-          <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-            <button
-              type="submit"
-              style={{ textAlign: "center" }}
-              className="btn btn-primary btn-outline-text mt-2"
-            >
-              Request Fund Transfer
-            </button>
-          </div>
-        </form>
-      </Dialog>
     </>
   );
 };
 
-const validate = (formValues) => {
-  const errors = {};
-
-  if (!formValues.amount) {
-    errors.amount = "Amount is required";
-  }
-
-  if (formValues.amount <= 0) {
-    errors.amount = "Amount must be greater than 0";
-  }
-
-  if (formValues.amount && formValues.amount.startsWith("0")) {
-    errors.amount = "Amount can not start with 0";
-  }
-
-  if (!formValues.email) {
-    errors.email = "Email is required";
-  }
-
-  if (
-    formValues.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
-
-  return errors;
-};
-
-export default reduxForm({
-  form: "newCouponForm",
-  validate,
-})(RevenueManagement);
+export default RevenueManagement;

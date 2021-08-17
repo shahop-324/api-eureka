@@ -1,5 +1,4 @@
 import React from 'react';
-import Faker from 'faker';
 
 const PlatinumSponsorCard = ({id, image}) => {
   return (

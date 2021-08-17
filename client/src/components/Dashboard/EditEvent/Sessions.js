@@ -15,7 +15,6 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import AddNewSession from "./FormComponents/EditSessionForms/AddNewSession";
 import {
-  errorTrackerForFetchSessions,
   fetchSessions,
   fetchSpeakers,
 } from "../../../actions";

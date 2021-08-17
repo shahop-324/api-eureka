@@ -1,5 +1,5 @@
 import React from 'react';
-import Faker from 'faker';
+
 
 const GoldSponsorCard = ({id, image}) => {
   return (

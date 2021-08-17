@@ -16,7 +16,7 @@ import BoothDetailsCard from "./BoothDetailsCard";
 import AddNewBooth from "./FormComponents/EditBoothsForms/AddNewBooth";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForFetchBooths, fetchBooths } from "../../../actions";
+import { fetchBooths } from "../../../actions";
 import Loader from "../../Loader";
 
 const styles = {

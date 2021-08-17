@@ -18,7 +18,6 @@ import AddNewSpeaker from "./FormComponents/EditSpeakersForms/AddNewSpeaker";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import {
-  errorTrackerForFetchSpeakers,
   fetchEvent,
   fetchSessions,
   fetchSpeakers,

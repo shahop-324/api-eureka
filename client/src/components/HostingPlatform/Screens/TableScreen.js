@@ -15,7 +15,6 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 
-
 import AgoraRTC from "agora-rtc-sdk-ng";
 
 let rtc = {

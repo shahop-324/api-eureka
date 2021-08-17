@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./../../../assets/Sass/TopNav.scss";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
@@ -20,7 +21,6 @@ import SideNav from "./SideNav";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import { Field, reduxForm } from "redux-form";
 import { connect, useSelector } from "react-redux";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 // import Avatar from '@material-ui/core/Avatar';
 // import Faker from 'faker';
 

@@ -16,7 +16,7 @@ import SponsorsListFields from "./SponsorListFields";
 import SponsorDetailsCard from "./SponsorDetailsCard";
 import AddNewSponsor from "./FormComponents/EditSponsorsForms/AddNewSponsor";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForFetchSponsors, fetchSponsors } from "../../../actions";
+import { fetchSponsors } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../Loader";
 

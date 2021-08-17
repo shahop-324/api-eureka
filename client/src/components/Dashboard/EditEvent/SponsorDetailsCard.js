@@ -9,8 +9,6 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
-import { useDispatch } from "react-redux";
-import { fetchSponsor } from "../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,8 +48,6 @@ const SponsorDetailsCard = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const dispatch = useDispatch();
 
   const classes = useStyles();
   return (

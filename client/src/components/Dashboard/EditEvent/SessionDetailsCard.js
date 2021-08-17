@@ -8,9 +8,6 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
 import EditSession from "./FormComponents/EditSessionForms/EditSession";
 import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
-
-import { useDispatch } from "react-redux";
-import { fetchParticularSessionOfEvent } from "../../../actions";
 import { Tooltip } from "@material-ui/core";
 
 var dateFormat = require("dateformat");
@@ -45,7 +42,7 @@ const SessionDetailCard = ({
     setOpenDeleteDialog(false);
   };
 
-  const dispatch = useDispatch();
+
 
   const handleEditSession = () => {
     //dispatch(fetchParticularSessionOfEvent(id));

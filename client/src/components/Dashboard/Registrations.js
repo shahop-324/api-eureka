@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import {
-  errorTrackerForfetchRegistrationsOfParticularCommunity,
   fetchRegistrationsOfParticularCommunity,
 } from "../../actions";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";

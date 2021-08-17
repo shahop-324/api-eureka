@@ -16,7 +16,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
 import {
-  errorTrackerForFetchEventsOfParticularCommunity,
   fetchEventsOfParticularCommunity,
 } from "../../actions";
 import { useParams } from "react-router";

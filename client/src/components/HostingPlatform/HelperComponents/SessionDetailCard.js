@@ -8,8 +8,6 @@ import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneO
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getRTCToken, setSessionRoleAndJoinSession } from "../../../actions";
-import history from "../../../history";
-
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -72,7 +70,6 @@ const SessionDetailCard = ({
 
   const eventId = params.eventId;
   const communityId = params.communityId;
-     const {token } = useSelector((state)=>state.RTC)
   const role = useSelector((state) => state.eventAccessToken.role);
   const userId = useSelector((state) => state.eventAccessToken.id);
 

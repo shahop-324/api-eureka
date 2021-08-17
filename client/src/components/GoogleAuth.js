@@ -50,33 +50,43 @@ class GoogleAuth extends React.Component {
   };
   renderAuthButton() {
     return (
+
+
       <>
-        <div
-          className="row d-flex"
-          style={{
-            justifyContent: "space-between",
-            marginBottom: "4%",
-          }}
-        >
-          <div onClick={this.onSignInClick}>
-            <button
-              type="button"
-              className="btn btn-light py-2"
-              style={{ width: "100%" }}
-            >
-              <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
-                <img
-                  class=""
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                  alt="google-signin"
-                />
-                <div className="sign-in-with-google-text ms-4">
-                  Sign in with google
+      
+      
+      <div
+                  className="row d-flex"
+                  style={{
+                    justifyContent: "space-between",
+                    marginBottom: "4%",
+                  }}
+                >
+                  <div onClick={this.onSignInClick}>
+                    
+
+                    <button
+                      type="button"
+                      className="btn btn-light py-2"
+                      style={{ width: "100%" }}
+                    >
+                      <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
+                        <img
+                          class=""
+                          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                          alt="google-signin"
+                        />
+                        <div className="sign-in-with-google-text ms-4">
+                         Sign in with google
+                        </div>
+                      </div>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </button>
-          </div>
-        </div>
+      
+      
+      
+      
       </>
       // <button onClick={this.onSignInClick} className="ui red google button">
       //   <i className="google icon" />

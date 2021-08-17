@@ -10,7 +10,7 @@ import "./../../assets/Sass/Coupon.scss";
 import CouponCard from "./HelperComponent/CouponCard";
 import AddNewCoupon from "./FormComponents/AddNewCoupon";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForFetchCoupons, fetchCoupons } from "../../actions";
+import { fetchCoupons } from "../../actions";
 import Loader from "../Loader";
 
 const renderCouponList = (coupons) => {

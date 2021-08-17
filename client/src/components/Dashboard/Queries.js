@@ -14,7 +14,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import QueryCard from "./HelperComponent/QueryCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  errorTrackerForfetchQueriesForCommunity,
   fetchQueriesForCommunity,
 } from "../../actions";
 

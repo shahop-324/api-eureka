@@ -10,13 +10,9 @@ import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumbe
 import Ripple from "../../ActiveStatusRipple";
 import EditTicket from "./FormComponents/EditTicketForms/EditTicket";
 import DeleteTicket from "./FormComponents/EditTicketForms/DeleteTicket";
-import { useDispatch } from "react-redux";
-import { fetchTicket } from "../../../actions";
 
 const TicketingDetailsCard = (props) => {
-  const dispatch = useDispatch();
-
-  const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
