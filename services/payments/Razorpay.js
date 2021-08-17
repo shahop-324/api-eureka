@@ -102,7 +102,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
 
   const newOrder = razorpay.orders.create(
     {
-      amount: 200 * 1,
+      amount: priceToBeCharged * 1,
       currency: "INR",
       receipt: UUID(),
       notes: {
