@@ -32,6 +32,11 @@ const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+
+
+// const BaseURL = "https://www.evenz.co.in/api-eureka/eureka/v1/";
+
+
 // authentication with id and password
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   console.log({ ...formValues });
@@ -459,6 +464,7 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
 };
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
+  console.log("I reached in fetch user personal data.");
   dispatch(eventActions.startLoading());
 
   const fetchData = async () => {
