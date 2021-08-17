@@ -59,9 +59,10 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       history.push("/pricing");
       dispatch(fetchUserAllPersonalData());
     } else {
-      window.location.href = REACT_APP_MY_ENV
-        ? "http://localhost:3001/user/home"
-        : "https://www.evenz.in/user/home";
+      history.push("/user/home");
+      // window.location.href = REACT_APP_MY_ENV
+      //   ? "http://localhost:3001/user/home"
+      //   : "https://www.evenz.in/user/home";
     }
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
@@ -95,9 +96,10 @@ export const signUp = (formValues) => async (dispatch) => {
         user: res.data.data.user,
       })
     );
-    window.location.href = REACT_APP_MY_ENV
-      ? "http://localhost:3001/user/home"
-      : "https://www.evenz.in/user/home";
+    history.push("/user/home");
+    // window.location.href = REACT_APP_MY_ENV
+    //   ? "http://localhost:3001/user/home"
+    //   : "https://www.evenz.in/user/home";
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
@@ -119,6 +121,10 @@ export const googleSignIn =
         authActions.SignIn({
           token: res.data.token,
           isSignedInThroughGoogle: true,
+
+          referralCode: res.data.data.user.hasUsedAnyReferral
+            ? null
+            : res.data.data.user.referralCode,
         })
       );
       dispatch(
@@ -133,10 +139,10 @@ export const googleSignIn =
         history.push("/pricing");
         dispatch(fetchUserAllPersonalData());
       } else {
-        // history.push("/user/home");
-        window.location.href = REACT_APP_MY_ENV
-          ? "http://localhost:3001/user/home"
-          : "https://www.evenz.in/user/home";
+        history.push("/user/home");
+        // window.location.href = REACT_APP_MY_ENV
+        //   ? "http://localhost:3001/user/home"
+        //   : "https://www.evenz.in/user/home";
       }
       //history.push("/user/home");
     } catch (err) {
