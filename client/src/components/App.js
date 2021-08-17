@@ -43,6 +43,7 @@ import EventBuilder from "./StaticScreens/Screens/EventBuilder";
 import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
+import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 AOS.init();
 
 class App extends React.Component {
@@ -104,6 +105,7 @@ class App extends React.Component {
               <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
 
+              <Route path="/pricing/ticketing" exact component={TicketingPricing} />
               <Route path="/pricing" exact component={Pricing} />
               <Route path="/not-found" exact component={NotFoundPage} />
               <Route

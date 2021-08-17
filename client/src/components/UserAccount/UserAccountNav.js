@@ -24,7 +24,7 @@ class UserAccountNav extends React.Component {
             Evenz
           </a>
 
-          <div class="d-flex flex-row align-items-center" x>
+          <div class="d-flex flex-row align-items-center">
             <Link
               to={`/search-events`}
               type="button"
@@ -33,7 +33,7 @@ class UserAccountNav extends React.Component {
               Explore Events
             </Link>
 
-            <button
+            {/* <button
               type="button"
               className="btn btn-primary btn-outline-text ms-3"
             >
@@ -43,8 +43,10 @@ class UserAccountNav extends React.Component {
               >
                 Get Help
               </Link>
-            </button>
-            <div>
+            </button> */}
+
+
+            <div className="ms-3">
               <ErrorBoundriesAvatarMenu>
                 <AvatarMenu />
               </ErrorBoundriesAvatarMenu>

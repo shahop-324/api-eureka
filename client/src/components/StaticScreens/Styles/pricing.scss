@@ -131,7 +131,7 @@ img {
   padding: 2rem 1.5rem 2.5rem;
   border-radius: 1.75rem;
   box-shadow: 0 12px 24px hsla(var(--hue-color), 61%, 16%, 0.1);
-  
+
   background: rgba(255, 255, 255, 0.931);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
@@ -273,30 +273,28 @@ img {
 /*==================== MEDIA QUERIES ====================*/
 /* For small devices */
 
-
-
 @media only screen and (min-width: '1416px') {
-    .pricing-card-2 {
-      border: 4px solid #538bf7 !important;
-      // margin-left: 2rem;
-      // margin-right: 2rem;
-    }
-    .pricing-section {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  
-    .FAQs-section {
-      padding-left: 0;
-      padding-right: 0;
-    }
+  .pricing-card-2 {
+    border: 4px solid #538bf7 !important;
+    // margin-left: 2rem;
+    // margin-right: 2rem;
+  }
+  .pricing-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
+  .FAQs-section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 @media screen and (max-width: 320px) {
-//   .container {
-//     margin-left: var(--mb-1);
-//     margin-right: var(--mb-1);
-//   }
+  //   .container {
+  //     margin-left: var(--mb-1);
+  //     margin-right: var(--mb-1);
+  //   }
   .card__content {
     padding: 2rem 1.25rem;
     border-radius: 1rem;
@@ -338,7 +336,6 @@ img {
     font-size: var(--small-font-size);
   }
 }
-
 
 // /////////////////////////////////////////////////////////////////////////////
 
@@ -411,4 +408,84 @@ p {
   font-weight: 500;
   font-family: Inter;
   text-align: center;
+}
+
+.ticketing-plan-features-card {
+  width: 540px; // TODO Make it responsive
+  height: auto;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  background: rgba(255, 255, 255, 0.938);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ticketing-pricing-sec-heading {
+  font-weight: 600;
+  font-size: 1.2rem;
+  font-family: 'Ubuntu';
+  color: #212121;
+  text-align: center;
+}
+
+.start-selling-ticket-button {
+  box-shadow: inset 0px -11px 8px #00000029, 0px 3px 15px #00000029;
+  border-radius: 50px;
+}
+
+.main-heading-calculate-profits {
+  font-size: 3rem;
+  font-family: 'Ubuntu';
+  font-weight: 600;
+  color: #538BF7;
+  text-align: center;
+}
+
+.profit-calculator-card {
+
+display: grid;
+grid-template-columns: 1fr 1fr 1fr 1fr;
+grid-gap: 3rem;
+align-items: center;
+justify-content: center;
+
+
+
+  width: 1138px;
+  height: 160px;
+  background-color: #538bf7;
+  margin-left: auto;
+  margin-right: auto;
+
+  background: rgb(255, 255, 255);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@media only screen and (max-width: 768px) {
+  .profit-calculator-card{
+    width: 90vw !important;
+    min-width: 300px;
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .ticketing-plan-features-card {
+    width: auto;
+    max-width: 90vw;
+  }
+
+  .pricing-br-heading {
+    flex-direction: column;
+  }
 }

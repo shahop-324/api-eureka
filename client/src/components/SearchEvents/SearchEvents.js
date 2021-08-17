@@ -49,19 +49,16 @@ const SearchEvents = () => {
 
   const location = useLocation();
 
-
-  
   useEffect(() => {
     dispatch(fetchEvents(location.search));
   }, [location.search, dispatch]);
 
   useEffect(() => {
-    history.push('/search-events/');
+    history.push("/search-events/");
   }, []);
 
   const [text, setText] = useState("");
   const [priceFilter, setPriceFilter] = useState("Free");
-
 
   let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
@@ -83,13 +80,12 @@ const SearchEvents = () => {
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      
 
-     const len = (new_url.split('?')[0].length);
+      const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
-console.log(typeof result);
-console.log(result);
+      const result = new_url.substring(len);
+      console.log(typeof result);
+      console.log(result);
       // props.fetchEvents(event.target.value);
       // if (result !== null) {
       //   history.push("/search-events/");
@@ -108,18 +104,17 @@ console.log(result);
       } else {
         history.push(result);
       }
-     // history.push(result);
+      // history.push(result);
     } else if (price === "Any Price") {
       search_params.delete("max_price");
       search_params.delete("min_price");
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      const len = (new_url.split('?')[0].length);
+      const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
-  console.log(typeof 
-    result);
+      const result = new_url.substring(len);
+      console.log(typeof result);
       // props.fetchEvents(event.target.value);
       if (result === "") {
         history.push("/search-events/");
@@ -140,9 +135,9 @@ console.log(result);
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      const len = (new_url.split('?')[0].length);
+      const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+      const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
       if (result === "") {
@@ -156,9 +151,9 @@ console.log(result);
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      const len = (new_url.split('?')[0].length);
+      const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+      const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
       if (result === "") {
@@ -172,9 +167,9 @@ console.log(result);
       url.search = search_params.toString();
       let new_url = url.toString();
       // setFullLocation(new_url);
-      const len = (new_url.split('?')[0].length);
+      const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+      const result = new_url.substring(len);
 
       // props.fetchEvents(event.target.value);
       if (result === "") {
@@ -198,9 +193,9 @@ console.log(result);
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    const len = (new_url.split('?')[0].length);
+    const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+    const result = new_url.substring(len);
 
     if (result === "") {
       history.push("/search-events/");
@@ -216,7 +211,7 @@ console.log(result);
       const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
       // console.log(x);
 
-      const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT")
+      const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
       return (
         <EventCard
@@ -241,9 +236,9 @@ console.log(result);
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    const len = (new_url.split('?')[0].length);
+    const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+    const result = new_url.substring(len);
 
     // props.fetchEvents(event.target.value);
     if (result === "") {
@@ -268,10 +263,10 @@ console.log(result);
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    const len = (new_url.split('?')[0].length);
+    const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
-console.log(result);
+    const result = new_url.substring(len);
+    console.log(result);
     if (result === "") {
       history.push("/search-events/");
     } else {
@@ -289,9 +284,9 @@ console.log(result);
     url.search = search_params.toString();
     let new_url = url.toString();
     // setFullLocation(new_url);
-    const len = (new_url.split('?')[0].length);
+    const len = new_url.split("?")[0].length;
 
-     const result = new_url.substring(len);
+    const result = new_url.substring(len);
 
     // props.fetchEvents(event.target.value);
     if (result === "") {
@@ -300,8 +295,6 @@ console.log(result);
       history.push(result);
     }
   };
-
- 
 
   if (error) {
     dispatch(errorTrackerForFetchEvents());
@@ -316,7 +309,11 @@ console.log(result);
         <div className="row nav-section">
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              <Link to="/home" class="navbar-brand" style={{ color: "#538BF7", textDecoration: "none" }}>
+              <Link
+                to="/home"
+                class="navbar-brand"
+                style={{ color: "#538BF7", textDecoration: "none" }}
+              >
                 Evenz
               </Link>
               <button
@@ -350,7 +347,7 @@ console.log(result);
                 </form>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
-                    <div className="me-5">
+                    <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center" >
                       <AvatarMenu />
                     </div>
                   ) : (
@@ -402,7 +399,7 @@ console.log(result);
               style={{ display: "none" }}
             >
               <div className="row" style={{ width: "99.5%", margin: "0 auto" }}>
-                <button
+                {/* <button
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseExample"
@@ -411,7 +408,7 @@ console.log(result);
                   class="btn btn-outline-secondary"
                 >
                   Filter
-                </button>
+                </button> */}
               </div>
             </div>
             <div className="col filter-wrapper" id="collapseExample">
@@ -618,28 +615,35 @@ console.log(result);
           </div>
           <div className="col-12 col-lg-9 search-results-section px-5">
             <div className="row search-result-heading pb-4">Top Picks</div>
-            { eventsList[0] ? <div
-              className="row search-result-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gridColumnGap: "40px",
-                gridRowGap: "40px",
-              }}
-            >
-              {isLoading ? (
-                <div
-                  className="d-flex flex-row justify-content-center align-items-center"
-                  style={{ minWidth: "60vw", height: "50vh" }}
-                >
-                  <Loader />{" "}
-                </div>
-              ) : (
-              renderedList(eventsList)
-              )}
-            </div> : <div className="d-flex flex-row align-items-center justify-content-center me-5" style={{textAlign: "center"}}><NoResultsFound /></div>  }
-            
-            
+            {eventsList[0] ? (
+              <div
+                className="row search-result-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gridColumnGap: "40px",
+                  gridRowGap: "40px",
+                }}
+              >
+                {isLoading ? (
+                  <div
+                    className="d-flex flex-row justify-content-center align-items-center"
+                    style={{ minWidth: "60vw", height: "50vh" }}
+                  >
+                    <Loader />{" "}
+                  </div>
+                ) : (
+                  renderedList(eventsList)
+                )}
+              </div>
+            ) : (
+              <div
+                className="d-flex flex-row align-items-center justify-content-center me-5"
+                style={{ textAlign: "center" }}
+              >
+                <NoResultsFound />
+              </div>
+            )}
           </div>
         </div>
         <div className="row show-more-search-page " style={{ height: "auto" }}>

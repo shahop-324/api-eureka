@@ -29,6 +29,7 @@ import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 import Select from "react-select";
 
 import PhoneInput from "react-phone-input-2";
+import PreFooter from "../../PreFooter";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -931,7 +932,7 @@ const Pricing = (props) => {
             </details>
           </div>
         </div>
-
+        <PreFooter/>
         {/* Pre Footer Here */}
         <Footer />
         {/* Footer */}

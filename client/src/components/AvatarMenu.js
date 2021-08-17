@@ -336,6 +336,10 @@ const AvatarMenu = () => {
               </div>
             </div>
 
+            <div className="refer-and-earn-banner px-3 py-2 mt-3">
+              Refer your network to Evenz — give $5, get $5.
+            </div>
+
             {/* Number cards indication credit, signups, and upgrades */}
             <div className="referral-3-cards-row my-5">
               <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
@@ -383,6 +387,8 @@ const AvatarMenu = () => {
               </div>
             </div>
 
+            
+
             <div
               className="social-media-share-your-link mt-5"
               style={{ textAlign: "center" }}
@@ -422,9 +428,7 @@ const AvatarMenu = () => {
                 </div>
               </div>
             </div>
-            <div className="refer-and-earn-banner px-3 py-2 mt-3">
-              Refer your network to Evenz — give $5, get $5.
-            </div>
+            
           </div>
         </Dialog>
       </div>

@@ -9,6 +9,8 @@ import BuildIcon from "@material-ui/icons/Build";
 import AirplayIcon from "@material-ui/icons/Airplay";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import CallMergeIcon from "@material-ui/icons/CallMerge";
+import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
+import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
 import history from "../../../history";
 
 import { IconButton } from "@material-ui/core";
@@ -226,7 +228,7 @@ const TopNav = () => {
                     </Link>
                   </div>
                 </li>
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+                {/* <li class="nav-item" style={{ alignSelf: "center" }}>
                   <div
                     className="nav-link-btn nav-link-btn-dark me-4"
                     style={{ fontWeight: "600" }}
@@ -238,6 +240,60 @@ const TopNav = () => {
                       Pricing
                     </Link>
                   </div>
+                </li> */}
+
+<li class="nav-item" style={{ alignSelf: "center" }}>
+                  {/* <div className="nav-link-btn nav-link-btn-dark me-4">
+                        Features
+                      </div> */}
+
+                  <Dropdown
+                    text="Pricing"
+                    style={{ fontWeight: "600", color: "#ffffff" }}
+                    className="link item nav-link-btn nav-link-btn-dark me-4"
+                  >
+                    <Dropdown.Menu className="mt-3">
+                      <Dropdown.Item>
+                        <div
+                          className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          onClick={() => {
+                            history.push("/pricing/");
+                          }}
+                        >
+                          <AllInclusiveIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            All Access
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <div
+                          className="home-nav-dropdown d-flex flex-row align-items-center  nav-dropdown-item-active"
+                          onClick={() => {
+                            history.push("/pricing/ticketing/");
+                          }}
+                        >
+                          <ConfirmationNumberIcon
+                            style={{ fill: "#538BF7", fontSize: "28" }}
+                            className="nav-dropdown-item-active-icon"
+                          />
+                          <div
+                            className="mx-3 nav-dropdown-item-active-text"
+                            style={{ fontWeight: "600" }}
+                          >
+                            Ticketing 
+                          </div>
+                        </div>
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </li>
 
                 <li class="nav-item" style={{ alignSelf: "center" }}>
@@ -324,7 +380,22 @@ const TopNav = () => {
                 }}
               >
                 <div style={{ textDecoration: "none", color: "#000000" }}>
-                  Pricing
+                  All Access Pricing
+                </div>
+              </Link>
+
+              <Link
+                to="/pricing/ticketing/"
+                className="nav-link-btn nav-link-btn-dark nav-tab-mb me-4 py-4"
+                style={{
+                  fontWeight: "600",
+                  width: "100%",
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ textDecoration: "none", color: "#000000" }}>
+                  Ticketing Pricing
                 </div>
               </Link>
 
