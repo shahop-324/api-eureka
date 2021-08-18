@@ -123,7 +123,7 @@ const SideNavEdit = (props) => {
             <img src={url} alt="event-poster" />
           </div>
           <div className="px-4 d-flex flex-row justify-content-between">
-            <div className="sidenav-event-name">The Craft Workshop</div>
+            <div className="sidenav-event-name" style={{fontFamily: "Inter"}}>{event.eventName}</div>
             {/* <div className=" px-3 py-2 user-registration-status-chip">
               Draft
             </div> */}

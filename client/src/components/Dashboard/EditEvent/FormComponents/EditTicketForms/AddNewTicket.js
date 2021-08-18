@@ -12,7 +12,10 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { createTicket, errorTrackerForCreateTicket } from "../../../../../actions";
+import {
+  createTicket,
+  errorTrackerForCreateTicket,
+} from "../../../../../actions";
 import Loader from "../../../../Loader";
 
 const styles = {
@@ -127,14 +130,25 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   </div>
 );
 const AddNewTicket = (props) => {
   const { handleSubmit, pristine, submitting } = props;
-const {error, isLoading} = useSelector((state) => state.ticket);
+  const { error, isLoading } = useSelector((state) => state.ticket);
   const params = useParams();
   const id = params.id;
   const showResults = (formValues) => {
@@ -143,11 +157,11 @@ const {error, isLoading} = useSelector((state) => state.ticket);
   };
 
   const currencyOptions = [
-    { value: "USD", label: "US Dollars" },
-    { value: "AED", label: "United Arab Emirates Dirham" },
+    // { value: "USD", label: "US Dollars" },
+    // { value: "AED", label: "United Arab Emirates Dirham" },
     { value: "INR", label: "Indian Rupees" },
-    { value: "BMD", label: "Bermudan Dollar equals" },
-    { value: "CAD", label: "Canadian Dollar" },
+    // { value: "BMD", label: "Bermudan Dollar equals" },
+    // { value: "CAD", label: "Canadian Dollar" },
   ];
 
   const venueAreaOptions = [
@@ -189,11 +203,19 @@ const {error, isLoading} = useSelector((state) => state.ticket);
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForCreateTicket());
     alert(error);
     return;
@@ -385,10 +407,6 @@ const validate = (formValues) => {
   if (!formValues.numberOfTicketAvailable) {
     errors.numberOfTicketAvailable = "Number of tickets available is required";
   }
-  if (!formValues.shareRecording) {
-    errors.shareRecording = "Recording sharing permission is required";
-  }
-
   return errors;
 };
 

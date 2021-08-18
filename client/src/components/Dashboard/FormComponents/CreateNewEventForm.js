@@ -382,6 +382,41 @@ const CreateNewEventForm = (props) => {
             />
           </div>
           <div class="mb-4 overlay-form-input-row">
+            <p>Which service would you like to use ?</p>
+            <div class="form-check mb-2">
+              <Field
+                name="service"
+                class="form-check-input"
+                type="radio"
+                // name="flexRadioDefault"
+                id="flexRadioDefault1"
+                value="Hosting & Management"
+                // component={renderInput}
+                component="input"
+              />
+              <label class="form-check-label" for="flexRadioDefault1">
+                Hosting & Management
+              </label>
+            </div>
+            <div class="form-check">
+              <Field
+                class="form-check-input"
+                type="radio"
+                name="service"
+                id="flexRadioDefault2"
+                // checked="true"
+                value="Ticketing"
+                // component={renderInput}
+                component="input"
+              />
+              <label class="form-check-label" for="flexRadioDefault2">
+                Ticketing Only
+              </label>
+            </div>
+          </div>
+
+
+          <div class="mb-4 overlay-form-input-row">
             <p>Event Visibility</p>
             <div class="form-check mb-2">
               <Field

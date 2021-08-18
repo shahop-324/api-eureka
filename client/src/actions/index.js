@@ -4396,4 +4396,40 @@ export const errorTrackerForFetchVideoCallToken =
       console.log(err);
     }
   };
+
+  export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
+    // dispatch(contactUsActions.startLoading());
+    try {
+      let res = await fetch(`${BaseURL}communityPlan/switchToFree`, {
+        method: "POST",
+  
+        body: JSON.stringify({
+         communityId: communityId,
+        }),
+  
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res.data);
+  
+      alert("Successfully switched to free plan!");
+      // dispatch(contactUsActions.ContactUs());
+    } catch (err) {
+      // dispatch(contactUsActions.hasError(err.message));
+      console.log(err);
+    }
+  };
+
+
+  
   

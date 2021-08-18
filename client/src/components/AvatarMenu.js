@@ -273,10 +273,16 @@ const AvatarMenu = () => {
                       </div>
                     </MenuItem>
 
-                    <hr />
-                    <div className="avatar-menu-group-heading px-3 pb-2">
-                      Switch to A Community ({communities.length})
-                    </div>
+                    {communities.length === 0 ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <hr />
+                        <div className="avatar-menu-group-heading px-3 pb-2">
+                          Switch to A Community ({communities.length})
+                        </div>
+                      </div>
+                    )}
                     <div
                       className="communities-list-error"
                       style={{ maxHeight: "200px", overflow: "scroll" }}

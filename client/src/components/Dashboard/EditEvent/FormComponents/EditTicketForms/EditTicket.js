@@ -127,14 +127,25 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   </div>
 );
 const EditTicket = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const {error, isLoading} = useSelector((state) => state.ticket);
+  const { error, isLoading } = useSelector((state) => state.ticket);
 
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
@@ -142,11 +153,11 @@ const EditTicket = (props) => {
   };
 
   const currencyOptions = [
-    { value: "USD", label: "US Dollars" },
-    { value: "AED", label: "United Arab Emirates Dirham" },
+    // { value: "USD", label: "US Dollars" },
+    // { value: "AED", label: "United Arab Emirates Dirham" },
     { value: "INR", label: "Indian Rupees" },
-    { value: "BMD", label: "Bermudan Dollar equals" },
-    { value: "CAD", label: "Canadian Dollar" },
+    // { value: "BMD", label: "Bermudan Dollar equals" },
+    // { value: "CAD", label: "Canadian Dollar" },
   ];
 
   const venueAreaOptions = [
@@ -188,11 +199,19 @@ const EditTicket = (props) => {
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForEditTicket());
     alert(error);
     return;
@@ -417,7 +436,7 @@ const mapStateToProps = (state) => ({
               label: element,
             };
           })
-        : "",
+           : "",
   },
 });
 
@@ -442,10 +461,6 @@ const validate = (formValues) => {
   if (!formValues.numberOfTicketAvailable) {
     errors.numberOfTicketAvailable = "Number of tickets available is required";
   }
-  if (!formValues.shareRecording) {
-    errors.shareRecording = "Recording sharing permission is required";
-  }
-
   return errors;
 };
 

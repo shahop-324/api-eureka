@@ -25,11 +25,13 @@ import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { Field, reduxForm } from "redux-form";
-import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
+import { createDemoRequest, errorTrackerForCreateDemo, switchToFreePlan } from "../../../actions";
 import Select from "react-select";
 
 import PhoneInput from "react-phone-input-2";
 import PreFooter from "../../PreFooter";
+import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
+import FemaleMascot from "./../../../assets/images/femaleMascot.png";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -932,7 +934,7 @@ const Pricing = (props) => {
             </details>
           </div>
         </div>
-        <PreFooter/>
+        <PreFooter />
         {/* Pre Footer Here */}
         <Footer />
         {/* Footer */}
@@ -948,33 +950,29 @@ const Pricing = (props) => {
             className="select-community-list px-3 py-4 d-flex flex-column justify-content-center"
             style={{ minWidth: "480px" }}
           >
-            <div className="select-community-heading">
-              Select Your community
+            <div
+              className="select-community-heading"
+              style={{ fontSize: "0.9rem" }}
+            >
+              {typeof communities !== "undefined" && communities.length > 0
+                ? "Select Your community"
+                : "Oops, you don't have any communities"}
             </div>
-            {communities ? (
+            {typeof communities !== "undefined" && communities.length > 0 ? (
               renderCommunitiesList(communities)
             ) : (
-              <>
-                <div className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5">
-                  <img src={Bored} alt="Bored" className="mb-4" />
-                  <div className="you-have-no-event-coming-text mb-4">
-                    You have not created or joined any community yet.
-                  </div>
-
-                  <Link
-                    to={"/user/home"}
-                    className="btn btn-text-customised btn-color-customised btn-primary btn-outline-text"
-                  >
-                    Create New Community
-                  </Link>
-                </div>
-              </>
+              <CreateNewCommunityMsgCard
+                msgText="Let's create your first community."
+                img={FemaleMascot}
+              />
             )}
 
             <div className="d-flex flex-row align-items-center justify-content-center mt-2">
               <button
                 onClick={() => {
-                  setOpenDrawer(true);
+                  typeof communities !== "undefined" && communities.length > 0
+                    ? setOpenDrawer(true)
+                    : history.push("/user/home/");
                   handleCloseCommunityList();
                 }}
                 className="btn btn-primary btn-outline-text me-2"
@@ -1065,7 +1063,7 @@ const Pricing = (props) => {
                   onClick={() => {
                     selectedPlan.name !== "Basic"
                       ? displayRazorpay()
-                      : alert("Successfully switched to free plan.");
+                      : dispatch(switchToFreePlan(selectedCommunity));
                     setOpenDrawer(false);
                   }}
                   type="button"

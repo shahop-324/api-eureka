@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CssBaseline } from "@material-ui/core";
 import UserAccountNav from "./UserAccountNav";
 import "./../../assets/css/UserAccountStyle.css";
@@ -10,7 +10,7 @@ import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
 import {
   errorTrackerForPersonalData,
-  fetchUserAllPersonalData
+  fetchUserAllPersonalData,
 } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 
@@ -20,8 +20,20 @@ import history from "../../history";
 import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
+import Tour from "reactour";
+
+const steps = [
+  {
+    selector: ".first-step-user-section",
+    content: "This is my first Step",
+  },
+  // ...
+];
+
 const UserAccountHome = () => {
   const { isLoading, error } = useSelector((state) => state.user);
+
+  const [isTourOpen, setIsTourOpen] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -83,7 +95,7 @@ const UserAccountHome = () => {
         </div>
       ) : (
         <div
-          className="container-fluid page-user-account"
+          className="first-step-user-section container-fluid page-user-account"
           style={{
             paddingLeft: "0",
             paddingRight: "0",
@@ -92,9 +104,9 @@ const UserAccountHome = () => {
             width: "auto",
           }}
         >
-          <UserAccountNav  />
+          <UserAccountNav />
           <div className="user-account-body">
-            <UserAccountSideNav />
+            <UserAccountSideNav className="first-step-user-section" />
             <div
               className="user-account-main-body"
               style={{ minWidth: "1024px", overflow: "visible" }}
@@ -131,6 +143,12 @@ const UserAccountHome = () => {
           </div>
         </div>
       )}
+
+      {/* <Tour
+        steps={steps}
+        isOpen={isTourOpen}
+        onRequestClose={() => setIsTourOpen(false)}
+      /> */}
     </>
   );
 };

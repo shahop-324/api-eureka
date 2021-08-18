@@ -306,55 +306,59 @@ const TicketingPricing = () => {
           <div className="FAQs-section px-4 mt-5 pt-5">
             <h2 className="mb-4">F.A.Q.</h2>
             <details>
-              <summary>Question 1</summary>
+              <summary>
+                Is there any special pricing for non profit organisation?
+              </summary>
               <p>
-                Just use a <code>details</code> and <code>summary</code> tags
-                with a little CSS, no more JS. You can use any text or emoji as
-                caret.
+                Yes, we have special offers for NGOs and Not for profit
+                organisations. For More details please contact contact us at
+                <a href="mailto:contact@evenz.in"> {" "} Contact@evenz.in</a>
               </p>{" "}
+              {/*  */}
+            </details>
+            <details>
+              <summary>
+                How many tickets, coupons and landing pages can I create ?
+              </summary>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Tempora in nihil, deleniti saepe optio corrupti dolorum
-                perferendis hic iure, maiores quae vitae provident minus, ipsum,
-                aut tempore facilis doloremque rem.
+                There is no limit on how many tickets, coupons and landing pages
+                you can create as of now. And this service is always going to be
+                offered at zero cost.
               </p>
             </details>
             <details>
-              <summary>Question 2</summary>
+              <summary>
+                What all is needed to get started with posting and selling
+                tickets on evenz platform ?
+              </summary>
               <p>
-                Ipsa veritatis inventore reprehenderit dolorem, officiis.
-                Quaerat doloribus voluptatibus impedit repellat quae
-                perspiciatis nesciunt, recusandae facilis unde fugit et eaque
-                rem voluptatum perferendis libero veniam rerum aliquam eos
-                minima voluptate.
+                All you need is a free evenz account and you can start posting
+                and selling your tickets to the whole world in few clicks.
               </p>
             </details>
             <details>
-              <summary>Question 3</summary>
+              <summary>
+                How much service charge evenz takes on each booking and is this
+                same for any type of tickets ?
+              </summary>
               <p>
-                Quisquam, necessitatibus quo dolore sequi suscipit magni,
-                voluptatum debitis, accusantium dolorum officia beatae rerum
-                similique optio saepe vel dicta facere modi, voluptatem culpa
-                expedita quaerat eum reprehenderit dolores. Assumenda,
-                doloremque!
+                We have a simple pricing model which chrages only 1% on each
+                booking along with tax price as applicable. Yes, we charge only
+                1% on any ticket type you create and sell.
               </p>
             </details>
             <details>
-              <summary>Question 4</summary>
+              <summary>
+                How can I recieve my payouts and what payment methods do you
+                accept ?
+              </summary>
               <p>
-                Dolorum quaerat facilis magnam commodi molestiae atque similique
-                hic enim pariatur nulla magni amet iusto soluta nemo alias odit
-                recusandae repudiandae dignissimos, fugit asperiores quia eius
-                necessitatibus iure. Possimus, illum.
-              </p>
-            </details>
-            <details>
-              <summary>Question 5</summary>
-              <p>
-                Consequuntur voluptate consequatur sed adipisci libero
-                temporibus atque itaque voluptas eos, rerum vero qui. Adipisci
-                illum, molestias commodi unde necessitatibus ea, quod explicabo,
-                deleniti voluptatem aliquam reprehenderit, nobis maiores. Saepe?
+                You can recieve your payouts simply by adding a payout request
+                from your evenz community dashboard. You will be able track
+                status of payment and payment is generally processed within 6-18
+                hrs of posting request. We recieve domestic and international
+                payments using Debit cards, credit cards, UPI, Digital Wallets
+                and many more.
               </p>
             </details>
           </div>

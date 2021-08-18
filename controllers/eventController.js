@@ -101,6 +101,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     endTime: new Date(req.body.endTime),
     socialMediaHandles: communityGettingEvent.socialMediaHandles,
     Timezone: req.body.timezone,
+    service: req.body.service,
     // host: req.community.superAdmin[0].id,
   });
   // 2) Update that event into communities resource in events array

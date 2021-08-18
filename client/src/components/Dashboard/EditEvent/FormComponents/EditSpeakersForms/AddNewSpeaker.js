@@ -268,6 +268,7 @@ const AddNewSpeaker = (props) => {
                 children=""
                 alt="Travis Howard"
                 src={fileToPreview}
+                variant="rounded"
                 className={classes.large}
               />
             </div>
