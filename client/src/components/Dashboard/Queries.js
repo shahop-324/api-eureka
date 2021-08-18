@@ -19,6 +19,7 @@ import {
 import NoContentFound from "../NoContent";
 
 import QueriesPNG from './../../assets/images/queriesNotFound.png';
+import Loader from "../Loader";
 
 const ratingOptions = [
   { value: "all", label: "All Queries" },
@@ -169,7 +170,12 @@ const Queries = () => {
   const classes = useStyles();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div
+    className="d-flex flex-row align-items-center justify-content-center"
+    style={{ height: "93vh", width: "65vw" }}
+  >
+    <Loader />
+  </div>;
   } else if (error) {
     throw new Error(error);
   }
