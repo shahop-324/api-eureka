@@ -14,11 +14,7 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  communitySignIn,
-  navigationIndex,
-  signOut,
-} from "../actions/index";
+import { communitySignIn, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
@@ -387,8 +383,6 @@ const AvatarMenu = () => {
               </div>
             </div>
 
-            
-
             <div
               className="social-media-share-your-link mt-5"
               style={{ textAlign: "center" }}
@@ -399,36 +393,73 @@ const AvatarMenu = () => {
                 style={{ width: "100%" }}
               >
                 <div className="shareon-icon p-3 ">
-                  <IconButton
-                    style={{ height: "fit-content", width: "fit-content" }}
+                  <a
+                    href="https://web.whatsapp.com"
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <WhatsAppIcon style={{ fontSize: "24", fill: "#0C881D" }} />
-                  </IconButton>
+                    <IconButton
+                      style={{ height: "fit-content", width: "fit-content" }}
+                    >
+                      <WhatsAppIcon
+                        style={{ fontSize: "24", fill: "#0C881D" }}
+                      />
+                    </IconButton>
+                  </a>
                 </div>
                 <div className="shareon-icon p-3 ">
-                  <IconButton>
-                    <FacebookIcon style={{ fontSize: "24", fill: "#1760A8" }} />
-                  </IconButton>
+                  <a
+                    href="https://www.facebook.com"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <FacebookIcon
+                        style={{ fontSize: "24", fill: "#1760A8" }}
+                      />
+                    </IconButton>
+                  </a>
                 </div>
                 <div className="shareon-icon p-3 ">
-                  <IconButton>
-                    <LinkedInIcon style={{ fontSize: "24", fill: "#2565A5" }} />
-                  </IconButton>
+                  <a
+                    href="https://www.linkedin.com"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <LinkedInIcon
+                        style={{ fontSize: "24", fill: "#2565A5" }}
+                      />
+                    </IconButton>
+                  </a>
                 </div>
                 <div className="shareon-icon p-3 ">
-                  <IconButton>
-                    <TwitterIcon style={{ fontSize: "24", fill: "#539FF7" }} />
-                  </IconButton>
+                  <a
+                    href="https://www.twitter.com"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <TwitterIcon
+                        style={{ fontSize: "24", fill: "#539FF7" }}
+                      />
+                    </IconButton>
+                  </a>
                 </div>
 
                 <div className="shareon-icon p-3 ">
-                  <IconButton>
-                    <Instagram style={{ fontSize: "24", fill: "#841E8D" }} />
-                  </IconButton>
+                  <a
+                    href="https://www.instagram.com"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <Instagram style={{ fontSize: "24", fill: "#841E8D" }} />
+                    </IconButton>
+                  </a>
                 </div>
               </div>
             </div>
-            
           </div>
         </Dialog>
       </div>

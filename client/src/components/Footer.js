@@ -148,17 +148,42 @@ const Footer = (props) => {
 
             <div className=" d-flex flex-row align-items-center">
               <div className="shareon-icon p-3 me-3">
-                <FacebookIcon style={{ fontSize: "20", fill: "#1760A8" }} />
+                <a
+                  href="https://www.facebook.com/pages/?category=your_pages&ref=bookmarks"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FacebookIcon style={{ fontSize: "20", fill: "#1760A8" }} />
+                </a>
               </div>
               <div className="shareon-icon p-3 me-3">
-                <LinkedInIcon style={{ fontSize: "20", fill: "#2565A5" }} />
-              </div>
-              <div className="shareon-icon p-3 me-3">
-                <TwitterIcon style={{ fontSize: "20", fill: "#539FF7" }} />
+                <a
+                  href="https://www.linkedin.com/company/evenz-in"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <LinkedInIcon style={{ fontSize: "20", fill: "#2565A5" }} />
+                </a>
               </div>
 
               <div className="shareon-icon p-3 me-3">
-                <Instagram style={{ fontSize: "20", fill: "#841E8D" }} />
+                <a
+                  href="https://twitter.com/EvenzOfficial"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <TwitterIcon style={{ fontSize: "20", fill: "#539FF7" }} />
+                </a>
+              </div>
+
+              <div className="shareon-icon p-3 me-3">
+                <a
+                  href="https://www.instagram.com/evenzofficial/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Instagram style={{ fontSize: "20", fill: "#841E8D" }} />
+                </a>
               </div>
             </div>
 
