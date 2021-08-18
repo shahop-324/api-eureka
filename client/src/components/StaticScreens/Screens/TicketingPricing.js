@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
 import { useTheme } from "@material-ui/core/styles";
 import PreFooter from "../../PreFooter";
+import { Link } from "react-router-dom";
 
 const TicketingPricing = () => {
   const referral = useSelector((state) => state.user.referredUserId);
@@ -34,8 +35,11 @@ const TicketingPricing = () => {
           <TopNav />
 
           <div className="pricing-section  py-4">
-          <div className="pricing-heading-primary mt-5 mb-4" style={{ color: "#FFFFFF" }}>
-             $0 <span style={{ color: "#538BF7" }}>is all you need</span>
+            <div
+              className="pricing-heading-primary mt-5 mb-4"
+              style={{ color: "#FFFFFF" }}
+            >
+              $0 <span style={{ color: "#538BF7" }}>is all you need</span>
             </div>
             <div className="pricing-heading-secondary mb-4">
               Yes you heard it right
@@ -224,8 +228,9 @@ const TicketingPricing = () => {
             </div>
 
             <div className="d-flex flex-row justify-content-center align-items-center mt-5">
-              <button
-                className="btn btn-primary btn-outline-text px-5 py-3 start-selling-ticket-button"
+              <Link
+                to="/signup"
+                className="btn btn-primary btn-outline-text px-5 py-3 start-selling-ticket-Link"
                 style={{
                   borderRadius: "40px",
                   marginLeft: "auto",
@@ -233,7 +238,7 @@ const TicketingPricing = () => {
                 }}
               >
                 Start selling today
-              </button>
+              </Link>
             </div>
 
             {/* 
@@ -354,7 +359,7 @@ const TicketingPricing = () => {
             </details>
           </div>
         </div>
-              <PreFooter />
+        <PreFooter />
         {/* Pre Footer Here */}
         <Footer />
         {/* Footer */}

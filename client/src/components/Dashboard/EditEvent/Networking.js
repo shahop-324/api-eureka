@@ -11,7 +11,7 @@ import NetworkingFormLeft from "./FormComponents/EditNetworkingForms/NetworkingF
 import NetworkingFormRight from "./FormComponents/EditNetworkingForms/NetworkingFormRight";
 import { useDispatch } from "react-redux";
 import { fetchNetworking } from "../../../actions";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Networking = () => {
   const params = useParams();
@@ -28,9 +28,18 @@ const Networking = () => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Networking</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
-            <button className="btn btn-outline-primary btn-outline-text">
+            {/* <button className="btn btn-outline-primary btn-outline-text">
               Preview Venue
-            </button>
+            </button> */}
+
+            <Link
+              type="button"
+              className="btn btn-outline-primary btn-outline-text me-3"
+              to={`/event-landing-page/${id}`}
+              target="_blank"
+            >
+              Preview Landing Page
+            </Link>
           </div>
         </div>
         <div className="networking-content-grid px-3 mb-4">

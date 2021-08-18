@@ -209,7 +209,7 @@ const Speakers = () => {
             <div className="mx-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
                 //  onChange={(value)=>console.log(value)}
