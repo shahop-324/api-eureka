@@ -11,7 +11,10 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
-import { createSession, errorTrackerForCreateSession } from "../../../../../actions";
+import {
+  createSession,
+  errorTrackerForCreateSession,
+} from "../../../../../actions";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -37,15 +40,6 @@ const styles = {
   }),
 };
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 const renderInput = ({
   input,
   meta: { touched, error, warning },
@@ -150,7 +144,7 @@ const renderReactSelect = ({
 
 const AddNewSession = (props) => {
   let speakerOptions = [];
-const {error, isLoading} = useSelector((state) => state.session);
+  const { error, isLoading } = useSelector((state) => state.session);
   const [state, setState] = React.useState({
     open: false,
     vertical: "top",
@@ -212,16 +206,23 @@ const {error, isLoading} = useSelector((state) => state.session);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForCreateSession());
     alert(error);
     return;
   }
-
 
   return (
     <>

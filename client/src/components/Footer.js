@@ -8,10 +8,52 @@ import Instagram from "@material-ui/icons/Instagram";
 import { useDispatch } from "react-redux";
 import { signupForEmailNewsletter } from "../actions";
 
+import { reduxForm, Field } from "redux-form";
+
+const renderInput = ({
+  input,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
+};
+
 const Footer = (props) => {
   const dispatch = useDispatch();
+  const { handleSubmit, pristine, submitting } = props;
 
-  const [email, setEmail] = useState("");
+  const onSubmit = (formValues) => {
+    dispatch(signupForEmailNewsletter(formValues));
+  };
 
   return (
     <>
@@ -188,26 +230,19 @@ const Footer = (props) => {
             </div>
 
             <div className="footer-section-headline my-3 ">Newsletter</div>
-
-            <div class="ui action input">
-              <input
-                type="text"
-                value={email}
-                placeholder="Your email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-              <button
-                type="button"
-                class="ui blue icon button"
-                onClick={() => {
-                  email && dispatch(signupForEmailNewsletter(email));
-                }}
-              >
-                <i class="send icon"></i>
-              </button>
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div class="ui action input">
+                <Field
+                  name="email"
+                  type="text"
+                  placeholder="Your email"
+                  component={renderInput}
+                />
+                <button type="submit" class="ui blue icon button">
+                  <i class="send icon"></i>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </footer>
@@ -215,4 +250,21 @@ const Footer = (props) => {
   );
 };
 
-export default Footer;
+const validate = (formValues) => {
+  const errors = {};
+  if (!formValues.email) {
+    errors.email = "email is required";
+  }
+
+  errors.email =
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+      ? "Invalid email address"
+      : undefined;
+
+  return errors;
+};
+export default reduxForm({
+  form: "newsletterSubscription",
+  validate,
+})(Footer);
