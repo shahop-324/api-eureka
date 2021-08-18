@@ -162,7 +162,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 
 const EditBooth = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const {error, isLoading} = useSelector((state) => state.booth);
+  const { error, isLoading } = useSelector((state) => state.booth);
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -218,11 +218,19 @@ const EditBooth = (props) => {
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForEditBooth());
     alert(error);
     return;
@@ -466,7 +474,7 @@ const EditBooth = (props) => {
               <button
                 className="btn btn-outline-primary btn-outline-text me-3"
                 type="button"
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
                 onClick={reset}
               >
                 Discard

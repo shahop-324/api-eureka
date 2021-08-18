@@ -15,7 +15,11 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editSpeaker, errorTrackerForEditSpeaker, fetchParticularSpeakerOfEvent } from "../../../../../actions";
+import {
+  editSpeaker,
+  errorTrackerForEditSpeaker,
+  fetchParticularSpeakerOfEvent,
+} from "../../../../../actions";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -160,8 +164,7 @@ const renderReactSelect = ({
 const EditSpeakerForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
 
-  const {error, isLoading} = useSelector((state) => state.speaker);
-
+  const { error, isLoading } = useSelector((state) => state.speaker);
 
   const params = useParams();
   const id = params.id;
@@ -249,12 +252,19 @@ const EditSpeakerForm = (props) => {
     console.log(file);
   };
 
-  
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForEditSpeaker());
     alert(error);
     return;
@@ -505,7 +515,7 @@ const EditSpeakerForm = (props) => {
               <button
                 className="btn btn-outline-primary btn-outline-text me-3"
                 type="button"
-                disabled={pristine || submitting}
+                // disabled={pristine || submitting}
                 onClick={reset}
               >
                 Discard
