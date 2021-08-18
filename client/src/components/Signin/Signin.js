@@ -84,10 +84,6 @@ const Signin = (props) => {
     dispatch(signIn(formValues));
   };
 
-  const onClickHandle = () => {
-    dispatch(googleLinkClicked());
-  };
-
   if (isSending) {
     return (
       <section>
