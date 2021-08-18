@@ -361,6 +361,14 @@ const TicketingPricing = () => {
                 and many more.
               </p>
             </details>
+            <details>
+              <summary>
+                I still have some queries ?
+              </summary>
+              <p>
+                Please reach out to us at <a href="mailto:support@evenz.in"> {" "} support@evenz.in</a>
+              </p>
+            </details>
           </div>
         </div>
         <PreFooter />

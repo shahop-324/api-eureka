@@ -5,11 +5,8 @@ import "./../../../index.css";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { createEvent } from "../../../actions";
-
 import { IconButton } from "@material-ui/core";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
 
 const renderInput = ({
   input,

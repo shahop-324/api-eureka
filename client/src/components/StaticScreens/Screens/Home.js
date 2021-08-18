@@ -863,6 +863,37 @@ const Home = (props) => {
           </div>
         </div>
 
+
+        <div className="home-section-9">
+          <div className="container py-5 mt-3">
+            <div className="centered-heading-primary">
+              Let’s give a boost to <br /> Your virtual events
+            </div>
+            <div
+              className="centered-heading-primary"
+              style={{ marginLeft: "auto", marginRight: "auto" }}
+            >
+              <img
+                src={BoostYourEvents}
+                data-aos="zoom-in"
+                data-aos-easing="ease-in-sine"
+                data-aos-delay="100"
+                alt="amazing event"
+                style={{ maxHeight: "100%", maxWidth: "100%" }}
+              />
+            </div>
+            <div className="" style={{ textAlign: "center" }}>
+              <a
+                href="/signup"
+                className="btn btn-primary btn-outline-text btn-attention-home px-5 py-3"
+                style={{ borderRadius: "20px" }}
+              >
+                Get started for free
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div className="home-section-8 p-4">
           <div className="pt-5">
             <div
