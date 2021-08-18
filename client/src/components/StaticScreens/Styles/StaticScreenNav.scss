@@ -441,3 +441,155 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+:root {
+  --Teal: #538BF7;
+  --Green: #538BF7;
+  --Magenta: #f73859;
+  --Black: #282828;
+  --Grey: #e2e2e2;
+}
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+//   font-family: sans-serif !important;
+// }
+.comparision {
+  width: 900px;
+  height: 400px;
+  margin: 60px auto;
+  background-color: var(--Teal);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row wrap;
+  position: relative;
+}
+.comparision::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 340px;
+  background-color: #fff;
+}
+.comparision::after {
+  content: "or";
+  position: absolute;
+  left: 50.25%;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  margin-left: -25px;
+  margin-top: -25px;
+  background-color: #fff;
+  border-radius: 50%;
+  text-transform: uppercase;
+  color: var(--Teal);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.comparision .prod {
+  width: 300px;
+  height: 350px;
+  margin: 0 40px;
+  border-radius: 15px;
+  background-color: #fff;
+}
+.comparision .prod div:not(.features) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 100px;
+  border-radius: 15px 15px 0 0;
+  background-color: var(--Black);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+}
+.comparision .prod div:not(.features) label {
+  margin-top: 15px;
+}
+.comparision .prod div:not(.features) label span {
+  color: var(--Green);
+  margin-left: 6px;
+}
+.comparision .prod .features {
+  width: 260px;
+  height: 260px;
+  margin: -50px auto 0 auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 0 5px var(--Black);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 2fr auto;
+}
+.comparision .prod .features h4 {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 25px;
+}
+.comparision .prod .features ul {
+  list-style-type: none;
+  margin: 0 auto;
+}
+.comparision .prod .features ul li {
+  cursor: pointer;
+  transition: 0.3s;
+}
+.comparision .prod .features ul li::before {
+  content: "\2022";
+  position: relative;
+  top: 4px;
+  right: 5px;
+  color: var(--Magenta);
+  font-weight: bold;
+  font-size: 30px;
+}
+.comparision .prod .features ul li:hover {
+  padding-left: 10px;
+  font-weight: bold;
+}
+.comparision .prod .features a {
+  width: 180px;
+  padding: 10px;
+  margin: 0 auto 10px auto;
+  background-color: var(--Magenta);
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  transition: 0.3s;
+}
+.comparision .prod .features a::before,
+.comparision .prod .features a::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: inherit;
+  transition: 0.3s;
+}
+.comparision .prod .features a::before {
+  top: -4px;
+  left: 0;
+}
+.comparision .prod .features a::after {
+  bottom: -4px;
+  right: 0;
+}
+.comparision .prod .features a:hover {
+  transform: scale(1.1);
+}
+.comparision .prod .features a:hover::before,
+.comparision .prod .features a:hover::after {
+  width: 100%;
+}
+
+

@@ -196,8 +196,8 @@ const EditSession = (props) => {
       return speaker.value;
     });
 
-    console.log(ModifiedFormValues);
-    showResults(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));

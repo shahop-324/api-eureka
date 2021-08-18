@@ -95,9 +95,9 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
   if (planName === "Basic") {
     priceToBeCharged = 0;
   } else if (planName === "Starter") {
-    priceToBeCharged = 49 * 75 * 100 * 1; // In INR (paise)
+    priceToBeCharged = 19 * 75 * 100 * 1; // In INR (paise)
   } else if (planName === "Professional") {
-    priceToBeCharged = 99 * 75 * 100 * 1; // In INR (paise)
+    priceToBeCharged = 39 * 75 * 100 * 1; // In INR (paise)
   }
 
   const newOrder = razorpay.orders.create(

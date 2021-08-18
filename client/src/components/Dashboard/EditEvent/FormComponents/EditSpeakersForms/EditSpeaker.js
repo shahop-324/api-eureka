@@ -246,7 +246,7 @@ const EditSpeakerForm = (props) => {
 
     console.log(ModifiedFormValues);
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     setState({ vertical: "top", horizontal: "center", open: true });
     dispatch(editSpeaker(ModifiedFormValues, file, props.id));
     console.log(file);

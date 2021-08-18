@@ -214,7 +214,7 @@ const EditBooth = (props) => {
 
     dispatch(editBooth(ModifiedFormValues, file, props.id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

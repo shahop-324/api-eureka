@@ -6,6 +6,7 @@ import "../Styles/AboutUs.scss";
 import PreFooter from "../../PreFooter";
 
 import TopNav from "../Helper/TopNav";
+import Timer from "../../Timer";
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -69,12 +70,13 @@ window.onload = function () {
 window.onload();
 
 const AboutUs = () => {
-    useEffect(() => {
-      window.localStorage.clear();
-    })
-  
+  useEffect(() => {
+    window.localStorage.clear();
+  });
+
   return (
     <>
+      <Timer />
       <div
         className="container-fluid p-0 pb-5"
         style={{ backgroundColor: "#272727", width: "100vw" }}
@@ -402,28 +404,41 @@ const AboutUs = () => {
             <div class="c"></div>
           </div>
 
-          <div className="d-flex flex-column align-items-center" data-aos="zoom-in">
-            <div
-              className="mission-statement-container p-5"
-              
-            >
-              <p className="mission-text mb-5" style={{fontFamily: "Ubuntu", fontWeight: "500", color: "#ffffff"}} >
+          <div
+            className="d-flex flex-column align-items-center"
+            data-aos="zoom-in"
+          >
+            <div className="mission-statement-container p-5">
+              <p
+                className="mission-text mb-5"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: "500",
+                  color: "#ffffff",
+                }}
+              >
                 Evenz is designed and developed to cater to the ever growing
                 event industry needs. From 100 people events to large
                 conferences, trade shows, expos or training sessions, Evenz can
                 help you and your community in delivering a delightful
                 experience for your audience.
               </p>
-              <p className="mission-text" style={{fontFamily: "Ubuntu", fontWeight: "500", color: "#ffffff"}}>
+              <p
+                className="mission-text"
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: "500",
+                  color: "#ffffff",
+                }}
+              >
                 This Platform is designed to help you in managing and hosting
                 any type of event in just few clicks and provides various tools
                 to get registrations and set marketing campaigns to drive
                 audience.
               </p>
             </div>
-
           </div>
-            {/* <div>
+          {/* <div>
             <div className="home-section-2 px-5 py-5" style={{ height: "auto" }}>
           <div className="centered-heading-primary mb-5">
           <span style={{color: "#ffffff"}}>Not Just a Sass Company</span>  <br />

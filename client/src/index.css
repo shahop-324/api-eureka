@@ -241,3 +241,27 @@ code {
   color: #538bf7;
   border-bottom: 1px solid #538bf7;
 }
+
+.shareon-icon:hover {
+  /* transform: translate(1.1%); */
+  cursor: pointer;
+  /* background-color: ; */
+}
+
+.offer-strip {
+  background-color: #538bf7;
+  color: #ffffff;
+  font-weight: 500;
+  font-family: "Ubuntu";
+}
+
+.sale-text {
+  letter-spacing: 0.3px;
+  word-spacing: 0.5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .grab-deal-btn{
+    margin-top: 2%;
+  }
+}

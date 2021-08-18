@@ -60,8 +60,8 @@ const EditNotificationSettings = (props) => {
   };
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
-    console.log(formValues);
-    showResults(formValues);
+    // console.log(formValues);
+    // showResults(formValues);
     dispatch(editUser(formValues));
   };
 

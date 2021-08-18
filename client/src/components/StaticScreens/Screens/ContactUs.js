@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { contactUs, errorTrackerForContactUs } from "../../../actions";
 
 import TopNav from "../Helper/TopNav";
+import Timer from "../../Timer";
 
 const renderInput = ({
   input,
@@ -128,6 +129,7 @@ const ContactUs = (props) => {
 
   return (
     <>
+    <Timer />
       <div
         className="container-fluid p-0"
         style={{ backgroundColor: "#474747", width: "100vw" }}

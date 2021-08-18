@@ -29,6 +29,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import PreFooter from "../../PreFooter";
 import TopNav from "../Helper/TopNav";
+import Timer from "../../Timer";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -226,6 +227,7 @@ const EventBuilderHome = (props) => {
 
   return (
     <>
+    <Timer />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

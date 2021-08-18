@@ -175,7 +175,7 @@ const EditSponosor = (props) => {
 
     dispatch(editSponsor(ModifiedFormValues, file, props.id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

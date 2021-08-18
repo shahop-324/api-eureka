@@ -32,6 +32,7 @@ import PhoneInput from "react-phone-input-2";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
+import Timer from "../../Timer";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -51,7 +52,7 @@ const basicPlan = {
 };
 const starterPlan = {
   name: "Starter",
-  price: "49",
+  price: "19",
   details: [
     "2 organiser",
     "300 registrations",
@@ -66,7 +67,7 @@ const starterPlan = {
 };
 const professionalPlan = {
   name: "Professional",
-  price: "99",
+  price: "39",
   details: [
     "5 organiser",
     "1200 registrations",
@@ -452,6 +453,7 @@ const Pricing = (props) => {
 
   return (
     <>
+    <Timer />
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}
@@ -552,7 +554,7 @@ const Pricing = (props) => {
                 >
                   <div class="card__pricing">
                     <div class="card__pricing-number">
-                      <span class="card__pricing-symbol">$</span>49
+                      <span class="card__pricing-symbol">$</span>19
                     </div>
                     <span class="card__pricing-month">/month</span>
                   </div>
@@ -659,7 +661,7 @@ const Pricing = (props) => {
                 >
                   <div class="card__pricing">
                     <div class="card__pricing-number">
-                      <span class="card__pricing-symbol">$</span>99
+                      <span class="card__pricing-symbol">$</span>39
                     </div>
                     <span class="card__pricing-month">/month</span>
                   </div>
@@ -879,7 +881,7 @@ const Pricing = (props) => {
           </div>
 
           <div className="FAQs-section px-4">
-          <h2 className="mb-4">F.A.Q.</h2>
+          <h2 className="mb-4 main-heading-calculate-profits">F.A.Q.</h2>
             <details>
               <summary>
                 Is there any special pricing for non profit organisation?
