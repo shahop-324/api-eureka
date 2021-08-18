@@ -49,8 +49,8 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
           <div className="registrations-name-field">
             <div className="registrations-field-label d-flex flex-row justify-content-start">
               {/* attendee avatar and name */}
-              <Avatar alt={name} src={url} />
-              <div className="ms-3 px-2 registration-name-styled">{name}</div>
+              <Avatar alt={name} src={url} varinat="rounded" />
+              <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter"}}>{name}</div>
             </div>
           </div>
           {/* <div className="event-name-d" style={{width: '100%'}}>
@@ -65,7 +65,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
         >
           <div
             className="event-field-label registrations-field-label"
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontFamily: "Inter" }}
           >
             {headline}
             {/* {truncateText(headline, 25)} */}
@@ -81,7 +81,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text">
+            <div className="chip-text" style={{fontFamily: "Inter"}}>
               {email}
               {/* {truncateText(email, 18)} */}
             </div>
@@ -101,7 +101,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
                   <div
                     key={session.id}
                     className="me-3 px-3 py-2 event-name-chip-review"
-                    style={{ textAlign: "center" }}
+                    style={{ textAlign: "center", fontFamily: "Inter" }}
                   >
                     {session.name}
                   </div>

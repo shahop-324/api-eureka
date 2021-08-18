@@ -76,7 +76,7 @@ const BoothDetailsCard = (props) => {
                 variant="rounded"
                 className={classes.large}
               />
-              <div className="ms-3 px-2 registration-name-styled">
+              <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter"}}>
                 {props.name}
               </div>
             </div>
@@ -93,7 +93,7 @@ const BoothDetailsCard = (props) => {
         >
           <div
             className="event-field-label registrations-field-label"
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontFamily: "Inter" }}
           >
             {props.tagline}
           </div>
@@ -109,7 +109,7 @@ const BoothDetailsCard = (props) => {
             style={{ width: "100%" }}
           >
             {props.emails.map((email) => {
-              return <div className="chip-text mb-2">{email}</div>;
+              return <div className="chip-text mb-2" style={{fontFamily: "Inter"}}>{email}</div>;
             })}
           </div>
         </div>
@@ -125,7 +125,7 @@ const BoothDetailsCard = (props) => {
                 return (
                   <div
                     className="me-3 px-3 py-2 event-name-chip-review"
-                    style={{ textAlign: "center" }}
+                    style={{ textAlign: "center", fontFamily: "Inter" }}
                   >
                     {boothTag}
                   </div>

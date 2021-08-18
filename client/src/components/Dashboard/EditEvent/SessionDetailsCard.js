@@ -62,6 +62,7 @@ const SessionDetailCard = ({
       return (
         <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
           <Avatar
+          variant="rounded"
             alt={speaker.name}
             src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
           />
@@ -79,7 +80,7 @@ const SessionDetailCard = ({
             width: "100%",
           }}
         >
-          <div className="event-name-d" style={{ width: "100%" }}>
+          <div className="event-name-d" style={{ width: "100%", fontFamily: "Inter" }}>
             {name}
           </div>
         </div>
@@ -93,13 +94,13 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="me-3">
+            <div className="me-3" style={{fontFamily: "Inter"}}>
               {dateFormat(startDate, "mm/d/yyyy")}{" "}
               {dateFormat(startTime, "h:MM TT")}
             </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
-            <div>
+            <div style={{fontFamily: "Inter"}}>
               {dateFormat(endDate, "mm/d/yyyy")}{" "}
               {dateFormat(endTime, "h:MM TT")}
             </div>{" "}
@@ -115,7 +116,7 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text">
+            <div className="chip-text" style={{fontFamily: "Inter"}}>
               {/* Cracking PM Interviews by Microsoft Product Leader */}
 
               {description}
