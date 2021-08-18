@@ -4,7 +4,7 @@ import Bored from "./../../assets/images/Bored.png";
 
 const YouHaveNoEventComing = (props) => {
   return (
-    <div className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5">
+    <div className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5" style={{maxWidth: "400px"}}>
       <img src={Bored} alt="Bored" className="mb-4" />
       <div className="you-have-no-event-coming-text mb-4">{props.msgText}</div>
       

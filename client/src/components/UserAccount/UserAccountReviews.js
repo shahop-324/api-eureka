@@ -1,10 +1,10 @@
 import React from "react";
 // import { Link } from "react-router-dom";
-import Downloading from "./../../assets/images/Downloading.png";
+import DiscussingPNG from "./../../assets/images/discussing.png";
 
 const UserAccountReviews = () => {
   return (
-    <div className="user-account-main-body-home-content">
+    <div className="user-account-main-body-home-content" >
       <div className="user-account-main-body-home-content-left ps-2">
         <div className="user-account-main-body-headline pb-4 ps-4">
           Your Event Reviews
@@ -15,13 +15,13 @@ const UserAccountReviews = () => {
         >
           <div
             className="you-have-no-event-coming-card d-flex flex-column justify-content-between align-items-center px-3 py-5"
-            style={{ maxWidth: "60%" }}
+            style={{ maxWidth: "60%", maxHeight: "500px" }}
           >
             <img
-              src={Downloading}
+              src={DiscussingPNG}
               alt="Bored"
               className="mb-4"
-              style={{ maxWidth: "300px" }}
+              style={{ maxWidth: "300px", maxHeight: "340px" }}
             />
             <div className="you-have-no-event-coming-text mb-4">
               Your event reviews will show up here, when they are available.

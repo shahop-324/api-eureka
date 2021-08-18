@@ -1,6 +1,6 @@
 import React from "react";
 // import { Link } from "react-router-dom";
-import Downloading from "./../../assets/images/Downloading.png";
+import ScratchingHead from "./../../assets/images/scratching-head.png";
 
 const UserAccountQueries = () => {
   return (
@@ -18,10 +18,10 @@ const UserAccountQueries = () => {
             style={{ maxWidth: "60%" }}
           >
             <img
-              src={Downloading}
+              src={ScratchingHead}
               alt="Bored"
               className="mb-4"
-              style={{ maxWidth: "300px" }}
+              style={{ maxWidth: "300px", maxHeight: "340px" }}
             />
             <div className="you-have-no-event-coming-text mb-4">
               Your event queries will show up here, when they are available.

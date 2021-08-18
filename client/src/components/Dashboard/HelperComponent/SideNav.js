@@ -264,7 +264,7 @@ const SideNav = (props) => {
 
         <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
 
-        <div
+        {/* <div
           onClick={() => {
             props.handleBillingClick();
             handleCloseDrawer && handleCloseDrawer();
@@ -290,9 +290,9 @@ const SideNav = (props) => {
           >
             Billing
           </div>
-        </div>
+        </div> */}
 
-        <div
+        {/* <div
           onClick={() => {
             props.handleTeamManagementClick();
             handleCloseDrawer && handleCloseDrawer();
@@ -318,7 +318,7 @@ const SideNav = (props) => {
           >
             Team Management
           </div>
-        </div>
+        </div> */}
         <div
           onClick={() => {
             props.handleRevenueManagementClick();
@@ -343,7 +343,7 @@ const SideNav = (props) => {
               (props.activeIndex === "9" ? "btn-text-active-d" : " ")
             }
           >
-            Revenue Management
+            Payouts
           </div>
         </div>
 

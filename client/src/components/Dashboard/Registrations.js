@@ -16,19 +16,19 @@ import RegistrationDetailsCard from "./HelperComponent/RegistrationDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import {
-  fetchRegistrationsOfParticularCommunity,
-} from "../../actions";
+import { fetchRegistrationsOfParticularCommunity } from "../../actions";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { alpha, Avatar, IconButton } from "@material-ui/core";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
+import NoContentFound from "../NoContent";
+import NoRegistartions from "./../../assets/images/registrations.png";
 
 const options = [
   { value: "All", label: "All Events" },
-  { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  { value: "Startup conference", label: "Startup conference" },
-  { value: "Design Meetup", label: "Design Meetup" },
+  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
+  // { value: "Startup conference", label: "Startup conference" },
+  // { value: "Design Meetup", label: "Design Meetup" },
 ];
 
 const timelineOptions = [
@@ -198,7 +198,7 @@ const Registrations = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <div className="ms-3" style={{ minWidth: "250px" }}>
+            {/* <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
                 menuPlacement="top"
@@ -214,7 +214,7 @@ const Registrations = () => {
                 options={timelineOptions}
                 defaultValue={timelineOptions[0]}
               />
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
@@ -230,8 +230,14 @@ const Registrations = () => {
             >
               <Loader />
             </div>
-          ) : (
+          ) : typeof communityRegistrations !== "undefined" &&
+            communityRegistrations.length > 0 ? (
             renderRegistrationsList(communityRegistrations)
+          ) : (
+            <NoContentFound
+              msgText="Your event registrations will appear here."
+              img={NoRegistartions}
+            />
           )}
         </div>
         {/* Here I have to use pagination */}

@@ -18,6 +18,8 @@ import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooths } from "../../../actions";
 import Loader from "../../Loader";
+import NoContentFound from "../../NoContent";
+import BoothPNG from './../../../assets/images/fogg-come-back-later-2.png';
 
 const styles = {
   control: (base) => ({
@@ -186,7 +188,7 @@ const Booths = () => {
             <div className="mx-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
                 onChange={(value) => setTagText(value.value)}
@@ -218,7 +220,9 @@ const Booths = () => {
                 <Loader />
               </div>
             ) : (
-              renderBoothList(booths)
+              typeof booths !== "undefined" &&
+            booths.length > 0 ?
+              renderBoothList(booths) : <NoContentFound msgText="This Events booths will appear here" img={BoothPNG}/>
             )}
           </div>
         </div>

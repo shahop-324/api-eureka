@@ -29,6 +29,8 @@ import AddNewMember from "./FormComponents/AddNewMember";
 import Doughnut from "./ChartComponents/Doughnut";
 import NotEnoughData from "../NotEnoughData";
 import Loader from "../Loader";
+import NoContentFound from "../NoContent";
+import NoEvent from './../../assets/images/noEvent.png';
 
 const options = [
   { value: "Today", label: "Today" },
@@ -330,7 +332,7 @@ const communityError=useSelector((state)=>state.community.error)
                     >
                       Your Team (1)
                     </div>
-                    <div
+                    {/* <div
                       className="see-all-members"
                       onClick={() => {
                         dispatch(navigationIndexForCommunityDash(8));
@@ -341,7 +343,7 @@ const communityError=useSelector((state)=>state.community.error)
                       style={{ fontFamily: "Inter" }}
                     >
                       See all
-                    </div>
+                    </div> */}
                   </div>
                   <Divider />
 
@@ -402,7 +404,12 @@ const communityError=useSelector((state)=>state.community.error)
               <Divider /> */}
 
                   {/* Add New Member Button */}
-                  <div className="mx-4">
+
+
+
+
+
+                  {/* <div className="mx-4">
                     <button
                       className="btn btn-outline-primary btn-outline-text"
                       style={{ width: "100%" }}
@@ -410,7 +417,11 @@ const communityError=useSelector((state)=>state.community.error)
                     >
                       Add Member
                     </button>
-                  </div>
+                  </div> */}
+
+
+
+
 
                   {/* Plan Members Limit Message */}
                   {/* <div className="add-more-info mt-3 mx-4">
@@ -439,7 +450,7 @@ const communityError=useSelector((state)=>state.community.error)
                     >
                       Your Team (1)
                     </div>
-                    <div
+                    {/* <div
                       className="see-all-members"
                       onClick={() => {
                         dispatch(navigationIndexForCommunityDash(8));
@@ -450,7 +461,7 @@ const communityError=useSelector((state)=>state.community.error)
                       style={{ fontFamily: "Inter" }}
                     >
                       See all
-                    </div>
+                    </div> */}
                   </div>
                   <Divider />
 
@@ -511,7 +522,12 @@ const communityError=useSelector((state)=>state.community.error)
               <Divider /> */}
 
                   {/* Add New Member Button */}
-                  <div className="mx-4">
+
+
+
+
+
+                  {/* <div className="mx-4">
                     <button
                       className="btn btn-outline-primary btn-outline-text"
                       style={{ width: "100%" }}
@@ -519,7 +535,7 @@ const communityError=useSelector((state)=>state.community.error)
                     >
                       Add Member
                     </button>
-                  </div>
+                  </div> */}
 
                   {/* Plan Members Limit Message */}
                   {/* <div className="add-more-info mt-3 mx-4">
@@ -559,7 +575,7 @@ const communityError=useSelector((state)=>state.community.error)
               <Divider />
             </div>
             {/* Data Table Events Detail Cards Wrapper */}
-            <div>{renderRecentEvents(communityEvents)}</div>
+            <div>{(typeof communityEvents !== 'undefined' && communityEvents.length > 0) ? renderRecentEvents(communityEvents) : <NoContentFound msgText="You recent events will appear here." img={NoEvent}/>}</div>
           </div>
           {/* Add New Member Dialog Box ---- This Needs to be refactored into a single component with it's own open / close state. */}
           <AddNewMember

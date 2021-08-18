@@ -14,9 +14,9 @@ const CreateNewTicketAndConnectToStripe = (props) => {
       <div className="you-have-no-event-coming-text mb-4">
         Your event dosen't have any tickets.
       </div>
-      <button className="btn btn-text-customised btn-color-customised btn-primary btn-outline-text">
+      {/* <button className="btn btn-text-customised btn-color-customised btn-primary btn-outline-text">
         Add New Ticket
-      </button>
+      </button> */}
     </div>
     </div>
   );

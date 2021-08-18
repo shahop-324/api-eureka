@@ -16,6 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchQueriesForCommunity,
 } from "../../actions";
+import NoContentFound from "../NoContent";
+
+import QueriesPNG from './../../assets/images/queriesNotFound.png';
 
 const ratingOptions = [
   { value: "all", label: "All Queries" },
@@ -175,7 +178,7 @@ const Queries = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Queries (16)</div>
+          <div className="sec-heading-text">Queries (0)</div>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search}`}
@@ -199,7 +202,8 @@ const Queries = () => {
         <div className="event-reviews-content-grid  mx-3 mb-4 ">
           <div className="review-cards-container px-4 py-4">
             {/* Here I have to place queries cards */}
-            {renderQueriesList(queries)}
+
+            { (typeof queries !== 'undefined' && queries.length > 0) ?   renderQueriesList(queries) : <NoContentFound msgText="Your queries will appear here." img={QueriesPNG} />}
             {/* <QueryCard />
             <QueryCard /> */}
           </div>

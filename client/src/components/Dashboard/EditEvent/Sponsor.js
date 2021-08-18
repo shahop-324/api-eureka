@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSponsors } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../Loader";
+import NoContentFound from "../../NoContent";
+import NoSponsor from "./../../../assets/images/working.png";
 
 const options = [
   { value: "all", label: "All Sponsors" },
@@ -212,7 +214,9 @@ const Sponsors = () => {
                 <Loader />
               </div>
             ) : (
-              renderSponsorList(sponsors)
+              typeof sponsors !== "undefined" &&
+            sponsors.length > 0 ?
+              renderSponsorList(sponsors) : <NoContentFound msgText="This events sponsors will appear here." img={NoSponsor} />
             )}
           </div>
         </div>

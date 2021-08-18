@@ -211,7 +211,7 @@ const Topnav = ({
         </div>
         <div className="col-6 right">
           <div className="icon-and-avatar-menu-wrapper d-flex flex-row align-items-center">
-            <div className={`${classes.root} mx-2 whats-new-btn`}>
+            {/* <div className={`${classes.root} mx-2 whats-new-btn`}>
               <div
                 className="btn-outline-text px-2 py-2 whats-new-button"
                 style={{
@@ -222,21 +222,21 @@ const Topnav = ({
               >
                 What's New
               </div>
-            </div>
-            <div className={`${classes.root} mx-2 dash-notification`}>
+            </div> */}
+            {/* <div className={`${classes.root} mx-2 dash-notification`}>
               <Badge badgeContent={4} color="secondary">
                 <NotificationsNoneIcon />
               </Badge>
-            </div>
+            </div> */}
 
-            <div
+            {/* <div
               onClick={handleClickOpenSettings}
               className={`${classes.root} mx-2 dash-settings`}
             >
               <IconButton>
                 <SettingsIcon />
               </IconButton>
-            </div>
+            </div> */}
             <div
               className="dashboard-avatar-menu mx-2 d-flex flex-row align-items-center"
               style={{ padding: "0" }}

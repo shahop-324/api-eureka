@@ -22,6 +22,8 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
+import NoContentFound from "../NoContent";
+import NoEvent from './../../assets/images/noEvent.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -208,7 +210,9 @@ const EventManagement = () => {
               <Loader />
             </div>
           ) : (
-            renderCommunityEventsList(communityEvents)
+            (typeof communityEvents !== 'undefined' && communityEvents.length > 0) ?
+              
+            renderCommunityEventsList(communityEvents) : <NoContentFound msgText="You have not created any event yet" img={NoEvent}/>
           )}
         </div>
         {/* Here I have to use pagination */}

@@ -16,12 +16,14 @@ import RecordingsListFields from "./HelperComponent/RecordingsListFields";
 import RecordingsDetailsCard from "./HelperComponent/RecordingsDetailsCard";
 
 import { useParams } from "react-router-dom";
+import NoContentFound from "../NoContent";
+import Downloading from './../../assets/images/Downloading.png';
 
 const options = [
   { value: "All", label: "All Events" },
-  { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  { value: "Startup conference", label: "Startup conference" },
-  { value: "Design Meetup", label: "Design Meetup" },
+  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
+  // { value: "Startup conference", label: "Startup conference" },
+  // { value: "Design Meetup", label: "Design Meetup" },
 ];
 
 const timelineOptions = [
@@ -162,13 +164,14 @@ const Recordings = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
+          {/* <RecordingsDetailsCard />
           <RecordingsDetailsCard />
           <RecordingsDetailsCard />
           <RecordingsDetailsCard />
           <RecordingsDetailsCard />
           <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
+          <RecordingsDetailsCard /> */}
+          <NoContentFound msgText="Your event recording will appear here." img={Downloading}/>
           
         </div>
         {/* Here I have to use pagination */}

@@ -14,12 +14,14 @@ import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
 import ApexGaugeChart from "./ChartComponents/ApexGaugeChart";
 import ReviewCard from "./HelperComponent/ReviewCard";
+import ReviewsPNG from './../../assets/images/reviews.png';
+import NoContentFound from "../NoContent";
 
 const options = [
   { value: "All", label: "All Events" },
-  { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  { value: "Startup conference", label: "Startup conference" },
-  { value: "Design Meetup", label: "Design Meetup" },
+  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
+  // { value: "Startup conference", label: "Startup conference" },
+  // { value: "Design Meetup", label: "Design Meetup" },
 ];
 
 const ratingOptions = [
@@ -106,7 +108,7 @@ const Reviews = () => {
     <>
       <div style={{minWidth: "1138px"}}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Reviews (16)</div>
+          <div className="sec-heading-text">Reviews (0)</div>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search}`}
@@ -127,7 +129,7 @@ const Reviews = () => {
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
               />
@@ -136,7 +138,7 @@ const Reviews = () => {
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={ratingOptions}
                 defaultValue={ratingOptions[0]}
               />
@@ -146,9 +148,10 @@ const Reviews = () => {
         <div className="event-reviews-content-grid  mx-3 mb-4 ">
           <div className="review-cards-container px-4 py-4">
             {/* Here I have to place review cards */}
+            {/* {<ReviewCard />
             <ReviewCard />
-            <ReviewCard />
-            <ReviewCard />
+            <ReviewCard />} */}
+            <NoContentFound msgText="Your reviews will appear here" img={ReviewsPNG}/>
           </div>
 
           <div className="overall-audience-satisfaction-gauge-conatiner">
@@ -158,7 +161,7 @@ const Reviews = () => {
             <div className="gauge-and-datalabel-wrapper">
               <ApexGaugeChart />
               <div className="custom-gauge-datalabel">
-                4.2<span className="lightly-styled-guage-label"> / 5</span>
+                4<span className="lightly-styled-guage-label"> / 5</span>
               </div>
             </div>
             <div className="horizontally-centred">
@@ -166,7 +169,7 @@ const Reviews = () => {
                 <Rating value="4.2" color="#1499fa" weight="24" readonly />
               </Box>
             </div>
-            <div className="total-no-of-reviews">21,648 Reviews</div>
+            <div className="total-no-of-reviews">0 Reviews</div>
           </div>
         </div>
         {/* Here I have to use pagination */}
