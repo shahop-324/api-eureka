@@ -30,7 +30,7 @@ import Doughnut from "./ChartComponents/Doughnut";
 import NotEnoughData from "../NotEnoughData";
 import Loader from "../Loader";
 import NoContentFound from "../NoContent";
-import NoEvent from './../../assets/images/noEvent.png';
+import NoEvent from "./../../assets/images/noEvent.png";
 
 const options = [
   { value: "Today", label: "Today" },
@@ -76,8 +76,8 @@ const Overview = () => {
   const [term, setTerm] = React.useState("");
   const { events, isLoading, error } = useSelector((state) => state.event);
 
-const communityLoading=useSelector((state)=>state.community.isLoading)
-const communityError=useSelector((state)=>state.community.error)
+  const communityLoading = useSelector((state) => state.community.isLoading);
+  const communityError = useSelector((state) => state.community.error);
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -94,8 +94,6 @@ const communityError=useSelector((state)=>state.community.error)
   const userId = useSelector((state) => state.user.userDetails._id);
 
   const { analytics, superAdminImage, superAdminName } = community;
-
- 
 
   const classes = useStyles();
 
@@ -118,14 +116,8 @@ const communityError=useSelector((state)=>state.community.error)
   }, [dispatch, term]);
 
   if (error) {
-   
-
     throw new Error(error);
-
-  }
-  else if(communityError)
-  {
-
+  } else if (communityError) {
     throw new Error(communityError);
   }
 
@@ -357,11 +349,13 @@ const communityError=useSelector((state)=>state.community.error)
                         alt="Travis Howard"
                         variant="rounded"
                         src={
-                          superAdminImage.startsWith(
-                            "https://lh3.googleusercontent.com"
-                          )
-                            ? superAdminImage
-                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                          superAdminImage
+                            ? superAdminImage.startsWith(
+                                "https://lh3.googleusercontent.com"
+                              )
+                              ? superAdminImage
+                              : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                            : "#"
                         }
                         className={classes.large}
                       />
@@ -405,10 +399,6 @@ const communityError=useSelector((state)=>state.community.error)
 
                   {/* Add New Member Button */}
 
-
-
-
-
                   {/* <div className="mx-4">
                     <button
                       className="btn btn-outline-primary btn-outline-text"
@@ -418,10 +408,6 @@ const communityError=useSelector((state)=>state.community.error)
                       Add Member
                     </button>
                   </div> */}
-
-
-
-
 
                   {/* Plan Members Limit Message */}
                   {/* <div className="add-more-info mt-3 mx-4">
@@ -523,10 +509,6 @@ const communityError=useSelector((state)=>state.community.error)
 
                   {/* Add New Member Button */}
 
-
-
-
-
                   {/* <div className="mx-4">
                     <button
                       className="btn btn-outline-primary btn-outline-text"
@@ -575,7 +557,17 @@ const communityError=useSelector((state)=>state.community.error)
               <Divider />
             </div>
             {/* Data Table Events Detail Cards Wrapper */}
-            <div>{(typeof communityEvents !== 'undefined' && communityEvents.length > 0) ? renderRecentEvents(communityEvents) : <NoContentFound msgText="You recent events will appear here." img={NoEvent}/>}</div>
+            <div>
+              {typeof communityEvents !== "undefined" &&
+              communityEvents.length > 0 ? (
+                renderRecentEvents(communityEvents)
+              ) : (
+                <NoContentFound
+                  msgText="You recent events will appear here."
+                  img={NoEvent}
+                />
+              )}
+            </div>
           </div>
           {/* Add New Member Dialog Box ---- This Needs to be refactored into a single component with it's own open / close state. */}
           <AddNewMember

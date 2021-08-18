@@ -273,7 +273,7 @@ const CreateNewCommunityForm = (props) => {
 
   const onSubmit = (formValues) => {
     setCreateCommunityClicked(true);
-    console.log(formValues);
+    // console.log(formValues);
     // showResults(formValues);
     dispatch(createCommunity(formValues, file, userId));
   };

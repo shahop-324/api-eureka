@@ -195,7 +195,7 @@ const EditTicket = (props) => {
 
     dispatch(editTicket(ModifiedFormValues, props.id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

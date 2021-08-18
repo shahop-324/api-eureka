@@ -220,7 +220,7 @@ const AddNewSpeaker = (props) => {
 
     dispatch(createSpeaker(ModifiedFormValues, file, id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

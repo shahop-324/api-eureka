@@ -218,7 +218,7 @@ const AddNewBooth = (props) => {
 
     dispatch(fetchParticularEventOfCommunity(id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

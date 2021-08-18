@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
-import {fetchReferralCode} from "../../../actions"
+import { fetchReferralCode } from "../../../actions";
 import HomeHero from "./../../../assets/images/HomeHero.png";
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
@@ -35,6 +35,7 @@ import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import TopNav from "../Helper/TopNav";
+import Timer from "../../Timer";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -118,7 +119,6 @@ window.onload = function () {
   css.type = "text/css";
   css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #ffffff}";
   document.body.appendChild(css);
-
 };
 
 // window.onload();
@@ -246,17 +246,15 @@ const Home = (props) => {
       duration: 1100,
     });
     AOS.refresh();
-       
+
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
-      if(params.ref)
-      {
-          dispatch(fetchReferralCode(params.ref))
-      }
+    if (params.ref) {
+      dispatch(fetchReferralCode(params.ref));
+    }
 
     // window.onload();
-
   }, []);
 
   const { error, isLoading } = useSelector((state) => state.demo);
@@ -295,6 +293,7 @@ const Home = (props) => {
 
   return (
     <>
+      <Timer />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here goes Top Nav */}
@@ -418,7 +417,10 @@ const Home = (props) => {
             style={{ height: "auto", alignItems: "center" }}
           >
             <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4">
+              <div
+                className="section-heading-primary mb-4"
+                style={{ color: "#222222" }}
+              >
                 An amazing{" "}
                 <div
                   class="typewrite"
@@ -430,71 +432,16 @@ const Home = (props) => {
                 event begins with us.
               </div>
 
-              <div className="home-text-description" data-aos="slide-up">
+              <div className="home-text-description">
                 Evenz is designed to smoothly create, manage and Host memorable
                 and most interactive event, no matter whatever Scale it is.
               </div>
 
-              <div className="my-5">
-                <div className="plan-features-offered-list">
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      SEO-optimized event registration pages{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Ticketing and payment processing{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Event Analytics Dashboard
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    data-aos="slide-up"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">Unlimited Events</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="action-btn-home">
+              <div className="action-btn-home mt-5">
                 <button
-                 onClick={() => {
-                  setOpenDrawer(true);
-                }}
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
                   type="button"
                   className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                   style={{
@@ -547,10 +494,10 @@ const Home = (props) => {
               <div
                 className="section-heading-primary pb-2"
                 style={{ color: "black" }}
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
+                // data-aos="slide-up"
+                // data-aos-easing="ease-in-sine"
+                // data-aos-duration="500"
+                // data-aos-delay="100"
               >
                 Your First Event is just <br />
                 few clicks away.
@@ -558,10 +505,10 @@ const Home = (props) => {
 
               <div
                 className="home-text-description my-5"
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
+                // data-aos="slide-up"
+                // data-aos-easing="ease-in-sine"
+                // data-aos-duration="500"
+                // data-aos-delay="100"
               >
                 It’s that simple. With Evenz you can setup your virtual event
                 with just one click and start getting registrations as soon as
@@ -571,10 +518,10 @@ const Home = (props) => {
               <div className="plan-features-offered-list">
                 <div
                   className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   <div className="me-3">
                     <CheckRoundedIcon
@@ -587,10 +534,10 @@ const Home = (props) => {
                 </div>
                 <div
                   className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   <div className="me-3">
                     <CheckRoundedIcon
@@ -603,10 +550,10 @@ const Home = (props) => {
                 </div>
                 <div
                   className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   <div className="me-3">
                     <CheckRoundedIcon
@@ -619,10 +566,10 @@ const Home = (props) => {
                 </div>
                 <div
                   className="d-flex flex-row align-items-center mb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   <div className="me-3">
                     <CheckRoundedIcon
@@ -662,10 +609,10 @@ const Home = (props) => {
               <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
                 <div
                   className="section-heading-primary pb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
                   Rooms for open discussions
@@ -673,10 +620,10 @@ const Home = (props) => {
 
                 <div
                   className="home-text-description my-5"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                   style={{ color: "#4D4D4D" }}
                 >
                   Everyone in your event can join a room and start discussing
@@ -752,10 +699,10 @@ const Home = (props) => {
                 <div
                   className="section-heading-primary pb-2"
                   style={{ color: "#000000" }}
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   Meet, greet and make <br />
                   connections that lasts.
@@ -763,10 +710,10 @@ const Home = (props) => {
 
                 <div
                   className="home-text-description my-5"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   Speed networking and group based networking provides
                   opportunity to interact with others in event one-on-one and
@@ -807,10 +754,10 @@ const Home = (props) => {
               >
                 <div
                   className="section-heading-primary pb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   Engage your audience.
                 </div>
@@ -818,10 +765,10 @@ const Home = (props) => {
                 <div
                   className="home-text-description my-5"
                   style={{ color: "#ffffff" }}
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   We have especially designed and developed various features to
                   boost engagement in your virtual events using live Q &As,
@@ -863,24 +810,44 @@ const Home = (props) => {
           </div>
         </div>
 
-
-        <div className="home-section-9">
+        {/* <div className="home-section-9">
           <div className="container py-5 mt-3">
-            <div className="centered-heading-primary">
-              Let’s give a boost to <br /> Your virtual events
-            </div>
+            <div className="centered-heading-primary">Why Evenz ?</div>
+            
+
             <div
-              className="centered-heading-primary"
-              style={{ marginLeft: "auto", marginRight: "auto" }}
+              class="comparision"
+              data-aos="slide-up"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="500"
+              data-aos-delay="100"
             >
-              <img
-                src={BoostYourEvents}
-                data-aos="zoom-in"
-                data-aos-easing="ease-in-sine"
-                data-aos-delay="100"
-                alt="amazing event"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
+              <div class="prod one">
+                <div>
+                  <label>Evenz</label>
+                </div>
+                <div class="features">
+                  <h4>Affordable</h4>
+                  <ul>
+                    <li>1% Ticketing Fees</li>
+                    <li>Complete Management Suite</li>
+                    <li>Unlimited events</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="prod two">
+                <div>
+                  <label>Other Platforms</label>
+                </div>
+                <div class="features">
+                  <h4>Too Costly</h4>
+                  <ul>
+                    <li>4% or higher Fees</li>
+                    <li>No or minimal Management</li>
+                    <li>Limited events</li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div className="" style={{ textAlign: "center" }}>
               <a
@@ -892,7 +859,7 @@ const Home = (props) => {
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="home-section-8 p-4">
           <div className="pt-5">
@@ -903,10 +870,10 @@ const Home = (props) => {
               <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
                 <div
                   className="section-heading-primary pb-2"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
                   Endless Use Cases
@@ -914,10 +881,10 @@ const Home = (props) => {
 
                 <div
                   className="home-text-description my-5"
-                  data-aos="slide-up"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-duration="500"
-                  data-aos-delay="100"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
                 >
                   You can host almost any event you can think of, using Evenz.
                   Here are some of them:
@@ -927,10 +894,10 @@ const Home = (props) => {
                   <div className="plan-features-offered-list">
                     <div
                       className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
+                      // data-aos="slide-up"
+                      // data-aos-easing="ease-in-sine"
+                      // data-aos-duration="500"
+                      // data-aos-delay="100"
                     >
                       <div className="me-3">
                         <CheckRoundedIcon
@@ -943,10 +910,10 @@ const Home = (props) => {
                     </div>
                     <div
                       className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
+                      // data-aos="slide-up"
+                      // data-aos-easing="ease-in-sine"
+                      // data-aos-duration="500"
+                      // data-aos-delay="100"
                     >
                       <div className="me-3">
                         <CheckRoundedIcon
@@ -959,10 +926,10 @@ const Home = (props) => {
                     </div>
                     <div
                       className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
+                      // data-aos="slide-up"
+                      // data-aos-easing="ease-in-sine"
+                      // data-aos-duration="500"
+                      // data-aos-delay="100"
                     >
                       <div className="me-3">
                         <CheckRoundedIcon
@@ -975,10 +942,10 @@ const Home = (props) => {
                     </div>
                     <div
                       className="d-flex flex-row align-items-center mb-2"
-                      data-aos="slide-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="500"
-                      data-aos-delay="100"
+                      // data-aos="slide-up"
+                      // data-aos-easing="ease-in-sine"
+                      // data-aos-duration="500"
+                      // data-aos-delay="100"
                     >
                       <div className="me-3">
                         <CheckRoundedIcon

@@ -199,7 +199,7 @@ const AddNewTicket = (props) => {
 
     dispatch(createTicket(ModifiedFormValues, id));
 
-    showResults(formValues);
+    // showResults(formValues);
     props.handleClose();
   };
 

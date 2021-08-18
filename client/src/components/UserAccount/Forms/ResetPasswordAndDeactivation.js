@@ -66,8 +66,8 @@ const ResetPasswordAndDeactivation = (props) => {
   };
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
-    console.log(formValues);
-    showResults(formValues);
+    // console.log(formValues);
+    // showResults(formValues);
 
     dispatch(editUserPassword(formValues));
   };

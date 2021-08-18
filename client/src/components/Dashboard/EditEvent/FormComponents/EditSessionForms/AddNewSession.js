@@ -196,8 +196,8 @@ const AddNewSession = (props) => {
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
     ModifiedFormValues.speakers = speakersArray;
 
-    console.log(ModifiedFormValues);
-    showResults(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(createSession(ModifiedFormValues, id));
     props.handleClose();
     setState({ open: true, vertical: "top", horizontal: "center" });

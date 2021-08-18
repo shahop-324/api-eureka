@@ -129,7 +129,7 @@ const NetworkingFormLeft = (props) => {
 
     dispatch(editNetworking(ModifiedFormValues, id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
   };
 
   if (error) {

@@ -9,6 +9,7 @@ import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
 import { useTheme } from "@material-ui/core/styles";
 import PreFooter from "../../PreFooter";
 import { Link } from "react-router-dom";
+import Timer from "../../Timer";
 
 const TicketingPricing = () => {
   const referral = useSelector((state) => state.user.referredUserId);
@@ -28,6 +29,7 @@ const TicketingPricing = () => {
 
   return (
     <>
+    <Timer />
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}
@@ -54,6 +56,25 @@ const TicketingPricing = () => {
             <div className="ticketing-pricing-sec-heading mb-5">
               What would you get
             </div>
+            <div
+              className="d-flex flex-row align-items-center mb-4"
+              style={{ marginLeft: "0", marginRight: "0" }}
+            >
+              <CheckCircleRoundedIcon
+                style={{ fill: "#538BF7" }}
+                className="me-4"
+              />
+              <div
+                className="card__list-description"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.95rem",
+                }}
+              >
+                Get instant payouts
+              </div>
+            </div>
 
             <div
               className="d-flex flex-row align-items-center mb-4"
@@ -71,7 +92,7 @@ const TicketingPricing = () => {
                   fontSize: "0.95rem",
                 }}
               >
-                SEO optimized ticketing page
+                SEO optimized Event landing page
               </div>
             </div>
             <div
@@ -166,45 +187,26 @@ const TicketingPricing = () => {
                   fontSize: "0.95rem",
                 }}
               >
+                Only 1% ticket processing Fees
+              </div>
+            </div>
+            <div
+              className="d-flex flex-row align-items-center mb-4"
+              style={{ marginLeft: "0", marginRight: "0" }}
+            >
+              <CheckCircleRoundedIcon
+                style={{ fill: "#538BF7" }}
+                className="me-4"
+              />
+              <div
+                className="card__list-description"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.95rem",
+                }}
+              >
                 Unlimited Events & Ticketing
-              </div>
-            </div>
-            <div
-              className="d-flex flex-row align-items-center mb-4"
-              style={{ marginLeft: "0", marginRight: "0" }}
-            >
-              <CheckCircleRoundedIcon
-                style={{ fill: "#538BF7" }}
-                className="me-4"
-              />
-              <div
-                className="card__list-description"
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  fontSize: "0.95rem",
-                }}
-              >
-                Minimal 1% ticketing charge on any ticket
-              </div>
-            </div>
-            <div
-              className="d-flex flex-row align-items-center mb-4"
-              style={{ marginLeft: "0", marginRight: "0" }}
-            >
-              <CheckCircleRoundedIcon
-                style={{ fill: "#538BF7" }}
-                className="me-4"
-              />
-              <div
-                className="card__list-description"
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  fontSize: "0.95rem",
-                }}
-              >
-                Payment processing within 24hrs
               </div>
             </div>
             <div
@@ -240,10 +242,6 @@ const TicketingPricing = () => {
                 Start selling today
               </Link>
             </div>
-
-            {/* 
-            <div>Attendee Query Resolution</div>
-<div>Query Resolution</div> */}
           </div>
 
           <div className="main-heading-calculate-profits mb-5 pt-5">
@@ -304,7 +302,7 @@ const TicketingPricing = () => {
           </div>
 
           <div className="FAQs-section px-4 mt-5 pt-5">
-            <h2 className="mb-4">F.A.Q.</h2>
+            <h2 className="mb-4 main-heading-calculate-profits">F.A.Q.</h2>
             <details>
               <summary>
                 Is there any special pricing for non profit organisation?

@@ -172,7 +172,7 @@ const AddNewSponsor = (props) => {
 
     dispatch(createSponsor(ModifiedFormValues, file, id));
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 

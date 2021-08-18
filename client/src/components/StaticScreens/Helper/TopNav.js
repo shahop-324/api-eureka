@@ -208,6 +208,19 @@ const TopNav = () => {
                     style={{ fontWeight: "600" }}
                   >
                     <Link
+                      to="/about-us/"
+                      style={{ textDecoration: "none", color: "#ffffff" }}
+                    >
+                      About us
+                    </Link>
+                  </div>
+                </li>
+                <li class="nav-item" style={{ alignSelf: "center" }}>
+                  <div
+                    className="nav-link-btn nav-link-btn-dark me-4"
+                    style={{ fontWeight: "600" }}
+                  >
+                    <Link
                       to="/use-cases/"
                       style={{ textDecoration: "none", color: "#ffffff" }}
                     >

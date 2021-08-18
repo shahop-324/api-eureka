@@ -210,8 +210,8 @@ const EditBasicDetailsForm = (props) => {
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
 
-    console.log(ModifiedFormValues);
-    showResults(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(editEvent(ModifiedFormValues, id));
 
     props.openSavedChangesSnack();
