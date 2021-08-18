@@ -26,6 +26,8 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import { reduxForm, Field } from "redux-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import NoContentFound from "../NoContent";
+import PayoutPNG from './../../assets/images/clip-payment.png';
 
 const options = [
   { value: "Today", label: "Today" },
@@ -407,9 +409,9 @@ const RevenueManagement = (props) => {
               </div>
               <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
                 <div className="num-text me-3" style={{ fontSize: "3rem" }}>
-                  $ 89202
+                  $ 0
                 </div>
-                <div className="num-percent increment">+100%</div>
+                <div className="num-percent increment">+0%</div>
               </div>
             </div>
           </div>
@@ -437,7 +439,7 @@ const RevenueManagement = (props) => {
               </div>
               <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
                 <div className="num-text me-3" style={{ fontSize: "3rem" }}>
-                  $ 1.2 M
+                  $ 0
                 </div>
                 {/* <div className="num-percent increment">+100%</div> */}
               </div>
@@ -486,7 +488,8 @@ const RevenueManagement = (props) => {
           </div>
 
           <div>
-            <PayoutDetailsCard />
+           {/* {  <PayoutDetailsCard />} */}
+           <NoContentFound msgText="Your payout request will appear here." img={PayoutPNG}/>
           </div>
         </div>
         {/* Give a FAQ section here. */}

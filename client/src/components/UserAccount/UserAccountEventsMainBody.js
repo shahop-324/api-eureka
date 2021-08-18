@@ -19,7 +19,7 @@ const UserAccountEventsMainBody = () => {
     return;
   }
 
-  const renderSuggestedEventsList = () => {
+  const renderSuggestedEventsList = (events) => {
     if (events.length !== 0) {
       return events.map((event) => {
         const now = new Date(event.startDate);
@@ -37,14 +37,10 @@ const UserAccountEventsMainBody = () => {
             minPrice={event.minTicketPrice}
             maxPrice={event.maxTicketPrice}
             endDate={formatedEndDate}
-            rating={(event.communityRating * 1 ).toFixed(1)}
+            rating={(event.communityRating * 1).toFixed(1)}
           />
         );
       });
-    } else {
-      return (
-        <YouHaveNoEventComing msgText="You have no event coming this month" />
-      );
     }
   };
 
@@ -57,13 +53,26 @@ const UserAccountEventsMainBody = () => {
         <div className="user-account-main-body-headline pb-4 ps-4">
           Made Just For You
         </div>
-        <div className="user-account-events-event-card-grid px-2 py-2">
-          {isLoading ? <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ height: "80vh", width: "80vw" }}
-      >
-        <Loader />
-      </div> :   renderSuggestedEventsList()}
+        <div
+          style={{ height: "100%" }}
+          className="d-flex flex-row justify-content-center align-items-center"
+        >
+          {typeof events !== "undefined" && events.length > 0 ? (
+            <div className="user-account-events-event-card-grid px-2 py-2">
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center"
+                  style={{ height: "80vh", width: "80vw" }}
+                >
+                  <Loader />
+                </div>
+              ) : (
+                renderSuggestedEventsList(events)
+              )}
+            </div>
+          ) : (
+            <YouHaveNoEventComing msgText="Looks like there are no great matches for you" style={{maxWidth: "400px"}} />
+          )}
         </div>
       </div>
     </div>

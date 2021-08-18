@@ -9,6 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,7 +80,7 @@ const SponsorDetailsCard = (props) => {
         >
           <div
             className="event-field-label registrations-field-label"
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontFamily: "Inter" }}
           >
             {props.organisationName}
           </div>
@@ -90,12 +91,13 @@ const SponsorDetailsCard = (props) => {
             width: "100%",
           }}
         >
-          <div
+          <Link
+          to={props.website}
             className="event-field-label registrations-field-label d-flex flex-column align-items-start"
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontFamily: "Inter" }}
           >
             {props.website}
-          </div>
+          </Link>
         </div>
         <div
           className="event-views-field"
@@ -104,7 +106,7 @@ const SponsorDetailsCard = (props) => {
           }}
         >
           <div className="event-field-label registrations-field-label">
-            <div className="speaker-card-session-grid">{props.status}</div>
+            <div className="speaker-card-session-grid" style={{fontFamily: "Inter"}}>{props.status}</div>
           </div>
         </div>
 

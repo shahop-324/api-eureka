@@ -86,14 +86,14 @@ const About = (props) => {
                 className="d-flex flex-row justify-content-end mt-3"
                 style={{ width: "100%" }}
               >
-                <button
+                {/* <button
                   type="button"
                   className={`btn btn-outline-primary btn-outline-text me-3 `}
                   disabled={pristine || submitting}
                   onClick={reset}
                 >
                   Discard
-                </button>
+                </button> */}
                 <button
                   type="submit"
                   className={`btn btn-primary btn-outline-text `}

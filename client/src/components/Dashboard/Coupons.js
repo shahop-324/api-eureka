@@ -12,6 +12,8 @@ import AddNewCoupon from "./FormComponents/AddNewCoupon";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCoupons } from "../../actions";
 import Loader from "../Loader";
+import NoContentFound from "../NoContent";
+import noCoupons from './../../assets/images/coupons.png';
 
 const renderCouponList = (coupons) => {
   return coupons
@@ -78,7 +80,7 @@ const Coupons = () => {
           </div>
         </div>
         <div className="coupon-management-content-grid px-3 mx-3 mb-4 py-4">
-          {renderCouponList(coupons)}
+          { (typeof coupons !== 'undefined' && coupons.length > 0) ?  renderCouponList(coupons) : <NoContentFound msgText="Your event coupons will appear here" img={noCoupons} />}
         </div>
       </div>
     </>

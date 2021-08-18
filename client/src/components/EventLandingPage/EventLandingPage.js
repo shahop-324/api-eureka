@@ -386,20 +386,16 @@ const EventLandingPage = (props) => {
         className="conatiner-fluid page"
         style={{ backgroundColor: "#ffffff" }}
       >
-        <div
-          className="row nav-section max-width"
-          style={{ marginLeft: "auto", marginRight: "auto" }}
-        >
-          <nav class="navbar navbar-expand-lg navbar-light">
+        <div className="row nav-section">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light" style={{backgroundColor: "#ffffff"}}>
             <div class="container-fluid">
-              <a
-                href="https://www.evenz.in/home"
-                className="navbar-brand"
-                style={{ textDecoration: "none", color: "#538BF7" }}
+              <Link
+                to="/home"
+                class="navbar-brand"
+                style={{ color: "#538BF7", textDecoration: "none" }}
               >
                 Evenz
-              </a>
-
+              </Link>
               <button
                 class="navbar-toggler"
                 type="button"
@@ -414,25 +410,30 @@ const EventLandingPage = (props) => {
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
-                    <AvatarMenu />
+                    <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
+                      <AvatarMenu />
+                    </div>
                   ) : (
-                    <div className="d-flex flex-row">
+                    <div className="d-flex flex-row align-items-center justify-content-center">
+                      {" "}
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        <button
+                        <Link
+                          to="/signin"
                           type="button"
-                          class="btn btn-outline-primary btn-outline-text"
+                          class="btn btn-outline-primary btn-outline-text me-3"
                         >
-                          Get started
-                        </button>
+                          Login
+                        </Link>
                       </li>
                       <li class="nav-item" style={{ alignSelf: "center" }}>
-                        <button
+                        <Link
+                          to="/signup"
                           type="button"
                           class="btn btn-primary btn-outline-text"
                         >
-                          Login
-                        </button>
-                      </li>
+                          Get Started
+                        </Link>
+                      </li>{" "}
                     </div>
                   )}
                 </ul>

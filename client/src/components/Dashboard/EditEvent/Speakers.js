@@ -25,6 +25,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
+import NoSpeakers from './../../../assets/images/scratching-head.png';
+import NoContentFound from "../../NoContent";
 
 const styles = {
   control: (base) => ({
@@ -207,7 +209,7 @@ const Speakers = () => {
             <div className="mx-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
                 //  onChange={(value)=>console.log(value)}
@@ -242,7 +244,9 @@ const Speakers = () => {
                 <Loader />
               </div>
             ) : (
-              renderSpeakersList(speakers)
+              typeof speakers !== "undefined" &&
+            speakers.length > 0 ?
+              renderSpeakersList(speakers) : <NoContentFound msgText="This events speakers will appear here." img={NoSpeakers} />
             )}
           </div>
         </div>

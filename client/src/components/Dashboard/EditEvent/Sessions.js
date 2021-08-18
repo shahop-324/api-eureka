@@ -24,6 +24,8 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Loader from "../../Loader";
+import NoContentFound from "../../NoContent";
+import NoSessionsPNG from "./../../../assets/images/confident.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -209,7 +211,10 @@ const Sessions = () => {
                 <Loader />
               </div>
             ) : (
-              renderSessionsList(sessions)
+
+              typeof sessions !== "undefined" &&
+            sessions.length > 0 ?
+              renderSessionsList(sessions) : <NoContentFound msgText="This events sessions will appear here." img={NoSessionsPNG} />
             )}
           </div>
         </div>
