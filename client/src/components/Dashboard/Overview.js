@@ -357,11 +357,12 @@ const communityError=useSelector((state)=>state.community.error)
                         alt="Travis Howard"
                         variant="rounded"
                         src={
+                          superAdminImage ?
                           superAdminImage.startsWith(
                             "https://lh3.googleusercontent.com"
                           )
                             ? superAdminImage
-                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}` : "#"
                         }
                         className={classes.large}
                       />

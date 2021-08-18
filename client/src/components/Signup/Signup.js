@@ -37,14 +37,14 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
             {error}
           </div>
         )) ||
           (warning && (
             <div
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
+              style={{ color: "#8B780D", fontWeight: "400" }}
             >
               {warning}
             </div>
@@ -188,7 +188,7 @@ const Signup = (props) => {
 
                 {/*  */}
 
-                {/* <div
+                <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
                 >
@@ -199,7 +199,7 @@ const Signup = (props) => {
                   <div className="col-5">
                     <hr />
                   </div>
-                </div> */}
+                </div>
 
                 <form
                   className="ui form error"
@@ -293,7 +293,7 @@ const Signup = (props) => {
                           id="password"
                           name="password"
                           ariadescribedby="emailHelp"
-                          placeholder="Enter email"
+                          placeholder="Enter password"
                           component={renderInput}
                         />
                       </div>
@@ -439,13 +439,13 @@ const validate = (formValues) => {
       ? "Invalid email address"
       : undefined;
   if (!formValues.password) {
-    errors.password = "password is required";
+    errors.password = "Password is required";
   }
   if (formValues.password && formValues.password.length < 8) {
-    errors.password = "password length must be greater than 8";
+    errors.password = "Password length must be greater than 8";
   }
   if (!formValues.policySigned) {
-    errors.policySigned = "required";
+    errors.policySigned = "Required";
   }
 
   return errors;
