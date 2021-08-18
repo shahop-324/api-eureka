@@ -14,11 +14,7 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  communitySignIn,
-  navigationIndex,
-  signOut,
-} from "../actions/index";
+import { communitySignIn, navigationIndex, signOut } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
@@ -277,10 +273,16 @@ const AvatarMenu = () => {
                       </div>
                     </MenuItem>
 
-                    <hr />
-                    <div className="avatar-menu-group-heading px-3 pb-2">
-                      Switch to A Community ({communities.length})
-                    </div>
+                    {communities.length === 0 ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <hr />
+                        <div className="avatar-menu-group-heading px-3 pb-2">
+                          Switch to A Community ({communities.length})
+                        </div>
+                      </div>
+                    )}
                     <div
                       className="communities-list-error"
                       style={{ maxHeight: "200px", overflow: "scroll" }}
@@ -387,8 +389,6 @@ const AvatarMenu = () => {
               </div>
             </div>
 
-            
-
             <div
               className="social-media-share-your-link mt-5"
               style={{ textAlign: "center" }}
@@ -428,7 +428,6 @@ const AvatarMenu = () => {
                 </div>
               </div>
             </div>
-            
           </div>
         </Dialog>
       </div>

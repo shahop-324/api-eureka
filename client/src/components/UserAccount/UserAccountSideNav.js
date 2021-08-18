@@ -10,6 +10,8 @@ import {
   errorTrackerForPersonalData,
 } from "../../actions";
 import Loader from "../Loader";
+import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
+import maleMascot from "./../../assets/images/winkingPerson.png";
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
@@ -122,7 +124,7 @@ const UserAccountSideNav = () => {
 
   const name = `${firstName} ${lastName}`;
 
-  const renderCommunitiesList = () => {
+  const renderCommunitiesList = (communities) => {
     if (communities) {
       return communities.map((community) => {
         console.log(community);
@@ -141,14 +143,13 @@ const UserAccountSideNav = () => {
 
   let userImageURL;
 
-  if(image) {
+  if (image) {
     if (image.startsWith("https://lh3.googleusercontent.com")) {
       userImageURL = image;
     } else {
       userImageURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
     }
   }
-
 
   return (
     <div className="user-account-side-nav-bar">
@@ -160,7 +161,11 @@ const UserAccountSideNav = () => {
           className="user-community-tab-list mb-4"
           style={{ overflow: "auto", height: "77vh" }}
         >
-          {renderCommunitiesList()}
+          {typeof communities !== "undefined" && communities.length > 0 ? (
+            renderCommunitiesList(communities)
+          ) : (
+            <CreateNewCommunityMsgCard msgText="Start by creating your community" img={maleMascot} />
+          )}
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <button
               className="btn btn-outline-text  btn-outline-primary  py-2"

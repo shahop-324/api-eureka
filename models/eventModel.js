@@ -15,6 +15,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default: "60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg",
     },
+    service: {
+      type: String,
+      enum: ["Hosting & Management", "Ticketing"],
+      default: "Hosting & Management"
+    },
     shortDescription: {
       type: String,
       required: [true, "A short description for an event is required"],

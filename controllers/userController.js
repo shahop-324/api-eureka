@@ -85,7 +85,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
 // Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
   console.log(req.user);
-  
+
   const response = await Event.findById(req.params.id, (err, data) => {
     console.log(data, "89");
   })
@@ -115,6 +115,12 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
       },
     });
   console.log(response, "114");
+
+  await Event.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { views: 1 } },
+    { new: true, validateModifiedOnly: true }
+  );
 
   res.status(200).json({
     status: "SUCCESS",
