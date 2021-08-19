@@ -26,6 +26,7 @@ const ticketSlice = createSlice({
 
     CreateTicket(state, action) {
       state.tickets.push(action.payload.ticket);
+      state.ticketDetails = action.payload.ticket;
       state.isLoading = false;
     },
     FetchTickets(state, action) {
@@ -50,6 +51,7 @@ const ticketSlice = createSlice({
       state.tickets = state.tickets.map((ticket) =>
         ticket.id === action.payload.ticket.id ? action.payload.ticket : ticket
       );
+      state.ticketDetails = action.payload.ticket;
       state.isLoading = false;
     },
     DeleteTicket(state, action) {

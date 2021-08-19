@@ -5,9 +5,7 @@ const mongoose = require("mongoose");
 const apiFeatures = require("../utils/apiFeatures");
 const validator = require("validator");
 
-const newObj = {};
-
-const fillSocialMediaHandler = (object) => {
+const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
     const value = object[key];
     // 2) Check if value is a url
@@ -21,39 +19,40 @@ const fillSocialMediaHandler = (object) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj.facebook = newVal;
+          console.log(updatedUser.socialMediaHandles);
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "instagram": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj.instagram = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "twitter": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          newObj.twitter = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "linkedIn": {
           const regex = /(?<=\/in\/).+/;
           [newVal] = value.match(regex);
-          newObj.linkedIn = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
         case "website": {
           const regex = /(?<=www.).+/;
           [newVal] = value.match(regex);
-          newObj.website = newVal;
+          updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
       }
     } else {
-      newObj.set(key, value);
+      updatedUser.socialMediaHandles.set(key, value);
     }
   }
-  return newObj;
+  return updatedUser;
 };
 
 exports.deleteBooth = catchAsync(async (req, res, next) => {
@@ -69,8 +68,6 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
     status: "success",
   });
 });
-
-
 
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
   console.log(req.query, 72);
@@ -106,9 +103,6 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const boothId = req.params.id;
 
-  // const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
-  // console.log("This is processedObj", processedObj);
-
   const updatedBooth = await Booth.findByIdAndUpdate(
     boothId,
     {
@@ -116,10 +110,6 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       emails: req.body.emails,
       tagline: req.body.tagline,
       description: req.body.description,
-      // image: req.body.image,
-      // boothLogo: req.body.boothLogo,
-      // boothPoster: req.body.boothPoster,
-      // socialMediaHandles: processedObj,
       tags: req.body.tags,
     },
     {
@@ -128,11 +118,26 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     }
   );
 
-  console.log(updatedBooth);
+  const processedBoothObj = fillSocialMediaHandler(
+    req.body.socialMediaHandles,
+    updatedBooth
+  );
+  console.log("This is processedBoothObj", processedBoothObj);
+
+  if (req.body.image) {
+    processedBoothObj.image = req.body.image;
+  }
+
+  const doublyUpdatedBooth = await processedBoothObj.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  console.log(doublyUpdatedBooth);
 
   res.status(200).json({
     status: "success",
-    data: updatedBooth,
+    data: doublyUpdatedBooth,
   });
 });
 

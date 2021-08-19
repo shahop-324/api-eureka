@@ -25,6 +25,7 @@ const couponSlice = createSlice({
     },
     CreateCoupon(state, action) {
       state.coupons.push(action.payload.coupon);
+      state.couponDetails = action.payload.coupon;
       state.isLoading = false;
     },
     FetchCoupons(state, action) {
@@ -49,6 +50,7 @@ const couponSlice = createSlice({
       state.coupons = state.coupons.map((coupon) =>
         coupon.id === action.payload.coupon._id ? action.payload.coupon : coupon
       );
+      state.couponDetails = action.payload.coupon;
       state.isLoading = false;
     },
     DeleteCoupon(state, action) {

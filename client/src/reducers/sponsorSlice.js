@@ -26,7 +26,6 @@ const sponsorSlice = createSlice({
     },
     CreateSponsor(state, action) {
       state.sponsors.push(action.payload.sponsor);
-
       state.sponsorDetails = action.payload.sponsor;
 
       state.isLoading = false;

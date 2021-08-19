@@ -31,6 +31,7 @@ const sessionSlice = createSlice({
     },
     CreateSession(state, action) {
       state.sessions.push(action.payload.session);
+      state.sessionDetails = action.payload.session;
       state.isLoading = false;
     },
     FetchSessions(state, action) {
@@ -60,6 +61,7 @@ const sessionSlice = createSlice({
       );
       console.log(sessionsArr);
       state.sessions = sessionsArr;
+      state.sessionDetails = action.payload.session;
       state.isLoading = false;
     },
 

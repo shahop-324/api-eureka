@@ -25,6 +25,7 @@ const boothSlice = createSlice({
     },
     CreateBooth(state, action) {
       state.booths.push(action.payload.booth);
+      state.boothDetails = action.payload.booth;
       state.isLoading = false;
     },
 
@@ -50,6 +51,7 @@ const boothSlice = createSlice({
       state.booths = state.booths.map((booth) =>
         booth._id === action.payload.booth._id ? action.payload.booth : booth
       );
+      state.boothDetails = action.payload.booth;
       state.isLoading = false;
     },
     DeleteBooth(state, action) {
