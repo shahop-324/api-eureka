@@ -404,12 +404,16 @@ const Home = (props) => {
           </div>
         </div>
 
-        <div className="home-section-3 px-5 " id="home-section-3">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
+        
+
+
+<div className="home-section-3 p-4 " id="home-section-3">
+          <div className="mt-3">
+            <div
+              className="grid-of-2"
+              style={{ height: "auto", alignItems: "center" }}
+            >
+              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
               <div
                 className="section-heading-primary mb-4"
                 style={{ color: "#222222" }}
@@ -425,39 +429,54 @@ const Home = (props) => {
                 event begins with us.
               </div>
 
-              <div className="home-text-description">
-                Evenz is designed to smoothly create, manage and Host memorable
+                <div
+                  className="home-text-description my-5"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
+                  style={{ color: "#4D4D4D" }}
+                >
+                  Evenz is designed to smoothly create, manage and Host memorable
                 and most interactive event, no matter whatever Scale it is.
+                </div>
+
+                <div className="action-btn-home py-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
+                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
+                    style={{
+                      boxShadow:
+                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    Host a free event
+                  </button>
+                </div>
               </div>
 
-              <div className="action-btn-home mt-5">
-                <button
-                  onClick={() => {
-                    setOpenDrawer(true);
-                  }}
-                  type="button"
-                  className="btn btn-dark btn-outline-text px-5 py-3 me-3"
+              <div
+                className="grid-2-of-2 d-flex flex-row align-items-center"
+                style={{ alignSelf: "center" }}
+              >
+                <img
+                  src={AmazingEvent}
+                  alt="amazing event"
+                  data-aos="zoom-in"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-delay="100"
+                  className="zoom-in"
                   style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
+                    alignSelf: "center",
+                    maxHeight: "100%",
+                    maxWidth: "100%",
                   }}
-                >
-                  Host a free event
-                </button>
+                />
               </div>
-            </div>
-            <div
-              className="grid-2-of-2 d-flex flex-row align-items-center"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={AmazingEvent}
-                alt="amazing event"
-                className="zoom-in"
-                data-aos="zoom-in"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
             </div>
           </div>
         </div>

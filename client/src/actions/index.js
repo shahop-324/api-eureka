@@ -3369,6 +3369,10 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
   }
 };
 
+export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
+  dispatch(couponActions.disabledDetailError());
+};
+
 export const deleteCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
