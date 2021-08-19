@@ -169,7 +169,7 @@ const Signup = (props) => {
                 <GoogleAuth />
                 {/* <div className="row d-flex flex-row justify-content-center px-2 mb-4">
                   <button
-                    type="button"
+                   
                     onClick={onClickHandle}
                     className="btn btn-light py-2 px-2"
                   >

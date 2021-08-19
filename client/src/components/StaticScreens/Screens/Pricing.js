@@ -1080,7 +1080,7 @@ const Pricing = (props) => {
                       : dispatch(switchToFreePlan(selectedCommunity));
                     setOpenDrawer(false);
                   }}
-                  type="button"
+               
                   className="btn btn-primary btn-outline-text mt-4"
                   style={{ width: "100%" }}
                 >

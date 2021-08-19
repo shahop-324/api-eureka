@@ -318,7 +318,7 @@ const SearchEvents = () => {
               </Link>
               <button
                 class="navbar-toggler"
-                type="button"
+               
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
@@ -356,7 +356,7 @@ const SearchEvents = () => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                          type="button"
+                         
                           class="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
@@ -365,7 +365,7 @@ const SearchEvents = () => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                          type="button"
+                         
                           class="btn btn-primary btn-outline-text"
                         >
                           Get Started
@@ -400,7 +400,7 @@ const SearchEvents = () => {
             >
               <div className="row" style={{ width: "99.5%", margin: "0 auto" }}>
                 {/* <button
-                  type="button"
+                
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseExample"
                   aria-expanded="false"

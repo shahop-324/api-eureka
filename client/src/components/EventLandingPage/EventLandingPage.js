@@ -398,7 +398,7 @@ const EventLandingPage = (props) => {
               </Link>
               <button
                 class="navbar-toggler"
-                type="button"
+              
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
@@ -419,7 +419,7 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                          type="button"
+                        
                           class="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
@@ -428,7 +428,7 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                          type="button"
+                        
                           class="btn btn-primary btn-outline-text"
                         >
                           Get Started
@@ -1009,7 +1009,7 @@ const EventLandingPage = (props) => {
                         <button
                           disabled={!isSignedIn}
                           class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-                          type="button"
+                       
                           onClick={handleAskQuery}
                         >
                           Ask

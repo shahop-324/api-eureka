@@ -115,7 +115,7 @@ const EditNotificationSettings = (props) => {
 
           <div className="row edit-profile-form-row my-3 d-flex flex-row justify-content-end">
             {/* <button
-              type="button"
+             
               className="col-3 btn btn-outline-primary outline-btn-text me-3"
               style={{ textAlign: "center" }}
               disabled={pristine || submitting}

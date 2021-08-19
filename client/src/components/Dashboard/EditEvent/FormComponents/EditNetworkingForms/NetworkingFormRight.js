@@ -229,7 +229,7 @@ const NetworkingFormRight = (props) => {
               style={{ width: "100%" }}
             >
               <button
-                type="button"
+        
                 disabled={pristine || submitting}
                 onClick={reset}
                 className={`btn btn-outline-primary btn-outline-text me-3 `}

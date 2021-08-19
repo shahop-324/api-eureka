@@ -484,7 +484,7 @@ const EditBooth = (props) => {
               >
                 <button
                   className="btn btn-outline-primary btn-outline-text me-3"
-                  type="button"
+         
                   // disabled={pristine || submitting}
                   onClick={reset}
                 >

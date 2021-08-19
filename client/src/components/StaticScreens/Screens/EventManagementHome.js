@@ -279,7 +279,7 @@ const EventManagementHome = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                      type="button"
+                     
                       onClick={() => {
                         setOpenDrawer(true);
                       }}
@@ -289,7 +289,7 @@ const EventManagementHome = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                      type="button"
+                     
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -309,30 +309,76 @@ const EventManagementHome = (props) => {
           </div>
         </div>
 
-        <div
-          className="home-section-2 px-5 py-5"
-          id="home-section-2"
-          style={{ height: "auto" }}
-        >
-          <div className="centered-heading-primary mb-5">
-            Tools Catered with your <br />
+        
+
+
+<div className="home-section-2 p-4 " id="home-section-3">
+          <div className="mt-3">
+            <div
+              className="grid-of-2"
+              style={{ height: "auto", alignItems: "center" }}
+            >
+              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
+              <div
+                className="section-heading-primary mb-4"
+                style={{ color: "#222222" }}
+              >
+                Tools Catered with your <br />
             needs in mind
-          </div>
-          <div className="centered-heading-secondary mb-5">
-            From inviting speakers, sponsors, booths, attendees, managing teams,
+              </div>
+
+                <div
+                  className="home-text-description my-5"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
+                  style={{ color: "#4D4D4D" }}
+                >
+                  From inviting speakers, sponsors, booths, attendees, managing teams,
             ticketing to getting feedback
             <br /> and sharing recordings post event, we do it all for you. So,
             you don’t have to. peacefully.
-          </div>
+                </div>
 
-          <img
-            // src={EditTicketsHero}
-            src={AmazingEvent}
-            alt="amazing event"
-            className="zoom-in"
-            data-aos="zoom-in"
-            style={{ maxHeight: "100%", maxWidth: "100%" }}
-          />
+                <div className="action-btn-home py-3">
+                  <button
+                 
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
+                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
+                    style={{
+                      boxShadow:
+                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    Host a free event
+                  </button>
+                </div>
+              </div>
+
+              <div
+                className="grid-2-of-2 d-flex flex-row align-items-center"
+                style={{ alignSelf: "center" }}
+              >
+                <img
+                  src={AmazingEvent}
+                  alt="amazing event"
+                  data-aos="zoom-in"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-delay="100"
+                  className="zoom-in"
+                  style={{
+                    alignSelf: "center",
+                    maxHeight: "100%",
+                    maxWidth: "100%",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="home-section-3 px-5 py-5" id="home-section-3">
@@ -357,7 +403,7 @@ And sponsors
 
               <div className="action-btn-home mt-5">
                 <button
-                  type="button"
+                
                   onClick={() => {
                     setOpenDrawer(true);
                   }}
@@ -387,72 +433,76 @@ And sponsors
           </div>
         </div>
 
-        <div className="home-section-4 p-5">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
+        <div className="home-section-6 p-4">
+          <div className="mt-3">
             <div
-              className="grid-1-of-2 d-flex flex-row align-items-center mb-3"
-              style={{ alignSelf: "center" }}
+              className="grid-of-2"
+              style={{ height: "auto", alignItems: "center" }}
             >
-              <img
-                src={ReviewsHero}
-                alt="amazing event"
-                data-aos="zoom-in"
-                data-aos-easing="ease-in-sine"
-                data-aos-delay="100"
-                // className="zoom-in"
-                // data-aos="slide-left"
-
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-            <div className="grid-2-of-2 " style={{ alignSelf: "center" }}>
               <div
-                className="section-heading-primary pb-2"
-                style={{ color: "black" }}
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
+                className="grid-1-of-2 d-flex flex-row align-items-center"
+                style={{ alignSelf: "center" }}
               >
-                Get Feedback from your  <br />
-                attendees
-              </div>
-
-              <div
-                className="home-text-description my-5"
-                data-aos="slide-up"
-                data-aos-easing="ease-in-sine"
-                data-aos-duration="500"
-                data-aos-delay="100"
-              >
-                We know its the key to constantly improve your events to drive more meaningful connections and build values that stays. 
-So, you can hear to what your attendees have to say about your event using reviews feature built for your community.
-              </div>
-
-              
-
-              <div className="action-btn-home  pt-5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpenDrawer(true);
-                  }}
-                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
+                <img
+                  
+                  src={ReviewsHero}
+                  alt="amazing event"
+                  className="zoom-in"
+                  data-aos="zoom-in"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-delay="100"
                   style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
+                    alignSelf: "center",
+                    maxHeight: "100%",
+                    maxWidth: "100%",
                   }}
+                />
+              </div>
+              <div className="grid-2-of-2 px-4" style={{ alignSelf: "center" }}>
+                <div
+                  className="section-heading-primary pb-2"
+                  style={{ color: "#000000" }}
+                  data-aos="slide-up"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-duration="500"
+                  data-aos-delay="100"
                 >
-                  Host a free event
-                </button>
+                 Get Feedback from your  <br />
+                attendees
+                </div>
+
+                <div
+                  className="home-text-description my-5"
+                  data-aos="slide-up"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-duration="500"
+                  data-aos-delay="100"
+                >
+                  We know its the key to constantly improve your events to drive more meaningful connections and build values that stays. 
+So, you can hear to what your attendees have to say about your event using reviews feature built for your community.
+                </div>
+
+                <div className="action-btn-home py-3">
+                  <button
+                  
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
+                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
+                    style={{
+                      boxShadow:
+                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    Host a free event
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
 
         <div className="home-section-5 p-4">
           <div className="mt-3">
@@ -487,7 +537,7 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -579,7 +629,7 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -634,7 +684,7 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -698,7 +748,7 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                
                     onClick={() => {
                       setOpenDrawer(true);
                     }}

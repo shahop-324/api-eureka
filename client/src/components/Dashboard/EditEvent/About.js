@@ -64,7 +64,7 @@ const About = (props) => {
           <div className="sec-heading-text">About</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <Link
-              type="button"
+        
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}`}
               target="_blank"
@@ -87,7 +87,7 @@ const About = (props) => {
                 style={{ width: "100%" }}
               >
                 {/* <button
-                  type="button"
+            
                   className={`btn btn-outline-primary btn-outline-text me-3 `}
                   disabled={pristine || submitting}
                   onClick={reset}

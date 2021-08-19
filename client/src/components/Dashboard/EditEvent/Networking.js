@@ -33,7 +33,7 @@ const Networking = () => {
             </button> */}
 
             <Link
-              type="button"
+      
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}`}
               target="_blank"

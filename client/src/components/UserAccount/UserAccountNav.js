@@ -27,14 +27,14 @@ class UserAccountNav extends React.Component {
           <div class="d-flex flex-row align-items-center">
             <Link
               to={`/search-events`}
-              type="button"
+             
               className="btn btn-outline-primary btn-outline-text"
             >
               Explore Events
             </Link>
 
             {/* <button
-              type="button"
+            
               className="btn btn-primary btn-outline-text ms-3"
             >
               <Link
