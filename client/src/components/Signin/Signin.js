@@ -5,11 +5,7 @@ import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
-import {
-  errorTrackerForSignIn,
-  googleLinkClicked,
-  resetAuthError,
-} from "../../actions/index";
+import { errorTrackerForSignIn, resetAuthError } from "../../actions/index";
 
 import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
