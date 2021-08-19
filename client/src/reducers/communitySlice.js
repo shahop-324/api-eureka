@@ -6,7 +6,7 @@ const communitySlice = createSlice({
   initialState: {
     communities: [],
     communityDetails: null,
-    isCommunityLoading: true,
+
     error: false,
     isLoading: true,
   },
@@ -18,9 +18,7 @@ const communitySlice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-    startCommunityLoading(state) {
-      state.isCommunityLoading = true;
-    },
+
     hasError(state, action) {
       state.error = action.payload;
     },
@@ -38,7 +36,6 @@ const communitySlice = createSlice({
     FetchCommunities(state, action) {
       state.communities = action.payload.communities;
       state.isLoading = false;
-      state.isCommunityLoading = false;
     },
     FetchCommunity(state, action) {
       const newCommunity = action.payload.community;
