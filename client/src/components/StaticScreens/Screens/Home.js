@@ -106,6 +106,9 @@ TxtType.prototype.tick = function () {
 };
 
 window.onload = function () {
+  // useEffect(() => {
+  //   window.location.href("https://www.evenz.in");
+  // }, []);
   var elements = document.getElementsByClassName("typewrite");
   for (var i = 0; i < elements.length; i++) {
     var toRotate = elements[i].getAttribute("data-type");

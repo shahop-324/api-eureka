@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { CssBaseline } from "@material-ui/core";
 import UserAccountNav from "./UserAccountNav";
 import "./../../assets/css/UserAccountStyle.css";
@@ -21,7 +22,7 @@ import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
 import Tour from "reactour";
-
+const { REACT_APP_MY_ENV } = process.env;
 const steps = [
   {
     selector: ".first-step-user-section",
@@ -32,14 +33,18 @@ const steps = [
 
 const UserAccountHome = () => {
   const { isLoading, error } = useSelector((state) => state.user);
-
+  const { isCommunityLoading } = useSelector(
+    (state) => state.isCommunityLoading
+  );
   const [isTourOpen, setIsTourOpen] = useState(true);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    history.push("/user/home");
-
+    // history.push("/user/home");
+    // window.location.href = REACT_APP_MY_ENV
+    //   ? "http://localhost:3001/user/home"
+    //   : "https://www.evenz.in/user/home";
     dispatch(fetchUserAllPersonalData());
   }, [dispatch]);
   useEffect(() => {
@@ -88,7 +93,7 @@ const UserAccountHome = () => {
 
       {/* {error && handleError(error)} */}
 
-      {isLoading ? (
+      {isLoading || isCommunityLoading ? (
         <div
           className="d-flex flex-row justify-content-center align-items-center"
           style={{ width: "100vw", height: "100vh" }}

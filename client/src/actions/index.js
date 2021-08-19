@@ -464,7 +464,7 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
 };
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
-  dispatch(eventActions.startLoading());
+  dispatch(eventActions.startCommunityLoading());
 
   const fetchData = async () => {
     let res = await fetch(
