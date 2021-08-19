@@ -84,6 +84,7 @@ const Basics = () => {
             <a
               type="button"
               className="btn btn-outline-primary btn-outline-text me-3"
+              style={{backgroundColor: "#538bf7"}}
               href={`/event-landing-page/${id}`}
             >
               Preview Landing Page
