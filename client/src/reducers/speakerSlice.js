@@ -7,12 +7,17 @@ const speakerSlice = createSlice({
     speakers: [],
     speakerDetails: null,
     isLoading: true,
+    isLoadingDetail: true,
     error: false,
+    detailError: false,
   },
 
   reducers: {
     startLoading(state) {
       state.isLoading = true;
+    },
+    startLoadingDetail(state) {
+      state.isLoadingDetail = true;
     },
 
     hasError(state, action) {
@@ -20,9 +25,18 @@ const speakerSlice = createSlice({
       state.isLoading = false;
     },
 
+    detailHasError(state, action) {
+      state.detailError = action.payload;
+      state.isLoadingDetail = false;
+    },
+
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+    },
+    disabledDetailError(state, action) {
+      state.detailError = false;
+      state.isLoadingDetail = false;
     },
     CreateSpeaker(state, action) {
       state.speakers.push(action.payload.speaker);
@@ -43,7 +57,7 @@ const speakerSlice = createSlice({
         state.speakers.push(action.payload.speaker);
       }
       state.speakerDetails = action.payload.speaker;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
 
     EditSpeaker(state, action) {
@@ -53,7 +67,7 @@ const speakerSlice = createSlice({
           : speaker
       );
       state.speakerDetails = action.payload.speaker;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
     DeleteSpeaker(state, action) {
       state.speakers = state.speakers.filter(

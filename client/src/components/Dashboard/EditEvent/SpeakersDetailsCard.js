@@ -7,12 +7,17 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
 import EditSpeaker from "./FormComponents/EditSpeakersForms/EditSpeaker";
 import DeleteSpeaker from "./FormComponents/EditSpeakersForms/DeleteSpeaker";
+import { fetchParticularSpeakerOfEvent } from "../../../actions";
+import { useDispatch } from "react-redux";
 // import { useDispatch } from "react-redux";
 // import { fetchParticularSpeakerOfEvent } from "../../../actions";
 
 const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
   console.log(sessions);
   console.log(id);
+
+const dispatch = useDispatch();
+
   const [open, setOpen] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
@@ -27,7 +32,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
 
   const handleEditSpeaker = () => {
     setOpen(true);
-    // dispatch(fetchParticularSpeakerOfEvent(id));
+    dispatch(fetchParticularSpeakerOfEvent(id));
   };
 
   const handleClose = () => {
@@ -37,6 +42,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
   // const truncateText = (str, n) => {
   //   return str.length > n ? `${str.substring(0, n)} ...` : str;
   // };
+  
   return (
     <>
       <div className="session-field-value-container">

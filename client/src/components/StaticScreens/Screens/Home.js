@@ -241,10 +241,13 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
+
+
 const Home = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    window.location.reload();
     AOS.init({
       duration: 1100,
     });

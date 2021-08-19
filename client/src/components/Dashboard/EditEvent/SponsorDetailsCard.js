@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
 import { Link } from "react-router-dom";
+import { fetchSponsor } from "../../../actions";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SponsorDetailsCard = (props) => {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -42,7 +45,7 @@ const SponsorDetailsCard = (props) => {
   };
 
   const handleEditSponsor = () => {
-    //  dispatch(fetchSponsor(props.id));
+    dispatch(fetchSponsor(props.id));
     setOpen(true);
   };
 
@@ -91,13 +94,15 @@ const SponsorDetailsCard = (props) => {
             width: "100%",
           }}
         >
-          <Link
-          to={props.website}
+          <a
+            href={`https://${props.website}`}
+            target="_blank"
+            rel="noreferrer"
             className="event-field-label registrations-field-label d-flex flex-column align-items-start"
             style={{ width: "100%", fontFamily: "Inter" }}
           >
             {props.website}
-          </Link>
+          </a>
         </div>
         <div
           className="event-views-field"
@@ -106,7 +111,12 @@ const SponsorDetailsCard = (props) => {
           }}
         >
           <div className="event-field-label registrations-field-label">
-            <div className="speaker-card-session-grid" style={{fontFamily: "Inter"}}>{props.status}</div>
+            <div
+              className="speaker-card-session-grid"
+              style={{ fontFamily: "Inter" }}
+            >
+              {props.status}
+            </div>
           </div>
         </div>
 

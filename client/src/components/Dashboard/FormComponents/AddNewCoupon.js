@@ -136,6 +136,7 @@ const AddNewCoupon = (props) => {
     // showResults(ModifiedFormValues);
     dispatch(createCoupon(ModifiedFormValues));
     props.handleClose();
+    window.location.reload();
   };
 
   return (

@@ -14,7 +14,10 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editSponsor, errorTrackerForEditSponsor } from "../../../../../actions";
+import {
+  editSponsor,
+  errorTrackerForEditSponsor,
+} from "../../../../../actions";
 
 import { connect } from "react-redux";
 import Loader from "../../../../Loader";
@@ -129,7 +132,9 @@ const renderReactSelect = ({
 );
 const EditSponosor = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const {error, isLoading} = useSelector((state) => state.sponsor);
+  const { detailError, isLoadingDetail } = useSelector(
+    (state) => state.sponsor
+  );
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -151,9 +156,20 @@ const EditSponosor = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-  const imgKey = useSelector((state) =>
-    state.sponsor.sponsorDetails ? state.sponsor.sponsorDetails.image : false
-  );
+
+ 
+
+  const sponsor = useSelector((state) => {
+    return state.sponsor.sponsors.find((sponsor) => {
+      return sponsor._id === props.id;
+    });
+  });
+
+  console.log(sponsor.image);
+
+  const imgKey = sponsor.image;
+
+ 
 
   let imgUrl = " #";
   if (imgKey) {
@@ -179,14 +195,10 @@ const EditSponosor = (props) => {
     props.handleClose();
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
-  }
-
-  if(error) {
+  if (detailError) {
     dispatch(errorTrackerForEditSponsor());
-    alert(error);
-    return;
+    alert(detailError);
+    return null;
   }
 
   return (
@@ -196,127 +208,137 @@ const EditSponosor = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
-              <div></div>
-              <div className="coupon-overlay-form-headline">Edit sponsor</div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
-                <IconButton aria-label="delete">
-                  <CancelRoundedIcon />
-                </IconButton>
+        {isLoadingDetail ? (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ width: "100%", height: "100%" }}
+          >
+            {" "}
+            <Loader />{" "}
+          </div>
+        ) : (
+          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+            <div className="create-new-coupon-form px-4 py-4">
+              <div className="form-heading-and-close-button mb-4">
+                <div></div>
+                <div className="coupon-overlay-form-headline">Edit sponsor</div>
+                <div
+                  className="overlay-form-close-button"
+                  onClick={props.handleClose}
+                >
+                  <IconButton aria-label="delete">
+                    <CancelRoundedIcon />
+                  </IconButton>
+                </div>
               </div>
-            </div>
 
-            <div className="p-0 d-flex flex-row justify-content-center">
-              <Avatar
-                children=""
-                alt="Travis Howard"
-                src={fileToPreview}
-                className={classes.large}
-                variant="rounded"
-              />
-            </div>
+              <div className="p-0 d-flex flex-row justify-content-center">
+                <Avatar
+                  children=""
+                  alt="Travis Howard"
+                  src={fileToPreview}
+                  className={classes.large}
+                  variant="rounded"
+                />
+              </div>
 
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Logo
-              </label>
-              <input
-                name="imgUpload"
-                type="file"
-                accept="image/*"
-                onChange={onFileChange}
-                className="form-control"
-              />
-            </div>
-
-            <div class="mb-3 overlay-form-input-row ">
-              <div>
+              <div className="mb-3 overlay-form-input-row">
                 <label
-                  Forhtml="eventStartDate"
+                  for="communityHeadline"
                   class="form-label form-label-customized"
                 >
-                  Organisation Name
+                  Logo
+                </label>
+                <input
+                  name="imgUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={onFileChange}
+                  className="form-control"
+                />
+              </div>
+
+              <div class="mb-3 overlay-form-input-row ">
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    Organisation Name
+                  </label>
+                  <Field
+                    name="organisationName"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="Google Inc."
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Select Category
                 </label>
                 <Field
-                  name="organisationName"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="Google Inc."
-                  component={renderInput}
+                  name="status"
+                  placeholder="category"
+                  styles={styles}
+                  menuPlacement="top"
+                  options={sponsorCategoryOptions}
+                  // defaultValue={eventOptions[0]}
+                  component={renderReactSelect}
                 />
               </div>
-            </div>
 
-            <div class="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Select Category
-              </label>
-              <Field
-                name="status"
-                placeholder="category"
-                styles={styles}
-                menuPlacement="top"
-                options={sponsorCategoryOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Website
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="website"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="www.myDomain.com"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
 
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
+              <div
+                style={{ width: "100%" }}
+                className="d-flex flex-row justify-content-end"
               >
-                Website
-              </label>
-              <div class="form-group">
-                <Field
-                  name="website"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.myDomain.com"
-                  component={renderInput}
-                />
+                <button
+                  disabled={pristine || submitting}
+                  onClick={reset}
+                  className="btn btn-outline-primary btn-outline-text me-3"
+                >
+                  Discard
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline-text"
+                  onClick={() => {
+                    props.handleClose();
+                  }}
+                >
+                  Save Changes
+                </button>
               </div>
             </div>
-
-            <div
-              style={{ width: "100%" }}
-              className="d-flex flex-row justify-content-end"
-            >
-              <button
-                disabled={pristine || submitting}
-                onClick={reset}
-                className="btn btn-outline-primary btn-outline-text me-3"
-              >
-                Discard
-              </button>
-
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline-text"
-                onClick={() => {
-                  props.handleClose();
-                }}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        )}
       </Dialog>
     </>
   );

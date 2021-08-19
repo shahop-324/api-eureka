@@ -55,7 +55,7 @@ const UserAccountEventsMainBody = () => {
         </div>
         <div
           style={{ height: "100%" }}
-          className="d-flex flex-row justify-content-center align-items-center"
+          // className="d-flex flex-row justify-content-center align-items-center"
         >
           {typeof events !== "undefined" && events.length > 0 ? (
             <div className="user-account-events-event-card-grid px-2 py-2">

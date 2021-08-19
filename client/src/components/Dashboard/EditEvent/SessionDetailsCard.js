@@ -9,6 +9,8 @@ import Avatar from "@material-ui/core/Avatar";
 import EditSession from "./FormComponents/EditSessionForms/EditSession";
 import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
 import { Tooltip } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { fetchParticularSessionOfEvent } from "../../../actions";
 
 var dateFormat = require("dateformat");
 //var now = new Date();
@@ -34,6 +36,8 @@ const SessionDetailCard = ({
   //   dateFormat(startDate, "mm/d/yyyy");
   //  }
 
+const dispatch = useDispatch();
+
   const handleDeleteSession = () => {
     setOpenDeleteDialog(true);
   };
@@ -45,7 +49,7 @@ const SessionDetailCard = ({
 
 
   const handleEditSession = () => {
-    //dispatch(fetchParticularSessionOfEvent(id));
+    dispatch(fetchParticularSessionOfEvent(id));
     setOpen(true);
   };
 

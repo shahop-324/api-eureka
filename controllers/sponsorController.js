@@ -43,7 +43,6 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
       organisationName: req.body.organisationName,
       status: req.body.status,
       website: req.body.website,
-      image: req.body.image,
     },
     {
       new: true,
@@ -51,9 +50,17 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
     }
   );
 
+  if (req.body.image) {
+    updatedSponsor.image = req.body.image;
+  }
+  const doublyUpdatedSponsor = await updatedSponsor.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
   res.status(200).json({
     status: "success",
-    data: updatedSponsor,
+    data: doublyUpdatedSponsor,
   });
 });
 

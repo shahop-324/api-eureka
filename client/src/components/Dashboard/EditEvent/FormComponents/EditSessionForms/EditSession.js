@@ -144,7 +144,7 @@ const styles = {
 
 const EditSession = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const { error, isLoading } = useSelector((state) => state.session);
+  const { detailError, isLoadingDetail } = useSelector((state) => state.session);
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -152,9 +152,9 @@ const EditSession = (props) => {
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
 
-  useEffect(() => {
-    dispatch(fetchParticularSessionOfEvent(props.id));
-  }, [props.id, dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchParticularSessionOfEvent(props.id));
+  // }, [props.id, dispatch]);
   const speakers = useSelector((state) => state.speaker.speakers);
 
   const speakerOptions = speakers.map((speaker) => {
@@ -201,22 +201,12 @@ const EditSession = (props) => {
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  if (isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "80vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
+ 
 
-  if (error) {
+  if (detailError) {
     dispatch(errorTrackerForEditSession());
-    alert(error);
-    return;
+    alert(detailError);
+    return null;
   }
   return (
     <>
@@ -225,7 +215,13 @@ const EditSession = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+        {isLoadingDetail ? <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "100%" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div> : <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -382,7 +378,8 @@ const EditSession = (props) => {
               </button>
             </div>
           </div>
-        </form>
+        </form> }
+        
       </Dialog>
       <div>
         <Snackbar

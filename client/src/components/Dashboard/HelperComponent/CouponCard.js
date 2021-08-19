@@ -7,6 +7,8 @@ import "./../../../assets/Sass/Coupon.scss";
 
 import EditCoupon from "../FormComponents/EditCoupon";
 import DeleteCoupon from "../FormComponents/DeleteCoupon";
+import { useDispatch } from "react-redux";
+import { fetchCoupon } from "../../../actions";
 
 const CouponCard = ({
   id,
@@ -19,9 +21,11 @@ const CouponCard = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleEditCoupon = () => {
     setOpen(true);
+    dispatch(fetchCoupon(id));
   };
 
   const handleClose = () => {

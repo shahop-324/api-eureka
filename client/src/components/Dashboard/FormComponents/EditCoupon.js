@@ -14,7 +14,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 import { reduxForm, Field } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { editCoupon } from "../../../actions";
+import { editCoupon, errorTrackerForEditCoupon } from "../../../actions";
+import Loader from "./../../Loader";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -90,6 +91,7 @@ const renderReactSelect = ({
   <div>
     <div>
       <Select
+      isDisabled={true}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -118,6 +120,7 @@ const EditCoupon = (props) => {
     });
   }
 
+  const {detailError, isLoadingDetail} = useSelector((state) => state.coupon);
   const { handleSubmit, pristine, submitting, reset } = props;
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -156,8 +159,15 @@ const EditCoupon = (props) => {
     // showResults(ModifiedFormValues);
     dispatch(editCoupon(ModifiedFormValues, props.id));
     props.handleClose();
+    window.location.reload();
     
   };
+
+  if (detailError) {
+    dispatch(errorTrackerForEditCoupon());
+    alert(detailError);
+    return null;
+  }
 
   return (
     <>
@@ -166,7 +176,13 @@ const EditCoupon = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+        {isLoadingDetail ? <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "100%" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div> :  <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -317,7 +333,8 @@ const EditCoupon = (props) => {
               </button>
             </div>
           </div>
-        </form>
+        </form> }
+        
       </Dialog>
       <div>
         <Snackbar

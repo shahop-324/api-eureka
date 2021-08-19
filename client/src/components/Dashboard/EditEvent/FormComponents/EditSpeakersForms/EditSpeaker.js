@@ -164,7 +164,9 @@ const renderReactSelect = ({
 const EditSpeakerForm = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
 
-  const { error, isLoading } = useSelector((state) => state.speaker);
+  const { detailError, isLoadingDetail } = useSelector(
+    (state) => state.speaker
+  );
 
   const params = useParams();
   const id = params.id;
@@ -183,12 +185,12 @@ const EditSpeakerForm = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const event = useSelector((state) => {
-    return state.event.events.find((event) => {
-      return event.id === id;
+  const speaker = useSelector((state) => {
+    return state.speaker.speakers.find((speaker) => {
+      return speaker._id === props.id;
     });
   });
-  const imgKey = event.image;
+  const imgKey = speaker.image;
   //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
@@ -252,22 +254,22 @@ const EditSpeakerForm = (props) => {
     console.log(file);
   };
 
-  if (isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "80vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
+  // if (isLoadingDetail) {
+  //   return (
+  //     <div
+  //       className="d-flex flex-row align-items-center justify-content-center"
+  //       style={{ width: "100%", height: "80vh" }}
+  //     >
+  //       {" "}
+  //       <Loader />{" "}
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
+  if (detailError) {
     dispatch(errorTrackerForEditSpeaker());
-    alert(error);
-    return;
+    alert(detailError);
+    return null;
   }
 
   return (
@@ -278,268 +280,278 @@ const EditSpeakerForm = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+        {isLoadingDetail ? (
           <div
-            className="create-new-coupon-form px-4 py-4"
-            style={{ minHeight: "100vh" }}
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ width: "100%", height: "100%" }}
           >
-            <div className="form-heading-and-close-button mb-4">
-              <div></div>
-              <div className="coupon-overlay-form-headline">Edit Speaker</div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
-                <IconButton aria-label="delete">
-                  <CancelRoundedIcon />
-                </IconButton>
-              </div>
-            </div>
-
-            <div className="p-0 d-flex flex-row justify-content-center">
-              <Avatar
-                children=""
-                alt="Travis Howard"
-                src={fileToPreview}
-                variant="rounded"
-                className={classes.large}
-              />
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Avatar
-              </label>
-              <input
-                name="imgUpload"
-                type="file"
-                accept="image/*"
-                onChange={onFileChange}
-                className="form-control"
-              />
-            </div>
-
-            <div class="mb-3 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
-                >
-                  First Name
-                </label>
-                <Field
-                  name="firstName"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="John"
-                  component={renderInput}
-                />
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
-                >
-                  Last Name
-                </label>
-                <Field
-                  name="lastName"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="Doe"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                Forhtml="eventStartDate"
-                class="form-label form-label-customized"
-              >
-                Organisation
-              </label>
-              <div class="form-group">
-                <Field
-                  name="organisation"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="CEO of App Brewery"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                Forhtml="eventStartDate"
-                class="form-label form-label-customized"
-              >
-                Headline
-              </label>
-              <div class="form-group">
-                <Field
-                  name="headline"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="Hi there! I am here"
-                  component={renderTextArea}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                Forhtml="eventStartDate"
-                class="form-label form-label-customized"
-              >
-                Email
-              </label>
-              <div class="form-group">
-                <Field
-                  name="email"
-                  type="email"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="johndoe@gmail.com"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div class="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Select Sessions
-              </label>
-              <Field
-                name="sessions"
-                isMulti
-                placeholder="Select sessions"
-                styles={styles}
-                menuPlacement="top"
-                //options={SessionOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Linkedin
-              </label>
-              <div class="form-group">
-                <Field
-                  name="linkedin"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.linkedIn.com/in/JohnDoe/ or JohnDoe"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Facebook
-              </label>
-              <div class="form-group">
-                <Field
-                  name="facebook"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.facebook.com/in/JohnDoe/ or JohnDoe"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Twitter
-              </label>
-              <div class="form-group">
-                <Field
-                  name="twitter"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.twitter.com/in/JohnDoe/ or JohnDoe"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
-              >
-                Website
-              </label>
-              <div class="form-group">
-                <Field
-                  name="website"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.myDomain.com"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div
-              style={{ width: "100%" }}
-              className="d-flex flex-row justify-content-end"
-            >
-              <button
-                className="btn btn-outline-primary btn-outline-text me-3"
-                type="button"
-                // disabled={pristine || submitting}
-                onClick={reset}
-              >
-                Discard
-              </button>
-
-              <button
-                type="submit"
-                disabled={pristine || submitting}
-                className="btn btn-primary btn-outline-text"
-                onClick={() => {
-                  props.handleClose();
-                  setState({
-                    open: true,
-                    vertical: "top",
-                    horizontal: "center",
-                  });
-                }}
-              >
-                Save Changes
-              </button>
-            </div>
+            {" "}
+            <Loader />{" "}
           </div>
-        </form>
+        ) : (
+          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+            <div
+              className="create-new-coupon-form px-4 py-4"
+              style={{ minHeight: "100vh" }}
+            >
+              <div className="form-heading-and-close-button mb-4">
+                <div></div>
+                <div className="coupon-overlay-form-headline">Edit Speaker</div>
+                <div
+                  className="overlay-form-close-button"
+                  onClick={props.handleClose}
+                >
+                  <IconButton aria-label="delete">
+                    <CancelRoundedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="p-0 d-flex flex-row justify-content-center">
+                <Avatar
+                  children=""
+                  alt="Travis Howard"
+                  src={fileToPreview}
+                  variant="rounded"
+                  className={classes.large}
+                />
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityHeadline"
+                  class="form-label form-label-customized"
+                >
+                  Avatar
+                </label>
+                <input
+                  name="imgUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={onFileChange}
+                  className="form-control"
+                />
+              </div>
+
+              <div class="mb-3 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    First Name
+                  </label>
+                  <Field
+                    name="firstName"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="John"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    Last Name
+                  </label>
+                  <Field
+                    name="lastName"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="Doe"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  Forhtml="eventStartDate"
+                  class="form-label form-label-customized"
+                >
+                  Organisation
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="organisation"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="CEO of App Brewery"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  Forhtml="eventStartDate"
+                  class="form-label form-label-customized"
+                >
+                  Headline
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="headline"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="Hi there! I am here"
+                    component={renderTextArea}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  Forhtml="eventStartDate"
+                  class="form-label form-label-customized"
+                >
+                  Email
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="email"
+                    type="email"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="johndoe@gmail.com"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Select Sessions
+                </label>
+                <Field
+                  name="sessions"
+                  isMulti
+                  placeholder="Select sessions"
+                  styles={styles}
+                  menuPlacement="top"
+                  //options={SessionOptions}
+                  // defaultValue={eventOptions[0]}
+                  component={renderReactSelect}
+                />
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Linkedin
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="linkedin"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="www.linkedIn.com/in/JohnDoe/ or JohnDoe"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Facebook
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="facebook"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="www.facebook.com/in/JohnDoe/ or JohnDoe"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Twitter
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="twitter"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="www.twitter.com/in/JohnDoe/ or JohnDoe"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  class="form-label form-label-customized"
+                >
+                  Website
+                </label>
+                <div class="form-group">
+                  <Field
+                    name="website"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="www.myDomain.com"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div
+                style={{ width: "100%" }}
+                className="d-flex flex-row justify-content-end"
+              >
+                <button
+                  className="btn btn-outline-primary btn-outline-text me-3"
+                  type="button"
+                  // disabled={pristine || submitting}
+                  onClick={reset}
+                >
+                  Discard
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={pristine || submitting}
+                  className="btn btn-primary btn-outline-text"
+                  onClick={() => {
+                    props.handleClose();
+                    setState({
+                      open: true,
+                      vertical: "top",
+                      horizontal: "center",
+                    });
+                  }}
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
       </Dialog>
       <div>
         <Snackbar

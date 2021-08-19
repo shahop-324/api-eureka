@@ -7,7 +7,9 @@ const boothSlice = createSlice({
     booths: [],
     boothDetails: null,
     isLoading: true,
+    isLoadingDetail: true,
     error: false,
+    detailError: false,
   },
 
   reducers: {
@@ -15,13 +17,25 @@ const boothSlice = createSlice({
       state.isLoading = true;
     },
 
+    startLoadingDetail(state) {
+      state.isLoadingDetail = true;
+    },
+    
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
     },
+    detailHasError(state, action) {
+      state.detailError = action.payload;
+      state.isLoadingDetail = false;
+    },
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+    },
+    disabledDetailError(state, action) {
+      state.detailError = false;
+      state.isLoadingDetail = false;
     },
     CreateBooth(state, action) {
       state.booths.push(action.payload.booth);
@@ -44,7 +58,7 @@ const boothSlice = createSlice({
       }
 
       state.boothDetails = action.payload.booth;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
 
     EditBooth(state, action) {
@@ -52,7 +66,7 @@ const boothSlice = createSlice({
         booth._id === action.payload.booth._id ? action.payload.booth : booth
       );
       state.boothDetails = action.payload.booth;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
     DeleteBooth(state, action) {
       state.booths = state.booths.filter(
@@ -60,18 +74,6 @@ const boothSlice = createSlice({
       );
       state.isLoading = false;
     },
-
-    // addSessionOfParticularBooth(state,action){
-
-    //   state.allSessionsOfParticularBooth=action.payload.allSessions;
-
-    // },
-
-    // addSpeakerOfParticularBooth(state,action){
-
-    //   state.allSpeakersOfParticularBooth=action.payload.speakers
-
-    // }
   },
 });
 export const boothActions = boothSlice.actions;

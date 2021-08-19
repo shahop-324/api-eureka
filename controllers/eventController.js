@@ -176,6 +176,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
+  
   console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
@@ -183,8 +184,6 @@ exports.createBooth = catchAsync(async (req, res, next) => {
     tagline: req.body.tagline,
     description: req.body.description,
     image: req.body.image,
-    // boothLogo: req.body.boothLogo,
-    // boothPoster: req.body.boothPoster,
     socialMediaHandles: processedObj,
     tags: req.body.tags,
     eventId: eventGettingBooth.id,

@@ -8,12 +8,17 @@ const sessionSlice = createSlice({
     sessionDetails: null,
     sessionsStatus: [],
     isLoading: true,
+    isLoadingDetail: true,
     error: false,
+    detailError: false,
   },
 
   reducers: {
     startLoading(state) {
       state.isLoading = true;
+    },
+    startLoadingDetail(state) {
+      state.isLoadingDetail = true;
     },
 
     hasError(state, action) {
@@ -21,9 +26,18 @@ const sessionSlice = createSlice({
       state.isLoading = false;
     },
 
+    detailHasError(state, action) {
+      state.detailError = action.payload;
+      state.isLoadingDetail = false;
+    },
+
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+    },
+    disabledDetailError(state, action) {
+      state.detailError = false;
+      state.isLoadingDetail = false;
     },
     FetchSessionsStatus(state, action) {
       state.sessionsStatus = action.payload.sessionsStatus;
@@ -48,7 +62,7 @@ const sessionSlice = createSlice({
         state.sessions.push(action.payload.session);
       }
       state.sessionDetails = action.payload.session;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
 
     EditSession(state, action) {
@@ -62,7 +76,7 @@ const sessionSlice = createSlice({
       console.log(sessionsArr);
       state.sessions = sessionsArr;
       state.sessionDetails = action.payload.session;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
 
     DeleteSession(state, action) {
