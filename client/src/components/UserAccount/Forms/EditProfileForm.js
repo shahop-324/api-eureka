@@ -471,7 +471,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3 d-flex flex-row justify-content-end">
             <button
               type="submit"
+<<<<<<< HEAD
               // disabled={!error}
+=======
+             // disabled={editProfileClicked && !error}
+>>>>>>> fe87ef8fdda5e7dcc6a94be885e8a9adbaeecbb4
               // disabled={pristine}
               className="col-3 btn btn-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}

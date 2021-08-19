@@ -147,8 +147,18 @@ const renderReactSelectTimeZone = ({
 const options = [
   { value: "Technology", label: "Technology" },
   { value: "Education", label: "Education" },
-  { value: "Career Fair", label: "Career Fair" },
+  { value: "Lifestyle", label: "Lifestyle" },
+  { value: "Professional Development", label: "Professional Development" },
+  { value: "Arts and crafts", label: "Arts and crafts" },
+  {
+    value: "Business & Enterpreneurship",
+    label: "Business & Enterpreneurship",
+  },
+  { value: "Job Search", label: "Job Search" },
+  { value: "Entertainment", label: "Entertainment" },
+  { value: "Health", label: "Health" },
   { value: "Crypto", label: "Crypto" },
+  { value: "Web Security", label: "Web Security" },
 ];
 
 const timeZoneOptions = [
@@ -156,6 +166,9 @@ const timeZoneOptions = [
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
   { value: "(GMT + 00:00) Lisbon", label: "(GMT + 00:00) Lisbon" },
   { value: "(GMT + 00:00) London", label: "(GMT + 00:00) London" },
+  {value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii"},
+  {value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai", label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai"},
+  {value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu"}
 ];
 
 const styles = {
@@ -203,8 +216,8 @@ const CreateNewEventForm = (props) => {
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
 
-    console.log(ModifiedFormValues);
-    showResults(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(createEvent(ModifiedFormValues));
 
     props.handleClose();

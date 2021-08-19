@@ -153,7 +153,7 @@ const EditCoupon = (props) => {
       formValues.numberOfDiscountsAvailable;
 
     
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(editCoupon(ModifiedFormValues, props.id));
     props.handleClose();
     
