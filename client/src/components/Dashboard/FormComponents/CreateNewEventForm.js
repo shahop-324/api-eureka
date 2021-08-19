@@ -216,8 +216,8 @@ const CreateNewEventForm = (props) => {
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
 
-    console.log(ModifiedFormValues);
-    showResults(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(createEvent(ModifiedFormValues));
 
     props.handleClose();

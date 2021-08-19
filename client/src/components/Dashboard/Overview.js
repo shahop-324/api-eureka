@@ -346,7 +346,7 @@ const Overview = () => {
                   >
                     <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
                       <Avatar
-                        alt="Travis Howard"
+                        alt={superAdminName}
                         variant="rounded"
                         src={
                           superAdminImage
@@ -458,14 +458,15 @@ const Overview = () => {
                   >
                     <div className="team-member-card d-flex flex-row align-items-center  px-4 my-4">
                       <Avatar
-                        alt="Travis Howard"
+                        alt={superAdminName}
                         variant="rounded"
                         src={
-                          superAdminImage.startsWith(
+                          superAdminImage ? 
+                          (superAdminImage.startsWith(
                             "https://lh3.googleusercontent.com"
                           )
                             ? superAdminImage
-                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`
+                            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${superAdminImage}`) : "#"
                         }
                         className={classes.large}
                       />

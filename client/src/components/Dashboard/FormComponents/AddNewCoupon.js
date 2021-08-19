@@ -133,7 +133,7 @@ const AddNewCoupon = (props) => {
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
 
-    showResults(ModifiedFormValues);
+    // showResults(ModifiedFormValues);
     dispatch(createCoupon(ModifiedFormValues));
     props.handleClose();
   };
