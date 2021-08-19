@@ -473,8 +473,6 @@ let EditProfileForm = (props) => {
               type="submit"
               // disabled={!error}
 
-              // disabled={editProfileClicked && !error}
-
               // disabled={pristine}
               className="col-3 btn btn-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}

@@ -38,6 +38,8 @@ const UserAccountHome = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    history.push("/user/home");
+
     dispatch(fetchUserAllPersonalData());
   }, [dispatch]);
   useEffect(() => {

@@ -13,7 +13,7 @@ const SessionCard = ({
 }) => {
   const renderSpeakerAvatarList = (speakerAvatarList) => {
     console.log(speakerAvatarList);
-    if (speakerAvatarList[0]) {
+    if (speakerAvatarList) {
       return speakerAvatarList.map((speaker) => {
         return (
           <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
