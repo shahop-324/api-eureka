@@ -103,10 +103,11 @@ exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBooth = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const boothId = req.params.id;
 
-  const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
-  console.log("This is processedObj", processedObj);
+  // const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
+  // console.log("This is processedObj", processedObj);
 
   const updatedBooth = await Booth.findByIdAndUpdate(
     boothId,
@@ -115,10 +116,10 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       emails: req.body.emails,
       tagline: req.body.tagline,
       description: req.body.description,
-      image: req.body.image,
+      // image: req.body.image,
       // boothLogo: req.body.boothLogo,
       // boothPoster: req.body.boothPoster,
-      socialMediaHandles: processedObj,
+      // socialMediaHandles: processedObj,
       tags: req.body.tags,
     },
     {

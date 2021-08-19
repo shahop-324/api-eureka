@@ -49,7 +49,7 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
           <div className="registrations-name-field">
             <div className="registrations-field-label d-flex flex-row justify-content-start">
               {/* attendee avatar and name */}
-              <Avatar alt={name} src={url} varinat="rounded" />
+              <Avatar alt={name} src={url} variant="rounded" />
               <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter"}}>{name}</div>
             </div>
           </div>

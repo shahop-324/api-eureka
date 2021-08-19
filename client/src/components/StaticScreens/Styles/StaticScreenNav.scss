@@ -41,7 +41,7 @@
 
 .grid-1-of-2 {
   //   border: 2px solid green;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,7 +50,7 @@
 }
 .grid-2-of-2 {
   //   border: 2px solid green;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

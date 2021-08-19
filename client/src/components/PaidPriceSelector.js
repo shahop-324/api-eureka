@@ -22,11 +22,7 @@ const PaidPriceSelector = (props) => {
     const result = new_url.substring(len);
     console.log(typeof result);
     console.log(result);
-    // setFullLocation(new_url);
-    // let regex = /(?<=search-events\/).+/;
-    // const result = new_url.match(regex);
-
-    // props.searchEvents(event.target.value);
+   
     if (result === "") {
       history.push("/search-events/");
     } else {

@@ -91,14 +91,9 @@ const AboutUs = () => {
               style={{ color: "#538BF7" }}
             >
               Our mission is to make <br />
-              <div
-                      class="typewrite"
-                      data-period="1000"
-                      data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                      style={{ color: "#ffffff", display: "inline-block" }}
-                    >
-                      {/* Virtual Events */}
-                    </div>{" "}
+              <div style={{ color: "#ffffff", display: "inline-block" }}>
+                Virtual Events
+              </div>{" "}
               <br /> more engaging and effortless
             </div>
           </div>

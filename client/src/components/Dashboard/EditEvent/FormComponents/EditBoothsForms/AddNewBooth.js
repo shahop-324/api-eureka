@@ -497,7 +497,9 @@ const validate = (formValues) => {
   }
   if (
     formValues.multiEmail &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.multiEmail)
+    formValues.multiEmail.forEach((element) => {
+      return !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(element);
+    })
   ) {
     errors.multiEmail = "Invalid Email address";
   }

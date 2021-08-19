@@ -411,7 +411,7 @@ const Home = (props) => {
           </div>
         </div>
 
-        <div className="home-section-3 px-5 py-5" id="home-section-3">
+        <div className="home-section-3 px-5 " id="home-section-3">
           <div
             className="grid-of-2"
             style={{ height: "auto", alignItems: "center" }}
@@ -486,7 +486,6 @@ const Home = (props) => {
                 data-aos-delay="100"
                 // className="zoom-in"
                 // data-aos="slide-left"
-
                 style={{ maxHeight: "100%", maxWidth: "100%" }}
               />
             </div>

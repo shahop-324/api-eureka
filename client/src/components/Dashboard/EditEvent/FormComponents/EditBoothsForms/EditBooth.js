@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
@@ -178,9 +178,23 @@ const EditBooth = (props) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
-  const imgKey = useSelector((state) =>
-    state.booth.boothDetails ? state.booth.boothDetails.image : false
-  );
+  // const imgKey = useSelector((state) => state.booth.boothDetails.image);
+
+  // const event = useSelector((state) => {
+  //   return state.event.events.find((event) => {
+  //     return event.id === id;
+  //   });
+  // });
+
+  const booth = useSelector((state) => {
+    return state.booth.booths.find((booth) => {
+      return booth._id === props.id;
+    });
+  });
+
+  console.log(booth.image);
+
+  const imgKey = booth.image;
 
   let imgUrl = "#";
   if (imgKey) {
@@ -263,7 +277,7 @@ const EditBooth = (props) => {
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
                 children=""
-                alt="Travis Howard"
+                alt={booth.name}
                 src={fileToPreview}
                 className={classes.large}
                 variant="rounded"
@@ -581,7 +595,9 @@ const validate = (formValues) => {
   }
   if (
     formValues.multiEmail &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.multiEmail)
+    formValues.multiEmail.forEach((element) => {
+      return !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(element);
+    })
   ) {
     errors.multiEmail = "Invalid Email address";
   }
