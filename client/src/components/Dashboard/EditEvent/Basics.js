@@ -13,7 +13,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useParams } from "react-router";
 
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -22,6 +21,8 @@ const Basics = () => {
   //console.log("i am inside basics")
   const params = useParams();
   const id = params.id;
+
+  console.log(params);
 
   console.log(id);
 
@@ -66,13 +67,27 @@ const Basics = () => {
   };
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Basics</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
-          <a type="button" className="btn btn-outline-primary btn-outline-text me-3" href={`/event-landing-page/${id}`} >
-                Preview Landing Page
-              </a>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(`https://www.evenz.in/event-landing-page/${id}`);
+                alert("copied to clipboard!");
+              }}
+              className="btn btn-outline-text btn-primary me-3"
+              style={{ backgroundColor: "#538BF7" }}
+            >
+              Copy Link
+            </button>
+            <a
+              type="button"
+              className="btn btn-outline-primary btn-outline-text me-3"
+              href={`/event-landing-page/${id}`}
+            >
+              Preview Landing Page
+            </a>
           </div>
         </div>
         <div className="basic-content-grid px-3 mb-4">
@@ -85,8 +100,10 @@ const Basics = () => {
               id={id}
             />
           </div>
-          <div className="basic-form-right">
-            <UploadEventImageForm />
+          <div>
+            <div className="basic-form-right">
+              <UploadEventImageForm />
+            </div>
           </div>
         </div>
       </div>

@@ -218,7 +218,7 @@ const Overview = () => {
                       <div className="num-text me-3">
                         {analytics.totalRegistrations}
                       </div>
-                      <div className="num-percent increment">+100%</div>
+                      <div className="num-percent increment">{(analytics.totalRegistrations) >= 1 ? "+100%" : "+0%"}</div>
                     </div>
                   </div>
                 </div>
@@ -228,9 +228,9 @@ const Overview = () => {
                     <div className="number-card-heading mb-2">Revenue</div>
                     <div className="number-card-num-and-percent d-flex flex-row align-items-center mb-3">
                       <div className="num-text me-3">
-                        INR {analytics.totalRevenue}
+                        INR {(analytics.totalRevenue/100).toFixed(2)}
                       </div>
-                      <div className="num-percent increment">+0%</div>
+                      <div className="num-percent increment">{(analytics.totalRevenue/100) > 10 ? "+100%" : "+0%"}</div>
                     </div>
                   </div>
                 </div>

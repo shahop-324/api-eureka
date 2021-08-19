@@ -165,7 +165,7 @@ const AvatarMenu = () => {
   const referralLink = `https://www.evenz.in/?ref=${referralCode}`;
 
   return (
-    <div className={classes.root}>
+    <div style={{zIndex: "1000000000000000000"}} className={classes.root}>
       <div>
         <Button
           style={{ padding: "0" }}

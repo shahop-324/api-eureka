@@ -18,11 +18,12 @@ import { useParams } from "react-router-dom";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { fetchRegistrationsOfParticularCommunity } from "../../actions";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import { alpha, Avatar, IconButton } from "@material-ui/core";
+import { alpha, Avatar, Button, IconButton } from "@material-ui/core";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import NoRegistartions from "./../../assets/images/registrations.png";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const options = [
   { value: "All", label: "All Events" },
@@ -141,6 +142,50 @@ const Registrations = () => {
     setOpenDrawer(true);
   };
 
+  const processRegistrationData = () => {
+    const processedArray = [];
+
+    communityRegistrations.map((communityRegistration) => {
+      const array = Object.entries(communityRegistration);
+
+      const filtered = array.filter(
+        ([key, value]) =>
+          key === "userName" ||
+          key === "userEmail" ||
+          key === "ticketType" ||
+          key === "eventName" ||
+          key === "userName" ||
+          key === "created_by_contact" ||
+          key === "razorpayPayId" ||
+          key === "createdAt"
+      );
+
+      const asObject = Object.fromEntries(filtered);
+
+      processedArray.push(asObject);
+    });
+
+    const finalArray = processedArray.map((obj) => Object.values(obj));
+
+    return finalArray;
+  };
+
+  const CreateAndDownloadCSV = (data) => {
+    
+    var csv = "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
+    data.forEach(function (row) {
+      csv += row.join(",");
+      csv += "\n";
+    });
+
+    console.log(csv);
+    var hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+    hiddenElement.download = "registrations.csv";
+    hiddenElement.click();
+  };
+
   const renderRegistrationsList = (registrations) => {
     return registrations
       .slice(0)
@@ -183,7 +228,7 @@ const Registrations = () => {
           <div className="sec-heading-text">Registrations</div>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
-              className={`${classes.search}`}
+              className={`${classes.search} me-3`}
               style={{ backgroundColor: "#ffffff" }}
             >
               <div className={classes.searchIcon}>
@@ -198,6 +243,21 @@ const Registrations = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
+
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<GetAppIcon />}
+              style={{ backgroundColor: "#538BF7" }}
+              onClick={() => {
+                CreateAndDownloadCSV(processRegistrationData());
+                console.log(processRegistrationData());
+              }}
+            >
+              Export
+            </Button>
+
             {/* <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
