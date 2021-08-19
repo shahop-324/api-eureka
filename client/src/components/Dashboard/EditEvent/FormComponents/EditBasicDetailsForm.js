@@ -148,19 +148,28 @@ const renderReactSelectTimeZone = ({
 const options = [
   { value: "Technology", label: "Technology" },
   { value: "Education", label: "Education" },
-  { value: "Career Fair", label: "Career Fair" },
+  { value: "Lifestyle", label: "Lifestyle" },
+  { value: "Professional Development", label: "Professional Development" },
+  { value: "Arts and crafts", label: "Arts and crafts" },
+  {
+    value: "Business & Enterpreneurship",
+    label: "Business & Enterpreneurship",
+  },
+  { value: "Job Search", label: "Job Search" },
+  { value: "Entertainment", label: "Entertainment" },
+  { value: "Health", label: "Health" },
   { value: "Crypto", label: "Crypto" },
+  { value: "Web Security", label: "Web Security" },
 ];
 
 const timeZoneOptions = [
-  {
-    value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
-    label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
-  },
   { value: "(GMT + 00:00) UTC", label: "(GMT + 00:00) UTC" },
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
   { value: "(GMT + 00:00) Lisbon", label: "(GMT + 00:00) Lisbon" },
   { value: "(GMT + 00:00) London", label: "(GMT + 00:00) London" },
+  {value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii"},
+  {value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai", label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai"},
+  {value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu"}
 ];
 
 const styles = {
@@ -384,6 +393,39 @@ const EditBasicDetailsForm = (props) => {
             />
           </div>
           <div class="mb-4 overlay-form-input-row">
+            <p>Which service would you like to use ?</p>
+            <div class="form-check mb-2">
+              <Field
+                name="service"
+                class="form-check-input"
+                type="radio"
+                // name="flexRadioDefault"
+                id="flexRadioDefault1"
+                value="Hosting & Management"
+                // component={renderInput}
+                component="input"
+              />
+              <label class="form-check-label" for="flexRadioDefault1">
+                Hosting & Management
+              </label>
+            </div>
+            <div class="form-check">
+              <Field
+                class="form-check-input"
+                type="radio"
+                name="service"
+                id="flexRadioDefault2"
+                // checked="true"
+                value="Ticketing"
+                // component={renderInput}
+                component="input"
+              />
+              <label class="form-check-label" for="flexRadioDefault2">
+                Ticketing Only
+              </label>
+            </div>
+          </div>
+          <div class="mb-4 overlay-form-input-row">
             <p>Event Visibility</p>
             <div class="form-check mb-2">
               <Field
@@ -520,6 +562,11 @@ const mapStateToProps = (state) => ({
       state.event.eventDetails && state.event.eventDetails.visibility
         ? state.event.eventDetails.visibility
         : "",
+    service:
+      state.event.eventDetails && state.event.eventDetails.service
+        ? state.event.eventDetails.service
+        : "",
+
   },
 });
 

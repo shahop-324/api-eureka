@@ -142,22 +142,23 @@ const EventDetailCard = ({
             <div className="visit-stage-button">
               <Link
                 onClick={() => {
-                  dispatch(fetchEvent(eventId));
+                  // dispatch(fetchEvent(eventId));
                 }}
-                to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
+                // to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
-                  onClick={() => {
-                    dispatch(
-                      generateEventAccessToken(
-                        userId,
-                        email,
-                        "host",
-                        eventId,
-                        communityId
-                      )
-                    );
-                  }}
+                disabled
+                  // onClick={() => {
+                  //   dispatch(
+                  //     generateEventAccessToken(
+                  //       userId,
+                  //       email,
+                  //       "host",
+                  //       eventId,
+                  //       communityId
+                  //     )
+                  //   );
+                  // }}
                   className="btn btn-primary event-field-label py-2"
                   style={{ color: "#ffffff" }}
                 >
