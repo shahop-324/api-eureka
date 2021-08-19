@@ -247,7 +247,7 @@ const Home = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    window.location.reload();
+    
     AOS.init({
       duration: 1100,
     });
