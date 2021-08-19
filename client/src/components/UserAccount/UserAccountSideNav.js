@@ -92,7 +92,7 @@ class UserProfileTab extends React.Component {
 }
 
 const UserAccountSideNav = () => {
-  const { isLoading, error } = useSelector((state) => state.user);
+  const { isLoadingCommunity, error } = useSelector((state) => state.community);
   const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -107,11 +107,15 @@ const UserAccountSideNav = () => {
 
   const { communities } = useSelector((state) => state.community);
   const { userDetails } = useSelector((state) => state.user);
-  if (isLoading) {
+  if (isLoadingCommunity) {
     return (
-      <section>
-        <p>Loading...</p>
-      </section>
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100vw", height: "100vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
     );
   }
   if (error) {
@@ -164,7 +168,10 @@ const UserAccountSideNav = () => {
           {typeof communities !== "undefined" && communities.length > 0 ? (
             renderCommunitiesList(communities)
           ) : (
-            <CreateNewCommunityMsgCard msgText="Start by creating your community" img={maleMascot} />
+            <CreateNewCommunityMsgCard
+              msgText="Start by creating your community"
+              img={maleMascot}
+            />
           )}
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <button

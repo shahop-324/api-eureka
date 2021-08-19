@@ -33,9 +33,7 @@ const steps = [
 
 const UserAccountHome = () => {
   const { isLoading, error } = useSelector((state) => state.user);
-  const { isCommunityLoading } = useSelector(
-    (state) => state.isCommunityLoading
-  );
+  const { isCommunityLoading } = useSelector((state) => state.community);
   const [isTourOpen, setIsTourOpen] = useState(true);
 
   const dispatch = useDispatch();
@@ -93,7 +91,7 @@ const UserAccountHome = () => {
 
       {/* {error && handleError(error)} */}
 
-      {isLoading || isCommunityLoading ? (
+      {isLoading ? (
         <div
           className="d-flex flex-row justify-content-center align-items-center"
           style={{ width: "100vw", height: "100vh" }}
