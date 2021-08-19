@@ -16,15 +16,21 @@ const PaidPriceSelector = (props) => {
     props.searchParams.set("min_price", minPrice);
     props.URL.search = props.searchParams.toString();
     let new_url = props.URL.toString();
+
+    const len = new_url.split("?")[0].length;
+
+    const result = new_url.substring(len);
+    console.log(typeof result);
+    console.log(result);
     // setFullLocation(new_url);
-    let regex = /(?<=search-events\/).+/;
-    const result = new_url.match(regex);
+    // let regex = /(?<=search-events\/).+/;
+    // const result = new_url.match(regex);
 
     // props.searchEvents(event.target.value);
-    if (result === null) {
+    if (result === "") {
       history.push("/search-events/");
     } else {
-      history.push(result[0]);
+      history.push(result);
     }
   };
 
