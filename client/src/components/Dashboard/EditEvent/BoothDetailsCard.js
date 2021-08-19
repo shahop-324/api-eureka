@@ -162,7 +162,7 @@ const BoothDetailsCard = (props) => {
         <Divider />
       </div>
 
-      <EditBooth open={open} handleClose={handleClose} id={props.id} />
+      <EditBooth open={open} handleClose={handleClose} id={props.id}  />
       <DeleteBooth
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteBooth={handleCloseDeleteBooth}
