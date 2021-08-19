@@ -229,11 +229,6 @@ exports.googleSignIn = catchAsync(async (req, res, next) => {
         policySigned: true,
         subscribedToMailList: true,
         image: req.body.image,
-        referralCode: MyReferralCode,
-        referrer: referrer._id,
-        signupUsingReferral: 0,
-        upgrades: 0,
-        credit: 0,
       }).save({ validateModifiedOnly: true });
 
       const name = `${req.body.firstName} ${req.body.lastName}`;

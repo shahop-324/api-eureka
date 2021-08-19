@@ -106,9 +106,7 @@ TxtType.prototype.tick = function () {
 };
 
 window.onload = function () {
-  // useEffect(() => {
-  //   window.location.href("https://www.evenz.in");
-  // }, []);
+  
   var elements = document.getElementsByClassName("typewrite");
   for (var i = 0; i < elements.length; i++) {
     var toRotate = elements[i].getAttribute("data-type");
@@ -123,8 +121,6 @@ window.onload = function () {
   css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #ffffff}";
   document.body.appendChild(css);
 };
-
-// window.onload();
 
 const renderInput = ({
   input,
@@ -178,8 +174,6 @@ const renderPhoneInput = ({
           enableSearch: true,
         }}
         country={"us"}
-        // value={state.phone}
-        //   onChange={phone => setState({ phone })}
         {...input}
         type={type}
       />
@@ -283,10 +277,6 @@ const Home = (props) => {
     dispatch(createDemoRequest(ModifiedFormValues));
     showResults(ModifiedFormValues);
   };
-
-  // if(isLoading) {
-  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{height: "100vh", width: "100vw"}}><Loader /> </div>);
-  // }
 
   if (error) {
     alert(error);

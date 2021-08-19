@@ -16,7 +16,9 @@ import maleMascot from "./../../assets/images/winkingPerson.png";
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useSelector((state) => state.user);
+
+  const { error, isCommunityLoading } = useSelector((state) => state.community);
+
 
   const { id } = useSelector((state) => state.user.userDetails);
 
@@ -26,11 +28,11 @@ const CommunityProfileTab = (props) => {
     dispatch(communitySignIn(props.communityId, userId));
   };
 
-  if (isLoading) {
+  if (isCommunityLoading) {
     return (
       <div
         className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100%", height: "100vh" }}
       >
         {" "}
         <Loader />{" "}
@@ -109,9 +111,15 @@ const UserAccountSideNav = () => {
   const { userDetails } = useSelector((state) => state.user);
   if (isLoading) {
     return (
-      <section>
-        <p>Loading...</p>
-      </section>
+
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "100vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+
     );
   }
   if (error) {

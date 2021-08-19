@@ -464,6 +464,10 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
 };
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
+<<<<<<< HEAD
+=======
+  dispatch(communityActions.startCommunityLoading());
+>>>>>>> fceb8d8 (commit)
   dispatch(eventActions.startLoading());
 
   const fetchData = async () => {
