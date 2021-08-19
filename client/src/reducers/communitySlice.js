@@ -39,6 +39,7 @@ const communitySlice = createSlice({
     FetchCommunities(state, action) {
       state.communities = action.payload.communities;
       state.isLoading = false;
+      state.isCommunityLoading=false;
     },
     FetchCommunity(state, action) {
       const newCommunity = action.payload.community;

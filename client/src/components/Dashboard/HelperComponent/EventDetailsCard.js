@@ -60,7 +60,7 @@ const EventDetailCard = ({
             />
             <div className="event-name-and-description-wrapper">
               <Link
-                to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
+                // to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
                 <div className="event-name-d" style={{ fontFamily: "Inter" }}>
@@ -68,7 +68,7 @@ const EventDetailCard = ({
                 </div>
               </Link>
               <Link
-                to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
+                // to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
                 <div
