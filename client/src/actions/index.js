@@ -2172,7 +2172,7 @@ export const errorTrackerForFetchTickets = () => async (dispatch, getState) => {
 };
 
 export const fetchTicket = (id) => async (dispatch, getState) => {
-  dispatch(ticketActions.startLoading());
+  dispatch(ticketActions.startLoadingDetail());
 
   try {
     console.log(id);
@@ -2201,14 +2201,14 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    dispatch(ticketActions.hasError(err.message));
+    dispatch(ticketActions.detailHasError(err.message));
   }
 };
 export const errorTrackerForFetchTicket = () => async (dispatch, getState) => {
-  dispatch(ticketActions.disabledError());
+  dispatch(ticketActions.disabledDetailError());
 };
 export const editTicket = (formValues, id) => async (dispatch, getState) => {
-  dispatch(ticketActions.startLoading());
+  dispatch(ticketActions.startLoadingDetail());
   try {
     console.log(id);
     console.log(formValues);
@@ -2240,11 +2240,11 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    dispatch(ticketActions.hasError(err.message));
+    dispatch(ticketActions.detailHasError(err.message));
   }
 };
 export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
-  dispatch(ticketActions.disabledError());
+  dispatch(ticketActions.disabledDetailError());
 };
 
 export const deleteTicket = (id) => async (dispatch, getState) => {

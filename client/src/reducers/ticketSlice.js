@@ -7,21 +7,33 @@ const ticketSlice = createSlice({
     tickets: [],
     ticketDetails: null,
     isLoading: true,
+    isLoadingDetail: true,
     error: false,
+    detailError: false,
   },
 
   reducers: {
     startLoading(state) {
       state.isLoading = true;
     },
-
+    startLoadingDetail(state) {
+      state.isLoadingDetail = true;
+    },
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
     },
+    detailHasError(state, action) {
+      state.detailError = action.payload;
+      state.isLoadingDetail = false;
+    },
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+    },
+    disabledDetailError(state, action) {
+      state.detailError = false;
+      state.isLoadingDetail = false;
     },
 
     CreateTicket(state, action) {
@@ -44,7 +56,7 @@ const ticketSlice = createSlice({
       }
 
       state.ticketDetails = action.payload.ticket;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
 
     EditTicket(state, action) {
@@ -52,7 +64,7 @@ const ticketSlice = createSlice({
         ticket.id === action.payload.ticket.id ? action.payload.ticket : ticket
       );
       state.ticketDetails = action.payload.ticket;
-      state.isLoading = false;
+      state.isLoadingDetail = false;
     },
     DeleteTicket(state, action) {
       state.tickets = state.tickets.filter(
