@@ -16,7 +16,7 @@ import maleMascot from "./../../assets/images/winkingPerson.png";
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useSelector((state) => state.community);
+  const { error, isLoading } = useSelector((state) => state.user);
 
   const { id } = useSelector((state) => state.user.userDetails);
 
@@ -92,7 +92,7 @@ class UserProfileTab extends React.Component {
 }
 
 const UserAccountSideNav = () => {
-  const { isLoadingCommunity, error } = useSelector((state) => state.community);
+  const { isLoading, error } = useSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -107,15 +107,11 @@ const UserAccountSideNav = () => {
 
   const { communities } = useSelector((state) => state.community);
   const { userDetails } = useSelector((state) => state.user);
-  if (isLoadingCommunity) {
+  if (isLoading) {
     return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100vw", height: "100vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
+      <section>
+        <p>Loading...</p>
+      </section>
     );
   }
   if (error) {

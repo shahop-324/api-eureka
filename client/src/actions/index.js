@@ -464,7 +464,7 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
 };
 
 export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
-  dispatch(communityActions.startCommunityLoading());
+  dispatch(eventActions.startLoading());
 
   const fetchData = async () => {
     let res = await fetch(
@@ -934,7 +934,7 @@ export const deleteEvent = () => (dispatch, getState) => {
 
 export const createSpeaker =
   (formValues, file, id) => async (dispatch, getState) => {
-    dispatch(speakerActions.startLoadingDetail());
+    dispatch(speakerActions.startLoading());
     try {
       if (file) {
         console.log(formValues);
@@ -1041,12 +1041,12 @@ export const createSpeaker =
         );
       }
     } catch (err) {
-      dispatch(speakerActions.detailHasError(err.message));
+      dispatch(speakerActions.hasError(err.message));
     }
   };
 export const errorTrackerForCreateSpeaker =
   () => async (dispatch, getState) => {
-    dispatch(speakerActions.disabledDetailError());
+    dispatch(speakerActions.disabledError());
   };
 
 export const fetchSpeakers =
@@ -1109,7 +1109,7 @@ export const errorTrackerForFetchSpeakers =
 
 export const fetchParticularSpeakerOfEvent =
   (id) => async (dispatch, getState) => {
-    dispatch(speakerActions.startLoadingDetail());
+    dispatch(speakerActions.startLoading());
 
     const fetchingSpeaker = async () => {
       //console.log(id, "I am passing from particularEvent action");
@@ -1146,14 +1146,14 @@ export const fetchParticularSpeakerOfEvent =
         })
       );
     } catch (err) {
-      dispatch(speakerActions.detailHasError(err.message));
+      dispatch(speakerActions.hasError(err.message));
       console.log(err);
     }
   };
 
 export const errorTrackerForFetchParticularSpeakerOfEvent =
   () => async (dispatch, getState) => {
-    dispatch(speakerActions.disabledDetailError());
+    dispatch(speakerActions.disabledError());
   };
 
 export const fetchSpeaker = (id) => async (dispatch, getState) => {
@@ -1206,7 +1206,7 @@ export const errorTrackerForFetchSpeaker = () => async (dispatch, getState) => {
 
 export const editSpeaker =
   (formValues, file, id) => async (dispatch, getState) => {
-    dispatch(speakerActions.startLoadingDetail());
+    dispatch(speakerActions.startLoading());
 
     try {
       if (file) {
@@ -1317,11 +1317,11 @@ export const editSpeaker =
         );
       }
     } catch (err) {
-      dispatch(speakerActions.detailHasError(err.message));
+      dispatch(speakerActions.hasError(err.message));
     }
   };
 export const errorTrackerForEditSpeaker = () => async (dispatch, getState) => {
-  dispatch(speakerActions.disabledDetailError());
+  dispatch(speakerActions.disabledError());
 };
 
 export const deleteSpeaker = (id) => async (dispatch, getState) => {
@@ -1834,7 +1834,7 @@ export const errorTrackerForCreateSponsor =
   };
 
 export const fetchSponsor = (id) => async (dispatch, getState) => {
-  dispatch(sponsorActions.startLoadingDetail());
+  dispatch(sponsorActions.startLoading());
   try {
     console.log(id);
 
@@ -1865,12 +1865,12 @@ export const fetchSponsor = (id) => async (dispatch, getState) => {
   } catch (err) {
     console.log(err);
 
-    dispatch(sponsorActions.detailHasError(err.message));
+    dispatch(sponsorActions.hasError(err.message));
   }
 };
 
 export const errorTrackerForFetchSponsor = () => async (dispatch, getState) => {
-  dispatch(sponsorActions.disabledDetailError());
+  dispatch(sponsorActions.disabledError());
 };
 
 export const fetchSponsors =
@@ -1933,7 +1933,7 @@ export const errorTrackerForFetchSponsors =
 
 export const editSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
-    dispatch(sponsorActions.startLoadingDetail());
+    dispatch(sponsorActions.startLoading());
     try {
       if (file) {
         console.log(formValues);
@@ -2026,11 +2026,11 @@ export const editSponsor =
         );
       }
     } catch (err) {
-      dispatch(sponsorActions.detailHasError(err.message));
+      dispatch(sponsorActions.hasError(err.chatMessages));
     }
   };
 export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
-  dispatch(sponsorActions.disabledDetailError());
+  dispatch(sponsorActions.disabledError());
 };
 
 export const deleteSponsor = (id) => async (dispatch, getState) => {
@@ -2988,7 +2988,7 @@ export const errorTrackerForFetchSessionForSessionStage =
   };
 export const fetchParticularSessionOfEvent =
   (id) => async (dispatch, getState) => {
-    dispatch(sessionActions.startLoadingDetail());
+    dispatch(sessionActions.startLoading());
     try {
       const existingSession = getState().session.sessions.find((session) => {
         return session.id === id;
@@ -3034,18 +3034,18 @@ export const fetchParticularSessionOfEvent =
         );
       }
     } catch (err) {
-      dispatch(sessionActions.detailHasError(err.message));
+      dispatch(sessionActions.hasError(err.message));
       console.log(err);
     }
   };
 
 export const errorTrackerForFetchParticularSessionOfEvent =
   () => async (dispatch, getState) => {
-    dispatch(sessionActions.disabledDetailError());
+    dispatch(sessionActions.disabledError());
   };
 
 export const editSession = (formValues, id) => async (dispatch, getState) => {
-  dispatch(sessionActions.startLoadingDetail());
+  dispatch(sessionActions.startLoading());
   try {
     console.log(formValues);
 
@@ -3078,12 +3078,12 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    dispatch(sessionActions.detailHasError(err.message));
+    dispatch(sessionActions.hasError(err.message));
     console.log(err);
   }
 };
 export const errorTrackerForEditSession = () => async (dispatch, getState) => {
-  dispatch(sessionActions.disabledDetailError());
+  dispatch(sessionActions.disabledError());
 };
 export const deleteSession = (id) => async (dispatch, getState) => {
   dispatch(sessionActions.startLoading());
@@ -3295,7 +3295,7 @@ export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
 };
 
 export const fetchCoupon = (id) => async (dispatch, getState) => {
-  dispatch(couponActions.startLoadingDetail());
+  dispatch(couponActions.startLoading());
 
   try {
     console.log(id);
@@ -3324,16 +3324,16 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    dispatch(couponActions.detailHasError(err.message));
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
 };
 export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
-  dispatch(couponActions.disabledDetailError());
+  dispatch(couponActions.disabledError());
 };
 
 export const editCoupon = (formValues, id) => async (dispatch, getState) => {
-  dispatch(couponActions.startLoadingDetail());
+  dispatch(couponActions.startLoading());
   try {
     let res = await fetch(`${BaseURL}community/${id}/updateCoupon`, {
       method: "PATCH",
@@ -3363,14 +3363,10 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-    dispatch(couponActions.detailHasError(err.message));
+    dispatch(couponActions.hasError(err.message));
     console.log(err);
   }
 };
-export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
-  dispatch(couponActions.disabledDetailError());
-};
-
 
 export const deleteCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
