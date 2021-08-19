@@ -26,6 +26,9 @@ const sponsorSlice = createSlice({
     },
     CreateSponsor(state, action) {
       state.sponsors.push(action.payload.sponsor);
+
+      state.sponsorDetails = action.payload.sponsor;
+
       state.isLoading = false;
     },
     FetchSponsors(state, action) {
@@ -52,6 +55,7 @@ const sponsorSlice = createSlice({
           ? action.payload.sponsor
           : sponsor
       );
+      state.sponsorDetails = action.payload.sponsor;
       state.isLoading = false;
     },
     DeleteSponsor(state, action) {
