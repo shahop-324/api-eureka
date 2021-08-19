@@ -935,11 +935,7 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Suspendisse malesuada lacus ex, sit amet blandit leo
-                        lobortis eget. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Suspendisse malesuada lacus ex, sit
-                        amet blandit leo lobortis eget.
+                        Yes, you can use networking zones and rooms to interact with other participants in this event.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -958,11 +954,7 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Suspendisse malesuada lacus ex, sit amet blandit leo
-                        lobortis eget. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Suspendisse malesuada lacus ex, sit
-                        amet blandit leo lobortis eget.
+                        Yes, session recording will automatically display in your user dashboard once this event is concluded.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -981,11 +973,7 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Suspendisse malesuada lacus ex, sit amet blandit leo
-                        lobortis eget. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Suspendisse malesuada lacus ex, sit
-                        amet blandit leo lobortis eget.
+                        Yes, you can choose to participate in any of the booths and interact with other attendees.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>

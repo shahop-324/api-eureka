@@ -88,7 +88,7 @@ const EventCard = ({
           <Link
             to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
           >
-            <button
+            {/* <button
               type="button"
               onClick={() => {
                 dispatch(
@@ -105,7 +105,7 @@ const EventCard = ({
               style={{ display: displayJoinBtn }}
             >
               Join Event
-            </button>
+            </button> */}
           </Link>
 
           {/* <button className="btn btn-outline-primary btn-outline-text" style={{display: displayJoinBtn}}>

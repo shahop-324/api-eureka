@@ -13,6 +13,10 @@ const EventTransactionIdsCommunityWise = require("../../models/eventTransactionI
 const Registration = require("../../models/registrationsModel");
 const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsCommunityWiseModel");
 const { convert } = require("exchange-rates-api");
+const EventRegistrationTemplate = require("../email/eventRegistrationMail");
+const sgMail = require("@sendgrid/mail");
+
+sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const razorpay = new Razorpay({
   key_id: "rzp_live_bDVAURs4oXxSGi",
@@ -533,7 +537,25 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         console.log("This is a payment made for event registration.");
         console.info("This is a payment made for event registration.");
 
-        // TODO VVIP Add revenue in community account
+        // DONE VVIP Adding revenue in community account
+
+        const msg = {
+          to: userEmail, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: "Your Event Registration Confirmation.",
+          text: "You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! ",
+          html: EventRegistrationTemplate(userName, eventName, ticketType, amount),
+        };
+    
+        sgMail
+          .send(msg)
+          .then(() => {
+            console.log("Event Registraion email sent to user");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+
       } catch (err) {
         console.log(err);
       }

@@ -58,7 +58,7 @@ const QueryCard = ({
     <div className="review-card-wrapper px-4 py-3 mb-3">
       <div className="user-name-event-and-star-rating-row d-flex flex-row justify-content-between mb-3">
         <div className=" d-flex flex-row align-items-center">
-          <Avatar alt="Travis Howard" src={userImgUrl} />
+          <Avatar alt={userName} src={userImgUrl} variant="rounded" />
           <div className="ms-3 px-2 registration-name-styled">{userName}</div>
         </div>
 
@@ -85,7 +85,7 @@ const QueryCard = ({
 
       <div
         className="query-text-dashboard mb-2"
-        style={{ fontWeight: "500", color: "#212121" }}
+        style={{ fontWeight: "500", color: "#212121", fontFamily: "Inter" }}
       >
         {questionText}
       </div>

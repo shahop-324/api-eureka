@@ -3,9 +3,13 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const { nanoid } = require('nanoid');
 
 const userSchema = new mongoose.Schema(
   {
+    userSerialNo: {
+      type: Number,
+    },
     firstName: {
       type: String,
       required: [true, "Please tell us your first name."],
@@ -169,7 +173,6 @@ const userSchema = new mongoose.Schema(
         ref: "Query",
       },
     ],
-
     notificationsForRegisteredEvents: {
       type: Boolean,
       default: false,
@@ -188,6 +191,7 @@ const userSchema = new mongoose.Schema(
     },
     referralCode: {
       type: String,
+      default: nanoid(10),
     },
     referrer: {
       // Here store the user id of who ever referred this person and null by default

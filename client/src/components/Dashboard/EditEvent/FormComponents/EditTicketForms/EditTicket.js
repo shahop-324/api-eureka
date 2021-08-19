@@ -175,10 +175,10 @@ const EditTicket = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    const accessibleAreas = formValues.venueAreasAccessible.map(
-      (area) => area.value
-    );
-    console.log("accessible areas", accessibleAreas);
+    // const accessibleAreas = formValues.venueAreasAccessible.map(
+    //   (area) => area.value
+    // );
+    // console.log("accessible areas", accessibleAreas);
 
     const ModifiedFormValues = {};
 
@@ -186,12 +186,12 @@ const EditTicket = (props) => {
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.price = formValues.price;
-    ModifiedFormValues.shareRecording = formValues.shareRecording;
+    // ModifiedFormValues.shareRecording = formValues.shareRecording;
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
-    ModifiedFormValues.venueAreasAccessible = accessibleAreas;
+    ModifiedFormValues.venueAreasAccessible = [];
 
-    console.log(ModifiedFormValues);
+    // console.log(ModifiedFormValues);
 
     dispatch(editTicket(ModifiedFormValues, props.id));
 
@@ -313,7 +313,7 @@ const EditTicket = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row">
+            {/* <div class="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
                 class="form-label form-label-customized"
@@ -330,7 +330,7 @@ const EditTicket = (props) => {
                 // defaultValue={eventOptions[0]}
                 component={renderReactSelect}
               />
-            </div>
+            </div> */}
 
             <div className="mb-3 overlay-form-input-row">
               <label
@@ -351,7 +351,7 @@ const EditTicket = (props) => {
               </div>
             </div>
 
-            <div className="form-check d-flex flex-row mb-3">
+            {/* <div className="form-check d-flex flex-row mb-3">
               <Field
                 name="shareRecording"
                 type="checkbox"
@@ -365,7 +365,7 @@ const EditTicket = (props) => {
               >
                 Share Recordings
               </label>
-            </div>
+            </div> */}
 
             <div
               style={{ width: "100%" }}
@@ -416,10 +416,10 @@ const mapStateToProps = (state) => ({
       state.ticket.ticketDetails.numberOfTicketAvailable
         ? state.ticket.ticketDetails.numberOfTicketAvailable
         : "",
-    shareRecording:
-      state.ticket.ticketDetails && state.ticket.ticketDetails.shareRecording
-        ? state.ticket.ticketDetails.shareRecording
-        : "",
+    // shareRecording:
+    //   state.ticket.ticketDetails && state.ticket.ticketDetails.shareRecording
+    //     ? state.ticket.ticketDetails.shareRecording
+    //     : "",
     currency:
       state.ticket.ticketDetails && state.ticket.ticketDetails.currency
         ? {
@@ -427,16 +427,16 @@ const mapStateToProps = (state) => ({
             value: state.ticket.ticketDetails.currency,
           }
         : "",
-    venueAreasAccessible:
-      state.ticket.ticketDetails &&
-      state.ticket.ticketDetails.venueAreasAccessible
-        ? state.ticket.ticketDetails.venueAreasAccessible.map((element) => {
-            return {
-              value: element,
-              label: element,
-            };
-          })
-           : "",
+    // venueAreasAccessible:
+    //   state.ticket.ticketDetails &&
+    //   state.ticket.ticketDetails.venueAreasAccessible
+    //     ? state.ticket.ticketDetails.venueAreasAccessible.map((element) => {
+    //         return {
+    //           value: element,
+    //           label: element,
+    //         };
+    //       })
+    //        : "",
   },
 });
 
@@ -455,9 +455,12 @@ const validate = (formValues) => {
   if (!formValues.price) {
     errors.price = "Ticket price is required";
   }
-  if (!formValues.venueAreasAccessible) {
-    errors.venueAreasAccessible = "Accessible venue areas is required";
+  if (formValues.price < 100) {
+    errors.price = "Minimum ticket price can be Rs. 100";
   }
+  // if (!formValues.venueAreasAccessible) {
+  //   errors.venueAreasAccessible = "Accessible venue areas is required";
+  // }
   if (!formValues.numberOfTicketAvailable) {
     errors.numberOfTicketAvailable = "Number of tickets available is required";
   }

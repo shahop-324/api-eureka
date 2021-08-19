@@ -58,7 +58,7 @@ module.exports = (user, url) => {
           font: normal normal 700 0.95rem/1.53rem Helvetica Neue;
           letter-spacing: 0px;
           color: #535353;">
-          the evenz team
+          The evenz team
           </div>
         </div>
          </div>
