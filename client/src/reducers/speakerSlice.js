@@ -53,6 +53,7 @@ const speakerSlice = createSlice({
           ? action.payload.speaker
           : speaker
       );
+      state.speakerDetails = action.payload.speaker;
       state.isLoading = false;
     },
     DeleteSpeaker(state, action) {
