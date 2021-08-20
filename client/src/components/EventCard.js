@@ -19,6 +19,8 @@ const EventCard = ({
   showBtn,
   communityId,
   rating,
+  startTime,
+  endTime,
 }) => {
   console.log(communityId);
   const dispatch = useDispatch();
@@ -45,7 +47,7 @@ const EventCard = ({
             className="event-card-date-main mb-3"
             style={{ fontWeight: "600", fontSize: "0.8rem" }}
           >
-            {date} - {endDate}
+            {startTime} <span style={{fontWeight: "600"}}>to</span> <br/> {endTime}
           </div>
           <div
             className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2"
@@ -78,12 +80,13 @@ const EventCard = ({
           className="event-card-price-main"
           style={{ fontWeight: "600", fontSize: "0.9rem" }}
         >
-          $ {minPrice} - $ {maxPrice}
+          {console.log(minPrice)}
+        {minPrice && `Rs ${minPrice} - `} Upto Rs {maxPrice}
         </div>
 
-        <div className="mt-4 mb-3" style={{ display: displayJoinBtn }}>
+        {/* <div className="mt-4 mb-3" style={{ display: displayJoinBtn }}>
           <Divider />
-        </div>
+        </div> */}
         <div className="d-flex flex-row justify-content-end align-items-center">
           <Link
             to={`/compatibility-test/community/${communityId}/event/${eventId}/`}

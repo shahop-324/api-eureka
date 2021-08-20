@@ -187,7 +187,6 @@ const eventSchema = new mongoose.Schema(
     ],
     minTicketPrice: {
       type: Number,
-      default: 0,
     },
     maxTicketPrice: {
       type: Number,

@@ -28,6 +28,9 @@ const UserAccountEventsMainBody = () => {
         const end = new Date(event.endDate);
         const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
+        const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
+      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+
         return (
           <EventCard
             image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
@@ -37,6 +40,8 @@ const UserAccountEventsMainBody = () => {
             minPrice={event.minTicketPrice}
             maxPrice={event.maxTicketPrice}
             endDate={formatedEndDate}
+            startTime={startTime}
+            endTime={endTime}
             rating={(event.communityRating * 1).toFixed(1)}
           />
         );

@@ -213,6 +213,9 @@ const SearchEvents = () => {
 
       const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
+      const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
+      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+
       return (
         <EventCard
           image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
@@ -224,6 +227,8 @@ const SearchEvents = () => {
           maxPrice={event.maxTicketPrice}
           key={event.id}
           rating={(event.communityRating * 1.0).toFixed(1)}
+          startTime={startTime}
+          endTime={endTime}
         />
       );
     });

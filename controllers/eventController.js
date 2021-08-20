@@ -552,6 +552,24 @@ exports.getNetworkSettings = catchAsync(async (req, res, next) => {
 
 exports.updateTicket = catchAsync(async (req, res, next) => {
   const ticketId = req.params.id;
+  const ticketDoc = await Ticket.findById(ticketId);
+
+  const eventUpdatingTicket = await Event.findById(ticketDoc.eventId);
+
+  const previousMinPrice = eventUpdatingTicket.minTicketPrice;
+  const previousMaxPrice = eventUpdatingTicket.maxTicketPrice;
+
+  let updatedMinPrice = previousMinPrice;
+  let updatedMaxPrice = previousMaxPrice;
+  const currentPriceValue = req.body.price;
+
+  if (currentPriceValue < previousMinPrice) {
+    updatedMinPrice = currentPriceValue;
+  }
+  if (currentPriceValue > previousMaxPrice) {
+    updatedMaxPrice = currentPriceValue;
+  }
+  
 
   console.log(ticketId);
 
@@ -568,6 +586,12 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     },
     { new: true, validateModifiedOnly: true }
   );
+
+  await Event.findByIdAndUpdate(ticketDoc.eventId, {
+    minTicketPrice: updatedMinPrice,
+    maxTicketPrice: updatedMaxPrice,
+  });
+
 
   console.log(updatedTicket);
 
