@@ -75,6 +75,9 @@ const dispatch = useDispatch();
     });
   };
 
+  console.log("start time",startTime);
+  console.log("end time" ,endTime);
+
   return (
     <>
       <div className="session-field-value-container" id={id}>
@@ -99,14 +102,15 @@ const dispatch = useDispatch();
             style={{ width: "100%" }}
           >
             <div className="me-3" style={{fontFamily: "Inter"}}>
-              {dateFormat(startDate, "mm/d/yyyy")}{" "}
-              {dateFormat(startTime, "h:MM TT")}
+            {/* dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+// Saturday, June 9th, 2007, 5:46:21 PM */}
+              {dateFormat(startTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
             <div style={{fontFamily: "Inter"}}>
-              {dateFormat(endDate, "mm/d/yyyy")}{" "}
-              {dateFormat(endTime, "h:MM TT")}
+              {/* {dateFormat(endDate, "mm/d/yyyy")}{" "} */}
+              {dateFormat(endTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>{" "}
           </div>
         </div>
