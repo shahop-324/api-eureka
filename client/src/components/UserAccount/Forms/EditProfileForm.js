@@ -480,7 +480,7 @@ let EditProfileForm = (props) => {
               Save Changes
             </button>
             <button
-              type="button"
+            
               disabled={pristine || submitting}
               onClick={reset}
               className="col-3 btn btn-outline-primary btn-outline-text me-3"

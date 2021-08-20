@@ -6,7 +6,7 @@ const AccordionItem = (props) => {
       <h2 class="accordion-header" id="headingOne">
         <button
           class="accordion-button"
-          type="button"
+    
           data-bs-toggle="collapse"
           data-bs-target={props.dataBsTarget}
           aria-expanded="true"

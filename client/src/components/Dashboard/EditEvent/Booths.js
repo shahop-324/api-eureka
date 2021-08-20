@@ -195,14 +195,17 @@ const Booths = () => {
               />
             </div>
             <Link
-              type="button"
+      
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}`}
               target="_blank"
             >
               Preview Landing Page
             </Link>
-            <div onClick={handleNewBooth}>
+            <div onClick={() => {
+              // handleNewBooth()
+              alert("Please switch to professional plan to add booths in your event.")
+              }}>
               <button className="btn btn-primary btn-outline-text">
                 Add New Booth
               </button>

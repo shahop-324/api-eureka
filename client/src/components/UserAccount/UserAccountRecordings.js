@@ -27,7 +27,7 @@ const UserAccountRecordings = () => {
               Your event recordings will show up here, when they are available.
             </div>
             
-            <Link type="button" to={"/search-events"} className="btn btn-outline-text btn-color-customised btn-primary">
+            <Link to={"/search-events"} className="btn btn-outline-text btn-color-customised btn-primary">
               Explore Events
             </Link>
           </div>

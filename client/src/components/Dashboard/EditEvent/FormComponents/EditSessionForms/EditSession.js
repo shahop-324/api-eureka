@@ -144,7 +144,9 @@ const styles = {
 
 const EditSession = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
-  const { detailError, isLoadingDetail } = useSelector((state) => state.session);
+  const { detailError, isLoadingDetail } = useSelector(
+    (state) => state.session
+  );
   const dispatch = useDispatch();
 
   const showResults = (formValues) => {
@@ -185,6 +187,9 @@ const EditSession = (props) => {
     console.log(formValues);
 
     const ModifiedFormValues = {};
+
+    ModifiedFormValues.speaker = [];
+
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.startDate = formValues.startDate;
@@ -192,16 +197,20 @@ const EditSession = (props) => {
     ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
 
-    ModifiedFormValues.speaker = formValues.speaker.map((speaker) => {
-      return speaker.value;
-    });
+    if (
+      typeof formValues.speaker !== "undefined" &&
+      formValues.speaker.length > 0
+    ) {
+      ModifiedFormValues.speaker = formValues.speaker.map((speaker) => {
+        return speaker.value;
+      });
+    }
 
     // console.log(ModifiedFormValues);
     // showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
- 
 
   if (detailError) {
     dispatch(errorTrackerForEditSession());
@@ -215,171 +224,174 @@ const EditSession = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        {isLoadingDetail ? <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "100%" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div> : <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
-              <div></div>
-              <div className="coupon-overlay-form-headline">
-                Edit this Session
-              </div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
-                <IconButton aria-label="delete">
-                  <CancelRoundedIcon />
-                </IconButton>
-              </div>
-            </div>
-            <div class="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="sessionName"
-                class="form-label form-label-customized"
-              >
-                Session Name
-              </label>
-              <Field
-                name="name"
-                type="text"
-                classes="form-control"
-                id="sessionName"
-                placeholder="Structuring Your Bussiness for success"
-                ariadescribedby="name"
-                component={renderInput}
-              />
-            </div>
-            <div class="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="description"
-                class="form-label form-label-customized"
-              >
-                Short Description
-              </label>
-              <Field
-                name="description"
-                type="textarea"
-                classes="form-control"
-                id="description1"
-                // placeholder="Structuring Your Bussiness for success"
-                component={renderTextArea}
-              />
-            </div>
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
-                >
-                  Start Date
-                </label>
-                <Field
-                  name="startDate"
-                  type="date"
-                  classes="form-control"
-                  id="eventStartDate"
-                  component={renderInput}
-                />
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartTime"
-                  class="form-label form-label-customized"
-                >
-                  Start Time
-                </label>
-                <Field
-                  name="startTime"
-                  type="time"
-                  classes="form-control"
-                  id="eventStartTime"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventEndDate"
-                  class="form-label form-label-customized"
-                >
-                  End Date
-                </label>
-                <Field
-                  name="endDate"
-                  type="date"
-                  classes="form-control"
-                  id="eventEndDate"
-                  component={renderInput}
-                />
-              </div>
-              <div>
-                <label
-                  Forhtml="eventEndTime"
-                  class="form-label form-label-customized"
-                >
-                  End Time
-                </label>
-                <Field
-                  name="endTime"
-                  type="time"
-                  classes="form-control"
-                  id="eventEndTime"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-            <div class="mb-4 overlay-form-input-row">
-              <label for="speakers" class="form-label form-label-customized">
-                Speakers
-              </label>
-              <Field
-                name="speaker"
-                styles={styles}
-                menuPlacement="top"
-                options={speakerOptions}
-                // defaultValue={options[0]}
-                id="speakers"
-                component={renderReactSelect}
-              />
-            </div>
-
-            <div
-              style={{ width: "100%" }}
-              className="d-flex flex-row justify-content-end"
-            >
-              <button
-                className="btn btn-outline-primary btn-outline-text me-3"
-                onClick={reset}
-                disabled={pristine || submitting}
-              >
-                Discard
-              </button>
-
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline-text"
-                onClick={() => {
-                  props.handleClose();
-                  setState({
-                    open: true,
-                    vertical: "top",
-                    horizontal: "center",
-                  });
-                }}
-                // disabled={pristine || submitting}
-              >
-                Save Changes
-              </button>
-            </div>
+        {isLoadingDetail ? (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ width: "100%", height: "100%" }}
+          >
+            {" "}
+            <Loader />{" "}
           </div>
-        </form> }
-        
+        ) : (
+          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+            <div className="create-new-coupon-form px-4 py-4">
+              <div className="form-heading-and-close-button mb-4">
+                <div></div>
+                <div className="coupon-overlay-form-headline">
+                  Edit this Session
+                </div>
+                <div
+                  className="overlay-form-close-button"
+                  onClick={props.handleClose}
+                >
+                  <IconButton aria-label="delete">
+                    <CancelRoundedIcon />
+                  </IconButton>
+                </div>
+              </div>
+              <div class="mb-4 overlay-form-input-row">
+                <label
+                  Forhtml="sessionName"
+                  class="form-label form-label-customized"
+                >
+                  Session Name
+                </label>
+                <Field
+                  name="name"
+                  type="text"
+                  classes="form-control"
+                  id="sessionName"
+                  placeholder="Structuring Your Bussiness for success"
+                  ariadescribedby="name"
+                  component={renderInput}
+                />
+              </div>
+              <div class="mb-4 overlay-form-input-row">
+                <label
+                  Forhtml="description"
+                  class="form-label form-label-customized"
+                >
+                  Short Description
+                </label>
+                <Field
+                  name="description"
+                  type="textarea"
+                  classes="form-control"
+                  id="description1"
+                  // placeholder="Structuring Your Bussiness for success"
+                  component={renderTextArea}
+                />
+              </div>
+              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    Start Date
+                  </label>
+                  <Field
+                    name="startDate"
+                    type="date"
+                    classes="form-control"
+                    id="eventStartDate"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <label
+                    Forhtml="eventStartTime"
+                    class="form-label form-label-customized"
+                  >
+                    Start Time
+                  </label>
+                  <Field
+                    name="startTime"
+                    type="time"
+                    classes="form-control"
+                    id="eventStartTime"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <label
+                    Forhtml="eventEndDate"
+                    class="form-label form-label-customized"
+                  >
+                    End Date
+                  </label>
+                  <Field
+                    name="endDate"
+                    type="date"
+                    classes="form-control"
+                    id="eventEndDate"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <label
+                    Forhtml="eventEndTime"
+                    class="form-label form-label-customized"
+                  >
+                    End Time
+                  </label>
+                  <Field
+                    name="endTime"
+                    type="time"
+                    classes="form-control"
+                    id="eventEndTime"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+              <div class="mb-4 overlay-form-input-row">
+                <label for="speakers" class="form-label form-label-customized">
+                  Speakers
+                </label>
+                <Field
+                  name="speaker"
+                  styles={styles}
+                  menuPlacement="top"
+                  options={speakerOptions}
+                  // defaultValue={options[0]}
+                  id="speakers"
+                  component={renderReactSelect}
+                />
+              </div>
+
+              <div
+                style={{ width: "100%" }}
+                className="d-flex flex-row justify-content-end"
+              >
+                <button
+                  className="btn btn-outline-primary btn-outline-text me-3"
+                  onClick={reset}
+                  disabled={pristine || submitting}
+                >
+                  Discard
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline-text"
+                  onClick={() => {
+                    props.handleClose();
+                    setState({
+                      open: true,
+                      vertical: "top",
+                      horizontal: "center",
+                    });
+                  }}
+                  // disabled={pristine || submitting}
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
       </Dialog>
       <div>
         <Snackbar

@@ -267,7 +267,7 @@ const EventBuilderHome = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                      type="button"
+                      
                       onClick={() => {
                         setOpenDrawer(true);
                       }}
@@ -277,7 +277,7 @@ const EventBuilderHome = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                      type="button"
+                      
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -359,7 +359,7 @@ const EventBuilderHome = (props) => {
                   onClick={() => {
                     setOpenDrawer(true);
                   }}
-                    type="button"
+                   
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -444,7 +444,7 @@ const EventBuilderHome = (props) => {
 
               <div className="action-btn-home  pt-5">
                 <button
-                  type="button"
+                 
                   onClick={() => {
                     setOpenDrawer(true);
                   }}

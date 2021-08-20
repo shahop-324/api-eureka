@@ -276,7 +276,7 @@ const EventPlatformHome = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                      type="button"
+                    
                       onClick={() => {
                         setOpenDrawer(true);
                       }}
@@ -286,7 +286,7 @@ const EventPlatformHome = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                      type="button"
+                    
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -367,7 +367,7 @@ const EventPlatformHome = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -457,7 +457,7 @@ const EventPlatformHome = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -511,7 +511,7 @@ const EventPlatformHome = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                  
                     onClick={() => {
                       setOpenDrawer(true);
                     }}

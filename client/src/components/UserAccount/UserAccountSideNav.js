@@ -28,17 +28,11 @@ const CommunityProfileTab = (props) => {
     dispatch(communitySignIn(props.communityId, userId));
   };
 
-  if (isCommunityLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "100vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
+  // if (isCommunityLoading) {
+  //   return (
+     
+  //   );
+  // }
 
   if (error) {
     dispatch(errorTrackerForCommunitySignIn());
@@ -98,6 +92,8 @@ const UserAccountSideNav = () => {
   const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
+
+  const { isCommunityLoading } = useSelector((state) => state.community);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -169,14 +165,20 @@ const UserAccountSideNav = () => {
           className="user-community-tab-list mb-4"
           style={{ overflow: "auto", height: "77vh" }}
         >
-          {typeof communities !== "undefined" && communities.length > 0 ? (
+         {isCommunityLoading ?  <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "auto" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div> : typeof communities !== "undefined" && communities.length > 0 ? (
             renderCommunitiesList(communities)
           ) : (
             <CreateNewCommunityMsgCard
               msgText="Start by creating your community"
               img={maleMascot}
             />
-          )}
+          ) } 
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <button
               className="btn btn-outline-text  btn-outline-primary  py-2"

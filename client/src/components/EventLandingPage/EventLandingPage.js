@@ -361,19 +361,25 @@ const EventLandingPage = (props) => {
   let startYear;
   let startDate;
   let endDate;
+  let startDateTime;
 
   const formatDate = () => {
     const { startTime, endTime } = event;
 
+    console.log(startTime, endTime);
+
     startMonth = new Date(startTime);
-    startMonth = dateFormat("mmmm");
+    startMonth = dateFormat(startMonth, "mmmm");
     startYear = new Date(startTime);
-    startYear = dateFormat("yyyy");
+    startYear = dateFormat(startYear ,"yyyy");
 
     startDate = new Date(startTime);
-    startDate = dateFormat("d");
+    startDate = dateFormat(startDate, "d");
     endDate = new Date(endTime);
-    endDate = dateFormat("d");
+    endDate = dateFormat(endDate, "d");
+
+    startDateTime = dateFormat(startTime, "ddd, mmm dS, yyyy, h:MM:ss TT");
+    console.log(startDateTime);
 
     console.log(event);
   };
@@ -398,7 +404,7 @@ const EventLandingPage = (props) => {
               </Link>
               <button
                 class="navbar-toggler"
-                type="button"
+              
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
@@ -419,7 +425,7 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                          type="button"
+                        
                           class="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
@@ -428,7 +434,7 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                          type="button"
+                        
                           class="btn btn-primary btn-outline-text"
                         >
                           Get Started
@@ -518,14 +524,16 @@ const EventLandingPage = (props) => {
                 src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
                 alt="event-landing-hero"
               />
+               <div className="event-start-end-date mb-4">
+                 Starts at {startDateTime}  
+                </div>
 
               <div className="event-name-date-hosting-community-container mb-4 px-4">
                 <div className="event-name mb-3" style={{ fontSize: "1.3rem" }}>
                   {event.eventName}
                 </div>
-                <div className="event-start-end-date mb-4">
-                  2 Aug - 8 Aug 2021{" "}
-                </div>
+               
+                
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
                   <Avatar
                     src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
@@ -545,6 +553,7 @@ const EventLandingPage = (props) => {
                     </div>
                   </div>
                 </div>
+                
                 <div className="hosted-by-social-grid mb-3">
                   <IconButton>
                     <LanguageIcon style={{ fill: "#4D4D4D" }} />
@@ -900,7 +909,7 @@ const EventLandingPage = (props) => {
                   <ConfirmationNumberIcon style={{ fill: "#818181" }} />
                   <div className="ticket-headline-text">Tickets</div>
                   <div className="ticket-price-range">
-                    From <b>$17.00</b> to <b>$95.00</b>
+                    {/* From <b>$17.00</b> to <b>$95.00</b> */}
                   </div>
                 </div>
                 {/* This is ticket form */}
@@ -1009,7 +1018,7 @@ const EventLandingPage = (props) => {
                         <button
                           disabled={!isSignedIn}
                           class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-                          type="button"
+                       
                           onClick={handleAskQuery}
                         >
                           Ask

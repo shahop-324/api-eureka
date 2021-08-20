@@ -348,7 +348,7 @@ const CreateNewCommunityForm = (props) => {
                 // }
               >
                 {/* <div> */}
-                <IconButton type="button" aria-label="delete" onClick={reset}>
+                <IconButton  aria-label="delete" onClick={reset}>
                   <CancelRoundedIcon />
                 </IconButton>
                 {/* </div> */}

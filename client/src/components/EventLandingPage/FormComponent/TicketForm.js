@@ -300,7 +300,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
           <button
             class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
             onClick={handleCouponValidation}
-            type="button"
+        
           >
             Apply
           </button>
@@ -311,7 +311,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
         <div>
           <button
             // disabled={!isSignedIn}
-            type="button"
+        
             class="btn btn-primary btn-outline-text"
             onClick={displayRazorpay}
             // onClick={ community.paymentGateway === "Paypal" ? handleRegistrationUsingPaypal : displayRazorpay}

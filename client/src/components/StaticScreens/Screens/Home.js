@@ -309,7 +309,7 @@ const Home = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                      type="button"
+                      
                       onClick={() => {
                         setOpenDrawer(true);
                       }}
@@ -319,7 +319,7 @@ const Home = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                      type="button"
+                      
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -404,9 +404,6 @@ const Home = (props) => {
           </div>
         </div>
 
-        
-
-
 <div className="home-section-3 p-4 " id="home-section-3">
           <div className="mt-3">
             <div
@@ -443,7 +440,7 @@ const Home = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                 
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -481,52 +478,57 @@ const Home = (props) => {
           </div>
         </div>
 
-        <div className="home-section-4 p-5">
-          <div
-            className="grid-of-2"
-            style={{ height: "auto", alignItems: "center" }}
-          >
-            <div
-              className="grid-1-of-2 d-flex flex-row align-items-center mb-3"
-              style={{ alignSelf: "center" }}
-            >
-              <img
-                src={FirstEvent}
-                alt="amazing event"
-                data-aos="zoom-in"
-                data-aos-easing="ease-in-sine"
-                data-aos-delay="100"
-                // className="zoom-in"
-                // data-aos="slide-left"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
-              />
-            </div>
-            <div className="grid-2-of-2 " style={{ alignSelf: "center" }}>
-              <div
-                className="section-heading-primary pb-2"
-                style={{ color: "black" }}
-                // data-aos="slide-up"
-                // data-aos-easing="ease-in-sine"
-                // data-aos-duration="500"
-                // data-aos-delay="100"
-              >
-                Your First Event is just <br />
-                few clicks away.
-              </div>
 
+        <div className="home-section-4 p-4">
+          <div className="mt-3">
+            <div
+              className="grid-of-2"
+              style={{ height: "auto", alignItems: "center" }}
+            >
               <div
-                className="home-text-description my-5"
-                // data-aos="slide-up"
-                // data-aos-easing="ease-in-sine"
-                // data-aos-duration="500"
-                // data-aos-delay="100"
+                className="grid-1-of-2 d-flex flex-row align-items-center"
+                style={{ alignSelf: "center" }}
               >
-                It’s that simple. With Evenz you can setup your virtual event
+                <img
+                  src={FirstEvent}
+                  alt="amazing event"
+                  className="zoom-in"
+                  data-aos="zoom-in"
+                  data-aos-easing="ease-in-sine"
+                  data-aos-delay="100"
+                  style={{
+                    alignSelf: "center",
+                    maxHeight: "100%",
+                    maxWidth: "100%",
+                  }}
+                />
+              </div>
+              <div className="grid-2-of-2 px-4" style={{ alignSelf: "center" }}>
+                <div
+                  className="section-heading-primary pb-2"
+                  style={{ color: "#000000" }}
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
+                >
+                 Your First Event is just <br />
+                few clicks away.
+                </div>
+
+                <div
+                  className="home-text-description my-5"
+                  // data-aos="slide-up"
+                  // data-aos-easing="ease-in-sine"
+                  // data-aos-duration="500"
+                  // data-aos-delay="100"
+                >
+                  It’s that simple. With Evenz you can setup your virtual event
                 with just one click and start getting registrations as soon as
                 you publish your event.
-              </div>
+                </div>
 
-              <div className="plan-features-offered-list">
+                <div className="plan-features-offered-list">
                 <div
                   className="d-flex flex-row align-items-center mb-2"
                   // data-aos="slide-up"
@@ -591,21 +593,22 @@ const Home = (props) => {
                 </div>
               </div>
 
-              <div className="action-btn-home  pt-5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpenDrawer(true);
-                  }}
-                  className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                  style={{
-                    boxShadow:
-                      "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                    borderRadius: "15px",
-                  }}
-                >
-                  Host a free event
-                </button>
+                <div className="action-btn-home py-3">
+                  <button
+                 
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
+                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
+                    style={{
+                      boxShadow:
+                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    Host a free event
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -644,7 +647,7 @@ const Home = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -734,7 +737,7 @@ const Home = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -788,7 +791,7 @@ const Home = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
@@ -970,7 +973,7 @@ const Home = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                    type="button"
+                
                     onClick={() => {
                       setOpenDrawer(true);
                     }}
