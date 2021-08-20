@@ -337,7 +337,7 @@ const AddNewSpeaker = (props) => {
                   type="text"
                   classes="form-control"
                   ariadescribedby="emailHelp"
-                  placeholder="CEO of App Brewery"
+                  // placeholder=""
                   component={renderInput}
                 />
               </div>
@@ -356,7 +356,7 @@ const AddNewSpeaker = (props) => {
                   type="text"
                   classes="form-control"
                   ariadescribedby="emailHelp"
-                  placeholder="Hi there! I am here"
+                  // placeholder="Hi there! I am here"
                   component={renderTextArea}
                 />
               </div>

@@ -251,18 +251,18 @@ const EventLandingPage = (props) => {
 
   const renderSessionList = () => {
     return event.session.map((session) => {
-      let startDate = new Date(session.startDate);
-      startDate = dateFormat("mmmm dS");
-      let startTime = new Date(session.startTime);
-      startTime = dateFormat("h:MM TT");
-      let endTime = new Date(session.startTime);
-      endTime = dateFormat("h:MM TT");
+      // let startDate = new Date(session.startDate);
+      // startDate = dateFormat("mmmm dS");
+      // let startTime = new Date(session.startTime);
+      // startTime = dateFormat("h:MM TT");
+      // let endTime = new Date(session.startTime);
+      // endTime = dateFormat("h:MM TT");
       console.log(session.speaker);
       return (
         <SessionCard
-          startDate={startDate}
-          startTime={startTime}
-          endTime={endTime}
+          // startDate={startDate}
+          startTime={session.startTime}
+          endTime={session.endTime}
           sessionName={session.name}
           sessionDescription={session.description}
           speakerAvatarList={session.speaker}
@@ -279,6 +279,8 @@ const EventLandingPage = (props) => {
         <SpeakerCard
           firstName={speaker.firstName}
           lastName={speaker.lastName}
+          organisation={speaker.organisation}
+          headline={speaker.headline}
           bio={`${speaker.designation} at ${speaker.organisation}`}
           speakerSocialHandles={speaker.socialMediaHandles}
           id={speaker.id}

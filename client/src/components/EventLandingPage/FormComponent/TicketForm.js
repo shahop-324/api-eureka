@@ -250,7 +250,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
             <div className="ticket-sold-out-text">Sold out</div>
           ) : (
             <div className="ticket-price">
-              <b>${(price * 1) / (factor * 1)}</b>
+              <b>Rs.{(price * 1) / (factor * 1)}</b>
             </div>
           )}
         </div>

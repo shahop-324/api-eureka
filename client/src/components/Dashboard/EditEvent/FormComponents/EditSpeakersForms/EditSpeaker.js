@@ -381,7 +381,7 @@ const EditSpeakerForm = (props) => {
                     type="text"
                     classes="form-control"
                     ariadescribedby="emailHelp"
-                    placeholder="CEO of App Brewery"
+                    // placeholder="CEO of App Brewery"
                     component={renderInput}
                   />
                 </div>
@@ -400,7 +400,7 @@ const EditSpeakerForm = (props) => {
                     type="text"
                     classes="form-control"
                     ariadescribedby="emailHelp"
-                    placeholder="Hi there! I am here"
+                    // placeholder="Hi there! I am here"
                     component={renderTextArea}
                   />
                 </div>
