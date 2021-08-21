@@ -6,10 +6,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "An event name is required!"],
       trim: true,
-      // maxlength: [
-      //   150,
-      //   "A Community name must have less or equal than 150 characters",
-      // ],
+      maxlength: [
+        350,
+        "A Community name must have less or equal than 150 characters",
+      ],
     },
     image: {
       type: String,
@@ -24,10 +24,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: [true, "A short description for an event is required"],
       trim: true,
-      // maxlength: [
-      //   200,
-      //   "A Community name must have less or equal than 150 characters",
-      // ],
+      maxlength: [
+        450,
+        "A Community name must have less or equal than 150 characters",
+      ],
     },
 
     referralIds: [
@@ -49,13 +49,13 @@ const eventSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       required: [true, "An event must have a start date."],
-      // validate: {
-      //   // This only works on .Create() and .Save()
-      //   validator: function (el) {
-      //     return el > this.startDate; // Checking if end date is greater than start date
-      //   },
-      //   message: "End date should be greater than start date.",
-      // },
+      validate: {
+        // This only works on .Create() and .Save()
+        validator: function (el) {
+          return el >= this.startDate; // Checking if end date is greater than start date
+        },
+        message: "End date should be greater than start date.",
+      },
     },
     startTime: {
       type: Date,
@@ -82,6 +82,7 @@ const eventSchema = new mongoose.Schema(
         "(GMT + 00:00) Edinburgh",
         "(GMT + 00:00) Lisbon",
         "(GMT + 00:00) London"
+
       ],
       default: "(GMT + 00:00) UTC",
     },
