@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../../assets/Sass/EventManagement.scss";
@@ -5,46 +6,12 @@ import "./../../../../assets/Sass/SideNav.scss";
 import "./../../../../assets/Sass/TopNav.scss";
 import "./../../../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "../../HelperComponent/Pagination";
-import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import RegistrationsListFields from "../../HelperComponent/RegistrationsListFields";
-import RegistrationDetailsCard from "../../HelperComponent/RegistrationDetailsCard";
-import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
-
-const options = [
-  { value: "All Tickets", label: "All Tickets" },
-  { value: "Early Bird", label: "Early Bird" },
-  { value: "All Access Pass", label: "All Access Pass" },
-  { value: "VIP Ticket", label: "VIP Ticket" },
-];
-
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
+import CheckInsListFields from "../Data/CheckInsListFields";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,9 +68,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Registrations = () => {
+const CheckIns = () => {
   const classes = useStyles();
-
+  
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
   
@@ -152,10 +119,10 @@ const Registrations = () => {
     <>
       <div>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Registrations</div>
+          <div className="sec-heading-text">Check Ins</div>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
-              className={`${classes.search}`}
+              className={`${classes.search} me-3`}
               style={{ backgroundColor: "#ffffff" }}
             >
               <div className={classes.searchIcon}>
@@ -170,15 +137,6 @@ const Registrations = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <div className="ms-3 me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="top"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
-
             <Button
               variant="contained"
               color="primary"
@@ -198,19 +156,11 @@ const Registrations = () => {
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          {/* <EventListFields /> */}
-          <RegistrationsListFields />
+          <CheckInsListFields />
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          {/* <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard /> */}
+          {/* <RegistrationDetailsCard /> */}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}
@@ -219,4 +169,4 @@ const Registrations = () => {
   );
 };
 
-export default Registrations;
+export default CheckIns;

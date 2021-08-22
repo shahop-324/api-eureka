@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./../Style/uploadEventImage.scss";
+import "./../../EditEvent/Style/uploadEventImage.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
+// import { errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
 import Loader from "../../../Loader";
@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UploadEventImageForm = (props) => {
+
+
+const UploadEventDefaultImageForm = (props) => {
   const { handleSubmit } = props;
 
   const {error, isLoading} = useSelector((state) => state.event);
@@ -64,7 +66,7 @@ const UploadEventImageForm = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    dispatch(uploadEventImage(file, id));
+    // dispatch(uploadEventImage(file, id));
 
     console.log(file);
   };
@@ -74,7 +76,7 @@ const UploadEventImageForm = (props) => {
   }
 
   if(error) {
-    dispatch(errorTrackerForUploadEventImage());
+    // dispatch(errorTrackerForUploadEventImage());
     alert(error);
     return;
   }
@@ -83,13 +85,13 @@ const UploadEventImageForm = (props) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="event-image-form-wrapper px-4 py-4">
+        <div className="event-image-form-wrapper py-4" style={{maxWidth: "400px"}}>
           <label for="eventName" class="form-label form-label-customized">
             Event image
           </label>
           <div className="my-2">
             <Avatar
-              alt="Remy Sharp"
+              alt={"Event Banner"}
               src={fileToPreview}
               variant="rounded"
               className={classes.large}
@@ -115,13 +117,6 @@ const UploadEventImageForm = (props) => {
             style={{ fontSize: "14px", fontWeight: "bold", color: "#5C5C5C" }}
             required
           />
-          <button
-            type="submit"
-            className="btn btn-outline-primary btn-outline-text"
-            style={{ width: "100%" }}
-          >
-            Upload
-          </button>
         </div>
       </form>
     </>
@@ -131,7 +126,7 @@ const UploadEventImageForm = (props) => {
 const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
-      state.event.eventDetails && state.event.eventDetails.image
+     state.event.eventDetails && state.event.eventDetails.image
         ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.event.eventDetails.image}`
         : " #",
   },
@@ -139,9 +134,9 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: "uploadEventImage",
+    form: "uploadEventDefaultImage",
 
     enableReinitialize: true,
     destroyOnUnmount: false,
-  })(UploadEventImageForm)
+  })(UploadEventDefaultImageForm)
 );

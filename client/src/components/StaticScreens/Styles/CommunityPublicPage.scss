@@ -29,3 +29,15 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 36px;
 }
+
+.tab {
+    font-family: "Inter";
+    font-weight: 700;
+    padding-bottom: 1rem;
+    cursor: pointer;
+}
+
+.active-tab {
+   color: #538BF7;
+   border-bottom: 1px solid #538BF7;
+}

@@ -392,7 +392,7 @@ const CreateNewEventForm = (props) => {
             />
           </div>
           <div class="mb-4 overlay-form-input-row">
-            <p>Which service would you like to use ?</p>
+            <p className="form-label form-label-customized">Which service would you like to use ?</p>
             <div class="form-check mb-2">
               <Field
                 name="service"
@@ -404,7 +404,7 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault1">
+              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault1">
                 Hosting & Management
               </label>
             </div>
@@ -419,7 +419,7 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault2">
+              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault2">
                 Ticketing Only
               </label>
             </div>
@@ -427,7 +427,7 @@ const CreateNewEventForm = (props) => {
 
 
           <div class="mb-4 overlay-form-input-row">
-            <p>Event Visibility</p>
+            <p className="form-label form-label-customized">Event Visibility</p>
             <div class="form-check mb-2">
               <Field
                 name="visibility"
@@ -439,7 +439,7 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault1">
+              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault1">
                 Public
               </label>
               <div
@@ -461,7 +461,7 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault2">
+              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault2">
                 Private
               </label>
             </div>

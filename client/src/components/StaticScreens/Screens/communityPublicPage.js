@@ -8,6 +8,8 @@ import "./../Styles/CommunityPublicPage.scss";
 import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
 
+
+import StarOutlineRoundedIcon from '@material-ui/icons/StarOutlineRounded';
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
@@ -15,6 +17,10 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
+import PropTypes from "prop-types";
+
+
+
 import Footer from "../../Footer";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +49,8 @@ const CommunityPublicPage = () => {
 
   const [text, setText] = useState("");
 
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
   let search_params = url.searchParams;
@@ -50,6 +58,21 @@ const CommunityPublicPage = () => {
   const onChangeSearchEvents = (e) => {
     setText(e.target.value);
   };
+
+  const handleUpcomingEventsClick = () => {
+    setSelectedTabIndex(0);
+    //
+  }
+
+  const handlePastEventsClick = () => {
+    setSelectedTabIndex(1);
+    //
+  }
+
+  const handleReviewsClick = () => {
+    setSelectedTabIndex(2);
+    //
+  }
 
   const onSubmitTextSearch = (e) => {
     e.preventDefault();
@@ -185,9 +208,15 @@ const CommunityPublicPage = () => {
             </div>
           </div>
 
-          <hr className="my-3" />
+          {/* <hr className="my-3" /> */}
+ 
+          <div className="d-flex flex-row align-items-center  my-5" style={{borderBottom: "1px solid #212121"}}>
+            <div onClick={handleUpcomingEventsClick} className={`px-4 ${ selectedTabIndex === 0  ?  "active-tab" : ""} tab`} style={{fontWeight: "600"}}>Upcoming Events (3)</div>
+            <div onClick={handlePastEventsClick} className={`mx-5 px-4 tab ${ selectedTabIndex ===  1 ?  "active-tab" : ""}`}>Past Events (592)</div>
+            <div onClick={handleReviewsClick} className={`px-4 tab ${ selectedTabIndex === 2  ?  "active-tab" : ""}`}>Reviews  ( <StarOutlineRoundedIcon style={{fontSize: "16px"}} /> 4.3)</div>
+          </div>
 
-          <div className="community-public-page-grid-view my-4">
+          <div className="community-public-page-grid-view my-5">
             <div
               className="dummy-card"
               style={{ border: "1px solid green", height: "250px" }}
@@ -277,9 +306,6 @@ const CommunityPublicPage = () => {
               style={{ border: "1px solid green", height: "250px" }}
             ></div>
           </div>
-
-
-          
         </div>
         <Footer />
         

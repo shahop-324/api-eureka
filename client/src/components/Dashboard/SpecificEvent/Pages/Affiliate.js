@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React from "react";
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../../assets/Sass/EventManagement.scss";
@@ -15,6 +16,7 @@ import RegistrationDetailsCard from "../../HelperComponent/RegistrationDetailsCa
 import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import AffiliateListFields from "../Data/AffiliateListFields";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -101,9 +103,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Registrations = () => {
+const Affiliate = () => {
   const classes = useStyles();
-
+  
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
   
@@ -152,10 +154,10 @@ const Registrations = () => {
     <>
       <div>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Registrations</div>
+          <div className="sec-heading-text">Affiliates</div>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
-              className={`${classes.search}`}
+              className={`${classes.search} me-3`}
               style={{ backgroundColor: "#ffffff" }}
             >
               <div className={classes.searchIcon}>
@@ -170,15 +172,7 @@ const Registrations = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <div className="ms-3 me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="top"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
-
+            <button className="btn btn-outline-primary btn-outline-text me-3">Add New Affiliate</button>
             <Button
               variant="contained"
               color="primary"
@@ -199,7 +193,7 @@ const Registrations = () => {
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
           {/* <EventListFields /> */}
-          <RegistrationsListFields />
+          <AffiliateListFields />
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
@@ -219,4 +213,4 @@ const Registrations = () => {
   );
 };
 
-export default Registrations;
+export default Affiliate;
