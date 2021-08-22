@@ -29,7 +29,6 @@ const eventSchema = new mongoose.Schema(
         "A Community name must have less or equal than 150 characters",
       ],
     },
-
     referralIds: [
       {
         type: mongoose.Schema.ObjectId,
@@ -165,6 +164,24 @@ const eventSchema = new mongoose.Schema(
         type: mongoose.Schema.ObjectId,
         ref: "Coupon",
       },
+    ],
+    affiliates: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Affiliate"
+      }
+    ],
+    interestedPeople: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "InterestedPeople"
+      }
+    ],
+    eventLeads: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventLeads",
+      }
     ],
     eventAverageRating: {
       type: Number,
@@ -329,7 +346,6 @@ const eventSchema = new mongoose.Schema(
         ref: "EventChatMessage",
       },
     ],
-
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {

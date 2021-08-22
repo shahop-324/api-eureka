@@ -81,5 +81,11 @@ router.patch(
   eventController.updateNetworking,
 );
 
+router.get(
+  "/getAffliates/:eventId",
+  authController.protectCommunity,
+  eventController.getAffiliates,
+)
+
 
 module.exports = router;

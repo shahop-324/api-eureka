@@ -1,22 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../../assets/Sass/EventManagement.scss";
 import "./../../../../assets/Sass/SideNav.scss";
 import "./../../../../assets/Sass/TopNav.scss";
 import "./../../../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "../../HelperComponent/Pagination";
-import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import RegistrationsListFields from "../../HelperComponent/RegistrationsListFields";
-import RegistrationDetailsCard from "../../HelperComponent/RegistrationDetailsCard";
-import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import AffiliateListFields from "../Data/AffiliateListFields";
+import CreateNewAffiliate from "../Helper/CreateNewAffiliate";
+import { useDispatch } from "react-redux";
+import { fetchEventAffiliates } from "../../../../actions";
+import { useParams } from "react-router-dom";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -65,9 +65,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -105,13 +105,33 @@ const useStyles = makeStyles((theme) => ({
 
 const Affiliate = () => {
   const classes = useStyles();
-  
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const [openAddAffiliateForm, setOpenAddAffiliateForm] = useState(false);
+
+  const handleOpenAddAffiliateForm = () => {
+    setOpenAddAffiliateForm(true);
+  };
+
+  const handleCloseAddAffiliateForm = () => {
+    setOpenAddAffiliateForm(false);
+  };
+
+  useEffect(() => {
+    dispatch(fetchEventAffiliates(eventId));
+  }, []);
+
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
-  
+
     eventRegistrations.map((communityRegistration) => {
       const array = Object.entries(communityRegistration);
-  
+
       const filtered = array.filter(
         ([key, value]) =>
           key === "userName" ||
@@ -123,25 +143,25 @@ const Affiliate = () => {
           key === "razorpayPayId" ||
           key === "createdAt"
       );
-  
+
       const asObject = Object.fromEntries(filtered);
-  
+
       processedArray.push(asObject);
     });
-  
+
     const finalArray = processedArray.map((obj) => Object.values(obj));
-  
+
     return finalArray;
   };
-  
+
   const CreateAndDownloadCSV = (data) => {
-      
-    var csv = "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
+    var csv =
+      "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
     data.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
     });
-  
+
     console.log(csv);
     var hiddenElement = document.createElement("a");
     hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
@@ -172,7 +192,12 @@ const Affiliate = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <button className="btn btn-outline-primary btn-outline-text me-3">Add New Affiliate</button>
+            <button
+              onClick={handleOpenAddAffiliateForm}
+              className="btn btn-outline-primary btn-outline-text me-3"
+            >
+              Add New Affiliate
+            </button>
             <Button
               variant="contained"
               color="primary"
@@ -186,9 +211,6 @@ const Affiliate = () => {
             >
               Export
             </Button>
-            {/* <button className="btn btn-primary btn-outline-text">
-                  Create New event
-                </button> */}
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
@@ -197,18 +219,16 @@ const Affiliate = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          {/* <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard /> */}
+          {/* Here goes Affiliate Detail card */}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}
       </div>
+
+      <CreateNewAffiliate
+        open={openAddAffiliateForm}
+        handleClose={handleCloseAddAffiliateForm}
+      />
     </>
   );
 };

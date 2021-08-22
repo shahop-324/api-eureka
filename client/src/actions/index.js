@@ -26,6 +26,7 @@ import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
+import { affiliateActions } from "../reducers/affiliateSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -3371,7 +3372,6 @@ export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledDetailError());
 };
 
-
 export const deleteCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
@@ -3763,6 +3763,55 @@ export const fetchRegistrationsOfParticularCommunity =
     }
   };
 export const errorTrackerForfetchRegistrationsOfParticularCommunity =
+  () => async (dispatch, getState) => {
+    dispatch(registrationActions.disabledError());
+  };
+
+export const fetchRegistrationsOfParticularEvent =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(registrationActions.startLoading());
+
+    const fetchRegistration = async () => {
+      console.log(eventId);
+
+      let res = await fetch(
+        `${BaseURL}registrations/event/${eventId}/getAllRegistration`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      console.log(res);
+
+      return res;
+    };
+    try {
+      const res = await fetchRegistration();
+      dispatch(
+        registrationActions.FetchRegistrations({
+          registrations: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(registrationActions.hasError(err.message));
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchRegistrationsOfParticularEvent =
   () => async (dispatch, getState) => {
     dispatch(registrationActions.disabledError());
   };
@@ -4432,6 +4481,76 @@ export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
     // dispatch(contactUsActions.ContactUs());
   } catch (err) {
     // dispatch(contactUsActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const addNewAffiliate = (formValues) => async (dispatch, getState) => {
+  dispatch(affiliateActions.startLoading());
+  try {
+    let res = await fetch(`${BaseURL}affiliate/createNewAffiliate`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res.data);
+
+    alert("Successfully added new affiliate!");
+
+    dispatch(
+      affiliateActions.CreateAffiliate({
+        affiliate: res.data,
+      })
+    );
+  } catch (err) {
+    dispatch(affiliateActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
+  dispatch(affiliateActions.startLoading());
+  try {
+    let res = await fetch(`${BaseURL}events/getAffliates/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      affiliateActions.FetchAffiliates({
+        affiliates: res.data.affiliates,
+      })
+    );
+  } catch (err) {
+    dispatch(affiliateActions.hasError(err.message));
     console.log(err);
   }
 };

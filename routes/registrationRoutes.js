@@ -6,11 +6,18 @@ const registrationController = require("../controllers/registrationController");
 
 const router = express.Router();
 
-// Route for Collecting general Intent and Profile Completion
+// Route for getting all registrations of a community
 router.get(
   "/community/getAll",
   authController.protectCommunity,
   registrationController.getAllRegistrations
+);
+
+// Route for getting all registrations of one particular event
+router.get(
+  "/event/:eventId/getAllRegistration",
+  authController.protectCommunity,
+  registrationController.getAllRegistrationsForOneEvent
 );
 
 router.get(

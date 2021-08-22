@@ -22,14 +22,12 @@ import { Link, useParams } from "react-router-dom";
 const SideNav = (props) => {
   const params = useParams();
 
-  console.log(params);
-
-
+  // EVENT_ID, COMMUNITY_ID AND USER_ID
   const eventId = params.eventId;
   const communityId = params.communityId;
   const userId = params.userId;
 
-  // http://localhost:3001/user/611f27e97f0edf6846ee1e6a/community/event-management/61202c307f0edf6846ee1fad
+  // http://localhost:3001/user/611f27e97f0edf6846ee1e6a/community/event-management/61202c307f0edf6846ee1fad => /user/USER_ID/community/event-management/COMMUNITY_ID
 
   return (
     <>

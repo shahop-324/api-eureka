@@ -176,7 +176,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
-  
+
   console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
@@ -569,7 +569,6 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
   if (currentPriceValue > previousMaxPrice) {
     updatedMaxPrice = currentPriceValue;
   }
-  
 
   console.log(ticketId);
 
@@ -591,7 +590,6 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     minTicketPrice: updatedMinPrice,
     maxTicketPrice: updatedMaxPrice,
   });
-
 
   console.log(updatedTicket);
 
@@ -677,5 +675,16 @@ exports.generateReferralCode = catchAsync(async (req, res, next) => {
     data: {
       createdReferral,
     },
+  });
+});
+
+exports.getAffiliates = catchAsync(async (req, res, next) => {
+  const eventAffiliates = await Event.findById(req.params.eventId)
+    .select("affiliates")
+    .populate("affiliates");
+
+  res.status(200).json({
+    status: "success",
+    data: eventAffiliates,
   });
 });
