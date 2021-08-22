@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const affiliateModelSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
+        type: String,
+    },
+    lastName: {
         type: String,
     },
     email: {

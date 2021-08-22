@@ -1,23 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import React from "react";
+import React, { useEffect } from "react";
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../../assets/Sass/EventManagement.scss";
 import "./../../../../assets/Sass/SideNav.scss";
 import "./../../../../assets/Sass/TopNav.scss";
 import "./../../../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "../../HelperComponent/Pagination";
-import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import RegistrationsListFields from "../../HelperComponent/RegistrationsListFields";
-import RegistrationDetailsCard from "../../HelperComponent/RegistrationDetailsCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import AffiliateListFields from "../Data/AffiliateListFields";
 import InterestedPeopleListFields from "../Data/InterestedPeopleListFields";
+import { useParams } from "react-router-dom";
+import { fetchInterestedPeopleList } from "../../../../actions";
+import InterestedPeopleDetailsCard from "../Data/InterestedPeopleDetailsCard";
+import NoContentFound from "../../../NoContent";
+import NoRegistartions from "./../../../../assets/images/registrations.png";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -106,13 +107,43 @@ const useStyles = makeStyles((theme) => ({
 
 const InterestedPeople = () => {
   const classes = useStyles();
-  
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const {interestedPeople} = useSelector((state) => state.interestedPeople)
+
+  useEffect(() => {
+    dispatch(fetchInterestedPeopleList(eventId));
+  }, []);
+
+
+  const renderInterestedPeopleList = (interestedPeople) => {
+    return interestedPeople
+      .slice(0)
+      .reverse()
+      .map((person) => {
+        return (
+          <InterestedPeopleDetailsCard
+            id={person._id}
+            key={person._id}
+            fullName={`${person.firstName} ${person.lastName}`}
+            email={person.email}
+            capturedAt={person.capturedAt}
+          />
+        );
+      });
+  };
+
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
-  
+
     eventRegistrations.map((communityRegistration) => {
       const array = Object.entries(communityRegistration);
-  
+
       const filtered = array.filter(
         ([key, value]) =>
           key === "userName" ||
@@ -124,25 +155,25 @@ const InterestedPeople = () => {
           key === "razorpayPayId" ||
           key === "createdAt"
       );
-  
+
       const asObject = Object.fromEntries(filtered);
-  
+
       processedArray.push(asObject);
     });
-  
+
     const finalArray = processedArray.map((obj) => Object.values(obj));
-  
+
     return finalArray;
   };
-  
+
   const CreateAndDownloadCSV = (data) => {
-      
-    var csv = "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
+    var csv =
+      "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
     data.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
     });
-  
+
     console.log(csv);
     var hiddenElement = document.createElement("a");
     hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
@@ -173,7 +204,6 @@ const InterestedPeople = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            
             <Button
               variant="contained"
               color="primary"
@@ -187,9 +217,6 @@ const InterestedPeople = () => {
             >
               Export
             </Button>
-            {/* <button className="btn btn-primary btn-outline-text">
-                  Create New event
-                </button> */}
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
@@ -198,14 +225,10 @@ const InterestedPeople = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          {/* <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard />
-          <RegistrationDetailsCard /> */}
+          {/* Here Goes Interested People Deatils Card */}
+          { typeof interestedPeople !== "undefined" &&
+            interestedPeople.length > 0 ?  renderInterestedPeopleList(interestedPeople) : <NoContentFound msgText="Looks like no one has shown interest in this event yet."
+            img={NoRegistartions} />}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}

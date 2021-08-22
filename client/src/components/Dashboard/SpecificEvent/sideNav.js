@@ -7,11 +7,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { Divider } from "@material-ui/core";
 
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
-import LiveHelpOutlinedIcon from "@material-ui/icons/LiveHelpOutlined";
-import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import CropFreeIcon from "@material-ui/icons/CropFree";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
@@ -27,19 +24,19 @@ const SideNav = (props) => {
   const communityId = params.communityId;
   const userId = params.userId;
 
-  // http://localhost:3001/user/611f27e97f0edf6846ee1e6a/community/event-management/61202c307f0edf6846ee1fad => /user/USER_ID/community/event-management/COMMUNITY_ID
-
   return (
     <>
       <div className="side-nav-wrapper py-4 pt-4">
         <div className="event-poster-name-and-status-card">
-          <div  className="px-3 mb-3 d-flex flex-row justify-content-between">
-            <Link to={`/user/${userId}/community/event-management/${communityId}`}>
-            <IconButton aria-label="back">
-              <ArrowBackIosIcon style={{ fontSize: 18 }} />
-            </IconButton>
+          <div className="px-3 mb-3 d-flex flex-row justify-content-between">
+            <Link
+              to={`/user/${userId}/community/event-management/${communityId}`}
+            >
+              <IconButton aria-label="back">
+                <ArrowBackIosIcon style={{ fontSize: 18 }} />
+              </IconButton>
             </Link>
-            
+
             <button className="btn btn-outline-primary btn-outline-text me-2">
               Publish
             </button>
@@ -52,41 +49,14 @@ const SideNav = (props) => {
             />
           </div>
           <div className="px-4 d-flex flex-row justify-content-between">
-            <div className="sidenav-event-name" style={{fontFamily: "Inter"}}>The Craft Workshop</div>
+            <div className="sidenav-event-name" style={{ fontFamily: "Inter" }}>
+              The Craft Workshop
+            </div>
           </div>
         </div>
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
-        <Link
-          to={`/community/${communityId}/edit-event/${eventId}/basics`}
-          style={{ textDecoration: "none" }}
-        >
-          <div
-            className={
-              `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-              (props.activeIndex === "0" ? "btn-active-d" : " ")
-            }
-          >
-            <div
-              className={
-                "mx-3 sidenav-icon " +
-                (props.activeIndex === "0" ? "btn-icon-active-d" : " ")
-              }
-            >
-              <EditRoundedIcon style={{ fontSize: 26 }} />
-            </div>
-            <div
-              className={
-                `mx-3 button-text-dashboard-sidenav ` +
-                (props.activeIndex === "0" ? "btn-text-active-d" : " ")
-              }
-            >
-              Edit event
-            </div>
-          </div>
-        </Link>
-
         <div
           onClick={props.handlePreAnalyticsClick}
           className={
@@ -209,56 +179,6 @@ const SideNav = (props) => {
             }
           >
             Leads
-          </div>
-        </div>
-
-        <div
-          onClick={props.handleQueriesClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "3" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (props.activeIndex === "3" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <LiveHelpOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "3" ? "btn-text-active-d" : " ")
-            }
-          >
-            Queries
-          </div>
-        </div>
-
-        <div
-          onClick={props.handleReviewsClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "4" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (props.activeIndex === "4" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <RateReviewOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "4" ? "btn-text-active-d" : " ")
-            }
-          >
-            Reviews
           </div>
         </div>
 

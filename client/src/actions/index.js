@@ -27,6 +27,7 @@ import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
 import { affiliateActions } from "../reducers/affiliateSlice";
+import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -4554,3 +4555,68 @@ export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
     console.log(err);
   }
 };
+
+export const captureUserInterestInEvent =
+  (eventId) => async (dispatch, getState) => {
+    // dispatch(affiliateActions.startLoading());
+    try {
+      let res = await fetch(
+        `${BaseURL}interestedPeople/captureInterest/${eventId}`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+export const fetchInterestedPeopleList =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(interestedPeopleActions.startLoading());
+    try {
+      let res = await fetch(
+        `${BaseURL}interestedPeople/fetchInterestedPeople/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        interestedPeopleActions.FetchInterestedPeople({
+          interestedPeople: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(interestedPeopleActions.hasError(err.message));
+      console.log(err);
+    }
+  };

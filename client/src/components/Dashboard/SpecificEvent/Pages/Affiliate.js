@@ -14,9 +14,10 @@ import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import AffiliateListFields from "../Data/AffiliateListFields";
 import CreateNewAffiliate from "../Helper/CreateNewAffiliate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchEventAffiliates } from "../../../../actions";
 import { useParams } from "react-router-dom";
+import AffiliateDetailsCard from "../Data/AffiliateDetailsCard";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -126,6 +127,31 @@ const Affiliate = () => {
     dispatch(fetchEventAffiliates(eventId));
   }, []);
 
+  const {affiliates} = useSelector((state) => state.affiliate);
+
+  const renderAffiliatesList = (affiliates) => {
+    return affiliates
+      .slice(0)
+      .reverse()
+      .map((affiliate) => {
+        return (
+          <AffiliateDetailsCard
+            id={affiliate._id}
+            key={affiliate._id}
+            fullName={`${affiliate.firstName} ${affiliate.lastName}`}
+            email={affiliate.email}
+            commisionValue={affiliate.commisionValue}
+            totalAttempts={affiliate.totalAttempts}
+            totalLeads={affiliate.totalLeads}
+            totalConfirmedTickets={affiliate.totalConfirmedTickets}
+            totalCommisionEarned={affiliate.totalCommisionEarned}
+          />
+        );
+      });
+  };
+
+
+
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
 
@@ -220,6 +246,7 @@ const Affiliate = () => {
             <Divider />
           </div>
           {/* Here goes Affiliate Detail card */}
+         {renderAffiliatesList(affiliates)}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}

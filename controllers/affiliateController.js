@@ -13,7 +13,8 @@ exports.addNewAffiliate = catchAsync(async (req, res, next) => {
   const createdBy = req.user.id;
 
   const newAffiliate = await Affiliate.create({
-    name: name,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     email: email,
     affiliate_code: affiliate_code,
     eventId: eventId,

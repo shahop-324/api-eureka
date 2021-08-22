@@ -83,7 +83,7 @@ const CreateNewAffiliate = (props) => {
     showResults(ModifiedFormValues);
     dispatch(addNewAffiliate(ModifiedFormValues));
     // props.handleClose();
-    // window.location.reload();
+    window.location.reload();
   };
 
   return (

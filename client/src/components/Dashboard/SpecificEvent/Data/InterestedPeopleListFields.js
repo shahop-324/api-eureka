@@ -12,7 +12,7 @@ const InterestedPeopleListFields = () => {
         <div className="registrations-field-label">Email</div>
       </div>
       <div className="registrations-phone-field">
-        <div className="registrations-field-label">Contact No.</div>
+        <div className="registrations-field-label">Captured at</div>
       </div>
       
       <div className="registrations-amount-field">
