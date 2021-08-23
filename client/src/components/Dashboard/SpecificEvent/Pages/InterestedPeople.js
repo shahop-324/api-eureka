@@ -114,12 +114,11 @@ const InterestedPeople = () => {
 
   const eventId = params.eventId;
 
-  const {interestedPeople} = useSelector((state) => state.interestedPeople)
+  const { interestedPeople } = useSelector((state) => state.interestedPeople);
 
   useEffect(() => {
     dispatch(fetchInterestedPeopleList(eventId));
   }, []);
-
 
   const renderInterestedPeopleList = (interestedPeople) => {
     return interestedPeople
@@ -226,9 +225,15 @@ const InterestedPeople = () => {
             <Divider />
           </div>
           {/* Here Goes Interested People Deatils Card */}
-          { typeof interestedPeople !== "undefined" &&
-            interestedPeople.length > 0 ?  renderInterestedPeopleList(interestedPeople) : <NoContentFound msgText="Looks like no one has shown interest in this event yet."
-            img={NoRegistartions} />}
+          {typeof interestedPeople !== "undefined" &&
+          interestedPeople.length > 0 ? (
+            renderInterestedPeopleList(interestedPeople)
+          ) : (
+            <NoContentFound
+              msgText="Looks like no one has shown interest in this event yet."
+              img={NoRegistartions}
+            />
+          )}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}
