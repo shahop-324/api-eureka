@@ -4,6 +4,8 @@ const authController = require("../controllers/authController");
 const speakerController = require("../controllers/speakerController");
 const router = express.Router();
 
+router.post("/signin/:speakerId", authController.signInForSpeaker);
+
 router.get(
   "/:id",
   authController.protectCommunity,

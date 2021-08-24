@@ -276,9 +276,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     image: req.body.image,
   });
 
-  console.log(speaker, "277");
-
-  speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`;
+  speakerLink = `http://localhost:3001/join-as-speaker?role=speaker&id=${speaker._id}&community=${communityId}&event=${eventId}`;
 
   // 2.) Send new Invitation via mail to speaker
   const msg = {

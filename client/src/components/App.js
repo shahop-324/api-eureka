@@ -86,7 +86,7 @@ class App extends React.Component {
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
               <Route
-                path="/accept-speaker-invitation"
+                path="/join-as-speaker"
                 exact
                 component={AcceptSpeakerInvite}
               />

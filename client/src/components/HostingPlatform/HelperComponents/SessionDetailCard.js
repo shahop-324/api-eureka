@@ -110,13 +110,13 @@ const SessionDetailCard = ({
   } else if (role === "speaker") {
     const bool = speaker.sessions.includes(id);
     if (bool) {
-      sessionRole = "speaker";
+      sessionRole = "host";
     } else {
       sessionRole = "audience";
     }
   }
 
-  if (sessionRole === "speaker" || sessionRole === "host") {
+  if (sessionRole === "host") {
     btnText = "Backstage";
     bgColor = "#538BF7";
   }

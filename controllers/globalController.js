@@ -221,11 +221,10 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
 
-  const appID = "6877e158655f4810968b19e65d0bbb23";
-  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const appID = "702d57c3092c4fd389eb7ea5a505d471";
+  const appCertificate = "d8311f38cf434445805478cb8c93a334";
   const channelName = channel;
   const uid = userId;
-  const account = "2882341273";
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
   const expirationTimeInSeconds = 3600;
