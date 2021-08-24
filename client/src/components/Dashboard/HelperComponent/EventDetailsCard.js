@@ -60,7 +60,7 @@ const EventDetailCard = ({
             />
             <div className="event-name-and-description-wrapper">
               <Link
-                // to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
+                to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
                 <div className="event-name-d" style={{ fontFamily: "Inter" }}>
@@ -68,7 +68,7 @@ const EventDetailCard = ({
                 </div>
               </Link>
               <Link
-                // to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
+                to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
                 style={{ width: "100%", textDecoration: "none" }}
               >
                 <div
@@ -142,23 +142,23 @@ const EventDetailCard = ({
             <div className="visit-stage-button">
               <Link
                 onClick={() => {
-                  // dispatch(fetchEvent(eventId));
+                  dispatch(fetchEvent(eventId));
                 }}
-                // to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
+                to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
-                disabled
-                  // onClick={() => {
-                  //   dispatch(
-                  //     generateEventAccessToken(
-                  //       userId,
-                  //       email,
-                  //       "host",
-                  //       eventId,
-                  //       communityId
-                  //     )
-                  //   );
-                  // }}
+                // disabled
+                  onClick={() => {
+                    dispatch(
+                      generateEventAccessToken(
+                        userId,
+                        email,
+                        "host",
+                        eventId,
+                        communityId
+                      )
+                    );
+                  }}
                   className="btn btn-primary event-field-label py-2"
                   style={{ color: "#ffffff" }}
                 >

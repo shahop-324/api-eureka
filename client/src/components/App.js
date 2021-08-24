@@ -44,6 +44,7 @@ import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
+import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
 AOS.init();
 
 class App extends React.Component {
@@ -85,7 +86,7 @@ class App extends React.Component {
               {/* // TODO LINK ALL STATIC PAGES HERE */}
 
               <Route
-                path="/accept-speaker-invitation"
+                path="/join-as-speaker"
                 exact
                 component={AcceptSpeakerInvite}
               />
@@ -104,6 +105,7 @@ class App extends React.Component {
               <Route path="/event-builder" exact component={EventBuilder} />
               <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
+              <Route path="/community-public-page/:communityId" exact component={CommunityPublicPage} />
 
               <Route path="/pricing/ticketing" exact component={TicketingPricing} />
               <Route path="/pricing" exact component={Pricing} />

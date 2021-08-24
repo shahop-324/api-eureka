@@ -7,7 +7,7 @@ const eventSchema = new mongoose.Schema(
       required: [true, "An event name is required!"],
       trim: true,
       maxlength: [
-        150,
+        350,
         "A Community name must have less or equal than 150 characters",
       ],
     },
@@ -25,11 +25,10 @@ const eventSchema = new mongoose.Schema(
       required: [true, "A short description for an event is required"],
       trim: true,
       maxlength: [
-        200,
+        450,
         "A Community name must have less or equal than 150 characters",
       ],
     },
-
     referralIds: [
       {
         type: mongoose.Schema.ObjectId,
@@ -52,7 +51,7 @@ const eventSchema = new mongoose.Schema(
       validate: {
         // This only works on .Create() and .Save()
         validator: function (el) {
-          return el > this.startDate; // Checking if end date is greater than start date
+          return el >= this.startDate; // Checking if end date is greater than start date
         },
         message: "End date should be greater than start date.",
       },
@@ -166,6 +165,24 @@ const eventSchema = new mongoose.Schema(
         ref: "Coupon",
       },
     ],
+    affiliates: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Affiliate"
+      }
+    ],
+    interestedPeople: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "InterestedPeople"
+      }
+    ],
+    eventLeads: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventLeads",
+      }
+    ],
     eventAverageRating: {
       type: Number,
       default: 3,
@@ -187,7 +204,6 @@ const eventSchema = new mongoose.Schema(
     ],
     minTicketPrice: {
       type: Number,
-      default: 0,
     },
     maxTicketPrice: {
       type: Number,
@@ -330,7 +346,6 @@ const eventSchema = new mongoose.Schema(
         ref: "EventChatMessage",
       },
     ],
-
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {

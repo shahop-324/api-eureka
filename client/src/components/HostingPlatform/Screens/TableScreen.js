@@ -68,19 +68,23 @@ const TableScreen = ({
   const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
 
   const turnOffVideo = async () => {
+    if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(false);
     setVideoIsEnabled(false);
   };
   const turnOnVideo = async () => {
+    if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(true);
     setVideoIsEnabled(true);
   };
 
   const turnOffAudio = async () => {
+    if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(false);
     setAudioIsEnabled(false);
   };
   const turnOnAudio = async () => {
+    if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(true);
     setAudioIsEnabled(true);
   };
@@ -184,6 +188,10 @@ const TableScreen = ({
         const remotePlayerContainer = document.getElementById(user.uid);
         // Destroy the container.
         remotePlayerContainer && remotePlayerContainer.remove();
+
+        setGrid(
+          document.getElementById("table-video-layout-grid").childElementCount
+        );
       });
     });
 
@@ -193,7 +201,7 @@ const TableScreen = ({
       .then(async (uid) => {
         console.log("Joined RTC channel");
 
-        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({encoderConfig: "high_quality_stereo",});
         rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
         console.log(rtc.localAudioTrack);

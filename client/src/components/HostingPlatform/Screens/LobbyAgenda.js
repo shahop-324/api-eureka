@@ -106,6 +106,7 @@ const LobbyAgenda = ({ socket }) => {
 
   const role = useSelector((state) => state.eventAccessToken.role);
   const id = useSelector((state) => state.eventAccessToken.id);
+  // const { role } = useSelector((state) => state.eventAccessToken);
 
   console.log(role, id);
 
@@ -119,7 +120,7 @@ const LobbyAgenda = ({ socket }) => {
   }, [dispatch, eventId]);
 
   useEffect(() => {
-    dispatch(fetchSessionsForUser(eventId));
+      dispatch(fetchSessionsForUser(eventId));
   }, [dispatch, eventId]);
 
   const sessions = useSelector((state) => state.session.sessions);

@@ -5,6 +5,12 @@
   align-items: center;
 }
 
+.agora_video-player {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+}
+
 .btn-filled-h-small {
   background: #095a3bd8 0% 0% no-repeat padding-box;
   box-shadow: inset 0px 3px 6px #00000029;
@@ -133,8 +139,8 @@
 
 .take-break-session-btn {
   background: #333333 0% 0% no-repeat padding-box;
-  border: 1px solid #538BF7;
-  color: #538BF7;
+  border: 1px solid #538bf7;
+  color: #538bf7;
   text-align: center;
 }
 
@@ -169,11 +175,10 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px;
   align-items: center;
-  
 }
 
 .session-sidebar-nav-primary {
-  border-bottom: 1.2px solid #A09797;
+  border-bottom: 1.2px solid #a09797;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -181,16 +186,16 @@
 
 .stage-nav-button-primary {
   text-align: center;
-font: normal normal medium 12px/27px Ubuntu;
-font-weight: 500;
-font-size: 0.86rem;
-letter-spacing: 0px;
-color: #A09797;
-opacity: 1;
+  font: normal normal medium 12px/27px Ubuntu;
+  font-weight: 500;
+  font-size: 0.86rem;
+  letter-spacing: 0px;
+  color: #a09797;
+  opacity: 1;
 }
 
 .sidebar-active-btn-stage {
-  color: #538BF7;
+  color: #538bf7;
 }
 
 .session-stage-side-main-body {
@@ -206,7 +211,7 @@ opacity: 1;
 
   font: normal normal medium 12px/27px Ubuntu;
   letter-spacing: 0px;
-  color: #A09797;
+  color: #a09797;
 }
 
 .session-stage-sec-nav-wrapper {
@@ -217,8 +222,8 @@ opacity: 1;
 .slider-btn-active-stage {
   font: normal normal medium 12px/27px Ubuntu;
   letter-spacing: 0px;
-  color: #2C242199;
+  color: #2c242199;
 
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   border-radius: 5px;
 }

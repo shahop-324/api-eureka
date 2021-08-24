@@ -12,7 +12,6 @@ router.get(
 
 router.get(
   "/:id/getOneSession",
-  authController.protect,
   sessionController.getParticularSession
 );
 

@@ -76,6 +76,7 @@ const DeviceTest = ({ handleBack, handleNext }) => {
 
   useEffect(() => {
     testDeviceHandler();
+    
   }, []);
 
   console.log(typeof audioLevel, audioLevel);

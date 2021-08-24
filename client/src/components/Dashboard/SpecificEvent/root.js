@@ -18,6 +18,12 @@ import SideNav from "./sideNav";
 import Registrations from "./Pages/Registrations";
 import Queries from "./Pages/Queries";
 import Reviews from "./Pages/Reviews";
+import EventAnalytics from "./Pages/Analytics";
+import Affiliate from "./Pages/Affiliate";
+import InterestedPeople from "./Pages/InterestedPeople";
+import Leads from "./Pages/Leads";
+import CheckIns from "./Pages/CheckIns";
+import MailCampaign from "./Pages/MailCampaign";
 
 /* <Link to={`/user/${userId}/community/${communityId}/event/${eventId}`} style={{width: "100%"}}> 
             </Link> */
@@ -159,7 +165,7 @@ const SpecificEventRoot = () => {
             {(() => {
               switch (currentIndex) {
                 case "1":
-                  return <div>This is pre analytics.</div>;
+                  return <EventAnalytics />;
 
                 case "2":
                   return <Registrations />;
@@ -171,28 +177,19 @@ const SpecificEventRoot = () => {
                   return <Reviews />;
 
                 case "5":
-                  return <div>This is post analytics.</div>;
+                  return <Affiliate />;
 
                 case "6":
-                  return <div>This is polls.</div>;
+                  return <InterestedPeople />;
 
                 case "7":
-                  return <div>This is stage customisation.</div>;
+                  return <Leads />;
 
                 case "8":
-                  return <div>This is uploaded content section.</div>;
+                  return <CheckIns />;
 
                 case "9":
-                  return <div>This is RTMP and live streaming section.</div>;
-
-                case "10":
-                  return <div>This is integrations section.</div>;
-
-                case "11":
-                  return <div>This is email customisation section.</div>;
-
-                case "12":
-                  return <div>This is security checks section.</div>;
+                  return <MailCampaign />;
 
                 default:
                   return <div>You are a community Editing an event.</div>;

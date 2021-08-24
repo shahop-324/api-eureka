@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
@@ -10,6 +11,7 @@ import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  captureUserInterestInEvent,
   createQuery,
   errorTrackerForFetchEvent,
   fetchEvent,
@@ -120,6 +122,10 @@ const AccordionDetails = withStyles((theme) => ({
 const EventLandingPage = (props) => {
   const params = useParams();
 
+  const isSignedIn = useSelector((state) => state.auth.isSignedIn);
+
+  const { isLoading, error } = useSelector((state) => state.event);
+
   const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
@@ -127,8 +133,17 @@ const EventLandingPage = (props) => {
   useEffect(() => {
     dispatch(fetchEvent(id));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if(isSignedIn) {
+      // TODO dispatch(captureInterest())
+      dispatch(captureUserInterestInEvent(id))
+      console.log("Here we will capture interest");
+    }
+  }, []);
+
+
   const classes = useStyles();
-  const { isLoading, error } = useSelector((state) => state.event);
 
   const [selectedSection, setSelectedSection] = useState(0);
 
@@ -163,8 +178,6 @@ const EventLandingPage = (props) => {
 
   const { userDetails } = useSelector((state) => state.user);
   let event = useSelector((state) => state.event.eventDetails);
-
-  const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
   if (isLoading) {
     return (
@@ -251,18 +264,18 @@ const EventLandingPage = (props) => {
 
   const renderSessionList = () => {
     return event.session.map((session) => {
-      let startDate = new Date(session.startDate);
-      startDate = dateFormat("mmmm dS");
-      let startTime = new Date(session.startTime);
-      startTime = dateFormat("h:MM TT");
-      let endTime = new Date(session.startTime);
-      endTime = dateFormat("h:MM TT");
+      // let startDate = new Date(session.startDate);
+      // startDate = dateFormat("mmmm dS");
+      // let startTime = new Date(session.startTime);
+      // startTime = dateFormat("h:MM TT");
+      // let endTime = new Date(session.startTime);
+      // endTime = dateFormat("h:MM TT");
       console.log(session.speaker);
       return (
         <SessionCard
-          startDate={startDate}
-          startTime={startTime}
-          endTime={endTime}
+          // startDate={startDate}
+          startTime={session.startTime}
+          endTime={session.endTime}
           sessionName={session.name}
           sessionDescription={session.description}
           speakerAvatarList={session.speaker}
@@ -279,6 +292,8 @@ const EventLandingPage = (props) => {
         <SpeakerCard
           firstName={speaker.firstName}
           lastName={speaker.lastName}
+          organisation={speaker.organisation}
+          headline={speaker.headline}
           bio={`${speaker.designation} at ${speaker.organisation}`}
           speakerSocialHandles={speaker.socialMediaHandles}
           id={speaker.id}
@@ -371,7 +386,7 @@ const EventLandingPage = (props) => {
     startMonth = new Date(startTime);
     startMonth = dateFormat(startMonth, "mmmm");
     startYear = new Date(startTime);
-    startYear = dateFormat(startYear ,"yyyy");
+    startYear = dateFormat(startYear, "yyyy");
 
     startDate = new Date(startTime);
     startDate = dateFormat(startDate, "d");
@@ -393,7 +408,10 @@ const EventLandingPage = (props) => {
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="row nav-section">
-          <nav class="navbar navbar-expand-lg navbar-light bg-light" style={{backgroundColor: "#ffffff"}}>
+          <nav
+            class="navbar navbar-expand-lg navbar-light bg-light"
+            style={{ backgroundColor: "#ffffff" }}
+          >
             <div class="container-fluid">
               <Link
                 to="/home"
@@ -404,7 +422,6 @@ const EventLandingPage = (props) => {
               </Link>
               <button
                 class="navbar-toggler"
-              
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
@@ -425,7 +442,6 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                        
                           class="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
@@ -434,7 +450,6 @@ const EventLandingPage = (props) => {
                       <li class="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                        
                           class="btn btn-primary btn-outline-text"
                         >
                           Get Started
@@ -524,16 +539,15 @@ const EventLandingPage = (props) => {
                 src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
                 alt="event-landing-hero"
               />
-               <div className="event-start-end-date mb-4">
-                 Starts at {startDateTime}  
-                </div>
+              <div className="event-start-end-date mb-4">
+                Starts at {startDateTime}
+              </div>
 
               <div className="event-name-date-hosting-community-container mb-4 px-4">
                 <div className="event-name mb-3" style={{ fontSize: "1.3rem" }}>
                   {event.eventName}
                 </div>
-               
-                
+
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
                   <Avatar
                     src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
@@ -553,7 +567,7 @@ const EventLandingPage = (props) => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="hosted-by-social-grid mb-3">
                   <IconButton>
                     <LanguageIcon style={{ fill: "#4D4D4D" }} />
@@ -944,7 +958,8 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Yes, you can use networking zones and rooms to interact with other participants in this event.
+                        Yes, you can use networking zones and rooms to interact
+                        with other participants in this event.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -963,7 +978,8 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Yes, session recording will automatically display in your user dashboard once this event is concluded.
+                        Yes, session recording will automatically display in
+                        your user dashboard once this event is concluded.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -982,7 +998,8 @@ const EventLandingPage = (props) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        Yes, you can choose to participate in any of the booths and interact with other attendees.
+                        Yes, you can choose to participate in any of the booths
+                        and interact with other attendees.
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -1018,7 +1035,6 @@ const EventLandingPage = (props) => {
                         <button
                           disabled={!isSignedIn}
                           class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-                       
                           onClick={handleAskQuery}
                         >
                           Ask

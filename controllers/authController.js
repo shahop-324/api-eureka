@@ -15,6 +15,16 @@ const { nanoid } = require("nanoid");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
+exports.signInForSpeaker = catchAsync(async(req, res, next) => {
+  const speakerId = req.params.speakerId;
+   const token = signToken(speakerId);
+
+   res.status(200).json({
+    status: "success",
+    token
+  });
+})
+
 const signTokenForSalesLogin = (salesPersonId) =>
   jwt.sign({ salesPersonId }, process.env.JWT_SECRET);
 

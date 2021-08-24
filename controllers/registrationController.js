@@ -39,13 +39,14 @@ exports.getAllRegistrationsForOneEvent = catchAsync(async (req, res, next) => {
     .select("registrations")
     .populate({
       path: "registrations",
-      select: "name photo email ticketType",
     });
 
   const obj = await JSON.parse(JSON.stringify(json));
   const { registrations } = obj;
 
-  // console.log(obj.registrations);
+  console.log(obj.registrations, "These are all this event's registrations.");
+
+
   res.status(200).json({
     status: "success",
     length: registrations.length,

@@ -36,7 +36,6 @@ router.get(
 );
 router.get(
   "/:eventId/sessionsForUser",
-  authController.protect,
   sessionController.getAllSessionsForUser
 );
 router.get(
@@ -80,6 +79,12 @@ router.patch(
   authController.protectCommunity,
   eventController.updateNetworking,
 );
+
+router.get(
+  "/getAffliates/:eventId",
+  authController.protectCommunity,
+  eventController.getAffiliates,
+)
 
 
 module.exports = router;

@@ -36,7 +36,7 @@ const SessionDetailCard = ({
   //   dateFormat(startDate, "mm/d/yyyy");
   //  }
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleDeleteSession = () => {
     setOpenDeleteDialog(true);
@@ -45,8 +45,6 @@ const dispatch = useDispatch();
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
-
-
 
   const handleEditSession = () => {
     dispatch(fetchParticularSessionOfEvent(id));
@@ -66,7 +64,7 @@ const dispatch = useDispatch();
       return (
         <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
           <Avatar
-          variant="rounded"
+            variant="rounded"
             alt={speaker.name}
             src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
           />
@@ -75,8 +73,8 @@ const dispatch = useDispatch();
     });
   };
 
-  console.log("start time",startTime);
-  console.log("end time" ,endTime);
+  console.log("start time", startTime);
+  console.log("end time", endTime);
 
   return (
     <>
@@ -87,7 +85,10 @@ const dispatch = useDispatch();
             width: "100%",
           }}
         >
-          <div className="event-name-d" style={{ width: "100%", fontFamily: "Inter" }}>
+          <div
+            className="event-name-d"
+            style={{ width: "100%", fontFamily: "Inter" }}
+          >
             {name}
           </div>
         </div>
@@ -101,14 +102,14 @@ const dispatch = useDispatch();
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="me-3" style={{fontFamily: "Inter"}}>
-            {/* dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-// Saturday, June 9th, 2007, 5:46:21 PM */}
+            <div className="me-3" style={{ fontFamily: "Inter" }}>
+              {/* dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+              // Saturday, June 9th, 2007, 5:46:21 PM */}
               {dateFormat(startTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
-            <div style={{fontFamily: "Inter"}}>
+            <div style={{ fontFamily: "Inter" }}>
               {/* {dateFormat(endDate, "mm/d/yyyy")}{" "} */}
               {dateFormat(endTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>{" "}
@@ -124,7 +125,7 @@ const dispatch = useDispatch();
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text" style={{fontFamily: "Inter"}}>
+            <div className="chip-text" style={{ fontFamily: "Inter" }}>
               {/* Cracking PM Interviews by Microsoft Product Leader */}
 
               {description}

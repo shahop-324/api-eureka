@@ -46,6 +46,8 @@ const contactUsRoutes = require("./routes/contactUsRoutes");
 const twillioRoutes = require("./routes/twillioRoutes");
 const fundTransferRoutes = require("./routes/fundTransferRoutes");
 const communityPlanRoutes = require("./routes/communityPlanRoutes");
+const affiliateRoutes = require("./routes/affiliateRoutes");
+const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 // const { initialize } = require("passport");
 
 require("./services/passport");
@@ -87,14 +89,6 @@ app.use(passport.session());
 // 1. GLOBAL MIDDLEWARES
 
 // passport.js middleware functions
-
-
-
-
-
-
-
-
 
 // Set security HTTP headers
 app.use(helmet());
@@ -160,6 +154,8 @@ app.use("/api-eureka/eureka/v1/contactUs",contactUsRoutes);
 app.use("/api-eureka/eureka/v1/twillio", twillioRoutes);
 app.use("/api-eureka/eureka/v1/fund", fundTransferRoutes);
 app.use("/api-eureka/eureka/v1/communityPlan", communityPlanRoutes);
+app.use("/api-eureka/eureka/v1/affiliate", affiliateRoutes);
+app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

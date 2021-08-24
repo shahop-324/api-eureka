@@ -1,6 +1,7 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import { Tooltip } from "@material-ui/core";
+var dateFormat = require("dateformat");
 
 const SessionCard = ({
   startDate,
@@ -32,7 +33,8 @@ const SessionCard = ({
   return (
     <div key={id} className="session-card mb-3 px-3 py-4">
       <div className="session-date-time-venue-section mb-3">
-        {startDate} {startTime}-{endTime}
+        
+        {dateFormat(startTime, "mmm dS, h:MM TT")} - {dateFormat(endTime, "mmm dS, h:MM TT")}
       </div>
       <div className="session-name mb-2">{sessionName}</div>
       <div className="session-description mb-2">{sessionDescription}</div>

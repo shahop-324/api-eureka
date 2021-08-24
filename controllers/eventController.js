@@ -176,7 +176,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
-  
+
   console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
@@ -276,9 +276,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     image: req.body.image,
   });
 
-  console.log(speaker, "277");
-
-  speakerLink = `http://localhost:3001/community/${communityId}/event/${eventId}/hosting-platform/lobby?role=speaker&id=${speaker._id}`;
+  speakerLink = `http://localhost:3001/join-as-speaker?role=speaker&id=${speaker._id}&community=${communityId}&event=${eventId}`;
 
   // 2.) Send new Invitation via mail to speaker
   const msg = {
@@ -552,6 +550,23 @@ exports.getNetworkSettings = catchAsync(async (req, res, next) => {
 
 exports.updateTicket = catchAsync(async (req, res, next) => {
   const ticketId = req.params.id;
+  const ticketDoc = await Ticket.findById(ticketId);
+
+  const eventUpdatingTicket = await Event.findById(ticketDoc.eventId);
+
+  const previousMinPrice = eventUpdatingTicket.minTicketPrice;
+  const previousMaxPrice = eventUpdatingTicket.maxTicketPrice;
+
+  let updatedMinPrice = previousMinPrice;
+  let updatedMaxPrice = previousMaxPrice;
+  const currentPriceValue = req.body.price;
+
+  if (currentPriceValue < previousMinPrice) {
+    updatedMinPrice = currentPriceValue;
+  }
+  if (currentPriceValue > previousMaxPrice) {
+    updatedMaxPrice = currentPriceValue;
+  }
 
   console.log(ticketId);
 
@@ -568,6 +583,11 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     },
     { new: true, validateModifiedOnly: true }
   );
+
+  await Event.findByIdAndUpdate(ticketDoc.eventId, {
+    minTicketPrice: updatedMinPrice,
+    maxTicketPrice: updatedMaxPrice,
+  });
 
   console.log(updatedTicket);
 
@@ -653,5 +673,16 @@ exports.generateReferralCode = catchAsync(async (req, res, next) => {
     data: {
       createdReferral,
     },
+  });
+});
+
+exports.getAffiliates = catchAsync(async (req, res, next) => {
+  const eventAffiliates = await Event.findById(req.params.eventId)
+    .select("affiliates")
+    .populate("affiliates");
+
+  res.status(200).json({
+    status: "success",
+    data: eventAffiliates,
   });
 });

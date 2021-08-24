@@ -26,12 +26,37 @@ import { eventChatActions } from "../reducers/eventChatSlice";
 import { RTCActions } from "../reducers/RTCSlice";
 import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
+import { affiliateActions } from "../reducers/affiliateSlice";
+import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 // authentication with id and password
+
+export const signInForSpeaker =
+  (id, communityId, eventId) => async (dispatch) => {
+    console.log(id);
+
+    try {
+      const res = await eureka.post(`/eureka/v1/speakers/signin/${id}`);
+      console.log(res);
+
+      dispatch(
+        authActions.SignIn({
+          token: res.data.token,
+        })
+      );
+      history.push(
+        `/compatibility-test/community/${communityId}/event/${eventId}/`
+      );
+    } catch (err) {
+      dispatch(authActions.hasError(err.response.data.message));
+      console.log(err);
+    }
+  };
+
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   console.log({ ...formValues });
 
@@ -2885,7 +2910,6 @@ export const fetchSessionsForUser =
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
         },
       });
       if (!res.ok) {
@@ -2963,7 +2987,6 @@ export const fetchSessionForSessionStage =
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
         },
       });
 
@@ -3371,7 +3394,6 @@ export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledDetailError());
 };
 
-
 export const deleteCoupon = (id) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
@@ -3767,6 +3789,55 @@ export const errorTrackerForfetchRegistrationsOfParticularCommunity =
     dispatch(registrationActions.disabledError());
   };
 
+export const fetchRegistrationsOfParticularEvent =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(registrationActions.startLoading());
+
+    const fetchRegistration = async () => {
+      console.log(eventId);
+
+      let res = await fetch(
+        `${BaseURL}registrations/event/${eventId}/getAllRegistration`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      console.log(res);
+
+      return res;
+    };
+    try {
+      const res = await fetchRegistration();
+      dispatch(
+        registrationActions.FetchRegistrations({
+          registrations: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(registrationActions.hasError(err.message));
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchRegistrationsOfParticularEvent =
+  () => async (dispatch, getState) => {
+    dispatch(registrationActions.disabledError());
+  };
+
 export const fetchParticularRegistration =
   (id) => async (dispatch, getState) => {
     dispatch(registrationActions.startLoading());
@@ -4105,6 +4176,56 @@ export const getRTCToken =
       dispatch(RTCActions.hasError(err.message));
     }
   };
+
+export const getRTCTokenForSpeaker =
+  (sessionId, role, eventId, communityId, speakerId) =>
+  async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+
+    const fetchingRTCToken = async () => {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForSpeaker`, {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: sessionId,
+          role: role,
+          speakerId: speakerId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+
+    try {
+      let res = await fetchingRTCToken();
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+      );
+    } catch (err) {
+      alert(err);
+      dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
 export const errorTrackerForFetchingRTCToken =
   () => async (dispatch, getState) => {
     dispatch(RTCActions.disabledError());
@@ -4279,7 +4400,7 @@ export const fetchVideoCallToken =
     dispatch(RTCActions.startLoading());
     try {
       let res = await fetch(
-        `https://token-service-1443-dev.twil.io/token?identity=${userId}&table=${tableId}`
+        `https://token-service-1443-dev.twil.io/token?identity=${userId}&room=${tableId}`
       );
       if (!res.ok) {
         if (!res.message) {
@@ -4435,3 +4556,138 @@ export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
     console.log(err);
   }
 };
+
+export const addNewAffiliate = (formValues) => async (dispatch, getState) => {
+  dispatch(affiliateActions.startLoading());
+  try {
+    let res = await fetch(`${BaseURL}affiliate/createNewAffiliate`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res.data);
+
+    alert("Successfully added new affiliate!");
+
+    dispatch(
+      affiliateActions.CreateAffiliate({
+        affiliate: res.data,
+      })
+    );
+  } catch (err) {
+    dispatch(affiliateActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const fetchEventAffiliates = (eventId) => async (dispatch, getState) => {
+  dispatch(affiliateActions.startLoading());
+  try {
+    let res = await fetch(`${BaseURL}events/getAffliates/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      affiliateActions.FetchAffiliates({
+        affiliates: res.data.affiliates,
+      })
+    );
+  } catch (err) {
+    dispatch(affiliateActions.hasError(err.message));
+    console.log(err);
+  }
+};
+
+export const captureUserInterestInEvent =
+  (eventId) => async (dispatch, getState) => {
+    // dispatch(affiliateActions.startLoading());
+    try {
+      let res = await fetch(
+        `${BaseURL}interestedPeople/captureInterest/${eventId}`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+export const fetchInterestedPeopleList =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(interestedPeopleActions.startLoading());
+    try {
+      let res = await fetch(
+        `${BaseURL}interestedPeople/fetchInterestedPeople/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        interestedPeopleActions.FetchInterestedPeople({
+          interestedPeople: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(interestedPeopleActions.hasError(err.message));
+      console.log(err);
+    }
+  };

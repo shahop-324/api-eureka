@@ -41,11 +41,15 @@ const UploadEventImageForm = (props) => {
       return event.id === id;
     });
   });
-  const imgKey = event.image;
-  let imgUrl = " #";
-  if (imgKey) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+  let imgKey;
+  let imgUrl = "#";
+  if(event) {
+    imgKey = event.image;
+    if (imgKey) {
+      imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    }
   }
+  
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);

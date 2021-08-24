@@ -28,6 +28,8 @@ import eventChatSlice from "./eventChatSlice";
 import RTCSlice from "./RTCSlice";
 import demoSlice from "./demoSlice";
 import contactUsSlice from "./contactSlice";
+import affiliateSlice from "./affiliateSlice";
+import interestedPeopleSlice from "./interestedPeopleSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -58,4 +60,6 @@ export default combineReducers({
   chats:eventChatSlice.reducer,
   demo: demoSlice.reducer,
   contact: contactUsSlice.reducer,
+  affiliate: affiliateSlice.reducer,
+  interestedPeople: interestedPeopleSlice.reducer,
 });

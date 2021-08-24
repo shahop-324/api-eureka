@@ -221,11 +221,10 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
 
-  const appID = "6877e158655f4810968b19e65d0bbb23";
-  const appCertificate = "8a33b9e912794ab4a78ddd5aafbc590a";
+  const appID = "702d57c3092c4fd389eb7ea5a505d471";
+  const appCertificate = "d8311f38cf434445805478cb8c93a334";
   const channelName = channel;
   const uid = userId;
-  const account = "2882341273";
   const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
   const expirationTimeInSeconds = 3600;
@@ -235,6 +234,44 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+  // Build token with uid
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appID,
+    appCertificate,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs
+  );
+  console.log("Token With Integer Number Uid: " + token);
+
+  res.status(200).json({
+    status: "success",
+    token: token,
+  });
+});
+
+
+exports.generateTokenForLiveStreamingForSpeaker = catchAsync(async (req, res, next) => {
+  const channel = req.body.sessionId;
+  const userId = req.body.speakerId;
+  const isPublisher = req.body.role === "host" ? true : false;
+
+  const appID = "702d57c3092c4fd389eb7ea5a505d471";
+  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const channelName = channel;
+  const uid = userId;
+  const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+
+  const expirationTimeInSeconds = 3600;
+
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  // IMPORTANT! Build token with either the uid or with the user account. 
+  // Comment out the option you do not want to use below.
 
   // Build token with uid
   const token = RtcTokenBuilder.buildTokenWithUid(

@@ -26,7 +26,7 @@ function MyTimer({ expiryTimestamp }) {
 }
 
 const Timer = () => {
-  const time = 1629504000000; // DATE TIME IN MILLI SECONDS
+  const time = 1629656999000; // DATE TIME IN MILLI SECONDS
 
   return (
     <div>

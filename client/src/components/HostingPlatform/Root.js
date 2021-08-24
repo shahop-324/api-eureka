@@ -47,8 +47,6 @@ const Root = () => {
   const isEventLoading = useSelector((state) => state.event.isLoading);
   const eventError = useSelector((state) => state.event.error);
 
-
-
   const { role, id, email } = useSelector((state) => state.eventAccessToken);
 
   const userDetails = useSelector((state) => state.user.userDetails);

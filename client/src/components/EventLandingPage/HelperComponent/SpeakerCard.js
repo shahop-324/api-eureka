@@ -31,6 +31,8 @@ const SpeakerCard = ({
   bio,
   speakerSocialHandles,
   imgURL,
+  organisation,
+  headline,
   id,
 }) => {
   const linkedIn = speakerSocialHandles && speakerSocialHandles.linkedIn;
@@ -53,7 +55,8 @@ const SpeakerCard = ({
         <div className="speaker-name mb-2 px-3">
           {firstName + " " + lastName}
         </div>
-        <div className="speaker-about mb-2 px-3">{bio}</div>
+        <div className="speaker-about mb-2 px-3">{organisation}</div>
+        <div className="speaker-about mb-2 px-3">{headline}</div>
         <div className="speaker-social-media-grid">
           {linkedIn && (
             <a
