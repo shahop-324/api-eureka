@@ -35,25 +35,27 @@ const BaseURL = REACT_APP_MY_ENV
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 // authentication with id and password
 
-export const signInForSpeaker = (id, communityId, eventId) => async (dispatch) => {
-  console.log(id);
+export const signInForSpeaker =
+  (id, communityId, eventId) => async (dispatch) => {
+    console.log(id);
 
-  try {
-    const res = await eureka.post(`/eureka/v1/speakers/signin/${id}`);
-    console.log(res);
+    try {
+      const res = await eureka.post(`/eureka/v1/speakers/signin/${id}`);
+      console.log(res);
 
-    dispatch(
-      authActions.SignIn({
-        token: res.data.token,
-      })
-    );
-    history.push(`/compatibility-test/community/${communityId}/event/${eventId}/`)
-  } catch (err) {
-    dispatch(authActions.hasError(err.response.data.message));
-    console.log(err);
-  }
-};
-
+      dispatch(
+        authActions.SignIn({
+          token: res.data.token,
+        })
+      );
+      history.push(
+        `/compatibility-test/community/${communityId}/event/${eventId}/`
+      );
+    } catch (err) {
+      dispatch(authActions.hasError(err.response.data.message));
+      console.log(err);
+    }
+  };
 
 export const signIn = (formValues, intent, eventId) => async (dispatch) => {
   console.log({ ...formValues });
@@ -2908,7 +2910,6 @@ export const fetchSessionsForUser =
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
         },
       });
       if (!res.ok) {
@@ -2986,7 +2987,6 @@ export const fetchSessionForSessionStage =
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
         },
       });
 
@@ -4176,6 +4176,56 @@ export const getRTCToken =
       dispatch(RTCActions.hasError(err.message));
     }
   };
+
+export const getRTCTokenForSpeaker =
+  (sessionId, role, eventId, communityId, speakerId) =>
+  async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+
+    const fetchingRTCToken = async () => {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForSpeaker`, {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: sessionId,
+          role: role,
+          speakerId: speakerId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+
+    try {
+      let res = await fetchingRTCToken();
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+      );
+    } catch (err) {
+      alert(err);
+      dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
 export const errorTrackerForFetchingRTCToken =
   () => async (dispatch, getState) => {
     dispatch(RTCActions.disabledError());

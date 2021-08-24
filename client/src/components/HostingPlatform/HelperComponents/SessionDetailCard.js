@@ -7,7 +7,7 @@ import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getRTCToken, setSessionRoleAndJoinSession } from "../../../actions";
+import { getRTCToken, getRTCTokenForSpeaker, setSessionRoleAndJoinSession } from "../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -68,6 +68,7 @@ const SessionDetailCard = ({
   const params = useParams();
   console.log(params);
 
+
   const eventId = params.eventId;
   const communityId = params.communityId;
   const role = useSelector((state) => state.eventAccessToken.role);
@@ -95,6 +96,8 @@ const SessionDetailCard = ({
     });
   });
 
+  const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
+
   const day = dateFormat(new Date(startTime), "ddd");
   const date = dateFormat(new Date(startTime), "dS mmm");
   const time = dateFormat(new Date(startTime), "h:MM TT");
@@ -108,7 +111,7 @@ const SessionDetailCard = ({
   } else if (role === "host") {
     sessionRole = "host";
   } else if (role === "speaker") {
-    const bool = speaker.sessions.includes(id);
+    const bool = speaker.sessions.find((session)=> session._id === id)
     if (bool) {
       sessionRole = "host";
     } else {
@@ -199,28 +202,64 @@ const SessionDetailCard = ({
             <Link
              // to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
               onClick={() => {
-                
-                dispatch(getRTCToken(id,sessionRole,eventId,communityId));
-                socket.emit(
-                  "joinSession",
-                  {
-                    sessionId: id,
-                    userId: userId,
-                    sessionRole: sessionRole,
-                    userName: userName,
-                    userEmail: email,
-                    userImage: userImage,
-                    userCity: userCity,
-                    userCountry: userCountry,
-                    userOrganisation: userOrganisation,
-                    userDesignation: userDesignation,
-                  },
-                  (error) => {
-                    if (error) {
-                      alert(error);
+
+                if(role === "speaker") {
+                  dispatch(getRTCTokenForSpeaker(id,sessionRole,eventId,communityId, userId))
+
+                  socket.emit(
+                    "joinSession",
+                    {
+                      sessionId: id,
+                      userId: userId,
+                      sessionRole: sessionRole,
+                      userName: speakerDetails.firstName + " " + speakerDetails.lastName,
+                      userEmail: speakerDetails.email,
+                      userImage: `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speakerDetails.image}`,
+                      userCity: userCity,
+                      userCountry: userCountry,
+                      userOrganisation: userOrganisation,
+                      userDesignation: userDesignation,
+                    },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
                     }
-                  }
-                );
+                  );
+
+                  
+                }
+                else{
+
+                  dispatch(getRTCToken(id,sessionRole,eventId,communityId));
+
+                  socket.emit(
+                    "joinSession",
+                    {
+                      sessionId: id,
+                      userId: userId,
+                      sessionRole: sessionRole,
+                      userName: userName,
+                      userEmail: email,
+                      userImage: userImage,
+                      userCity: userCity,
+                      userCountry: userCountry,
+                      userOrganisation: userOrganisation,
+                      userDesignation: userDesignation,
+                    },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
+                    }
+                  );
+                }
+
+
+                
+                
+
+
 
                 dispatch(
                   setSessionRoleAndJoinSession(

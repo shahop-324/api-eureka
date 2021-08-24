@@ -36,7 +36,6 @@ router.get(
 );
 router.get(
   "/:eventId/sessionsForUser",
-  authController.protect,
   sessionController.getAllSessionsForUser
 );
 router.get(

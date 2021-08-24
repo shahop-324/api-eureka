@@ -2,9 +2,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
-import  ReactDOM  from "react-dom";
+import ReactDOM from "react-dom";
 import SessionScreenTopNav from "../HelperComponents/SessionScreenTopNav";
-import MicNoneIcon from '@material-ui/icons/MicNone';
+import MicNoneIcon from "@material-ui/icons/MicNone";
 
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -49,11 +49,13 @@ import history from "../../../history";
 import SessionStatusMsg from "../ComplimentaryParts/SessionStatusMsg";
 
 import NotYetStarted from "./../../../assets/images/NotYetStarted.png";
+import InCallDeviceTest from "../HelperComponents/InCallDeviceTest";
 
 let rtc = {
   localAudioTrack: null,
   localVideoTrack: null,
   client: null,
+  screenClient: null,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -309,7 +311,21 @@ const SessionScreen = () => {
     startBasicLiveStreaming();
   }, []);
 
-  console.log("This is our RTC token to join RTC channel.", token);
+  // console.log("This is our RTC token to join RTC channel.", token);
+
+  async function startScreenCall() {
+    rtc.screenClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+    await rtc.screenClient.join(options.appId,  sessionId, token);
+
+    // options.appId, options.channel, options.token, options.uid
+
+    const screenTrack = await AgoraRTC.createScreenVideoTrack();
+
+    await rtc.screenClient.publish(screenTrack);
+
+    return rtc.screenClient;
+  }
 
   async function startBasicLiveStreaming() {
     // Created client object using Agora SDK
@@ -333,6 +349,11 @@ const SessionScreen = () => {
           const remotePlayerContainer = document.getElementById(
             user.uid.toString()
           );
+
+          const userId = user.uid.toString();
+
+          document.getElementById(`avatar-box_${userId}`).style.display =
+            "none";
 
           // Play the remote video track.
           // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
@@ -367,6 +388,57 @@ const SessionScreen = () => {
         remotePlayerContainer.id = user.uid.toString();
         console.log(user.uid.toString());
 
+        const { userName, userImage, userOrganisation, userDesignation } =
+          peopleInThisSession.find(
+            (people) => people.userId === user.uid.toString()
+          );
+
+        const userIdentity = document.createElement("div");
+        userIdentity.id = `user_identity_${user.uid.toString()}`;
+        userIdentity.style.position = "absolute";
+        userIdentity.style.left = "15px";
+        userIdentity.style.bottom = "15px";
+        userIdentity.style.color = "white";
+        userIdentity.style.padding = "12px";
+        userIdentity.style.boxSizing = "border-box";
+        userIdentity.style.zIndex = "10000000000000";
+        userIdentity.style.fontSize = "12px";
+        userIdentity.style.fontWeight = "500";
+        userIdentity.style.fontFamily = "Ubuntu";
+        userIdentity.style.backgroundColor = "#807F7F62";
+        userIdentity.style.borderRadius = "5px";
+        userIdentity.style.textTransform = "capitalize";
+
+        userIdentity.textContent = userName;
+
+        const userCompanyAndDesignation = document.createElement("div");
+        // userCompanyAndDesignation.appendChild(MicNoneIcon);
+
+        // ReactDOM.render(document.getElementById('user_identity'), <MicNoneIcon />);
+
+        userCompanyAndDesignation.textContent =
+          userOrganisation + `, ${userDesignation}`;
+
+        userIdentity.appendChild(userCompanyAndDesignation);
+
+        const userVideoAvatarContainer = document.createElement("img");
+        userVideoAvatarContainer.id = `avatar-box_${user.uid.toString()}`;
+        userVideoAvatarContainer.src = userImage;
+
+        userVideoAvatarContainer.style.position = "absolute";
+        userVideoAvatarContainer.style.left = "50%";
+        userVideoAvatarContainer.style.bottom = "37.5%";
+        userVideoAvatarContainer.style.transform = "translate(-50%, -50%)";
+        userVideoAvatarContainer.style.maxHeight = "100px";
+        userVideoAvatarContainer.style.maxWidth = "100px";
+        // userVideoAvatarContainer.style.borderRadius = "50%";
+        userVideoAvatarContainer.style.boxSizing = "border-box";
+        userVideoAvatarContainer.style.zIndex = "10";
+
+        remotePlayerContainer.append(userVideoAvatarContainer);
+
+        remotePlayerContainer.append(userIdentity);
+
         remotePlayerContainer.style.borderRadius = "10px";
         remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
         remotePlayerContainer.style.backdropFilter = "blur( 4px )";
@@ -382,6 +454,10 @@ const SessionScreen = () => {
         // Play the remote video track.
         // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
         remoteVideoTrack.play(remotePlayerContainer);
+
+        document.getElementById(
+          `avatar-box_${user.uid.toString()}`
+        ).style.display = "none";
 
         // Or just pass the ID of the DIV container.
         // remoteVideoTrack.play(playerContainer.id);
@@ -399,7 +475,20 @@ const SessionScreen = () => {
     });
 
     rtc.client.on("user-unpublished", (user) => {
-      console.log(user);
+      // console.log(user);
+
+      const userId = user.uid.toString();
+
+      const isAudioEnabled = user._audio_enabled_;
+      const isAudioMuted = user._audio_muted_;
+
+      const isVideoEnabled = user._video_enabled_;
+      const isVideoMuted = user._video_muted_;
+
+      if (isVideoEnabled && isVideoMuted) {
+        document.getElementById(`avatar-box_${userId}`).style.display =
+          "inline-block";
+      }
 
       // Get the dynamically created DIV container.
       const remotePlayerContainer = document.getElementById(user.uid);
@@ -413,7 +502,7 @@ const SessionScreen = () => {
     });
 
     rtc.client.on("user-left", (user) => {
-      console.log(user);
+      // console.log(user);
 
       // Get the dynamically created DIV container.
       const remotePlayerContainer = document.getElementById(user.uid);
@@ -438,7 +527,7 @@ const SessionScreen = () => {
         console.log("Joined RTC channel");
 
         if (agoraRole !== "audience") {
-          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({encoderConfig: "high_quality_stereo",});
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
           console.log(rtc.localAudioTrack);
@@ -450,6 +539,12 @@ const SessionScreen = () => {
           localPlayerContainer.id = userId;
 
           console.log(userId);
+
+          console.log(peopleInThisSession);
+
+          console.log(
+            peopleInThisSession.find((people) => people.userId === userId)
+          );
 
           const { userName, userImage, userOrganisation, userDesignation } =
             peopleInThisSession.find((people) => people.userId === userId);
@@ -496,7 +591,6 @@ const SessionScreen = () => {
           userVideoAvatarContainer.style.boxSizing = "border-box";
           userVideoAvatarContainer.style.zIndex = "10";
 
-         
           localPlayerContainer.append(userVideoAvatarContainer);
 
           localPlayerContainer.append(userIdentity);
@@ -506,7 +600,6 @@ const SessionScreen = () => {
           localPlayerContainer.style.backdropFilter = "blur( 4px )";
           localPlayerContainer.style.zIndex = "101";
 
-          
           document
             .getElementById("session-stage-video-layout-grid")
             .append(localPlayerContainer);
@@ -519,7 +612,6 @@ const SessionScreen = () => {
           rtc.localVideoTrack.play(localPlayerContainer);
 
           document.getElementById(`avatar-box`).style.display = "none";
-         
 
           // document.getElementsByClassName("agora_video_player").style.zIndex = "100";
 
@@ -531,13 +623,13 @@ const SessionScreen = () => {
         }
       });
 
-      setInterval(() => {
-        if (!rtc.localAudioTrack) return;
-        const level = rtc.localAudioTrack.getVolumeLevel();
-        // setAudioLevel(level * 100);
-        setLocalVolumeLevel(level * 100);
-        console.log("local stream audio level", level);
-      }, 1000);
+    setInterval(() => {
+      if (!rtc.localAudioTrack) return;
+      const level = rtc.localAudioTrack.getVolumeLevel();
+      // setAudioLevel(level * 100);
+      setLocalVolumeLevel(level * 100);
+      // console.log("local stream audio level", level);
+    }, 1000);
 
     document.getElementById("leave-session").onclick = async function () {
       if (agoraRole === "host") {
@@ -559,8 +651,6 @@ const SessionScreen = () => {
       );
     };
   }
-
- 
 
   const leaveStreaming = async () => {
     if (agoraRole === "host") {
@@ -732,6 +822,7 @@ const SessionScreen = () => {
                   <IconButton
                     onClick={() => {
                       // shareScreen();
+                      startScreenCall();
                       setScreenSharingIsEnabled(true);
                     }}
                     aria-label="share screen"
@@ -893,6 +984,8 @@ const SessionScreen = () => {
           </div>
         </div>
       </div>
+      <InCallDeviceTest />
+      {/* InCallDeviceTest */}
     </>
   );
 };

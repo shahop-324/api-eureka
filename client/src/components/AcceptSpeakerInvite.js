@@ -15,7 +15,7 @@ const AcceptSpeakerInvite = () => {
   const { speakerDetails, isLoading, error } = useSelector(
     (state) => state.speaker
   );
-  const {email} = speakerDetails;
+  
   const { eventDetails } = useSelector((state) => state.event);
   const { image, eventName } = eventDetails;
   console.log(eventDetails.eventName);
@@ -152,8 +152,8 @@ const AcceptSpeakerInvite = () => {
               dispatch(
                 generateEventAccessToken(
                   speakerId,
-                  email,
-                  "Speaker",
+                  speakerDetails.email,
+                  "speaker",
                   eventId,
                   communityId
                 )

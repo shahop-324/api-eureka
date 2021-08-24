@@ -92,8 +92,6 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
 
 exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
 
-  console.log(req.query, 73);
-
   const query = Session.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
    // sessionId: mongoose.Types.ObjectId(req.query.sessionId),

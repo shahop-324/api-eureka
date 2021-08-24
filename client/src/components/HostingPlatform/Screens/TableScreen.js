@@ -201,7 +201,7 @@ const TableScreen = ({
       .then(async (uid) => {
         console.log("Joined RTC channel");
 
-        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({encoderConfig: "high_quality_stereo",});
         rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
         console.log(rtc.localAudioTrack);
