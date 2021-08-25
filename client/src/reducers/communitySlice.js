@@ -6,11 +6,7 @@ const communitySlice = createSlice({
   initialState: {
     communities: [],
     communityDetails: null,
-<<<<<<< HEAD
     isCommunityLoading: false,
-=======
-    isCommunityLoading: true,
->>>>>>> 7cd980f765d31802588e85543798f0a3fe656872
     error: false,
     isLoading: true,
   },
@@ -43,12 +39,8 @@ const communitySlice = createSlice({
     FetchCommunities(state, action) {
       state.communities = action.payload.communities;
       state.isLoading = false;
-<<<<<<< HEAD
 
       state.isCommunityLoading = false;
-=======
-      state.isCommunityLoading=false;
->>>>>>> 7cd980f765d31802588e85543798f0a3fe656872
     },
     FetchCommunity(state, action) {
       const newCommunity = action.payload.community;
