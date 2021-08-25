@@ -166,9 +166,12 @@ const timeZoneOptions = [
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
   { value: "(GMT + 00:00) Lisbon", label: "(GMT + 00:00) Lisbon" },
   { value: "(GMT + 00:00) London", label: "(GMT + 00:00) London" },
-  {value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii"},
-  {value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai", label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai"},
-  {value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu"}
+  { value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii" },
+  {
+    value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
+    label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
+  },
+  { value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu" },
 ];
 
 const styles = {
@@ -226,29 +229,38 @@ const CreateNewEventForm = (props) => {
     <>
       <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
         <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
-        <div
-              className="form-heading-and-close-button "
-              style={{ width: "100%" }}
+          <div
+            className="form-heading-and-close-button "
+            style={{ width: "100%" }}
+          >
+            <div></div>
+            <h2
+              className="overlay-form-heading"
+              style={{ fontFamily: "Inter" }}
             >
-              <div></div>
-              <h2 className="overlay-form-heading" style={{fontFamily: "Inter"}}>New Event</h2>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.closeHandler}
-                // onClick={(props)=>{
-                //   props.closeHandler,
-                //   dispatch(reset(form:"newCreatedCommunity")),
+              New Event
+            </h2>
+            <div
+              className="overlay-form-close-button"
+              onClick={props.closeHandler}
+              // onClick={(props)=>{
+              //   props.closeHandler,
+              //   dispatch(reset(form:"newCreatedCommunity")),
 
-                // }
-                // }
+              // }
+              // }
+            >
+              {/* <div> */}
+              <IconButton
+                type="button"
+                aria-label="delete"
+                onClick={props.handleClose}
               >
-                {/* <div> */}
-                <IconButton type="button" aria-label="delete" onClick={props.handleClose}>
-                  <CancelRoundedIcon />
-                </IconButton>
-                {/* </div> */}
-              </div>
+                <CancelRoundedIcon />
+              </IconButton>
+              {/* </div> */}
             </div>
+          </div>
           <h5
             className={
               `overlay-sub-form-heading mb-5 ` +
@@ -320,7 +332,6 @@ const CreateNewEventForm = (props) => {
                 component={renderInput}
                 min={Date.now()}
               />
-              
             </div>
           </div>
           <div class="mb-4 overlay-form-input-row form-row-2-in-1">
@@ -392,7 +403,9 @@ const CreateNewEventForm = (props) => {
             />
           </div>
           <div class="mb-4 overlay-form-input-row">
-            <p className="form-label form-label-customized">Which service would you like to use ?</p>
+            <p className="form-label form-label-customized">
+              Which service would you like to use ?
+            </p>
             <div class="form-check mb-2">
               <Field
                 name="service"
@@ -404,7 +417,15 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault1">
+              <label
+                class="form-check-label"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+                for="flexRadioDefault1"
+              >
                 Hosting & Management
               </label>
             </div>
@@ -419,12 +440,19 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault2">
+              <label
+                class="form-check-label"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+                for="flexRadioDefault2"
+              >
                 Ticketing Only
               </label>
             </div>
           </div>
-
 
           <div class="mb-4 overlay-form-input-row">
             <p className="form-label form-label-customized">Event Visibility</p>
@@ -439,7 +467,15 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault1">
+              <label
+                class="form-check-label"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+                for="flexRadioDefault1"
+              >
                 Public
               </label>
               <div
@@ -461,7 +497,15 @@ const CreateNewEventForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" style={{fontFamily: "Inter", fontWeight: "500", fontSize: "0.9rem"}} for="flexRadioDefault2">
+              <label
+                class="form-check-label"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+                for="flexRadioDefault2"
+              >
                 Private
               </label>
             </div>
@@ -527,6 +571,21 @@ const validate = (formValues) => {
   if (!formValues.startDate) {
     errors.startDate = "Start Date is required";
   }
+
+  if (formValues.startDate) {
+    if (new Date(formValues.startDate) <= Date.now()) {
+      errors.startDate = "Please enter valid startDate";
+    }
+  }
+  if (formValues.endDate && formValues.startDate) {
+    if (
+      // new Date(formValues.endDate) < Date.now() ||
+      new Date(formValues.endDate) < new Date(formValues.startDate)
+    ) {
+      errors.endDate = "Please enter valid endDate";
+    }
+  }
+
   if (!formValues.startTime) {
     errors.startTime = "Start Time is required";
   }

@@ -129,9 +129,7 @@ const Signin = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
-                <a href="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78ppgap6u4vzdt&redirect_uri=https://www.evenz.in/&state=foobar&scope=r_liteprofile%20r_emailaddress%20w_member_social">
-                  SignInWithLinkedin
-                </a>
+
                 <GoogleAuth />
 
                 <div
