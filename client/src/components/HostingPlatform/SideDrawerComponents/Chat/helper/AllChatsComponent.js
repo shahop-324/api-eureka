@@ -64,25 +64,29 @@ const AllChatsComponent = () => {
     const sender = peopleInThisEvent.find((person) => person.userId === id);
     return sender;
   };
-
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   const joining = async () => {
     await channel.join();
+    // await sleep(300);
   };
 
   const leaveChannel = async () => {
     console.log(channel);
     await channel.leave();
+    //  await sleep(300);
   };
 
   useEffect(() => {
     joining();
-  });
+  }, []);
 
-  useEffect(() => {
-    return async() => {
-    await  channel.leave();
-    };
-  });
+  // useEffect(() => {
+  //   return async () => {
+  //     await channel.leave();
+  //   };
+  // }, []);
 
   channel.on("ChannelMessage", function (message, memberId) {
     const { userName, userImage } = findSender(memberId);

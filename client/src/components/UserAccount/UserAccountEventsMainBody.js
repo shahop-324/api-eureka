@@ -14,9 +14,10 @@ const UserAccountEventsMainBody = () => {
   console.log(events);
 
   if (error) {
-    dispatch(errorTrackerForMadeJustForYou());
-    alert(error);
-    return;
+    throw new Error(error);
+    // dispatch(errorTrackerForMadeJustForYou());
+    // alert(error);
+    // return;
   }
 
   const renderSuggestedEventsList = (events) => {
@@ -28,8 +29,8 @@ const UserAccountEventsMainBody = () => {
         const end = new Date(event.endDate);
         const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
-        const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+        const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+        const endTime = dateFormat(event.endTime, "mmm dS, h:MM TT");
 
         return (
           <EventCard
@@ -76,7 +77,10 @@ const UserAccountEventsMainBody = () => {
               )}
             </div>
           ) : (
-            <YouHaveNoEventComing msgText="Looks like there are no great matches for you" style={{maxWidth: "400px"}} />
+            <YouHaveNoEventComing
+              msgText="Looks like there are no great matches for you"
+              style={{ maxWidth: "400px" }}
+            />
           )}
         </div>
       </div>
