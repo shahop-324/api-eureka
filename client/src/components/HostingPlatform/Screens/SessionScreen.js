@@ -124,6 +124,16 @@ const SessionScreen = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
+  const [openSettings, setOpenSettings] = useState(false);
+
+  const handleOpenSettings = () => {
+    setOpenSettings(true);
+  }
+
+  const handleCloseSettings = () => {
+    setOpenSettings(false);
+  }
+
   const { token } = useSelector((state) => state.RTC);
 
   const { peopleInThisSession } = useSelector((state) => state.user);
@@ -139,6 +149,8 @@ const SessionScreen = () => {
   const [state, setState] = React.useState({
     checkedB: true,
   });
+
+
 
   const [grid, setGrid] = useState(0);
 
@@ -283,6 +295,9 @@ const SessionScreen = () => {
   const [localVolumeLevel, setLocalVolumeLevel] = useState("");
   const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
 
+  const [uplinkStat, setUplinkStat] = useState("");
+  const [downlinkStat, setDownLinkStat] = useState("");
+
   const turnOffVideo = async () => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(false);
@@ -332,6 +347,13 @@ const SessionScreen = () => {
     rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
     rtc.client.setClientRole(options.role);
+
+    rtc.client.on("network-quality", (stats) => {
+      console.log("downlinkNetworkQuality", stats.downlinkNetworkQuality);
+      setDownLinkStat(stats.downlinkNetworkQuality);
+      console.log("uplinkNetworkQuality", stats.uplinkNetworkQuality);
+      setUplinkStat(stats.uplinkNetworkQuality);
+  });
 
     rtc.client.on("user-published", async (user, mediaType) => {
       if (document.getElementById(user.uid.toString())) {
@@ -520,6 +542,8 @@ const SessionScreen = () => {
         console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
       });
     });
+
+    
 
     await rtc.client
       .join(options.appId, options.channel, options.token, options.uid)
@@ -844,7 +868,7 @@ const SessionScreen = () => {
                     />
                   </IconButton>
                 ) : (
-                  <IconButton aria-label="settings" className={classes.margin}>
+                  <IconButton onClick={handleOpenSettings} aria-label="settings" className={classes.margin}>
                     <SettingsOutlinedIcon
                       style={{ fill: "#D3D3D3", size: "24" }}
                     />
@@ -984,7 +1008,7 @@ const SessionScreen = () => {
           </div>
         </div>
       </div>
-      <InCallDeviceTest />
+      <InCallDeviceTest open={openSettings} handleCloseSettings={handleCloseSettings} uplinkStat={uplinkStat} downlinkStat={downlinkStat}/>
       {/* InCallDeviceTest */}
     </>
   );

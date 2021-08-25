@@ -1,8 +1,7 @@
-import { Avatar, IconButton, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import { connect, useSelector } from "react-redux";
 
-import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import { Field, reduxForm } from "redux-form";
 
 const useStyles = makeStyles((theme) => ({

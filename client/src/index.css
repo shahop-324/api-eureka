@@ -6,14 +6,14 @@
   text-align: center;
 }
 
-.form-label-customized{
+.form-label-customized {
   font-size: 0.9rem;
 }
 
-html{
-font-family: "Inter";
+html {
+  font-family: "Inter";
 }
-*{
+* {
   font-family: "Inter";
 }
 
@@ -24,10 +24,32 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
 
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scrollbar-width: none;
+}
+
+.instruction-headline {
+  font-size: 1rem;
+  color: #212121;
+  font-weight: 500;
+  font-family: "Inter";
+}
+
+.instruction-point {
+  font-size: 0.87rem;
+  color: #555555;
+  font-weight: 400;
+  font-family: "Inter";
+}
+
+.network-connection-card {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 5px 5px 0 rgba(119, 121, 155, 0.37);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .husky-container {
@@ -270,7 +292,7 @@ code {
 }
 
 @media only screen and (max-width: 768px) {
-  .grab-deal-btn{
+  .grab-deal-btn {
     margin-top: 2%;
   }
 }
