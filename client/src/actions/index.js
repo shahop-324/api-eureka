@@ -1218,6 +1218,11 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
         speaker: result.data.speaker,
       })
     );
+    dispatch(
+      userActions.CreateUser({
+        user: result.data.speaker,
+      })
+    );
   } catch (err) {
     console.log(err);
 
@@ -3999,6 +4004,73 @@ export const fetchNumberOfPeopleOnTable =
     );
   };
 
+  
+
+export const getRTMTokenForSpeaker = (eventId, speakerId) => async (dispatch, getState) => {
+  dispatch(RTMActions.startLoading());
+
+  const fetchingRTMToken = async () => {
+    let res = await fetch(`${BaseURL}getRTMTokenForSpeaker`, {
+      method: "POST",
+      body: JSON.stringify({
+        eventId: eventId,
+        speakerId:speakerId,
+
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    return res;
+  };
+  try {
+    let res = await fetchingRTMToken();
+    console.log(res);
+    const appID = "6877e158655f4810968b19e65d0bbb23";
+
+    const client = AgoraRTM.createInstance(appID);
+
+    await client.login(
+      {
+        uid: speakerId,
+        token: res.token,
+      },
+      () => {
+        console.log("logged In Successfully");
+      },
+      () => {
+        console.log("log in failed");
+      }
+    );
+    dispatch(
+      RTMActions.fetchRTMToken({
+        token: res.token,
+      })
+    );
+    dispatch(
+      RTMActions.fetchRTMClient({
+        RTMClient: client,
+      })
+    );
+  } catch (err) {
+    dispatch(RTMActions.hasError(err.message));
+  }
+};
+export const errorTrackerForGetRTMTokenForSpeaker = () => async (dispatch, getState) => {
+  dispatch(RTMActions.disabledError());
+};
+
 export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());
 
@@ -4103,7 +4175,7 @@ export const fetchPreviousEventChatMessages =
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
+          // Authorization: `Bearer ${getState().auth.token}`,
         },
       });
       if (!res.ok) {
@@ -4171,6 +4243,50 @@ export const getRTCToken =
       history.push(
         `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
       );
+    } catch (err) {
+      alert(err);
+      dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
+export const getRTCTokenForScreenShare =
+  (sessionId, uid, startScreenCall) => async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+
+    const fetchingRTCToken = async () => {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForScreenShare`, {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: sessionId,
+          uid: uid,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+    try {
+      let res = await fetchingRTCToken();
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCScreenToken({
+          ScreenToken: res.token,
+        })
+      );
+
+      startScreenCall();
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));

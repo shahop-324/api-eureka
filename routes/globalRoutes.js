@@ -13,7 +13,6 @@ router.get("/exploreEvents", globalController.getAllEvents);
 
 router.get(
   "/getPreviousEventMsg/:eventId",
-  authController.protect,
   chatMessagesController.getPreviousEventChatMessage
 );
 
@@ -40,9 +39,19 @@ router.post(
 );
 
 router.post(
+  "/getLiveStreamingTokenForScreenShare",
+  globalController.generateTokenForLiveStreamingForScreenShare
+);
+
+router.post(
   "/getRTMToken",
   authController.protect,
   globalController.generateRTMToken
+);
+
+router.post(
+  "/getRTMTokenForSpeaker",
+  globalController.generateRTMTokenForSpeaker
 );
 
 module.exports = router;

@@ -66,7 +66,7 @@ const MainChatComponent = (props) => {
         {(() => {
           switch (selectedTab) {
             case "all":
-              return (isLoading ? <div className="d-flex flex-row align-items-center justify-content-center" style={{height: "73vh"}}><div class="blob-7"></div></div>  :  <AllChatsComponent />);
+              return  <AllChatsComponent />;
 
             case "private":
               return "This is private chats section.";

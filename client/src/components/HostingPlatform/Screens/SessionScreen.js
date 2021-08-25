@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import SessionScreenTopNav from "../HelperComponents/SessionScreenTopNav";
 import MicNoneIcon from "@material-ui/icons/MicNone";
+import { v4 as uuidv4 } from "uuid";
 
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -32,6 +33,7 @@ import {
   errorTrackerForFetchSessionForSessionStage,
   fetchSessionForSessionStage,
   getRTCToken,
+  getRTCTokenForScreenShare,
 } from "../../../actions";
 
 import Like from "./../../../assets/images/like.png";
@@ -121,6 +123,8 @@ const IOSSwitch = withStyles((theme) => ({
 });
 
 const SessionScreen = () => {
+  const uid = uuidv4();
+
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -128,13 +132,13 @@ const SessionScreen = () => {
 
   const handleOpenSettings = () => {
     setOpenSettings(true);
-  }
+  };
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
-  }
+  };
 
-  const { token } = useSelector((state) => state.RTC);
+  const { token, screenToken } = useSelector((state) => state.RTC);
 
   const { peopleInThisSession } = useSelector((state) => state.user);
 
@@ -147,10 +151,8 @@ const SessionScreen = () => {
 
   const classes = useStyles();
   const [state, setState] = React.useState({
-    checkedB: true,
+    checkedB: false,
   });
-
-
 
   const [grid, setGrid] = useState(0);
 
@@ -288,6 +290,10 @@ const SessionScreen = () => {
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+
+    if (event.target.checked) {
+      startCloudRecording();
+    }
   };
 
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
@@ -328,16 +334,49 @@ const SessionScreen = () => {
 
   // console.log("This is our RTC token to join RTC channel.", token);
 
+  const startCloudRecording = () => {
+    // Write logic for starting cloud recording
+
+    alert("This will start cloud recording.");
+  };
+
   async function startScreenCall() {
     rtc.screenClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
-    await rtc.screenClient.join(options.appId,  sessionId, token);
+    await rtc.screenClient.join(options.appId, sessionId, screenToken, uid);
 
     // options.appId, options.channel, options.token, options.uid
 
     const screenTrack = await AgoraRTC.createScreenVideoTrack();
 
     await rtc.screenClient.publish(screenTrack);
+
+    rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+    console.log(rtc.localAudioTrack);
+    console.log(rtc.localVideoTrack);
+
+    await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+
+    const localPlayerContainer = document.createElement("div");
+    localPlayerContainer.id = uid;
+
+    localPlayerContainer.style.position = "relative";
+    localPlayerContainer.style.borderRadius = "10px";
+    localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+    localPlayerContainer.style.backdropFilter = "blur( 4px )";
+    localPlayerContainer.style.zIndex = "101";
+
+    document
+      .getElementById("session-stage-video-layout-grid")
+      .append(localPlayerContainer);
+
+    setGrid(
+      document.getElementById("session-stage-video-layout-grid")
+        .childElementCount
+    );
+
+    rtc.localVideoTrack.play(localPlayerContainer);
 
     return rtc.screenClient;
   }
@@ -353,7 +392,7 @@ const SessionScreen = () => {
       setDownLinkStat(stats.downlinkNetworkQuality);
       console.log("uplinkNetworkQuality", stats.uplinkNetworkQuality);
       setUplinkStat(stats.uplinkNetworkQuality);
-  });
+    });
 
     rtc.client.on("user-published", async (user, mediaType) => {
       if (document.getElementById(user.uid.toString())) {
@@ -543,15 +582,15 @@ const SessionScreen = () => {
       });
     });
 
-    
-
     await rtc.client
       .join(options.appId, options.channel, options.token, options.uid)
       .then(async () => {
         console.log("Joined RTC channel");
 
         if (agoraRole !== "audience") {
-          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({encoderConfig: "high_quality_stereo",});
+          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
+            encoderConfig: "high_quality_stereo",
+          });
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
           console.log(rtc.localAudioTrack);
@@ -845,8 +884,13 @@ const SessionScreen = () => {
                 ) : (
                   <IconButton
                     onClick={() => {
-                      // shareScreen();
-                      startScreenCall();
+                      dispatch(
+                        getRTCTokenForScreenShare(
+                          sessionId,
+                          uid,
+                          startScreenCall
+                        )
+                      );
                       setScreenSharingIsEnabled(true);
                     }}
                     aria-label="share screen"
@@ -868,7 +912,11 @@ const SessionScreen = () => {
                     />
                   </IconButton>
                 ) : (
-                  <IconButton onClick={handleOpenSettings} aria-label="settings" className={classes.margin}>
+                  <IconButton
+                    onClick={handleOpenSettings}
+                    aria-label="settings"
+                    className={classes.margin}
+                  >
                     <SettingsOutlinedIcon
                       style={{ fill: "#D3D3D3", size: "24" }}
                     />
@@ -1008,7 +1056,12 @@ const SessionScreen = () => {
           </div>
         </div>
       </div>
-      <InCallDeviceTest open={openSettings} handleCloseSettings={handleCloseSettings} uplinkStat={uplinkStat} downlinkStat={downlinkStat}/>
+      <InCallDeviceTest
+        open={openSettings}
+        handleCloseSettings={handleCloseSettings}
+        uplinkStat={uplinkStat}
+        downlinkStat={downlinkStat}
+      />
       {/* InCallDeviceTest */}
     </>
   );

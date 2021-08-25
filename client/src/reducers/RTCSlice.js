@@ -5,6 +5,7 @@ const RTCSlice = createSlice({
 
   initialState: {
     RTCClient: null,
+    screenToken: null,
     token: "",
     isLoading: true,
     error: false,
@@ -26,6 +27,10 @@ const RTCSlice = createSlice({
     },
     fetchRTCToken(state, action) {
       state.token = action.payload.token;
+      state.isLoading = false;
+    },
+    fetchRTCScreenToken(state, action) {
+      state.screenToken = action.payload.ScreenToken;
       state.isLoading = false;
     },
   },

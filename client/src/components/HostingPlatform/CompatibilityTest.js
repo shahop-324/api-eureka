@@ -6,11 +6,13 @@ import "./Styles/Compatibility.scss";
 
 import { useDispatch, useSelector } from "react-redux";
 import CustomizedStepper from "./CustomizedStepper";
-import { errorTrackerForFetchEvent, errorTrackerForgetRTMToken, fetchEvent, getRTMToken } from "../../actions";
+import { errorTrackerForFetchEvent, errorTrackerForgetRTMToken, fetchEvent, getRTMToken, getRTMTokenForSpeaker } from "../../actions";
 import { useParams } from "react-router-dom";
 
 const CompatibilityTest = () => {
   const user = useSelector((state) => state.user);
+
+  const {role, id} = useSelector((state) => state.eventAccessToken);
 
   const dispatch = useDispatch();
 
@@ -22,7 +24,14 @@ const CompatibilityTest = () => {
   useEffect(() => {
     dispatch(fetchEvent(eventId));
 
-    dispatch(getRTMToken(eventId));
+if(role !== "speaker") {
+  dispatch(getRTMToken(eventId));
+}
+else {
+  dispatch(getRTMTokenForSpeaker(eventId, id));
+}
+
+    
   }, []);
 
   const { isLoading, error } = useSelector((state) => state.event);

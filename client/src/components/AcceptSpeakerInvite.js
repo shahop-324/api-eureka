@@ -49,6 +49,8 @@ const AcceptSpeakerInvite = () => {
     dispatch(fetchCommunity(communityId));
   }, []);
 
+  
+
   // if(isLoading || isEventLoading || isCommunityLoading) {
   //   return <Loader />;
   // }

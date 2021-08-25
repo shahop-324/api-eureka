@@ -7,10 +7,12 @@ import MsgInput from "./MsgInput";
 import ReactDOM from "react-dom";
 import "./../../../Styles/chatComponent.scss";
 import socket from "../../../service/socket";
-import {  fetchEventChats, fetchPreviousEventChatMessages } from "../../../../../actions";
+import {
+  fetchEventChats,
+  fetchPreviousEventChatMessages,
+} from "../../../../../actions";
 
 const AllChatsComponent = () => {
-
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -18,13 +20,12 @@ const AllChatsComponent = () => {
   const eventId = params.eventId;
 
   useEffect(() => {
-
     dispatch(fetchPreviousEventChatMessages(eventId));
 
-    socket.on("previousEventMessages", ({chats}) => {
+    socket.on("previousEventMessages", ({ chats }) => {
       console.log(chats);
-     dispatch(fetchEventChats(chats));
-    })
+      dispatch(fetchEventChats(chats));
+    });
   }, [dispatch, eventId]);
 
   const { RTMClient } = useSelector((state) => state.RTM);
@@ -48,7 +49,11 @@ const AllChatsComponent = () => {
       return (
         <ChatMsgElement
           msgText={chat.textMessage}
-          image={ chat.userImage.startsWith("https://") ? chat.userImage :   `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chat.userImage}`}
+          image={
+            chat.userImage.startsWith("https://")
+              ? chat.userImage
+              : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chat.userImage}`
+          }
           name={chat.userName}
         />
       );
@@ -64,19 +69,23 @@ const AllChatsComponent = () => {
     await channel.join();
   };
 
+  const leaveChannel = async () => {
+    console.log(channel);
+    await channel.leave();
+  };
+
   useEffect(() => {
     joining();
-    return () => {
-      (async () => {
-        await channel.leave();
-      })();
+  });
+
+  useEffect(() => {
+    return async() => {
+    await  channel.leave();
     };
-  }, [channel]);
+  });
 
   channel.on("ChannelMessage", function (message, memberId) {
-   
-    const {  userName, userImage } = findSender(memberId);
-    
+    const { userName, userImage } = findSender(memberId);
 
     ReactDOM.render(
       <ChatMsgElement
@@ -85,8 +94,8 @@ const AllChatsComponent = () => {
         image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${userImage}`}
       />,
       document
-      .getElementById("all-chat-msg-container")
-      .appendChild(document.createElement("div"))
+        .getElementById("all-chat-msg-container")
+        .appendChild(document.createElement("div"))
     );
 
     // userId, userName, userEmail, userImage
