@@ -56,6 +56,10 @@ body {
   max-width: 200px;
 }
 
+.poll-expired {
+  color: grey;
+}
+
 html {
   overflow: scroll;
   overflow-x: hidden;
@@ -298,5 +302,9 @@ code {
 }
 
 .stage-nav-button-primary:hover {
+  cursor: pointer;
+}
+
+.poll-option:hover {
   cursor: pointer;
 }

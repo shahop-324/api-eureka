@@ -31,6 +31,8 @@ import contactUsSlice from "./contactSlice";
 import affiliateSlice from "./affiliateSlice";
 import interestedPeopleSlice from "./interestedPeopleSlice";
 import sessionChatSlice from "./sessionChatSlice";
+import eventAlertSlice from "./eventAlertSlice";
+import eventPollSlice from "./eventPollSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -64,4 +66,6 @@ export default combineReducers({
   contact: contactUsSlice.reducer,
   affiliate: affiliateSlice.reducer,
   interestedPeople: interestedPeopleSlice.reducer,
+  eventAlert: eventAlertSlice.reducer,
+  eventPoll: eventPollSlice.reducer,
 });

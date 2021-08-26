@@ -13,7 +13,9 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
+  createNewEventAlert,
   createNewEventMsg,
+  createNewEventPoll,
   createNewSessionMsg,
   errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
@@ -22,6 +24,7 @@ import {
   fetchUserAllPersonalData,
   getRTMToken,
   navigationIndexForHostingPlatform,
+  updateEventPoll,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -100,6 +103,18 @@ const Root = () => {
     socket.on("newEventMsg", ({ newMsg }) => {
       console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));
+    });
+    socket.on("newEventAlert", ({ newAlert }) => {
+      console.log(newAlert);
+      dispatch(createNewEventAlert(newAlert));
+    });
+    socket.on("newEventPoll", ({ newPoll }) => {
+      console.log(newPoll);
+      dispatch(createNewEventPoll(newPoll));
+    });
+    socket.on("updatedEventPoll", ({ updatedPoll }) => {
+      console.log(updatedPoll);
+      dispatch(updateEventPoll(updatedPoll));
     });
 
     socket.on("newSessionMsg", ({ newMsg }) => {

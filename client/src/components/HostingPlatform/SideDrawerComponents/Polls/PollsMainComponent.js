@@ -1,15 +1,37 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 import "./../../Styles/root.scss";
 import PollComponent from "./helper/PollComponent";
 import CreateNewPollForm from "./helper/CreateNewPollForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import {
+  errorTrackerForFetchPreviousEventPolls,
+  fetchPreviousEventPolls,
+} from "../../../../actions";
+import Loader from "../../../Loader";
 // import { PollComponent } from "./helper/PollComponent";
 
-
 const PollsMainComponent = (props) => {
-  
+  const params = useParams();
+
+  const { eventPolls, isLoading, error } = useSelector(
+    (state) => state.eventPoll
+  );
+
+  const eventId = params.eventId;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPreviousEventPolls(eventId));
+  }, []);
+
+  // const {}
+
   const [open, setOpen] = React.useState(false);
 
   const handleCreateNewPoll = () => {
@@ -19,6 +41,44 @@ const PollsMainComponent = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const renderPollsList = (eventPolls) => {
+    if (!eventPolls) return;
+    return eventPolls
+      .slice(0)
+      .reverse()
+      .map((poll) => {
+        return (
+          <PollComponent
+            key={poll._id}
+            id={poll._id}
+            question={poll.question}
+            option_1={poll.option_1}
+            option_1_count={poll.option_1_count }
+            option_2={poll.option_2}
+            option_2_count={poll.option_2_count }
+            option_3={poll.option_3}
+            option_3_count={poll.option_3_count }
+            option_4={poll.option_4}
+            option_4_count={poll.option_4_count }
+            expiresAt={poll.expiresAt}
+            hostName={poll.hostFirstName + " " + poll.hostLastName}
+            hostImage={poll.hostImage}
+            organisation={poll.organisation}
+            designation={poll.designation}
+          />
+        );
+      });
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    alert(error);
+    dispatch(errorTrackerForFetchPreviousEventPolls());
+    return null;
+  }
 
   return (
     <>
@@ -45,9 +105,13 @@ const PollsMainComponent = (props) => {
         <div className="people-container pt-2 px-2">
           {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
 
-          <div className="scrollable-chat-element-container">
+          <div
+            className="scrollable-chat-element-container mb-3"
+            style={{ height: "72vh" }}
+          >
+            {/* Here Goes Polls list */}
             {/* <PollComponent /> */}
-            <PollComponent />
+            {renderPollsList(eventPolls)}
           </div>
 
           <div className="chat-msg-input-container d-flex flex-row justify-content-between">

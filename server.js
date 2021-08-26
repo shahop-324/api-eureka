@@ -39,6 +39,8 @@ const RoomChair = require("./models/roomChairModel");
 const RoomTable = require("./models/roomTableModel");
 const EventChatMessage = require("./models/eventChatMessageModel");
 const SessionChatMessage = require("./models/sessionChatMessageModel");
+const EventAlert = require("./models/eventAlertsModel");
+const EventPoll = require("./models/eventPollModel");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -72,7 +74,7 @@ io.on("connect", (socket) => {
   //   "transmitSessionMessage", () => {
   //     console.log("This is transmit session message")
   //   }
-    
+
   // );
 
   socket.on(
@@ -809,6 +811,171 @@ io.on("connect", (socket) => {
     }
   );
 
+  socket.on("updatePoll", async ({ userId, selectedPoll, selectedOption }) => {
+    console.log("I am in update polls section.");
+    console.log("User Id: ", userId);
+    console.log("selected Poll Id: ", selectedPoll);
+    console.log("Selected poll option: ", selectedOption);
+
+    await EventPoll.findById(selectedPoll, async (err, pollDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        pollDoc.answeredBy.push(userId);
+        switch (selectedOption) {
+          case "option_1":
+            pollDoc.option_1_count++;
+            break;
+          case "option_1":
+            pollDoc.option_2_count++;
+            break;
+          case "option_1":
+            pollDoc.option_3_count++;
+            break;
+          case "option_1":
+            pollDoc.option_4_count++;
+            break;
+          default:
+            break;
+        }
+        pollDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedPollDoc) => {
+            if (err) {
+              console.log(err);
+            } else {
+              const eventId = updatedPollDoc.eventId;
+              io.in(eventId).emit("updatedEventPoll", {
+                updatedPoll: updatedPollDoc,
+              });
+            }
+          }
+        );
+      }
+    });
+  });
+
+  socket.on(
+    "transmitEventPoll",
+    async ({
+      question,
+      answer_1,
+      answer_2,
+      answer_3,
+      answer_4,
+      expiresAt,
+      eventId,
+      hostId,
+      hostFirstName,
+      hostLastName,
+      hostEmail,
+      hostImage,
+      organisation,
+      designation,
+    }) => {
+      await EventPoll.create(
+        {
+          question: question,
+          option_1: answer_1,
+          option_2: answer_2,
+          option_3: answer_3,
+          option_4: answer_4,
+          expiresAt: expiresAt,
+          eventId: eventId,
+          hostId: hostId,
+          hostFirstName: hostFirstName,
+          hostLastName: hostLastName,
+          hostEmail: hostEmail,
+          hostImage: hostImage,
+          organisation: organisation,
+          designation: designation,
+        },
+        async (err, eventPollDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            await Event.findById(eventId, async (err, eventDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                eventDoc.polls.push(eventPollDoc._id);
+
+                await eventDoc.save(
+                  { validateModifiedOnly: true },
+                  (err, data) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      io.in(eventId).emit("newEventPoll", {
+                        newPoll: eventPollDoc,
+                      });
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
+      console.log("I reached in event poll section.");
+    }
+  );
+
+  socket.on(
+    "transmitEventAlert",
+    async ({
+      alertMsg,
+      eventId,
+      hostId,
+      hostEmail,
+      hostFirstName,
+      hostLastName,
+      hostImage,
+      organisation,
+      designation,
+    }) => {
+      console.log("I reached in event alert section.");
+      await EventAlert.create(
+        {
+          alertMsg,
+          eventId,
+          hostId,
+          hostEmail,
+          hostFirstName,
+          hostLastName,
+          hostImage,
+          organisation,
+          designation,
+        },
+        async (err, eventAlertDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            await Event.findById(eventId, async (err, eventDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(eventDoc);
+                eventDoc.alerts.push(eventAlertDoc._id);
+
+                eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    io.in(eventId).emit("newEventAlert", {
+                      newAlert: eventAlertDoc,
+                    });
+                  }
+                });
+              }
+            });
+          }
+        }
+      );
+      console.log("I reached in event alert section.");
+    }
+  );
+
   socket.on(
     "transmitEventMessage",
     async ({
@@ -853,7 +1020,7 @@ io.on("connect", (socket) => {
                   if (err) {
                     console.log(err);
                   } else {
-                    io.to(eventId).emit("newEventMsg", {
+                    io.in(eventId).emit("newEventMsg", {
                       newMsg: chatMsgDoc,
                     });
                   }
