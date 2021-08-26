@@ -13,6 +13,7 @@ import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
+  createNewEventMsg,
   errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
@@ -95,7 +96,10 @@ const Root = () => {
   console.log(role, id, email);
 
   useEffect(() => {
-    
+    socket.on("newEventMsg", ({ newMsg }) => {
+      console.log(newMsg);
+      dispatch(createNewEventMsg(newMsg));
+    });
 
     socket.on("previousEventMessages", ({ chats }) => {
       console.log(chats);
@@ -120,7 +124,6 @@ const Root = () => {
       );
     });
 
-    
     socket.emit(
       "join",
       {
@@ -147,7 +150,6 @@ const Root = () => {
     } else if (role === "audience" || role === "host") {
       dispatch(fetchUserAllPersonalData(id));
     }
-    
   }, [
     dispatch,
     email,
@@ -188,13 +190,11 @@ const Root = () => {
   //   );
   // }
 
-  if(eventError) {
+  if (eventError) {
     alert(eventError);
     dispatch(errorTrackerForFetchEvent());
     return null;
   }
-
-  
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));

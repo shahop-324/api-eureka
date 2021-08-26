@@ -8,6 +8,7 @@ import socket from "./../../../service/socket";
 const MsgInput = () => {
   const params = useParams();
   const eventId = params.eventId;
+  const sessionId = params.sessionId;
 
   const { role, id } = useSelector((state) => state.eventAccessToken);
 
@@ -21,14 +22,12 @@ const MsgInput = () => {
   const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
 
   if (role !== "speaker") {
-
     firstName = userDetails.firstName;
     lastName = userDetails.lastName;
     email = userDetails.email;
     image = userDetails.image;
-
-    
-  } else {
+  } 
+  else {
     firstName = speakerDetails.firstName;
     lastName = speakerDetails.lastName;
     email = speakerDetails.email;
@@ -39,12 +38,12 @@ const MsgInput = () => {
 
   const sendChannelMessage = () => {
     socket.emit(
-      "transmitEventMessage",
+      "transmitSessionMessage",
       {
         textMessage: Message,
-        eventId: eventId,
+        sessionId: sessionId,
         createdAt: Date.now(),
-        userRole: role,
+        sessionRole: role,
         userName: firstName + " " + lastName,
         userEmail: email,
         userImage: image,

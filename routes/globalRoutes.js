@@ -16,6 +16,11 @@ router.get(
   chatMessagesController.getPreviousEventChatMessage
 );
 
+router.get(
+  "/getPreviousSessionMsg/:sessionId",
+  chatMessagesController.getPreviousSessionChatMessage
+);
+
 router.post(
   "/generateEventAccessToken",
   globalController.createEventAccessToken

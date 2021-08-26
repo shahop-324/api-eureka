@@ -296,3 +296,7 @@ code {
     margin-top: 2%;
   }
 }
+
+.stage-nav-button-primary:hover {
+  cursor: pointer;
+}

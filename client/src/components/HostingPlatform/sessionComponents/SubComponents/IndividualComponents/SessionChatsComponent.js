@@ -1,33 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import ChatMsgElement from "./ChatMsgElement";
+import ChatMsgElement from "../../../SideDrawerComponents/Chat/helper/ChatMsgElement";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import MsgInput from "./MsgInput";
 import "./../../../Styles/chatComponent.scss";
 import socket from "../../../service/socket";
-import {
-  fetchEventChats,
-  fetchPreviousEventChatMessages,
-} from "../../../../../actions";
+import { fetchPreviousSessionChatMessages, fetchSessionChats } from "../../../../../actions";
 
 const AllChatsComponent = () => {
   const dispatch = useDispatch();
 
   const params = useParams();
 
-  const eventId = params.eventId;
+  const sessionId = params.sessionId;
 
   useEffect(() => {
-    dispatch(fetchPreviousEventChatMessages(eventId));
+    dispatch(fetchPreviousSessionChatMessages(sessionId));
 
-    socket.on("previousEventMessages", ({ chats }) => {
+    socket.on("previousSessionMessages", ({ chats }) => {
       console.log(chats);
-      dispatch(fetchEventChats(chats));
+      dispatch(fetchSessionChats(chats));
     });
-  }, [dispatch, eventId]);
+  }, [dispatch, sessionId]);
 
-  const eventChats = useSelector((state) => state.chats.eventChats);
+  const sessionChats = useSelector((state) => state.sessionChats.sessionChats);
 
   const renderChats = (chats) => {
     return chats.map((chat) => {
@@ -47,15 +44,14 @@ const AllChatsComponent = () => {
 
   return (
     <>
-      <div className="chat-msg-container pt-2 px-2">
+      <div className="chat-msg-container pt-2 px-2" style={{backgroundColor: "#A1A1A175"}}>
         <div
           className="scrollable-chat-element-container"
           id="all-chat-msg-container"
         >
-          {renderChats(eventChats)}
+          {renderChats(sessionChats)}
         </div>
         <MsgInput
-        //  sendChannelMessage={sendChannelMessage}
         />
       </div>
     </>

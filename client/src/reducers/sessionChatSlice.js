@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const eventChatSlice = createSlice({
-  name: "Chat",
+const sessionChatSlice = createSlice({
+  name: "SessionChat",
 
   initialState: {
-    eventChats: [],
-    eventChatDetails: null,
+    sessionChats: [],
     isLoading: true,
     error: false,
   },
@@ -23,15 +22,15 @@ const eventChatSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
-    FetchEventChats(state, action) {
-      state.eventChats = action.payload.eventChats;
+    FetchSessionChats(state, action) {
+      state.sessionChats = action.payload.sessionChats;
       state.isLoading = false;
     },
-    CreateEventChat(state, action) {
-      state.eventChats.push(action.payload.chat);
+    CreateSessionChat(state, action) {
+      state.sessionChats.push(action.payload.chat);
       state.isLoading = false;
     }
   },
 });
-export const eventChatActions = eventChatSlice.actions;
-export default eventChatSlice;
+export const sessionChatActions = sessionChatSlice.actions;
+export default sessionChatSlice;

@@ -38,6 +38,7 @@ const Session = require("./models/sessionModel");
 const RoomChair = require("./models/roomChairModel");
 const RoomTable = require("./models/roomTableModel");
 const EventChatMessage = require("./models/eventChatMessageModel");
+const SessionChatMessage = require("./models/sessionChatMessageModel");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -556,6 +557,22 @@ io.on("connect", (socket) => {
     ) => {
       socket.join(sessionId);
 
+      const fetchCurrentMessages = async (sessionId) => {
+        await Session.findById(sessionId, (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.to(sessionId).emit("previousSessionMessages", {
+              chats: doc.chatMessages,
+            });
+          }
+        })
+          .select("chatMessages")
+          .populate("chatMessages");
+      };
+
+      fetchCurrentMessages(sessionId);
+
       const fetchCurrentUsersInSession = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
           if (err) {
@@ -767,6 +784,63 @@ io.on("connect", (socket) => {
                     console.log(err);
                   } else {
                     io.to(eventId).emit("newEventMsg", {
+                      newMsg: chatMsgDoc,
+                    });
+                  }
+                });
+              }
+            });
+          }
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "transmitSessionMessage",
+    async ({
+      textMessage,
+      sessionId,
+      createdAt,
+      sessionRole,
+      userName,
+      userEmail,
+      userImage,
+      userId,
+      reported,
+      numOfTimesReported,
+      visibilityStatus,
+    }) => {
+      await SessionChatMessage.create(
+        {
+          textMessage,
+          sessionId,
+          createdAt,
+          sessionRole,
+          userName,
+          userEmail,
+          userImage,
+          userId,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            await Session.findById(sessionId, async (err, sessionDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(sessionDoc);
+                sessionDoc.chatMessages.push(chatMsgDoc._id);
+
+                sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    io.to(sessionId).emit("newSessionMsg", {
                       newMsg: chatMsgDoc,
                     });
                   }

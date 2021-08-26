@@ -72,6 +72,12 @@ const sessionSchema = new mongoose.Schema(
     sessionStatus: {
       type: String,
     },
+    chatMessages: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "SessionChatMessage",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

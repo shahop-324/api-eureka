@@ -28,6 +28,7 @@ import { demoActions } from "../reducers/demoSlice";
 import { contactUsActions } from "../reducers/contactSlice";
 import { affiliateActions } from "../reducers/affiliateSlice";
 import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
+import { sessionChatActions } from "../reducers/sessionChatSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -4157,6 +4158,19 @@ export const fetchEventChats = (chats) => async (dispatch, getState) => {
   }
 };
 
+export const fetchSessionChats = (chats) => async (dispatch, getState) => {
+  dispatch(sessionChatActions.startLoading());
+  try {
+    dispatch(
+      sessionChatActions.FetchSessionChats({
+        sessionChats: chats,
+      })
+    );
+  } catch (err) {
+    dispatch(sessionChatActions.hasError(err.message));
+  }
+};
+
 export const errorTrackerForfetchEventChats =
   () => async (dispatch, getState) => {
     dispatch(eventChatActions.disabledError());
@@ -4198,6 +4212,44 @@ export const fetchPreviousEventChatMessages =
 export const errorTrackerForFetchPreviousEventChatMessages =
   () => async (dispatch, getState) => {
     dispatch(eventChatActions.disabledError());
+  };
+
+export const fetchPreviousSessionChatMessages =
+  (sessionId) => async (dispatch, getState) => {
+    dispatch(sessionChatActions.startLoading());
+    try {
+      console.log(sessionId);
+
+      let res = await fetch(`${BaseURL}getPreviousSessionMsg/${sessionId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        sessionChatActions.FetchSessionChats({
+          sessionChats: res.data.chatMessages,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchPreviousSessionChatMessages =
+  () => async (dispatch, getState) => {
+    dispatch(sessionChatActions.disabledError());
   };
 
 export const getRTCToken =
@@ -4805,3 +4857,11 @@ export const fetchInterestedPeopleList =
       console.log(err);
     }
   };
+
+export const createNewEventMsg = (newMsg) => async (dispatch, getState) => {
+  dispatch(
+    eventChatActions.CreateEventChat({
+      chat: newMsg,
+    })
+  );
+};
