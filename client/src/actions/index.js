@@ -4865,3 +4865,11 @@ export const createNewEventMsg = (newMsg) => async (dispatch, getState) => {
     })
   );
 };
+
+export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
+  dispatch(
+    sessionChatActions.CreateSessionChat({
+      chat: newMsg,
+    })
+  );
+};

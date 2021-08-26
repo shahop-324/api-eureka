@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import ChatMsgElement from "../../../SideDrawerComponents/Chat/helper/ChatMsgElement";
+import ChatMsgElement from "./ChatMsgElement";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import MsgInput from "./MsgInput";
 import "./../../../Styles/chatComponent.scss";
 import socket from "../../../service/socket";
-import { fetchPreviousSessionChatMessages, fetchSessionChats } from "../../../../../actions";
+import {
+  fetchPreviousSessionChatMessages,
+  fetchSessionChats,
+} from "../../../../../actions";
 
 const AllChatsComponent = () => {
   const dispatch = useDispatch();
@@ -44,15 +47,17 @@ const AllChatsComponent = () => {
 
   return (
     <>
-      <div className="chat-msg-container pt-2 px-2" style={{backgroundColor: "#A1A1A175"}}>
+      <div
+        className="chat-msg-container pt-2 px-2"
+        style={{ backgroundColor: "#A1A1A175" }}
+      >
         <div
           className="scrollable-chat-element-container"
           id="all-chat-msg-container"
         >
           {renderChats(sessionChats)}
         </div>
-        <MsgInput
-        />
+        <MsgInput />
       </div>
     </>
   );

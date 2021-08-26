@@ -40,7 +40,7 @@ const MsgInput = () => {
     console.log("send channel message was triggered");
     console.log(Message);
     socket.emit(
-      "transmitEventMessage",
+      "transmitSessionMessage",
       {
         textMessage: Message,
         sessionId: sessionId,
@@ -73,7 +73,9 @@ const MsgInput = () => {
       />
       <IconButton
         onClick={() => {
+          if(!Message) return;
           sendChannelMessage(Message);
+          setMessage("")
         }}
       >
         <SendRoundedIcon />

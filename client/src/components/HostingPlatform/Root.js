@@ -14,6 +14,7 @@ import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
 import {
   createNewEventMsg,
+  createNewSessionMsg,
   errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
@@ -99,6 +100,11 @@ const Root = () => {
     socket.on("newEventMsg", ({ newMsg }) => {
       console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));
+    });
+
+    socket.on("newSessionMsg", ({ newMsg }) => {
+      console.log(newMsg);
+      dispatch(createNewSessionMsg(newMsg));
     });
 
     socket.on("previousEventMessages", ({ chats }) => {

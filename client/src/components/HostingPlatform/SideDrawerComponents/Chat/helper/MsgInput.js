@@ -72,7 +72,9 @@ const MsgInput = () => {
       />
       <IconButton
         onClick={() => {
+          if(!Message) return;
           sendChannelMessage(Message);
+          setMessage("")
         }}
       >
         <SendRoundedIcon />
