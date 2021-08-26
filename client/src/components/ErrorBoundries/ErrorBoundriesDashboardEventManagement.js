@@ -22,19 +22,21 @@ class ErrorBoundaryEventManagement extends React.Component {
   render() {
     if (this.state.error) {
       // Error path
-      return (
-        <>
-          {alert(this.state.error)}
-          {/* <div>
-            <h2>Something went wrong.</h2>
-            <details style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.error && this.state.error.toString()}
-              <br />
-              {this.state.errorInfo.componentStack}
-            </details>
-          </div> */}
-        </>
-      );
+      alert(this.state.error);
+      return null;
+      // return (
+      //   <>
+      //     {alert(this.state.error)}
+      //     {/* <div>
+      //       <h2>Something went wrong.</h2>
+      //       <details style={{ whiteSpace: "pre-wrap" }}>
+      //         {this.state.error && this.state.error.toString()}
+      //         <br />
+      //         {this.state.errorInfo.componentStack}
+      //       </details>
+      //     </div> */}
+      //   </>
+      // );
     }
     // Normally, just render children
     return this.props.children;

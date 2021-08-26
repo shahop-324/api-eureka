@@ -14,7 +14,6 @@ import {
   fetchUserAllPersonalData,
 } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
-
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../history";
@@ -22,6 +21,8 @@ import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
 import Tour from "reactour";
+import ErrorBoundriesUserAccountSideNav from "../ErrorBoundries/ErrorBoundriesUserAccountSideNav";
+import ErrorBoundriesUserAccountEventsMainBody from "../ErrorBoundries/ErrorBoundriesUserAccountEventsMainBody";
 const { REACT_APP_MY_ENV } = process.env;
 const steps = [
   {
@@ -111,7 +112,10 @@ const UserAccountHome = () => {
         >
           <UserAccountNav />
           <div className="user-account-body">
-            <UserAccountSideNav className="first-step-user-section" />
+            <ErrorBoundriesUserAccountSideNav>
+              <UserAccountSideNav className="first-step-user-section" />
+            </ErrorBoundriesUserAccountSideNav>
+
             <div
               className="user-account-main-body"
               style={{ minWidth: "1024px", overflow: "visible" }}
@@ -128,7 +132,11 @@ const UserAccountHome = () => {
                     return <UserAccountHomeMainBody />;
 
                   case 1:
-                    return <UserAccountEventsMainBody />;
+                    return (
+                      <ErrorBoundriesUserAccountEventsMainBody>
+                        <UserAccountEventsMainBody />
+                      </ErrorBoundriesUserAccountEventsMainBody>
+                    );
 
                   case 2:
                     return <UserAccountRecordings />;

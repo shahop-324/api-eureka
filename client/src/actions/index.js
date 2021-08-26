@@ -4004,72 +4004,70 @@ export const fetchNumberOfPeopleOnTable =
     );
   };
 
-  
+export const getRTMTokenForSpeaker =
+  (eventId, speakerId) => async (dispatch, getState) => {
+    dispatch(RTMActions.startLoading());
 
-export const getRTMTokenForSpeaker = (eventId, speakerId) => async (dispatch, getState) => {
-  dispatch(RTMActions.startLoading());
+    const fetchingRTMToken = async () => {
+      let res = await fetch(`${BaseURL}getRTMTokenForSpeaker`, {
+        method: "POST",
+        body: JSON.stringify({
+          eventId: eventId,
+          speakerId: speakerId,
+        }),
 
-  const fetchingRTMToken = async () => {
-    let res = await fetch(`${BaseURL}getRTMTokenForSpeaker`, {
-      method: "POST",
-      body: JSON.stringify({
-        eventId: eventId,
-        speakerId:speakerId,
-
-      }),
-
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-    });
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+
+      res = await res.json();
+      return res;
+    };
+    try {
+      let res = await fetchingRTMToken();
+      console.log(res);
+      const appID = "6877e158655f4810968b19e65d0bbb23";
+
+      const client = AgoraRTM.createInstance(appID);
+
+      await client.login(
+        {
+          uid: speakerId,
+          token: res.token,
+        },
+        () => {
+          console.log("logged In Successfully");
+        },
+        () => {
+          console.log("log in failed");
+        }
+      );
+      dispatch(
+        RTMActions.fetchRTMToken({
+          token: res.token,
+        })
+      );
+      dispatch(
+        RTMActions.fetchRTMClient({
+          RTMClient: client,
+        })
+      );
+    } catch (err) {
+      dispatch(RTMActions.hasError(err.message));
     }
-
-    res = await res.json();
-    return res;
   };
-  try {
-    let res = await fetchingRTMToken();
-    console.log(res);
-    const appID = "6877e158655f4810968b19e65d0bbb23";
-
-    const client = AgoraRTM.createInstance(appID);
-
-    await client.login(
-      {
-        uid: speakerId,
-        token: res.token,
-      },
-      () => {
-        console.log("logged In Successfully");
-      },
-      () => {
-        console.log("log in failed");
-      }
-    );
-    dispatch(
-      RTMActions.fetchRTMToken({
-        token: res.token,
-      })
-    );
-    dispatch(
-      RTMActions.fetchRTMClient({
-        RTMClient: client,
-      })
-    );
-  } catch (err) {
-    dispatch(RTMActions.hasError(err.message));
-  }
-};
-export const errorTrackerForGetRTMTokenForSpeaker = () => async (dispatch, getState) => {
-  dispatch(RTMActions.disabledError());
-};
+export const errorTrackerForGetRTMTokenForSpeaker =
+  () => async (dispatch, getState) => {
+    dispatch(RTMActions.disabledError());
+  };
 
 export const getRTMToken = (eventId) => async (dispatch, getState) => {
   dispatch(RTMActions.startLoading());

@@ -16,9 +16,7 @@ import maleMascot from "./../../assets/images/winkingPerson.png";
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-
   const { error, isCommunityLoading } = useSelector((state) => state.community);
-
 
   const { id } = useSelector((state) => state.user.userDetails);
 
@@ -30,7 +28,7 @@ const CommunityProfileTab = (props) => {
 
   // if (isCommunityLoading) {
   //   return (
-     
+
   //   );
   // }
 
@@ -107,7 +105,6 @@ const UserAccountSideNav = () => {
   const { userDetails } = useSelector((state) => state.user);
   if (isLoading) {
     return (
-
       <div
         className="d-flex flex-row align-items-center justify-content-center"
         style={{ width: "100%", height: "100vh" }}
@@ -115,13 +112,14 @@ const UserAccountSideNav = () => {
         {" "}
         <Loader />{" "}
       </div>
-
     );
   }
   if (error) {
-    dispatch(errorTrackerForPersonalData());
-    alert(error);
-    return;
+    throw new Error(error);
+
+    // dispatch(errorTrackerForPersonalData());
+    // alert(error);
+    // return;
   }
 
   const { firstName, lastName, email, image } = userDetails;
@@ -165,20 +163,22 @@ const UserAccountSideNav = () => {
           className="user-community-tab-list mb-4"
           style={{ overflow: "auto", height: "77vh" }}
         >
-         {isCommunityLoading ?  <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "auto" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div> : typeof communities !== "undefined" && communities.length > 0 ? (
+          {isCommunityLoading ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "100%", height: "auto" }}
+            >
+              {" "}
+              <Loader />{" "}
+            </div>
+          ) : typeof communities !== "undefined" && communities.length > 0 ? (
             renderCommunitiesList(communities)
           ) : (
             <CreateNewCommunityMsgCard
               msgText="Start by creating your community"
               img={maleMascot}
             />
-          ) } 
+          )}
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <button
               className="btn btn-outline-text  btn-outline-primary  py-2"

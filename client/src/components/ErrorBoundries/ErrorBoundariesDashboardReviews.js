@@ -22,11 +22,13 @@ class ErrorBoundaryDashboardOverview extends React.Component {
   render() {
     if (this.state.error) {
       // Error path
-      return (
-        <>
-          {alert(this.state.error)}
-        </>
-      );
+      alert(this.state.error);
+      return null;
+      // return (
+      //   <>
+      //     {}
+      //   </>
+      // );
     }
     // Normally, just render children
     return this.props.children;
