@@ -37,8 +37,10 @@ const MsgInput = () => {
   const [Message, setMessage] = useState("");
 
   const sendChannelMessage = () => {
+    console.log("send channel message was triggered");
+    console.log(Message);
     socket.emit(
-      "transmitSessionMessage",
+      "transmitEventMessage",
       {
         textMessage: Message,
         sessionId: sessionId,

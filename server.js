@@ -68,6 +68,69 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  // socket.on(
+  //   "transmitSessionMessage",
+  //   console.log("This is transmit session message")
+  // );
+
+  // socket.on(
+  //   "transmitSessionMessage",
+  //   async ({
+  //     textMessage,
+  //     sessionId,
+  //     createdAt,
+  //     sessionRole,
+  //     userName,
+  //     userEmail,
+  //     userImage,
+  //     userId,
+  //     reported,
+  //     numOfTimesReported,
+  //     visibilityStatus,
+  //   }) => {
+  //     console.log("I Reached in transmit session message.");
+  //     await SessionChatMessage.create(
+  //       {
+  //         textMessage,
+  //         sessionId,
+  //         createdAt,
+  //         sessionRole,
+  //         userName,
+  //         userEmail,
+  //         userImage,
+  //         userId,
+  //         reported,
+  //         numOfTimesReported,
+  //         visibilityStatus,
+  //       },
+  //       async (err, chatMsgDoc) => {
+  //         if (err) {
+  //           console.log(err);
+  //         } else {
+  //           await Session.findById(sessionId, async (err, sessionDoc) => {
+  //             if (err) {
+  //               console.log(err);
+  //             } else {
+  //               console.log(sessionDoc);
+  //               sessionDoc.chatMessages.push(chatMsgDoc._id);
+
+  //               sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
+  //                 if (err) {
+  //                   console.log(err);
+  //                 } else {
+  //                   io.to(sessionId).emit("newSessionMsg", {
+  //                     newMsg: chatMsgDoc,
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //           });
+  //         }
+  //       }
+  //     );
+  //   }
+  // );
+
   socket.on("leaveChair", ({ chairId, eventId, tableId }, callback) => {
     fetchCurrentRoomChairs = async () => {
       await Event.findById(eventId, (err, doc) => {
@@ -784,63 +847,6 @@ io.on("connect", (socket) => {
                     console.log(err);
                   } else {
                     io.to(eventId).emit("newEventMsg", {
-                      newMsg: chatMsgDoc,
-                    });
-                  }
-                });
-              }
-            });
-          }
-        }
-      );
-    }
-  );
-
-  socket.on(
-    "transmitSessionMessage",
-    async ({
-      textMessage,
-      sessionId,
-      createdAt,
-      sessionRole,
-      userName,
-      userEmail,
-      userImage,
-      userId,
-      reported,
-      numOfTimesReported,
-      visibilityStatus,
-    }) => {
-      await SessionChatMessage.create(
-        {
-          textMessage,
-          sessionId,
-          createdAt,
-          sessionRole,
-          userName,
-          userEmail,
-          userImage,
-          userId,
-          reported,
-          numOfTimesReported,
-          visibilityStatus,
-        },
-        async (err, chatMsgDoc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            await Session.findById(sessionId, async (err, sessionDoc) => {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(sessionDoc);
-                sessionDoc.chatMessages.push(chatMsgDoc._id);
-
-                sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    io.to(sessionId).emit("newSessionMsg", {
                       newMsg: chatMsgDoc,
                     });
                   }
