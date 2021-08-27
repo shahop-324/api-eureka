@@ -321,6 +321,17 @@ const eventSchema = new mongoose.Schema(
         ref: "UsersInEvent",
       },
     ],
+    currentlyInNetworking: [
+      {
+        type: String,
+      },
+    ],
+    availableForNetworking: [
+      {
+        type: String,
+      },
+    ],
+    connectionsMade: [{ type: String }],
     sessionsStatus: [
       {
         type: mongoose.Schema.ObjectId,
@@ -357,6 +368,7 @@ const eventSchema = new mongoose.Schema(
         ref: "EventPoll",
       },
     ],
+
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {

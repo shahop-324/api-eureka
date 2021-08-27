@@ -287,7 +287,7 @@ const Root = () => {
           <MidTopNav eventName={eventDetails.eventName} />
           <div className="main-body-content-h">
             <div className="layer-3-mh py-4 px-5">
-              <div style={{ maxWidth: "1360px" }}>
+              <div style={{ maxWidth: "1360px", margin: "0 auto" }}>
                 {(() => {
                   switch (currentIndex) {
                     case "0":

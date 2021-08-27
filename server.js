@@ -41,6 +41,7 @@ const EventChatMessage = require("./models/eventChatMessageModel");
 const SessionChatMessage = require("./models/sessionChatMessageModel");
 const EventAlert = require("./models/eventAlertsModel");
 const EventPoll = require("./models/eventPollModel");
+const AvailableForNetworking = require("./models/availableForNetworking");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -70,12 +71,126 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
-  // socket.on(
-  //   "transmitSessionMessage", () => {
-  //     console.log("This is transmit session message")
-  //   }
+  socket.on("joinNetworking", async ({ eventId, userId }, callback) => {
+    console.log("I reached in Join networking");
+    await Event.findById(eventId, async (err, eventDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log();
+        eventDoc.currentlyInNetworking.push(userId);
 
-  // );
+        eventDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedDoc) => {
+            if (err) {
+              console.log("There was an error while updating event document.");
+            } else {
+              console.log("Event doc updated successfully.");
+            }
+          }
+        );
+      }
+    });
+    callback();
+  });
+
+  socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
+    console.log("I reached in Leave networking");
+    await Event.findById(eventId, async (err, eventDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log();
+        eventDoc.currentlyInNetworking;
+
+        const index = eventDoc.currentlyInNetworking.indexOf(userId);
+        if (index > -1) {
+          eventDoc.currentlyInNetworking.splice(index, 1);
+        }
+
+        eventDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedDoc) => {
+            if (err) {
+              console.log("There was an error while updating event document.");
+            } else {
+              console.log(
+                "User Successfully left networking zone. Event doc updated successfully."
+              );
+            }
+          }
+        );
+      }
+    });
+    callback();
+  });
+
+  socket.on(
+    "startNetworking",
+    async ({ eventId, userId, userName, image, socketId }, callback) => {
+      console.log("I reached in start networking");
+
+      const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
+        const availableInThisEvent = await AvailableForNetworking.find({
+          $and: [{ eventId: eventId }, { status: "Available" }],
+        });
+
+        io.to(socketId).emit("listOfAvailablePeopleInNetworking", {
+          availableForNetworking: availableInThisEvent,
+        });
+      };
+
+      await AvailableForNetworking.find(
+        { $and: [{ eventId: eventId }, { userId: userId }] },
+        async (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (doc) {
+              // Already existing
+              doc.status = "Available";
+
+              doc.save({ validateModifiedOnly: true }, (err, updatedDoc) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log("Updated status to available.");
+
+                  // Send list of all available participants at this time in this event
+
+                  sendAllAvailableForNetworking(eventId, socketId);
+                }
+              });
+            } else {
+              // Not Existing before, create new document
+              await AvailableForNetworking.create(
+                {
+                  userId: userId,
+                  userName: userName,
+                  image: image,
+                  eventId: eventId,
+                  socketId: socketId,
+                  status: "Available",
+                },
+                async (err, newAvailableUser) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("created new available user");
+
+                    // Send list of all available participants at this time in this event
+                    sendAllAvailableForNetworking(eventId, socketId);
+                  }
+                }
+              );
+            }
+          }
+        }
+      );
+      callback();
+    }
+  );
 
   socket.on(
     "transmitSessionMessage",
