@@ -31,6 +31,7 @@ import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 import { sessionChatActions } from "../reducers/sessionChatSlice";
 import { eventAlertActions } from "../reducers/eventAlertSlice";
 import { eventPollActions } from "../reducers/eventPollSlice";
+import { availableForNetworkingActions } from "../reducers/availableForNetworking";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -4932,6 +4933,38 @@ export const fetchInterestedPeopleList =
       );
     } catch (err) {
       dispatch(interestedPeopleActions.hasError(err.message));
+      console.log(err);
+    }
+  };
+
+export const fetchAvailableForNetworking =
+  (eventId, id) => async (dispatch, getState) => {
+    // dispatch(interestedPeopleActions.startLoading());
+    try {
+      let res = await fetch(`${BaseURL}availableForNetworking/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        availableForNetworkingActions.FetchAvailablePeople({
+          availablePeople: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(availableForNetworkingActions.hasError(err.message));
       console.log(err);
     }
   };

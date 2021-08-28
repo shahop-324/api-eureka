@@ -4,6 +4,7 @@ const authController = require("./../controllers/authController");
 const chatMessagesController = require("../controllers/chatMessageController");
 const eventAlertController = require("../controllers/eventAlertController");
 const eventPollController = require("../controllers/eventPollController");
+const networkingController = require("./../controllers/networkingController");
 
 const router = express.Router();
 
@@ -69,6 +70,11 @@ router.post(
 router.post(
   "/getRTMTokenForSpeaker",
   globalController.generateRTMTokenForSpeaker
+);
+
+router.get(
+  "/availableForNetworking/:eventId",
+ networkingController.getAllAvailableForNetworking
 );
 
 module.exports = router;

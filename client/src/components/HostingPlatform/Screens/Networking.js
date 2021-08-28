@@ -1,61 +1,34 @@
-import { Avatar, Dialog } from "@material-ui/core";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Avatar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-import Faker from "faker";
-// import FloatingAvatars from "../HelperComponents/NetworkingFloatingAvatars";
 import "./../Styles/networking.scss";
 import { useSelector } from "react-redux";
 import socket from "./../service/socket";
 
-import { makeStyles } from "@material-ui/core/styles";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import { useParams } from "react-router-dom";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}));
+import Matching from "../HelperComponents/Matching";
 
 const Networking = () => {
-  const classes = useStyles();
-
   const params = useParams();
 
   const eventId = params.eventId;
 
   const [open, setOpen] = useState(false);
 
-  const [img, setImg] = useState("");
-
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const handleCloseMatching = () => {
+    setOpen(false);
+  };
 
   const { image, id, firstName, lastName } = useSelector(
     (state) => state.user.userDetails
   );
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      /*
-          Run any function or setState here
-      */
-      setImg(Faker.image.avatar());
-    }, 1500);
+    socket.on("listOfAvailablePeopleInNetworking", (list) => {
+      console.log(list);
+      // dispatch(fetchEventChats(chats));
+    });
 
     socket.emit("joinNetworking", { eventId: eventId, userId: id }, (error) => {
       if (error) {
@@ -63,8 +36,12 @@ const Networking = () => {
       }
     });
 
+    // Emit a signal to join network zone when mounting this component and automatically.
+  }, []);
+
+  useEffect(() => {
     return () => {
-      clearInterval(intervalId);
+      
       socket.emit(
         "leaveNetworking",
         { eventId: eventId, userId: id },
@@ -74,14 +51,6 @@ const Networking = () => {
           }
         }
       );
-    };
-
-    // Emit a signal to join network zone when mounting this component and automatically.
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      // Emit a signal to leave from networking zone. When unmounting this component.
     };
   }, []);
 
@@ -144,43 +113,7 @@ const Networking = () => {
         </div>
       </div>
 
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        aria-labelledby="responsive-dialog-title"
-        style={{ minHeight: "550px", marginLeft: "4vw" }}
-      >
-        <div className="speed-networking-matching-container p-4 pt-5">
-          <div className="finding-your-match mb-5">
-            Finding your best match...
-          </div>
-          <div className="matching-card d-flex flex-row align-items-center justify-content-center mb-4">
-            <Avatar
-              src={img}
-              className={`${classes.large} slider-avatar-matching`}
-            />
-          </div>
-          <div>
-            <div
-              className="btn-filled-h  py-3 start-networking-btn "
-              style={{
-                maxWidth: "100px",
-                textAlign: "center",
-                margin: "0 auto",
-                backgroundColor: "#F7536E",
-              }}
-              onClick={() => {
-                console.log("Cancel speed networking was just clicked!");
-                setOpen(false);
-
-                // TODO   Emit a message to put this user in available for networking and cancel matching him/her.
-              }}
-            >
-              Stop
-            </div>
-          </div>
-        </div>
-      </Dialog>
+      <Matching openMatching={open} handleCloseMatching={handleCloseMatching} />
     </>
   );
 };

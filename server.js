@@ -130,26 +130,29 @@ io.on("connect", (socket) => {
     "startNetworking",
     async ({ eventId, userId, userName, image, socketId }, callback) => {
       console.log("I reached in start networking");
+      console.log(socketId);
 
       const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
         const availableInThisEvent = await AvailableForNetworking.find({
           $and: [{ eventId: eventId }, { status: "Available" }],
         });
 
-        io.to(socketId).emit("listOfAvailablePeopleInNetworking", {
+        io.in(eventId).emit("listOfAvailablePeopleInNetworking", {
           availableForNetworking: availableInThisEvent,
         });
       };
 
-      await AvailableForNetworking.find(
+      await AvailableForNetworking.findOne(
         { $and: [{ eventId: eventId }, { userId: userId }] },
         async (err, doc) => {
           if (err) {
             console.log(err);
           } else {
+            console.log(doc);
             if (doc) {
               // Already existing
               doc.status = "Available";
+              doc.socketId = socketId;
 
               doc.save({ validateModifiedOnly: true }, (err, updatedDoc) => {
                 if (err) {
@@ -188,7 +191,7 @@ io.on("connect", (socket) => {
           }
         }
       );
-      callback();
+      // callback();
     }
   );
 
