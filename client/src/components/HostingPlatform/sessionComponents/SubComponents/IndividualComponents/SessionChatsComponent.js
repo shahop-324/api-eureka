@@ -11,7 +11,7 @@ import {
   fetchSessionChats,
 } from "../../../../../actions";
 
-const AllChatsComponent = () => {
+const SessionChatsComponent = () => {
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -63,4 +63,4 @@ const AllChatsComponent = () => {
   );
 };
 
-export default AllChatsComponent;
+export default SessionChatsComponent;

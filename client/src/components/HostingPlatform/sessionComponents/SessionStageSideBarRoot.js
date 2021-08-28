@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PeopleInSession from "./SubComponents/PeopleInSession";
 import SessionHappeningRoot from "./SubComponents/SessionHappeningRoot";
 
 const SessionStageSideBarRoot = () => {
@@ -38,7 +39,7 @@ const SessionStageSideBarRoot = () => {
             return <SessionHappeningRoot />;
 
           case "people":
-            return "This is session people section.";
+            return <PeopleInSession />;
 
           default:
             return <div>This is side drawer chat section.</div>;

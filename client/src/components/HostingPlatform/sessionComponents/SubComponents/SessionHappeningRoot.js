@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import AllChatsComponent from "../../SideDrawerComponents/Chat/helper/AllChatsComponent";
 import SessionChatsComponent from "./IndividualComponents/SessionChatsComponent";
+import SessionPollsComponent from "./IndividualComponents/SessionPolls/SessionPollsComponent";
+import SessionQnAComponent from "./IndividualComponents/SessionQnAComponent";
+import RaisedHandMainComponent from "./IndividualComponents/SessionRaisedHands/RaisedHandsMainComponent";
+import SessionVideosComponent from "./IndividualComponents/SessionVideos/SessionVideosComponent";
 
 const SessionHappeningRoot = () => {
   const [selectedTab, setSelectedTab] = useState("chats");
@@ -62,9 +65,28 @@ const SessionHappeningRoot = () => {
             </div>
           </div>
 
-          <div style={{height: "73vh", width: "90%", margin: "0 auto"}}>
-              {/* <AllChatsComponent /> */}
-              <SessionChatsComponent />
+          <div style={{ height: "73vh", width: "90%", margin: "0 auto" }}>
+            {(() => {
+              switch (selectedTab) {
+                case "chats":
+                  return <SessionChatsComponent />;
+
+                case "q&a":
+                  return <SessionQnAComponent />;
+
+                case "polls":
+                  return <SessionPollsComponent />;
+
+                case "raisedhands":
+                  return <RaisedHandMainComponent />;
+
+                case "video":
+                  return <SessionVideosComponent />;
+
+                default:
+                  return <div>You are a User visting hosting platform.</div>;
+              }
+            })()}
           </div>
         </div>
 
