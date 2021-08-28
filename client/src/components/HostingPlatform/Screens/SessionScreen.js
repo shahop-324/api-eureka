@@ -591,7 +591,9 @@ const SessionScreen = () => {
           rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
             encoderConfig: "high_quality_stereo",
           });
-          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
+            encoderConfig: "1080p_1",
+          });
 
           console.log(rtc.localAudioTrack);
           console.log(rtc.localVideoTrack);
