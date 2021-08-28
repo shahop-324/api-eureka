@@ -3,51 +3,15 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 
-
-
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-
-import { fetchParticularEventOfCommunity } from "../../../../../actions";
 import { Divider } from "@material-ui/core";
+import socket from "./../../../service/socket";
 
-
-
-
-
-
-
-// const validate = (values) => {
-//   const errors = {};
-
-//   if (values.firstName && values.firstName.length > 15) {
-//     errors.firstName = "Must be 15 characters or less";
-//   }
-//   if (values.lastName && values.lastName.length > 15) {
-//     errors.lastName = "Must be 15 characters or less";
-//   }
-//   if (
-//     values.email &&
-//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-//   ) {
-//     errors.email = "Invalid email address";
-//   }
-
-//   return errors;
-// };
-// const warn = values => {
-//   const warnings = {}
-//   if (values.age < 19) {
-//     warnings.age = 'Hmm, you seem a bit young...'
-//   }
-//   return warnings
-// }
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -83,10 +47,14 @@ const renderInput = ({
 };
 
 const CreateNewPoll = (props) => {
-  const { handleSubmit, pristine, submitting} = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const params = useParams();
-  const id = params.id;
+  const eventId = params.eventId;
+
+  const { id, firstName, lastName, email, image, organisation, designation } =
+    useSelector((state) => state.user.userDetails);
+
   const showResults = (formValues) => {
     // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -102,23 +70,37 @@ const CreateNewPoll = (props) => {
 
     const ModifiedFormValues = {};
 
-    ModifiedFormValues.name = formValues.name;
-    ModifiedFormValues.tagline = formValues.tagline;
-    ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.emails = formValues.multiEmail;
-    ModifiedFormValues.tags = formValues.multiTags;
+    ModifiedFormValues.question = formValues.pollingQuestion;
+    ModifiedFormValues.eventId = eventId;
+    ModifiedFormValues.hostId = id;
+    ModifiedFormValues.hostFirstName = firstName;
+    ModifiedFormValues.hostLastName = lastName;
+    ModifiedFormValues.hostEmail = email;
+    ModifiedFormValues.hostImage = image;
+    ModifiedFormValues.organisation = organisation;
+    ModifiedFormValues.designation = designation;
 
-    const groupedSocialHandles = {
-      facebook: formValues.facebook,
-      twitter: formValues.twitter,
-      linkedIn: formValues.linkedIn,
-      instagram: formValues.instagram,
-      website: formValues.website,
-    };
+    if (formValues.answer_1) {
+      ModifiedFormValues.answer_1 = formValues.answer_1;
+    }
+    if (formValues.answer_2) {
+      ModifiedFormValues.answer_2 = formValues.answer_2;
+    }
+    if (formValues.answer_3) {
+      ModifiedFormValues.answer_3 = formValues.answer_3;
+    }
+    if (formValues.answer_4) {
+      ModifiedFormValues.answer_4 = formValues.answer_4;
+    }
 
-    ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
+    ModifiedFormValues.expiresAt =
+      Date.now() + formValues.time_limit * 60 * 1000 + 5 * 1000;
 
-    dispatch(fetchParticularEventOfCommunity(id));
+    socket.emit("transmitEventPoll", { ...ModifiedFormValues }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    });
 
     showResults(ModifiedFormValues);
     props.handleClose();
@@ -129,10 +111,10 @@ const CreateNewPoll = (props) => {
       <Dialog
         fullScreen={fullScreen}
         open={props.open}
-        onClose={props.handleClose}
+        // onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ minWidth: "480px" }}>
           <div className=" px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
               <div></div>
@@ -156,10 +138,10 @@ const CreateNewPoll = (props) => {
                   Question
                 </label>
                 <Field
-                  name="name"
+                  name="pollingQuestion"
                   type="text"
                   classes="form-control"
-                  ariadescribedby="emailHelp"
+                  ariadescribedby="poll question"
                   placeholder="e.g. How did you got first job?"
                   component={renderInput}
                 />
@@ -180,7 +162,7 @@ const CreateNewPoll = (props) => {
             <div class="mb-3 overlay-form-input-row ">
               <div>
                 <Field
-                  name="option-1"
+                  name="answer_1"
                   type="text"
                   classes="form-control"
                   ariadescribedby="emailHelp"
@@ -192,7 +174,7 @@ const CreateNewPoll = (props) => {
             <div class="mb-3 overlay-form-input-row ">
               <div>
                 <Field
-                  name="option-2"
+                  name="answer_2"
                   type="text"
                   classes="form-control"
                   ariadescribedby="emailHelp"
@@ -201,19 +183,35 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-
-            <button
-              className="btn btn-outline-secondary btn-outline-text mb-3"
-              style={{ width: "100%" }}
-              disabled
-            >
-              Add more option
-            </button>
+            <div class="mb-3 overlay-form-input-row ">
+              <div>
+                <Field
+                  name="answer_3"
+                  type="text"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="Option 3"
+                  component={renderInput}
+                />
+              </div>
+            </div>
+            <div class="mb-3 overlay-form-input-row ">
+              <div>
+                <Field
+                  name="answer_4"
+                  type="text"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="Option 4"
+                  component={renderInput}
+                />
+              </div>
+            </div>
 
             <div class="mb-3 overlay-form-input-row ">
               <div>
                 <label
-                  Forhtml="eventStartDate"
+                  Forhtml="pollExpiryTime"
                   class="form-label form-label-customized"
                 >
                   Time Limit{" "}
@@ -227,10 +225,10 @@ const CreateNewPoll = (props) => {
                   </div>
                 </label>
                 <Field
-                  name="time-left"
+                  name="time_limit"
                   type="number"
                   classes="form-control"
-                  ariadescribedby="emailHelp"
+                  ariadescribedby="poll time limit in min"
                   placeholder="5"
                   component={renderInput}
                 />

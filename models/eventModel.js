@@ -18,7 +18,7 @@ const eventSchema = new mongoose.Schema(
     service: {
       type: String,
       enum: ["Hosting & Management", "Ticketing"],
-      default: "Hosting & Management"
+      default: "Hosting & Management",
     },
     shortDescription: {
       type: String,
@@ -80,8 +80,7 @@ const eventSchema = new mongoose.Schema(
         "(GMT+5:45) Kathmandu",
         "(GMT + 00:00) Edinburgh",
         "(GMT + 00:00) Lisbon",
-        "(GMT + 00:00) London"
-
+        "(GMT + 00:00) London",
       ],
       default: "(GMT + 00:00) UTC",
     },
@@ -168,20 +167,20 @@ const eventSchema = new mongoose.Schema(
     affiliates: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "Affiliate"
-      }
+        ref: "Affiliate",
+      },
     ],
     interestedPeople: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "InterestedPeople"
-      }
+        ref: "InterestedPeople",
+      },
     ],
     eventLeads: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "EventLeads",
-      }
+      },
     ],
     eventAverageRating: {
       type: Number,
@@ -322,6 +321,17 @@ const eventSchema = new mongoose.Schema(
         ref: "UsersInEvent",
       },
     ],
+    currentlyInNetworking: [
+      {
+        type: String,
+      },
+    ],
+    availableForNetworking: [
+      {
+        type: String,
+      },
+    ],
+    connectionsMade: [{ type: String }],
     sessionsStatus: [
       {
         type: mongoose.Schema.ObjectId,
@@ -346,6 +356,19 @@ const eventSchema = new mongoose.Schema(
         ref: "EventChatMessage",
       },
     ],
+    alerts: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventAlert",
+      },
+    ],
+    polls: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "EventPoll",
+      },
+    ],
+
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {

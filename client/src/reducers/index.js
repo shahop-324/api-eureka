@@ -31,6 +31,9 @@ import contactUsSlice from "./contactSlice";
 import affiliateSlice from "./affiliateSlice";
 import interestedPeopleSlice from "./interestedPeopleSlice";
 import sessionChatSlice from "./sessionChatSlice";
+import eventAlertSlice from "./eventAlertSlice";
+import eventPollSlice from "./eventPollSlice";
+import AvailableForNetworkingSlice from "./availableForNetworking";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -55,13 +58,16 @@ export default combineReducers({
   socket: socketSlice.reducer,
   stage: stageSlice.reducer,
   rooms: roomsSlice.reducer,
-  RTM: RTMSlice.reducer, 
+  RTM: RTMSlice.reducer,
   RTC: RTCSlice.reducer,
 
-  chats:eventChatSlice.reducer,
+  chats: eventChatSlice.reducer,
   sessionChats: sessionChatSlice.reducer,
   demo: demoSlice.reducer,
   contact: contactUsSlice.reducer,
   affiliate: affiliateSlice.reducer,
   interestedPeople: interestedPeopleSlice.reducer,
+  eventAlert: eventAlertSlice.reducer,
+  eventPoll: eventPollSlice.reducer,
+  availableForNetworking: AvailableForNetworkingSlice.reducer,
 });

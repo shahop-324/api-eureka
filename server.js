@@ -39,6 +39,9 @@ const RoomChair = require("./models/roomChairModel");
 const RoomTable = require("./models/roomTableModel");
 const EventChatMessage = require("./models/eventChatMessageModel");
 const SessionChatMessage = require("./models/sessionChatMessageModel");
+const EventAlert = require("./models/eventAlertsModel");
+const EventPoll = require("./models/eventPollModel");
+const AvailableForNetworking = require("./models/availableForNetworking");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -68,12 +71,129 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
-  // socket.on(
-  //   "transmitSessionMessage", () => {
-  //     console.log("This is transmit session message")
-  //   }
-    
-  // );
+  socket.on("joinNetworking", async ({ eventId, userId }, callback) => {
+    console.log("I reached in Join networking");
+    await Event.findById(eventId, async (err, eventDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log();
+        eventDoc.currentlyInNetworking.push(userId);
+
+        eventDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedDoc) => {
+            if (err) {
+              console.log("There was an error while updating event document.");
+            } else {
+              console.log("Event doc updated successfully.");
+            }
+          }
+        );
+      }
+    });
+    callback();
+  });
+
+  socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
+    console.log("I reached in Leave networking");
+    await Event.findById(eventId, async (err, eventDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log();
+        eventDoc.currentlyInNetworking;
+
+        const index = eventDoc.currentlyInNetworking.indexOf(userId);
+        if (index > -1) {
+          eventDoc.currentlyInNetworking.splice(index, 1);
+        }
+
+        eventDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedDoc) => {
+            if (err) {
+              console.log("There was an error while updating event document.");
+            } else {
+              console.log(
+                "User Successfully left networking zone. Event doc updated successfully."
+              );
+            }
+          }
+        );
+      }
+    });
+    callback();
+  });
+
+  socket.on(
+    "startNetworking",
+    async ({ eventId, userId, userName, image, socketId }, callback) => {
+      console.log("I reached in start networking");
+      console.log(socketId);
+
+      const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
+        const availableInThisEvent = await AvailableForNetworking.find({
+          $and: [{ eventId: eventId }, { status: "Available" }],
+        });
+
+        io.in(eventId).emit("listOfAvailablePeopleInNetworking", {
+          availableForNetworking: availableInThisEvent,
+        });
+      };
+
+      await AvailableForNetworking.findOne(
+        { $and: [{ eventId: eventId }, { userId: userId }] },
+        async (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(doc);
+            if (doc) {
+              // Already existing
+              doc.status = "Available";
+              doc.socketId = socketId;
+
+              doc.save({ validateModifiedOnly: true }, (err, updatedDoc) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log("Updated status to available.");
+
+                  // Send list of all available participants at this time in this event
+
+                  sendAllAvailableForNetworking(eventId, socketId);
+                }
+              });
+            } else {
+              // Not Existing before, create new document
+              await AvailableForNetworking.create(
+                {
+                  userId: userId,
+                  userName: userName,
+                  image: image,
+                  eventId: eventId,
+                  socketId: socketId,
+                  status: "Available",
+                },
+                async (err, newAvailableUser) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("created new available user");
+
+                    // Send list of all available participants at this time in this event
+                    sendAllAvailableForNetworking(eventId, socketId);
+                  }
+                }
+              );
+            }
+          }
+        }
+      );
+      // callback();
+    }
+  );
 
   socket.on(
     "transmitSessionMessage",
@@ -809,6 +929,171 @@ io.on("connect", (socket) => {
     }
   );
 
+  socket.on("updatePoll", async ({ userId, selectedPoll, selectedOption }) => {
+    console.log("I am in update polls section.");
+    console.log("User Id: ", userId);
+    console.log("selected Poll Id: ", selectedPoll);
+    console.log("Selected poll option: ", selectedOption);
+
+    await EventPoll.findById(selectedPoll, async (err, pollDoc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        pollDoc.answeredBy.push(userId);
+        switch (selectedOption) {
+          case "option_1":
+            pollDoc.option_1_count++;
+            break;
+          case "option_1":
+            pollDoc.option_2_count++;
+            break;
+          case "option_1":
+            pollDoc.option_3_count++;
+            break;
+          case "option_1":
+            pollDoc.option_4_count++;
+            break;
+          default:
+            break;
+        }
+        pollDoc.save(
+          { validateModifiedOnly: true },
+          async (err, updatedPollDoc) => {
+            if (err) {
+              console.log(err);
+            } else {
+              const eventId = updatedPollDoc.eventId;
+              io.in(eventId).emit("updatedEventPoll", {
+                updatedPoll: updatedPollDoc,
+              });
+            }
+          }
+        );
+      }
+    });
+  });
+
+  socket.on(
+    "transmitEventPoll",
+    async ({
+      question,
+      answer_1,
+      answer_2,
+      answer_3,
+      answer_4,
+      expiresAt,
+      eventId,
+      hostId,
+      hostFirstName,
+      hostLastName,
+      hostEmail,
+      hostImage,
+      organisation,
+      designation,
+    }) => {
+      await EventPoll.create(
+        {
+          question: question,
+          option_1: answer_1,
+          option_2: answer_2,
+          option_3: answer_3,
+          option_4: answer_4,
+          expiresAt: expiresAt,
+          eventId: eventId,
+          hostId: hostId,
+          hostFirstName: hostFirstName,
+          hostLastName: hostLastName,
+          hostEmail: hostEmail,
+          hostImage: hostImage,
+          organisation: organisation,
+          designation: designation,
+        },
+        async (err, eventPollDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            await Event.findById(eventId, async (err, eventDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                eventDoc.polls.push(eventPollDoc._id);
+
+                await eventDoc.save(
+                  { validateModifiedOnly: true },
+                  (err, data) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      io.in(eventId).emit("newEventPoll", {
+                        newPoll: eventPollDoc,
+                      });
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
+      console.log("I reached in event poll section.");
+    }
+  );
+
+  socket.on(
+    "transmitEventAlert",
+    async ({
+      alertMsg,
+      eventId,
+      hostId,
+      hostEmail,
+      hostFirstName,
+      hostLastName,
+      hostImage,
+      organisation,
+      designation,
+    }) => {
+      console.log("I reached in event alert section.");
+      await EventAlert.create(
+        {
+          alertMsg,
+          eventId,
+          hostId,
+          hostEmail,
+          hostFirstName,
+          hostLastName,
+          hostImage,
+          organisation,
+          designation,
+        },
+        async (err, eventAlertDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            await Event.findById(eventId, async (err, eventDoc) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(eventDoc);
+                eventDoc.alerts.push(eventAlertDoc._id);
+
+                eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    io.in(eventId).emit("newEventAlert", {
+                      newAlert: eventAlertDoc,
+                    });
+                  }
+                });
+              }
+            });
+          }
+        }
+      );
+      console.log("I reached in event alert section.");
+    }
+  );
+
   socket.on(
     "transmitEventMessage",
     async ({
@@ -853,7 +1138,7 @@ io.on("connect", (socket) => {
                   if (err) {
                     console.log(err);
                   } else {
-                    io.to(eventId).emit("newEventMsg", {
+                    io.in(eventId).emit("newEventMsg", {
                       newMsg: chatMsgDoc,
                     });
                   }

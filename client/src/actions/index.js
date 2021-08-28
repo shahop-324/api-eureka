@@ -29,8 +29,15 @@ import { contactUsActions } from "../reducers/contactSlice";
 import { affiliateActions } from "../reducers/affiliateSlice";
 import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 import { sessionChatActions } from "../reducers/sessionChatSlice";
+<<<<<<< HEAD
 import { LinkedInApi, NodeServer } from "../components/LinkedinConfig";
 import axios from "axios";
+=======
+import { eventAlertActions } from "../reducers/eventAlertSlice";
+import { eventPollActions } from "../reducers/eventPollSlice";
+import { availableForNetworkingActions } from "../reducers/availableForNetworking";
+
+>>>>>>> b033c1495d49016cbe24b2b91341a7a6dd5a02e6
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -4305,6 +4312,44 @@ export const errorTrackerForFetchPreviousEventChatMessages =
     dispatch(eventChatActions.disabledError());
   };
 
+export const fetchPreviousEventPolls =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(eventPollActions.startLoading());
+    try {
+      console.log(eventId);
+
+      let res = await fetch(`${BaseURL}getPreviousEventPolls/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        eventPollActions.FetchEventPolls({
+          eventPolls: res.data.polls,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchPreviousEventPolls =
+  () => async (dispatch, getState) => {
+    dispatch(eventPollActions.disabledError());
+  };
+
 export const fetchPreviousSessionChatMessages =
   (sessionId) => async (dispatch, getState) => {
     dispatch(sessionChatActions.startLoading());
@@ -4341,6 +4386,44 @@ export const fetchPreviousSessionChatMessages =
 export const errorTrackerForFetchPreviousSessionChatMessages =
   () => async (dispatch, getState) => {
     dispatch(sessionChatActions.disabledError());
+  };
+
+export const fetchPreviousEventAlerts =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(eventAlertActions.startLoading());
+    try {
+      console.log(eventId);
+
+      let res = await fetch(`${BaseURL}getPreviousEventAlert/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        eventAlertActions.FetchEventAlerts({
+          eventAlerts: res.data.alerts,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+export const errorTrackerForFetchPreviousEventAlerts =
+  () => async (dispatch, getState) => {
+    dispatch(eventAlertActions.disabledError());
   };
 
 export const getRTCToken =
@@ -4949,10 +5032,65 @@ export const fetchInterestedPeopleList =
     }
   };
 
+export const fetchAvailableForNetworking =
+  (eventId, id) => async (dispatch, getState) => {
+    // dispatch(interestedPeopleActions.startLoading());
+    try {
+      let res = await fetch(`${BaseURL}availableForNetworking/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        availableForNetworkingActions.FetchAvailablePeople({
+          availablePeople: res.data,
+        })
+      );
+    } catch (err) {
+      dispatch(availableForNetworkingActions.hasError(err.message));
+      console.log(err);
+    }
+  };
+
 export const createNewEventMsg = (newMsg) => async (dispatch, getState) => {
   dispatch(
     eventChatActions.CreateEventChat({
       chat: newMsg,
+    })
+  );
+};
+export const createNewEventAlert = (newAlert) => async (dispatch, getState) => {
+  dispatch(
+    eventAlertActions.CreateEventAlert({
+      eventAlert: newAlert,
+    })
+  );
+};
+
+export const createNewEventPoll = (newPoll) => async (dispatch, getState) => {
+  dispatch(
+    eventPollActions.CreateEventPoll({
+      eventPoll: newPoll,
+    })
+  );
+};
+
+export const updateEventPoll = (poll) => async (dispatch, getState) => {
+  dispatch(
+    eventPollActions.UpdateEventPoll({
+      updatedPoll: poll,
     })
   );
 };
