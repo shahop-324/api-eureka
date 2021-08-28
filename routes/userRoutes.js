@@ -9,6 +9,8 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 router.post("/googleSignIn", authController.googleSignIn);
+
+router.post("/linkedinSignIn", authController.linkedinSignIn);
 router.post("/forgotPassword", userController.forgotPassword);
 
 // user signup router

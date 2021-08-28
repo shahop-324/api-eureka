@@ -165,19 +165,20 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
           // console.log(response.data);
           userProfile.firstName = response.data["localizedFirstName"];
           userProfile.lastName = response.data["localizedLastName"];
-          userProfile.profileImageURL =
+          userProfile.image =
             response.data.profilePicture[
               "displayImage~"
             ].elements[0].identifiers[0].identifier;
+            userProfile.linkedinId=response.data.id;
           // I mean, couldn't they have burried it any deeper?
 
           axios
             .get(urlToGetUserEmail, config)
             .then((response) => {
               // console.log(response.data);
-              userProfile.email = response.data.elements[0]["handle~"];
+              userProfile.email = response.data.elements[0]["handle~"].emailAddress;
 
-              console.log(userProfile);
+              // console.log(userProfile);
 
               // if (!(userProfile === null)) {
               res.status(200).json({ userProfile });

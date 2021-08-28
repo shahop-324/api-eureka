@@ -9,14 +9,12 @@ const authSlice = createSlice({
     error: false,
     isSignedInThroughGoogle: false,
     referralCode: null,
-    accessToken: null,
-    isLoading: false,
+    
+    
   },
 
   reducers: {
-    startLoading(state, action) {
-      state.isLoading = true;
-    },
+    
     ResetError(state, action) {
       state.error = false;
       // state.isSignedIn = false;
@@ -37,12 +35,7 @@ const authSlice = createSlice({
         state.isSignedInThroughGoogle = action.payload.isSignedThroughGoogle;
       }
     },
-    LinkedInAccessToken(state, action) {
-      if (action.payload.accessToken) {
-        state.accessToken = action.payload.accessToken;
-      }
-    },
-
+   
     SignOut(state, action) {
       state.token = null;
       state.isSignedIn = false;
