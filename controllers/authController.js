@@ -15,15 +15,15 @@ const { nanoid } = require("nanoid");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
-exports.signInForSpeaker = catchAsync(async(req, res, next) => {
+exports.signInForSpeaker = catchAsync(async (req, res, next) => {
   const speakerId = req.params.speakerId;
-   const token = signToken(speakerId);
+  const token = signToken(speakerId);
 
-   res.status(200).json({
+  res.status(200).json({
     status: "success",
-    token
+    token,
   });
-})
+});
 
 const signTokenForSalesLogin = (salesPersonId) =>
   jwt.sign({ salesPersonId }, process.env.JWT_SECRET);
@@ -245,6 +245,97 @@ exports.googleSignIn = catchAsync(async (req, res, next) => {
       await MailList.create({
         name: name,
         email: req.body.email,
+      });
+
+      createSendToken(user, 201, req, res);
+    }
+  }
+
+  // 3) If everything is ok, send json web token to client
+  // createSendToken(user, 200, req, res);
+});
+
+exports.linkedinSignIn = catchAsync(async (userProfile, req, res) => {
+  // const { profile } = req.body;
+  // console.log(profile);
+  // 1) Check if email and password exist
+  // console.log(req.body);
+  // Create new referral code
+
+  console.log(userProfile, "iohjfjhgvghjhjkjlkjoiioiihnkjkjuunkjjjjjjjjjjj");
+  const MyReferralCode = nanoid(10);
+  // check if someone referred this new user
+  let referrer;
+
+  if (req.body.referralCode) {
+    referrer = await User.findOneAndUpdate(
+      { referralCode: req.body.referralCode },
+
+      { $inc: { signupUsingReferral: 1 } },
+
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    );
+    if (referrer) {
+      const existingUser = await User.findOne({
+        linkedinId: userProfile.linkedinId,
+      });
+      if (existingUser) {
+        //  we already have a record with the given req.body ID
+        //done(null, existingUser);
+        console.log(existingUser);
+        createSendToken(existingUser, 200, req, res);
+      } else {
+        const user = await new User({
+          linkedinId: userProfile.linkedinId,
+          email: userProfile.email,
+          firstName: userProfile.firstName,
+          lastName: userProfile.lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: userProfile.image,
+          referralCode: MyReferralCode,
+          referrer: referrer._id,
+          signupUsingReferral: 0,
+          upgrades: 0,
+          credit: 0,
+        }).save({ validateModifiedOnly: true });
+
+        const name = `${userProfile.firstName} ${userProfile.lastName}`;
+        await MailList.create({
+          name: name,
+          email: userProfile.email,
+        });
+
+        createSendToken(user, 201, req, res);
+      }
+    }
+  } else {
+    const existingUser = await User.findOne({
+      linkedinId: userProfile.linkedinId,
+    });
+    if (existingUser) {
+      //  we already have a record with the given userProfile ID
+      //done(null, existingUser);
+      console.log(existingUser);
+      createSendToken(existingUser, 200, req, res);
+    } else {
+      const user = await new User({
+        linkedinId: userProfile.linkedinId,
+        email: userProfile.email,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        policySigned: true,
+        subscribedToMailList: true,
+        image: userProfile.image,
+      }).save({ validateModifiedOnly: true });
+
+      const name = `${userProfile.firstName} ${userProfile.lastName}`;
+      await MailList.create({
+        name: name,
+        email: userProfile.email,
       });
 
       createSendToken(user, 201, req, res);

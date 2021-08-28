@@ -24,6 +24,7 @@ import InterestedPeople from "./Pages/InterestedPeople";
 import Leads from "./Pages/Leads";
 import CheckIns from "./Pages/CheckIns";
 import MailCampaign from "./Pages/MailCampaign";
+import ErrorBoundriesRegistrations from "../../ErrorBoundries/ErrorBoundriesRegistrations";
 
 /* <Link to={`/user/${userId}/community/${communityId}/event/${eventId}`} style={{width: "100%"}}> 
             </Link> */
@@ -168,7 +169,11 @@ const SpecificEventRoot = () => {
                   return <EventAnalytics />;
 
                 case "2":
-                  return <Registrations />;
+                  return (
+                    <ErrorBoundriesRegistrations>
+                      <Registrations />
+                    </ErrorBoundriesRegistrations>
+                  );
 
                 case "3":
                   return <Queries />;

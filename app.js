@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-
+const axios = require("axios");
+const qs = require("query-string");
 const morgan = require("morgan");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
@@ -15,11 +16,10 @@ const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const session = require('cookie-session');
+const session = require("cookie-session");
 
-
-const http = require('http');
-const socketio = require('socket.io');
+const http = require("http");
+const socketio = require("socket.io");
 // Imported Routes for Various Resources
 
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -49,15 +49,26 @@ const communityPlanRoutes = require("./routes/communityPlanRoutes");
 const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 // const { initialize } = require("passport");
-
+const authController = require("./controllers/authController.js");
+const { promisify } = require("util");
 require("./services/passport");
 
 // Created a new express app
 const app = express();
-
+const urlToGetLinkedInAccessToken =
+  "https://www.linkedin.com/oauth/v2/accessToken";
+const urlToGetUserProfile =
+  "https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName,profilePicture(displayImage~digitalmediaAsset:playableStreams))";
+const urlToGetUserEmail =
+  "https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))";
 app.use(
   cors({
-     origin: ["http://localhost:3001", "https://www.evenz.in", "https://www.evenz.co.in", "https://evenz.co.in"],
+    origin: [
+      "http://localhost:3001",
+      "https://www.evenz.in",
+      "https://www.evenz.co.in",
+      "https://evenz.co.in",
+    ],
     //origin: "*",
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
@@ -94,7 +105,7 @@ app.use(passport.session());
 app.use(helmet());
 
 // Development Logging
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -112,25 +123,124 @@ app.use("/eureka", limiter);
 app.use(express.json({ limit: "10kb" })); // Middleware // use method is used to add middlewares to our middleware stack
 
 // app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-// app.use(bodyParser.json());
-
-
-// Data sanitization against NoSQL query injection
 app.use(mongosanitize());
 
-// Data sanitization against XSS
 app.use(xss());
-//test middleware
-app.use((req, res, next) => {
-  console.log("hello form cookie middleware");
-  console.log(req.cookies);
-  next();
+
+app.get("/api-eureka/getUserCredentials", (req, res) => {
+  // let user = {};
+  const code = req.query.code;
+  let userProfile = {};
+  let resStatus = 400;
+  let accessToken = null;
+  const config = {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  };
+  const parameters = {
+    grant_type: "authorization_code",
+    code: code,
+    redirect_uri: process.env.REDIRECT_URI,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+  };
+  axios
+    .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
+    .then((response) => {
+      accessToken = response.data.access_token;
+      console.log(accessToken);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      axios
+        .get(urlToGetUserProfile, config)
+        .then((response) => {
+          // console.log(response.data);
+          userProfile.firstName = response.data["localizedFirstName"];
+          userProfile.lastName = response.data["localizedLastName"];
+          userProfile.profileImageURL =
+            response.data.profilePicture[
+              "displayImage~"
+            ].elements[0].identifiers[0].identifier;
+          // I mean, couldn't they have burried it any deeper?
+
+          axios
+            .get(urlToGetUserEmail, config)
+            .then((response) => {
+              // console.log(response.data);
+              userProfile.email = response.data.elements[0]["handle~"];
+
+              console.log(userProfile);
+
+              // if (!(userProfile === null)) {
+              res.status(200).json({ userProfile });
+              // }
+            })
+            .catch((error) => console.log("Error getting user email"));
+        })
+        .catch((error) => console.log("Error grabbing user profile"));
+    })
+    .catch((err) => {
+      console.log("Error getting LinkedIn access token");
+    });
+  // Here, you can implement your own login logic
+  //to authenticate new user or register him
 });
-// All routes
+
+/**
+ * Get access token from LinkedIn
+ * @param code returned from step 1
+ * @returns accessToken if successful or null if request fails
+ */
+// function getAccessToken(code) {
+//   let accessToken = null;
+
+//   return accessToken;
+// }
+
+/**
+ * Get user first and last name and profile image URL
+ * @param accessToken returned from step 2
+ */
+// function getUserProfile(accessToken) {
+//   let userProfile = null;
+//     return userProfile;
+// }
+
+/**
+ * Get user email
+ * @param accessToken returned from step 2
+ */
+// function getUserEmail(accessToken) {
+//   const email = null;
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//   };
+
+//   return email;
+// }
+
+/**
+ * Build User object
+ */
+// function userBuilder(userProfile) {
+//   return {
+//     firstName: userProfile.firstName,
+//     lastName: userProfile.lastName,
+//     profileImageURL: userProfile.profileImageURL,
+//     email: userProfile.email,
+//   };
+// }
+
 app.use("/api-eureka/eureka/v1/auth", authRoutes);
 app.use("/api-eureka/eureka/v1/upload", uploadRoutes);
 app.use("/api-eureka/eureka/v1/users", userRoutes);
@@ -147,10 +257,10 @@ app.use("/api-eureka/eureka/v1/sponsors", sponsorRoutes);
 app.use("/api-eureka/eureka/v1/stripe", stripeRoutes);
 app.use("/api-eureka/eureka/v1/razorpay", razorpayRoutes);
 app.use("/api-eureka/eureka/v1/tickets", ticketRoutes);
-app.use("/api-eureka/eureka/v1/team-invites",teamInvite);
-app.use("/api-eureka/eureka/v1/demo",demoRoutes);
-app.use("/api-eureka/eureka/v1/newsletter",newsletterRoutes);
-app.use("/api-eureka/eureka/v1/contactUs",contactUsRoutes);
+app.use("/api-eureka/eureka/v1/team-invites", teamInvite);
+app.use("/api-eureka/eureka/v1/demo", demoRoutes);
+app.use("/api-eureka/eureka/v1/newsletter", newsletterRoutes);
+app.use("/api-eureka/eureka/v1/contactUs", contactUsRoutes);
 app.use("/api-eureka/eureka/v1/twillio", twillioRoutes);
 app.use("/api-eureka/eureka/v1/fund", fundTransferRoutes);
 app.use("/api-eureka/eureka/v1/communityPlan", communityPlanRoutes);
@@ -163,7 +273,6 @@ const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   //remove password from output
- 
 
   res.status(statusCode).json({
     status: "success",
@@ -175,11 +284,10 @@ const createSendToken = (user, statusCode, req, res) => {
   });
 };
 app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
- // createSendToken(req.user,200,req,res)
- const token = signToken(req.user._id);
- 
-    
-  res.send({user:req.user,token:token});
+  // createSendToken(req.user,200,req,res)
+  const token = signToken(req.user._id);
+
+  res.send({ user: req.user, token: token });
 });
 
 app.get("/api-eureka/eureka/v1/logout", (req, res) => {

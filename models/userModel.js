@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const { nanoid } = require('nanoid');
+const { nanoid } = require("nanoid");
 
 const userSchema = new mongoose.Schema(
   {
@@ -81,6 +81,9 @@ const userSchema = new mongoose.Schema(
     },
 
     googleId: {
+      type: String,
+    },
+    linkedinId: {
       type: String,
     },
     gender: {

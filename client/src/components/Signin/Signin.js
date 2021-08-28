@@ -6,14 +6,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
 import { errorTrackerForSignIn, resetAuthError } from "../../actions/index";
-
+import LinkedinAuth from "../LinkedinAuth";
 import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
-
+import { linkedinSignIn } from "../../actions";
 let formIsvalidated = false;
 
 const renderInput = ({
@@ -59,6 +59,7 @@ const renderInput = ({
     </div>
   );
 };
+
 const Signin = (props) => {
   const { error } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
@@ -69,6 +70,11 @@ const Signin = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    console.log(params.code);
+
+    dispatch(linkedinSignIn(params.code));
     dispatch(resetAuthError());
     setSigninClicked(false);
   }, [dispatch, error]);
@@ -112,7 +118,7 @@ const Signin = (props) => {
 
   return (
     <>
-    {chatBot()}
+      {chatBot()}
       <CssBaseline />
       <div className="container-fluid page-body">
         <div
@@ -144,7 +150,7 @@ const Signin = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
-
+                <LinkedinAuth />
                 <GoogleAuth />
 
                 <div

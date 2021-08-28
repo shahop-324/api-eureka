@@ -29,13 +29,19 @@ import { contactUsActions } from "../reducers/contactSlice";
 import { affiliateActions } from "../reducers/affiliateSlice";
 import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 import { sessionChatActions } from "../reducers/sessionChatSlice";
-
+import { LinkedInApi, NodeServer } from "../components/LinkedinConfig";
+import axios from "axios";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 // authentication with id and password
-
+const urlToGetLinkedInAccessToken =
+  "https://www.linkedin.com/oauth/v2/accessToken";
+const urlToGetUserProfile =
+  "https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName,profilePicture(displayImage~digitalmediaAsset:playableStreams))";
+const urlToGetUserEmail =
+  "https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))";
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
     console.log(id);
@@ -135,7 +141,87 @@ export const signUp = (formValues) => async (dispatch) => {
 export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
+export const linkedinSignIn = (code, intent, eventId) => async (dispatch) => {
+  // console.log(code);
 
+  // try {
+
+  dispatch(authActions.startLoading());
+
+  const res = await eureka.get(`/getUserCredentials/?code=${code}`);
+  console.log(res.data);
+  //  const accessToken = res.data.accessToken;
+  dispatch(
+    authActions.LinkedInAccessToken({
+      accessToken: res.data.accessToken,
+    })
+  );
+  // let userProfile = {};
+  // const config = {
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  // };
+  // axios
+  //   .get(urlToGetUserProfile, config)
+  //   .then((response) => {
+  //     console.log(response.data);
+  //     // console.log(response, "208 get User Profile");
+  //     userProfile.firstName = response.data["localizedFirstName"];
+  //     userProfile.lastName = response.data["localizedLastName"];
+  //     userProfile.image =
+  //       response.data.profilePicture[
+  //         "displayImage~"
+  //       ].elements[0].identifiers[0].identifier;
+  //     userProfile.linkedinId = response.data.id;
+  //   })
+  //   .catch((error) => console.log("Error grabbing user profile"));
+  // axios
+  //   .get(urlToGetUserEmail, config)
+  //   .then((response) => {
+  //     userProfile.email = response.data.elements[0]["handle~"];
+  //   })
+  //   .catch((error) => console.log("Error getting user email"));
+
+  //   dispatch(
+  //     authActions.SignIn({
+  //       token: res.data.token,
+  //       isSignedInThroughLinkedIn: true,
+
+  //       referralCode: res.data.data.user.hasUsedAnyReferral
+  //         ? null
+  //         : res.data.data.user.referralCode,
+  //     })
+  //   );
+  //   dispatch(
+  //     userActions.CreateUser({
+  //       user: res.data.data.user,
+  //     })
+  //   );
+
+  //   if (intent === "eventRegistration") {
+  //     history.push(`/event-landing-page/${eventId}`);
+  //   } else if (intent === "buyPlan") {
+  //     history.push("/pricing");
+  //     dispatch(fetchUserAllPersonalData());
+  //   } else {
+  //     history.push("/user/home");
+  //     // window.location.href = REACT_APP_MY_ENV
+  //     //   ? "http://localhost:3001/user/home"
+  //     //   : "https://www.evenz.in/user/home";
+  //   }
+  //   //history.push("/user/home");
+  // } catch (err) {
+  //   console.log(err);
+  //   // dispatch(authActions.hasError(err.response.data.message));
+  //   // alert(err.response.data.message);
+  // }
+};
+
+export const errorTrackerForLinkedinSignIn =
+  () => async (dispatch, getState) => {
+    dispatch(authActions.disabledError());
+  };
 export const googleSignIn =
   (formValues, intent, eventId) => async (dispatch) => {
     try {
@@ -489,59 +575,64 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
 
-export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
-  dispatch(communityActions.startCommunityLoading());
+export const fetchUserAllPersonalData =
+  (code) => async (dispatch, getState) => {
+    dispatch(communityActions.startCommunityLoading());
+    console.log(code);
+    const fetchData = async (code) => {
+      // if(code)
+      // {
 
-  const fetchData = async () => {
-    let res = await fetch(
-      `${BaseURL}users/personalData`,
+      // }
+      let res = await fetch(
+        `${BaseURL}users/personalData`,
 
-      {
-        method: "GET",
+        {
+          method: "GET",
 
-        headers: {
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
+          headers: {
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      console.log(res);
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("fetching user data failed");
+        } else {
+          throw new Error(res.message);
+        }
       }
-    );
 
-    console.log(res);
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("fetching user data failed");
-      } else {
-        throw new Error(res.message);
-      }
+      res = await res.json();
+      return res;
+    };
+    try {
+      const res = await fetchData();
+      console.log(res);
+      // console.log(res.data.personalData);
+
+      dispatch(
+        eventActions.FetchEvents({
+          events: res.data.personalData.registeredInEvents,
+        })
+      );
+      dispatch(
+        communityActions.FetchCommunities({
+          communities: res.data.personalData.communities,
+        })
+      );
+
+      dispatch(
+        userActions.CreateUser({
+          user: res.data.personalData,
+        })
+      );
+    } catch (e) {
+      dispatch(eventActions.hasError(e.message));
     }
-
-    res = await res.json();
-    return res;
   };
-  try {
-    const res = await fetchData();
-    console.log(res);
-    // console.log(res.data.personalData);
-
-    dispatch(
-      eventActions.FetchEvents({
-        events: res.data.personalData.registeredInEvents,
-      })
-    );
-    dispatch(
-      communityActions.FetchCommunities({
-        communities: res.data.personalData.communities,
-      })
-    );
-
-    dispatch(
-      userActions.CreateUser({
-        user: res.data.personalData,
-      })
-    );
-  } catch (e) {
-    dispatch(eventActions.hasError(e.message));
-  }
-};
 export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };

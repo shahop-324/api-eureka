@@ -40,11 +40,15 @@ const UserAccountHome = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // history.push("/user/home");
+    history.push("/user/home/");
     // window.location.href = REACT_APP_MY_ENV
     //   ? "http://localhost:3001/user/home"
     //   : "https://www.evenz.in/user/home";
-    dispatch(fetchUserAllPersonalData());
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    console.log(params.code);
+    dispatch(fetchUserAllPersonalData(params.code));
   }, [dispatch]);
   useEffect(() => {
     return () => {
@@ -56,7 +60,7 @@ const UserAccountHome = () => {
     dispatch(navigationIndex(newValue));
     switch (newValue) {
       case 0: {
-        history.push("/user/home");
+        history.push("/user/home/");
         break;
       }
       case 1: {

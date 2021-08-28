@@ -206,9 +206,10 @@ const Registrations = () => {
   };
 
   if (error) {
-    dispatch(errorTrackerForFetchRegistrationsOfParticularEvent());
-    alert(error);
-    return null;
+    throw new Error(error);
+    // dispatch(errorTrackerForFetchRegistrationsOfParticularEvent());
+    // alert(error);
+    // return null;
   }
 
   return (
@@ -269,13 +270,14 @@ const Registrations = () => {
             >
               <Loader />
             </div>
+          ) : typeof registrations !== "undefined" &&
+            registrations.length > 0 ? (
+            renderRegistrationsList(registrations)
           ) : (
-            typeof registrations !== "undefined" &&
-            registrations.length > 0 ?
-            renderRegistrationsList(registrations) : <NoContentFound
-            msgText="Looks like this event has not got any registrations yet."
-            img={NoRegistartions}
-          />
+            <NoContentFound
+              msgText="Looks like this event has not got any registrations yet."
+              img={NoRegistartions}
+            />
           )}
         </div>
         {/* Here I have to use pagination */}
