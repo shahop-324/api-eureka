@@ -167,6 +167,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     display: "none",
+    color: "#ffffff",
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
@@ -175,9 +176,9 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     color: "#ffffff",
-    backgroundColor: alpha(theme.palette.common.white, 0.12),
+    backgroundColor: alpha(theme.palette.common.black, 0.12),
     "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.black, 0.25),
     },
     marginLeft: 0,
     width: "100%",

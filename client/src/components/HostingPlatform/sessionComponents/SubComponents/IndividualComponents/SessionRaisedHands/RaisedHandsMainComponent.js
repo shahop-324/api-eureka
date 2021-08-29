@@ -56,11 +56,11 @@ const RaisedHandMainComponent = () => {
   return (
     <>
       <div
-        className="chat-msg-container pt-2 px-2"
+        className="chat-msg-container raised-hands-container pt-2 px-2"
         style={{ backgroundColor: "#A1A1A175" }}
       >
         <div
-          className="scrollable-chat-element-container"
+          className="scrollable-chat-element-container raised-hands-scrollable-container"
           id="all-chat-msg-container"
         >
           {/* {renderQnAs} */}

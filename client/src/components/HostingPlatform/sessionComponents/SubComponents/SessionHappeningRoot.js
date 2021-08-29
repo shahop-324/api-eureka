@@ -53,7 +53,7 @@ const SessionHappeningRoot = () => {
             >
               Hands
             </div>
-            <div
+            {/* <div
               onClick={() => {
                 setSelectedTab("video");
               }}
@@ -62,7 +62,7 @@ const SessionHappeningRoot = () => {
               } d-flex flex-row align-items-center justify-content-center`}
             >
               Video
-            </div>
+            </div> */}
           </div>
 
           <div style={{ height: "73vh", width: "90%", margin: "0 auto" }}>
@@ -80,8 +80,8 @@ const SessionHappeningRoot = () => {
                 case "raisedhands":
                   return <RaisedHandMainComponent />;
 
-                case "video":
-                  return <SessionVideosComponent />;
+                // case "video":
+                //   return <SessionVideosComponent />;
 
                 default:
                   return <div>You are a User visting hosting platform.</div>;

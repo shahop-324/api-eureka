@@ -1,9 +1,16 @@
 .scrollable-chat-element-container {
     overflow: scroll;
-    height: 63vh;
+    height: 62vh;
 }
 
 .chat-msg-container {
     overflow: hidden;
+}
+
+@media only screen and (min-width: "1560px") {
+    .scrollable-chat-element-container {
+        overflow: scroll;
+        height: 65vh;
+    }
 }
 

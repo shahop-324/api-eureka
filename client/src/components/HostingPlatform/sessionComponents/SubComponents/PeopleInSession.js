@@ -52,7 +52,7 @@ const PeopleInSession = (props) => {
       <div style={{ height: "73vh", width: "90%", margin: "0 auto" }}>
         {/* here comes people component */}
 
-        <div className="chat-msg-container pt-2 px-2 mt-3" style={{height: "78vh", backgroundColor: "#8A8A8A71"}}>
+        <div className="chat-msg-container people-in-session-container pt-2 px-2 mt-3" style={{backgroundColor: "#8A8A8A71"}}>
           <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
             <input
               type="text"

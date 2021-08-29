@@ -81,7 +81,7 @@ const Reception = () => {
             </div>
           </div>
           <div className="platinum-and-gold-sponsor-stand-container">
-            <div className="platinum-sponsor-stand py-4 px-3">
+            <div className="gold-sponsor-stand py-4 px-3">
               <div
                 style={{ textAlign: "center" }}
                 className="sponsor-stand-heading"
@@ -108,7 +108,7 @@ const Reception = () => {
                 className="mb-4 sponsor-stand-image"
               />
             </div>
-            <div className="gold-sponsor-stand py-4 px-3">
+            <div className="platinum-sponsor-stand py-4 px-3">
               <div
                 style={{ textAlign: "center" }}
                 className="sponsor-stand-heading"
