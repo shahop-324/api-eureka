@@ -88,7 +88,7 @@ const SessionPollsComponent = (props) => {
         style={{ backgroundColor: "#A1A1A175" }}>
           <div
             className="scrollable-chat-element-container mb-3"
-            style={{ height: "65vh" }}
+            style={{ height: "62vh" }}
           >
             {/* Here Goes Polls list */}
             {/* <PollComponent /> */}
