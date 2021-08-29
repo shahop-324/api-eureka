@@ -150,8 +150,16 @@ const Signin = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
-                <LinkedinAuth />
+                {/* <div className="d-flex flex-row align-items-center justify-content-center"> */}
+
+              
                 <GoogleAuth />
+                
+                <div className="mb-3">
+                <LinkedinAuth />
+                   </div>
+                
+               
 
                 <div
                   className="row d-flex"

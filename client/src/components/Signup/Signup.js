@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { reduxForm, Field } from "redux-form";
 import GoogleAuth from "../GoogleAuth";
+import LinkedIn from "@material-ui/icons/LinkedIn";
+import LinkedinAuth from "../LinkedinAuth";
 
 let formIsvalidated = false;
 
@@ -95,27 +97,17 @@ const Signup = (props) => {
   }, [dispatch, error]);
 
   const { handleSubmit } = props;
-  const {referredUserId} =useSelector((state)=>state.user)
-
-
+  const { referredUserId } = useSelector((state) => state.user);
 
   const onSubmit = (formValues) => {
     // e.preventDefault();
     setSignupClicked(true);
-    
-    
-    if(referredUserId)
-    {
 
-
-      formValues.referrralCode=referredUserId
+    if (referredUserId) {
+      formValues.referrralCode = referredUserId;
       dispatch(signUp(formValues));
-    }
-    else
-    {
-
-    
-    dispatch(signUp(formValues));
+    } else {
+      dispatch(signUp(formValues));
     }
   };
 
@@ -167,27 +159,10 @@ const Signup = (props) => {
                 </div>
 
                 <GoogleAuth />
-                {/* <div className="row d-flex flex-row justify-content-center px-2 mb-4">
-                  <button
-                   
-                    onClick={onClickHandle}
-                    className="btn btn-light py-2 px-2"
-                  >
-                    <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
-                      <img
-                        class=""
-                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                        alt="google-signin"
-                      />
-                      <div className="sign-in-with-google-text ms-4">
-                      <a href="https://www.evenz.co.in/api-eureka/eureka/v1/auth/google">Sign up with google</a> 
-                      </div>
-                    </div>
-                  </button>
-                </div> */}
 
-                {/*  */}
-
+                <div className="mb-3">
+                  <LinkedinAuth />
+                </div>
                 <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
@@ -205,7 +180,14 @@ const Signup = (props) => {
                   className="ui form error"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  <div className="row" style={{display: "grid", gridTemplateColumns: "1fr 1fr", gridGap: "0.6rem"}}>
+                  <div
+                    className="row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gridGap: "0.6rem",
+                    }}
+                  >
                     <div className="">
                       <div class="form-group">
                         <label
