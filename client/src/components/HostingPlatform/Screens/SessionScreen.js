@@ -125,6 +125,10 @@ const IOSSwitch = withStyles((theme) => ({
 const SessionScreen = () => {
   const uid = uuidv4();
 
+  const userId = useSelector((state) => state.eventAccessToken.id);
+
+  const [mainStreamId, setMainStreamId] = useState(userId);
+
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -180,8 +184,6 @@ const SessionScreen = () => {
   const sessionDetails = useSelector((state) =>
     state.session.sessions.find((session) => session.id === params.sessionId)
   );
-
-  const userId = useSelector((state) => state.eventAccessToken.id);
 
   const { name } = sessionDetails;
 
@@ -296,6 +298,9 @@ const SessionScreen = () => {
     }
   };
 
+  // stream references (keep track of active streams)
+  var remoteStreams = {}; // remote streams obj struct [id : stream]
+
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
   const [localVolumeLevel, setLocalVolumeLevel] = useState("");
@@ -388,9 +393,9 @@ const SessionScreen = () => {
     rtc.client.setClientRole(options.role);
 
     rtc.client.on("network-quality", (stats) => {
-      console.log("downlinkNetworkQuality", stats.downlinkNetworkQuality);
+      // console.log("downlinkNetworkQuality", stats.downlinkNetworkQuality);
       setDownLinkStat(stats.downlinkNetworkQuality);
-      console.log("uplinkNetworkQuality", stats.uplinkNetworkQuality);
+      // console.log("uplinkNetworkQuality", stats.uplinkNetworkQuality);
       setUplinkStat(stats.uplinkNetworkQuality);
     });
 
@@ -443,12 +448,120 @@ const SessionScreen = () => {
       if (mediaType === "video") {
         // Get `RemoteVideoTrack` in the `user` object.
         const remoteVideoTrack = user.videoTrack;
+
+        // Keep track of remote streams
+        remoteStreams[user.uid] = remoteVideoTrack;
+
         // Dynamically create a container in the form of a DIV element for playing the remote video track.
         const remotePlayerContainer = document.createElement("div");
         // Specify the ID of the DIV container. You can use the `uid` of the remote user.
         remotePlayerContainer.id = user.uid.toString();
         console.log(user.uid.toString());
+        remotePlayerContainer.addEventListener("dblclick", (e) => {
+          console.log("Double click was detceted on remote player!");
+          console.log(user.uid.toString());
 
+          // play selected container as full screen - swap out current full screen stream
+          // remoteStreams[mainStreamId].stop(); // stop the main video stream playback
+          // addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
+          // $(containerId).empty().remove(); // remove the stream's miniView container
+          // remoteStreams[streamId].stop() // stop the container's video stream playback
+          // remoteStreams[streamId].play('full-screen-video'); // play the remote stream as the full screen video
+          // mainStreamId = streamId; // set the container stream id as the new main stream id
+
+          // remoteStreams[mainStreamId].stop();
+          rtc.localVideoTrack.stop();
+          addRemoteStreamMiniView(rtc.localVideoTrack, mainStreamId);
+          console.log(mainStreamId, "This is main stream Id");
+          // if (!mainStreamId) return;
+          document.getElementById(mainStreamId).remove();
+
+          document.getElementById(user.uid.toString()).remove();
+          remoteStreams[user.uid.toString()].stop();
+
+          const localPlayerContainer = document.createElement("div");
+          localPlayerContainer.id = user.uid.toString();
+          setMainStreamId(userId.toString());
+
+          const { userName, userImage, userOrganisation, userDesignation } =
+            peopleInThisSession.find((people) => people.userId === userId);
+
+          const userIdentity = document.createElement("div");
+          userIdentity.id = "user_identity";
+          userIdentity.style.position = "absolute";
+          userIdentity.style.left = "15px";
+          userIdentity.style.bottom = "15px";
+          userIdentity.style.color = "white";
+          userIdentity.style.padding = "12px";
+          userIdentity.style.boxSizing = "border-box";
+          userIdentity.style.zIndex = "10000000000000";
+          userIdentity.style.fontSize = "12px";
+          userIdentity.style.fontWeight = "500";
+          userIdentity.style.fontFamily = "Ubuntu";
+          userIdentity.style.backgroundColor = "#807F7F62";
+          userIdentity.style.borderRadius = "5px";
+          userIdentity.style.textTransform = "capitalize";
+
+          userIdentity.textContent = userName + ` (You)`;
+
+          const userCompanyAndDesignation = document.createElement("div");
+          // userCompanyAndDesignation.appendChild(MicNoneIcon);
+
+          // ReactDOM.render(document.getElementById('user_identity'), <MicNoneIcon />);
+
+          userCompanyAndDesignation.textContent =
+            userOrganisation + `, ${userDesignation}`;
+
+          userIdentity.appendChild(userCompanyAndDesignation);
+         
+          const userVideoAvatarContainer = document.createElement("img");
+          userVideoAvatarContainer.id = `avatar-box`;
+          userVideoAvatarContainer.src = userImage;
+
+          userVideoAvatarContainer.style.position = "absolute";
+          userVideoAvatarContainer.style.left = "50%";
+          userVideoAvatarContainer.style.bottom = "37.5%";
+          userVideoAvatarContainer.style.transform = "translate(-50%, -50%)";
+          userVideoAvatarContainer.style.maxHeight = "50px";
+          userVideoAvatarContainer.style.maxWidth = "50px";
+          // userVideoAvatarContainer.style.borderRadius = "50%";
+          userVideoAvatarContainer.style.boxSizing = "border-box";
+          userVideoAvatarContainer.style.zIndex = "10";
+
+          localPlayerContainer.append(userVideoAvatarContainer);
+          
+          localPlayerContainer.append(userIdentity);
+          localPlayerContainer.style.position = "relative";
+          localPlayerContainer.style.borderRadius = "10px";
+          localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+          localPlayerContainer.style.backdropFilter = "blur( 4px )";
+          localPlayerContainer.style.zIndex = "101";
+          localPlayerContainer.style.height = "100%";
+          localPlayerContainer.style.width = "100%";
+
+          document
+            .getElementById("session-main-view-container")
+            .append(localPlayerContainer);
+
+          // document.body.append(localPlayerContainer);
+
+          // setGrid(
+          //   document.getElementById("session-stage-video-layout-grid")
+          //     .childElementCount
+          // );
+
+          remoteStreams[user.uid.toString()].play(localPlayerContainer);
+
+          document.getElementById(`avatar-box`).style.display = "none";
+
+          // document
+          // .getElementById("session-mini-view-container")
+          // .append(remotePlayerContainer);
+
+          // Play the remote video track.
+          // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
+          // remoteVideoTrack.play(remotePlayerContainer);
+        });
         const { userName, userImage, userOrganisation, userDesignation } =
           peopleInThisSession.find(
             (people) => people.userId === user.uid.toString()
@@ -490,27 +603,27 @@ const SessionScreen = () => {
         userVideoAvatarContainer.style.left = "50%";
         userVideoAvatarContainer.style.bottom = "37.5%";
         userVideoAvatarContainer.style.transform = "translate(-50%, -50%)";
-        userVideoAvatarContainer.style.maxHeight = "100px";
-        userVideoAvatarContainer.style.maxWidth = "100px";
+        userVideoAvatarContainer.style.maxHeight = "50px";
+        userVideoAvatarContainer.style.maxWidth = "50px";
         // userVideoAvatarContainer.style.borderRadius = "50%";
         userVideoAvatarContainer.style.boxSizing = "border-box";
         userVideoAvatarContainer.style.zIndex = "10";
 
         remotePlayerContainer.append(userVideoAvatarContainer);
-
         remotePlayerContainer.append(userIdentity);
 
         remotePlayerContainer.style.borderRadius = "10px";
         remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
         remotePlayerContainer.style.backdropFilter = "blur( 4px )";
+        remotePlayerContainer.style.backgroundColor = "#DBDBDB";
+        remotePlayerContainer.style.borderRadius = "5px";
+        remotePlayerContainer.style.width = "100%";
+        remotePlayerContainer.style.height = "31.6%";
+        remotePlayerContainer.style.marginBottom = "1rem";
 
         document
-          .getElementById("session-stage-video-layout-grid")
+          .getElementById("session-mini-view-container")
           .append(remotePlayerContainer);
-        setGrid(
-          document.getElementById("session-stage-video-layout-grid")
-            .childElementCount
-        );
 
         // Play the remote video track.
         // Pass the DIV container and the SDK dynamically creates a player in the container for playing the remote video track.
@@ -535,13 +648,108 @@ const SessionScreen = () => {
       console.log(rtc.client.getRemoteVideoStats());
     });
 
+    // REMOTE STREAMS UI
+    function addRemoteStreamMiniView(remoteStream, streamId) {
+      // var streamId = remoteStream.getId();
+
+      console.log(
+        streamId,
+        "This is the stream ID of previous main video track."
+      );
+
+      const remotePlayerContainer = document.createElement("div");
+      // Specify the ID of the DIV container. You can use the `uid` of the remote user.
+      remotePlayerContainer.id = streamId;
+
+
+      const { userName, userImage, userOrganisation, userDesignation } =
+          peopleInThisSession.find(
+            (people) => people.userId === streamId
+          );
+
+        const userIdentity = document.createElement("div");
+        userIdentity.id = `user_identity_${streamId}`;
+        userIdentity.style.position = "absolute";
+        userIdentity.style.left = "15px";
+        userIdentity.style.bottom = "15px";
+        userIdentity.style.color = "white";
+        userIdentity.style.padding = "12px";
+        userIdentity.style.boxSizing = "border-box";
+        userIdentity.style.zIndex = "10000000000000";
+        userIdentity.style.fontSize = "12px";
+        userIdentity.style.fontWeight = "500";
+        userIdentity.style.fontFamily = "Ubuntu";
+        userIdentity.style.backgroundColor = "#807F7F62";
+        userIdentity.style.borderRadius = "5px";
+        userIdentity.style.textTransform = "capitalize";
+
+        userIdentity.textContent = userName;
+
+        const userCompanyAndDesignation = document.createElement("div");
+        // userCompanyAndDesignation.appendChild(MicNoneIcon);
+
+        // ReactDOM.render(document.getElementById('user_identity'), <MicNoneIcon />);
+
+        userCompanyAndDesignation.textContent =
+          userOrganisation + `, ${userDesignation}`;
+
+        userIdentity.appendChild(userCompanyAndDesignation);
+
+        const userVideoAvatarContainer = document.createElement("img");
+        userVideoAvatarContainer.id = `avatar-box_${streamId}`;
+        userVideoAvatarContainer.src = userImage;
+
+        userVideoAvatarContainer.style.position = "absolute";
+        userVideoAvatarContainer.style.left = "50%";
+        userVideoAvatarContainer.style.bottom = "37.5%";
+        userVideoAvatarContainer.style.transform = "translate(-50%, -50%)";
+        userVideoAvatarContainer.style.maxHeight = "50px";
+        userVideoAvatarContainer.style.maxWidth = "50px";
+        // userVideoAvatarContainer.style.borderRadius = "50%";
+        userVideoAvatarContainer.style.boxSizing = "border-box";
+        userVideoAvatarContainer.style.zIndex = "10";
+
+        remotePlayerContainer.append(userVideoAvatarContainer);
+        remotePlayerContainer.append(userIdentity);
+
+
+      remotePlayerContainer.style.borderRadius = "10px";
+      remotePlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
+      remotePlayerContainer.style.backdropFilter = "blur( 4px )";
+      remotePlayerContainer.style.backgroundColor = "#DBDBDB";
+      remotePlayerContainer.style.borderRadius = "5px";
+      remotePlayerContainer.style.width = "100%";
+      remotePlayerContainer.style.height = "31.6%";
+      remotePlayerContainer.style.marginBottom = "1rem";
+
+      // append the remote stream template to #remote-streams
+      document
+        .getElementById("session-mini-view-container")
+        .append(remotePlayerContainer);
+
+      remoteStream.play(remotePlayerContainer);
+
+      document.getElementById(`avatar-box`).style.display = "none";
+      // remoteStream.play('agora_remote_' + streamId);
+
+      // var containerId = '#' + streamId + '_container';
+
+      // $(containerId).dblclick(function() {
+      //   // play selected container as full screen - swap out current full screen stream
+      //   remoteStreams[mainStreamId].stop(); // stop the main video stream playback
+      //   addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
+      //   $(containerId).empty().remove(); // remove the stream's miniView container
+      //   remoteStreams[streamId].stop() // stop the container's video stream playback
+
+
+
+      //   remoteStreams[streamId].play('full-screen-video'); // play the remote stream as the full screen video
+      //   mainStreamId = streamId; // set the container stream id as the new main stream id
+      // });
+    }
+
     rtc.client.on("user-unpublished", (user) => {
-      // console.log(user);
-
       const userId = user.uid.toString();
-
-      const isAudioEnabled = user._audio_enabled_;
-      const isAudioMuted = user._audio_muted_;
 
       const isVideoEnabled = user._video_enabled_;
       const isVideoMuted = user._video_muted_;
@@ -550,30 +758,31 @@ const SessionScreen = () => {
         document.getElementById(`avatar-box_${userId}`).style.display =
           "inline-block";
       }
-
-      // Get the dynamically created DIV container.
-      const remotePlayerContainer = document.getElementById(user.uid);
-      // Destroy the container.
-      // remotePlayerContainer && remotePlayerContainer.remove();
-
-      setGrid(
-        document.getElementById("session-stage-video-layout-grid")
-          .childElementCount
-      );
     });
 
     rtc.client.on("user-left", (user) => {
-      // console.log(user);
+      const streamId = user.uid.toString();
 
-      // Get the dynamically created DIV container.
-      const remotePlayerContainer = document.getElementById(user.uid);
-      // Destroy the container.
-      remotePlayerContainer && remotePlayerContainer.remove();
+      if (remoteStreams[streamId] !== undefined) {
+        remoteStreams[streamId].stop();
+        delete remoteStreams[streamId];
 
-      setGrid(
-        document.getElementById("session-stage-video-layout-grid")
-          .childElementCount
-      );
+        if (streamId === mainStreamId) {
+          let streamIds = Object.keys(remoteStreams);
+          var randomId =
+            streamIds[Math.floor(Math.random() * streamIds.length)]; // select from the remaining streams
+          remoteStreams[randomId].stop(); // stop the stream's existing playback
+          const randomMiniVideo = document.getElementById(randomId);
+          randomMiniVideo && randomMiniVideo.remove(); // remove the stream's miniView container
+          remoteStreams[randomId].play("session-main-view-container"); // play the random stream as the main stream
+          setMainStreamId(randomId);
+        } else {
+          // Get the dynamically created DIV container.
+          const remotePlayerContainer = document.getElementById(streamId);
+          // Destroy the container.
+          remotePlayerContainer && remotePlayerContainer.remove();
+        }
+      }
     });
 
     rtc.client.on("volume-indicator", function (result) {
@@ -602,6 +811,8 @@ const SessionScreen = () => {
 
           const localPlayerContainer = document.createElement("div");
           localPlayerContainer.id = userId;
+          setMainStreamId(userId.toString());
+          console.log("This is main stream Id");
 
           console.log(userId);
 
@@ -641,6 +852,9 @@ const SessionScreen = () => {
             userOrganisation + `, ${userDesignation}`;
 
           userIdentity.appendChild(userCompanyAndDesignation);
+          userIdentity.addEventListener("dblclick", () => {
+            console.log("Double click was detceted on local player!");
+          });
 
           const userVideoAvatarContainer = document.createElement("img");
           userVideoAvatarContainer.id = `avatar-box`;
@@ -650,13 +864,16 @@ const SessionScreen = () => {
           userVideoAvatarContainer.style.left = "50%";
           userVideoAvatarContainer.style.bottom = "37.5%";
           userVideoAvatarContainer.style.transform = "translate(-50%, -50%)";
-          userVideoAvatarContainer.style.maxHeight = "100px";
-          userVideoAvatarContainer.style.maxWidth = "100px";
+          userVideoAvatarContainer.style.maxHeight = "50px";
+          userVideoAvatarContainer.style.maxWidth = "50px";
           // userVideoAvatarContainer.style.borderRadius = "50%";
           userVideoAvatarContainer.style.boxSizing = "border-box";
           userVideoAvatarContainer.style.zIndex = "10";
 
           localPlayerContainer.append(userVideoAvatarContainer);
+          localPlayerContainer.addEventListener("dblclick", () => {
+            console.log("Double click was detceted!");
+          });
 
           localPlayerContainer.append(userIdentity);
           localPlayerContainer.style.position = "relative";
@@ -664,15 +881,19 @@ const SessionScreen = () => {
           localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
           localPlayerContainer.style.backdropFilter = "blur( 4px )";
           localPlayerContainer.style.zIndex = "101";
+          localPlayerContainer.style.height = "100%";
+          localPlayerContainer.style.width = "100%";
 
           document
-            .getElementById("session-stage-video-layout-grid")
+            .getElementById("session-main-view-container")
             .append(localPlayerContainer);
 
-          setGrid(
-            document.getElementById("session-stage-video-layout-grid")
-              .childElementCount
-          );
+          // document.body.append(localPlayerContainer);
+
+          // setGrid(
+          //   document.getElementById("session-stage-video-layout-grid")
+          //     .childElementCount
+          // );
 
           rtc.localVideoTrack.play(localPlayerContainer);
 
@@ -719,8 +940,8 @@ const SessionScreen = () => {
 
   const leaveStreaming = async () => {
     if (agoraRole === "host") {
-      rtc.localAudioTrack.close();
-      rtc.localVideoTrack.close();
+      rtc.localAudioTrack && rtc.localAudioTrack.close();
+      rtc.localVideoTrack && rtc.localVideoTrack.close();
     }
 
     // Traverse all remote users.
@@ -761,12 +982,23 @@ const SessionScreen = () => {
               id="session-stage-video-layout-grid"
               style={{
                 display: "grid",
-                gridTemplateColumns: col,
-                gridTemplateRows: row,
+                gridTemplateColumns: "3fr 1fr",
+                // gridTemplateRows: row,
                 gridGap: "10px",
               }}
             >
-              {/* Here Session video will go */}
+              <div
+                className="main-view-container"
+                id="session-main-view-container"
+                style={{ backgroundColor: "#DBDBDB", borderRadius: "5px" }}
+              ></div>
+
+              <div
+                className="session-mini-view-container"
+                id="session-mini-view-container"
+              >
+                {/* Session mini videos will go over here */}
+              </div>
             </div>
             <div className="session-video-controls-grid ">
               <div
@@ -955,13 +1187,6 @@ const SessionScreen = () => {
                       >
                         Start Session
                       </div>
-
-                      {/* <button
-                        className="btn btn-danger btn-outline-text ms-4"
-                        id="leave"
-                      >
-                        Leave
-                      </button> */}
                     </div>
                   ) : (
                     <div className="d-flex flex-row align-items-center">
