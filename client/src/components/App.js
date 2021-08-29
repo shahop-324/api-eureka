@@ -495,6 +495,14 @@ class App extends React.Component {
                 />
               )}
 
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/event/:eventId/hosting-platform/reception"
+                  exact
+                  component={Root}
+                />
+              )}
+
               {/* // TODO */}
 
               {isSignedIn && (

@@ -308,3 +308,18 @@ code {
 .poll-option:hover {
   cursor: pointer;
 }
+
+.session-running-status-container {
+  background-color: #538af7;
+  width: max-content;
+  border-radius: 5px;
+  
+}
+
+.session-running-status-container {
+color: #ffffff;
+font-size: 0.83rem;
+font-weight: 500;
+font-family: "Inter";
+  
+}

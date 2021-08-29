@@ -140,10 +140,16 @@ $Shadow-inset-color: '#00000029';
 .layer-3-mh {
   width: 100%;
   min-height: 92vh;
-  background: hsla(0, 0%, 9%, 0.794);
-  box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
+  // background: hsla(0, 0%, 9%, 0.794);
+  // box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(4.5px);
   -webkit-backdrop-filter: blur(4.5px);
+
+  background: #CC95C0;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #7AA1D2, #DBD4B4, #CC95C0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
 }
 
 .event-banner-card {

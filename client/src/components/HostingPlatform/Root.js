@@ -35,6 +35,7 @@ import { sessionActions } from "../../reducers/sessionSlice";
 import { userActions } from "../../reducers/userSlice";
 import { roomsActions } from "../../reducers/roomsSlice";
 import Loader from "../Loader";
+import Reception from "./Screens/Reception";
 
 const Root = () => {
   const params = useParams();
@@ -257,6 +258,14 @@ const Root = () => {
     );
   };
 
+  const handleReceptionClick = () => {
+    dispatch(navigationIndexForHostingPlatform(5));
+
+    history.push(
+      `/community/${communityId}/event/${eventId}/hosting-platform/reception`
+    );
+  };
+
   const handleLogoutClick = () => {
     // write logic for logging out here
   };
@@ -279,6 +288,7 @@ const Root = () => {
           handleNetworkingClick={handleNetworkingClick}
           handleRoomsClick={handleRoomsClick}
           handleBoothsClick={handleBoothsClick}
+          handleReceptionClick={handleReceptionClick}
           handleLogoutClick={handleLogoutClick}
         />
 
@@ -286,33 +296,74 @@ const Root = () => {
         <div style={{ height: "100vh" }}>
           <MidTopNav eventName={eventDetails.eventName} />
           <div className="main-body-content-h">
-            <div className="layer-3-mh py-4 px-5">
-              <div style={{ maxWidth: "1360px", margin: "0 auto" }}>
-                {(() => {
-                  switch (currentIndex) {
-                    case "0":
-                      return <LobbyAgenda socket={socket} />;
+            {/* <div className="layer-3-mh py-4 px-5">
+              <div style={{ maxWidth: "1360px", margin: "0 auto" }}> */}
+            {(() => {
+              switch (currentIndex) {
+                case "0":
+                  return (
+                    <div className="layer-3-mh" style={{position: "relative"}}>
+                      <div className="opaque-layer " style={{height: "100%"}}></div>
+                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                        <LobbyAgenda socket={socket} />
+                      </div>
+                    </div>
+                  );
 
-                    case "1":
-                      return <Sessions />;
+                case "1":
+                  return (
+                    <div className="layer-3-mh" style={{position: "relative"}}>
+                      <div className="opaque-layer " style={{height: "100%"}}></div>
+                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                        <Sessions />{" "}
+                      </div>
+                    </div>
+                  );
 
-                    case "2":
-                      return <Networking />;
+                case "2":
+                  return (
+                    <div className="layer-3-mh" style={{position: "relative"}}>
+                      <div className="opaque-layer "></div>
+                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                        <Networking />{" "}
+                      </div>
+                    </div>
+                  );
+                case "3":
+                  return (
+                    <div className="layer-3-mh" style={{position: "relative"}}>
+                      <div className="opaque-layer " style={{height: "100%"}}></div>
+                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                        <Rooms />{" "}
+                      </div>
+                    </div>
+                  );
 
-                    case "3":
-                      return <Rooms />;
+                case "4":
+                  return (
+                    <div className="layer-3-mh " style={{position: "relative"}}>
+                      <div className="opaque-layer " style={{height: "100%"}}></div>
+                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                        <Booths />{" "}
+                      </div>
+                    </div>
+                  );
+                case "5":
+                  return (
+                    // <div className="layer-3-mh py-4 px-5">
+                    //   <div style={{ maxWidth: "1360px", margin: "0 auto" }}>
+                    //   <Reception />{" "}
+                    //   </div>
+                    // </div>
+                    <Reception />
+                  );
 
-                    case "4":
-                      return <Booths />;
-
-                    default:
-                      return (
-                        <div>You are a User visting hosting platform.</div>
-                      );
-                  }
-                })()}
-              </div>
-            </div>
+                default:
+                  return <div>You are a User visting hosting platform.</div>;
+              }
+            })()}
+            {/* </div>
+            </div> */}
           </div>
         </div>
       </div>

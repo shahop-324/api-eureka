@@ -7,7 +7,11 @@ import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getRTCToken, getRTCTokenForSpeaker, setSessionRoleAndJoinSession } from "../../../actions";
+import {
+  getRTCToken,
+  getRTCTokenForSpeaker,
+  setSessionRoleAndJoinSession,
+} from "../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -43,7 +47,8 @@ const renderSpeakerList = (speakers) => {
     return (
       <SessionSpeakerCard
         image={
-          speaker.image && speaker.image.startsWith("https://lh3.googleusercontent.com")
+          speaker.image &&
+          speaker.image.startsWith("https://lh3.googleusercontent.com")
             ? speaker.image
             : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`
         }
@@ -67,7 +72,6 @@ const SessionDetailCard = ({
 
   const params = useParams();
   console.log(params);
-
 
   const eventId = params.eventId;
   const communityId = params.communityId;
@@ -111,7 +115,7 @@ const SessionDetailCard = ({
   } else if (role === "host") {
     sessionRole = "host";
   } else if (role === "speaker") {
-    const bool = speaker.sessions.find((session)=> session._id === id)
+    const bool = speaker.sessions.find((session) => session._id === id);
     if (bool) {
       sessionRole = "host";
     } else {
@@ -123,7 +127,7 @@ const SessionDetailCard = ({
     btnText = "Backstage";
     bgColor = "#538BF7";
   }
-  
+
   // const readFilePro = file => {
   //   return new Promise((resolve, reject) => {
   //     fs.readFile(file, (err, data) => {
@@ -141,34 +145,26 @@ const SessionDetailCard = ({
   //   });
   // };
 
-//   const joining =()=>{
-//       return new Promise((resolve,reject)=>{
-//           dispatch(getRTCToken(id,sessionRole))
-           
+  //   const joining =()=>{
+  //       return new Promise((resolve,reject)=>{
+  //           dispatch(getRTCToken(id,sessionRole))
 
+  //       }).then(()=>{
 
-//       }).then(()=>{
+  //         if(token)
+  //         {
 
+  //           console.log(token)
 
-//         if(token)
-//         {
+  //         }
+  // else{
 
-//           console.log(token)
-       
-//         }
-// else{
+  //     alert("joining session failed")
+  // }
 
+  //       })
 
-//     alert("joining session failed")
-// }
-
-//       })
-
-
-//   }
-  
-
-  
+  //   }
 
   return (
     <>
@@ -183,7 +179,9 @@ const SessionDetailCard = ({
         </div>
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
           <div className="session-title mb-3">{name}</div>
-          <div className="session-duration px-5 py-3 mb-3">30 Min</div>
+          <div className="session-running-status-container px-2 py-3 mb-3">
+            <div className="session-running-status">Upcoming</div>
+          </div>
 
           <div className="session-short-description mb-3">{description}</div>
 
@@ -200,11 +198,18 @@ const SessionDetailCard = ({
               <NotificationsNoneOutlinedIcon />
             </IconButton>
             <Link
-             // to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
+              // to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
               onClick={() => {
-
-                if(role === "speaker") {
-                  dispatch(getRTCTokenForSpeaker(id,sessionRole,eventId,communityId, userId))
+                if (role === "speaker") {
+                  dispatch(
+                    getRTCTokenForSpeaker(
+                      id,
+                      sessionRole,
+                      eventId,
+                      communityId,
+                      userId
+                    )
+                  );
 
                   socket.emit(
                     "joinSession",
@@ -212,7 +217,10 @@ const SessionDetailCard = ({
                       sessionId: id,
                       userId: userId,
                       sessionRole: sessionRole,
-                      userName: speakerDetails.firstName + " " + speakerDetails.lastName,
+                      userName:
+                        speakerDetails.firstName +
+                        " " +
+                        speakerDetails.lastName,
                       userEmail: speakerDetails.email,
                       userImage: `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speakerDetails.image}`,
                       userCity: userCity,
@@ -226,12 +234,8 @@ const SessionDetailCard = ({
                       }
                     }
                   );
-
-                  
-                }
-                else{
-
-                  dispatch(getRTCToken(id,sessionRole,eventId,communityId));
+                } else {
+                  dispatch(getRTCToken(id, sessionRole, eventId, communityId));
 
                   socket.emit(
                     "joinSession",
@@ -254,12 +258,6 @@ const SessionDetailCard = ({
                     }
                   );
                 }
-
-
-                
-                
-
-
 
                 dispatch(
                   setSessionRoleAndJoinSession(
