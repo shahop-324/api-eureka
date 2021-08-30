@@ -6,13 +6,15 @@ import GroupIcon from "@material-ui/icons/Group";
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
+import WeekendIcon from '@material-ui/icons/Weekend';
 
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-
 import { signOut } from "../../../actions"; 
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
+
+import InfoDeskPNG from "./../../../assets/images/information-desk.png";
 
 
 
@@ -34,6 +36,34 @@ const SideNav = (props) => {
           <Avatar   src={props.communityLogo} alt={props.communityName} variant="rounded"/>
         </div>
         <div className="main-icon-btn-container py-3">
+        <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={props.handleReceptionClick}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (props.activeIndex === "5" ? "active-wrapper-h" : "")
+              }
+            >
+              <HomeRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (props.activeIndex === "5" ? "icon-btn-active-h" : "")
+                }
+              />
+
+              {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (props.activeIndex === "5" ? "icon-btn-text-active-h" : "")
+              }
+            >
+              Reception
+            </div>
+          </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={props.handleLobbyClick}
@@ -44,7 +74,7 @@ const SideNav = (props) => {
                 (props.activeIndex === "0" ? "active-wrapper-h" : "")
               }
             >
-              <HomeRoundedIcon
+              <WeekendIcon
                 className={
                   "icon-btn-h " +
                   (props.activeIndex === "0" ? "icon-btn-active-h" : "")
@@ -61,7 +91,7 @@ const SideNav = (props) => {
             </div>
           </div>
 
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={props.handleSessionsClick}
           >
@@ -86,7 +116,7 @@ const SideNav = (props) => {
             >
               Sessions
             </div>
-          </div>
+          </div> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
@@ -168,6 +198,7 @@ const SideNav = (props) => {
               Booths
             </div>
           </div>
+          
         </div>
 
         <div className="logout-btn-side-nav-h">

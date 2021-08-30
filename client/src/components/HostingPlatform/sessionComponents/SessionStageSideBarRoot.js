@@ -9,7 +9,7 @@ const SessionStageSideBarRoot = () => {
     <>
       <div
         className="session-sidebar-nav-primary px-1"
-        style={{ maxWidth: "23vw" }}
+        // style={{ maxWidth: "23vw" }}
       >
         <div
           onClick={() => {

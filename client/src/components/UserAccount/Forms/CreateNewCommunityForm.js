@@ -173,31 +173,6 @@ const renderInputCheckbox = ({
     </div>
   );
 };
-// const renderInputImage = ({
-//   input,
-
-//   type,
-
-//   classes,
-//   handleChange,
-//   accept,
-//   meta: { touched, error, warning },
-// }) => {
-//   const className = `field ${error && touched ? "error" : ""}`;
-//   return (
-//     <div className={className}>
-//       <input
-//         type={type}
-//         {...input}
-//         accept={accept}
-//         onChange={() => input.onChange(handleChange)}
-//         className={classes}
-
-//         // required
-//       />
-//     </div>
-//   );
-// };
 
 const renderTextArea = ({
   input,
@@ -273,8 +248,6 @@ const CreateNewCommunityForm = (props) => {
 
   const onSubmit = (formValues) => {
     setCreateCommunityClicked(true);
-    // console.log(formValues);
-    // showResults(formValues);
     dispatch(createCommunity(formValues, file, userId));
   };
 
@@ -282,32 +255,6 @@ const CreateNewCommunityForm = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-
-  // const renderInputImage = ({
-  //   input,
-
-  //   type,
-
-  //   classes,
-
-  //   accept,
-  //   meta: { touched, error, warning },
-  // }) => {
-  //   const className = `field ${error && touched ? "error" : ""}`;
-  //   return (
-  //     <div className={className}>
-  //       <input
-  //         type={type}
-  //         {...input}
-  //         accept={accept}
-  //         onChange={handleChange}
-  //         className={classes}
-
-  //         // required
-  //       />
-  //     </div>
-  //   );
-  // };
 
   console.log(file);
   console.log(fileToPreview);
@@ -340,12 +287,6 @@ const CreateNewCommunityForm = (props) => {
               <div
                 className="overlay-form-close-button"
                 onClick={props.closeHandler}
-                // onClick={(props)=>{
-                //   props.closeHandler,
-                //   dispatch(reset(form:"newCreatedCommunity")),
-
-                // }
-                // }
               >
                 {/* <div> */}
                 <IconButton  aria-label="delete" onClick={reset}>
@@ -384,8 +325,6 @@ const CreateNewCommunityForm = (props) => {
                 type="file"
                 accept="image/*"
                 onChange={handleChange}
-                // handleChange={handleChange}
-                //component={renderInputImage}
               />
             </div>
             <div class="mb-4 overlay-form-input-row">

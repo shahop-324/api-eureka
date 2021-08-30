@@ -741,6 +741,7 @@ io.on("connect", (socket) => {
         userCountry,
         userOrganisation,
         userDesignation,
+        roleToBeDisplayed,
       },
       callback
     ) => {
@@ -806,6 +807,7 @@ io.on("connect", (socket) => {
         userCountry,
         userOrganisation,
         userDesignation,
+        roleToBeDisplayed,
       }) => {
         const existingUser = await UsersInSession.findOne(
           {
@@ -834,6 +836,7 @@ io.on("connect", (socket) => {
                   userCountry: userCountry,
                   userOrganisation: userOrganisation,
                   userDesignation: userDesignation,
+                  roleToBeDisplayed: roleToBeDisplayed,
                 },
                 async (err, doc) => {
                   if (err) {
@@ -895,6 +898,7 @@ io.on("connect", (socket) => {
         userCountry: userCountry,
         userOrganisation: userOrganisation,
         userDesignation: userDesignation,
+        roleToBeDisplayed: roleToBeDisplayed,
       });
 
       if (error) return callback(error);

@@ -128,7 +128,7 @@ const AvatarMenu = () => {
   let imgURL;
 
   if (image) {
-    if (image.startsWith("https://lh3.googleusercontent.com")) {
+    if (image.startsWith("https://")) {
       imgURL = image;
     } else {
       imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;

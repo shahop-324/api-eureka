@@ -187,7 +187,7 @@ let EditProfileForm = (props) => {
   let imgUrl;
 
   if (imgKey) {
-    if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
+    if (imgKey && !imgKey.startsWith("https://")) {
       imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
     } else {
       imgUrl = imgKey;
@@ -254,7 +254,7 @@ let EditProfileForm = (props) => {
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
                 variant="rounded"
-                alt={"Travis Howard"}
+                alt={userDetails.firstName}
                 src={fileToPreview}
                 className={classes.large}
               />

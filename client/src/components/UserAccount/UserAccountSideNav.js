@@ -146,7 +146,7 @@ const UserAccountSideNav = () => {
   let userImageURL;
 
   if (image) {
-    if (image.startsWith("https://lh3.googleusercontent.com")) {
+    if (image.startsWith("https://")) {
       userImageURL = image;
     } else {
       userImageURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;

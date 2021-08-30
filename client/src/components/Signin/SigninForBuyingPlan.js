@@ -8,6 +8,7 @@ import { signIn } from "../../actions/index";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import GoogleAuth from "../GoogleAuth";
+import LinkedinAuth from "../LinkedinAuth";
 class SigninForBuyingPlan extends React.Component {
   state = { email: "", password: "" };
 
@@ -66,29 +67,9 @@ class SigninForBuyingPlan extends React.Component {
                     Enter your details below.
                   </div>
                   <GoogleAuth intent={params.intent} />
-                  {/* <div
-                    className="row d-flex"
-                    style={{
-                      justifyContent: "space-between",
-                      marginBottom: "4%",
-                    }}
-                  >
-                    <li>
-                      <a href="/eureka/v1/auth/google">Login with Google</a>
-                    </li>
-                  </div> */}
-                  {/* <div
-                    className="row d-flex"
-                    style={{ alignItems: "center", marginBottom: "6%" }}
-                  >
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                    <div className="col-2 OR">OR</div>
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                  </div> */}
+                  <div className="mb-3">
+                    <LinkedinAuth intent={params.intent} />
+                  </div>
                   <form onSubmit={this.onSubmit}>
                     <div className="row">
                       <div className="mb-3">

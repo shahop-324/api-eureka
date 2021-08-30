@@ -45,6 +45,7 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
+import TestSession from "./HostingPlatform/Screens/TestSession";
 AOS.init();
 
 class App extends React.Component {
@@ -490,6 +491,14 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/event/:eventId/hosting-platform/booths"
+                  exact
+                  component={Root}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/event/:eventId/hosting-platform/reception"
                   exact
                   component={Root}
                 />

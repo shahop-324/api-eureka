@@ -8,6 +8,8 @@ import { signIn } from "../../actions/index";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import GoogleAuth from "../GoogleAuth";
+import LinkedIn from "@material-ui/icons/LinkedIn";
+import LinkedinAuth from "../LinkedinAuth";
 class SignInForEventRegistration extends React.Component {
   state = { email: "", password: "" };
 
@@ -70,6 +72,11 @@ class SignInForEventRegistration extends React.Component {
                     intent={params.intent}
                     eventId={this.props.match.params.eventId}
                   />
+
+                  <div className="mb-3">
+                    <LinkedinAuth intent={params.intent}
+                    eventId={this.props.match.params.eventId} />
+                  </div>
                   {/* <div
                     className="row d-flex"
                     style={{
