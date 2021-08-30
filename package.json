@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/shahop-324/project-eureka#readme",
   "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.59",
     "@material-ui/core": "^4.11.4",
     "@sendgrid/mail": "^7.4.5",
     "agora-access-token": "^2.0.4",

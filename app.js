@@ -17,6 +17,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const session = require("cookie-session");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
 
 const http = require("http");
 const socketio = require("socket.io");
@@ -169,14 +170,15 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
             response.data.profilePicture[
               "displayImage~"
             ].elements[0].identifiers[0].identifier;
-            userProfile.linkedinId=response.data.id;
+          userProfile.linkedinId = response.data.id;
           // I mean, couldn't they have burried it any deeper?
 
           axios
             .get(urlToGetUserEmail, config)
             .then((response) => {
               // console.log(response.data);
-              userProfile.email = response.data.elements[0]["handle~"].emailAddress;
+              userProfile.email =
+                response.data.elements[0]["handle~"].emailAddress;
 
               // console.log(userProfile);
 
@@ -289,6 +291,11 @@ app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
   const token = signToken(req.user._id);
 
   res.send({ user: req.user, token: token });
+});
+
+mailchimp.setConfig({
+  apiKey: "a46a2d608c843b545d321990cc03edb8-us5",
+  server: "us5",
 });
 
 app.get("/api-eureka/eureka/v1/logout", (req, res) => {
