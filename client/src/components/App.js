@@ -45,6 +45,7 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
+import TestSession from "./HostingPlatform/Screens/TestSession";
 AOS.init();
 
 class App extends React.Component {

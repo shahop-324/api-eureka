@@ -128,6 +128,8 @@ const SessionDetailCard = ({
     bgColor = "#538BF7";
   }
 
+  const roleToBeDisplayed = role;
+
   // const readFilePro = file => {
   //   return new Promise((resolve, reject) => {
   //     fs.readFile(file, (err, data) => {
@@ -205,6 +207,7 @@ const SessionDetailCard = ({
                     getRTCTokenForSpeaker(
                       id,
                       sessionRole,
+                      
                       eventId,
                       communityId,
                       userId
@@ -227,6 +230,7 @@ const SessionDetailCard = ({
                       userCountry: userCountry,
                       userOrganisation: userOrganisation,
                       userDesignation: userDesignation,
+                      roleToBeDisplayed: role,
                     },
                     (error) => {
                       if (error) {
@@ -250,6 +254,7 @@ const SessionDetailCard = ({
                       userCountry: userCountry,
                       userOrganisation: userOrganisation,
                       userDesignation: userDesignation,
+                      roleToBeDisplayed: role,
                     },
                     (error) => {
                       if (error) {

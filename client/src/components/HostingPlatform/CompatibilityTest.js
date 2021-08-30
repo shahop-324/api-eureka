@@ -59,11 +59,14 @@ else {
 
   let imgURL;
 
-  if (image.startsWith("https://lh3.googleusercontent.com")) {
-    imgURL = image;
-  } else {
-    imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+  if(image) {
+    if (image.startsWith("https://lh3.googleusercontent.com")) {
+      imgURL = image;
+    } else {
+      imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+    }
   }
+  
 
   return (
     <>

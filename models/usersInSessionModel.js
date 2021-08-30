@@ -44,6 +44,7 @@ const usersInSessionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    roleToBeDisplayed: {type: String},
   },
   {
     toJSON: { virtuals: true },
