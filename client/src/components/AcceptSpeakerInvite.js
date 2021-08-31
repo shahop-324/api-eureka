@@ -16,9 +16,8 @@ const AcceptSpeakerInvite = () => {
     (state) => state.speaker
   );
   
-  const { eventDetails } = useSelector((state) => state.event);
-  const { image, eventName } = eventDetails;
-  console.log(eventDetails.eventName);
+  const eventDetails = useSelector((state) => state.event.eventDetails);
+ 
   const { communityDetails } = useSelector((state) => state.community);
 
   const isEventLoading = useSelector((state) => state.event.isLoading);
@@ -49,7 +48,9 @@ const AcceptSpeakerInvite = () => {
     dispatch(fetchCommunity(communityId));
   }, []);
 
-  
+  if(isEventLoading) {
+    return <Loader />
+  }
 
   // if(isLoading || isEventLoading || isCommunityLoading) {
   //   return <Loader />;
@@ -136,7 +137,7 @@ const AcceptSpeakerInvite = () => {
               className="d-flex flex-row justify-content-center btn-outline-text mb-4"
               style={{ padding: "0", fontSize: "1.25rem" }}
             >
-              {eventName}
+              {eventDetails.eventName}
             </div>
           )}
 

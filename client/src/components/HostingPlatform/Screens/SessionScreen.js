@@ -498,33 +498,23 @@ const SessionScreen = () => {
     });
 
     rtc.client.on("user-left", (user) => {
-      if(!remoteStreams || !localStream) return;
+      // if(!remoteStreams || !localStream) return;
       const streamId = user.uid.toString(); // the id of stream that just left
-      console.log("I reached in user left section");
-      console.log(localStream);
-      console.log(MainStreamId);
-      console.log(streamId);
-      if (streamId === MainStreamId) {
-        // alert("This was the Main view container that left meeting.");
-        // Then make sure to assign some random stream from remote to main stream
-        let randomStream =
-          remoteStreams[0];
-          console.log(remoteStreams);
-          console.log(randomStream);
+      // console.log("I reached in user left section");
+      // console.log(localStream);
+      // console.log(MainStreamId);
+      // console.log(streamId);
+      window.location.reload();
+      // if (streamId === MainStreamId) {
+      //   // alert("This was the Main view container that left meeting.");
+      //   // Then make sure to assign some random stream from remote to main stream
 
-        setLocalStream(randomStream);
-
-        setRemoteStreams((prevStreams) => {
-          prevStreams.filter((prevStream) => prevStream.uid !== randomStream.uid);
-        });
-      } else {
-        setRemoteStreams((prevRemoteStreams) => {
-          // alert("This was the Mini view container that left meeting.");
-          return prevRemoteStreams.filter(
-            ({ stream, uid }) => uid !== streamId
-          );
-        });
-      }
+      //   window.location.reload();
+        
+      // } else {
+      //   window.location.reload();
+        
+      // }
     });
 
     await rtc.client

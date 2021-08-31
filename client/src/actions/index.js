@@ -5075,6 +5075,7 @@ export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
 
 export const fetchRemoteStreams =
   (remoteStreams) => async (dispatch, getState) => {
+   
     dispatch(
       StreamActions.fetchRemoteStreams({
         streams: remoteStreams,
@@ -5083,9 +5084,12 @@ export const fetchRemoteStreams =
   };
 
 export const fetchLocalStream = (localStream) => async (dispatch, getState) => {
+  
   dispatch(
     StreamActions.fetchLocalStream({
       localStream: localStream,
     })
   );
 };
+
+
