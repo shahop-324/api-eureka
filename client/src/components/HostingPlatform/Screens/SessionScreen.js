@@ -54,10 +54,12 @@ import NotYetStarted from "./../../../assets/images/NotYetStarted.png";
 import InCallDeviceTest from "../HelperComponents/InCallDeviceTest";
 import RemotePlayer from "../SessionStreamingComponents.js/RemotePlayer";
 import LocalPlayer from "../SessionStreamingComponents.js/LocalPlayer";
+import ScreenTrackPlayer from "./../SessionStreamingComponents.js/ScreenTrackPlayer";
 
 let rtc = {
   localAudioTrack: null,
   localVideoTrack: null,
+  localScreenTrack: null,
   client: null,
   screenClient: null,
 };
@@ -365,40 +367,11 @@ const SessionScreen = () => {
 
     await rtc.screenClient.join(options.appId, sessionId, screenToken, uid);
 
-    // options.appId, options.channel, options.token, options.uid
+    rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack();
 
-    const screenTrack = await AgoraRTC.createScreenVideoTrack();
+    await rtc.screenClient.publish(uid);
 
-    await rtc.screenClient.publish(screenTrack);
-
-    rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-
-    console.log(rtc.localAudioTrack);
-    console.log(rtc.localVideoTrack);
-
-    await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-
-    const localPlayerContainer = document.createElement("div");
-    localPlayerContainer.id = uid;
-
-    localPlayerContainer.style.position = "relative";
-    localPlayerContainer.style.borderRadius = "10px";
-    localPlayerContainer.style.background = "rgba( 255, 255, 255, 0.25 )";
-    localPlayerContainer.style.backdropFilter = "blur( 4px )";
-    localPlayerContainer.style.zIndex = "101";
-
-    document
-      .getElementById("session-stage-video-layout-grid")
-      .append(localPlayerContainer);
-
-    // setGrid(
-    //   document.getElementById("session-stage-video-layout-grid")
-    //     .childElementCount
-    // );
-
-    rtc.localVideoTrack.play(localPlayerContainer);
-
-    return rtc.screenClient;
+    
   }
 
   async function startBasicLiveStreaming() {
