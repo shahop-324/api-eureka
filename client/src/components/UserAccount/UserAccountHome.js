@@ -12,6 +12,7 @@ import UserAccountRecordings from "./UserAccountRecordings";
 import {
   errorTrackerForPersonalData,
   fetchUserAllPersonalData,
+  MailChimpAuth,
 } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 import { useEffect } from "react";
@@ -48,7 +49,7 @@ const UserAccountHome = () => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
     console.log(params.code);
-    dispatch(fetchUserAllPersonalData(params.code));
+    dispatch(MailChimpAuth(params.code));
   }, [dispatch]);
   useEffect(() => {
     return () => {

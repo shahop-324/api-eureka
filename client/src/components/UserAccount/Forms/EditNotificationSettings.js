@@ -1,24 +1,26 @@
-import React from 'react';
-import {Field, reduxForm} from 'redux-form';
+import React from "react";
+import { Field, reduxForm } from "redux-form";
 
-import {withStyles} from '@material-ui/core/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {useDispatch} from 'react-redux';
-import {editUser} from '../../../actions';
-import {connect} from 'react-redux';
+import { withStyles } from "@material-ui/core/styles";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { useDispatch } from "react-redux";
+import { editUser } from "../../../actions";
+import { connect } from "react-redux";
+import { MailChimpAuth } from "../../../actions";
+
 const RoyalBlueCheckBox = withStyles({
   root: {
-    color: '#538BF7',
-    '&$checked': {
-      color: '#3877F3',
+    color: "#538BF7",
+    "&$checked": {
+      color: "#3877F3",
     },
   },
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-const RenderCustomCheckboxLabels = ({input, label, value}) => {
+const RenderCustomCheckboxLabels = ({ input, label, value }) => {
   return (
     <FormGroup row>
       <FormControlLabel
@@ -51,11 +53,10 @@ const RenderCustomCheckboxLabels = ({input, label, value}) => {
 };
 
 const EditNotificationSettings = (props) => {
-  const {handleSubmit, pristine, submitting} = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const showResults = (formValues) => {
- 
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
   const dispatch = useDispatch();
@@ -63,6 +64,9 @@ const EditNotificationSettings = (props) => {
     // console.log(formValues);
     // showResults(formValues);
     dispatch(editUser(formValues));
+  };
+  const onClickHandle = () => {
+    dispatch(MailChimpAuth());
   };
 
   return (
@@ -127,10 +131,18 @@ const EditNotificationSettings = (props) => {
               type="submit"
               disabled={submitting || pristine}
               className="col-3 btn btn-primary"
-              style={{textAlign: 'center', backgroundColor: '#538BF7'}}
+              style={{ textAlign: "center", backgroundColor: "#538BF7" }}
             >
               Save changes
             </button>
+            <a href="http://localhost:3000/api-eureka/auth/mailchimp">
+              {" "}
+              MailChimp
+            </a>
+            {/* <button type="button" onClick={() => onClickHandle}>
+              {" "}
+              MailChimp
+            </button> */}
           </div>
         </form>
       </div>
@@ -140,20 +152,19 @@ const EditNotificationSettings = (props) => {
 const mapStateToProps = (state, props) => ({
   initialValues: {
     notificationsForRegisteredEvents:
-       state.user.userDetails.notificationsForRegisteredEvents,
+      state.user.userDetails.notificationsForRegisteredEvents,
     notificationsForEventRemainders:
-       state.user.userDetails.notificationsForEventRemainders,
+      state.user.userDetails.notificationsForEventRemainders,
     notificationsBasedOnMyPreference:
-       state.user.userDetails.notificationsBasedOnMyPreference,
+      state.user.userDetails.notificationsBasedOnMyPreference,
   },
 });
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: 'notificationsSettings',
+    form: "notificationsSettings",
     enableReinitialize: true,
     destroyOnUnmount: false,
-
   })(EditNotificationSettings)
 );
 

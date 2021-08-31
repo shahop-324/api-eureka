@@ -45,13 +45,12 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
-import TestSession from "./HostingPlatform/Screens/TestSession";
+
 AOS.init();
 
 class App extends React.Component {
   render() {
     const { isSignedIn } = this.props;
-  
 
     // (() => {
     //   console.log("i run ");
@@ -106,9 +105,17 @@ class App extends React.Component {
               <Route path="/event-builder" exact component={EventBuilder} />
               <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
-              <Route path="/community-public-page/:communityId" exact component={CommunityPublicPage} />
+              <Route
+                path="/community-public-page/:communityId"
+                exact
+                component={CommunityPublicPage}
+              />
 
-              <Route path="/pricing/ticketing" exact component={TicketingPricing} />
+              <Route
+                path="/pricing/ticketing"
+                exact
+                component={TicketingPricing}
+              />
               <Route path="/pricing" exact component={Pricing} />
               <Route path="/not-found" exact component={NotFoundPage} />
               <Route
@@ -533,7 +540,6 @@ class App extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
-  
 });
 
 export default connect(mapStateToProps)(App);

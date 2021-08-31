@@ -512,14 +512,16 @@ const SessionScreen = () => {
       volumes.forEach((volume) => {
         console.log(`UID ${volume.uid} Level ${volume.level}`);
         if (options.uid === volume.uid && volume.level > 30) {
-          document.getElementById("session-main-view-container").style.border = "3px solid #538BF7";
-         
+          document.getElementById("session-main-view-container").style.border =
+            "3px solid #538BF7";
         } else if (options.uid === volume.uid && volume.level < 30) {
-          document.getElementById("session-main-view-container").style.boxShadow = "none";
+          document.getElementById(
+            "session-main-view-container"
+          ).style.boxShadow = "none";
         }
         if (options.uid !== volume.uid && volume.level > 30) {
-         
-          document.getElementById(volume.uid).style.border = "3px solid #538BF7";
+          document.getElementById(volume.uid).style.border =
+            "3px solid #538BF7";
         } else if (options.uid !== volume.uid && volume.level < 30) {
           document.getElementById(volume.uid).style.border = "none";
         }
