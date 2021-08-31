@@ -5,7 +5,11 @@ import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
-import { errorTrackerForSignIn, resetAuthError } from "../../actions/index";
+import {
+  errorTrackerForSignIn,
+  resetAuthError,
+  MailChimpAuth,
+} from "../../actions/index";
 import LinkedinAuth from "../LinkedinAuth";
 import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
@@ -73,7 +77,7 @@ const Signin = (props) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
     console.log(params.code);
-
+    dispatch(MailChimpAuth(params.code));
     dispatch(linkedinSignIn(params.code));
     dispatch(resetAuthError());
     setSigninClicked(false);
@@ -152,14 +156,11 @@ const Signin = (props) => {
                 </div>
                 {/* <div className="d-flex flex-row align-items-center justify-content-center"> */}
 
-              
                 <GoogleAuth />
-                
+
                 <div className="mb-3">
-                <LinkedinAuth />
-                   </div>
-                
-               
+                  <LinkedinAuth />
+                </div>
 
                 <div
                   className="row d-flex"

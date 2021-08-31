@@ -69,8 +69,8 @@ const urlToGetUserEmail =
 const MAILCHIMP_CLIENT_ID = "919814706970";
 const MAILCHIMP_CLIENT_SECRET =
   "3837302297576b7845b5ced8bd4691bb69ac7b8c5f90645887";
-const BASE_URL = "http://127.0.0.1:3000";
-const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/oauth/mailchimp/callback`;
+const BASE_URL = "http://127.0.0.1:3001";
+const OAUTH_CALLBACK = `${BASE_URL}/signin`;
 
 app.use(
   cors({
