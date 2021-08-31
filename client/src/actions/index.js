@@ -4453,7 +4453,7 @@ export const getRTCTokenForScreenShare =
         method: "POST",
         body: JSON.stringify({
           sessionId: sessionId,
-          uid: uid,
+          uid: `screen_${uid}`,
         }),
 
         headers: {

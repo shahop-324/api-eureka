@@ -129,8 +129,6 @@ const IOSSwitch = withStyles((theme) => ({
 });
 
 const SessionScreen = () => {
-  const uid = uuidv4();
-
   const userId = useSelector((state) => state.eventAccessToken.id);
 
   const [mainStreamId, setMainStreamId] = useState(userId);
@@ -363,15 +361,18 @@ const SessionScreen = () => {
   };
 
   async function startScreenCall() {
-    rtc.screenClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    rtc.screenClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
-    await rtc.screenClient.join(options.appId, sessionId, screenToken, uid);
+    await rtc.screenClient.join(
+      options.appId,
+      sessionId,
+      screenToken,
+      `screen_${userId}`
+    );
 
     rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack();
 
-    await rtc.screenClient.publish(uid);
-
-    
+    await rtc.screenClient.publish(rtc.localScreenTrack);
   }
 
   async function startBasicLiveStreaming() {
@@ -614,13 +615,19 @@ const SessionScreen = () => {
     return remoteStreams.map((stream) => {
       if (!stream.uid) return [];
 
+      let userUID = stream.uid;
+
+      if (stream.uid.startsWith("screen")) {
+        userUID = userUID.slice(7);
+        console.error(userUID);
+      }
       const {
         userName,
         userImage,
         userOrganisation,
         userDesignation,
         sessionRole,
-      } = peopleInThisSession.find((people) => people.userId === stream.uid);
+      } = peopleInThisSession.find((people) => people.userId === userUID);
       return (
         <RemotePlayer
           uid={stream.uid}
@@ -884,7 +891,7 @@ const SessionScreen = () => {
                       dispatch(
                         getRTCTokenForScreenShare(
                           sessionId,
-                          uid,
+                          userId,
                           startScreenCall
                         )
                       );
