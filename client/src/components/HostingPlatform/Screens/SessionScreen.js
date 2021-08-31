@@ -137,11 +137,11 @@ const SessionScreen = () => {
 
   const [mainStreamId, setMainStreamId] = useState(userId);
 
-  // const [remoteStreams, setRemoteStreams] = useState([]);
+  const [remoteStreams, setRemoteStreams] = useState([]);
 
-  const { remoteStreams, localStream } = useSelector((state) => state.streams);
+  // const { remoteStreams, localStream } = useSelector((state) => state.streams);
 
-  // const [localStream, setLocalStream] = useState("");
+  const [localStream, setLocalStream] = useState("");
 
   const [count, setCount] = useState(0);
 
@@ -462,12 +462,12 @@ const SessionScreen = () => {
         const remoteVideoTrack = user.videoTrack;
 
         // Keep track of all remote video streams
-        // setRemoteStreams((prevRemoteStreams) => {
-        //   return [
-        //     ...prevRemoteStreams,
-        //     { stream: remoteVideoTrack, uid: streamId },
-        //   ];
-        // });
+        setRemoteStreams((prevRemoteStreams) => {
+          return [
+            ...prevRemoteStreams,
+            { stream: remoteVideoTrack, uid: streamId },
+          ];
+        });
 
         dispatch(
           createRemoteStream({ stream: remoteVideoTrack, uid: streamId })
@@ -509,14 +509,24 @@ const SessionScreen = () => {
 
     rtc.client.on("user-left", (user) => {
       const streamId = user.uid.toString(); // the id of stream that just left
-      // window.location.reload();
+
+      console.log(MainStreamId);
+      console.log(streamId);
 
       console.log(localStream);
       console.log(remoteStreams);
 
-      setCount((prevCount) => prevCount + 1);
+      if (MainStreamId === streamId) {
+        // Main view left
+        console.log("Main view left");
+      } else {
+        // Mini view left
+        console.log("Mini view left");
+      }
 
-      dispatch(deleteRemoteStream(streamId));
+      setRemoteStreams((prevStreams) =>
+        prevStreams.filter((stream) => stream.uid !== streamId)
+      );
     });
 
     await rtc.client
@@ -532,10 +542,10 @@ const SessionScreen = () => {
             encoderConfig: "1080p_1",
           });
 
-          // setLocalStream({  });
-          dispatch(
-            createLocalStream({ stream: rtc.localVideoTrack, uid: options.uid })
-          );
+          setLocalStream({ stream: rtc.localVideoTrack, uid: options.uid });
+          // dispatch(
+          //   createLocalStream({ stream: rtc.localVideoTrack, uid: options.uid })
+          // );
           MainStreamId = options.uid;
 
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
@@ -674,29 +684,21 @@ const SessionScreen = () => {
     const MiniTrack = remoteStreamToSwap.stream;
     const MiniUID = remoteStreamToSwap.uid;
 
-    // setLocalStream({ stream: MiniTrack, uid: MiniUID });
-    dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
+    setLocalStream({ stream: MiniTrack, uid: MiniUID });
+    // dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
 
     MainStreamId = MiniUID;
 
-    // setRemoteStreams((prevStreams) => {
-    //   const remoteStreamsToRetain = prevStreams.filter(
-    //     (prevStream) => prevStream.uid !== MiniUID
-    //   );
-    //   console.log([
-    //     ...remoteStreamsToRetain,
-    //     { stream: MainTrack, uid: MainUID },
-    //   ]);
-    //   return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
-    // });
-
-    let remoteStreamsToRetain = remoteStreams.filter(
-      (prevStream) => prevStream.uid !== MiniUID
-    );
-
-    remoteStreamsToRetain.push({ stream: MainTrack, uid: MainUID });
-
-    dispatch(fetchRemoteStreams(remoteStreamsToRetain));
+    setRemoteStreams((prevStreams) => {
+      const remoteStreamsToRetain = prevStreams.filter(
+        (prevStream) => prevStream.uid !== MiniUID
+      );
+      console.log([
+        ...remoteStreamsToRetain,
+        { stream: MainTrack, uid: MainUID },
+      ]);
+      return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
+    });
   };
 
   return (
