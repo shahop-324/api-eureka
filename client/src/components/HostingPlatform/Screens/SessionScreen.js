@@ -137,6 +137,16 @@ const SessionScreen = () => {
 
   const [localStream, setLocalStream] = useState("");
 
+  const num = 1;
+  let remoteStreams_o = [];
+  let localStream_o;
+
+  const switchMiniToMain = () => {
+    console.log(remoteStreams_o);
+    console.log(localStream_o);
+    console.log(num);
+  };
+
   const [count, setCount] = useState(0);
 
   const dispatch = useDispatch();
@@ -463,6 +473,8 @@ const SessionScreen = () => {
           ];
         });
 
+        remoteStreams_o.push({ stream: remoteVideoTrack, uid: streamId });
+
         remoteVideoTrack.play(streamId);
       }
 
@@ -503,20 +515,45 @@ const SessionScreen = () => {
       console.log(MainStreamId);
       console.log(streamId);
 
-      console.log(localStream);
-      console.log(remoteStreams);
+      console.log(localStream_o);
+      console.log(remoteStreams_o);
 
       if (MainStreamId === streamId) {
         // Main view left
         console.log("Main view left");
+
+        console.log(localStream_o);
+        console.log(remoteStreams_o);
+        console.log(options.uid);
+
+        // Set new local stream
+
+        setLocalStream(localStream_o);
+
+        MainStreamId = localStream_o.uid;
+
+        // Set remote streams (exclude the one which you just added to local stream)
+        setRemoteStreams(
+          remoteStreams_o.filter((stream) => stream.uid !== streamId)
+        );
+
+        remoteStreams_o = remoteStreams_o.filter(
+          (stream) => stream.uid !== streamId
+        );
+
+        // switchMiniToMain();
       } else {
         // Mini view left
         console.log("Mini view left");
-      }
 
-      setRemoteStreams((prevStreams) =>
-        prevStreams.filter((stream) => stream.uid !== streamId)
-      );
+        setRemoteStreams((prevStreams) =>
+          prevStreams.filter((stream) => stream.uid !== streamId)
+        );
+
+        remoteStreams_o = remoteStreams_o.filter(
+          (stream) => stream.uid !== streamId
+        );
+      }
     });
 
     await rtc.client
@@ -533,6 +570,7 @@ const SessionScreen = () => {
           });
 
           setLocalStream({ stream: rtc.localVideoTrack, uid: options.uid });
+          localStream_o = { stream: rtc.localVideoTrack, uid: options.uid };
           // dispatch(
           //   createLocalStream({ stream: rtc.localVideoTrack, uid: options.uid })
           // );
@@ -625,7 +663,9 @@ const SessionScreen = () => {
     });
   };
 
-  const renderLocalStream = ({ stream, uid }) => {
+  const renderLocalStream = (localStream) => {
+    if (!localStream) return;
+    const { stream, uid } = localStream;
     if (!stream || !uid) return;
     // console.log(stream, uid);
     const {
@@ -675,6 +715,7 @@ const SessionScreen = () => {
     const MiniUID = remoteStreamToSwap.uid;
 
     setLocalStream({ stream: MiniTrack, uid: MiniUID });
+    localStream_o = { stream: MiniTrack, uid: MiniUID };
     // dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
 
     MainStreamId = MiniUID;
@@ -689,6 +730,14 @@ const SessionScreen = () => {
       ]);
       return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
     });
+
+    const remoteStreamsToRetain = remoteStreams_o.filter(
+      (prevStream) => prevStream.uid !== MiniUID
+    );
+
+    remoteStreamsToRetain.push({ stream: MainTrack, uid: MainUID });
+
+    remoteStreams_o = remoteStreamsToRetain;
   };
 
   return (
