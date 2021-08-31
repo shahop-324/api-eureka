@@ -5075,7 +5075,6 @@ export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
 
 export const fetchRemoteStreams =
   (remoteStreams) => async (dispatch, getState) => {
-   
     dispatch(
       StreamActions.fetchRemoteStreams({
         streams: remoteStreams,
@@ -5083,13 +5082,26 @@ export const fetchRemoteStreams =
     );
   };
 
-export const fetchLocalStream = (localStream) => async (dispatch, getState) => {
-  
+export const createRemoteStream = (stream) => async (dispatch, getState) => {
   dispatch(
-    StreamActions.fetchLocalStream({
-      localStream: localStream,
+    StreamActions.createRemoteStream({
+      stream: stream,
     })
   );
 };
 
+export const deleteRemoteStream = (streamId) => async (dispatch, getState) => {
+  dispatch(
+    StreamActions.deleteRemoteStream({
+      streamId: streamId,
+    })
+  );
+};
 
+export const createLocalStream = (localStream) => async (dispatch, getState) => {
+  dispatch(
+    StreamActions.createLocalStream({
+      localStream: localStream,
+    })
+  );
+};

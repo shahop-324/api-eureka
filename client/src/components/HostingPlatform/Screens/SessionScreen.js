@@ -30,7 +30,11 @@ import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
 import {
+  createLocalStream,
+  createRemoteStream,
+  deleteRemoteStream,
   errorTrackerForFetchSessionForSessionStage,
+  fetchRemoteStreams,
   fetchSessionForSessionStage,
   getRTCToken,
   getRTCTokenForScreenShare,
@@ -133,11 +137,13 @@ const SessionScreen = () => {
 
   const [mainStreamId, setMainStreamId] = useState(userId);
 
-  const [remoteStreams, setRemoteStreams] = useState([]);
+  // const [remoteStreams, setRemoteStreams] = useState([]);
 
-  
+  const { remoteStreams, localStream } = useSelector((state) => state.streams);
 
-  const [localStream, setLocalStream] = useState("");
+  // const [localStream, setLocalStream] = useState("");
+
+  const [count, setCount] = useState(0);
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -456,12 +462,16 @@ const SessionScreen = () => {
         const remoteVideoTrack = user.videoTrack;
 
         // Keep track of all remote video streams
-        setRemoteStreams((prevRemoteStreams) => {
-          return [
-            ...prevRemoteStreams,
-            { stream: remoteVideoTrack, uid: streamId },
-          ];
-        });
+        // setRemoteStreams((prevRemoteStreams) => {
+        //   return [
+        //     ...prevRemoteStreams,
+        //     { stream: remoteVideoTrack, uid: streamId },
+        //   ];
+        // });
+
+        dispatch(
+          createRemoteStream({ stream: remoteVideoTrack, uid: streamId })
+        );
 
         remoteVideoTrack.play(streamId);
       }
@@ -498,23 +508,15 @@ const SessionScreen = () => {
     });
 
     rtc.client.on("user-left", (user) => {
-      // if(!remoteStreams || !localStream) return;
       const streamId = user.uid.toString(); // the id of stream that just left
-      // console.log("I reached in user left section");
-      // console.log(localStream);
-      // console.log(MainStreamId);
-      // console.log(streamId);
-      window.location.reload();
-      // if (streamId === MainStreamId) {
-      //   // alert("This was the Main view container that left meeting.");
-      //   // Then make sure to assign some random stream from remote to main stream
+      // window.location.reload();
 
-      //   window.location.reload();
-        
-      // } else {
-      //   window.location.reload();
-        
-      // }
+      console.log(localStream);
+      console.log(remoteStreams);
+
+      setCount((prevCount) => prevCount + 1);
+
+      dispatch(deleteRemoteStream(streamId));
     });
 
     await rtc.client
@@ -530,7 +532,10 @@ const SessionScreen = () => {
             encoderConfig: "1080p_1",
           });
 
-          setLocalStream({ stream: rtc.localVideoTrack, uid: options.uid });
+          // setLocalStream({  });
+          dispatch(
+            createLocalStream({ stream: rtc.localVideoTrack, uid: options.uid })
+          );
           MainStreamId = options.uid;
 
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
@@ -669,19 +674,29 @@ const SessionScreen = () => {
     const MiniTrack = remoteStreamToSwap.stream;
     const MiniUID = remoteStreamToSwap.uid;
 
-    setLocalStream({ stream: MiniTrack, uid: MiniUID });
+    // setLocalStream({ stream: MiniTrack, uid: MiniUID });
+    dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
+
     MainStreamId = MiniUID;
 
-    setRemoteStreams((prevStreams) => {
-      const remoteStreamsToRetain = prevStreams.filter(
-        (prevStream) => prevStream.uid !== MiniUID
-      );
-      console.log([
-        ...remoteStreamsToRetain,
-        { stream: MainTrack, uid: MainUID },
-      ]);
-      return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
-    });
+    // setRemoteStreams((prevStreams) => {
+    //   const remoteStreamsToRetain = prevStreams.filter(
+    //     (prevStream) => prevStream.uid !== MiniUID
+    //   );
+    //   console.log([
+    //     ...remoteStreamsToRetain,
+    //     { stream: MainTrack, uid: MainUID },
+    //   ]);
+    //   return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
+    // });
+
+    let remoteStreamsToRetain = remoteStreams.filter(
+      (prevStream) => prevStream.uid !== MiniUID
+    );
+
+    remoteStreamsToRetain.push({ stream: MainTrack, uid: MainUID });
+
+    dispatch(fetchRemoteStreams(remoteStreamsToRetain));
   };
 
   return (
@@ -718,7 +733,7 @@ const SessionScreen = () => {
                 id="session-main-view-container"
                 style={{ backgroundColor: "#DBDBDB", borderRadius: "5px" }}
               >
-                {renderLocalStream(localStream)}
+                {localStream && renderLocalStream(localStream)}
               </div>
 
               <div
@@ -728,7 +743,7 @@ const SessionScreen = () => {
                 className="session-mini-view-container"
                 id="session-mini-view-container"
               >
-                {renderRemoteStreams(remoteStreams)}
+                {remoteStreams && renderRemoteStreams(remoteStreams)}
                 {/* Session mini videos will go over here */}
               </div>
             </div>

@@ -13,9 +13,20 @@ const StreamSlice = createSlice({
     fetchRemoteStreams(state, action) {
       state.remoteStreams = action.payload.streams;
     },
+    createRemoteStream(state, action) {
+      state.remoteStreams.push(action.payload.stream);
+    },
+    deleteRemoteStream(state, action) {
+      state.remoteStreams = state.remoteStreams.filter(
+        (stream) => stream.uid !== action.payload.streamId
+      );
+    },
     fetchLocalStream(state, action) {
       state.localStream = action.payload.localStream;
     },
+    createLocalStream(state, action) {
+      state.localStream = action.payload.localStream;
+    }
   },
 });
 
