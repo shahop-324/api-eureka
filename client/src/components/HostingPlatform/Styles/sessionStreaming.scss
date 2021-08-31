@@ -59,6 +59,37 @@
     z-index: 10000000000000000000000;
 }
 
+.player-overlay-pin {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(214, 214, 214, 0.26);
+    z-index: 425627628892277228288289229828;
+}
+
+// .player-overlay-pin, .pin-stream-btn {
+//     display: none;
+// }
+
+.player-overlay-pin, .pin-stream-btn {
+    // display: none;
+    background-color: transparent;
+    opacity: 0;
+}
+
+.player-overlay-pin:hover {
+    display: inline-block;
+    background-color: rgba(214, 214, 214, 0.26);
+    opacity: 1;
+}
+
+.pin-stream-btn:hover {
+    display: block;
+    opacity: 1;
+}
+
+
 .wave-loader {
     height: 20px;
     display: flex;

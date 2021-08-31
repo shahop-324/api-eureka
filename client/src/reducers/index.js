@@ -34,6 +34,7 @@ import sessionChatSlice from "./sessionChatSlice";
 import eventAlertSlice from "./eventAlertSlice";
 import eventPollSlice from "./eventPollSlice";
 import AvailableForNetworkingSlice from "./availableForNetworking";
+import StreamSlice from "./streamSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -70,4 +71,5 @@ export default combineReducers({
   eventAlert: eventAlertSlice.reducer,
   eventPoll: eventPollSlice.reducer,
   availableForNetworking: AvailableForNetworkingSlice.reducer,
+  streams: StreamSlice.reducer,
 });

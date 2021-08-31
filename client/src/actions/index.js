@@ -36,7 +36,7 @@ import axios from "axios";
 import { eventAlertActions } from "../reducers/eventAlertSlice";
 import { eventPollActions } from "../reducers/eventPollSlice";
 import { availableForNetworkingActions } from "../reducers/availableForNetworking";
-
+import { StreamActions } from "../reducers/streamSlice";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -154,50 +154,45 @@ export const linkedinSignIn = (code, intent, eventId) => async (dispatch) => {
   // try {
 
   //  dispatch(authActions.startLoading());
-try
-{
-  let res =  await eureka.get(`/getUserCredentials/?code=${code}`);
-  console.log(res.data);
+  try {
+    let res = await eureka.get(`/getUserCredentials/?code=${code}`);
+    console.log(res.data);
 
-// const formValues=res.data;
-res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
-   ...res.data
-});
-console.log(res.data.data.user);
-dispatch(
-  authActions.SignIn({
-    token: res.data.token,
-    isSignedInThroughLinkedin: true,
+    // const formValues=res.data;
+    res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
+      ...res.data,
+    });
+    console.log(res.data.data.user);
+    dispatch(
+      authActions.SignIn({
+        token: res.data.token,
+        isSignedInThroughLinkedin: true,
 
-    referralCode: res.data.data.user.hasUsedAnyReferral
-      ? null
-      : res.data.data.user.referralCode,
-  })
-);
-dispatch(
-  userActions.CreateUser({
-    user: res.data.data.user,
-  })
-);
+        referralCode: res.data.data.user.hasUsedAnyReferral
+          ? null
+          : res.data.data.user.referralCode,
+      })
+    );
+    dispatch(
+      userActions.CreateUser({
+        user: res.data.data.user,
+      })
+    );
 
-if (intent === "eventRegistration") {
-  history.push(`/event-landing-page/${eventId}`);
-} else if (intent === "buyPlan") {
-  history.push("/pricing");
-  dispatch(fetchUserAllPersonalData());
-} else {
-  history.push("/user/home");
-  // window.location.href = REACT_APP_MY_ENV
-  //   ? "http://localhost:3001/user/home"
-  //   : "https://www.evenz.in/user/home";
-}
-}
-catch(err)
-{
-  console.log(err)
-}
-
-
+    if (intent === "eventRegistration") {
+      history.push(`/event-landing-page/${eventId}`);
+    } else if (intent === "buyPlan") {
+      history.push("/pricing");
+      dispatch(fetchUserAllPersonalData());
+    } else {
+      history.push("/user/home");
+      // window.location.href = REACT_APP_MY_ENV
+      //   ? "http://localhost:3001/user/home"
+      //   : "https://www.evenz.in/user/home";
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const errorTrackerForLinkedinSignIn =
@@ -5074,6 +5069,23 @@ export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
   dispatch(
     sessionChatActions.CreateSessionChat({
       chat: newMsg,
+    })
+  );
+};
+
+export const fetchRemoteStreams =
+  (remoteStreams) => async (dispatch, getState) => {
+    dispatch(
+      StreamActions.fetchRemoteStreams({
+        streams: remoteStreams,
+      })
+    );
+  };
+
+export const fetchLocalStream = (localStream) => async (dispatch, getState) => {
+  dispatch(
+    StreamActions.fetchLocalStream({
+      localStream: localStream,
     })
   );
 };

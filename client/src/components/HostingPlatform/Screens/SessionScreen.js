@@ -62,6 +62,8 @@ let rtc = {
   screenClient: null,
 };
 
+let MainStreamId; // Keep Track of main stream id
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -132,6 +134,8 @@ const SessionScreen = () => {
   const [mainStreamId, setMainStreamId] = useState(userId);
 
   const [remoteStreams, setRemoteStreams] = useState([]);
+
+  
 
   const [localStream, setLocalStream] = useState("");
 
@@ -327,8 +331,9 @@ const SessionScreen = () => {
 
   useEffect(() => {
     remoteStreams.forEach((remoteStream, index) => {
+      if (!remoteStream.stream) return;
       remoteStream.stream.play(remoteStream.uid);
-    });
+    }, []);
 
     if (typeof remoteStreams !== "undefined" && remoteStreams.length > 0) {
       setRemoteStreamAvailable(true);
@@ -481,10 +486,10 @@ const SessionScreen = () => {
       const isAudioEnabled = user._audio_enabled_;
       const isAudioMuted = user._audio_muted_;
 
-      if (isVideoEnabled && isVideoMuted) {
-        document.getElementById(`avatar_box_${userId}`).style.display =
-          "inline-block";
-      }
+      // if (isVideoEnabled && isVideoMuted) {
+      //   document.getElementById(`avatar_box_${userId}`).style.display =
+      //     "inline-block";
+      // }
 
       // if(isAudioEnabled && isAudioMuted) {
       //   document.getElementById(`remote_mic_off_${userId}`).style.display = "inline-block";
@@ -493,37 +498,33 @@ const SessionScreen = () => {
     });
 
     rtc.client.on("user-left", (user) => {
-      const streamId = user.uid.toString();
+      if(!remoteStreams || !localStream) return;
+      const streamId = user.uid.toString(); // the id of stream that just left
+      console.log("I reached in user left section");
+      console.log(localStream);
+      console.log(MainStreamId);
+      console.log(streamId);
+      if (streamId === MainStreamId) {
+        // alert("This was the Main view container that left meeting.");
+        // Then make sure to assign some random stream from remote to main stream
+        let randomStream =
+          remoteStreams[0];
+          console.log(remoteStreams);
+          console.log(randomStream);
 
-      setRemoteStreams((prevRemoteStreams) => {
-        return prevRemoteStreams.filter(({ stream, uid }) => uid !== streamId);
-      });
-    });
+        setLocalStream(randomStream);
 
-    // rtc.client.on("volume-indicator", function (result) {
-    //   result.forEach(function (volume, index) {
-    //     console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
-    //   });
-    // });
-
-    // Find active speakers
-    rtc.client.enableAudioVolumeIndicator();
-    rtc.client.on("volume-indicator", (volumes) => {
-      volumes.forEach((volume) => {
-        console.log(`UID ${volume.uid} Level ${volume.level}`);
-        if (options.uid === volume.uid && volume.level > 30) {
-          document.getElementById("session-main-view-container").style.border = "3px solid #538BF7";
-         
-        } else if (options.uid === volume.uid && volume.level < 30) {
-          document.getElementById("session-main-view-container").style.boxShadow = "none";
-        }
-        if (options.uid !== volume.uid && volume.level > 30) {
-         
-          document.getElementById(volume.uid).style.border = "3px solid #538BF7";
-        } else if (options.uid !== volume.uid && volume.level < 30) {
-          document.getElementById(volume.uid).style.border = "none";
-        }
-      });
+        setRemoteStreams((prevStreams) => {
+          prevStreams.filter((prevStream) => prevStream.uid !== randomStream.uid);
+        });
+      } else {
+        setRemoteStreams((prevRemoteStreams) => {
+          // alert("This was the Mini view container that left meeting.");
+          return prevRemoteStreams.filter(
+            ({ stream, uid }) => uid !== streamId
+          );
+        });
+      }
     });
 
     await rtc.client
@@ -539,30 +540,12 @@ const SessionScreen = () => {
             encoderConfig: "1080p_1",
           });
 
+          setLocalStream({ stream: rtc.localVideoTrack, uid: options.uid });
+          MainStreamId = options.uid;
+
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
-          const localPlayerId = userId;
-
-          const { userName, userImage, userOrganisation, userDesignation } =
-            peopleInThisSession.find((people) => people.userId === userId);
-
-          const localPlayerContainer = (
-            <LocalPlayer
-              role={sessionRole}
-              localPlayerId={localPlayerId}
-              userImage={userImage}
-              userName={userName}
-              userOrganisation={userOrganisation}
-              userDesignation={userDesignation}
-            />
-          );
-
-          ReactDOM.render(
-            localPlayerContainer,
-            document.querySelector("#session-main-view-container")
-          );
-
-          rtc.localVideoTrack.play(localPlayerId);
+          rtc.localVideoTrack.play(options.uid);
 
           console.log("publish success!");
         }
@@ -620,24 +603,94 @@ const SessionScreen = () => {
   };
 
   const renderRemoteStreams = (remoteStreams) => {
-    return remoteStreams.map(({ stream, uid }) => {
+    if (!remoteStreams) return;
+
+    return remoteStreams.map((stream) => {
+      if (!stream.uid) return [];
+
       const {
         userName,
         userImage,
         userOrganisation,
         userDesignation,
         sessionRole,
-      } = peopleInThisSession.find((people) => people.userId === uid);
+      } = peopleInThisSession.find((people) => people.userId === stream.uid);
       return (
         <RemotePlayer
+          uid={stream.uid}
           role={sessionRole}
-          remotePlayerId={uid}
+          remotePlayerId={stream.uid}
           userName={userName}
           userImage={userImage}
           userOrganisation={userOrganisation}
           userDesignation={userDesignation}
+          swapMainAndMiniView={swapMainAndMiniView}
         />
       );
+    });
+  };
+
+  const renderLocalStream = ({ stream, uid }) => {
+    if (!stream || !uid) return;
+    // console.log(stream, uid);
+    const {
+      userName,
+      userImage,
+      userOrganisation,
+      userDesignation,
+      sessionRole,
+    } = peopleInThisSession.find((people) => people.userId === uid);
+
+    return (
+      <LocalPlayer
+        role={sessionRole}
+        localPlayerId={uid}
+        userName={userName}
+        userImage={userImage}
+        userOrganisation={userOrganisation}
+        userDesignation={userDesignation}
+      />
+    );
+  };
+
+  const swapMainAndMiniView = (remoteStreamUIDToSwap) => {
+    console.log(
+      "I reached in swap main and mini view but not yet passed the test case."
+    );
+    const remoteStreamToSwap = remoteStreams.find((remoteStream) => {
+      console.log(remoteStream.uid);
+      return remoteStream.uid === remoteStreamUIDToSwap;
+    });
+    console.log(localStream);
+    console.log(remoteStreamUIDToSwap);
+    console.log(remoteStreamToSwap);
+    if (!localStream || !remoteStreamToSwap) return;
+
+    console.log(
+      "I reached in swap main and mini view and passed the test case."
+    );
+
+    const MainTrack = localStream.stream;
+    const MainUID = localStream.uid;
+
+    console.log(MainTrack);
+    console.log(MainUID);
+
+    const MiniTrack = remoteStreamToSwap.stream;
+    const MiniUID = remoteStreamToSwap.uid;
+
+    setLocalStream({ stream: MiniTrack, uid: MiniUID });
+    MainStreamId = MiniUID;
+
+    setRemoteStreams((prevStreams) => {
+      const remoteStreamsToRetain = prevStreams.filter(
+        (prevStream) => prevStream.uid !== MiniUID
+      );
+      console.log([
+        ...remoteStreamsToRetain,
+        { stream: MainTrack, uid: MainUID },
+      ]);
+      return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
     });
   };
 
@@ -674,7 +727,9 @@ const SessionScreen = () => {
                 className="main-view-container"
                 id="session-main-view-container"
                 style={{ backgroundColor: "#DBDBDB", borderRadius: "5px" }}
-              ></div>
+              >
+                {renderLocalStream(localStream)}
+              </div>
 
               <div
                 style={{
