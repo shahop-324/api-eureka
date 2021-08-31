@@ -5076,8 +5076,7 @@ export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
 
 export const MailChimpAuth = (code) => async (dispatch) => {
   try {
-    console.log("Hey Chimpy");
-    await eureka.post("/oauth/mailchimp/callback", code);
+    await eureka.get(`/oauth/mailchimp/callback/?code=${code}`);
   } catch (err) {
     console.log(err);
   }

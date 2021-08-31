@@ -19,6 +19,7 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: [
+      "http://127.0.0.1:3001",
       "http://localhost:3001",
       "https://www.evenz.in",
       "https://evenz.in",

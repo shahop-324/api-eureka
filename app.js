@@ -75,6 +75,7 @@ const OAUTH_CALLBACK = `${BASE_URL}/signin`;
 app.use(
   cors({
     origin: [
+      "http://127.0.0.1:3001",
       "http://localhost:3001",
       "https://www.evenz.in",
       "https://www.evenz.co.in",
@@ -147,7 +148,7 @@ app.use(xss());
 app.get("/api-eureka/getUserCredentials", (req, res) => {
   const code = req.query.code;
   let userProfile = {};
-  let resStatus = 400;
+
   let accessToken = null;
   const config = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -264,22 +265,48 @@ app.get("/api-eureka/auth/mailchimp", (req, res) => {
 // access token.
 app.get("/api-eureka/oauth/mailchimp/callback", async (req, res) => {
   // Here we're exchanging the temporary code for the user's access token.
-  const tokenResponse = await fetch(
-    "https://login.mailchimp.com/oauth2/token",
-    {
-      method: "POST",
-      body: new URLSearchParams({
-        grant_type: "authorization_code",
-        client_id: MAILCHIMP_CLIENT_ID,
-        client_secret: MAILCHIMP_CLIENT_SECRET,
-        redirect_uri: OAUTH_CALLBACK,
-        code: req.body.code,
-      }),
-    }
-  );
+  //console.log(req.body.code);
+  console.log(req.query.code);
 
-  const { access_token } = await tokenResponse.json();
-  console.log(access_token);
+  let accessToken = null;
+  const config = {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  };
+  const parameters = {
+    grant_type: "authorization_code",
+    code: req.query.code,
+    client_id: MAILCHIMP_CLIENT_ID,
+    client_secret: MAILCHIMP_CLIENT_SECRET,
+    redirect_uri: OAUTH_CALLBACK,
+  };
+
+  axios
+    .post(
+      "https://login.mailchimp.com/oauth2/token",
+      qs.stringify(parameters),
+      config
+    )
+    .then((response) => {
+      accessToken = response.data.access_token;
+      console.log(accessToken);
+    });
+
+  // const tokenResponse = await fetch(
+  //   "https://login.mailchimp.com/oauth2/token",
+  //   {
+  //     method: "POST",
+  //     body: new URLSearchParams({
+  //       grant_type: "authorization_code",
+  //       client_id: MAILCHIMP_CLIENT_ID,
+  //       client_secret: MAILCHIMP_CLIENT_SECRET,
+  //       redirect_uri: OAUTH_CALLBACK,
+  //       code: req.query.code,
+  //     }),
+  //   }
+  // );
+
+  // const { access_token } = await tokenResponse.json();
+  // console.log(access_token);
 
   // Now we're using the access token to get information about the user.
   // Specifically, we want to get the user's server prefix, which we'll use to
