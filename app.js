@@ -263,7 +263,7 @@ app.get("/api-eureka/auth/mailchimp", (req, res) => {
 // 3. Once // 3. Once the user authorizes your app, Mailchimp will redirect the user to
 // this endpoint, along with a code you can use to exchange for the user's
 // access token.
-app.get("/api-eureka/oauth/mailchimp/callback", async (req, res) => {
+app.get("/api-eureka/oauth/mailchimp/callback", (req, res) => {
   // Here we're exchanging the temporary code for the user's access token.
   //console.log(req.body.code);
   console.log(req.query.code);
@@ -289,6 +289,32 @@ app.get("/api-eureka/oauth/mailchimp/callback", async (req, res) => {
     .then((response) => {
       accessToken = response.data.access_token;
       console.log(accessToken);
+
+      axios
+        .get("https://login.mailchimp.com/oauth2/metadata", {
+          headers: {
+            Authorization: `OAuth ${accessToken}`,
+          },
+        })
+        .then((metadataResponse) => {
+          console.log(metadataResponse.data.dc);
+          mailchimp.setConfig({
+            accessToken,
+            server: metadataResponse.data.dc,
+          });
+
+          mailchimp.ping.get().then((response) => {
+            console.log(response);
+          });
+
+          res.send(`
+    <p>This user's access token is ${accessToken} and their server prefix is ${metadataResponse.data.dc}.</p>
+
+    <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
+
+
+  `);
+        });
     });
 
   // const tokenResponse = await fetch(
@@ -305,52 +331,52 @@ app.get("/api-eureka/oauth/mailchimp/callback", async (req, res) => {
   //   }
   // );
 
-  // const { access_token } = await tokenResponse.json();
-  // console.log(access_token);
+  // const { accessToken } = await tokenResponse.json();
+  // console.log(accessToken);
 
   // Now we're using the access token to get information about the user.
   // Specifically, we want to get the user's server prefix, which we'll use to
   // make calls to the API on their behalf.  This prefix will change from user
   // to user.
-  const metadataResponse = await fetch(
-    "https://login.mailchimp.com/oauth2/metadata",
-    {
-      headers: {
-        Authorization: `OAuth ${access_token}`,
-      },
-    }
-  );
+  // const metadataResponse = await fetch(
+  //   "https://login.mailchimp.com/oauth2/metadata",
+  //   {
+  //     headers: {
+  //       Authorization: `OAuth ${accessToken}`,
+  //     },
+  //   }
+  // );
 
-  const { dc } = await metadataResponse.json();
-  console.log(dc);
+  // const { dc } = await metadataResponse.json();
+  // console.log(dc);
 
   // Below, we're using the access token and server prefix to make an
   // authenticated request on behalf of the user who just granted OAuth access.
   // You wouldn't keep this in your production code, but it's here to
   // demonstrate how the call is made.
 
-  mailchimp.setConfig({
-    accessToken: access_token,
-    server: dc,
-  });
+  // mailchimp.setConfig({
+  //   accessToken: accessToken,
+  //   server: dc,
+  // });
 
-  const response = await mailchimp.ping.get();
-  console.log(response);
+  // const response = await mailchimp.ping.get();
+  // console.log(response);
 
-  res.send(`
-    <p>This user's access token is ${access_token} and their server prefix is ${dc}.</p>
+  // res.send(`
+  //   <p>This user's access token is ${accessToken} and their server prefix is ${dc}.</p>
 
-    <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
+  //   <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
 
-    <code>${response}</code>
-  `);
+  //   <code>${response}</code>
+  // `);
 
   // In reality, you'd want to store the access token and server prefix
   // somewhere in your application.
   // fakeDB.getCurrentUser();
   // fakeDB.storeMailchimpCredsForUser(user, {
   //   dc,
-  //   access_token
+  //   accessToken
   // });
 });
 
