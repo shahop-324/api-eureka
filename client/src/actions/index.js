@@ -37,6 +37,8 @@ import { eventAlertActions } from "../reducers/eventAlertSlice";
 import { eventPollActions } from "../reducers/eventPollSlice";
 import { availableForNetworkingActions } from "../reducers/availableForNetworking";
 
+import { StreamActions } from "../reducers/streamSlice";
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
