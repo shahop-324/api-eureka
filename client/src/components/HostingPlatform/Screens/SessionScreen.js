@@ -30,11 +30,9 @@ import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
 import {
-  createLocalStream,
-  createRemoteStream,
-  deleteRemoteStream,
+  
   errorTrackerForFetchSessionForSessionStage,
-  fetchRemoteStreams,
+  
   fetchSessionForSessionStage,
   getRTCToken,
   getRTCTokenForScreenShare,
@@ -138,8 +136,6 @@ const SessionScreen = () => {
   const [mainStreamId, setMainStreamId] = useState(userId);
 
   const [remoteStreams, setRemoteStreams] = useState([]);
-
-  // const { remoteStreams, localStream } = useSelector((state) => state.streams);
 
   const [localStream, setLocalStream] = useState("");
 
@@ -468,10 +464,6 @@ const SessionScreen = () => {
             { stream: remoteVideoTrack, uid: streamId },
           ];
         });
-
-        dispatch(
-          createRemoteStream({ stream: remoteVideoTrack, uid: streamId })
-        );
 
         remoteVideoTrack.play(streamId);
       }
