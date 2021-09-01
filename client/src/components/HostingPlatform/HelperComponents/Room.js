@@ -75,14 +75,14 @@ const Room = ({ id, num }) => {
           </div>
 
           {/* // UPPER_2_CHAIR */}
-          <div className="mx-3">
+          {/* <div className="mx-3">
             <UPPER_2_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div>
+          </div> */}
 
           {/* // UPPER_3_CHAIR */}
-          <div>
+          {/* <div>
             <UPPER_3_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div>
+          </div> */}
         </div>
 
         <div className="mid-l-r-chair-and-table d-flex flex-row">
@@ -109,12 +109,12 @@ const Room = ({ id, num }) => {
           <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} />
 
           {/* // LOWER_6_CHAIR */}
-          <div className="mx-3">
+          {/* <div className="mx-3">
             <LOWER_6_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div>
+          </div> */}
 
           {/* // LOWER_7_CHAIR */}
-          <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} />
+          {/* <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
         </div>
       </div>
 

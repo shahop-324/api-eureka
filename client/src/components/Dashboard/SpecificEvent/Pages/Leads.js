@@ -19,6 +19,9 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import AffiliateListFields from "../Data/AffiliateListFields";
 import InterestedPeopleListFields from "../Data/InterestedPeopleListFields";
 import LeadsListFields from "../Data/LeadsListFields";
+import NoContentFound from "../../../NoContent";
+
+import NoRegistartions from "./../../../../assets/images/humaaans-sitting-1.png";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -199,6 +202,10 @@ const Leads = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
+          <NoContentFound
+              msgText="We will capture your leads for your event here."
+              img={NoRegistartions}
+            />
           {/* <RegistrationDetailsCard />
           <RegistrationDetailsCard />
           <RegistrationDetailsCard />

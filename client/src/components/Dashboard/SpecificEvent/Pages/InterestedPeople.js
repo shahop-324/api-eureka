@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import { fetchInterestedPeopleList } from "../../../../actions";
 import InterestedPeopleDetailsCard from "../Data/InterestedPeopleDetailsCard";
 import NoContentFound from "../../../NoContent";
-import NoRegistartions from "./../../../../assets/images/registrations.png";
+import NoRegistartions from "./../../../../assets/images/working.png";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -230,7 +230,7 @@ const InterestedPeople = () => {
             renderInterestedPeopleList(interestedPeople)
           ) : (
             <NoContentFound
-              msgText="Looks like no one has shown interest in this event yet."
+              msgText="People who show interest in your event will be dispalyed here."
               img={NoRegistartions}
             />
           )}

@@ -18,6 +18,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEventAffiliates } from "../../../../actions";
 import { useParams } from "react-router-dom";
 import AffiliateDetailsCard from "../Data/AffiliateDetailsCard";
+import NoContentFound from "../../../NoContent";
+
+import NoRegistartions from "./../../../../assets/images/discussing.png";
 
 const options = [
   { value: "All Tickets", label: "All Tickets" },
@@ -127,7 +130,7 @@ const Affiliate = () => {
     dispatch(fetchEventAffiliates(eventId));
   }, []);
 
-  const {affiliates} = useSelector((state) => state.affiliate);
+  const { affiliates } = useSelector((state) => state.affiliate);
 
   const renderAffiliatesList = (affiliates) => {
     return affiliates
@@ -149,8 +152,6 @@ const Affiliate = () => {
         );
       });
   };
-
-
 
   const processRegistrationData = (eventRegistrations) => {
     const processedArray = [];
@@ -246,7 +247,14 @@ const Affiliate = () => {
             <Divider />
           </div>
           {/* Here goes Affiliate Detail card */}
-         {renderAffiliatesList(affiliates)}
+          {typeof affiliates !== "undefined" && affiliates.length > 0 ? (
+            renderAffiliatesList(affiliates)
+          ) : (
+            <NoContentFound
+              msgText="You can add and manage affiliates for this event here."
+              img={NoRegistartions}
+            />
+          )}
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}

@@ -26,7 +26,7 @@ const roleSuffix = id === uid ? "(You)" : "";
     <>
       <div id={remotePlayerId} className="session-remote-video-player">
         <div className="session-role px-3 py-1">{role}</div>
-        <div
+        {/* <div
           className="player-overlay-pin d-flex flex-row align-items-center justify-content-center"
           onMouseEnter={() => {
             setOpacity(1);
@@ -57,7 +57,7 @@ const roleSuffix = id === uid ? "(You)" : "";
               }}
             />
           </IconButton>
-        </div>
+        </div> */}
         <div id={`avatar_box_${remotePlayerId}`} className="avatar_box">
           <Avatar
             variant="rounded"

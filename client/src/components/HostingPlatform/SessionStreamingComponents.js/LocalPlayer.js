@@ -19,6 +19,7 @@ const SoundWaveAnimation = () => {
 };
 
 const LocalPlayer = ({
+  localStream,
   role,
   localPlayerId,
   userName,
@@ -29,7 +30,7 @@ const LocalPlayer = ({
   const {id} = useSelector((state) => state.eventAccessToken);
 
 const roleSuffix = id === localPlayerId ? "(You)" : "";
-
+console.log("This is local player");
   return (
     <>
       <div id={localPlayerId} className="session-local-video-player">
@@ -52,6 +53,7 @@ const roleSuffix = id === localPlayerId ? "(You)" : "";
           </div>
         </div>
       </div>
+      {/* {localStream.play(localPlayerId)} */}
     </>
   );
 };

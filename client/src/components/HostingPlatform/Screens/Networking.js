@@ -67,10 +67,11 @@ const Networking = () => {
           <div class="sonar-wrapper">
             <div class="sonar-emitter" style={{ position: "relative" }}>
               <Avatar
+              alt={firstName}
                 src={
-                  image.startsWith("https")
+                  image ? image.startsWith("https")
                     ? image
-                    : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`
+                    : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}` : " "
                 }
                 style={{
                   position: "absolute",

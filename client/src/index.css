@@ -2,6 +2,14 @@
 
 /* rest of app styles */
 
+video {
+  object-fit: contain !important;
+}
+
+/* .screen-share-container {
+  object-fit: contain !important;
+} */
+
 .btn {
   text-align: center;
 }

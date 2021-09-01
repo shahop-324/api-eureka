@@ -12,6 +12,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import CheckInsListFields from "../Data/CheckInsListFields";
+import NoContentFound from "../../../NoContent";
+
+import NoRegistartions from "./../../../../assets/images/clip-list-is-empty.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,6 +164,10 @@ const CheckIns = () => {
             <Divider />
           </div>
           {/* <RegistrationDetailsCard /> */}
+          <NoContentFound
+              msgText="People who show up at your event will be displayed here."
+              img={NoRegistartions}
+            />
         </div>
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}

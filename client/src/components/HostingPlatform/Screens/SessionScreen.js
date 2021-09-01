@@ -15,6 +15,7 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import socket from "../service/socket";
 
 import "./../Styles/wave.scss";
+import "./../../../index.css";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -63,6 +64,9 @@ let rtc = {
   client: null,
   screenClient: null,
 };
+
+let remoteStreams_o = [];
+let localStream_o;
 
 let MainStreamId; // Keep Track of main stream id
 
@@ -138,8 +142,6 @@ const SessionScreen = () => {
   const [localStream, setLocalStream] = useState("");
 
   const num = 1;
-  let remoteStreams_o = [];
-  let localStream_o;
 
   const switchMiniToMain = () => {
     console.log(remoteStreams_o);
@@ -362,7 +364,7 @@ const SessionScreen = () => {
 
   async function startScreenCall() {
     rtc.screenClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-
+    rtc.client.setClientRole(options.role);
     await rtc.screenClient.join(
       options.appId,
       sessionId,
@@ -371,6 +373,8 @@ const SessionScreen = () => {
     );
 
     rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack();
+
+    await rtc.screenClient.setClientRole("host");
 
     await rtc.screenClient.publish(rtc.localScreenTrack);
   }
@@ -439,17 +443,34 @@ const SessionScreen = () => {
         // Get `RemoteVideoTrack` in the `user` object.
         const remoteVideoTrack = user.videoTrack;
 
-        // Keep track of all remote video streams
-        setRemoteStreams((prevRemoteStreams) => {
-          return [
-            ...prevRemoteStreams,
-            { stream: remoteVideoTrack, uid: streamId },
-          ];
-        });
+        if (streamId.startsWith("screen")) {
+          console.log(localStream_o);
+          console.log(remoteStreams_o);
 
-        remoteStreams_o.push({ stream: remoteVideoTrack, uid: streamId });
+          localStream_o.stream.stop();
 
-        remoteVideoTrack.play(streamId);
+          document.getElementById(localStream_o.uid).remove();
+
+          remoteStreams_o.push(localStream_o);
+
+          setRemoteStreams(remoteStreams_o);
+
+          setLocalStream({ stream: remoteVideoTrack, uid: streamId });
+
+          remoteVideoTrack.play(streamId);
+        } else {
+          // Keep track of all remote video streams
+          setRemoteStreams((prevRemoteStreams) => {
+            return [
+              ...prevRemoteStreams,
+              { stream: remoteVideoTrack, uid: streamId },
+            ];
+          });
+
+          remoteStreams_o.push({ stream: remoteVideoTrack, uid: streamId });
+
+          remoteVideoTrack.play(streamId);
+        }
       }
 
       // If the subscribed track is audio.
@@ -465,6 +486,12 @@ const SessionScreen = () => {
 
     rtc.client.on("user-unpublished", (user) => {
       const userId = user.uid.toString();
+
+      if (userId.startsWith("screen")) {
+        console.log("screen sharing track unpblished");
+
+        // Call a function which can take out any random stream from remote streams and place it in main view
+      }
 
       const isVideoEnabled = user._video_enabled_;
       const isVideoMuted = user._video_muted_;
@@ -498,22 +525,43 @@ const SessionScreen = () => {
 
         console.log(localStream_o);
         console.log(remoteStreams_o);
-        console.log(options.uid);
-
-        // Set new local stream
-
-        setLocalStream(localStream_o);
-
-        MainStreamId = localStream_o.uid;
-
-        // Set remote streams (exclude the one which you just added to local stream)
-        setRemoteStreams(
+        console.log(
           remoteStreams_o.filter((stream) => stream.uid !== streamId)
         );
+        console.log(options.uid);
 
         remoteStreams_o = remoteStreams_o.filter(
           (stream) => stream.uid !== streamId
         );
+
+        // var randomId = streamIds[Math.floor(Math.random()*streamIds.length)];
+        let randomStream = remoteStreams_o.find(
+          (stream) => stream.uid === options.uid
+        );
+        console.log(randomStream);
+
+        // 1.) stop playing localStream_o
+        localStream_o.stream.stop();
+
+        // 2.) destroy current local stream container
+        document.getElementById(localStream_o.uid).remove();
+
+        // 3.) set any random stream as local
+        remoteStreams_o = remoteStreams_o.filter(
+          (stream) => stream.uid !== options.uid
+        );
+        setLocalStream(randomStream);
+        localStream_o = randomStream;
+        MainStreamId = randomStream;
+
+        // 4.) Play this as local stream
+        // !see if we need to play local stream here
+        localStream_o.stream.play(localStream_o.uid)
+
+        // 5.) stop and remove the selected stream from remote list
+        setRemoteStreams(remoteStreams_o);
+        console.log(remoteStreams_o);
+        // document.getElementById(randomStream.uid).remove(); //See if we need to execute this step
 
         // switchMiniToMain();
       } else {
@@ -552,7 +600,7 @@ const SessionScreen = () => {
 
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
-          rtc.localVideoTrack.play(options.uid);
+          // rtc.localVideoTrack.play(options.uid);
 
           console.log("publish success!");
         }
@@ -609,6 +657,63 @@ const SessionScreen = () => {
     );
   };
 
+  // ! Call This function when A user-left is fired and you confiem that it was main view that left
+
+  // ! always make sure to set MainStreamId whenever you do setLocalStream
+
+  const handleBlankMainView = () => {
+    console.log(localStream_o);
+    console.log(remoteStreams_o);
+
+    // 1.) Choose one random stream from remoteStreams_o // In our case we are always choosing the first stream from remote list
+    const newMainStream = remoteStreams_o.unshift();
+    // 2.) stop playing that stream
+    newMainStream.stream.stop();
+    // 3.) Destroy its container
+    setRemoteStreams(remoteStreams_o); // This will set new list of remote streams and trigger a re-render of remote streams
+    // 4.) Set this random stream as localStream
+    setLocalStream(newMainStream);
+    localStream_o = newMainStream;
+    // 5.) Set MainStreamId
+    MainStreamId = newMainStream.uid;
+    // 5.) Play this stream  // This step has already been handled in renderLocalStream function
+  };
+
+  const handleSwapStreams = (streamUIDToSwap) => {
+    console.log(localStream_o);
+    console.log(remoteStreams_o);
+
+    console.log(localStream);
+    console.log(remoteStreams);
+
+    const streamToBePinned = remoteStreams_o.find(
+      (stream) => stream.uid === streamUIDToSwap
+    );
+
+    // 1.) stop playing current localStream
+    localStream_o.stream.stop();
+    // 2.) remove current localStream container
+    // document.getElementById(localStream_o.uid).remove();
+    // 3.) add current localStream to remote streams list
+    remoteStreams_o.push(localStream_o);
+    setRemoteStreams(remoteStreams_o);
+    // 4.) Start playing currently added remote stream
+    // ? localStream_o.stream.play(localStream_o.uid); This step will happen on its own as we have a useEffect which plays as soon as length of remoteStreams changes
+    // 5.) stop playing stream that needs to be pinned
+    streamToBePinned.stream.stop();
+    // 5.) remove the container that belongs to stream that needs to be pinned
+    document.getElementById(streamUIDToSwap).remove();
+    // 6.) Add this stream (which is to be pinned) to localStream
+    setLocalStream(streamToBePinned);
+    localStream_o = streamToBePinned;
+    // 7.) Set its uid as MainStreamId
+    MainStreamId = streamUIDToSwap;
+    // 8.) localStream.play('session-main-view-container)
+    // streamToBePinned.stream.play('session-main-view-container');
+
+    // 9.) Congratulations! Streams have been swapped successfully.
+  };
+
   const renderRemoteStreams = (remoteStreams) => {
     if (!remoteStreams) return;
 
@@ -637,27 +742,45 @@ const SessionScreen = () => {
           userImage={userImage}
           userOrganisation={userOrganisation}
           userDesignation={userDesignation}
-          swapMainAndMiniView={swapMainAndMiniView}
+          swapMainAndMiniView={handleSwapStreams}
         />
       );
     });
   };
 
   const renderLocalStream = (localStream) => {
+    console.log("render local stream fxn was fired");
+    console.log(localStream);
+
     if (!localStream) return;
     const { stream, uid } = localStream;
+
     if (!stream || !uid) return;
     // console.log(stream, uid);
+    console.log("I reached at line 736");
+    let userUID = uid;
+
+    if (uid.startsWith("screen")) {
+      userUID = userUID.slice(7);
+      console.error(userUID);
+      localStream.stream.play("session-main-view-container");
+    }
+
+    if (document.getElementById(uid)) {
+      localStream.stream.play(uid);
+    }
+
     const {
       userName,
       userImage,
       userOrganisation,
       userDesignation,
       sessionRole,
-    } = peopleInThisSession.find((people) => people.userId === uid);
+    } = peopleInThisSession.find((people) => people.userId === userUID);
 
     return (
       <LocalPlayer
+        localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
         userName={userName}
@@ -668,57 +791,57 @@ const SessionScreen = () => {
     );
   };
 
-  const swapMainAndMiniView = (remoteStreamUIDToSwap) => {
-    console.log(
-      "I reached in swap main and mini view but not yet passed the test case."
-    );
-    const remoteStreamToSwap = remoteStreams.find((remoteStream) => {
-      console.log(remoteStream.uid);
-      return remoteStream.uid === remoteStreamUIDToSwap;
-    });
-    console.log(localStream);
-    console.log(remoteStreamUIDToSwap);
-    console.log(remoteStreamToSwap);
-    if (!localStream || !remoteStreamToSwap) return;
+  // const swapMainAndMiniView = (remoteStreamUIDToSwap) => {
+  //   console.log(
+  //     "I reached in swap main and mini view but not yet passed the test case."
+  //   );
+  //   const remoteStreamToSwap = remoteStreams.find((remoteStream) => {
+  //     console.log(remoteStream.uid);
+  //     return remoteStream.uid === remoteStreamUIDToSwap;
+  //   });
+  //   console.log(localStream);
+  //   console.log(remoteStreamUIDToSwap);
+  //   console.log(remoteStreamToSwap);
+  //   if (!localStream || !remoteStreamToSwap) return;
 
-    console.log(
-      "I reached in swap main and mini view and passed the test case."
-    );
+  //   console.log(
+  //     "I reached in swap main and mini view and passed the test case."
+  //   );
 
-    const MainTrack = localStream.stream;
-    const MainUID = localStream.uid;
+  //   const MainTrack = localStream.stream;
+  //   const MainUID = localStream.uid;
 
-    console.log(MainTrack);
-    console.log(MainUID);
+  //   console.log(MainTrack);
+  //   console.log(MainUID);
 
-    const MiniTrack = remoteStreamToSwap.stream;
-    const MiniUID = remoteStreamToSwap.uid;
+  //   const MiniTrack = remoteStreamToSwap.stream;
+  //   const MiniUID = remoteStreamToSwap.uid;
 
-    setLocalStream({ stream: MiniTrack, uid: MiniUID });
-    localStream_o = { stream: MiniTrack, uid: MiniUID };
-    // dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
+  //   setLocalStream({ stream: MiniTrack, uid: MiniUID });
+  //   localStream_o = { stream: MiniTrack, uid: MiniUID };
+  //   // dispatch(createLocalStream({ stream: MiniTrack, uid: MiniUID }));
 
-    MainStreamId = MiniUID;
+  //   MainStreamId = MiniUID;
 
-    setRemoteStreams((prevStreams) => {
-      const remoteStreamsToRetain = prevStreams.filter(
-        (prevStream) => prevStream.uid !== MiniUID
-      );
-      console.log([
-        ...remoteStreamsToRetain,
-        { stream: MainTrack, uid: MainUID },
-      ]);
-      return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
-    });
+  //   setRemoteStreams((prevStreams) => {
+  //     const remoteStreamsToRetain = prevStreams.filter(
+  //       (prevStream) => prevStream.uid !== MiniUID
+  //     );
+  //     console.log([
+  //       ...remoteStreamsToRetain,
+  //       { stream: MainTrack, uid: MainUID },
+  //     ]);
+  //     return [...remoteStreamsToRetain, { stream: MainTrack, uid: MainUID }];
+  //   });
 
-    const remoteStreamsToRetain = remoteStreams_o.filter(
-      (prevStream) => prevStream.uid !== MiniUID
-    );
+  //   const remoteStreamsToRetain = remoteStreams_o.filter(
+  //     (prevStream) => prevStream.uid !== MiniUID
+  //   );
 
-    remoteStreamsToRetain.push({ stream: MainTrack, uid: MainUID });
+  //   remoteStreamsToRetain.push({ stream: MainTrack, uid: MainUID });
 
-    remoteStreams_o = remoteStreamsToRetain;
-  };
+  //   remoteStreams_o = remoteStreamsToRetain;
+  // };
 
   return (
     <>
@@ -750,7 +873,7 @@ const SessionScreen = () => {
               }}
             >
               <div
-                className="main-view-container"
+                className="main-view-container screen-share-container"
                 id="session-main-view-container"
                 style={{ backgroundColor: "#DBDBDB", borderRadius: "5px" }}
               >
