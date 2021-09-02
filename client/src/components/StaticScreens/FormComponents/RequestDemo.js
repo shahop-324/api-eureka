@@ -9,8 +9,6 @@ import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
-import GlobalSnackbar from "../../GlobalSnackbar";
-import { useState } from "react";
 import { useSnackbar } from "notistack";
 
 const options = [
@@ -146,11 +144,6 @@ const renderEventPreferences = ({
   </div>
 );
 
-const showResults = (formValues) => {
-  // await sleep(500); // simulate server latency
-  window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-};
-
 const RequestDemo = ({
   handleCloseRequestDemo,
   openDemoForm,
@@ -158,11 +151,9 @@ const RequestDemo = ({
   pristine,
   submitting,
 }) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, succeded } = useSelector((state) => state.demo);
-
-  const [hasError, sethasError] = useState(false);
+  const { error, succeded } = useSelector((state) => state.demo);
 
   const dispatch = useDispatch();
 
@@ -198,9 +189,7 @@ const RequestDemo = ({
 
   return (
     <>
-      {/* {hasError ? <GlobalSnackbar severity={"error"} feedbackMsg={error}/> : null} */}
       <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer anchor="right" open={openDemoForm}>
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">

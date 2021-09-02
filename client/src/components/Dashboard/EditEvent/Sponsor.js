@@ -21,6 +21,7 @@ import { Link, useParams } from "react-router-dom";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import NoSponsor from "./../../../assets/images/working.png";
+import { useSnackbar } from "notistack";
 
 const options = [
   { value: "all", label: "All Sponsors" },
@@ -100,6 +101,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sponsors = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [open, setOpen] = React.useState(false);
   const [term, setTerm] = React.useState("");
   const [sponsorStatus, setSponsorStatus] = React.useState("");
@@ -151,6 +155,9 @@ const Sponsors = () => {
   const classes = useStyles();
 
   if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
     throw new Error(error);
   }
 

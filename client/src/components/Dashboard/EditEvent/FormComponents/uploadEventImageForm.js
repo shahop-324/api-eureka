@@ -4,10 +4,14 @@ import "./../Style/uploadEventImage.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { errorTrackerForUploadEventImage, uploadEventImage } from "../../../../actions";
+import {
+  errorTrackerForUploadEventImage,
+  uploadEventImage,
+} from "../../../../actions";
 import { reduxForm } from "redux-form";
 import { useParams } from "react-router-dom";
 import Loader from "../../../Loader";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +33,9 @@ const useStyles = makeStyles((theme) => ({
 const UploadEventImageForm = (props) => {
   const { handleSubmit } = props;
 
-  const {error, isLoading} = useSelector((state) => state.event);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { error, isLoading } = useSelector((state) => state.event);
 
   const classes = useStyles();
 
@@ -43,13 +49,12 @@ const UploadEventImageForm = (props) => {
   });
   let imgKey;
   let imgUrl = "#";
-  if(event) {
+  if (event) {
     imgKey = event.image;
     if (imgKey) {
       imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
     }
   }
-  
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
@@ -69,17 +74,25 @@ const UploadEventImageForm = (props) => {
     console.log(file);
   };
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader/> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
-    dispatch(errorTrackerForUploadEventImage());
-    alert(error);
-    return;
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForUploadEventImage());
   }
 
-  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

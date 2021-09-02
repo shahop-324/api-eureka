@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import Loader from "../../Loader";
 import NoSpeakers from './../../../assets/images/scratching-head.png';
 import NoContentFound from "../../NoContent";
+import { useSnackbar } from "notistack";
 
 const styles = {
   control: (base) => ({
@@ -99,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Speakers = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   let options = [{ value: "all", label: "All Sessions" }];
 
   const sessions = useSelector((state) => state.session.sessions);
@@ -179,6 +183,9 @@ const Speakers = () => {
   const classes = useStyles();
 
   if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
     throw new Error(error);
   }
 

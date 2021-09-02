@@ -19,6 +19,7 @@ import { fetchTickets } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
 import Loader from "../../Loader";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Ticketing = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [term, setTerm] = React.useState("");
 
   const params = useParams();
@@ -135,6 +139,9 @@ const Ticketing = () => {
   const classes = useStyles();
 
   if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
     throw new Error(error);
   }
 

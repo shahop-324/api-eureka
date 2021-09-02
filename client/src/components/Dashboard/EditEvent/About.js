@@ -15,10 +15,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { editEventDescription } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
 // import draftToHtml from "draftjs-to-html";
 
 const About = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { error, isLoading } = useSelector((state) => state.event);
 
   const aboutText = useSelector(
     (state) => state.event.eventDetails.editingComment
@@ -56,6 +61,12 @@ const About = (props) => {
       />
     );
   };
+
+  if(error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+  }
 
   return (
     <>

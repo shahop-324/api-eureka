@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 import { fetchReferralCode } from "../../../actions";
@@ -21,13 +21,12 @@ import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
 import TopNav from "../Helper/TopNav";
 import RequestDemo from "../FormComponents/RequestDemo";
-import { useSnackbar } from "notistack";
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -90,12 +89,6 @@ window.onload = function () {
 
 const Home = () => {
   const dispatch = useDispatch();
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  const { error, signOutSucceded } = useSelector((state) => state.auth);
-
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
     AOS.init({

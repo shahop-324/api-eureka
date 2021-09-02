@@ -8,6 +8,7 @@ import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { editEvent, errorTrackerForeditEvent } from "../../../../actions";
 import Loader from "../../../Loader";
+import { useSnackbar } from "notistack";
 
 const renderInput = ({
   input,
@@ -188,16 +189,15 @@ const styles = {
 };
 
 const EditBasicDetailsForm = (props) => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const { handleSubmit, pristine, submitting, reset } = props;
   const { error, isLoading } = useSelector((state) => state.event);
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
   console.log(id);
-
-  const showResults = (formValues) => {
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const onSubmit = (formValues) => {
     const categories = [];
@@ -239,9 +239,10 @@ const EditBasicDetailsForm = (props) => {
   }
 
   if (error) {
-    dispatch(errorTrackerForeditEvent());
-    alert(error);
-    return;
+      enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForeditEvent());
   }
 
   return (

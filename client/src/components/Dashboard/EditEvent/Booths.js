@@ -20,6 +20,7 @@ import { fetchBooths } from "../../../actions";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import BoothPNG from './../../../assets/images/fogg-come-back-later-2.png';
+import { useSnackbar } from "notistack";
 
 const styles = {
   control: (base) => ({
@@ -92,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Booths = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   let options = [{ value: "all", label: "All tags" }];
 
   const availableTags = useSelector(
@@ -159,7 +163,10 @@ const Booths = () => {
   const classes = useStyles();
 
   if (error) {
-    throw new Error(error);
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+ throw new Error(error);
   }
 
   return (

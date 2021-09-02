@@ -9,11 +9,19 @@ import "./../../../index.css";
 import "./../../../assets/Sass/EditEvent/Networking.scss";
 import NetworkingFormLeft from "./FormComponents/EditNetworkingForms/NetworkingFormLeft";
 import NetworkingFormRight from "./FormComponents/EditNetworkingForms/NetworkingFormRight";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchNetworking } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const Networking = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { networkingSettings, isLoading, error } = useSelector(
+    (state) => state.networking
+  );
+
   const params = useParams();
   const id = params.id;
   const dispatch = useDispatch();
@@ -21,6 +29,12 @@ const Networking = () => {
   useEffect(() => {
     dispatch(fetchNetworking(id));
   }, [dispatch, id]);
+
+  if(error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+  }
 
   return (
     <>

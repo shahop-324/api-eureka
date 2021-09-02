@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import NoSessionsPNG from "./../../../assets/images/confident.png";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,6 +84,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sessions = () => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [open, setOpen] = React.useState(false);
   const [term, setTerm] = React.useState("");
 
@@ -153,10 +157,11 @@ const Sessions = () => {
   const classes = useStyles();
 
   if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
     // dispatch(errorTrackerForFetchSessions());
     throw new Error(error);
-    // alert(error);
-    // return;
   }
 
   return (
