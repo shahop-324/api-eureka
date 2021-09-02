@@ -9,6 +9,8 @@ const authSlice = createSlice({
     error: false,
     isSignedInThroughGoogle: false,
     referralCode: null,
+    signInSucceded: false,
+    signOutSucceded: false,
   },
 
   reducers: {
@@ -32,13 +34,20 @@ const authSlice = createSlice({
       if (action.payload.isSignedThroughGoogle) {
         state.isSignedInThroughGoogle = action.payload.isSignedThroughGoogle;
       }
+      state.signInSucceded = true;
     },
-   
     SignOut(state, action) {
       state.token = null;
       state.isSignedIn = false;
       state.isSignedInThroughGoogle = false;
+      state.signOutSucceded = true;
     },
+    disabledSignInSucceded(state, action) {
+      state.signInSucceded = false;
+    },
+    disabledSignOutSucceded(state, action) {
+      state.signOutSucceded = false;
+    }
   },
 });
 

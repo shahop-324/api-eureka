@@ -2,9 +2,11 @@ import React from "react";
 import ToggleSwitch from "../../ToggleSwitch";
 import Ripple from "./../../ActiveStatusRipple";
 import { Field, reduxForm } from "redux-form";
-import { useDispatch } from "react-redux";
-import { editUserPassword } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { editUserPassword, errorTrackerForEditUser } from "../../../actions";
 import { Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
+
 const renderError = ({ touched, error }) => {
   if (touched && error) {
     return (
@@ -86,6 +88,11 @@ const renderInput = ({
 };
 
 const ResetPasswordAndDeactivation = (props) => {
+
+  const { error, isLoading, succeded } = useSelector((state) => state.user);
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const { pristine, valid, submitting, handleSubmit } = props;
   // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const showResults = async (formValues) => {
@@ -96,6 +103,15 @@ const ResetPasswordAndDeactivation = (props) => {
   const onSubmit = (formValues) => {
     dispatch(editUserPassword(formValues));
   };
+
+
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForEditUser());
+  }
+
   return (
     <>
       <div className="user-account-edit-profile px-2 py-2">

@@ -15,10 +15,12 @@ import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
 // import { useDispatch } from "react-redux";
 
-import { createCommunity, resetCommunityError } from "../../../actions";
+import { createCommunity, errorTrackerForCreateCommunity, resetCommunityError } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
+import { useSnackbar } from "notistack";
 
 let formIsvalidated = false;
 
@@ -218,6 +220,9 @@ const renderTextArea = ({
   );
 };
 const CreateNewCommunityForm = (props) => {
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const { error } = useSelector((state) => state.community);
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
@@ -237,7 +242,7 @@ const CreateNewCommunityForm = (props) => {
   const classes = useStyles();
 
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth, setMaxWidth] = React.useState("md");
 
   //   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -259,6 +264,14 @@ const CreateNewCommunityForm = (props) => {
   console.log(file);
   console.log(fileToPreview);
   // const dispatch=useDispatch();
+
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForCreateCommunity());
+  }
+
   return (
     <>
       <Dialog
@@ -268,9 +281,9 @@ const CreateNewCommunityForm = (props) => {
         // onClose={props.closeHandler}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
+        <form onSubmit={handleSubmit(onSubmit)} className="ui form error" style={{maxWidth: "668px"}}>
           <div
-            className="overlay-form px-4 pt-4 pb-2 d-flex flex-column align-items-center"
+            className="px-4 pt-4 pb-2 d-flex flex-column align-items-center"
             // style={{ minHeight: "100vh" }}
           >
             <div

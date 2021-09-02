@@ -26,6 +26,7 @@ import PreFooter from "../PreFooter";
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
 import NoResultsFound from "../NoResultsFound";
+import { useSnackbar } from "notistack";
 
 const categories = [
   { title: "Technology" },
@@ -41,6 +42,9 @@ const categories = [
 ];
 
 const SearchEvents = () => {
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const dispatch = useDispatch();
 
   const { isSignedIn } = useSelector((state) => state.auth);
@@ -302,9 +306,11 @@ const SearchEvents = () => {
   };
 
   if (error) {
-    dispatch(errorTrackerForFetchEvents());
-    alert(error);
-    return;
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+   return dispatch(errorTrackerForFetchEvents());
+    
   }
 
   return (

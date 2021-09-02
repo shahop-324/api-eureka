@@ -19,8 +19,8 @@ import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { linkedinSignIn } from "../../actions";
 import Loader from "../Loader";
-import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
+import { useSnackbar } from "notistack";
 
 let formIsvalidated = false;
 
@@ -69,7 +69,10 @@ const renderInput = ({
 };
 
 const Signin = (props) => {
-  const { error } = useSelector((state) => state.auth);
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { error, signOutSucceded } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
   const { handleSubmit } = props;
 
@@ -108,23 +111,11 @@ const Signin = (props) => {
   }
 
   if (error) {
-    // alert(error);
-  //   toast.success("to create");
-  toast.success('🦄 Wow so easy!', {
-    position: "bottom-left",
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
+    enqueueSnackbar(error, {
+      variant: "error",
     });
-  //  toast.dark("of notifications.");
-  //  toast.warning("You just need to");
-  //  toast.info("execute one of these functions");
     setSigninClicked(false);
-    dispatch(errorTrackerForSignIn());
-    return;
+   return dispatch(errorTrackerForSignIn());
   }
 
   const chatBot = () => {

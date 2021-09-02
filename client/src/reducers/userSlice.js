@@ -13,6 +13,7 @@ const userSlice = createSlice({
     isLoading: true,
     error: false,
     referredId:null,
+    succeded: false,
   },
 
   reducers: {
@@ -38,6 +39,9 @@ const userSlice = createSlice({
       state.isLoading = false;
     },
 
+    disableSucceded(state, action) {
+      state.succeded = false;
+    },
     FetchPeopleInSession(state, action) {
       state.peopleInThisSession = action.payload.peopleInThisSession;
       state.isLoading = false;
@@ -79,6 +83,7 @@ const userSlice = createSlice({
 
       state.userDetails = action.payload.user;
       state.isLoading = false;
+      state.succeded = true;
     },
   },
 });

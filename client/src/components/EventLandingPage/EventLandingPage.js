@@ -49,6 +49,7 @@ import Footer from "../Footer";
 import { Avatar, IconButton } from "@material-ui/core";
 import StickyFooter from "./HelperComponent/StickyFooter";
 import Loader from "../Loader";
+import { useSnackbar } from "notistack";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -122,6 +123,10 @@ const AccordionDetails = withStyles((theme) => ({
 const EventLandingPage = (props) => {
   const params = useParams();
 
+  const { signInSucceded } = useSelector((state) => state.auth);
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
   const { isLoading, error } = useSelector((state) => state.event);
@@ -135,13 +140,12 @@ const EventLandingPage = (props) => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if(isSignedIn) {
+    if (isSignedIn) {
       // TODO dispatch(captureInterest())
-      dispatch(captureUserInterestInEvent(id))
+      dispatch(captureUserInterestInEvent(id));
       console.log("Here we will capture interest");
     }
   }, []);
-
 
   const classes = useStyles();
 
@@ -190,10 +194,7 @@ const EventLandingPage = (props) => {
     ); // TODO
   }
   if (error) {
-    dispatch(errorTrackerForFetchEvent());
-    alert(error);
-
-    return;
+    return dispatch(errorTrackerForFetchEvent());
   }
 
   console.log(event);

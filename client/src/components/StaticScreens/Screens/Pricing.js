@@ -25,13 +25,19 @@ import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { Field, reduxForm } from "redux-form";
-import { createDemoRequest, errorTrackerForCreateDemo, switchToFreePlan } from "../../../actions";
+import {
+  createDemoRequest,
+  errorTrackerForCreateDemo,
+  switchToFreePlan,
+} from "../../../actions";
 import Select from "react-select";
 
 import PhoneInput from "react-phone-input-2";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
+import { useSnackbar } from "notistack";
+import RequestDemo from "../FormComponents/RequestDemo";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -243,6 +249,10 @@ const showResults = (formValues) => {
 };
 
 const Pricing = (props) => {
+  const { signInSucceded } = useSelector((state) => state.auth);
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const referral = useSelector((state) => state.user.referredUserId);
   const dispatch = useDispatch();
 
@@ -260,9 +270,13 @@ const Pricing = (props) => {
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
-  const { error, isLoading } = useSelector((state) => state.demo);
+  const [openDemoForm, setOpenDemoForm] = React.useState(false);
 
-  const [openDemoDrawer, setOpenDemoDrawer] = React.useState(false);
+  // handleCloseRequestDemo, openDemoForm,
+
+  const handleCloseRequestDemo = () => {
+    setOpenDemoForm(false);
+  };
 
   const [selectedPlan, setSelectedPlan] = useState("");
 
@@ -443,12 +457,6 @@ const Pricing = (props) => {
   console.log(selectedCommunity);
 
   const { isSignedIn } = useSelector((state) => state.auth);
-
-  if (error) {
-    alert(error);
-    dispatch(errorTrackerForCreateDemo());
-    return;
-  }
 
   return (
     <>
@@ -867,7 +875,7 @@ const Pricing = (props) => {
 
                   <button
                     onClick={() => {
-                      setOpenDemoDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     class="card__button btn btn-primary btn-outline-text"
                   >
@@ -879,7 +887,7 @@ const Pricing = (props) => {
           </div>
 
           <div className="FAQs-section px-4">
-          <h2 className="mb-4 main-heading-calculate-profits">F.A.Q.</h2>
+            <h2 className="mb-4 main-heading-calculate-profits">F.A.Q.</h2>
             <details>
               <summary>
                 Is there any special pricing for non profit organisation?
@@ -887,7 +895,7 @@ const Pricing = (props) => {
               <p>
                 Yes, we have special offers for NGOs and Not for profit
                 organisations. For More details please contact contact us at
-                <a href="mailto:support@evenz.in"> {" "} support@evenz.in</a>
+                <a href="mailto:support@evenz.in"> support@evenz.in</a>
               </p>{" "}
               {/*  */}
             </details>
@@ -937,11 +945,10 @@ const Pricing = (props) => {
               </p>
             </details>
             <details>
-              <summary>
-                I still have some queries ?
-              </summary>
+              <summary>I still have some queries ?</summary>
               <p>
-                Please reach out to us at <a href="mailto:support@evenz.in"> {" "} support@evenz.in</a>
+                Please reach out to us at{" "}
+                <a href="mailto:support@evenz.in"> support@evenz.in</a>
               </p>
             </details>
           </div>
@@ -1078,7 +1085,6 @@ const Pricing = (props) => {
                       : dispatch(switchToFreePlan(selectedCommunity));
                     setOpenDrawer(false);
                   }}
-               
                   className="btn btn-primary btn-outline-text mt-4"
                   style={{ width: "100%" }}
                 >
@@ -1090,243 +1096,12 @@ const Pricing = (props) => {
         </SwipeableDrawer>
       </React.Fragment>
 
-      <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDemoDrawer}>
-          <div className="registration-more-details-right-drawer px-4 py-4">
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Let's Schedule a meet</div>
-              <div
-                onClick={() => {
-                  setOpenDemoDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-              <div className="side-drawer-more-details-content-section">
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridGap: "24px",
-                  }}
-                >
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      First name
-                    </label>
+      {/* Request Demo form goes here */}
 
-                    <Field
-                      name="firstName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="First Name"
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Last name
-                    </label>
-                    <Field
-                      name="lastName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Last Name"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Work E-mail
-                    </label>
-                    <Field
-                      name="email"
-                      type="email"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Email"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{ width: "100%" }}
-                >
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    contact Number
-                  </label>
-                  <Field
-                    name="phoneNumber"
-                    component={renderPhoneInput}
-                    type="number"
-                  />
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Company
-                    </label>
-                    <Field
-                      name="companyName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Job Title
-                    </label>
-                    <Field
-                      name="jobTitle"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    Select Your Region
-                  </label>
-                  <Field
-                    name="region"
-                    component={renderEventPreferences}
-                    label="Event Preferences"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-4 overlay-form-input-row">
-                <label
-                  for="communityHeadline"
-                  class="form-label form-label-customized"
-                >
-                  Are you an event agency ?
-                </label>
-
-                <div class="form-check mb-2">
-                  <Field
-                    name="eventAgency"
-                    class="form-check-input"
-                    type="radio"
-                    // name="flexRadioDefault"
-                    id="flexRadioDefault1"
-                    value="true"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <Field
-                    class="form-check-input"
-                    type="radio"
-                    name="eventAgency"
-                    id="flexRadioDefault2"
-                    // checked="true"
-                    value="false"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    No
-                  </label>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <div className="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      // value={this.state.policySigned}
-                      name="signinToMailList"
-                      required
-                      id="defaultCheck1"
-                      checked
-                      // onChange={this.onPrivacyPolicyChange}
-                    />
-                    <label
-                      className="form-check-label btn-outline-text mb-3"
-                      htmlFor="flexCheckChecked"
-                      style={{ color: "grey", fontSize: "13px" }}
-                    >
-                      By registering, I agree to recieve product updates and
-                      marketing communications from Evenz.
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  onClick={() => {
-                    setOpenDemoDrawer(false);
-                  }}
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  disabled={pristine || submitting}
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+      <RequestDemo
+        handleCloseRequestDemo={handleCloseRequestDemo}
+        openDemoForm={openDemoForm}
+      />
     </>
   );
 };

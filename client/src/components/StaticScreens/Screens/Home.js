@@ -21,13 +21,13 @@ import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
 import TopNav from "../Helper/TopNav";
 import RequestDemo from "../FormComponents/RequestDemo";
-import SnackbarForRequestDemo from "../../Snackbar/StaticScreen/SnackbarForRequestDemo";
+import { useSnackbar } from "notistack";
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -90,6 +90,10 @@ window.onload = function () {
 
 const Home = () => {
   const dispatch = useDispatch();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { error, signOutSucceded } = useSelector((state) => state.auth);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -864,12 +868,12 @@ const Home = () => {
 
       {/* Request Demo form here */}
 
-      <SnackbarForRequestDemo>
+      
         <RequestDemo
           handleCloseRequestDemo={handleCloseRequestDemo}
           openDemoForm={openDemoForm}
         />
-      </SnackbarForRequestDemo>
+      
     </>
   );
 };

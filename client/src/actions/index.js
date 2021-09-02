@@ -95,6 +95,10 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       })
     );
 
+    setTimeout(function () {
+      dispatch(authActions.disabledSignInSucceded());
+    }, 4000);
+
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
     } else if (intent === "buyPlan") {
@@ -102,7 +106,6 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       dispatch(fetchUserAllPersonalData());
     } else {
       history.push("/user/home");
-
       // window.location.href = REACT_APP_MY_ENV
       //   ? "http://localhost:3001/user/home"
       //   : "https://www.evenz.in/user/home";
@@ -183,6 +186,10 @@ export const linkedinSignIn = (code, intent, eventId) => async (dispatch) => {
       })
     );
 
+    setTimeout(function () {
+      dispatch(authActions.disabledSignInSucceded());
+    }, 4000);
+
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
     } else if (intent === "buyPlan") {
@@ -225,6 +232,10 @@ export const googleSignIn =
           user: res.data.data.user,
         })
       );
+
+      setTimeout(function () {
+        dispatch(authActions.disabledSignInSucceded());
+      }, 4000);
 
       if (intent === "eventRegistration") {
         history.push(`/event-landing-page/${eventId}`);
@@ -269,6 +280,10 @@ export const signOut = () => async (dispatch, getState) => {
 
   dispatch(authActions.SignOut());
   dispatch(communityAuthActions.CommunitySignOut());
+
+  setTimeout(function () {
+    dispatch(authActions.disabledSignOutSucceded());
+  }, 4000);
 
   history.push("/home");
 
@@ -456,7 +471,8 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
     //   })
     // );
     // /user/:userId/community/overview/:id
-    history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+    // history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+    window.location.href = `/user/${userId}/community/overview/${res.communityDoc.id}`;
   } catch (e) {
     dispatch(communityActions.hasError(e.message));
   }
@@ -2683,6 +2699,9 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         user: result.data.userData,
       })
     );
+    setTimeout(function () {
+      dispatch(userActions.disableSucceded());
+    }, 4000);
   } catch (err) {
     dispatch(userActions.hasError(err.message));
     console.log(err);

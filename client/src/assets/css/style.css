@@ -38,13 +38,18 @@ html {
 }
 
 ::-webkit-scrollbar {
-  display: none;
-  width: 0; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
+  width: 10px; /* Remove scrollbar space */
+  background: #ffffff; 
+  /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #ff0000;
+  /* background: #538bf7; */
+  border-radius: 10px;
+  background-color: #538BF7;
+background-image: linear-gradient(160deg, #538BF7 0%, #8088d0 100%);
+
+
 }
 
 .page-body {

@@ -7,10 +7,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import "react-phone-input-2/lib/style.css";
 import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser, resetUserError } from "../../../actions";
+import {
+  editUser,
+  errorTrackerForEditUser,
+  resetUserError,
+} from "../../../actions";
 
 import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
+import { useSnackbar } from "notistack";
 
 const options = [
   { value: "Technology", label: "Technology" },
@@ -174,7 +179,9 @@ const renderEventPreferences = ({
 let EditProfileForm = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
 
-  const { error } = useSelector((state) => state.user);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { error, isLoading, succeded } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -245,6 +252,18 @@ let EditProfileForm = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
+
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForEditUser());
+  }
+  if (succeded) {
+    enqueueSnackbar("User details updated successfully!", {
+      variant: "success",
+    });
+  }
 
   return (
     <>
@@ -480,7 +499,6 @@ let EditProfileForm = (props) => {
               Save Changes
             </button>
             <button
-            
               disabled={pristine || submitting}
               onClick={reset}
               className="col-3 btn btn-outline-primary btn-outline-text me-3"

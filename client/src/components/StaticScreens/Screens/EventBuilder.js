@@ -7,7 +7,7 @@ import BuildEventHero from "./../../../assets/images/buildEventFast@2x.png";
 import EventLandingHero from "./../../../assets/images/eventLandingHero@2x.png";
 import ScheduleHero from "./../../../assets/images/scheduleHero@2x.png";
 import AdditionalEventSettingsHero from "./../../../assets/images/additionalEventSettings@2x.png";
-import './../../../index.css';
+import "./../../../index.css";
 import BoostYourEvents from "./../../../assets/images/section-9-home.png";
 
 import { Link } from "react-router-dom";
@@ -29,6 +29,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import PreFooter from "../../PreFooter";
 import TopNav from "../Helper/TopNav";
+import RequestDemo from "../FormComponents/RequestDemo";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -180,49 +181,11 @@ const EventBuilderHome = (props) => {
     AOS.refresh();
   }, []);
 
-  const { error, isLoading } = useSelector((state) => state.demo);
+  const [openDemoForm, setOpenDemoForm] = React.useState(false);
 
-  const [hambergerOpen, setHambergerOpen] = useState(false);
-
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-
-  const { handleSubmit, pristine, submitting } = props;
-
-  const openHamberger = () => {
-    setHambergerOpen(true);
+  const handleCloseRequestDemo = () => {
+    setOpenDemoForm(false);
   };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
-
-  const onSubmit = (formValues) => {
-    console.log(formValues);
-
-    const ModifiedFormValues = {};
-
-    ModifiedFormValues.firstName = formValues.firstName;
-    ModifiedFormValues.lastName = formValues.lastName;
-    ModifiedFormValues.email = formValues.email;
-    ModifiedFormValues.companyName = formValues.companyName;
-    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-    ModifiedFormValues.jobTitle = formValues.jobTitle;
-    ModifiedFormValues.isAnEventAgency = formValues.eventAgency;
-    ModifiedFormValues.region = formValues.region.label;
-
-    dispatch(createDemoRequest(ModifiedFormValues));
-    showResults(ModifiedFormValues);
-  };
-
-  // if(isLoading) {
-  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{height: "100vh", width: "100vw"}}><Loader /> </div>);
-  // }
-
-  if (error) {
-    alert(error);
-    dispatch(errorTrackerForCreateDemo());
-    return;
-  }
 
   return (
     <>
@@ -234,10 +197,7 @@ const EventBuilderHome = (props) => {
 
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
-              <div
-                className="grid-1-of-2"
-                
-              >
+              <div className="grid-1-of-2">
                 <div className="header-main-heading-and-action-btn">
                   <div
                     className="hero-heading mb-4"
@@ -265,9 +225,8 @@ const EventBuilderHome = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                      
                       onClick={() => {
-                        setOpenDrawer(true);
+                        setOpenDemoForm(true);
                       }}
                       className="btn btn-light btn-outline-text px-3 py-2 me-3"
                     >
@@ -275,7 +234,6 @@ const EventBuilderHome = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                      
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -354,10 +312,9 @@ const EventBuilderHome = (props) => {
 
                 <div className="action-btn-home py-3">
                   <button
-                  onClick={() => {
-                    setOpenDrawer(true);
-                  }}
-                   
+                    onClick={() => {
+                      setOpenDemoForm(true);
+                    }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
                       boxShadow:
@@ -442,9 +399,8 @@ const EventBuilderHome = (props) => {
 
               <div className="action-btn-home  pt-5">
                 <button
-                 
                   onClick={() => {
-                    setOpenDrawer(true);
+                    setOpenDemoForm(true);
                   }}
                   className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                   style={{
@@ -459,10 +415,6 @@ const EventBuilderHome = (props) => {
             </div>
           </div>
         </div>
-
-        
-
-       
 
         <div className="home-section-9">
           <div className="container py-5 mt-3">
@@ -498,243 +450,11 @@ const EventBuilderHome = (props) => {
         {/* Footer */}
       </div>
 
-      <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer}>
-          <div className="registration-more-details-right-drawer px-4 py-4">
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Let's Schedule a meet</div>
-              <div
-                onClick={() => {
-                  setOpenDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-              <div className="side-drawer-more-details-content-section">
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridGap: "24px",
-                  }}
-                >
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      First name
-                    </label>
-
-                    <Field
-                      name="firstName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="First Name"
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Last name
-                    </label>
-                    <Field
-                      name="lastName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Last Name"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Work E-mail
-                    </label>
-                    <Field
-                      name="email"
-                      type="email"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Email"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{ width: "100%" }}
-                >
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    contact Number
-                  </label>
-                  <Field
-                    name="phoneNumber"
-                    component={renderPhoneInput}
-                    type="number"
-                  />
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Company
-                    </label>
-                    <Field
-                      name="companyName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Job Title
-                    </label>
-                    <Field
-                      name="jobTitle"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    Select Your Region
-                  </label>
-                  <Field
-                    name="region"
-                    component={renderEventPreferences}
-                    label="Event Preferences"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-4 overlay-form-input-row">
-                <label
-                  for="communityHeadline"
-                  class="form-label form-label-customized"
-                >
-                  Are you an event agency ?
-                </label>
-
-                <div class="form-check mb-2">
-                  <Field
-                    name="eventAgency"
-                    class="form-check-input"
-                    type="radio"
-                    // name="flexRadioDefault"
-                    id="flexRadioDefault1"
-                    value="true"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <Field
-                    class="form-check-input"
-                    type="radio"
-                    name="eventAgency"
-                    id="flexRadioDefault2"
-                    // checked="true"
-                    value="false"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    No
-                  </label>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <div className="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      // value={this.state.policySigned}
-                      name="signinToMailList"
-                      required
-                      id="defaultCheck1"
-                      checked
-                      // onChange={this.onPrivacyPolicyChange}
-                    />
-                    <label
-                      className="form-check-label btn-outline-text mb-3"
-                      htmlFor="flexCheckChecked"
-                      style={{ color: "grey", fontSize: "13px" }}
-                    >
-                      By registering, I agree to recieve product updates and
-                      marketing communications from Evenz.
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  onClick={() => {
-                    setOpenDrawer(false);
-                  }}
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  disabled={pristine || submitting}
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+      {/* Request demo form goes here */}
+      <RequestDemo
+        handleCloseRequestDemo={handleCloseRequestDemo}
+        openDemoForm={openDemoForm}
+      />
     </>
   );
 };

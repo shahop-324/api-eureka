@@ -5,7 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import './../../index.css';
+import "./../../index.css";
 
 import EditProfileForm from "./Forms/EditProfileForm";
 import EditNotificationSettings from "./Forms/EditNotificationSettings";
@@ -71,7 +71,7 @@ export default function VerticalTabsProfile() {
   };
 
   return (
-    <div className={`${classes.root} profile-tabs-container`}>
+    <div className={`${classes.root} profile-tabs-container`} style={{minHeight: "700px", maxHeight: "700px", height: "auto", minWidth: "998px"}}>
       <Tabs
         style={{ height: "auto" }}
         orientation="vertical"
@@ -81,10 +81,10 @@ export default function VerticalTabsProfile() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="Edit Profile" {...a11yProps(0)} />
-        <Tab label="Notifications" {...a11yProps(1)} />
-        <Tab label="Booked Ticket" {...a11yProps(2)} />
-        <Tab label="Password & Security" {...a11yProps(3)} />
+        <Tab label="Edit Profile" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(0)} />
+        <Tab label="Notifications" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(1)} />
+        <Tab label="Booked Ticket" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(2)} />
+        <Tab label="Password & Security" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <EditProfileForm />
@@ -97,7 +97,8 @@ export default function VerticalTabsProfile() {
         <UserBookedTickets />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <ResetPasswordAndDeactivation />
+        {" "}
+        <ResetPasswordAndDeactivation />{" "}
       </TabPanel>
     </div>
   );

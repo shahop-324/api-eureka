@@ -10,7 +10,6 @@ import ReviewsHero from "./../../../assets/images/reviews@2x.png";
 import CouponsHero from "./../../../assets/images/Coupons@2x.png";
 import TradeShow from "./../../../assets/images/tradeShow.png";
 
-
 import WorkflowStep1 from "./../../../assets/images/WorkflowStep1.png";
 import WorkflowStep2 from "./../../../assets/images/WorkflowStep2.png";
 import WorkflowStep3 from "./../../../assets/images/WorkflowStep3.png";
@@ -53,6 +52,7 @@ import AirplayIcon from "@material-ui/icons/Airplay";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import CallMergeIcon from "@material-ui/icons/CallMerge";
 import TopNav from "../Helper/TopNav";
+import RequestDemo from "../FormComponents/RequestDemo";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -194,8 +194,6 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-
-
 const EventManagementHome = (props) => {
   const dispatch = useDispatch();
 
@@ -206,52 +204,11 @@ const EventManagementHome = (props) => {
     AOS.refresh();
   }, []);
 
-  const { error, isLoading } = useSelector((state) => state.demo);
+  const [openDemoForm, setOpenDemoForm] = React.useState(false);
 
-  const [hambergerOpen, setHambergerOpen] = useState(false);
-
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-
-  const { handleSubmit, pristine, submitting } = props;
-
-  const openHamberger = () => {
-    setHambergerOpen(true);
+  const handleCloseRequestDemo = () => {
+    setOpenDemoForm(false);
   };
-
-  const closeHamberger = () => {
-    setHambergerOpen(false);
-  };
-
-  const onSubmit = (formValues) => {
-    console.log(formValues);
-
-    const ModifiedFormValues = {};
-
-    ModifiedFormValues.firstName = formValues.firstName;
-    ModifiedFormValues.lastName = formValues.lastName;
-    ModifiedFormValues.email = formValues.email;
-    ModifiedFormValues.companyName = formValues.companyName;
-    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-    ModifiedFormValues.jobTitle = formValues.jobTitle;
-    ModifiedFormValues.isAnEventAgency = formValues.eventAgency;
-    ModifiedFormValues.region = formValues.region.label;
-
-    dispatch(createDemoRequest(ModifiedFormValues));
-
-    // window.location.href="http://localhost:3001/home";
-    // dispatch(editUser(ModifiedFormValues, file));
-    showResults(ModifiedFormValues);
-  };
-
-  // if(isLoading) {
-  //   return (<div className="d-flex flex-row align-items-center justify-content-center" style={{height: "100vh", width: "100vw"}}><Loader /> </div>);
-  // }
-
-  if (error) {
-    alert(error);
-    dispatch(errorTrackerForCreateDemo());
-    return;
-  }
 
   return (
     <>
@@ -277,9 +234,8 @@ const EventManagementHome = (props) => {
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
-                     
                       onClick={() => {
-                        setOpenDrawer(true);
+                        setOpenDemoForm(true);
                       }}
                       className="btn btn-light btn-outline-text px-3 py-2 me-3"
                     >
@@ -287,7 +243,6 @@ const EventManagementHome = (props) => {
                     </button>
                     <Link
                       to="/signup"
-                     
                       className="btn btn-dark btn-outline-text px-3 py-2"
                     >
                       Get started
@@ -307,23 +262,20 @@ const EventManagementHome = (props) => {
           </div>
         </div>
 
-        
-
-
-<div className="home-section-2 p-4 " id="home-section-3">
+        <div className="home-section-2 p-4 " id="home-section-3">
           <div className="mt-3">
             <div
               className="grid-of-2"
               style={{ height: "auto", alignItems: "center" }}
             >
               <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div
-                className="section-heading-primary mb-4"
-                style={{ color: "#222222" }}
-              >
-                Tools Catered with your <br />
-            needs in mind
-              </div>
+                <div
+                  className="section-heading-primary mb-4"
+                  style={{ color: "#222222" }}
+                >
+                  Tools Catered with your <br />
+                  needs in mind
+                </div>
 
                 <div
                   className="home-text-description my-5"
@@ -333,17 +285,16 @@ const EventManagementHome = (props) => {
                   // data-aos-delay="100"
                   style={{ color: "#4D4D4D" }}
                 >
-                  From inviting speakers, sponsors, booths, attendees, managing teams,
-            ticketing to getting feedback
-            <br /> and sharing recordings post event, we do it all for you. So,
-            you don’t have to. peacefully.
+                  From inviting speakers, sponsors, booths, attendees, managing
+                  teams, ticketing to getting feedback
+                  <br /> and sharing recordings post event, we do it all for
+                  you. So, you don’t have to. peacefully.
                 </div>
 
                 <div className="action-btn-home py-3">
                   <button
-                 
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -385,25 +336,25 @@ const EventManagementHome = (props) => {
             style={{ height: "auto", alignItems: "center" }}
           >
             <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-              <div className="section-heading-primary mb-4" style={{color: "#000000"}}>
-              Invite Speakers, attendees 
-              <br/>
-And sponsors
+              <div
+                className="section-heading-primary mb-4"
+                style={{ color: "#000000" }}
+              >
+                Invite Speakers, attendees
+                <br />
+                And sponsors
               </div>
 
               <div className="home-text-description" data-aos="slide-up">
-              You can invite your speakers, attendees and sponsors to join you as soon as you publish your event and manage everything with just a click.
-
-
+                You can invite your speakers, attendees and sponsors to join you
+                as soon as you publish your event and manage everything with
+                just a click.
               </div>
-
-              
 
               <div className="action-btn-home mt-5">
                 <button
-                
                   onClick={() => {
-                    setOpenDrawer(true);
+                    setOpenDemoForm(true);
                   }}
                   className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                   style={{
@@ -442,7 +393,6 @@ And sponsors
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  
                   src={ReviewsHero}
                   alt="amazing event"
                   className="zoom-in"
@@ -465,8 +415,8 @@ And sponsors
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                 Get Feedback from your  <br />
-                attendees
+                  Get Feedback from your <br />
+                  attendees
                 </div>
 
                 <div
@@ -476,15 +426,16 @@ And sponsors
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  We know its the key to constantly improve your events to drive more meaningful connections and build values that stays. 
-So, you can hear to what your attendees have to say about your event using reviews feature built for your community.
+                  We know its the key to constantly improve your events to drive
+                  more meaningful connections and build values that stays. So,
+                  you can hear to what your attendees have to say about your
+                  event using reviews feature built for your community.
                 </div>
 
                 <div className="action-btn-home py-3">
                   <button
-                  
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -500,7 +451,6 @@ So, you can hear to what your attendees have to say about your event using revie
             </div>
           </div>
         </div>
-
 
         <div className="home-section-5 p-4">
           <div className="mt-3">
@@ -535,9 +485,8 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                  
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -584,7 +533,6 @@ So, you can hear to what your attendees have to say about your event using revie
                 style={{ alignSelf: "center" }}
               >
                 <img
-                  
                   src={TradeShow}
                   alt="amazing event"
                   className="zoom-in"
@@ -607,8 +555,8 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Invite booths to 
-                  <br/>
+                  Invite booths to
+                  <br />
                   boost engagement.
                 </div>
 
@@ -627,9 +575,8 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                  
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-dark btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -682,9 +629,8 @@ So, you can hear to what your attendees have to say about your event using revie
 
                 <div className="action-btn-home py-3">
                   <button
-                  
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-light btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -730,7 +676,8 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-delay="100"
                   style={{ color: "#000000" }}
                 >
-                  No we didn't forgot about<br />  sponsors.
+                  No we didn't forgot about
+                  <br /> sponsors.
                 </div>
 
                 <div
@@ -740,15 +687,15 @@ So, you can hear to what your attendees have to say about your event using revie
                   data-aos-duration="500"
                   data-aos-delay="100"
                 >
-                  Invite sponsors and your attendees can check thier listings and sites in your event.
-                  You can also give them shoutout as you wish.
+                  Invite sponsors and your attendees can check thier listings
+                  and sites in your event. You can also give them shoutout as
+                  you wish.
                 </div>
 
                 <div className="action-btn-home py-3">
                   <button
-                
                     onClick={() => {
-                      setOpenDrawer(true);
+                      setOpenDemoForm(true);
                     }}
                     className="btn btn-primary btn-outline-text px-5 py-3 me-3"
                     style={{
@@ -813,243 +760,13 @@ So, you can hear to what your attendees have to say about your event using revie
         {/* Footer */}
       </div>
 
-      <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer}>
-          <div className="registration-more-details-right-drawer px-4 py-4">
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Let's Schedule a meet</div>
-              <div
-                onClick={() => {
-                  setOpenDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-              <div className="side-drawer-more-details-content-section">
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridGap: "24px",
-                  }}
-                >
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      First name
-                    </label>
+{/* Here goes request demo form */}
 
-                    <Field
-                      name="firstName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="First Name"
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Last name
-                    </label>
-                    <Field
-                      name="lastName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Last Name"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Work E-mail
-                    </label>
-                    <Field
-                      name="email"
-                      type="email"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      label="Email"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className="row edit-profile-form-row mb-3"
-                  style={{ width: "100%" }}
-                >
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    contact Number
-                  </label>
-                  <Field
-                    name="phoneNumber"
-                    component={renderPhoneInput}
-                    type="number"
-                  />
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Company
-                    </label>
-                    <Field
-                      name="companyName"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
-                    <label
-                      for="communityHeadline"
-                      class="form-label form-label-customized"
-                    >
-                      Job Title
-                    </label>
-                    <Field
-                      name="jobTitle"
-                      type="text"
-                      classes="form-control"
-                      component={renderInput}
-                      aria-describedby="emailHelp"
-                      label="Headline"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <label
-                    for="communityHeadline"
-                    class="form-label form-label-customized"
-                  >
-                    Select Your Region
-                  </label>
-                  <Field
-                    name="region"
-                    component={renderEventPreferences}
-                    label="Event Preferences"
-                  />
-                </div>
-              </div>
-
-              <div class="mb-4 overlay-form-input-row">
-                <label
-                  for="communityHeadline"
-                  class="form-label form-label-customized"
-                >
-                  Are you an event agency ?
-                </label>
-
-                <div class="form-check mb-2">
-                  <Field
-                    name="eventAgency"
-                    class="form-check-input"
-                    type="radio"
-                    // name="flexRadioDefault"
-                    id="flexRadioDefault1"
-                    value="true"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <Field
-                    class="form-check-input"
-                    type="radio"
-                    name="eventAgency"
-                    id="flexRadioDefault2"
-                    // checked="true"
-                    value="false"
-                    // component={renderInput}
-                    component="input"
-                  />
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    No
-                  </label>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col">
-                  <div className="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      // value={this.state.policySigned}
-                      name="signinToMailList"
-                      required
-                      id="defaultCheck1"
-                      checked
-                      // onChange={this.onPrivacyPolicyChange}
-                    />
-                    <label
-                      className="form-check-label btn-outline-text mb-3"
-                      htmlFor="flexCheckChecked"
-                      style={{ color: "grey", fontSize: "13px" }}
-                    >
-                      By registering, I agree to recieve product updates and
-                      marketing communications from Evenz.
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  onClick={() => {
-                    setOpenDrawer(false);
-                  }}
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  disabled={pristine || submitting}
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+<RequestDemo
+        handleCloseRequestDemo={handleCloseRequestDemo}
+        openDemoForm={openDemoForm}
+      />
+      
     </>
   );
 };

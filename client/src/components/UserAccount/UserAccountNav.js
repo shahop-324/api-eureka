@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import AvatarMenu from "../AvatarMenu";
-import ErrorBoundriesAvatarMenu from "../ErrorBoundries/ErrorBoundriesAvatarMenu";
 
 class UserAccountNav extends React.Component {
   render() {
@@ -27,7 +26,6 @@ class UserAccountNav extends React.Component {
           <div class="d-flex flex-row align-items-center">
             <Link
               to={`/search-events`}
-             
               className="btn btn-outline-primary btn-outline-text"
             >
               Explore Events
@@ -45,11 +43,8 @@ class UserAccountNav extends React.Component {
               </Link>
             </button> */}
 
-
             <div className="ms-3">
-              <ErrorBoundriesAvatarMenu>
-                <AvatarMenu />
-              </ErrorBoundriesAvatarMenu>
+              <AvatarMenu />
             </div>
           </div>
         </div>

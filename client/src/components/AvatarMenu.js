@@ -14,7 +14,12 @@ import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.css";
 import { useDispatch, useSelector } from "react-redux";
-import { communitySignIn, navigationIndex, signOut } from "../actions/index";
+import {
+  communitySignIn,
+  errorTrackerForEditUser,
+  navigationIndex,
+  signOut,
+} from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
@@ -26,6 +31,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarMenu = () => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const referralCode = useSelector((state) => state.auth.referralCode);
 
   const [openReferral, setOpenReferral] = React.useState(false);
@@ -117,15 +125,15 @@ const AvatarMenu = () => {
     );
   }
   if (error) {
-    throw new Error(error);
-    // alert(error);
-    // dispatch(errorTrackerForPersonalData());
-    // return null;
+    // Here dispatch disable error
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForEditUser());
   }
+
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;
-
- 
 
   let imgURL;
 
@@ -167,7 +175,7 @@ const AvatarMenu = () => {
   const referralLink = `https://www.evenz.in/?ref=${referralCode}`;
 
   return (
-    <div style={{zIndex: "1000000000000000000"}} className={classes.root}>
+    <div style={{ zIndex: "1000000000000000000" }} className={`${classes.root}`}>
       <div>
         <Button
           style={{ padding: "0" }}
@@ -190,7 +198,7 @@ const AvatarMenu = () => {
             textAlign: "center",
             marginTop: "20px",
             // maxWidth: "250px",
-            // marginRight: "2.5rem",
+            // marginRight: "4.5rem",
           }}
           open={open}
           anchorEl={anchorRef.current}

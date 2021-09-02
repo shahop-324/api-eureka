@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./../../assets/css/hiddenScroll.css";
 import { CssBaseline } from "@material-ui/core";
 import UserAccountNav from "./UserAccountNav";
 import "./../../assets/css/UserAccountStyle.css";
@@ -22,9 +22,7 @@ import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
 import Tour from "reactour";
-import ErrorBoundriesUserAccountSideNav from "../ErrorBoundries/ErrorBoundriesUserAccountSideNav";
-import ErrorBoundriesUserAccountEventsMainBody from "../ErrorBoundries/ErrorBoundriesUserAccountEventsMainBody";
-import GlobalSnackbar from "../GlobalSnackbar";
+
 const { REACT_APP_MY_ENV } = process.env;
 const steps = [
   {
@@ -36,7 +34,10 @@ const steps = [
 
 const UserAccountHome = () => {
   const { isLoading, error } = useSelector((state) => state.user);
+
+
   const { isCommunityLoading } = useSelector((state) => state.community);
+
   const [isTourOpen, setIsTourOpen] = useState(true);
 
   const dispatch = useDispatch();
@@ -53,12 +54,14 @@ const UserAccountHome = () => {
     dispatch(fetchUserAllPersonalData());
     // dispatch(MailChimpAuth(params.code));
   }, [dispatch]);
+
   useEffect(() => {
     return () => {
       console.log("cleaned up");
       dispatch(navigationIndex(0));
     };
   }, [dispatch]);
+
   const handleChange = (event, newValue) => {
     dispatch(navigationIndex(newValue));
     switch (newValue) {
@@ -78,6 +81,14 @@ const UserAccountHome = () => {
         history.push("/user/profile");
         break;
       }
+      case 4: {
+        history.push("/user/reviews");
+        break;
+      }
+      case 5: {
+        history.push("/user/queries");
+        break;
+      }
       default: {
         // history.push("/user/home");
         break;
@@ -87,17 +98,16 @@ const UserAccountHome = () => {
 
   const { currentIndex } = useSelector((state) => state.navigation);
 
-  if (error) {
-    dispatch(errorTrackerForPersonalData());
-    // alert(error);
-    // return null;
-  }
+  // if (error) {
+
+  //   dispatch(errorTrackerForPersonalData());
+  //   // alert(error);
+  //   // return null;
+  // }
 
   return (
     <>
       <CssBaseline />
-      <GlobalSnackbar feedbackMsg={"Successfully signed in!"} severity={"success"}/>
-      {/* {error && handleError(error)} */}
 
       {isLoading ? (
         <div
@@ -112,16 +122,13 @@ const UserAccountHome = () => {
           style={{
             paddingLeft: "0",
             paddingRight: "0",
-
-            overflow: "scroll",
+            overflow: "auto",
             width: "auto",
           }}
         >
           <UserAccountNav />
           <div className="user-account-body">
-            <ErrorBoundriesUserAccountSideNav>
-              <UserAccountSideNav className="first-step-user-section" />
-            </ErrorBoundriesUserAccountSideNav>
+            <UserAccountSideNav className="first-step-user-section" />
 
             <div
               className="user-account-main-body"
@@ -137,17 +144,10 @@ const UserAccountHome = () => {
                 switch (currentIndex) {
                   case 0:
                     return <UserAccountHomeMainBody />;
-
                   case 1:
-                    return (
-                      <ErrorBoundriesUserAccountEventsMainBody>
-                        <UserAccountEventsMainBody />
-                      </ErrorBoundriesUserAccountEventsMainBody>
-                    );
-
+                    return <UserAccountEventsMainBody />;
                   case 2:
                     return <UserAccountRecordings />;
-
                   case 3:
                     return <UserAccountProfileMainBody />;
                   case 4:

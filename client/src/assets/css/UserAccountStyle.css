@@ -165,7 +165,7 @@
 
 .page-user-account {
   padding: 0;
-  overflow: auto;
+  /* overflow: auto; */
   background-color: #ffffff;
   height: 100vh;
 }

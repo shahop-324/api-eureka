@@ -5,10 +5,11 @@ import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { useDispatch } from "react-redux";
-import { editUser } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { editUser, errorTrackerForEditUser } from "../../../actions";
 import { connect } from "react-redux";
-import { MailChimpAuth } from "../../../actions";
+// import { MailChimpAuth } from "../../../actions";
+import { useSnackbar } from "notistack";
 
 const RoyalBlueCheckBox = withStyles({
   root: {
@@ -53,6 +54,11 @@ const RenderCustomCheckboxLabels = ({ input, label, value }) => {
 };
 
 const EditNotificationSettings = (props) => {
+
+  const { error, isLoading, succeded } = useSelector((state) => state.user);
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const { handleSubmit, pristine, submitting } = props;
 
   // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -65,9 +71,16 @@ const EditNotificationSettings = (props) => {
     // showResults(formValues);
     dispatch(editUser(formValues));
   };
-  const onClickHandle = () => {
-    dispatch(MailChimpAuth());
-  };
+  // const onClickHandle = () => {
+  //   dispatch(MailChimpAuth());
+  // };
+
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForEditUser());
+  }
 
   return (
     <>
@@ -135,10 +148,10 @@ const EditNotificationSettings = (props) => {
             >
               Save changes
             </button>
-            <a href="http://localhost:3000/api-eureka/auth/mailchimp">
+            {/* <a href="http://localhost:3000/api-eureka/auth/mailchimp">
               {" "}
               MailChimp
-            </a>
+            </a> */}
             {/* <button type="button" onClick={() => onClickHandle}>
               {" "}
               MailChimp

@@ -24,13 +24,13 @@ export default function CenteredTabs(props) {
         centered
         variant="fullWidth"
       >
-        <Tab label="Home" />
-        <Tab label="Events" />
-        <Tab label="Recordings" />
+        <Tab label="Home" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} />
+        <Tab label="Events" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
+        <Tab label="Recordings" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
         
-        <Tab label="Profile" />
-        <Tab label="Reviews" />
-        <Tab label="Queries" />
+        <Tab label="Profile" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
+        <Tab label="Reviews" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
+        <Tab label="Queries" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
       </Tabs>
     </Paper>
   );

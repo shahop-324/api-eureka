@@ -5,7 +5,10 @@ import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 import { errorTrackerForMadeJustForYou, madeJustForYou } from "../../actions";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
+import { useSnackbar } from "notistack";
+
 const UserAccountEventsMainBody = () => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(madeJustForYou());
@@ -14,10 +17,10 @@ const UserAccountEventsMainBody = () => {
   console.log(events);
 
   if (error) {
-    throw new Error(error);
-    // dispatch(errorTrackerForMadeJustForYou());
-    // alert(error);
-    // return;
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    return dispatch(errorTrackerForMadeJustForYou());
   }
 
   const renderSuggestedEventsList = (events) => {
@@ -51,10 +54,10 @@ const UserAccountEventsMainBody = () => {
   };
 
   return (
-    <div className="user-account-main-body-home-content">
+    <div className="user-account-main-body-home-content" style={{ height: "100%" }}>
       <div
         className="user-account-main-body-home-content-left ps-2"
-        style={{ overflow: "auto", height: "85vh" }}
+        style={{ overflow: "auto", height: "100%" }}
       >
         <div className="user-account-main-body-headline pb-4 ps-4">
           Made Just For You
@@ -68,7 +71,7 @@ const UserAccountEventsMainBody = () => {
               {isLoading ? (
                 <div
                   className="d-flex flex-row align-items-center justify-content-center"
-                  style={{ height: "80vh", width: "80vw" }}
+                  style={{ height: "100%", width: "80vw" }}
                 >
                   <Loader />
                 </div>
@@ -77,10 +80,15 @@ const UserAccountEventsMainBody = () => {
               )}
             </div>
           ) : (
-            <YouHaveNoEventComing
-              msgText="Looks like there are no great matches for you"
-              style={{ maxWidth: "400px" }}
-            />
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "100%" }}
+            >
+              <YouHaveNoEventComing
+                msgText="Looks like there are no great matches for you"
+                style={{ maxWidth: "400px" }}
+              />
+            </div>
           )}
         </div>
       </div>

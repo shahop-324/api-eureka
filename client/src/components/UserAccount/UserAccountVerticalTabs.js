@@ -11,8 +11,12 @@ import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 import dateFormat from "dateformat";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { errorTrackerForRegisteredEvents, fetchUserRegisteredEvents } from "../../actions";
+import {
+  errorTrackerForRegisteredEvents,
+  fetchUserRegisteredEvents,
+} from "../../actions";
 import Loader from "../Loader";
+import { useSnackbar } from "notistack";
 // import history from "../../history";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,6 +65,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VerticalTabs() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -69,9 +75,8 @@ export default function VerticalTabs() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-   
-      dispatch(fetchUserRegisteredEvents());
-  }, [ dispatch]);
+    dispatch(fetchUserRegisteredEvents());
+  }, [dispatch]);
 
   if (isLoading) {
     return (
@@ -83,17 +88,18 @@ export default function VerticalTabs() {
       </div>
     );
   } else if (error) {
-    dispatch(errorTrackerForRegisteredEvents());
-    alert(error);
-    return;
-  }
-  else if(Array.isArray(events) && events.length) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+
+    return dispatch(errorTrackerForRegisteredEvents());
+  } else if (Array.isArray(events) && events.length) {
     <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ height: "80vh", width: "100%" }}
-      >
-        <Loader />
-      </div>
+      className="d-flex flex-row align-items-center justify-content-center"
+      style={{ height: "80vh", width: "100%" }}
+    >
+      <Loader />
+    </div>;
   }
 
   console.log(events);
@@ -120,8 +126,8 @@ export default function VerticalTabs() {
           const end = new Date(event.endDate);
           const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
-          const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+          const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+          const endTime = dateFormat(event.endTime, "mmm dS, h:MM TT");
 
           return (
             <EventCard
@@ -137,7 +143,7 @@ export default function VerticalTabs() {
               endDate={formatedEndDate}
               startTime={startTime}
               endTime={endTime}
-            rating={(event.communityRating * 1 ).toFixed(1)}
+              rating={(event.communityRating * 1).toFixed(1)}
             />
           );
         }
@@ -165,9 +171,9 @@ export default function VerticalTabs() {
           const end = new Date(event.endDate);
           const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
-          const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
-          
+          const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+          const endTime = dateFormat(event.endTime, "mmm dS, h:MM TT");
+
           return (
             <EventCard
               image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
@@ -182,7 +188,7 @@ export default function VerticalTabs() {
               endDate={formatedEndDate}
               startTime={startTime}
               endTime={endTime}
-            rating={(event.communityRating * 1 ).toFixed(1)}
+              rating={(event.communityRating * 1).toFixed(1)}
             />
           );
         }
@@ -198,12 +204,12 @@ export default function VerticalTabs() {
         const now = new Date(event.startDate);
         const end = new Date(event.endDate);
         const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
-        const formatedEndDate = dateFormat(end,"mmm dS, h:MM TT" );
+        const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
 
-        console.log(event.createdBy)
+        console.log(event.createdBy);
 
-        const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+        const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+        const endTime = dateFormat(event.endTime, "mmm dS, h:MM TT");
 
         return (
           <EventCard
@@ -219,7 +225,7 @@ export default function VerticalTabs() {
             endDate={formatedEndDate}
             startTime={startTime}
             endTime={endTime}
-            rating={(event.communityRating * 1 ).toFixed(1)}
+            rating={(event.communityRating * 1).toFixed(1)}
           />
         );
       });
@@ -227,8 +233,6 @@ export default function VerticalTabs() {
       return <YouHaveNoEventComing msgText="You have no event coming at all" />;
     }
   };
-
-  
 
   return (
     <div className={classes.root}>
@@ -240,16 +244,18 @@ export default function VerticalTabs() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="All" {...a11yProps(0)} />
-        <Tab label="This Week" {...a11yProps(1)} />
-        <Tab label="This Month" {...a11yProps(2)} />
+        <Tab label="All" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(0)} />
+        <Tab label="This Week" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(1)} />
+        <Tab label="This Month" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <div className="user-account-home-event-card-grid px-2 py-2">
+        {typeof registeredInEvents !== 'undefined' && registeredInEvents.length > 0 ?  <div className="user-account-home-event-card-grid px-2 py-2">
           {renderAllRegisteredEvents()}
-        </div>
+        </div> : <div className="d-flex flex-row align-items-center justify-content-center"> <YouHaveNoEventComing msgText="You have no event coming at all" /></div>  }
+        
       </TabPanel>
       <TabPanel value={value} index={1}>
+        {}
         <div className="user-account-home-event-card-grid px-2 py-2">
           {renderThisWeekRegisteredEvents()}
         </div>

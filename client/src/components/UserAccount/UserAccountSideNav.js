@@ -12,9 +12,12 @@ import {
 import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
 import maleMascot from "./../../assets/images/winkingPerson.png";
+import { useSnackbar } from "notistack";
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { error, isCommunityLoading } = useSelector((state) => state.community);
 
@@ -26,16 +29,12 @@ const CommunityProfileTab = (props) => {
     dispatch(communitySignIn(props.communityId, userId));
   };
 
-  // if (isCommunityLoading) {
-  //   return (
-
-  //   );
-  // }
-
   if (error) {
-    dispatch(errorTrackerForCommunitySignIn());
-    alert(error);
-    return;
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+   return dispatch(errorTrackerForCommunitySignIn());
+    
   }
 
   return (
@@ -52,7 +51,7 @@ const CommunityProfileTab = (props) => {
       <div className="d-flex flex-column justify-content-center align-items-left ms-3">
         <div
           className="community-profile-name mb-1"
-          style={{ fontSize: "1rem" }}
+          style={{ fontSize: "0.9rem" }}
         >
           {props.name}
         </div>

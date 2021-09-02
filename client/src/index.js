@@ -57,7 +57,7 @@ ReactDOM.render(
           horizontal: "center",
         }}
         TransitionComponent={Slide}
-        maxSnack={3}
+        maxSnack={1}
       >
         <App />
       </SnackbarProvider>

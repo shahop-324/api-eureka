@@ -158,6 +158,12 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route path="/user/profile" exact component={UserAccountHome} />
               )}
+              {isSignedIn && (
+                <Route path="/user/reviews" exact component={UserAccountHome} />
+              )}
+              {isSignedIn && (
+                <Route path="/user/queries" exact component={UserAccountHome} />
+              )}
 
               {isSignedIn && (
                 <Route
