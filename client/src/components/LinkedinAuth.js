@@ -7,14 +7,17 @@ import { connect } from "react-redux";
 import { linkedinSignIn } from "../actions/index";
 import { Link } from "react-router-dom";
 import linkedInSVG from "./../assets/images/linkedin.svg";
+import Loader from "./Loader";
 
 class LinkedinAuth extends React.Component {
+  state = { isLinkedinClicked: false };
   render() {
     let { clientId, redirectUrl, oauthUrl, scope, state } = LinkedInApi;
     oauthUrl = `${oauthUrl}&client_id=${clientId}&scope=${scope}&state=${state}&redirect_uri=${redirectUrl}`;
     const contentWhenLoggedOut = (
       <>
-        <a href={oauthUrl}>
+      
+        <a href={oauthUrl} >
           <div>
             <button
               type="button"

@@ -107,6 +107,8 @@ const AvatarMenu = () => {
     prevOpen.current = open;
   }, [open]);
 
+  const { communities } = useSelector((state) => state.community);
+
   if (isLoading) {
     return (
       <div class="spinner-border" role="status">
@@ -123,7 +125,7 @@ const AvatarMenu = () => {
   const image = user.userDetails.image;
   const userName = user.userDetails.firstName;
 
-  const communities = user.userDetails.communities;
+ 
 
   let imgURL;
 

@@ -6,7 +6,7 @@ import "../Styles/AboutUs.scss";
 import PreFooter from "../../PreFooter";
 
 import TopNav from "../Helper/TopNav";
-import Timer from "../../Timer";
+
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -76,7 +76,7 @@ const AboutUs = () => {
 
   return (
     <>
-      <Timer />
+      
       <div
         className="container-fluid p-0 pb-5"
         style={{ backgroundColor: "#272727", width: "100vw" }}

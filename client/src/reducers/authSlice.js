@@ -9,8 +9,6 @@ const authSlice = createSlice({
     error: false,
     isSignedInThroughGoogle: false,
     referralCode: null,
-    
-    
   },
 
   reducers: {

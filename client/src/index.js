@@ -9,6 +9,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import { SnackbarProvider } from "notistack";
+import Slide from '@material-ui/core/Slide';
 
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -48,7 +50,17 @@ let persistor = persistStore(store);
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <SnackbarProvider
+      
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        TransitionComponent={Slide}
+        maxSnack={3}
+      >
+        <App />
+      </SnackbarProvider>
     </PersistGate>
   </Provider>,
 

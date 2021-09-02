@@ -32,7 +32,6 @@ import PhoneInput from "react-phone-input-2";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
-import Timer from "../../Timer";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -453,7 +452,6 @@ const Pricing = (props) => {
 
   return (
     <>
-    <Timer />
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

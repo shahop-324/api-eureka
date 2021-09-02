@@ -7,6 +7,7 @@ const demoSlice = createSlice({
     demo: null,
     isLoading: true,
     error: false,
+    succeded: false,
   },
 
   reducers: {
@@ -22,10 +23,17 @@ const demoSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
+    disableSucceded(state, action) {
+      state.succeded = false;
+    },
     CreateDemo(state, action) {
       state.demo=action.payload.demo;
       state.isLoading = false;
+      state.succeded = true;
+
+      
     },
+
   },
 });
 export const demoActions = demoSlice.actions;

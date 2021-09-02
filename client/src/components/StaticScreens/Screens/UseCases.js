@@ -15,7 +15,6 @@ import PreFooter from "../../PreFooter";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link } from "react-router-dom";
-import Timer from "../../Timer";
 
 const UseCases = () => {
   useEffect(() => {
@@ -31,7 +30,6 @@ const UseCases = () => {
 
   return (
     <>
-    <Timer />
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

@@ -19,12 +19,13 @@ const renderInputOldPass = ({
   type,
   placeholder,
   input,
-  meta,
+  meta: { touched, error, warning },
 
   classes,
 }) => {
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
-    <div>
+    <div className={className}>
       <input
         type={type}
         placeholder={placeholder}
@@ -32,7 +33,20 @@ const renderInputOldPass = ({
         className={classes}
         required
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "400" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -40,19 +54,33 @@ const renderInput = ({
   type,
   placeholder,
   input,
-  meta,
+  meta: { touched, error, warning },
 
   classes,
 }) => {
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
-    <div>
+    <div className={className}>
       <input
         type={type}
         placeholder={placeholder}
         {...input}
         className={classes}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "400" }}
+            >
+              {warning}
+            </div>
+          )))}
     </div>
   );
 };
@@ -66,17 +94,14 @@ const ResetPasswordAndDeactivation = (props) => {
   };
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
-    // console.log(formValues);
-    // showResults(formValues);
-
     dispatch(editUserPassword(formValues));
   };
   return (
     <>
       <div className="user-account-edit-profile px-2 py-2">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div className="mb-5">
-            <h3>Change Password</h3>
+            <h3 className="booked-ticket-sub-heading mb-3">Change Password</h3>
             <div class="form-group mb-4">
               <Field
                 name="oldPass"
@@ -134,7 +159,7 @@ const ResetPasswordAndDeactivation = (props) => {
             </div>
           </div>
         </form>
-        <div>
+        {/* <div>
           <h3 className="mb-3">Account Deactivation</h3>
           <div className="d-flex flex-row mb-3">
             <div className="me-3">Current Status </div>
@@ -143,7 +168,7 @@ const ResetPasswordAndDeactivation = (props) => {
             </div>
           </div>
           <ToggleSwitch />
-        </div>
+        </div> */}
       </div>
     </>
   );
@@ -152,17 +177,17 @@ const validate = (formValues) => {
   const errors = {};
 
   if (!formValues.oldPass) {
-    errors.oldPass = "required";
+    errors.oldPass = "Required";
   }
 
   if (!formValues.newPass) {
-    errors.newPass = "required";
+    errors.newPass = "Required";
   } else if (formValues.newPass.length < 8) {
     errors.newPass = "password must be atleast 8 characters ";
   }
 
   if (!formValues.confirmPass) {
-    errors.confirmPass = "required";
+    errors.confirmPass = "Required";
   } else if (formValues.newPass !== formValues.confirmPass) {
     errors.confirmPass = "new password and confirm password must be same";
   }

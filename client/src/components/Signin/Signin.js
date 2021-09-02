@@ -18,6 +18,10 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { linkedinSignIn } from "../../actions";
+import Loader from "../Loader";
+import { ToastContainer, toast } from 'material-react-toastify';
+import 'material-react-toastify/dist/ReactToastify.css';
+
 let formIsvalidated = false;
 
 const renderInput = ({
@@ -71,14 +75,19 @@ const Signin = (props) => {
 
   const [signinClicked, setSigninClicked] = useState(false);
 
+  const urlSearchParams = new URLSearchParams(window.location.search);
+
+  const params = Object.fromEntries(urlSearchParams.entries());
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
     console.log(params.code);
     // dispatch(MailChimpAuth(params.code));
-    dispatch(linkedinSignIn(params.code));
+    if (params.code) {
+      dispatch(linkedinSignIn(params.code));
+    }
+
     dispatch(resetAuthError());
     setSigninClicked(false);
   }, [dispatch, error]);
@@ -99,8 +108,20 @@ const Signin = (props) => {
   }
 
   if (error) {
-    // dispatch(resetAuthError());
-    alert(error);
+    // alert(error);
+  //   toast.success("to create");
+  toast.success('🦄 Wow so easy!', {
+    position: "bottom-left",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
+  //  toast.dark("of notifications.");
+  //  toast.warning("You just need to");
+  //  toast.info("execute one of these functions");
     setSigninClicked(false);
     dispatch(errorTrackerForSignIn());
     return;
@@ -124,12 +145,37 @@ const Signin = (props) => {
     <>
       {chatBot()}
       <CssBaseline />
-      <div className="container-fluid page-body">
+      {params.code && (
+        <div
+          style={{
+            position: "absolute",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "#212121B2",
+            zIndex: "10",
+          }}
+        >
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "100vh" }}
+          >
+            <Loader />
+          </div>
+        </div>
+      )}
+
+      <div
+        className="container-fluid page-body"
+        style={{ position: "relative" }}
+      >
         <div
           className="row d-flex"
           style={{ height: "100%", alignItems: "center" }}
         >
-          <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
+          <div
+            className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex"
+            style={{ paddingLeft: "0", marginLeft: "0" }}
+          >
             <div className="col illustration-card">
               <div className="row">
                 <a

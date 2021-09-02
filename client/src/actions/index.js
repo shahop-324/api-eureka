@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack";
 import eureka from "../apis/eureka";
 import { authActions } from "../reducers/authSlice";
 import { eventActions } from "../reducers/eventSlice";
@@ -38,6 +39,7 @@ import { eventPollActions } from "../reducers/eventPollSlice";
 import { availableForNetworkingActions } from "../reducers/availableForNetworking";
 
 import { StreamActions } from "../reducers/streamSlice";
+import GlobalSnackbar from "../components/GlobalSnackbar";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -100,6 +102,7 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       dispatch(fetchUserAllPersonalData());
     } else {
       history.push("/user/home");
+
       // window.location.href = REACT_APP_MY_ENV
       //   ? "http://localhost:3001/user/home"
       //   : "https://www.evenz.in/user/home";
@@ -447,11 +450,11 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
         token: res.token,
       })
     );
-    dispatch(
-      communityActions.CreateCommunity({
-        community: res.communityDoc,
-      })
-    );
+    // dispatch(
+    //   communityActions.CreateCommunity({
+    //     community: res.communityDoc,
+    //   })
+    // );
     // /user/:userId/community/overview/:id
     history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
   } catch (e) {
@@ -553,64 +556,56 @@ export const errorTrackerForFetchEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
 
-export const fetchUserAllPersonalData =
-  (code) => async (dispatch, getState) => {
-    dispatch(communityActions.startCommunityLoading());
-    console.log(code);
-    const fetchData = async (code) => {
-      // if(code)
-      // {
+export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
+  dispatch(communityActions.startCommunityLoading());
+  const fetchData = async () => {
+    let res = await fetch(
+      `${BaseURL}users/personalData`,
 
-      // }
-      let res = await fetch(
-        `${BaseURL}users/personalData`,
+      {
+        method: "GET",
 
-        {
-          method: "GET",
-
-          headers: {
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
-
-      console.log(res);
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("fetching user data failed");
-        } else {
-          throw new Error(res.message);
-        }
+        headers: {
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
       }
+    );
 
-      res = await res.json();
-      return res;
-    };
-    try {
-      const res = await fetchData();
-      console.log(res);
-      // console.log(res.data.personalData);
-
-      dispatch(
-        eventActions.FetchEvents({
-          events: res.data.personalData.registeredInEvents,
-        })
-      );
-      dispatch(
-        communityActions.FetchCommunities({
-          communities: res.data.personalData.communities,
-        })
-      );
-
-      dispatch(
-        userActions.CreateUser({
-          user: res.data.personalData,
-        })
-      );
-    } catch (e) {
-      dispatch(eventActions.hasError(e.message));
+    console.log(res);
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("fetching user data failed");
+      } else {
+        throw new Error(res.message);
+      }
     }
+
+    res = await res.json();
+    return res;
   };
+  try {
+    const res = await fetchData();
+    console.log(res);
+    dispatch(
+      eventActions.FetchEvents({
+        events: res.data.personalData.registeredInEvents,
+      })
+    );
+    dispatch(
+      communityActions.FetchCommunities({
+        communities: res.data.personalData.communities,
+      })
+    );
+
+    dispatch(
+      userActions.CreateUser({
+        user: res.data.personalData,
+      })
+    );
+  } catch (e) {
+    dispatch(eventActions.hasError(e.message));
+  }
+};
 export const errorTrackerForPersonalData = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
@@ -2700,7 +2695,6 @@ export const errorTrackerForEditUser = () => async (dispatch, getState) => {
 
 export const editUserPassword = (formValues) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
-  dispatch(authActions.startLoading());
   try {
     console.log(formValues);
 
@@ -2736,7 +2730,6 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     );
   } catch (err) {
     dispatch(userActions.hasError(err.message));
-    dispatch(authActions.hasError(err.message));
   }
 };
 export const errorTrackerForEditUserPassword =
@@ -4444,6 +4437,50 @@ export const getRTCToken =
     }
   };
 
+export const getRTCTokenForJoiningTable =
+  (tableId, userId, launchTableScreen) => async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+
+    const fetchingRTCToken = async () => {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForJoiningTable`, {
+        method: "POST",
+        body: JSON.stringify({
+          tableId: tableId,
+          userId: userId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+    try {
+      let res = await fetchingRTCToken();
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      launchTableScreen();
+    } catch (err) {
+      alert(err);
+      dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
 export const getRTCTokenForScreenShare =
   (sessionId, uid, startScreenCall) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
@@ -4574,18 +4611,26 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
         throw new Error(res.message);
       }
     }
+
     res = await res.json();
     console.log(res.data);
 
-    alert("Your demo request is recived successfully.");
     dispatch(
       demoActions.CreateDemo({
         demo: res.data,
       })
     );
+
+    setTimeout(function () {
+      dispatch(demoActions.disableSucceded());
+    }, 4000);
+    // alert("Request submitted successfully!");
+    // return <GlobalSnackbar severity={"success"} feedbackMsg={"Successfully recieved your request."}/>;
   } catch (err) {
     dispatch(demoActions.hasError(err.message));
-    console.log(err);
+    // return <GlobalSnackbar severity={"error"} feedbackMsg={err.response}/>
+    // GlobalSnackbar("error", err.response);
+    // console.log(err);
   }
 };
 

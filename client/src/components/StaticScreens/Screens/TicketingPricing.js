@@ -9,7 +9,6 @@ import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
 import { useTheme } from "@material-ui/core/styles";
 import PreFooter from "../../PreFooter";
 import { Link } from "react-router-dom";
-import Timer from "../../Timer";
 
 const TicketingPricing = () => {
   const referral = useSelector((state) => state.user.referredUserId);
@@ -29,7 +28,6 @@ const TicketingPricing = () => {
 
   return (
     <>
-    <Timer />
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

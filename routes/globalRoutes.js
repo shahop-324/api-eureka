@@ -52,6 +52,11 @@ router.post(
 );
 
 router.post(
+  "/getLiveStreamingTokenForJoiningTable",
+  globalController.generateLiveStreamingTokenForJoiningTable
+)
+
+router.post(
   "/getLiveStreamingTokenForSpeaker",
   globalController.generateTokenForLiveStreamingForSpeaker
 );

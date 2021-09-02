@@ -54,7 +54,6 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import CallMergeIcon from "@material-ui/icons/CallMerge";
 import PreFooter from "../../PreFooter";
 import TopNav from "../Helper/TopNav";
-import Timer from "../../Timer";
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -255,7 +254,6 @@ const EventPlatformHome = (props) => {
 
   return (
     <>
-    <Timer />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here Goes Top Nav */}

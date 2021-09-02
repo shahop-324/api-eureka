@@ -24,6 +24,7 @@ import UserAccountQueries from "./UserAccountQueries";
 import Tour from "reactour";
 import ErrorBoundriesUserAccountSideNav from "../ErrorBoundries/ErrorBoundriesUserAccountSideNav";
 import ErrorBoundriesUserAccountEventsMainBody from "../ErrorBoundries/ErrorBoundriesUserAccountEventsMainBody";
+import GlobalSnackbar from "../GlobalSnackbar";
 const { REACT_APP_MY_ENV } = process.env;
 const steps = [
   {
@@ -49,6 +50,7 @@ const UserAccountHome = () => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
     console.log(params.code);
+    dispatch(fetchUserAllPersonalData());
     // dispatch(MailChimpAuth(params.code));
   }, [dispatch]);
   useEffect(() => {
@@ -87,14 +89,14 @@ const UserAccountHome = () => {
 
   if (error) {
     dispatch(errorTrackerForPersonalData());
-    alert(error);
-    return;
+    // alert(error);
+    // return null;
   }
 
   return (
     <>
       <CssBaseline />
-
+      <GlobalSnackbar feedbackMsg={"Successfully signed in!"} severity={"success"}/>
       {/* {error && handleError(error)} */}
 
       {isLoading ? (

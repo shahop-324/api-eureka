@@ -18,10 +18,15 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import AgoraRTC from "agora-rtc-sdk-ng";
 
 let rtc = {
-  localAudioTrack: null,
-  localVideoTrack: null,
-  client: null,
+  localAudioTrack: null, // Keep track of local audio track
+  localVideoTrack: null, // Keep track of local video track
+  localScreenTrack: null, // Keep track of local screen track
+  client: null, // keep track of client (through which we joined channel)
 };
+
+let miniViewStreams = []; // Keep track of videos playing in mini view
+let mainViewStream = {}; // Keep trcak of video playing in main view
+let mainViewStreamId; // keep trcak of uid of video that is playing in main view
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -40,25 +45,23 @@ const TableScreen = ({
 }) => {
   const dispatch = useDispatch();
 
+  const params = useParams();
+
+  const eventId = params.eventId;
+
   const token = useSelector((state) => state.RTC.token);
 
   const table = id;
 
   const classes = useStyles();
 
-  const params = useParams();
-
-  const eventId = params.eventId;
-
   let options = {
     // Pass your App ID here.
-    appId: "c4e9f3e5cdf548f68d2f8417ad8a13eb",
-    // appId: "4f274729f9ab45139e509eb6efba14cc",
+    appId: "702d57c3092c4fd389eb7ea5a505d471",
     // Set the channel name.
     channel: table,
     // Pass your temp token here.
-    token: null,
-    // token: token,
+    token: token,
     // Set the user ID.
     uid: null,
   };
@@ -232,8 +235,6 @@ const TableScreen = ({
         console.log("op");
         console.log(12345678);
       });
-
-    
 
     document.getElementById("leave-table").onclick = async function () {
       // Destroy the local audio and video tracks.

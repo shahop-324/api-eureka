@@ -3,12 +3,10 @@ import TopNav from "../Helper/TopNav";
 
 import "./../Styles/StaticScreenNav.scss";
 import Footer from "../../Footer";
-import Timer from "../../Timer";
 
 const PrivacyPolicy = () => {
   return (
     <>
-    <Timer />
       <div className="container-fluid p-0">
         <div
           className="header-section-home header-section"

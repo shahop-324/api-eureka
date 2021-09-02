@@ -33,9 +33,6 @@ const Room = ({ id, num }) => {
     setOpenTableScreen(false);
   };
 
-  
- 
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,8 +45,6 @@ const Room = ({ id, num }) => {
         })
       );
     });
-
-
 
   }, [chairArrangement, dispatch ]);
 
