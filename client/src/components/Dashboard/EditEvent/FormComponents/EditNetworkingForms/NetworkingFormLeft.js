@@ -17,9 +17,14 @@ import CustomizedSwitchForNetworking from "../../ToggleSwitch";
 import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { editNetworking, errorTrackerForEditNetworking, errorTrackerForFetchNetworking } from "../../../../../actions";
+import {
+  editNetworking,
+  errorTrackerForEditNetworking,
+  errorTrackerForFetchNetworking,
+} from "../../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../../Loader";
+import { useSnackbar } from "notistack";
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -67,8 +72,10 @@ const renderInput = ({
 };
 
 const NetworkingFormLeft = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { handleSubmit, pristine, reset, submitting } = props;
-  
+
   const { networkingSettings, isLoading, error } = useSelector(
     (state) => state.networking
   );
@@ -82,8 +89,6 @@ const NetworkingFormLeft = (props) => {
   };
 
   const dispatch = useDispatch();
-
-  
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -132,12 +137,13 @@ const NetworkingFormLeft = (props) => {
     // showResults(ModifiedFormValues);
   };
 
-  if (error) {
-    dispatch(errorTrackerForEditNetworking());
-    dispatch(errorTrackerForFetchNetworking());
-    alert(error);
-    return;
-  }
+  // if (error) {
+  //   enqueueSnackbar(error, {
+  //     variant: "error",
+  //   });
+    
+  //   return dispatch(errorTrackerForEditNetworking());
+  // }
 
   return (
     <>
@@ -282,7 +288,6 @@ const NetworkingFormLeft = (props) => {
               style={{ width: "100%" }}
             >
               <button
-        
                 disabled={pristine || submitting}
                 onClick={reset}
                 className={`btn btn-outline-primary btn-outline-text me-3 `}
@@ -357,9 +362,6 @@ const mapStateToProps = (state) => ({
         : 0,
   },
 });
-
-
-
 
 export default connect(mapStateToProps)(
   reduxForm({

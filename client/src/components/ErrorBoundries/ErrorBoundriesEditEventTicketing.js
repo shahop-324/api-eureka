@@ -3,6 +3,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
+import { withSnackbar } from 'notistack';
 // import { errorTrackerForfetchRegistrationsOfParticularCommunity } from "../../actions";
 import { errorTrackerForFetchTickets } from "../../actions";
 // import { errorTrackerForFetchEventsOfParticularCommunity } from "../../actions";
@@ -26,8 +27,8 @@ class ErrorBoundaryEditEventSponsors extends React.Component {
   render() {
     if (this.state.error) {
       // Error path
-      alert(this.state.error);
-      return null;
+      // alert(this.state.error);
+      return this.props.enqueueSnackbar(this.state.error);
       // return (
       //   <>
       //     <div>
@@ -46,6 +47,8 @@ class ErrorBoundaryEditEventSponsors extends React.Component {
   }
 }
 
-export default connect(null, {
+const MyComponent = connect(null, {
   errorTrackerForFetchTickets,
 })(ErrorBoundaryEditEventSponsors);
+
+export default withSnackbar(MyComponent);

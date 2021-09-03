@@ -20,6 +20,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { editNetworking, errorTrackerForEditNetworking, errorTrackerForFetchNetworking } from "../../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../../Loader";
+import { useSnackbar } from "notistack";
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -67,6 +68,8 @@ const renderInput = ({
 };
 
 const NetworkingFormRight = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { handleSubmit, pristine, reset, submitting } = props;
 
   const { networkingSettings, isLoading, error } = useSelector(
@@ -154,12 +157,13 @@ const NetworkingFormRight = (props) => {
     // showResults(ModifiedFormValues);
   };
 
-  if (error) {
-    dispatch(errorTrackerForEditNetworking());
-    dispatch(errorTrackerForFetchNetworking());
-    alert(error);
-    return;
-  }
+  // if (error) {
+  //   enqueueSnackbar(error, {
+  //     variant: "error",
+  //   });
+    
+  //   return dispatch(errorTrackerForEditNetworking());
+  // }
 
   return (
     <>

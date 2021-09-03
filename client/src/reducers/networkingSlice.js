@@ -5,7 +5,7 @@ const networkingSlice = createSlice({
 
   initialState: {
     networkingSettings: null,
-    isLoading: true,
+    isLoading: false,
     error: false,
   },
 
@@ -15,6 +15,7 @@ const networkingSlice = createSlice({
     },
 
     hasError(state, action) {
+      console.log("Has error detected");
       state.error = action.payload;
       state.isLoading = false;
     },

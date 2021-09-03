@@ -20,6 +20,9 @@ import { Link, useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
 import Loader from "../../Loader";
 import { useSnackbar } from "notistack";
+import { errorTrackerForFetchTickets } from "../../../actions";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -142,7 +145,9 @@ const Ticketing = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    throw new Error(error);
+    
+    return dispatch(errorTrackerForFetchTickets());
+    // throw new Error(error);
   }
 
   return (

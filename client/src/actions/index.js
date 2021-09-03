@@ -3313,9 +3313,8 @@ export const editNetworking =
         })
       );
     } catch (err) {
-      console.log(err);
-
       networkingActions.hasError(err.message);
+      console.log(err);
     }
   };
 export const errorTrackerForEditNetworking =

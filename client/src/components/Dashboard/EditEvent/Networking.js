@@ -10,9 +10,10 @@ import "./../../../assets/Sass/EditEvent/Networking.scss";
 import NetworkingFormLeft from "./FormComponents/EditNetworkingForms/NetworkingFormLeft";
 import NetworkingFormRight from "./FormComponents/EditNetworkingForms/NetworkingFormRight";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchNetworking } from "../../../actions";
+import { errorTrackerForEditNetworking, fetchNetworking } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import Loader from "../../Loader";
 
 const Networking = () => {
 
@@ -34,7 +35,13 @@ const Networking = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
+
+    return dispatch(errorTrackerForEditNetworking())
   }
+
+  // if(isLoading) {
+  //   return <Loader />;
+  // }
 
   return (
     <>
