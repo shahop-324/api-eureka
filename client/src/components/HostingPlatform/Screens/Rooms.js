@@ -22,6 +22,9 @@ const Rooms = () => {
   const params = useParams();
   const eventId = params.eventId;
 
+  window.onbeforeunload = () => {
+    window.alert("closing now.....");
+  }
   
   useEffect(() => {
     // window.location.reload();
