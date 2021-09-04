@@ -52,9 +52,9 @@ const Rooms = () => {
 
   return (
     <>
-      <div className="sessions-and-networking-body-heading mb-5">
+      {/* <div className="sessions-and-networking-body-heading mb-5">
         Enter a room to start discussion
-      </div>
+      </div> */}
 
       <div className="rooms-grid-layout ">
         

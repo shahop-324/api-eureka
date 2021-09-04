@@ -70,12 +70,6 @@ const TableScreen = ({
 }) => {
 
 
-
-  window.onbeforeunload = () => {
-    return "closing now.....";
-  }
-
-
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -328,10 +322,6 @@ const TableScreen = ({
 
         rtc.localAudioTrack.play();
       });
-  }
-
-  window.onbeforeunload = () => {
-    window.alert("closing now.....");
   }
 
   useEffect(() => {

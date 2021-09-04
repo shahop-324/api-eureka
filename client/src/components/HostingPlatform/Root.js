@@ -36,6 +36,7 @@ import { userActions } from "../../reducers/userSlice";
 import { roomsActions } from "../../reducers/roomsSlice";
 import Loader from "../Loader";
 import Reception from "./Screens/Reception";
+import BoothArea from "./Screens/BoothArea";
 
 const Root = () => {
   const params = useParams();
@@ -344,17 +345,14 @@ const Root = () => {
                     <div className="layer-3-mh " style={{position: "relative"}}>
                       <div className="opaque-layer " style={{height: "100%"}}></div>
                       <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
-                        <Booths />{" "}
+                        {/* <Booths />{" "} */}
+                        <BoothArea />
                       </div>
                     </div>
                   );
                 case "5":
                   return (
-                    // <div className="layer-3-mh py-4 px-5">
-                    //   <div style={{ maxWidth: "1360px", margin: "0 auto" }}>
-                    //   <Reception />{" "}
-                    //   </div>
-                    // </div>
+                   
                     <Reception />
                   );
 
