@@ -58,6 +58,10 @@ const BoothDetailsCard = (props) => {
 
   const classes = useStyles();
 
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <>
       <div className="session-field-value-container">
@@ -77,7 +81,8 @@ const BoothDetailsCard = (props) => {
                 className={classes.large}
               />
               <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter"}}>
-                {props.name}
+                {/* {props.name} */}
+                {truncateText(props.name, 25)}
               </div>
             </div>
           </div>
@@ -95,7 +100,8 @@ const BoothDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%", fontFamily: "Inter" }}
           >
-            {props.tagline}
+            {/* {props.tagline} */}
+            {truncateText(props.tagline, 35)}
           </div>
         </div>
         <div
@@ -109,7 +115,10 @@ const BoothDetailsCard = (props) => {
             style={{ width: "100%" }}
           >
             {props.emails.map((email) => {
-              return <div className="chip-text mb-2" style={{fontFamily: "Inter"}}>{email}</div>;
+              return <div className="chip-text mb-2" style={{fontFamily: "Inter"}}>
+                {/* {email} */}
+                {truncateText(email, 20)}
+                </div>;
             })}
           </div>
         </div>
@@ -120,14 +129,15 @@ const BoothDetailsCard = (props) => {
           }}
         >
           <div className="event-field-label registrations-field-label">
-            <div className="speaker-card-session-grid">
+            <div className="speaker-card-session-grid" style={{gridTemplateColumns: "1fr"}}>
               {props.boothTags.map((boothTag) => {
                 return (
                   <div
                     className="me-3 px-3 py-2 event-name-chip-review"
                     style={{ textAlign: "center", fontFamily: "Inter" }}
                   >
-                    {boothTag}
+                    {/* {boothTag} */}
+                    {truncateText(boothTag, 35)}
                   </div>
                 );
               })}

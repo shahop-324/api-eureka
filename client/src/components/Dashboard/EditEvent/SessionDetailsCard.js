@@ -55,9 +55,7 @@ const SessionDetailCard = ({
     setOpen(false);
   };
 
-  // const truncateText = (str, n) => {
-  //   return str > n ? `${str.subString(0,n)} + ...` : str;
-  // }
+ 
 
   const renderSessionSpeakersList = (sessionSpeakers) => {
     return sessionSpeakers.map((speaker) => {
@@ -76,6 +74,10 @@ const SessionDetailCard = ({
   console.log("start time", startTime);
   console.log("end time", endTime);
 
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <>
       <div className="session-field-value-container" id={id}>
@@ -87,9 +89,11 @@ const SessionDetailCard = ({
         >
           <div
             className="event-name-d"
-            style={{ width: "100%", fontFamily: "Inter" }}
+            style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem" }}
           >
-            {name}
+            {/* {name} */}
+            {truncateText(name, 35)}
+            
           </div>
         </div>
         <div
@@ -102,14 +106,14 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="me-3" style={{ fontFamily: "Inter" }}>
+            <div className="me-3" style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
               {/* dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
               // Saturday, June 9th, 2007, 5:46:21 PM */}
               {dateFormat(startTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
-            <div style={{ fontFamily: "Inter" }}>
+            <div style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
               {/* {dateFormat(endDate, "mm/d/yyyy")}{" "} */}
               {dateFormat(endTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>{" "}
@@ -125,10 +129,10 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text" style={{ fontFamily: "Inter" }}>
+            <div className="chip-text" style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
               {/* Cracking PM Interviews by Microsoft Product Leader */}
-
-              {description}
+              {truncateText(description, 50)}
+              {/* {description} */}
             </div>
           </div>
         </div>
@@ -139,10 +143,10 @@ const SessionDetailCard = ({
           }}
         >
           <div className="event-field-label registrations-field-label">
-            <div className="session-card-speaker-grid">
+            {typeof speaker !== 'undefined' && speaker.length > 0 ? <div className="session-card-speaker-grid">
               {/* Session speaker List */}
               {renderSessionSpeakersList(speaker)}
-            </div>
+            </div> : <div style={{color: "#C92121", fontWeight: "500", fontSize: "0.85rem"}}>No speaker assigned</div> }
           </div>
         </div>
         <div className="event-registrations-field">

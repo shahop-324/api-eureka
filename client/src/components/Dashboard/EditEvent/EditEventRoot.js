@@ -17,7 +17,7 @@ import Ticketing from "./Ticketing";
 import Networking from "./Networking";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
-import { fetchParticularEventOfCommunity } from "../../../actions";
+import { errorTrackerForFetchParticularEventOfCommunity, fetchParticularEventOfCommunity } from "../../../actions";
 
 import { useParams } from "react-router";
 import { useEffect } from "react";
@@ -29,12 +29,18 @@ import ErrorBoundriesEditEventBooths from "../../ErrorBoundries/ErrorBoundriesEd
 import ErrorBoundriesEditEventSponsors from "../../ErrorBoundries/ErrorBoundriesEditEventSponsors";
 import ErrorBoundriesEditEventTickets from "../../ErrorBoundries/ErrorBoundriesEditEventTicketing";
 
+import { useSnackbar } from "notistack";
+
 const EditEventRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
   const id = params.id;
   const communityId = params.communityId;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const {error, isLoading} = useSelector((state) => state.event);
 
   console.log(id);
   useEffect(() => {
@@ -92,6 +98,15 @@ const EditEventRoot = () => {
   currentIndex = currentIndex.toString();
 
   console.log(currentIndex);
+
+  if(error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+
+    return dispatch(errorTrackerForFetchParticularEventOfCommunity());
+  }
+
   return (
     <>
       <div className="dashboard-position-fixed-non-scrollable-container">

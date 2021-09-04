@@ -11,10 +11,12 @@ import SessionListFields from "./SessionListFields";
 import SessionDetailCard from "./SessionDetailsCard";
 
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import AddNewSession from "./FormComponents/EditSessionForms/AddNewSession";
 import {
+  errorTrackerForCreateSession,
+  errorTrackerForFetchSessions,
   fetchSessions,
   fetchSpeakers,
 } from "../../../actions";
@@ -45,9 +47,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -160,8 +162,10 @@ const Sessions = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    // dispatch(errorTrackerForFetchSessions());
-    throw new Error(error);
+    
+    dispatch(errorTrackerForFetchSessions());
+    return dispatch(errorTrackerForCreateSession());
+    // throw new Error(error);
   }
 
   return (

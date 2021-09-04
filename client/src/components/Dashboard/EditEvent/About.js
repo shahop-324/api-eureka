@@ -12,7 +12,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import TipsToWriteAbout from "./HelperComponents/TipsToWriteAbout";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
-import { editEventDescription } from "../../../actions";
+import { editEventDescription, errorTrackerForEditEventDiscription, errorTrackerForFetchEvent } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
@@ -49,7 +49,6 @@ const About = (props) => {
   const renderEditor = ({ input, id }) => {
     return (
       <Editor
-      
         editorState={editorState}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
@@ -66,6 +65,9 @@ const About = (props) => {
     enqueueSnackbar(error, {
       variant: "error",
     });
+
+    dispatch(errorTrackerForFetchEvent())
+   return dispatch(errorTrackerForEditEventDiscription());
   }
 
   return (

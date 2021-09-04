@@ -7,9 +7,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import CommunityProfileTab from './CommunityProfileTab';
-import CommunityDefaults from './CommunityDefaults';
 import PayOutInfoForm from './FormComponents/PayOutInfoForm';
 import CommunityAgreements from './Helper/CommunityAgreements';
+import Defaults from './Defaults';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -85,10 +85,10 @@ export default function SettingsVerticalTabs() {
         <CommunityProfileTab />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CommunityDefaults />
+                  <Defaults />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <PayOutInfoForm />
+        {/* <PayOutInfoForm /> */}
       </TabPanel>
       <TabPanel value={value} index={3}>
         <CommunityAgreements />

@@ -331,7 +331,7 @@ const Pricing = (props) => {
     const options = {
       key: "rzp_live_bDVAURs4oXxSGi",
       amount: order.data.amount,
-      currency: "INR",
+      currency: "USD",
       name: "Evenz",
       description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
       image:

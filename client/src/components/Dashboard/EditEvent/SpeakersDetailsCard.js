@@ -39,9 +39,9 @@ const dispatch = useDispatch();
     setOpen(false);
   };
 
-  // const truncateText = (str, n) => {
-  //   return str.length > n ? `${str.substring(0, n)} ...` : str;
-  // };
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
   
   return (
     <>
@@ -56,7 +56,10 @@ const dispatch = useDispatch();
             <div className="registrations-field-label d-flex flex-row justify-content-start">
               {/* attendee avatar and name */}
               <Avatar alt={name} src={url} variant="rounded" />
-              <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter"}}>{name}</div>
+              <div className="ms-3 px-2 registration-name-styled" style={{fontFamily: "Inter", fontSize: "0.85rem"}}>
+                {/* {name} */}
+                {truncateText(name, 20)}
+              </div>
             </div>
           </div>
           {/* <div className="event-name-d" style={{width: '100%'}}>
@@ -71,10 +74,10 @@ const dispatch = useDispatch();
         >
           <div
             className="event-field-label registrations-field-label"
-            style={{ width: "100%", fontFamily: "Inter" }}
+            style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500" }}
           >
-            {headline}
-            {/* {truncateText(headline, 25)} */}
+            {/* {headline} */}
+            {truncateText(headline, 25)}
           </div>
         </div>
         <div
@@ -87,9 +90,9 @@ const dispatch = useDispatch();
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text" style={{fontFamily: "Inter"}}>
-              {email}
-              {/* {truncateText(email, 18)} */}
+            <div className="chip-text" style={{fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500"}}>
+              {/* {email} */}
+              {truncateText(email, 20)}
             </div>
           </div>
         </div>
@@ -100,16 +103,17 @@ const dispatch = useDispatch();
           }}
         >
           <div className="event-field-label registrations-field-label">
-            <div className="speaker-card-session-grid">
+            <div className="speaker-card-session-grid" style={{gridTemplateColumns: "1fr"}}>
               {sessions.map((session) => {
                 console.log(session);
                 return (
                   <div
                     key={session.id}
                     className="me-3 px-3 py-2 event-name-chip-review"
-                    style={{ textAlign: "center", fontFamily: "Inter" }}
+                    style={{ textAlign: "center", fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500" }}
                   >
-                    {session.name}
+                    {/* {session.name} */}
+                    {truncateText(session.name, 35)}
                   </div>
                 );
               })}
