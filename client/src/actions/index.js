@@ -40,7 +40,7 @@ import { availableForNetworkingActions } from "../reducers/availableForNetworkin
 
 import { StreamActions } from "../reducers/streamSlice";
 import GlobalSnackbar from "../components/GlobalSnackbar";
-
+import socket from "../components/HostingPlatform/service/socket";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -74,24 +74,24 @@ export const signInForSpeaker =
     }
   };
 
-export const signIn = (formValues, intent, eventId) => async (dispatch) => {
-  console.log({ ...formValues });
+export const signIn = (res, intent, eventId) => async (dispatch) => {
+  // console.log({ ...formValues });
 
   try {
-    const res = await eureka.post("/eureka/v1/users/login", { ...formValues });
-    console.log(res.data);
-
+    // const res = await eureka.post("/eureka/v1/users/login", { ...formValues });
+    // console.log(res.data);
+    console.log(res);
     dispatch(
       authActions.SignIn({
-        token: res.data.token,
-        referralCode: res.data.data.user.hasUsedAnyReferral
+        token: res.token,
+        referralCode: res.data.user.hasUsedAnyReferral
           ? null
-          : res.data.data.user.referralCode,
+          : res.data.user.referralCode,
       })
     );
     dispatch(
       userActions.CreateUser({
-        user: res.data.data.user,
+        user: res.data.user,
       })
     );
 
@@ -106,13 +106,14 @@ export const signIn = (formValues, intent, eventId) => async (dispatch) => {
       dispatch(fetchUserAllPersonalData());
     } else {
       history.push("/user/home");
-      // window.location.href = REACT_APP_MY_ENV
-      //   ? "http://localhost:3001/user/home"
-      //   : "https://www.evenz.in/user/home";
+      //   // window.location.href = REACT_APP_MY_ENV
+      //   //   ? "http://localhost:3001/user/home"
+      //   //   : "https://www.evenz.in/user/home";
     }
   } catch (err) {
-    dispatch(authActions.hasError(err.response.data.message));
-    console.log(err.response);
+    // dispatch(authActions.hasError(err.response.data.message));
+    // console.log(err.response);
+    console.log(err);
   }
 };
 export const errorTrackerForSignIn = () => async (dispatch, getState) => {
@@ -261,6 +262,7 @@ export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
 };
 
 export const signOut = () => async (dispatch, getState) => {
+  socket.emit("logOut", { userId: getState().user.userDetails._id });
   window.localStorage.clear();
 
   window.gapi.load("client:auth2", () => {
@@ -5142,5 +5144,39 @@ export const MailChimpAuth = (code) => async (dispatch) => {
     await eureka.get(`/oauth/mailchimp/callback/?code=${code}`);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const DuplicateUserSignOut = (userId) => async (dispatch, getState) => {
+  console.log(userId, "hey hitting duplicate user sign out");
+  console.log(getState().user.userDetails._id);
+  if (userId === getState().user.userDetails._id) {
+    window.localStorage.clear();
+
+    window.gapi.load("client:auth2", () => {
+      window.gapi.client
+        .init({
+          clientId:
+            "438235916836-6oaj1fbnqqrcd9ba30348fbe2ebn6lt0.apps.googleusercontent.com",
+          scope: "profile email",
+        })
+        .then(() => {
+          window.gapi.auth2.getAuthInstance().signOut();
+
+          // this.onAuthChange(this.auth.isSignedIn.get());
+          // this.auth.isSignedIn.listen(this.onAuthChange);
+        });
+    });
+
+    dispatch(authActions.SignOut());
+    dispatch(communityAuthActions.CommunitySignOut());
+
+    setTimeout(function () {
+      dispatch(authActions.disabledSignOutSucceded());
+    }, 4000);
+
+    history.push("/home");
+
+    //TODO Home page
   }
 };

@@ -2,9 +2,9 @@
 /* eslint-disable no-console */
 
 const mongoose = require("mongoose");
-
+const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-
+const LoggedInUsers = require("./models/loggedInUsers");
 process.on("uncaughtException", (err) => {
   console.log(err);
   console.log("UNCAUGHT Exception! Shutting down ...");
@@ -60,7 +60,7 @@ mongoose
   });
 
 const port = process.env.PORT || 8000;
-
+const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 const {
   removeUser,
   getUsersInSession,
@@ -1206,6 +1206,68 @@ io.on("connect", (socket) => {
     fetchCurrentUsers(eventId);
     // socket.leave(eventId);
   });
+
+  socket.on("loggingInUser", async ({ email, password }) => {
+    // console.log("I listened logging in user");
+
+    // console.log(email, password);
+    // 1) Check if email and password exist
+    if (!email || !password) {
+      // return next(new AppError("Please provide email and password", 400));
+      return;
+    }
+
+    // 2) Check if user exists && password is correct
+    const user = await User.findOne({ email: email }).select("+password");
+
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      // return new AppError("Incorrect email or password", 401);
+      return;
+    }
+
+    //1. First find by user._id
+    //2.if it is present in loggedInUsers
+    //3. logout the first same user and login him.
+
+    const isUserLoggedInAlready = await LoggedInUsers.find({
+      userId: user._id,
+    });
+    console.log(
+      isUserLoggedInAlready[0],
+      "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+    );
+
+    if (isUserLoggedInAlready.length > 0) {
+      socket.emit("logOutUser", { userId: user._id });
+      await LoggedInUsers.findOneAndDelete({
+        userId: user.userId,
+      });
+    }
+
+    await LoggedInUsers.create({
+      userId: user._id,
+    });
+
+    // const signToken = (user._id) => jwt.sign({id }, process.env.JWT_SECRET);
+    // 3) If everything is ok, send json web token to client
+    const token = signToken(user._id);
+
+    //remove password from output
+    user.password = undefined;
+    console.log(token, "hey hitting logging in server.js");
+    socket.emit("newLogin", {
+      token,
+      data: { user },
+    });
+
+    // createSendToken(user, 200, req, res);
+  });
+  socket.on("logOut", async (user) => {
+    console.log("hey hitting logout user in server.js");
+    await LoggedInUsers.findOneAndDelete({
+      userId: user.userId,
+    });
+  });
 });
 
 // 4. STARTING THE SERVER
@@ -1220,3 +1282,4 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
+module.exports = io;
