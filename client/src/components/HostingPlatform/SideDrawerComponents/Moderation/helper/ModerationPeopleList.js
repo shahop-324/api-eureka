@@ -26,13 +26,14 @@ const ModerationPeopleList = () => {
   const classes = useStyles();
   return (
     <>
-      <div className="people-container pt-2 px-2" style={{height: "75vh"}}>
-        <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
+      <div className="people-container pt-2 px-2" style={{ height: "75vh" }}>
+        <div class="ui icon input mb-3" style={{ width: "100%" }}>
           <input
             type="text"
-            className="form-control chat-input me-2"
-            placeholder="Search people ..."
+            placeholder="Search people..."
+            className="form-control"
           />
+          <i class="search icon"></i>
         </div>
         {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
 

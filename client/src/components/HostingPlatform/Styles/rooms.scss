@@ -10,6 +10,12 @@
   background: #747474 0% 0% no-repeat padding-box;
   border-radius: 10px;
   opacity: 1;
+  border: 3px solid #ffffff00;
+}
+
+.room-wrapper:hover {
+  border: 1px solid #538bf7;
+  box-shadow: 0 0 2px 1px #538bf7;
 }
 
 .room-number {
@@ -59,17 +65,11 @@
   align-items: flex-start;
 }
 
-.left-chair-row,
-.right-chair-row {
-  // border: 1px solid white;
-}
-
-
 .upper-chair {
   height: 35px;
   width: 40px;
   background: #bfb9b9 0% 0% no-repeat padding-box;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px;
   opacity: 1;
   transform: translateY(8px);
   z-index: 100;
@@ -79,7 +79,7 @@
   height: 35px;
   width: 40px;
   background: #bfb9b9 0% 0% no-repeat padding-box;
-  border-radius: 10px 0px 0px 10px;
+  border-radius: 10px;
   opacity: 1;
   transform: translateX(8px);
   z-index: 100;
@@ -89,7 +89,7 @@
   height: 35px;
   width: 40px;
   background: #bfb9b9 0% 0% no-repeat padding-box;
-  border-radius: 0px 10px 10px 0px;
+  border-radius: 10px;
   opacity: 1;
   transform: translateX(-8px);
   z-index: 100;
@@ -99,7 +99,7 @@
   height: 35px;
   width: 40px;
   background: #bfb9b9 0% 0% no-repeat padding-box;
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 10px;
   opacity: 1;
   transform: translateY(-8px);
   z-index: 100;
@@ -126,7 +126,7 @@
 }
 
 .room-table {
-  background: #4b4b4b 0% 0% no-repeat padding-box;
+  background: #202020 0% 0% no-repeat padding-box;
   box-shadow: 7px 22px 80px #ffffff29;
   border-radius: 15px;
   opacity: 1;
@@ -157,24 +157,68 @@
 //   }
 // }
 
+// .left-chair-wrapper:hover,
+// .upper-chair-wrapper:hover,
+// .right-chair-wrapper:hover,
+// .lower-chair-wrapper:hover {
+//   // animation-name: moveInLeft;
+//   animation-duration: 0.4s;
+//   animation-fill-mode: forwards;
+// }
+
+// .left-chair-wrapper:hover {
+//   animation-name: moveInLeft;
+// }
+// .upper-chair-wrapper:hover {
+//   animation-name: moveInUpwards;
+// }
+// .right-chair-wrapper:hover {
+//   animation-name: moveInRight;
+// }
+// .lower-chair-wrapper:hover {
+//   animation-name: moveInDownwards;
+// }
+
 .left-chair:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
+  // transform: translateX(-5px);
   // animation: move-in-left 0.4s ease-in 0.1s;
+  box-shadow: 0 0 1px 1px #ffffff;
+  animation-name: moveInLeft;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
 }
 
 .right-chair:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
+  // transform: translateX(5px);
   // animation: move-in-right 0.4s ease-in 0.1s;
+  box-shadow: 0 0 1px 1px #ffffff;
+  animation-name: moveInRight;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
 }
 
 .upper-chair:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
+  // transform: translateY(-5px);
   // animation: move-in-top 0.4s ease-in 0.1s;
+
+  box-shadow: 0 0 1px 1px #ffffff;
+  animation-name: moveInUpwards;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
 }
 
 .lower-chair:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
+  // transform: translateY(5px);
   // animation: move-in-bottom 0.4s ease-in 0.1s;
+
+  box-shadow: 0 0 1px 1px #ffffff;
+  animation-name: moveInDownwards;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
 }
 
 .table-logo-container {
@@ -192,7 +236,7 @@
 .table-num-and-heading {
   color: #ffffff;
   font-weight: 500;
-  font-family: "Inter";
+  font-family: 'Inter';
   letter-spacing: 0.15px;
   font-size: 0.89rem;
 }
@@ -200,8 +244,41 @@
 .table-side-drawer {
   background: rgba(138, 138, 138, 0.082);
   box-shadow: 0 8px 32px 0 rgba(80, 80, 80, 0.37);
-  backdrop-filter: blur( 4px );
-  -webkit-backdrop-filter: blur( 4px );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
-  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@keyframes moveInLeft {
+  0% {
+    transform: translateX(8px);
+  }
+  100% {
+    transform: translateX(-8px);
+  }
+}
+@keyframes moveInDownwards {
+  0% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(8px);
+  }
+}
+@keyframes moveInRight {
+  0% {
+    transform: translateX(-8px);
+  }
+  100% {
+    transform: translateX(8px);
+  }
+}
+@keyframes moveInUpwards {
+  0% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
 }

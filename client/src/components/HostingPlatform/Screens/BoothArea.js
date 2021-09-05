@@ -5,15 +5,15 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
+import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import { Avatar, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
-import Faker from 'faker';
+import Faker from "faker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    '& > *': {
+    display: "flex",
+    "& > *": {
       margin: theme.spacing(1),
     },
   },
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 // <LobbyAgenda socket={socket} />
 
 const BoothArea = () => {
-
   const classes = useStyles();
 
   return (
@@ -163,23 +162,27 @@ const BoothArea = () => {
         </div>
 
         <div
-                  className="row d-flex flex-row"
-                  style={{ alignItems: "center", marginBottom: "6%" }}
-                >
-                  <div className="col-5">
-                    <hr />
-                  </div>
-                  
-                  <div className="col-2 connect-with-us-booth-card d-flex flex-row align-items-center justify-content-between">
-                  <ExpandMoreRoundedIcon />
-                  
-                  <span className="join-us-here-booth">Join us here</span>
-                  <Avatar alt="Remy Sharp" src={Faker.image.avatar()} className={classes.small} />
-                  </div>
-                  <div className="col-5">
-                    <hr />
-                  </div>
-                </div>
+          className="row d-flex flex-row"
+          style={{ alignItems: "center", marginBottom: "6%" }}
+        >
+          <div className="col-5">
+            <hr />
+          </div>
+
+          <div className="col-2 connect-with-us-booth-card d-flex flex-row align-items-center justify-content-between">
+            <ExpandMoreRoundedIcon />
+
+            <span className="join-us-here-booth">Join us here</span>
+            <Avatar
+              alt="Remy Sharp"
+              src={Faker.image.avatar()}
+              className={classes.small}
+            />
+          </div>
+          <div className="col-5">
+            <hr />
+          </div>
+        </div>
 
         <Rooms />
       </div>

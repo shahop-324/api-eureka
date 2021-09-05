@@ -19,6 +19,7 @@ import AccountBoxOutlinedIcon from "@material-ui/icons/AccountBoxOutlined";
 import ZoomOutMapOutlinedIcon from "@material-ui/icons/ZoomOutMapOutlined";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
+import KeyboardTabRoundedIcon from '@material-ui/icons/KeyboardTabRounded';
 
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
@@ -510,7 +511,14 @@ const TableScreen = ({
               </div>
             </div>
 
-            <div className="table-side-drawer"></div>
+            <div className="" style={{display: "grid", gridTemplateColumns: "8fr 1fr"}}>
+              <div className="table-side-drawer"></div>
+              <div>
+                <IconButton className="ms-3">
+                <KeyboardTabRoundedIcon style={{ fill: "#D3D3D3", size: "24" }}/>
+                  </IconButton>
+              </div>
+            </div>
           </div>
         </div>
       </Dialog>

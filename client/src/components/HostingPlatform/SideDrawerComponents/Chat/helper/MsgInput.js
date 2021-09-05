@@ -4,8 +4,26 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import socket from "./../../../service/socket";
+import "./../../../Styles/chatComponent.scss";
+import ChatMsgElement from "./ChatMsgElement";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
-const MsgInput = () => {
+import SentimentSatisfiedRoundedIcon from "@material-ui/icons/SentimentSatisfiedRounded";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+
+const MsgInput = (props) => {
+  const [emojiMartVisbility, setEmojiMartVisbility] = useState("none");
+
+  const toggleEmojiMart = () => {
+    if (emojiMartVisbility === "none") {
+      setEmojiMartVisbility("inline-block");
+    }
+    if (emojiMartVisbility === "inline-block") {
+      setEmojiMartVisbility("none");
+    }
+  };
+
   const params = useParams();
   const eventId = params.eventId;
 
@@ -21,13 +39,10 @@ const MsgInput = () => {
   const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
 
   if (role !== "speaker") {
-
     firstName = userDetails.firstName;
     lastName = userDetails.lastName;
     email = userDetails.email;
     image = userDetails.image;
-
-    
   } else {
     firstName = speakerDetails.firstName;
     lastName = speakerDetails.lastName;
@@ -62,24 +77,79 @@ const MsgInput = () => {
   };
 
   return (
-    <div className="chat-msg-input-container d-flex flex-row justify-content-between">
-      <input
-        type="text"
-        className="form-control chat-input"
-        placeholder="Write a message ..."
-        onChange={(e) => setMessage(e.target.value)}
-        value={Message}
-      />
-      <IconButton
-        onClick={() => {
-          if(!Message) return;
-          sendChannelMessage(Message);
-          setMessage("")
-        }}
-      >
-        <SendRoundedIcon />
-      </IconButton>
-    </div>
+    <>
+      <div>
+        {props.name && props.image && props.msg ? (
+          <div className="p-2">
+            <div className="d-flex flex-row align-items-center justify-content-end mb-2">
+              <CancelOutlinedIcon
+                className="chat-msg-hover-icon"
+                onClick={() => {
+                  props.destroyReplyWidget();
+                }}
+              />
+            </div>
+            <div
+              style={{ backgroundColor: "#E7E7E7", borderRadius: "10px" }}
+              className="p-2"
+            >
+              <ChatMsgElement
+                name={props.name}
+                image={props.image}
+                msgText={props.msg}
+                forReply={true}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <div
+          className="chat-msg-input-container d-flex flex-row justify-content-between align-items-center px-2"
+          style={{ position: "relative" }}
+        >
+          <Picker
+            perLine={8}
+            emoji=""
+            showPreview={false}
+            set="apple"
+            style={{
+              position: "absolute",
+              bottom: "50px",
+              display: emojiMartVisbility,
+            }}
+          />
+          <SentimentSatisfiedRoundedIcon
+            style={{ fill: "#4D4D4D" }}
+            onClick={() => {
+              toggleEmojiMart();
+            }}
+            className="chat-msg-hover-icon"
+          />
+          <input
+            type="text"
+            className="chat-input"
+            placeholder="Write a message ..."
+            onChange={(e) => setMessage(e.target.value)}
+            style={{
+              border: "none",
+              backgroundColor: "transparent",
+              outline: "none",
+            }}
+            value={Message}
+          />
+          <IconButton
+            onClick={() => {
+              if (!Message) return;
+              sendChannelMessage(Message);
+              setMessage("");
+              props.destroyReplyWidget();
+            }}
+          >
+            <SendRoundedIcon className="chat-msg-hover-icon" />
+          </IconButton>
+        </div>
+      </div>
+    </>
   );
 };
 
