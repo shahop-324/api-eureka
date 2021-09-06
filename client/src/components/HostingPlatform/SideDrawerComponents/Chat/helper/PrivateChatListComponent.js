@@ -7,6 +7,7 @@ import PeopleList from "./PeopleList";
 import { Avatar } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
 import Faker from "faker";
+import PeopleProfile from "../../People/helper/PeopleProfile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,12 +24,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const IndividualChatSummary = () => {
+const IndividualChatSummary = ({ open, handleClose, enterPersonalChat }) => {
   const classes = useStyles();
   return (
     <>
-      <div className="mb-4 chat-summary py-2">
+      <div
+        className="mb-4 chat-summary py-2"
+        onClick={() => {
+          enterPersonalChat();
+        }}
+      >
         <div className="individual-chat-summary-container mb-2 px-3 ">
           <Avatar
             src={Faker.image.avatar()}
@@ -80,11 +85,13 @@ const IndividualChatSummary = () => {
           </div>
         </div>
       </div>
+
+      <PeopleProfile />
     </>
   );
 };
 
-const PrivateChatListComponent = () => {
+const PrivateChatListComponent = ({ open, handleClose, enterPersonalChat }) => {
   const [openPeopleList, setOpenPeopleList] = useState(false);
 
   const handleClosePeopleList = () => {
@@ -106,10 +113,26 @@ const PrivateChatListComponent = () => {
           </div>
 
           <div className="individual-chat-summary-list">
-            <IndividualChatSummary />
-            <IndividualChatSummary />
-            <IndividualChatSummary />
-            <IndividualChatSummary />
+            <IndividualChatSummary
+              open={open}
+              handleClose={handleClose}
+              enterPersonalChat={enterPersonalChat}
+            />
+            <IndividualChatSummary
+              open={open}
+              handleClose={handleClose}
+              enterPersonalChat={enterPersonalChat}
+            />
+            <IndividualChatSummary
+              open={open}
+              handleClose={handleClose}
+              enterPersonalChat={enterPersonalChat}
+            />
+            <IndividualChatSummary
+              open={open}
+              handleClose={handleClose}
+              enterPersonalChat={enterPersonalChat}
+            />
           </div>
         </div>
         <div
