@@ -1208,37 +1208,25 @@ io.on("connect", (socket) => {
   });
 
   socket.on("loggingInUser", async ({ email, password }) => {
-    // console.log("I listened logging in user");
-
-    // console.log(email, password);
-    // 1) Check if email and password exist
     if (!email || !password) {
-      // return next(new AppError("Please provide email and password", 400));
       return;
     }
 
-    // 2) Check if user exists && password is correct
     const user = await User.findOne({ email: email }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-      // return new AppError("Incorrect email or password", 401);
       return;
     }
-
-    //1. First find by user._id
-    //2.if it is present in loggedInUsers
-    //3. logout the first same user and login him.
 
     const isUserLoggedInAlready = await LoggedInUsers.find({
       userId: user._id,
     });
-    console.log(
-      isUserLoggedInAlready[0],
-      "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-    );
 
     if (isUserLoggedInAlready.length > 0) {
-      socket.broadcast.emit("logOutUser", { userId: user._id });
+      socket.broadcast.emit("logOutUser", {
+        userId: user._id,
+        message: "You have been logged In from Other device",
+      });
       await LoggedInUsers.findOneAndDelete({
         userId: user.userId,
       });
@@ -1248,20 +1236,153 @@ io.on("connect", (socket) => {
       userId: user._id,
     });
 
-    // const signToken = (user._id) => jwt.sign({id }, process.env.JWT_SECRET);
-    // 3) If everything is ok, send json web token to client
     const token = signToken(user._id);
 
-    //remove password from output
     user.password = undefined;
     console.log(token, "hey hitting logging in server.js");
     socket.emit("newLogin", {
       token,
       data: { user },
     });
-
-    // createSendToken(user, 200, req, res);
   });
+
+  socket.on(
+    "googleSignIn",
+    async ({ firstName, lastName, image, googleId, email }) => {
+      const user = await User.findOne({ googleId: googleId });
+      if (user) {
+        const isUserLoggedInAlready = await LoggedInUsers.find({
+          userId: user._id,
+        });
+        console.log(
+          isUserLoggedInAlready[0],
+          "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        );
+
+        if (isUserLoggedInAlready.length > 0) {
+          socket.broadcast.emit("logOutUser", {
+            userId: user._id,
+            message: "You have been logged In from Other device",
+          });
+          await LoggedInUsers.findOneAndDelete({
+            userId: user.userId,
+          });
+        }
+
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
+
+        const token = signToken(user._id);
+
+        console.log(token, "hey hitting logging in server.js");
+        socket.emit("newGoogleLogin", {
+          token,
+          data: { user },
+        });
+      } else {
+        const user = await new User({
+          googleId: googleId,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: image,
+        }).save({ validateModifiedOnly: true });
+
+        const name = `${firstName} ${lastName}`;
+        await MailList.create({
+          name: name,
+          email: email,
+        });
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
+
+        const token = signToken(user._id);
+
+        console.log(token, "hey hitting logging in server.js");
+        socket.emit("newGoogleLogin", {
+          token,
+          data: { user },
+        });
+      }
+    }
+  );
+
+  socket.on(
+    "linkedinSignIn",
+    async ({ linkedinId, firstName, lastName, email, image }) => {
+      console.log("hey hitting linkedinSignIn", firstName);
+      const user = await User.findOne({
+        linkedinId: linkedinId,
+      });
+      if (user) {
+        const isUserLoggedInAlready = await LoggedInUsers.find({
+          userId: user._id,
+        });
+        console.log(
+          isUserLoggedInAlready[0],
+          "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj"
+        );
+
+        if (isUserLoggedInAlready.length > 0) {
+          socket.broadcast.emit("logOutUser", {
+            userId: user._id,
+            message: "You have been logged In from Other device",
+          });
+          await LoggedInUsers.findOneAndDelete({
+            userId: user.userId,
+          });
+        }
+
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
+
+        const token = signToken(user._id);
+
+        console.log(token, "hey hitting logging in server.js");
+        socket.emit("newLinkedinLogin", {
+          token,
+          data: { user },
+        });
+        //  we already have a record with the givenuserProfile ID
+        //done(null, existingUser);
+        // console.log(existingUser);
+        // createSendToken(existingUser, 200, req, res);
+      } else {
+        const user = await new User({
+          linkedinId: linkedinId,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: image,
+        }).save({ validateModifiedOnly: true });
+
+        const name = `${firstName} ${lastName}`;
+        await MailList.create({
+          name: name,
+          email: email,
+        });
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
+
+        const token = signToken(user._id);
+
+        console.log(token, "hey hitting logging in server.js");
+        socket.emit("newLinkedinLogin", {
+          token,
+          data: { user },
+        });
+      }
+    }
+  );
+
   socket.on("logOut", async (user) => {
     console.log("hey hitting logout user in server.js");
     await LoggedInUsers.findOneAndDelete({
@@ -1270,7 +1391,6 @@ io.on("connect", (socket) => {
   });
 });
 
-// 4. STARTING THE SERVER
 server.listen(port, () => {
   console.log(`App running on port ${port} ...`);
 });
@@ -1282,4 +1402,3 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
-module.exports = io;

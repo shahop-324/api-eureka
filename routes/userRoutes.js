@@ -8,24 +8,14 @@ const communityController = require("../controllers/communityController");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
-router.post("/googleSignIn", authController.googleSignIn);
 
-router.post("/linkedinSignIn", authController.linkedinSignIn);
 router.post("/forgotPassword", userController.forgotPassword);
 
-// user signup router
 router.post("/signup", authController.signup);
-
-// user login router
-router.post("/login", authController.login);
 
 router.patch("/resetPassword/:token", authController.resetPassword);
 
-//user getting particular event
-
 router.get("/event/:id", userController.getParticularEvent);
-
-// const helperFxn =
 
 router.use((req, res, next) => {
   if (req.user != undefined) {
@@ -38,11 +28,9 @@ router.use((req, res, next) => {
 
 router.get("/registeredEvents", userController.getAllRegisteredEvents);
 router.get("/personalData", userController.getAllPersonalData);
-// router.get("/registeredEvents",userController.getAllRegisteredEvents);
-// update Me
+
 router.patch("/updateMe", userController.updateMe);
 
-// DONE Creating new Community
 router.post("/newCommunity", userController.createNewCommunity);
 
 // ! Select Plan
@@ -52,12 +40,10 @@ router.post(
   communityController.selectPlan
 );
 
-// DONE Logining Into a Community
 router.post("/:id", authController.communityLogin);
 
-// get all events for user
 router.get("/events", globalController.getAllEvents);
-// register in an event
+
 router.post(
   "/events/:eventId/:ticketId",
   globalController.IsUserAlreadyRegistred,
@@ -65,14 +51,12 @@ router.post(
   userController.registerInAnEvent
 );
 
-// create review for an event in which user participated
 router.post(
   "/events/review/:eventId",
   globalController.DoesUserRegistredInThisEvent,
   userController.createReview
 );
 
-// create query for an event
 router.post(
   "/query/createNew",
 
@@ -81,10 +65,8 @@ router.post(
   userController.IsUserRegistred
 );
 
-//Me
 router.get("/Me", userController.getMe);
 
-// delete Me
 router.delete("/Me", userController.deleteMe);
 
 // forgot Password (now use email to reset password)
