@@ -21,3 +21,26 @@
 .view-full-profile-btn:hover {
     cursor: pointer;
 }
+
+.individual-chat-summary-container {
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-gap: 20px;
+    align-items: center;
+}
+
+.chat-summary {
+    border: 1px solid transparent;
+}
+.chat-summary:hover {
+    border: 1px solid grey;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.chat-summary-msg-container {
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-gap: 20px;
+    align-items: center;
+}

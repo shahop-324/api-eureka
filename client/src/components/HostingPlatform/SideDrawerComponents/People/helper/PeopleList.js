@@ -7,7 +7,7 @@ import PeopleProfile from "./PeopleProfile";
 const PeopleComponent = ({ handleOpen }) => {
   return (
     <>
-      <div className="people-list-view-card p-3 mb-3">
+      <div className="people-list-view-card p-3 mb-4">
         <div className="mb-3">
           <div
             className=" mb-2"

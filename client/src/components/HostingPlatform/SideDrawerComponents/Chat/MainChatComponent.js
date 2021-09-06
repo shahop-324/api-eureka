@@ -6,6 +6,7 @@ import "./../../Styles/root.scss";
 import AllChatsComponent from "./helper/AllChatsComponent";
 import "./../../../../index.css";
 import PrivateChatListComponent from "./helper/PrivateChatListComponent";
+import IndividualChat from "./helper/IndividualChat";
 
 const MainChatComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState("all");
@@ -59,7 +60,8 @@ const MainChatComponent = (props) => {
               return <AllChatsComponent />;
 
             case "private":
-              return <PrivateChatListComponent />;
+              // return  <PrivateChatListComponent />;
+              return <IndividualChat />
 
             default:
               return <div>This is side drawer chat section.</div>;

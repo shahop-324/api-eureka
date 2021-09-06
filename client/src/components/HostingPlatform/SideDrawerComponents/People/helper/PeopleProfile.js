@@ -78,62 +78,85 @@ const PeopleProfile = ({ open, handleClose }) => {
                 variant="rounded"
                 style={{ marginLeft: "auto", marginRight: "auto" }}
               />
-              <div className="btn-outline-text mb-3">{Faker.name.findName()}</div>
+              <div className="btn-outline-text mb-3">
+                {Faker.name.findName()}
+              </div>
 
-             
-                <div style={{
+              <div
+                style={{
                   fontWeight: "500",
                   color: "#3B3B3B",
                   fontSize: "0.8rem",
-                  textAlign: "center"
-                }} className="mb-3">Product Manager, Evenz</div>
-
-<div className="d-flex flex-row align-items-center justify-content-center mb-3">
-              <div className="shareon-icon p-3 me-3">
-                <a
-                  href="https://www.facebook.com/pages/?category=your_pages&ref=bookmarks"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <FacebookIcon style={{ fontSize: "20", fill: "#1760A8" }} />
-                </a>
-              </div>
-              <div className="shareon-icon p-3 me-3">
-                <a
-                  href="https://www.linkedin.com/company/evenz-in"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <LinkedInIcon style={{ fontSize: "20", fill: "#2565A5" }} />
-                </a>
+                  textAlign: "center",
+                }}
+                className="mb-3"
+              >
+                Product Manager, Evenz
               </div>
 
-              <div className="shareon-icon p-3 me-3">
-                <a
-                  href="https://twitter.com/EvenzOfficial"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <TwitterIcon style={{ fontSize: "20", fill: "#539FF7" }} />
-                </a>
-              </div>
-
-              <div className="shareon-icon p-3 me-3">
-                <a
-                  href="https://www.instagram.com/evenzofficial/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Instagram style={{ fontSize: "20", fill: "#841E8D" }} />
-                </a>
-              </div>
-            </div>
-
-            <div>
-                <button className="btn btn-outline-primary btn-outline-text me-3">Schedule a meet</button>
-                <button className="btn btn-primary btn-outline-text">Start conversation</button>
+              <div className="d-flex flex-row align-items-center justify-content-center mb-3">
+                <div className="shareon-icon p-3 me-3">
+                  <a
+                    href="https://www.facebook.com/pages/?category=your_pages&ref=bookmarks"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <FacebookIcon
+                        style={{ fontSize: "20", fill: "#1760A8" }}
+                      />
+                    </IconButton>
+                  </a>
                 </div>
-              
+                <div className="shareon-icon p-3 me-3">
+                  <a
+                    href="https://www.linkedin.com/company/evenz-in"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <LinkedInIcon
+                        style={{ fontSize: "20", fill: "#2565A5" }}
+                      />
+                    </IconButton>
+                  </a>
+                </div>
+
+                <div className="shareon-icon p-3 me-3">
+                  <a
+                    href="https://twitter.com/EvenzOfficial"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <TwitterIcon
+                        style={{ fontSize: "20", fill: "#539FF7" }}
+                      />
+                    </IconButton>
+                  </a>
+                </div>
+
+                <div className="shareon-icon p-3 me-3">
+                  <a
+                    href="https://www.instagram.com/evenzofficial/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IconButton>
+                      <Instagram style={{ fontSize: "20", fill: "#841E8D" }} />
+                    </IconButton>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <button className="btn btn-outline-primary btn-outline-text me-3">
+                  Schedule a meet
+                </button>
+                <button className="btn btn-primary btn-outline-text">
+                  Start conversation
+                </button>
+              </div>
             </div>
           </div>
         </div>
