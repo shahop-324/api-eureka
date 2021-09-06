@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const Community = require("../models/communityModel");
 const MailList = require("../models/emailListModel");
+const LoggedInUsers = require("../models/loggedInUsers");
 const SalesDepartment = require("../models/salesDepartmentModel");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError.js");
@@ -11,7 +12,7 @@ const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
-
+const io = require("socket.io");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -123,6 +124,10 @@ exports.signup = catchAsync(async (req, res) => {
         email: req.body.email,
       });
 
+      await LoggedInUsers.create({
+        userId: newUser._id,
+      });
+
       createSendToken(newUser, 201, req, res);
     }
   } else {
@@ -146,6 +151,10 @@ exports.signup = catchAsync(async (req, res) => {
       email: req.body.email,
     });
 
+    await LoggedInUsers.create({
+      userId: newUser._id,
+    });
+
     createSendToken(newUser, 201, req, res);
   }
   // create new user
@@ -165,9 +174,22 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
+  // await LoggedInUsers.create({
+  //   userId: user._id,
+  // });
+  //1. First find by user._id
+  //2.if it is present in loggedInUsers
+  //3. logout the first same user and login him.
+
+  const isUserLoggedInAlready = await LoggedInUsers.find({ userId: user._id });
+  if (isUserLoggedInAlready) {
+    // await LoggedInUsers.findOneAndDelete({ userId: user._id });
+    // io.on("connection", (socket) => {
+    //   socket.emit("logOutUser", { userId: user._id });
+    // });
+  }
 
   // 3) If everything is ok, send json web token to client
-  createSendToken(user, 200, req, res);
 });
 
 exports.googleSignIn = catchAsync(async (req, res, next) => {
@@ -219,6 +241,9 @@ exports.googleSignIn = catchAsync(async (req, res, next) => {
           name: name,
           email: req.body.email,
         });
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
 
         createSendToken(user, 201, req, res);
       }
@@ -246,7 +271,9 @@ exports.googleSignIn = catchAsync(async (req, res, next) => {
         name: name,
         email: req.body.email,
       });
-
+      await LoggedInUsers.create({
+        userId: user._id,
+      });
       createSendToken(user, 201, req, res);
     }
   }
@@ -259,7 +286,7 @@ exports.linkedinSignIn = catchAsync(async (req, res, next) => {
   // const { profile } = req.body;
   // console.log(profile);
   // 1) Check if email and password exist
-  console.log(req.body.userProfile,"Hey");
+  console.log(req.body.userProfile, "Hey");
   // Create new referral code
   const MyReferralCode = nanoid(10);
   // check if someone referred this new user
@@ -277,7 +304,9 @@ exports.linkedinSignIn = catchAsync(async (req, res, next) => {
       }
     );
     if (referrer) {
-      const existingUser = await User.findOne({ linkedinId: req.body.userProfile.linkedinId });
+      const existingUser = await User.findOne({
+        linkedinId: req.body.userProfile.linkedinId,
+      });
       if (existingUser) {
         //  we already have a record with the given req.body.userProfile ID
         //done(null, existingUser);
@@ -304,12 +333,16 @@ exports.linkedinSignIn = catchAsync(async (req, res, next) => {
           name: name,
           email: req.body.userProfile.email,
         });
-
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
         createSendToken(user, 201, req, res);
       }
     }
   } else {
-    const existingUser = await User.findOne({ linkedinId: req.body.userProfile.linkedinId });
+    const existingUser = await User.findOne({
+      linkedinId: req.body.userProfile.linkedinId,
+    });
     if (existingUser) {
       //  we already have a record with the given req.body.userProfile ID
       //done(null, existingUser);
@@ -331,6 +364,9 @@ exports.linkedinSignIn = catchAsync(async (req, res, next) => {
         name: name,
         email: req.body.userProfile.email,
       });
+      await LoggedInUsers.create({
+        userId: user._id,
+      });
 
       createSendToken(user, 201, req, res);
     }
@@ -339,7 +375,6 @@ exports.linkedinSignIn = catchAsync(async (req, res, next) => {
   // 3) If everything is ok, send json web token to client
   // createSendToken(user, 200, req, res);
 });
-
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there

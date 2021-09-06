@@ -45,11 +45,32 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
+
+import socket from "./HostingPlatform/service/socket";
+import { DuplicateUserSignOut } from "../actions/index";
+import { signIn } from "../actions/index";
+
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
+
 
 AOS.init();
 
 class App extends React.Component {
+  componentDidMount = () => {
+    socket.on("logOutUser", ({ userId }) => {
+      console.log("hey,hitting logOutUser");
+      console.log(userId);
+      // dispatch(createNewEventAlert(newAlert));
+
+      this.props.DuplicateUserSignOut(userId);
+    });
+
+    socket.on("newLogin", (res) => {
+      console.log("hey hitting the new login in App.js 64 ");
+      this.props.signIn(res);
+    });
+  };
+
   render() {
     const { isSignedIn } = this.props;
 
@@ -559,4 +580,7 @@ const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, {
+  DuplicateUserSignOut,
+  signIn,
+})(App);

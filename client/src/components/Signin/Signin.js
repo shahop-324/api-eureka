@@ -19,9 +19,9 @@ import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { linkedinSignIn } from "../../actions";
 import Loader from "../Loader";
-import 'material-react-toastify/dist/ReactToastify.css';
+import "material-react-toastify/dist/ReactToastify.css";
 import { useSnackbar } from "notistack";
-
+import socket from "../HostingPlatform/service/socket";
 let formIsvalidated = false;
 
 const renderInput = ({
@@ -69,7 +69,6 @@ const renderInput = ({
 };
 
 const Signin = (props) => {
-
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { error, signOutSucceded } = useSelector((state) => state.auth);
@@ -87,6 +86,7 @@ const Signin = (props) => {
   useEffect(() => {
     console.log(params.code);
     // dispatch(MailChimpAuth(params.code));
+
     if (params.code) {
       dispatch(linkedinSignIn(params.code));
     }
@@ -98,8 +98,11 @@ const Signin = (props) => {
   const onSubmit = (formValues) => {
     setSigninClicked(true);
     console.log(formValues);
-
-    dispatch(signIn(formValues));
+    socket.emit("loggingInUser", {
+      email: formValues.email,
+      password: formValues.password,
+    });
+    //dispatch(signIn(formValues));
   };
 
   if (isSending) {
@@ -115,7 +118,7 @@ const Signin = (props) => {
       variant: "error",
     });
     setSigninClicked(false);
-   return dispatch(errorTrackerForSignIn());
+    return dispatch(errorTrackerForSignIn());
   }
 
   const chatBot = () => {
