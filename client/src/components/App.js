@@ -47,7 +47,11 @@ import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
 
 import socket from "./HostingPlatform/service/socket";
-import { DuplicateUserSignOut, googleSignIn } from "../actions/index";
+import {
+  DuplicateUserSignOut,
+  googleSignIn,
+  newLinkedinLogin,
+} from "../actions/index";
 import { signIn } from "../actions/index";
 
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
@@ -56,12 +60,13 @@ AOS.init();
 
 class App extends React.Component {
   componentDidMount = () => {
-    socket.on("logOutUser", ({ userId }) => {
+    socket.on("logOutUser", ({ userId, message }) => {
       console.log("hey,hitting logOutUser");
       console.log(userId);
+      console.log(message);
       // dispatch(createNewEventAlert(newAlert));
 
-      this.props.DuplicateUserSignOut(userId);
+      this.props.DuplicateUserSignOut(userId, message);
     });
 
     socket.on("newLogin", (res) => {
@@ -70,6 +75,9 @@ class App extends React.Component {
     });
     socket.on("newGoogleLogin", (res) => {
       this.props.googleSignIn(res);
+    });
+    socket.on("newLinkedinLogin", (res) => {
+      this.props.newLinkedinLogin(res);
     });
   };
 
@@ -584,4 +592,5 @@ export default connect(mapStateToProps, {
   DuplicateUserSignOut,
   signIn,
   googleSignIn,
+  newLinkedinLogin,
 })(App);

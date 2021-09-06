@@ -157,53 +157,53 @@ export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
 export const linkedinSignIn = (code, intent, eventId) => async (dispatch) => {
-  // console.log(code);
-
-  // try {
-
-  //  dispatch(authActions.startLoading());
   try {
-    let res = await eureka.get(`/getUserCredentials/?code=${code}`);
+    const res = await eureka.get(`/getUserCredentials/?code=${code}`);
     console.log(res.data);
+     const result=res.data.userProfile;
+    // // const formValues=res.data;
+    // res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
+    //   ...res.data,
+    // });
 
-    // const formValues=res.data;
-    res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
-      ...res.data,
-    });
-    console.log(res.data.data.user);
-    dispatch(
-      authActions.SignIn({
-        token: res.data.token,
-        isSignedInThroughLinkedin: true,
-
-        referralCode: res.data.data.user.hasUsedAnyReferral
-          ? null
-          : res.data.data.user.referralCode,
-      })
-    );
-    dispatch(
-      userActions.CreateUser({
-        user: res.data.data.user,
-      })
-    );
-
-    setTimeout(function () {
-      dispatch(authActions.disabledSignInSucceded());
-    }, 4000);
-
-    if (intent === "eventRegistration") {
-      history.push(`/event-landing-page/${eventId}`);
-    } else if (intent === "buyPlan") {
-      history.push("/pricing");
-      dispatch(fetchUserAllPersonalData());
-    } else {
-      history.push("/user/home");
-      // window.location.href = REACT_APP_MY_ENV
-      //   ? "http://localhost:3001/user/home"
-      //   : "https://www.evenz.in/user/home";
-    }
+    socket.emit("linkedinSignIn", {  result});
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
+  // console.log(res.data.user);
+  dispatch(
+    authActions.SignIn({
+      token: res.token,
+      isSignedInThroughLinkedin: true,
+
+      referralCode: res.data.user.hasUsedAnyReferral
+        ? null
+        : res.data.user.referralCode,
+    })
+  );
+  dispatch(
+    userActions.CreateUser({
+      user: res.data.user,
+    })
+  );
+
+  setTimeout(function () {
+    dispatch(authActions.disabledSignInSucceded());
+  }, 4000);
+
+  if (intent === "eventRegistration") {
+    history.push(`/event-landing-page/${eventId}`);
+  } else if (intent === "buyPlan") {
+    history.push("/pricing");
+    dispatch(fetchUserAllPersonalData());
+  } else {
+    history.push("/user/home");
+    // window.location.href = REACT_APP_MY_ENV
+    //   ? "http://localhost:3001/user/home"
+    //   : "https://www.evenz.in/user/home";
   }
 };
 
