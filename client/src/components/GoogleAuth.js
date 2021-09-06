@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { googleSignIn } from "../actions";
-
+import socket from "./HostingPlatform/service/socket";
 class GoogleAuth extends React.Component {
   state = { isGoogleClicked: false };
 
@@ -35,11 +35,13 @@ class GoogleAuth extends React.Component {
       ModifiedFormValues.image = profile.getImageUrl();
       ModifiedFormValues.googleId = profile.getId();
       ModifiedFormValues.email = profile.getEmail();
-      this.props.googleSignIn(
-        ModifiedFormValues,
-        this.props.intent,
-        this.props.eventId
-      );
+      socket.emit("googleSignIn", { ModifiedFormValues });
+
+      // this.props.googleSignIn(
+      //   ModifiedFormValues,
+      //   this.props.intent,
+      //   this.props.eventId
+      // );
     }
   };
 

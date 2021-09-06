@@ -47,11 +47,10 @@ import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
 
 import socket from "./HostingPlatform/service/socket";
-import { DuplicateUserSignOut } from "../actions/index";
+import { DuplicateUserSignOut, googleSignIn } from "../actions/index";
 import { signIn } from "../actions/index";
 
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
-
 
 AOS.init();
 
@@ -68,6 +67,9 @@ class App extends React.Component {
     socket.on("newLogin", (res) => {
       console.log("hey hitting the new login in App.js 64 ");
       this.props.signIn(res);
+    });
+    socket.on("newGoogleLogin", (res) => {
+      this.props.googleSignIn(res);
     });
   };
 
@@ -531,8 +533,6 @@ class App extends React.Component {
                 />
               )}
 
-              
-
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/event/:eventId/hosting-platform/reception"
@@ -583,4 +583,5 @@ const mapStateToProps = (state, props) => ({
 export default connect(mapStateToProps, {
   DuplicateUserSignOut,
   signIn,
+  googleSignIn,
 })(App);

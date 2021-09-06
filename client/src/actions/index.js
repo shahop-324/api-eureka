@@ -211,51 +211,50 @@ export const errorTrackerForLinkedinSignIn =
   () => async (dispatch, getState) => {
     dispatch(authActions.disabledError());
   };
-export const googleSignIn =
-  (formValues, intent, eventId) => async (dispatch) => {
-    try {
-      const res = await eureka.post("/eureka/v1/users/googleSignIn", {
-        ...formValues,
-      });
-      console.log(res.data.data.user);
-      dispatch(
-        authActions.SignIn({
-          token: res.data.token,
-          isSignedInThroughGoogle: true,
+export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
+  try {
+    // const res = await eureka.post("/eureka/v1/users/googleSignIn", {
+    //   ...formValues,
+    // });
+    // console.log(res.data.data.user);
+    dispatch(
+      authActions.SignIn({
+        token: res.token,
+        isSignedInThroughGoogle: true,
 
-          referralCode: res.data.data.user.hasUsedAnyReferral
-            ? null
-            : res.data.data.user.referralCode,
-        })
-      );
-      dispatch(
-        userActions.CreateUser({
-          user: res.data.data.user,
-        })
-      );
+        referralCode: res.data.user.hasUsedAnyReferral
+          ? null
+          : res.data.user.referralCode,
+      })
+    );
+    dispatch(
+      userActions.CreateUser({
+        user: res.data.user,
+      })
+    );
 
-      setTimeout(function () {
-        dispatch(authActions.disabledSignInSucceded());
-      }, 4000);
+    setTimeout(function () {
+      dispatch(authActions.disabledSignInSucceded());
+    }, 4000);
 
-      if (intent === "eventRegistration") {
-        history.push(`/event-landing-page/${eventId}`);
-      } else if (intent === "buyPlan") {
-        history.push("/pricing");
-        dispatch(fetchUserAllPersonalData());
-      } else {
-        history.push("/user/home");
-        // window.location.href = REACT_APP_MY_ENV
-        //   ? "http://localhost:3001/user/home"
-        //   : "https://www.evenz.in/user/home";
-      }
-      //history.push("/user/home");
-    } catch (err) {
-      console.log(err);
-      // dispatch(authActions.hasError(err.response.data.message));
-      // alert(err.response.data.message);
+    if (intent === "eventRegistration") {
+      history.push(`/event-landing-page/${eventId}`);
+    } else if (intent === "buyPlan") {
+      history.push("/pricing");
+      dispatch(fetchUserAllPersonalData());
+    } else {
+      history.push("/user/home");
+      // window.location.href = REACT_APP_MY_ENV
+      //   ? "http://localhost:3001/user/home"
+      //   : "https://www.evenz.in/user/home";
     }
-  };
+    //history.push("/user/home");
+  } catch (err) {
+    console.log(err);
+    // dispatch(authActions.hasError(err.response.data.message));
+    // alert(err.response.data.message);
+  }
+};
 
 export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
@@ -5147,36 +5146,40 @@ export const MailChimpAuth = (code) => async (dispatch) => {
   }
 };
 
-export const DuplicateUserSignOut = (userId) => async (dispatch, getState) => {
-  console.log(userId, "hey hitting duplicate user sign out");
-  console.log(getState().user.userDetails._id);
-  if (userId === getState().user.userDetails._id) {
-    window.localStorage.clear();
+export const DuplicateUserSignOut =
+  (userId, message) => async (dispatch, getState) => {
+    console.log(userId, "hey hitting duplicate user sign out");
+    console.log(getState().user.userDetails._id);
 
-    window.gapi.load("client:auth2", () => {
-      window.gapi.client
-        .init({
-          clientId:
-            "438235916836-6oaj1fbnqqrcd9ba30348fbe2ebn6lt0.apps.googleusercontent.com",
-          scope: "profile email",
-        })
-        .then(() => {
-          window.gapi.auth2.getAuthInstance().signOut();
+    if (userId === getState().user.userDetails._id) {
+      console.log(message);
+      alert(message);
+      window.localStorage.clear();
 
-          // this.onAuthChange(this.auth.isSignedIn.get());
-          // this.auth.isSignedIn.listen(this.onAuthChange);
-        });
-    });
+      window.gapi.load("client:auth2", () => {
+        window.gapi.client
+          .init({
+            clientId:
+              "438235916836-6oaj1fbnqqrcd9ba30348fbe2ebn6lt0.apps.googleusercontent.com",
+            scope: "profile email",
+          })
+          .then(() => {
+            window.gapi.auth2.getAuthInstance().signOut();
 
-    dispatch(authActions.SignOut());
-    dispatch(communityAuthActions.CommunitySignOut());
+            // this.onAuthChange(this.auth.isSignedIn.get());
+            // this.auth.isSignedIn.listen(this.onAuthChange);
+          });
+      });
 
-    setTimeout(function () {
-      dispatch(authActions.disabledSignOutSucceded());
-    }, 4000);
+      dispatch(authActions.SignOut());
+      dispatch(communityAuthActions.CommunitySignOut());
 
-    history.push("/home");
+      setTimeout(function () {
+        dispatch(authActions.disabledSignOutSucceded());
+      }, 4000);
 
-    //TODO Home page
-  }
-};
+      history.push("/home");
+
+      //TODO Home page
+    }
+  };
