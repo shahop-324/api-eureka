@@ -1238,7 +1238,7 @@ io.on("connect", (socket) => {
     );
 
     if (isUserLoggedInAlready.length > 0) {
-      socket.emit("logOutUser", { userId: user._id });
+      socket.broadcast.emit("logOutUser", { userId: user._id });
       await LoggedInUsers.findOneAndDelete({
         userId: user.userId,
       });
