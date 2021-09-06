@@ -8,6 +8,9 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 
 import Ripple from "../../../../ActiveStatusRipple";
 import MsgInput from "./MsgInput";
+import IncomingChat from "../Sub/IncomingChatMsg";
+import ChatMsgElement from "./ChatMsgElement";
+import OutgoingChatMsgElement from "./OutgoingChatElement";
 
 const IndividualChat = ({
   handleOpen,
@@ -144,6 +147,9 @@ const IndividualChat = ({
             className="scrollable-chat-element-container"
             id="all-chat-msg-container"
           >
+              {/* <IncomingChat /> */}
+              <ChatMsgElement name={Faker.name.findName()} image={Faker.image.avatar()} msgText={"Hi there"}/>
+              <OutgoingChatMsgElement msgText={"Hi, how you have been?"}/>
             {/* {renderChats(eventChats)} */}
           </div>
           <MsgInput

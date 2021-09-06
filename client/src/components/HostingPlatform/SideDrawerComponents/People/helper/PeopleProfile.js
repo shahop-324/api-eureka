@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Dialog, IconButton } from "@material-ui/core";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -9,10 +9,13 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
+import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 
 import "./../../../Styles/peopleProfile.scss";
 
 import Faker from "faker";
+import Ripple from "../../../../ActiveStatusRipple";
+import ScheduleOneToOneCallForm from "../../Chat/Sub/ScheduleOneToOneCallForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +36,16 @@ const useStyles = makeStyles((theme) => ({
 
 const PeopleProfile = ({ open, handleClose }) => {
   const classes = useStyles();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const handleOpenScheduleForm = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+  };
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -58,6 +71,7 @@ const PeopleProfile = ({ open, handleClose }) => {
             </span>
             <IconButton
               onClick={() => {
+                handleCloseDrawer();
                 handleClose();
               }}
             >
@@ -69,29 +83,100 @@ const PeopleProfile = ({ open, handleClose }) => {
             <hr />
           </div>
 
-          <div className="" style={{ textAlign: "center", width: "100%" }}>
-            <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-              <Avatar
-                alt={Faker.name.findName()}
-                src={Faker.image.avatar()}
-                className={`${classes.large} mb-3`}
-                variant="rounded"
-                style={{ marginLeft: "auto", marginRight: "auto" }}
-              />
-              <div className="btn-outline-text mb-3">
-                {Faker.name.findName()}
+          <div className="" style={{ width: "100%" }}>
+            <div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 5fr 1fr",
+                  gridGap: "24px",
+                }}
+                className="mb-3"
+              >
+                <Avatar
+                  alt={Faker.name.findName()}
+                  src={Faker.image.avatar()}
+                  className={`${classes.large} mb-3`}
+                  variant="rounded"
+                  // style={{ marginLeft: "auto", marginRight: "auto" }}
+                />
+                <div>
+                  <div className="btn-outline-text mb-2">
+                    {Faker.name.findName()}
+                  </div>
+
+                  <div
+                    style={{
+                      fontWeight: "500",
+                      color: "#3B3B3B",
+                      fontSize: "0.8rem",
+                      // textAlign: "center",
+                    }}
+                    className="mb-3"
+                  >
+                    Product Manager, Evenz
+                  </div>
+
+                  <div
+                    className="d-flex flex-row align-items-center event-field-label field-label-value"
+                    style={{
+                      color: "#75BF72",
+                      fontFamily: "Ubuntu",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    <Ripple /> Active{" "}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    backgroundColor: "#94949436",
+                    width: "fit-content",
+                    borderRadius: "5px",
+                    alignSelf: "center",
+                  }}
+                  className="px-2 py-2"
+                >
+                  <ChatBubbleRoundedIcon className="chat-msg-hover-icon" />
+                </div>
               </div>
 
               <div
                 style={{
-                  fontWeight: "500",
-                  color: "#3B3B3B",
-                  fontSize: "0.8rem",
-                  textAlign: "center",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 5fr 1fr",
+                  gridGap: "24px",
                 }}
-                className="mb-3"
               >
-                Product Manager, Evenz
+                <div></div>
+
+                <div>
+                  <div
+                    style={{
+                      fontWeight: "500",
+                      fontFamily: "Ubuntu",
+                      color: "#212121",
+                      fontSize: "0.95rem",
+                    }}
+                    className={"mb-3"}
+                  >
+                    Headline
+                  </div>
+
+                  <div
+                    style={{
+                      fontWeight: "400",
+                      fontFamily: "Ubuntu",
+                      color: "#4D4D4D",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Hi there! I am attending evenz event.
+                  </div>
+                </div>
+
+                <div></div>
               </div>
 
               <div className="d-flex flex-row align-items-center justify-content-center mb-3">
@@ -149,14 +234,57 @@ const PeopleProfile = ({ open, handleClose }) => {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <button className="btn btn-outline-primary btn-outline-text me-3">
                   Schedule a meet
                 </button>
                 <button className="btn btn-primary btn-outline-text">
                   Start conversation
                 </button>
-              </div>
+              </div> */}
+
+              
+                <div>
+                  <div
+                    className=""
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gridGap: "20px",
+                    }}
+                  >
+                    {/* Start instant meet */}
+                    <div className="mb-3">
+                      <button
+                        style={{ width: "100%" }}
+                        className="btn btn-primary btn-outline-text"
+                      >
+                        Start instant meet
+                      </button>
+                    </div>
+
+                    {/* Schedule for later */}
+                    <div className="mb-3">
+                      <button
+                        onClick={() => {
+                          handleOpenScheduleForm();
+                        }}
+                        style={{ width: "100%" }}
+                        className="btn btn-outline-primary btn-outline-text"
+                      >
+                        Schedule for later
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              
+                  
+
+                  <ScheduleOneToOneCallForm
+                    handleCloseDrawer={handleCloseDrawer}
+                    openDrawer={openDrawer}
+                  />
+                
             </div>
           </div>
         </div>

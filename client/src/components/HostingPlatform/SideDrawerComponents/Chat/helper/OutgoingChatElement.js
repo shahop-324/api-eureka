@@ -22,13 +22,15 @@ import DeleteMsg from "./DeleteMsg";
 
 
 
-const ChatMsgElement = ({
-  name,
-  image,
+const OutgoingChatMsgElement = ({
+//   name,
+//   image,
   msgText,
   forReply,
   createReplyWidget,
 }) => {
+  let emojiVisibility = "none";
+
 const [open, setOpen] = useState(false);
 
 const [visibility, setVisibility] = useState("none");
@@ -43,9 +45,6 @@ const handleClose = () => {
 const handleCloseDelete = () => {
   setOpenDelete(false);
 }
-
-  
-
   return (
     <>
       <div
@@ -124,12 +123,14 @@ const handleCloseDelete = () => {
             className=" mb-2"
             style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
           >
-            <Avatar src={image} alt={name} variant="rounded" />
+            {/* <Avatar src={image} alt={name} variant="rounded" /> */}
+            <div></div>
             <div
               className="chat-box-name ms-3"
               style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
             >
-              <div>{name}</div>
+              {/* <div>{name}</div> */}
+              <div></div>
 
               <div
                 style={{
@@ -139,9 +140,10 @@ const handleCloseDelete = () => {
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
+                {/* <div>Product Manager, Evenz</div> */}
+                <div></div>
 
-                <div>3m ago</div>
+                <div>Just now</div>
               </div>
             </div>
           </div>
@@ -159,15 +161,8 @@ const handleCloseDelete = () => {
             >
               <ReplyRoundedIcon
                 onClick={() => {
-                  createReplyWidget(name, image, msgText);
+                //   createReplyWidget(name, image, msgText);
                 }}
-                className="chat-msg-hover-icon me-2"
-                style={{ display: visibility }}
-              />
-              <ReportOutlinedIcon
-              onClick={() => {
-                setOpen(true)
-              }}
                 className="chat-msg-hover-icon me-2"
                 style={{ display: visibility }}
               />
@@ -179,7 +174,7 @@ const handleCloseDelete = () => {
                 style={{ display: visibility }}
               />
             </div>
-            <div className="chat-msg-text ms-3 p-3" style={{borderTopLeftRadius: "0"}}>
+            <div className="chat-msg-text ms-3 p-3" style={{backgroundColor: "#6E6E6E", color: "#ffffff", borderTopRightRadius: "0"}}>
               <div>{msgText}</div>
             </div>
           </div>
@@ -187,11 +182,11 @@ const handleCloseDelete = () => {
       </div>
 
       {/*  */}
-      <ReportMsg name={name} image={image} msgText={msgText} open={open} handleClose={handleClose}/>
+      {/* <ReportMsg name={name} image={image} msgText={msgText} open={open} handleClose={handleClose}/> */}
 
-      <DeleteMsg name={name} image={image} msgText={msgText} open={openDelete} handleClose={handleCloseDelete}/>
+      {/* <DeleteMsg name={name} image={image} msgText={msgText} open={openDelete} handleClose={handleCloseDelete}/> */}
     </>
   );
 };
 
-export default ChatMsgElement;
+export default OutgoingChatMsgElement;

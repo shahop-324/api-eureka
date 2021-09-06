@@ -94,11 +94,14 @@ const MainPeopleComponent = (props) => {
 
         <div className="people-container pt-2 px-2">
           <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
-            <input
-              type="text"
-              className="form-control chat-input me-2"
-              placeholder="Search people ..."
-            />
+          <div class="ui icon input me-3" style={{ width: "100%" }}>
+          <input
+            type="text"
+            placeholder="Search people..."
+            className="form-control"
+          />
+          <i class="search icon"></i>
+        </div>
 
             <DropdownIcon switchView={switchView} view={view}/>
           </div>

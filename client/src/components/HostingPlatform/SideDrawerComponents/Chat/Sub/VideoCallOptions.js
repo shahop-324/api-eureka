@@ -28,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const VideoCallOptions = ({ open, handleClose }) => {
-  const [openScheduleForm, setOpenScheduleForm] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const handleOpenScheduleForm = () => {
-    setOpenScheduleForm(true);
+  const handleOpenDrawer = () => {
+    setOpenDrawer(true);
   };
 
-  const handleCloseScheduleForm = () => {
-    setOpenScheduleForm(false);
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
   };
 
   const classes = useStyles();
@@ -64,7 +64,7 @@ const VideoCallOptions = ({ open, handleClose }) => {
             </span>
             <IconButton
               onClick={() => {
-                handleCloseScheduleForm();
+                handleCloseDrawer();
                 handleClose();
               }}
             >
@@ -120,7 +120,6 @@ const VideoCallOptions = ({ open, handleClose }) => {
             </div>
           </div>
 
-          {!openScheduleForm ? (
             <div>
               <div
                 className=""
@@ -144,7 +143,7 @@ const VideoCallOptions = ({ open, handleClose }) => {
                 <div className="mb-3">
                   <button
                     onClick={() => {
-                      handleOpenScheduleForm();
+                      handleOpenDrawer();
                     }}
                     style={{ width: "100%" }}
                     className="btn btn-outline-primary btn-outline-text"
@@ -154,17 +153,13 @@ const VideoCallOptions = ({ open, handleClose }) => {
                 </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <div>
-                <hr />
-              </div>
+         
 
               <ScheduleOneToOneCallForm
-                handleCloseScheduleForm={handleCloseScheduleForm}
+                handleCloseDrawer={handleCloseDrawer}
+                openDrawer={openDrawer}
               />
-            </div>
-          )}
+            
         </div>
         {/* dialog for choosing between instant meet or schedule for later */}
       </Dialog>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
+import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 import "./../../../Styles/PeopleList.scss";
 import PeopleProfile from "./PeopleProfile";
 
@@ -11,7 +12,7 @@ const PeopleComponent = ({ handleOpen }) => {
         <div className="mb-3">
           <div
             className=" mb-2"
-            style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
+            style={{ display: "grid", gridTemplateColumns: "1fr 5fr 1fr" }}
           >
             <Avatar
               src={Faker.image.avatar()}
@@ -37,6 +38,21 @@ const PeopleComponent = ({ handleOpen }) => {
                 {/* <div>3m ago</div> */}
               </div>
             </div>
+
+            <div
+              style={{
+                backgroundColor: "#94949436",
+                width: "fit-content",
+                borderRadius: "5px",
+                alignSelf: "center",
+              }}
+              className="px-2 py-2"
+            >
+              <ChatBubbleRoundedIcon
+                className="chat-msg-hover-icon"
+                style={{ fill: "#7C7C7C" }}
+              />
+            </div>
           </div>
         </div>
 
@@ -54,28 +70,27 @@ const PeopleComponent = ({ handleOpen }) => {
 };
 
 const PeopleList = () => {
+  const [open, setOpen] = useState(false);
 
-    const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-    const handleOpen = () => {
-        setOpen(true);
-    }
-
-    const handleClose = () => {
-        setOpen(false);
-    }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-    <div>
-      <PeopleComponent handleOpen={handleOpen}/>
-      <PeopleComponent handleOpen={handleOpen}/>
-      <PeopleComponent handleOpen={handleOpen}/>
-      <PeopleComponent handleOpen={handleOpen}/>
-      <PeopleComponent handleOpen={handleOpen}/>
-    </div>
+      <div>
+        <PeopleComponent handleOpen={handleOpen} />
+        <PeopleComponent handleOpen={handleOpen} />
+        <PeopleComponent handleOpen={handleOpen} />
+        <PeopleComponent handleOpen={handleOpen} />
+        <PeopleComponent handleOpen={handleOpen} />
+      </div>
 
-    <PeopleProfile open={open} handleClose={handleClose}/>
+      <PeopleProfile open={open} handleClose={handleClose} />
     </>
   );
 };
