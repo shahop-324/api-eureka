@@ -45,9 +45,14 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
+
 import socket from "./HostingPlatform/service/socket";
 import { DuplicateUserSignOut } from "../actions/index";
 import { signIn } from "../actions/index";
+
+import BoothArea from "./HostingPlatform/Screens/BoothArea";
+
+
 AOS.init();
 
 class App extends React.Component {
@@ -526,6 +531,8 @@ class App extends React.Component {
                 />
               )}
 
+              
+
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/event/:eventId/hosting-platform/reception"
@@ -541,6 +548,14 @@ class App extends React.Component {
                   path="/community/:communityId/event/:eventId/hosting-platform/session/:sessionId"
                   exact
                   component={SessionScreen}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/event/:eventId/hosting-platform/booths/:boothId"
+                  exact
+                  component={BoothArea}
                 />
               )}
 

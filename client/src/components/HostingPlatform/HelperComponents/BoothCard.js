@@ -1,15 +1,15 @@
-import React from 'react';
-import './../Styles/booth.scss';
+import React from "react";
+import "./../Styles/booth.scss";
 
-import Faker from 'faker';
+import Faker from "faker";
 
-import Avatar from '@material-ui/core/Avatar';
-import {makeStyles} from '@material-ui/core/styles';
+import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    '& > *': {
+    display: "flex",
+    "& > *": {
       margin: theme.spacing(1),
     },
   },
@@ -34,7 +34,7 @@ const BoothCard = (props) => {
           alt="booth-poster"
         ></img>
 
-        <div className="booth-logo-brand-name-and-short-description d-flex flex-row ">
+        <div className="booth-logo-brand-name-and-short-description d-flex flex-row mb-3">
           <Avatar
             alt="Remy Sharp"
             src={Faker.image.avatar()}
@@ -43,13 +43,18 @@ const BoothCard = (props) => {
           />
 
           <div className="booth-brand-name-and-short-description ms-4">
-                <div className="booth-card-brand-name mb-2">
-                    {Faker.company.companyName()}
-                </div>
-                <div className="booth-card-short-description">
-                    {Faker.company.catchPhrase()}
-                </div>
+            <div className="booth-card-brand-name mb-2">
+              {Faker.company.companyName()}
+            </div>
+            <div className="booth-card-short-description">
+              {Faker.company.catchPhrase()}
+            </div>
           </div>
+        </div>
+        <div className="booth-card-tags d-flex flex-row align-items-center">
+          <div className=" booth-tag px-3 py-1">Sass</div>
+          <div className="mx-3 booth-tag px-3 py-1">Ed-tech</div>
+          <div className=" booth-tag px-3 py-1">Marketing</div>
         </div>
       </div>
     </>

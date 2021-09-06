@@ -9,7 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { fetchSponsor } from "../../../actions";
 import { useDispatch } from "react-redux";
 
@@ -54,6 +54,11 @@ const SponsorDetailsCard = (props) => {
   };
 
   const classes = useStyles();
+
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <>
       <div className="sponsors-list-fields-container">
@@ -85,7 +90,8 @@ const SponsorDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%", fontFamily: "Inter" }}
           >
-            {props.organisationName}
+            {/* {props.organisationName} */}
+            {truncateText(props.organisationName, 30)}
           </div>
         </div>
         <div
@@ -99,9 +105,10 @@ const SponsorDetailsCard = (props) => {
             target="_blank"
             rel="noreferrer"
             className="event-field-label registrations-field-label d-flex flex-column align-items-start"
-            style={{ width: "100%", fontFamily: "Inter" }}
+            style={{ width: "100%", fontFamily: "Inter", color: "#538BF7" }}
           >
-            {props.website}
+            {/* {props.website} */}
+            {truncateText(props.website, 25)}
           </a>
         </div>
         <div
@@ -116,6 +123,8 @@ const SponsorDetailsCard = (props) => {
               style={{ fontFamily: "Inter" }}
             >
               {props.status}
+              {/* No need to limit characters here as this can only be Platinum, Diamond and Gold */}
+              {/* {truncateText(props.status, 25)} */}
             </div>
           </div>
         </div>

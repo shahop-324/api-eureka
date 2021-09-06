@@ -5,6 +5,7 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import "./../../Styles/root.scss";
 import AllChatsComponent from "./helper/AllChatsComponent";
 import "./../../../../index.css";
+import PrivateChatListComponent from "./helper/PrivateChatListComponent";
 
 const MainChatComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState("all");
@@ -58,7 +59,7 @@ const MainChatComponent = (props) => {
               return <AllChatsComponent />;
 
             case "private":
-              return "This is private chats section.";
+              return <PrivateChatListComponent />;
 
             default:
               return <div>This is side drawer chat section.</div>;

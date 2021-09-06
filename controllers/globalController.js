@@ -287,6 +287,9 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(async (req, res, 
   const userId = req.body.userId;
   const isPublisher = true;
 
+  console.log("This is user Id",userId);
+  console.log( "This is table Id" ,tableId);
+
   const appID = "702d57c3092c4fd389eb7ea5a505d471";
   const appCertificate = "d8311f38cf434445805478cb8c93a334";
   const channelName = tableId;

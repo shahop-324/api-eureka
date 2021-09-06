@@ -1,5 +1,5 @@
-import React from "react";
-import {  IconButton} from "@material-ui/core";
+import React, { useState } from "react";
+import { IconButton } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 import "./../../Styles/root.scss";
@@ -9,34 +9,65 @@ import { Dropdown } from "semantic-ui-react";
 import PeopleGridAvatar from "./helper/peopleGridAvatar";
 import { useSelector } from "react-redux";
 
-const DropdownIcon = () => (
+import PeopleList from "./helper/PeopleList";
+
+const DropdownIcon = ({ switchView, view }) => (
+
   <Dropdown
-    text="Grid"
-    icon="grid layout"
-    floating
-    labeled
+    // text="Grid"
+    icon={`${view} layout`}
+    // floating
+    // labeled
     button
     className="icon"
   >
-    <Dropdown.Menu>
-      <Dropdown.Item icon="list layout" text="List" />
-      <Dropdown.Item icon="grid layout" text="Grid" />
+    <Dropdown.Menu style={{ right: "0", left: "auto" }}>
+      <Dropdown.Item
+        icon="list layout"
+        text="List"
+        onClick={() => {
+          switchView("list");
+        }}
+      />
+      <Dropdown.Item
+        icon="grid layout"
+        text="Grid"
+        onClick={() => {
+          switchView("grid");
+        }}
+      />
     </Dropdown.Menu>
   </Dropdown>
 );
 
 const MainPeopleComponent = (props) => {
+  const [view, setView] = useState("grid");
+
+  const switchView = (view) => {
+    setView(view);
+  };
 
   const currentlyInEvent = useSelector((state) => state.user.peopleInThisEvent);
 
-
-
   const renderPeopleList = (people) => {
     return people.map((person) => {
-      return <PeopleGridAvatar image={ person.userImage.startsWith("https://lh3.googleusercontent.com") ?  person.userImage : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${person.userImage}`}  name={person.userName} designation={person.userDesignation} organisation={person.userOrganisation} city={person.userCity} country={person.userCountry}   />
-    })
-  }
-  
+      return (
+        <PeopleGridAvatar
+          image={
+            person.userImage.startsWith("https://lh3.googleusercontent.com")
+              ? person.userImage
+              : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${person.userImage}`
+          }
+          name={person.userName}
+          designation={person.userDesignation}
+          organisation={person.userOrganisation}
+          city={person.userCity}
+          country={person.userCountry}
+        />
+      );
+    });
+  };
+
   return (
     <>
       <div>
@@ -68,11 +99,26 @@ const MainPeopleComponent = (props) => {
               className="form-control chat-input me-2"
               placeholder="Search people ..."
             />
-            <DropdownIcon />
+
+            <DropdownIcon switchView={switchView} view={view}/>
           </div>
-          <div className="people-list-grid">
-            {renderPeopleList(currentlyInEvent)}
-          </div>
+
+          {(() => {
+            switch (view) {
+              case "grid":
+                return (
+                  <div className="people-list-grid">
+                    {renderPeopleList(currentlyInEvent)}
+                  </div>
+                );
+              case "list":
+                return <PeopleList />;
+
+              default:
+                return <div>You are viewing people in this event.</div>;
+            }
+          })()}
+
           {/* Avatar */}
         </div>
       </div>

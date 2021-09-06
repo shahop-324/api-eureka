@@ -171,7 +171,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Enable for this Event
               </div>
@@ -180,7 +180,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Number of Tables Available
               </div>
@@ -194,7 +194,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Number of Seats Per Table
               </div>
@@ -220,7 +220,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Enable for this Event
               </div>
@@ -233,7 +233,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Time Alloted per Interaction
               </div>
@@ -259,7 +259,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Enable for this Event
               </div>
@@ -272,7 +272,7 @@ const NetworkingFormLeft = (props) => {
             <div className="d-flex flex-row justify-content-between align-items-center ps-4 pe-3 my-4">
               <div
                 className="form-label-customized"
-                style={{ fontSize: "14px" }}
+                style={{ fontSize: "14px", textTransform: "capitalize" }}
               >
                 Time Alloted per Interaction
               </div>

@@ -9,14 +9,14 @@ import "./../../../index.css";
 
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import BoothsListFields from "./BoothListFields";
 import BoothDetailsCard from "./BoothDetailsCard";
 import AddNewBooth from "./FormComponents/EditBoothsForms/AddNewBooth";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBooths } from "../../../actions";
+import { errorTrackerForCreateBooth, errorTrackerForFetchBooths, fetchBooths } from "../../../actions";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import BoothPNG from './../../../assets/images/fogg-come-back-later-2.png';
@@ -54,9 +54,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -166,8 +166,12 @@ const Booths = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
- throw new Error(error);
+    
+    dispatch(errorTrackerForFetchBooths());
+    return dispatch(errorTrackerForCreateBooth());
+    // throw new Error(error);
   }
+  
 
   return (
     <>

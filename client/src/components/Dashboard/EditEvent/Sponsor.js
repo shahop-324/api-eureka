@@ -16,7 +16,7 @@ import SponsorsListFields from "./SponsorListFields";
 import SponsorDetailsCard from "./SponsorDetailsCard";
 import AddNewSponsor from "./FormComponents/EditSponsorsForms/AddNewSponsor";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSponsors } from "../../../actions";
+import { errorTrackerForCreateTicket, errorTrackerForFetchTickets, fetchSponsors } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
@@ -158,7 +158,10 @@ const Sponsors = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    throw new Error(error);
+    
+    dispatch(errorTrackerForFetchTickets());
+    return dispatch(errorTrackerForCreateTicket());
+    // throw new Error(error);
   }
 
   return (

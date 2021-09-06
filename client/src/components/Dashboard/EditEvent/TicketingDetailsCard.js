@@ -36,6 +36,11 @@ const dispatch=useDispatch();
   const handleClose = () => {
     setOpen(false);
   };
+
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <>
       <div className="ticketing-list-fields-container">
@@ -50,13 +55,11 @@ const dispatch=useDispatch();
               {/* attendee avatar and name */}
               <ConfirmationNumberOutlinedIcon style={{ fill: "#538BF7" }} />
               <div className="ms-3 px-2 registration-name-styled">
-                {props.name}
+                {/* {props.name} */}
+                {truncateText(props.name, 20)}
               </div>
             </div>
           </div>
-          {/* <div className="event-name-d" style={{width: '100%'}}>
-            The Craft Workshop
-          </div> */}
         </div>
         <div
           className="event-visibility-field"
@@ -68,7 +71,8 @@ const dispatch=useDispatch();
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            {props.description}
+            {/* {props.description} */}
+            {truncateText(props.description, 35)}
           </div>
         </div>
         <div

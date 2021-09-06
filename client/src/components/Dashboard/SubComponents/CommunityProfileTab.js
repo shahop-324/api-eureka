@@ -21,63 +21,81 @@ const useStyles = makeStyles((theme) => ({
     // },
   }));
 
-const renderError = ({ error, touched }) => {
-    if (touched && error) {
-      return (
-        <div className="ui error message">
-          <div className="header">{error}</div>
-        </div>
-      );
-    }
+const renderInput = ({
+  input,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "400", fontSize: "0.87rem" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
 };
 
-const renderInput = ({
-    input,
-    meta,
-    type,
-    ariadescribedby,
-    classes,
-    placeholder,
-  }) => {
-    const className = `field ${meta.error && meta.touched ? "error" : ""}`;
-    return (
-      <div className={className}>
-        <input
-          type={type}
-          {...input}
-          aria-describedby={ariadescribedby}
-          className={classes}
-          placeholder={placeholder}
-        />
-        {renderError(meta)}
-      </div>
-    );
-  };
+const renderTextArea = ({
+  input,
+  meta: { touched, error, warning },
 
-  const renderTextArea = ({
-    input,
-    meta,
-    type,
-    ariadescribedby,
-    classes,
-    placeholder,
-  }) => {
-    const className = `field ${meta.error && meta.touched ? "error" : ""}`;
-    return (
-      <div className={className}>
-        <textarea
-          rows="3"
-          type={type}
-          {...input}
-          aria-describedby={ariadescribedby}
-          className={classes}
-          placeholder={placeholder}
-        />
-  
-        {renderError(meta)}
-      </div>
-    );
-  };
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <textarea
+        rows="2"
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+      />
+
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "400", fontSize: "0.87rem" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
+};
 
 const CommunityProfileTab = ({handleSubmit,
     pristine,
@@ -96,14 +114,14 @@ const CommunityProfileTab = ({handleSubmit,
       setOpenSettings(false);
     };
 
-    const { userDetails } = useSelector((state) => state.user);
+    const { communityDetails } = useSelector((state) => state.community);
     let imgKey;
-    if (userDetails) {
-      imgKey = userDetails.image;
+    if (communityDetails) {
+      imgKey = communityDetails.image;
     }
   
     let imgUrl;
-    if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
+    if (imgKey && !imgKey.startsWith("https")) {
       imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
     } else {
       imgUrl = imgKey;
@@ -120,46 +138,35 @@ const CommunityProfileTab = ({handleSubmit,
 
     const onSubmit = (formValues) => {
         // setEditProfileClicked(true);
-        // console.log(formValues);
-        // const ModifiedFormValues = {};
-        // ModifiedFormValues.firstName = formValues.firstName;
-        // ModifiedFormValues.lastName = formValues.lastName;
-        // ModifiedFormValues.headline = formValues.headline;
-        // ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-        // ModifiedFormValues.email = formValues.email;
-        // const groupedSocialHandles = {
-        //   facebook: formValues.facebook,
-        //   twitter: formValues.twitter,
-        //   linkedin: formValues.linkedin,
-        // };
-        // ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
-        // const modifiedInterests = [];
-        // if (formValues.interests) {
-        //   for (let element of formValues.interests) {
-        //     modifiedInterests.push(element.value);
-        //   }
-        // }
-        // ModifiedFormValues.interests = modifiedInterests;
-        // console.log(ModifiedFormValues);
-        // console.log(file);
+        console.log(formValues);
+        const ModifiedFormValues = {};
+        ModifiedFormValues.name = formValues.communityName;
+        ModifiedFormValues.headline = formValues.communityHeadline;
+        ModifiedFormValues.email = formValues.communityEmail;
+        const groupedSocialHandles = {
+          linkedin: formValues.communityLinkedin,
+          facebook: formValues.communityFacebook,
+          twitter: formValues.communityTwitter,
+          website: formValues.communityWebsite,
+        };
+        ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
+         console.log(file);
+        console.log(ModifiedFormValues);
         // dispatch(editUser(ModifiedFormValues, file));
       };
 
-  
-
-
   return (
     <>
-
       <div className="user-account-edit-profile px-4 py-4">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4">
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
                 variant="rounded"
-                alt={"Travis Howard"}
+                alt={communityDetails.name}
                 src={fileToPreview}
                 className={classes.large}
+                style={{objectFit: "contain"}}
               />
             </div>
             <label
@@ -180,19 +187,18 @@ const CommunityProfileTab = ({handleSubmit,
           <div className="row edit-profile-form-row mb-3">
             <div class="form-group">
               <label
-                for="communityHeadline"
+                for="communityName"
                 class="form-label form-label-customized"
               >
                 Community Name
               </label>
               <Field
-                name="lastName"
+                name="communityName"
                 type="text"
                 classes="form-control"
                 component={renderInput}
                 ariadescribedby="emailHelp"
-                placeholder="Doe"
-                label="Last Name"
+                label="communityName"
               />
             </div>
           </div>
@@ -206,13 +212,11 @@ const CommunityProfileTab = ({handleSubmit,
                 Headline
               </label>
               <Field
-                name="headline"
+                name="communityHeadline"
                 type="text"
                 classes="form-control"
                 component={renderTextArea}
-                aria-describedby="emailHelp"
-                placeholder="Hi there! "
-                label="Headline"
+                aria-describedby="communityHeadline"
               />
             </div>
           </div>
@@ -220,39 +224,36 @@ const CommunityProfileTab = ({handleSubmit,
           <div className="row edit-profile-form-row mb-3">
             <div class="form-group">
               <label
-                for="communityHeadline"
+                for="communityEmail"
                 class="form-label form-label-customized"
               >
                 E-mail
               </label>
               <Field
-                name="email"
+                name="communityEmail"
                 type="email"
                 classes="form-control"
                 component={renderInput}
-                ariadescribedby="emailHelp"
-                placeholder="johndoe@gmail.com"
-                label="Email"
+                ariadescribedby="communityEmail"
               />
             </div>
           </div>
 
           <div className="row edit-profile-form-row mb-3">
             <label
-              for="communityHeadline"
+              for="communityLinkedin"
               class="form-label form-label-customized"
             >
               LinkedIn
             </label>
             <div class="form-group">
               <Field
-                name="linkedin"
+                name="communityLinkedin"
                 type="text"
                 classes="form-control"
                 component={renderInput}
-                ariadescribedby="emailHelp"
-                placeholder="www.linkedIn.com/in/JohnDoe/ or JohnDoe"
-                label="Linkedin"
+                ariadescribedby="communityLinkedin"
+                placeholder="www.linkedIn.com/in/community"
               />
             </div>
           </div>
@@ -270,9 +271,8 @@ const CommunityProfileTab = ({handleSubmit,
                 type="text"
                 classes="form-control"
                 component={renderInput}
-                ariadescribedby="emailHelp"
-                placeholder="www.facebook.com/in/JohnDoe/ or JohnDoe"
-                label="Facebook"
+                ariadescribedby="communityFacebook"
+                placeholder="www.facebook.com/in/community"
               />
             </div>
           </div>
@@ -290,9 +290,8 @@ const CommunityProfileTab = ({handleSubmit,
                 type="text"
                 classes="form-control"
                 component={renderInput}
-                ariadescribedby="emailHelp"
-                placeholder="www.twitter.com/in/JohnDoe/ or JohnDoe"
-                label="Twitter"
+                ariadescribedby="communityTwitter"
+                placeholder="www.twitter.com/in/community"
               />
             </div>
           </div>
@@ -310,9 +309,8 @@ const CommunityProfileTab = ({handleSubmit,
                 type="text"
                 classes="form-control"
                 component={renderInput}
-                ariadescribedby="emailHelp"
-                placeholder="www.myDomain.com"
-                label="Website"
+                ariadescribedby="communityWebsite"
+                placeholder="www.communityDomain.com"
               />
             </div>
           </div>
@@ -330,7 +328,7 @@ const CommunityProfileTab = ({handleSubmit,
             <button
               type="button"
               // disabled={pristine || submitting}
-              // onClick={reset}
+              onClick={reset}
               className="col-3 btn btn-outline-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}
             >
@@ -345,57 +343,59 @@ const CommunityProfileTab = ({handleSubmit,
 
 
 const mapStateToProps = (state) => ({
-    // console.log(state.user.userDetails);
     initialValues: {
-      // imgUrl: state.user.userDetails.image
-      //   ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.user.userDetails.image}`
-      //   : " #",
-      // firstName: state.user.userDetails.firstName
-      //   ? state.user.userDetails.firstName
-      //   : "",
-      // lastName: state.user.userDetails.lastName
-      //   ? state.user.userDetails.lastName
-      //   : "",
-      // email: state.user.userDetails.email ? state.user.userDetails.email : "",
-      // interests: state.user.userDetails.interests
-      //   ? state.user.userDetails.interests.map((interest) => {
-      //       return { value: interest, label: interest };
-      //     })
-      //   : "",
-      // linkedin:
-      //   state.user.userDetails.socialMediaHandles &&
-      //   state.user.userDetails.socialMediaHandles.linkedin
-      //     ? state.user.userDetails.socialMediaHandles.linkedin
-      //     : "",
-      // facebook:
-      //   state.user.userDetails.socialMediaHandles &&
-      //   state.user.userDetails.socialMediaHandles.facebook
-      //     ? state.user.userDetails.socialMediaHandles.facebook
-      //     : "",
-      // twitter:
-      //   state.user.userDetails.socialMediaHandles &&
-      //   state.user.userDetails.socialMediaHandles.twitter
-      //     ? state.user.userDetails.socialMediaHandles.twitter
-      //     : "",
-      // website:
-      //   state.user.userDetails.socialMediaHandles &&
-      //   state.user.userDetails.socialMediaHandles.website
-      //     ? state.user.userDetails.socialMediaHandles.website
-      //     : "",
-      // phoneNumber: state.user.userDetails.phoneNumber
-      //   ? state.user.userDetails.phoneNumber
-      //   : "",
-      // headline: state.user.userDetails.headline
-      //   ? state.user.userDetails.headline
-      //   : "",
+      communityName: state.community.communityDetails.name
+        ? state.community.communityDetails.name
+        : "",
+      communityHeadline: state.community.communityDetails.headline
+        ? state.community.communityDetails.headline
+        : "",
+      communityEmail: state.community.communityDetails.email ? state.community.communityDetails.email : "",
+      
+      communityLinkedin:
+        state.community.communityDetails.socialMediaHandles &&
+        state.community.communityDetails.socialMediaHandles.linkedin
+          ? state.community.communityDetails.socialMediaHandles.linkedin
+          : "",
+      communityFacebook:
+        state.community.communityDetails.socialMediaHandles &&
+        state.community.communityDetails.socialMediaHandles.facebook
+          ? state.community.communityDetails.socialMediaHandles.facebook
+          : "",
+      communityTwitter:
+        state.community.communityDetails.socialMediaHandles &&
+        state.community.communityDetails.socialMediaHandles.twitter
+          ? state.community.communityDetails.socialMediaHandles.twitter
+          : "",
+      communityWebsite:
+        state.community.communityDetails.socialMediaHandles &&
+        state.community.communityDetails.socialMediaHandles.website
+          ? state.community.communityDetails.socialMediaHandles.website
+          : "",
     },
   });
+
+
+  const validate = (formValues) => {
+    const errors = {};
+  
+    if (!formValues.communityName) {
+      errors.communityName = "Community name is required";
+    }
+    if (!formValues.communityHeadline) {
+      errors.communityHeadline = "Community headline is required";
+    }
+    if (!formValues.communityEmail) {
+      errors.communityEmail = "Email is required";
+    }
+    return errors;
+  };
 
 export default connect(mapStateToProps)(
     reduxForm({
       form: "editCommunityProfile",
   
-      // validate,
+      validate,
       enableReinitialize: true,
       destroyOnUnmount: false,
     })(CommunityProfileTab)
