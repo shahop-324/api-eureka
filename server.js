@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const LoggedInUsers = require("./models/loggedInUsers");
+const MailList = require("./models/emailListModel");
 process.on("uncaughtException", (err) => {
   console.log(err);
   console.log("UNCAUGHT Exception! Shutting down ...");
@@ -1251,7 +1252,7 @@ io.on("connect", (socket) => {
 
     async ({ ModifiedFormValues }) => {
       console.log("hey hitting googleSignIn", ModifiedFormValues);
-      const { googleId, firstName, lastName, image, email } =
+      const { googleId, firstName, lastName, image, email, referralCode } =
         ModifiedFormValues;
       const user = await User.findOne({ googleId: googleId });
       if (user) {
@@ -1285,38 +1286,81 @@ io.on("connect", (socket) => {
           data: { user },
         });
       } else {
-        const user = await new User({
-          googleId: googleId,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          policySigned: true,
-          subscribedToMailList: true,
-          image: image,
-        }).save({ validateModifiedOnly: true });
+        let referrer;
+        if (referralCode) {
+          referrer = await User.findOneAndUpdate(
+            { referralCode: referralCode },
 
-        const name = `${firstName} ${lastName}`;
-        await MailList.create({
-          name: name,
-          email: email,
-        });
-        await LoggedInUsers.create({
-          userId: user._id,
-        });
+            { $inc: { signupUsingReferral: 1 } },
 
-        const token = signToken(user._id);
+            {
+              new: true,
+              validateModifiedOnly: true,
+            }
+          );
 
-        console.log(token, "hey hitting logging in server.js");
-        socket.emit("newGoogleLogin", {
-          token,
-          data: { user },
-        });
+          if (referrer) {
+            const user = await new User({
+              googleId: googleId,
+              email: email,
+              firstName: firstName,
+              lastName: lastName,
+              policySigned: true,
+              subscribedToMailList: true,
+              image: image,
+              referrer: referrer._id,
+            }).save({ validateModifiedOnly: true });
+            const name = `${firstName} ${lastName}`;
+            await MailList.create({
+              name: name,
+              email: email,
+            });
+            await LoggedInUsers.create({
+              userId: user._id,
+            });
+
+            const token = signToken(user._id);
+
+            console.log(token, "hey hitting logging in server.js");
+            socket.emit("newGoogleLogin", {
+              token,
+              data: { user },
+            });
+          }
+        } else {
+          const user = await new User({
+            googleId: googleId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            policySigned: true,
+            subscribedToMailList: true,
+            image: image,
+          }).save({ validateModifiedOnly: true });
+          const name = `${firstName} ${lastName}`;
+          await MailList.create({
+            name: name,
+            email: email,
+          });
+          await LoggedInUsers.create({
+            userId: user._id,
+          });
+
+          const token = signToken(user._id);
+
+          console.log(token, "hey hitting logging in server.js");
+          socket.emit("newGoogleLogin", {
+            token,
+            data: { user },
+          });
+        }
       }
     }
   );
 
   socket.on("linkedinSignIn", async ({ result }) => {
-    const { linkedinId, firstName, lastName, email, image } = result;
+    const { linkedinId, firstName, lastName, email, image, referralCode } =
+      result;
     console.log(result);
     const user = await User.findOne({
       linkedinId: linkedinId,
@@ -1353,32 +1397,75 @@ io.on("connect", (socket) => {
       // console.log(existingUser);
       // createSendToken(existingUser, 200, req, res);
     } else {
-      const user = await new User({
-        linkedinId: linkedinId,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        policySigned: true,
-        subscribedToMailList: true,
-        image: image,
-      }).save({ validateModifiedOnly: true });
+      let referrer;
+      if (referralCode) {
+        referrer = await User.findOneAndUpdate(
+          { referralCode: referralCode },
 
-      const name = `${firstName} ${lastName}`;
-      await MailList.create({
-        name: name,
-        email: email,
-      });
-      await LoggedInUsers.create({
-        userId: user._id,
-      });
+          { $inc: { signupUsingReferral: 1 } },
 
-      const token = signToken(user._id);
+          {
+            new: true,
+            validateModifiedOnly: true,
+          }
+        );
+        if (referrer) {
+          const user = await new User({
+            linkedinId: linkedinId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            policySigned: true,
+            subscribedToMailList: true,
+            image: image,
+            referrer: referrer._id,
+          }).save({ validateModifiedOnly: true });
 
-      console.log(token, "hey hitting logging in server.js");
-      socket.emit("newLinkedinLogin", {
-        token,
-        data: { user },
-      });
+          const name = `${firstName} ${lastName}`;
+          await MailList.create({
+            name: name,
+            email: email,
+          });
+          await LoggedInUsers.create({
+            userId: user._id,
+          });
+
+          const token = signToken(user._id);
+
+          console.log(token, "hey hitting logging in server.js");
+          socket.emit("newLinkedinLogin", {
+            token,
+            data: { user },
+          });
+        } else {
+          const user = await new User({
+            linkedinId: linkedinId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            policySigned: true,
+            subscribedToMailList: true,
+            image: image,
+          }).save({ validateModifiedOnly: true });
+
+          const name = `${firstName} ${lastName}`;
+          await MailList.create({
+            name: name,
+            email: email,
+          });
+          await LoggedInUsers.create({
+            userId: user._id,
+          });
+
+          const token = signToken(user._id);
+
+          console.log(token, "hey hitting logging in server.js");
+          socket.emit("newLinkedinLogin", {
+            token,
+            data: { user },
+          });
+        }
+      }
     }
   });
 

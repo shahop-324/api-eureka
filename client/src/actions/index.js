@@ -156,21 +156,22 @@ export const signUp = (formValues) => async (dispatch) => {
 export const errorTrackerForSignUp = () => async (dispatch, getState) => {
   dispatch(authActions.disabledError());
 };
-export const linkedinSignIn = (code, intent, eventId) => async (dispatch) => {
-  try {
-    const res = await eureka.get(`/getUserCredentials/?code=${code}`);
-    console.log(res.data);
-     const result=res.data.userProfile;
-    // // const formValues=res.data;
-    // res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
-    //   ...res.data,
-    // });
-
-    socket.emit("linkedinSignIn", {  result});
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const linkedinSignIn =
+  (code, intent, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await eureka.get(`/getUserCredentials/?code=${code}`);
+      console.log(res.data);
+      const result = res.data.userProfile;
+      // // const formValues=res.data;
+      // res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
+      //   ...res.data,
+      // });
+      result.referralCode = getState().user.referralCode;
+      socket.emit("linkedinSignIn", { result });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
   // console.log(res.data.user);

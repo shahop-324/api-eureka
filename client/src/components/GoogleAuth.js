@@ -35,6 +35,9 @@ class GoogleAuth extends React.Component {
       ModifiedFormValues.image = profile.getImageUrl();
       ModifiedFormValues.googleId = profile.getId();
       ModifiedFormValues.email = profile.getEmail();
+
+      ModifiedFormValues.referralCode = this.props.referredId;
+
       socket.emit("googleSignIn", { ModifiedFormValues });
 
       // this.props.googleSignIn(
@@ -112,7 +115,10 @@ class GoogleAuth extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { isSignedIn: state.auth.isSignedIn };
+  return {
+    isSignedIn: state.auth.isSignedIn,
+    referredId: state.user.referredId,
+  };
 };
 
 export default connect(mapStateToProps, {
