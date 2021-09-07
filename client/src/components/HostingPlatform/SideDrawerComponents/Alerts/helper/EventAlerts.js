@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Avatar, IconButton, makeStyles } from "@material-ui/core";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import { Avatar, makeStyles } from "@material-ui/core";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
 
-import Faker from "faker";
 import Loader from "./../../../../Loader";
 
 import "./../../../Styles/root.scss";
