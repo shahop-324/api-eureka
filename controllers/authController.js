@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const Community = require("../models/communityModel");
 const MailList = require("../models/emailListModel");
-const LoggedInUsers = require("../models/loggedInUsers");
 const SalesDepartment = require("../models/salesDepartmentModel");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError.js");
@@ -12,7 +11,7 @@ const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
-
+const LoggedInUsers = require("../models/loggedInUsers");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -123,9 +122,8 @@ exports.signup = catchAsync(async (req, res) => {
         name: name,
         email: req.body.email,
       });
-
       await LoggedInUsers.create({
-        userId: newUser._id,
+        userId: user._id,
       });
 
       createSendToken(newUser, 201, req, res);
@@ -150,230 +148,204 @@ exports.signup = catchAsync(async (req, res) => {
       name: name,
       email: req.body.email,
     });
-
     await LoggedInUsers.create({
-      userId: newUser._id,
+      userId: user._id,
     });
 
     createSendToken(newUser, 201, req, res);
   }
+  // create new user
 });
 
-// exports.login = catchAsync(async (req, res, next) => {
-//   const { email, password } = req.body;
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-//   // 1) Check if email and password exist
-//   if (!email || !password) {
-//     return next(new AppError("Please provide email and password", 400));
-//   }
+  // 1) Check if email and password exist
+  if (!email || !password) {
+    return next(new AppError("Please provide email and password", 400));
+  }
 
-//   // 2) Check if user exists && password is correct
-//   const user = await User.findOne({ email: email }).select("+password");
+  // 2) Check if user exists && password is correct
+  const user = await User.findOne({ email: email }).select("+password");
 
-//   if (!user || !(await user.correctPassword(password, user.password))) {
-//     return next(new AppError("Incorrect email or password", 401));
-//   }
-//   // await LoggedInUsers.create({
-//   //   userId: user._id,
-//   // });
-//   //1. First find by user._id
-//   //2.if it is present in loggedInUsers
-//   //3. logout the first same user and login him.
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError("Incorrect email or password", 401));
+  }
 
-//   const isUserLoggedInAlready = await LoggedInUsers.find({ userId: user._id });
-//   if (isUserLoggedInAlready) {
-//     // await LoggedInUsers.findOneAndDelete({ userId: user._id });
-//     // io.on("connection", (socket) => {
-//     //   socket.emit("logOutUser", { userId: user._id });
-//     // });
-//   }
+  // 3) If everything is ok, send json web token to client
+  createSendToken(user, 200, req, res);
+});
 
-//   // 3) If everything is ok, send json web token to client
-// });
+exports.googleSignIn = catchAsync(async (req, res, next) => {
+  // const { profile } = req.body;
+  // console.log(profile);
+  // 1) Check if email and password exist
+  // console.log(req.body);
+  // Create new referral code
+  const MyReferralCode = nanoid(10);
+  // check if someone referred this new user
+  let referrer;
 
-// exports.googleSignIn = catchAsync(async (req, res, next) => {
-//   // const { profile } = req.body;
-//   // console.log(profile);
-//   // 1) Check if email and password exist
-//   // console.log(req.body);
-//   // Create new referral code
-//   const MyReferralCode = nanoid(10);
-//   // check if someone referred this new user
-//   let referrer;
+  if (req.body.referralCode) {
+    referrer = await User.findOneAndUpdate(
+      { referralCode: req.body.referralCode },
 
-//   if (req.body.referralCode) {
-//     referrer = await User.findOneAndUpdate(
-//       { referralCode: req.body.referralCode },
+      { $inc: { signupUsingReferral: 1 } },
 
-//       { $inc: { signupUsingReferral: 1 } },
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    );
+    if (referrer) {
+      const existingUser = await User.findOne({ googleId: req.body.googleId });
+      if (existingUser) {
+        createSendToken(existingUser, 200, req, res);
+      } else {
+        const user = await new User({
+          googleId: req.body.googleId,
+          email: req.body.email,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: req.body.image,
+          referralCode: MyReferralCode,
+          referrer: referrer._id,
+          signupUsingReferral: 0,
+          upgrades: 0,
+          credit: 0,
+        }).save({ validateModifiedOnly: true });
 
-//       {
-//         new: true,
-//         validateModifiedOnly: true,
-//       }
-//     );
-//     if (referrer) {
-//       const existingUser = await User.findOne({ googleId: req.body.googleId });
-//       if (existingUser) {
-//         //  we already have a record with the given req.body ID
-//         //done(null, existingUser);
-//         // console.log(existingUser);
-//         createSendToken(existingUser, 200, req, res);
-//       } else {
-//         const user = await new User({
-//           googleId: req.body.googleId,
-//           email: req.body.email,
-//           firstName: req.body.firstName,
-//           lastName: req.body.lastName,
-//           policySigned: true,
-//           subscribedToMailList: true,
-//           image: req.body.image,
-//           referralCode: MyReferralCode,
-//           referrer: referrer._id,
-//           signupUsingReferral: 0,
-//           upgrades: 0,
-//           credit: 0,
-//         }).save({ validateModifiedOnly: true });
+        const name = `${req.body.firstName} ${req.body.lastName}`;
+        await MailList.create({
+          name: name,
+          email: req.body.email,
+        });
 
-//         const name = `${req.body.firstName} ${req.body.lastName}`;
-//         await MailList.create({
-//           name: name,
-//           email: req.body.email,
-//         });
-//         await LoggedInUsers.create({
-//           userId: user._id,
-//         });
+        createSendToken(user, 201, req, res);
+      }
+    }
+  } else {
+    const existingUser = await User.findOne({ googleId: req.body.googleId });
+    if (existingUser) {
+      //  we already have a record with the given req.body ID
+      //done(null, existingUser);
+      // console.log(existingUser);
+      createSendToken(existingUser, 200, req, res);
+    } else {
+      const user = await new User({
+        googleId: req.body.googleId,
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        policySigned: true,
+        subscribedToMailList: true,
+        image: req.body.image,
+      }).save({ validateModifiedOnly: true });
 
-//         createSendToken(user, 201, req, res);
-//       }
-//     }
-//   } else {
-//     const existingUser = await User.findOne({ googleId: req.body.googleId });
-//     if (existingUser) {
-//       //  we already have a record with the given req.body ID
-//       //done(null, existingUser);
-//       // console.log(existingUser);
-//       createSendToken(existingUser, 200, req, res);
-//     } else {
-//       const user = await new User({
-//         googleId: req.body.googleId,
-//         email: req.body.email,
-//         firstName: req.body.firstName,
-//         lastName: req.body.lastName,
-//         policySigned: true,
-//         subscribedToMailList: true,
-//         image: req.body.image,
-//       }).save({ validateModifiedOnly: true });
+      const name = `${req.body.firstName} ${req.body.lastName}`;
+      await MailList.create({
+        name: name,
+        email: req.body.email,
+      });
 
-//       const name = `${req.body.firstName} ${req.body.lastName}`;
-//       await MailList.create({
-//         name: name,
-//         email: req.body.email,
-//       });
-//       await LoggedInUsers.create({
-//         userId: user._id,
-//       });
-//       createSendToken(user, 201, req, res);
-//     }
-//   }
+      createSendToken(user, 201, req, res);
+    }
+  }
 
-//   // 3) If everything is ok, send json web token to client
-//   // createSendToken(user, 200, req, res);
-// });
+  // 3) If everything is ok, send json web token to client
+  // createSendToken(user, 200, req, res);
+});
 
-// exports.linkedinSignIn = catchAsync(async (req, res, next) => {
-//   // const { profile } = req.body;
-//   // console.log(profile);
-//   // 1) Check if email and password exist
-//   console.log(req.body.userProfile, "Hey");
-//   // Create new referral code
-//   const MyReferralCode = nanoid(10);
-//   // check if someone referred this new user
-//   let referrer;
+exports.linkedinSignIn = catchAsync(async (req, res, next) => {
+  // const { profile } = req.body;
+  // console.log(profile);
+  // 1) Check if email and password exist
+  console.log(req.body.userProfile, "Hey");
+  // Create new referral code
+  const MyReferralCode = nanoid(10);
+  // check if someone referred this new user
+  let referrer;
 
-//   if (req.body.userProfile.referralCode) {
-//     referrer = await User.findOneAndUpdate(
-//       { referralCode: req.body.userProfile.referralCode },
+  if (req.body.userProfile.referralCode) {
+    referrer = await User.findOneAndUpdate(
+      { referralCode: req.body.userProfile.referralCode },
 
-//       { $inc: { signupUsingReferral: 1 } },
+      { $inc: { signupUsingReferral: 1 } },
 
-//       {
-//         new: true,
-//         validateModifiedOnly: true,
-//       }
-//     );
-//     if (referrer) {
-//       const existingUser = await User.findOne({
-//         linkedinId: req.body.userProfile.linkedinId,
-//       });
-//       if (existingUser) {
-//         //  we already have a record with the given req.body.userProfile ID
-//         //done(null, existingUser);
-//         // console.log(existingUser);
-//         createSendToken(existingUser, 200, req, res);
-//       } else {
-//         const user = await new User({
-//           linkedinId: req.body.userProfile.linkedinId,
-//           email: req.body.userProfile.email,
-//           firstName: req.body.userProfile.firstName,
-//           lastName: req.body.userProfile.lastName,
-//           policySigned: true,
-//           subscribedToMailList: true,
-//           image: req.body.userProfile.image,
-//           referralCode: MyReferralCode,
-//           referrer: referrer._id,
-//           signupUsingReferral: 0,
-//           upgrades: 0,
-//           credit: 0,
-//         }).save({ validateModifiedOnly: true });
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    );
+    if (referrer) {
+      const existingUser = await User.findOne({
+        linkedinId: req.body.userProfile.linkedinId,
+      });
+      if (existingUser) {
+        //  we already have a record with the given req.body.userProfile ID
+        //done(null, existingUser);
+        // console.log(existingUser);
+        createSendToken(existingUser, 200, req, res);
+      } else {
+        const user = await new User({
+          linkedinId: req.body.userProfile.linkedinId,
+          email: req.body.userProfile.email,
+          firstName: req.body.userProfile.firstName,
+          lastName: req.body.userProfile.lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: req.body.userProfile.image,
+          referralCode: MyReferralCode,
+          referrer: referrer._id,
+          signupUsingReferral: 0,
+          upgrades: 0,
+          credit: 0,
+        }).save({ validateModifiedOnly: true });
 
-//         const name = `${req.body.userProfile.firstName} ${req.body.userProfile.lastName}`;
-//         await MailList.create({
-//           name: name,
-//           email: req.body.userProfile.email,
-//         });
-//         await LoggedInUsers.create({
-//           userId: user._id,
-//         });
-//         createSendToken(user, 201, req, res);
-//       }
-//     }
-//   } else {
-//     const existingUser = await User.findOne({
-//       linkedinId: req.body.userProfile.linkedinId,
-//     });
-//     if (existingUser) {
-//       //  we already have a record with the given req.body.userProfile ID
-//       //done(null, existingUser);
-//       // console.log(existingUser);
-//       createSendToken(existingUser, 200, req, res);
-//     } else {
-//       const user = await new User({
-//         linkedinId: req.body.userProfile.linkedinId,
-//         email: req.body.userProfile.email,
-//         firstName: req.body.userProfile.firstName,
-//         lastName: req.body.userProfile.lastName,
-//         policySigned: true,
-//         subscribedToMailList: true,
-//         image: req.body.userProfile.image,
-//       }).save({ validateModifiedOnly: true });
+        const name = `${req.body.userProfile.firstName} ${req.body.userProfile.lastName}`;
+        await MailList.create({
+          name: name,
+          email: req.body.userProfile.email,
+        });
 
-//       const name = `${req.body.userProfile.firstName} ${req.body.userProfile.lastName}`;
-//       await MailList.create({
-//         name: name,
-//         email: req.body.userProfile.email,
-//       });
-//       await LoggedInUsers.create({
-//         userId: user._id,
-//       });
+        createSendToken(user, 201, req, res);
+      }
+    }
+  } else {
+    const existingUser = await User.findOne({
+      linkedinId: req.body.userProfile.linkedinId,
+    });
+    if (existingUser) {
+      //  we already have a record with the given req.body.userProfile ID
+      //done(null, existingUser);
+      // console.log(existingUser);
+      createSendToken(existingUser, 200, req, res);
+    } else {
+      const user = await new User({
+        linkedinId: req.body.userProfile.linkedinId,
+        email: req.body.userProfile.email,
+        firstName: req.body.userProfile.firstName,
+        lastName: req.body.userProfile.lastName,
+        policySigned: true,
+        subscribedToMailList: true,
+        image: req.body.userProfile.image,
+      }).save({ validateModifiedOnly: true });
 
-//       createSendToken(user, 201, req, res);
-//     }
-//   }
+      const name = `${req.body.userProfile.firstName} ${req.body.userProfile.lastName}`;
+      await MailList.create({
+        name: name,
+        email: req.body.userProfile.email,
+      });
 
-//   // 3) If everything is ok, send json web token to client
-//   // createSendToken(user, 200, req, res);
-// });
+      createSendToken(user, 201, req, res);
+    }
+  }
+
+  // 3) If everything is ok, send json web token to client
+  // createSendToken(user, 200, req, res);
+});
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there

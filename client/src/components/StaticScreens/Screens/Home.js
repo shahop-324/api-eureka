@@ -861,12 +861,10 @@ const Home = () => {
 
       {/* Request Demo form here */}
 
-      
-        <RequestDemo
-          handleCloseRequestDemo={handleCloseRequestDemo}
-          openDemoForm={openDemoForm}
-        />
-      
+      <RequestDemo
+        handleCloseRequestDemo={handleCloseRequestDemo}
+        openDemoForm={openDemoForm}
+      />
     </>
   );
 };

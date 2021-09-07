@@ -1248,7 +1248,11 @@ io.on("connect", (socket) => {
 
   socket.on(
     "googleSignIn",
-    async ({ firstName, lastName, image, googleId, email }) => {
+
+    async ({ ModifiedFormValues }) => {
+      console.log("hey hitting googleSignIn", ModifiedFormValues);
+      const { googleId, firstName, lastName, image, email } =
+        ModifiedFormValues;
       const user = await User.findOne({ googleId: googleId });
       if (user) {
         const isUserLoggedInAlready = await LoggedInUsers.find({
@@ -1311,77 +1315,72 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on(
-    "linkedinSignIn",
-    async ({ linkedinId, firstName, lastName, email, image }) => {
-      console.log("hey hitting linkedinSignIn", firstName);
-      const user = await User.findOne({
-        linkedinId: linkedinId,
+  socket.on("linkedinSignIn", async ({ result }) => {
+    const { linkedinId, firstName, lastName, email, image } = result;
+    console.log(result);
+    const user = await User.findOne({
+      linkedinId: linkedinId,
+    });
+    if (user) {
+      const isUserLoggedInAlready = await LoggedInUsers.find({
+        userId: user._id,
       });
-      if (user) {
-        const isUserLoggedInAlready = await LoggedInUsers.find({
+      console.log(isUserLoggedInAlready[0], "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj");
+
+      if (isUserLoggedInAlready.length > 0) {
+        socket.broadcast.emit("logOutUser", {
           userId: user._id,
+          message: "You have been logged In from Other device",
         });
-        console.log(
-          isUserLoggedInAlready[0],
-          "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        );
-
-        if (isUserLoggedInAlready.length > 0) {
-          socket.broadcast.emit("logOutUser", {
-            userId: user._id,
-            message: "You have been logged In from Other device",
-          });
-          await LoggedInUsers.findOneAndDelete({
-            userId: user.userId,
-          });
-        }
-
-        await LoggedInUsers.create({
-          userId: user._id,
-        });
-
-        const token = signToken(user._id);
-
-        console.log(token, "hey hitting logging in server.js");
-        socket.emit("newLinkedinLogin", {
-          token,
-          data: { user },
-        });
-        //  we already have a record with the givenuserProfile ID
-        //done(null, existingUser);
-        // console.log(existingUser);
-        // createSendToken(existingUser, 200, req, res);
-      } else {
-        const user = await new User({
-          linkedinId: linkedinId,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          policySigned: true,
-          subscribedToMailList: true,
-          image: image,
-        }).save({ validateModifiedOnly: true });
-
-        const name = `${firstName} ${lastName}`;
-        await MailList.create({
-          name: name,
-          email: email,
-        });
-        await LoggedInUsers.create({
-          userId: user._id,
-        });
-
-        const token = signToken(user._id);
-
-        console.log(token, "hey hitting logging in server.js");
-        socket.emit("newLinkedinLogin", {
-          token,
-          data: { user },
+        await LoggedInUsers.findOneAndDelete({
+          userId: user.userId,
         });
       }
+
+      await LoggedInUsers.create({
+        userId: user._id,
+      });
+
+      const token = signToken(user._id);
+
+      console.log(token, "hey hitting logging in server.js");
+      socket.emit("newLinkedinLogin", {
+        token,
+        data: { user },
+      });
+      //  we already have a record with the givenuserProfile ID
+      //done(null, existingUser);
+      // console.log(existingUser);
+      // createSendToken(existingUser, 200, req, res);
+    } else {
+      const user = await new User({
+        linkedinId: linkedinId,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        policySigned: true,
+        subscribedToMailList: true,
+        image: image,
+      }).save({ validateModifiedOnly: true });
+
+      const name = `${firstName} ${lastName}`;
+      await MailList.create({
+        name: name,
+        email: email,
+      });
+      await LoggedInUsers.create({
+        userId: user._id,
+      });
+
+      const token = signToken(user._id);
+
+      console.log(token, "hey hitting logging in server.js");
+      socket.emit("newLinkedinLogin", {
+        token,
+        data: { user },
+      });
     }
-  );
+  });
 
   socket.on("logOut", async (user) => {
     console.log("hey hitting logout user in server.js");

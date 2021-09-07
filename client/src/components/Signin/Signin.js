@@ -196,10 +196,13 @@ const Signin = (props) => {
                 </div>
                 {/* <div className="d-flex flex-row align-items-center justify-content-center"> */}
 
-                <GoogleAuth />
+                <GoogleAuth intent={params.intent} eventId={params.eventId} />
 
                 <div className="mb-3">
-                  <LinkedinAuth />
+                  <LinkedinAuth
+                    intent={params.intent}
+                    eventId={params.eventId}
+                  />
                 </div>
 
                 <div

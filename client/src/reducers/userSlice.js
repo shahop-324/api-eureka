@@ -12,7 +12,7 @@ const userSlice = createSlice({
     currentlyJoinedChair: null,
     isLoading: true,
     error: false,
-    referredId:null,
+    referredId: null,
     succeded: false,
   },
 
@@ -21,9 +21,8 @@ const userSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
-    FetchReferralCode(state,action)
-    {
-      state.referredUserId=action.payload.referredUserId
+    FetchReferralCode(state, action) {
+      state.referredId = action.payload.referredId;
     },
     startLoading(state) {
       state.isLoading = true;
