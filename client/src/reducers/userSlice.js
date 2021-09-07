@@ -22,7 +22,7 @@ const userSlice = createSlice({
       state.isLoading = false;
     },
     FetchReferralCode(state, action) {
-      state.referredId = action.payload.referredId;
+      state.referredId = action.payload.referredUserId;
     },
     startLoading(state) {
       state.isLoading = true;

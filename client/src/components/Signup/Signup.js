@@ -97,14 +97,14 @@ const Signup = (props) => {
   }, [dispatch, error]);
 
   const { handleSubmit } = props;
-  const { referredUserId } = useSelector((state) => state.user);
+  const { referredId } = useSelector((state) => state.user);
 
   const onSubmit = (formValues) => {
     // e.preventDefault();
     setSignupClicked(true);
 
-    if (referredUserId) {
-      formValues.referrralCode = referredUserId;
+    if (referredId) {
+      formValues.referralCode = referredId;
       dispatch(signUp(formValues));
     } else {
       dispatch(signUp(formValues));

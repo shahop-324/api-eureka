@@ -32,7 +32,10 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import { useSnackbar } from "notistack";
-
+const { REACT_APP_MY_ENV } = process.env;
+// const BaseURL = REACT_APP_MY_ENV
+//   ? "http://localhost:3000/api-eureka/eureka/v1/"
+//   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -172,10 +175,16 @@ const AvatarMenu = () => {
     });
   };
 
-  const referralLink = `https://www.evenz.in/?ref=${referralCode}`;
+  const referralLink = REACT_APP_MY_ENV
+    ? `http://localhost:3001/?ref=${referralCode}`
+    : `https://www.evenz.in/?ref=${referralCode}`;
+  // const referralLink = `https://www.evenz.in/?ref=${referralCode}`;
 
   return (
-    <div style={{ zIndex: "1000000000000000000" }} className={`${classes.root}`}>
+    <div
+      style={{ zIndex: "1000000000000000000" }}
+      className={`${classes.root}`}
+    >
       <div>
         <Button
           style={{ padding: "0" }}
