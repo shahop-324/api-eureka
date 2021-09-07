@@ -2,7 +2,6 @@ import React from "react";
 import "./../Styles/root.scss";
 
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
-import GroupIcon from "@material-ui/icons/Group";
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
@@ -13,10 +12,6 @@ import { signOut } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
-
-import InfoDeskPNG from "./../../../assets/images/information-desk.png";
-
-
 
 const SideNav = (props) => {
   const userDetails = useSelector((state) => state.user.userDetails);
@@ -90,34 +85,6 @@ const SideNav = (props) => {
               Lobby
             </div>
           </div>
-
-          {/* <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleSessionsClick}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "1" ? "active-wrapper-h" : "")
-              }
-            >
-              <GroupIcon
-                className={
-                  "icon-btn-h " +
-                  (props.activeIndex === "1" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (props.activeIndex === "1" ? "icon-btn-text-active-h" : "")
-              }
-            >
-              Sessions
-            </div>
-          </div> */}
-
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={props.handleNetworkingClick}

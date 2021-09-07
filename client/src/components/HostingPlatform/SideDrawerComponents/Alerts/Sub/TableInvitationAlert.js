@@ -41,10 +41,6 @@ const TableInvitationAlert = () => {
           <div className="alert-text mb-3">
             Invited you to Table 24 <b> Artificial Intelligence </b> 
           </div>
-  
-          <button className="btn btn-outline-primary btn-outline-text" style={{width: "100%"}}>
-            See details
-          </button>
         </div>
       </>
     );

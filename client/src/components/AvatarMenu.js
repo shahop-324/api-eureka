@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvatarMenu = () => {
+const AvatarMenu = ({withCommunity, withCarot}) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const referralCode = useSelector((state) => state.auth.referralCode);
@@ -147,6 +147,8 @@ const AvatarMenu = () => {
       imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
     }
   }
+
+  
 
   const renderCommunities = (communities, handleClose) => {
     return communities.map((community) => {
