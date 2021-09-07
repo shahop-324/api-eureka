@@ -4,6 +4,8 @@ import "./../../../../../index.css";
 import "./../../../Styles/root.scss";
 import socket from "./../../../service/socket";
 import { useSelector } from "react-redux";
+import { Avatar } from "@material-ui/core";
+import Faker from 'faker';
 
 function MyTimer({ expiryTimestamp, markPollAsExpired }) {
   const { seconds, minutes } = useTimer({
@@ -81,7 +83,35 @@ const PollComponent = ({
   return (
     <>
       <div className="poll-element-wrapper p-3 mb-3">
-        <div className="poll-question mb-4">{question}</div>
+
+      <div
+            className=" mb-4"
+            style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
+          >
+            <Avatar src={Faker.image.avatar()} alt={Faker.name.findName()} variant="rounded" />
+            <div
+              className="chat-box-name ms-3"
+              style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
+            >
+              <div>{Faker.name.findName()}</div>
+
+              <div
+                style={{
+                  fontWeight: "500",
+                  color: "#4B4B4B",
+                  fontSize: "0.7rem",
+                }}
+                className="d-flex flex-row align-items-center justify-content-between"
+              >
+                <div>Product Manager, Evenz</div>
+
+                <div>3m ago</div>
+              </div>
+            </div>
+          </div>
+
+
+        <div className="poll-question mb-4">Q. <span style={{fontSize: "0.9rem"}}> {question} </span>  </div>
 
         {option_1 ? (
           <div

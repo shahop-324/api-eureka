@@ -47,8 +47,6 @@ const GeneralAlerts = (props) => {
     (state) => state.eventAlert
   );
 
-  const [visibility, setVisibility] = useState("none");
-
   const renderAlertsList = (eventAlerts) => {
     if (!eventAlerts) return;
     return eventAlerts
@@ -58,33 +56,7 @@ const GeneralAlerts = (props) => {
         return (
           <div
             className="alert-element-container px-2 py-2 mb-3"
-            onMouseEnter={() => {
-              setVisibility("inline-block");
-            }}
-            onMouseLeave={() => {
-              setVisibility("none");
-            }}
           >
-            <div
-              className="chat-msg-hover-elm flex-row align-items-center justify-content-between px-2 py-1"
-              style={{ display: visibility }}
-            >
-              <EditRoundedIcon
-                onClick={() => {
-                  // createReplyWidget(name, image, msgText);
-                }}
-                className="chat-msg-hover-icon me-2"
-                style={{ display: visibility }}
-              />
-              <DeleteOutlineRoundedIcon
-                onClick={() => {
-                  // setOpenDelete(true)
-                }}
-                className="chat-msg-hover-icon"
-                style={{ display: visibility }}
-              />
-            </div>
-
             <div className="p-2 d-flex flex-row align-items-center mb-2">
               <Avatar
                 src={alert.hostImage}

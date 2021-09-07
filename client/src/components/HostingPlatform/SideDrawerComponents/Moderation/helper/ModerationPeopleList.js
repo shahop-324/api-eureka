@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 
 import "./../../../Styles/root.scss";
 import { makeStyles } from "@material-ui/core";
+import ReportActions from "../Sub/ReportActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +24,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ModerationPeopleList = () => {
+
+  const [openActions, setOpenActions] = useState(false);
+
+  const handleOpenActions = () => {
+    setOpenActions(true);
+  }
+  const handleCloseActions = () => {
+    setOpenActions(false);
+  }
+
   const classes = useStyles();
   return (
     <>
@@ -58,14 +69,17 @@ const ModerationPeopleList = () => {
             </div>
 
             <button
+            onClick={() => {handleOpenActions()}}
               className="btn btn-outline-text btn-outline-primary"
               style={{ width: "100%" }}
             >
-              Remove from event
+              Take action
             </button>
           </div>
         </div>
       </div>
+
+      <ReportActions open={openActions} handleClose={handleCloseActions} />
     </>
   );
 };

@@ -12,7 +12,6 @@ import Instagram from "@material-ui/icons/Instagram";
 import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 
 import "./../../../Styles/peopleProfile.scss";
-
 import Faker from "faker";
 import Ripple from "../../../../ActiveStatusRipple";
 import ScheduleOneToOneCallForm from "../../Chat/Sub/ScheduleOneToOneCallForm";

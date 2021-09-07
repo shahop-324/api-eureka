@@ -5,7 +5,7 @@ import "./../../../Styles/chatComponent.scss";
 import ReplyRoundedIcon from "@material-ui/icons/ReplyRounded";
 import MoreHorizRoundedIcon from "@material-ui/icons/MoreHorizRounded";
 import ReportOutlinedIcon from "@material-ui/icons/ReportOutlined";
-import DeleteOutlineRoundedIcon from '@material-ui/icons/DeleteOutlineRounded';
+import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
 
 import SentimentSatisfiedRoundedIcon from "@material-ui/icons/SentimentSatisfiedRounded";
 import ReportRoundedIcon from "@material-ui/icons/ReportRounded";
@@ -20,31 +20,31 @@ import Emoji8 from "./../../../../../assets/images/emoji8.png";
 import ReportMsg from "./ReportMsg";
 import DeleteMsg from "./DeleteMsg";
 
-
-
 const ChatMsgElement = ({
   name,
   image,
   msgText,
   forReply,
   createReplyWidget,
+  showOptions,
 }) => {
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-const [visibility, setVisibility] = useState("none");
+  const [visibility, setVisibility] = useState("none");
 
-const [openDelete, setOpenDelete] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-const handleClose = () => {
-  setOpen(false);
-}
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
 
-const handleCloseDelete = () => {
-  setOpenDelete(false);
-}
-
-  
+  // if(!showOptions) {
+  //   setVisibility("none");
+  // }
 
   return (
     <>
@@ -165,21 +165,24 @@ const handleCloseDelete = () => {
                 style={{ display: visibility }}
               />
               <ReportOutlinedIcon
-              onClick={() => {
-                setOpen(true)
-              }}
+                onClick={() => {
+                  setOpen(true);
+                }}
                 className="chat-msg-hover-icon me-2"
                 style={{ display: visibility }}
               />
               <DeleteOutlineRoundedIcon
-              onClick={() => {
-                setOpenDelete(true)
-              }}
+                onClick={() => {
+                  setOpenDelete(true);
+                }}
                 className="chat-msg-hover-icon"
                 style={{ display: visibility }}
               />
             </div>
-            <div className="chat-msg-text ms-3 p-3" style={{borderTopLeftRadius: "0"}}>
+            <div
+              className="chat-msg-text ms-3 p-3"
+              style={{ borderTopLeftRadius: "0" }}
+            >
               <div>{msgText}</div>
             </div>
           </div>
@@ -187,9 +190,21 @@ const handleCloseDelete = () => {
       </div>
 
       {/*  */}
-      <ReportMsg name={name} image={image} msgText={msgText} open={open} handleClose={handleClose}/>
+      <ReportMsg
+        name={name}
+        image={image}
+        msgText={msgText}
+        open={open}
+        handleClose={handleClose}
+      />
 
-      <DeleteMsg name={name} image={image} msgText={msgText} open={openDelete} handleClose={handleCloseDelete}/>
+      <DeleteMsg
+        name={name}
+        image={image}
+        msgText={msgText}
+        open={openDelete}
+        handleClose={handleCloseDelete}
+      />
     </>
   );
 };

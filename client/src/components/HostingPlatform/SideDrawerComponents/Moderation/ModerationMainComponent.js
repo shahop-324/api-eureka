@@ -5,6 +5,7 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import "./../../Styles/root.scss";
 import ModerationPeopleList from "./helper/ModerationPeopleList";
 import ModerationReportedList from "./helper/ModerationReportedList";
+import ReportActions from "./Sub/ReportActions";
 // import AllChatsComponent from "./helper/AllChatsComponent";
 
 const ModerationMainComponent = (props) => {
@@ -68,6 +69,8 @@ const ModerationMainComponent = (props) => {
 
         {/* here comes all and private chats conditionally */}
       </div>
+
+      
     </>
   );
 };

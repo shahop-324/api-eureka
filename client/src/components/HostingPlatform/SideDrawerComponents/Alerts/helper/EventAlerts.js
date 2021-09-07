@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
 
 import Faker from "faker";
 import Loader from "./../../../../Loader";
@@ -14,6 +16,8 @@ import {
   fetchPreviousEventAlerts,
 } from "../../../../../actions";
 import { useParams } from "react-router-dom";
+import EditAlertForm from "./EditAlertForm";
+import DeleteAlert from "./DeleteAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +50,11 @@ const EventAlerts = (props) => {
     (state) => state.eventAlert
   );
 
+  const [visibility, setVisibility] = useState("none");
+
   const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [openDelete, setOpenDelete] = React.useState(false);
 
   const classes = useStyles();
 
@@ -58,14 +66,57 @@ const EventAlerts = (props) => {
     setOpen(false);
   };
 
+  const handleEditAlert = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleDeleteAlert = () => {
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
   const renderAlertsList = (eventAlerts) => {
-    if (!eventAlerts) return ;
+    if (!eventAlerts) return;
     return eventAlerts
       .slice(0)
       .reverse()
       .map((alert) => {
         return (
-          <div className="alert-element-container px-2 py-2 mb-3">
+          <div
+            className="alert-element-container px-2 py-2 mb-3"
+            onMouseEnter={() => {
+              setVisibility("inline-block");
+            }}
+            onMouseLeave={() => {
+              setVisibility("none");
+            }}
+          >
+            <div
+              className="chat-msg-hover-elm flex-row align-items-center justify-content-between px-2 py-1"
+              style={{ display: visibility }}
+            >
+              <EditRoundedIcon
+                onClick={() => {
+                  handleEditAlert();
+                }}
+                className="chat-msg-hover-icon me-2"
+                style={{ display: visibility }}
+              />
+              <DeleteOutlineRoundedIcon
+                onClick={() => {
+                  handleDeleteAlert();
+                }}
+                className="chat-msg-hover-icon"
+                style={{ display: visibility }}
+              />
+            </div>
             <div className="p-2 d-flex flex-row align-items-center mb-2">
               <Avatar
                 src={alert.hostImage}
@@ -100,10 +151,13 @@ const EventAlerts = (props) => {
   return (
     <>
       <div>
-        <div className="people-container pt-2 px-2" style={{height: "69vh"}}>
+        <div className="people-container pt-2 px-2" style={{ height: "69vh" }}>
           {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
 
-          <div className="scrollable-chat-element-container mb-3" style={{height: "69vh"}}>
+          <div
+            className="scrollable-chat-element-container mb-3"
+            style={{ height: "69vh" }}
+          >
             {/* {isLoading ? :} */}
             {renderAlertsList(eventAlerts)}
           </div>
@@ -122,7 +176,10 @@ const EventAlerts = (props) => {
           </div>
         </div>
       </div>
+
       <CreateNewAlertForm open={open} handleClose={handleClose} />
+      <EditAlertForm open={openEdit} handleClose={handleCloseEdit} />
+      <DeleteAlert openDeleteAlert={openDelete} handleCloseDeleteAlert={handleCloseDelete}/>
     </>
   );
 };
