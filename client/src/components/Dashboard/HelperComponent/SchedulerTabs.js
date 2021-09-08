@@ -30,7 +30,6 @@ export default function SchedulerTabs(props) {
         <Tab label="Sponsors" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
         <Tab label="Leads" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
         <Tab label="Interested" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
-        <Tab label="Queries" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>
       </Tabs>
     </Paper>
   );
