@@ -3,6 +3,8 @@ import React from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import { useParams } from "react-router";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
@@ -25,8 +27,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Mailchimp = () => {
+  const params = useParams();
   const classes = useStyles();
-
+  const communityId = params.id;
   return (
     <>
       <div className="integration-card-container px-4 py-3 mb-4">
@@ -52,7 +55,7 @@ const Mailchimp = () => {
           <div style={{ justifySelf: "end" }}>
             <button className="btn btn-outline-primary btn-outline-text">
               <a
-                href={`${BaseURL}/auth/mailchimp`}
+                href={`${BaseURL}/auth/mailchimp/?communityId=${communityId}`}
                 style={{ textDecoration: "none" }}
               >
                 {" "}
