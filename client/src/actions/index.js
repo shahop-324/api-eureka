@@ -106,9 +106,6 @@ export const signIn = (res, intent, eventId) => async (dispatch) => {
       dispatch(fetchUserAllPersonalData());
     } else {
       history.push("/user/home");
-      //   // window.location.href = REACT_APP_MY_ENV
-      //   //   ? "http://localhost:3001/user/home"
-      //   //   : "https://www.evenz.in/user/home";
     }
   } catch (err) {
     // dispatch(authActions.hasError(err.response.data.message));
@@ -125,7 +122,7 @@ export const fetchReferralCode =
     dispatch(userActions.FetchReferralCode({ referredUserId }));
   };
 
-export const signUp = (formValues) => async (dispatch) => {
+export const signUp = (formValues, intent, eventId) => async (dispatch) => {
   try {
     const res = await eureka.post("/eureka/v1/users/signup", {
       ...formValues,
@@ -143,10 +140,18 @@ export const signUp = (formValues) => async (dispatch) => {
         user: res.data.data.user,
       })
     );
-    history.push("/user/home");
+    //  history.push("/user/home");
     // window.location.href = REACT_APP_MY_ENV
     //   ? "http://localhost:3001/user/home"
     //   : "https://www.evenz.in/user/home";
+    if (intent === "eventRegistration") {
+      history.push(`/event-landing-page/${eventId}`);
+    } else if (intent === "buyPlan") {
+      history.push("/pricing");
+      dispatch(fetchUserAllPersonalData());
+    } else {
+      history.push("/user/home");
+    }
   } catch (err) {
     dispatch(authActions.hasError(err.response.data.message));
     alert(err.response.data.message);
@@ -5184,3 +5189,20 @@ export const DuplicateUserSignOut =
       //TODO Home page
     }
   };
+
+export const eventRegistrationSignIn =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(
+      authActions.signinForEventRegistration({
+        eventId,
+      })
+    );
+  };
+
+export const eventBuyingPlan = (intent) => async (dispatch, getState) => {
+  dispatch(
+    authActions.signinForBuyingPlan({
+      intent,
+    })
+  );
+};

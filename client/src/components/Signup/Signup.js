@@ -90,6 +90,9 @@ const Signup = (props) => {
   const [signupClicked, setSignupClicked] = useState(false);
 
   const dispatch = useDispatch();
+  const urlSearchParams = new URLSearchParams(window.location.search);
+
+  const params = Object.fromEntries(urlSearchParams.entries());
 
   useEffect(() => {
     dispatch(resetAuthError());
@@ -105,9 +108,9 @@ const Signup = (props) => {
 
     if (referredId) {
       formValues.referralCode = referredId;
-      dispatch(signUp(formValues));
+      dispatch(signUp(formValues, params.intent, params.eventId));
     } else {
-      dispatch(signUp(formValues));
+      dispatch(signUp(formValues, params.intent, params.eventId));
     }
   };
 

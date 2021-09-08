@@ -1,199 +1,323 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
+import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import LoginPNG from "./../../assets/images/Saly-22.png";
-
-import { signIn } from "../../actions/index";
-
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import GoogleAuth from "../GoogleAuth";
-import LinkedIn from "@material-ui/icons/LinkedIn";
+import LoginPNG from "./../../assets/images/Saly-3.png";
+import { useDispatch } from "react-redux";
+import {
+  errorTrackerForSignIn,
+  resetAuthError,
+  MailChimpAuth,
+} from "../../actions/index";
 import LinkedinAuth from "../LinkedinAuth";
-class SignInForEventRegistration extends React.Component {
-  state = { email: "", password: "" };
+import GoogleAuth from "../GoogleAuth";
+import {
+  signIn,
+  eventRegistrationSignIn,
+  eventBuyingPlan,
+} from "../../actions/index";
+import { reduxForm, Field } from "redux-form";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import Footer from "../Footer";
+import { linkedinSignIn } from "../../actions";
+import Loader from "../Loader";
+import "material-react-toastify/dist/ReactToastify.css";
+import { useSnackbar } from "notistack";
+import socket from "../HostingPlatform/service/socket";
+let formIsvalidated = false;
 
-  onSubmit = (e) => {
-    e.preventDefault();
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    console.log(params.intent);
-    this.props.signIn(
-      this.state,
-      params.intent,
-      this.props.match.params.eventId
-    );
+const renderInput = ({
+  input,
+
+  meta,
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+  meta: { touched, error, warning },
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+      />
+
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "400" }}
+            >
+              {warning}
+            </div>
+          )))}
+      {/* {renderError(meta)} */}
+      {!error && !warning
+        ? (formIsvalidated = true)
+        : (formIsvalidated = false)}
+    </div>
+  );
+};
+
+const Signin = (props) => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { error, signOutSucceded } = useSelector((state) => state.auth);
+  const { isSending } = useSelector((state) => state.auth);
+  const { handleSubmit } = props;
+
+  const [signinClicked, setSigninClicked] = useState(false);
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+
+  const params = Object.fromEntries(urlSearchParams.entries());
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(params.code);
+    // dispatch(MailChimpAuth(params.code));
+    dispatch(eventRegistrationSignIn(params.eventId));
+    dispatch(eventBuyingPlan(params.intent));
+    if (params.code) {
+      dispatch(linkedinSignIn(params.code));
+    }
+
+    dispatch(resetAuthError());
+    setSigninClicked(false);
+  }, [dispatch, error]);
+  const { signinForBuyingPlanIntent, signinForEventRegistrationEventId } =
+    useSelector((state) => state.auth);
+  const onSubmit = (formValues) => {
+    setSigninClicked(true);
+    console.log(formValues);
+    socket.emit("loggingInUser", {
+      email: formValues.email,
+      password: formValues.password,
+    });
+    //dispatch(signIn(formValues));
   };
 
-  onEmailAddressChange = (e) => {
-    this.setState({ email: e.target.value });
-  };
-  onPasswordChange = (e) => {
-    e.preventDefault();
-
-    this.setState({ password: e.target.value });
-  };
-
-  render() {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
+  if (isSending) {
     return (
-      <>
-        <CssBaseline />
-        <div className="container-fluid page-body">
+      <section>
+        <p>Sending...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+    setSigninClicked(false);
+    return dispatch(errorTrackerForSignIn());
+  }
+
+  const chatBot = () => {
+    var Tawk_API = Tawk_API || {},
+      Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"),
+        s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = "https://embed.tawk.to/611c4005649e0a0a5cd1a0c5/1fdb5k5ha";
+      s1.charset = "UTF-8";
+      s1.setAttribute("crossorigin", "*");
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  };
+
+  return (
+    <>
+      {chatBot()}
+      <CssBaseline />
+      {params.code && (
+        <div
+          style={{
+            position: "absolute",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "#212121B2",
+            zIndex: "10",
+          }}
+        >
           <div
-            className="row d-flex"
-            style={{ height: "100%", alignItems: "center" }}
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "100vh" }}
           >
-            <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
-              <div className="col illustration-card">
-                <div className="row">
-                  <div className="companyName">Evenz</div>
-                  <div className="welcome-message mb-5">
-                    You are almost there!
-                  </div>
-                  <div className="login-illustration">
-                    <img alt="login-illustration" src={LoginPNG}></img>
-                  </div>
+            <Loader />
+          </div>
+        </div>
+      )}
+
+      <div
+        className="container-fluid page-body"
+        style={{ position: "relative" }}
+      >
+        <div
+          className="row d-flex"
+          style={{ height: "100%", alignItems: "center" }}
+        >
+          <div
+            className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex"
+            style={{ paddingLeft: "0", marginLeft: "0" }}
+          >
+            <div className="col illustration-card">
+              <div className="row">
+                <a
+                  href="https://www.evenz.in/home"
+                  className="companyName"
+                  style={{ textDecoration: "none", color: "#538BF7" }}
+                >
+                  {" "}
+                  <div>Evenz</div>
+                </a>
+                <div className="welcome-message">Hi, Welcome Back</div>
+                <div className="login-illustration">
+                  <img alt="login-illustration" src={LoginPNG}></img>
                 </div>
               </div>
             </div>
-            <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
-              <div className="col signin-form">
-                <div className="container">
-                  <div className="row sign-in-heading px-2">
-                    Sign in to Evenz to register
-                  </div>
-                  <div className="row sign-in-sub-heading px-2">
-                    Enter your details below.
-                  </div>
+          </div>
+          <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
+            <div className="col signin-form">
+              <div className="container">
+                <div className="row sign-in-heading px-2">Sign in to Evenz</div>
+                <div className="row sign-in-sub-heading px-2">
+                  Enter your details below.
+                </div>
+                {/* <div className="d-flex flex-row align-items-center justify-content-center"> */}
 
-                  <GoogleAuth
-                    intent={params.intent}
-                    eventId={this.props.match.params.eventId}
-                  />
+                <GoogleAuth />
 
-                  <div className="mb-3">
-                    <LinkedinAuth intent={params.intent}
-                    eventId={this.props.match.params.eventId} />
+                <div className="mb-3">
+                  <LinkedinAuth />
+                </div>
+
+                <div
+                  className="row d-flex"
+                  style={{ alignItems: "center", marginBottom: "6%" }}
+                >
+                  <div className="col-5">
+                    <hr />
                   </div>
-                  {/* <div
-                    className="row d-flex"
-                    style={{
-                      justifyContent: "space-between",
-                      marginBottom: "4%",
-                    }}
-                  >
-                    <li>
-                      <a href="/eureka/v1/auth/google">Login with Google</a>
-                    </li>
+                  <div className="col-2 OR">OR</div>
+                  <div className="col-5">
+                    <hr />
+                  </div>
+                </div>
+
+                <form
+                  className="ui form error"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
+                  <div className="row">
+                    <div className="mb-3">
+                      <div class="form-group">
+                        <label
+                          for="emailAddress"
+                          className="form-label form-label-customized"
+                        >
+                          Email address
+                        </label>
+                        <Field
+                          type="email"
+                          classes="form-control"
+                          id="emailAddress"
+                          name="email"
+                          ariadescribedby="Enter Email Address"
+                          placeholder="Enter Email"
+                          component={renderInput}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="mb-3">
+                      <div class="form-group">
+                        <label
+                          for="UserPassword"
+                          className="form-label form-label-customized"
+                        >
+                          Password
+                        </label>
+                        <Field
+                          type="password"
+                          classes="form-control"
+                          id="UserPassword"
+                          name="password"
+                          ariaddescribedby="Enter Password "
+                          placeholder="Enter password"
+                          component={renderInput}
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div
-                    className="row d-flex"
-                    style={{ alignItems: "center", marginBottom: "6%" }}
+                    className="row mb-3 d-flex"
+                    style={{ padding: "0 0%", alignItems: "center" }}
                   >
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                    <div className="col-2 OR">OR</div>
-                    <div className="col-5">
-                      <hr />
-                    </div>
-                  </div> */}
-                  <form onSubmit={this.onSubmit}>
-                    <div className="row">
-                      <div className="mb-3">
-                        <div class="form-group">
-                          <label
-                            for="emailAddress"
-                            className="form-label form-label-customized"
-                          >
-                            Email address
-                          </label>
-                          <input
-                            type="email"
-                            class="form-control"
-                            id="emailAddress"
-                            name="email"
-                            aria-describedby="Enter Email Address"
-                            placeholder="Enter Email"
-                            value={this.state.email}
-                            onChange={this.onEmailAddressChange}
-                            required
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row mb-3">
-                      <div className="mb-3">
-                        <div class="form-group">
-                          <label
-                            for="UserPassword"
-                            className="form-label form-label-customized"
-                          >
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="UserPassword"
-                            name="UserPassword"
-                            aria-describedby="Enter Password "
-                            placeholder="Enter password"
-                            required
-                            value={this.state.password}
-                            onChange={this.onPasswordChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="row mb-3 d-flex"
-                      style={{ padding: "0 0%", alignItems: "center" }}
-                    >
-                      {/* <div className="col">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexCheckChecked"
-                          >
-                            Remember Me
-                          </label>
-                        </div>
-                      </div> */}
-                      <div
-                        className="col"
-                        style={{
-                          textAlign: "end",
-                          color: "#538BF7",
-                          fontWeight: "500",
-                          letterSpacing: "0.2px",
-                          textDecoration: "none",
-                        }}
-                      >
-                        <Link
-                          to="/forgot-password"
-                          style={{ textDecoration: "none" }}
+                    <div className="col">
+                      {/* <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckChecked"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckChecked"
                         >
-                          Forgot Password?
-                        </Link>
-                      </div>
+                          Remember Me
+                        </label>
+                      </div> */}
                     </div>
+
+                    <div
+                      className="col"
+                      style={{
+                        textAlign: "end",
+                        color: "#538BF7",
+                        fontWeight: "500",
+                        letterSpacing: "0.2px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <Link
+                        to="/forgot-password"
+                        style={{ textDecoration: "none" }}
+                      >
+                        Forgot Password?
+                      </Link>
+                    </div>
+                  </div>
+                  <div
+                    className="row"
+                    style={{ padding: "0 0%", marginTop: "3%" }}
+                  >
                     <button
-                      style={{ width: "100%" }}
                       type="submit"
                       className="btn btn-primary"
-                      //   disabled={signinClicked && formIsvalidated && !error}
+                      disabled={signinClicked && formIsvalidated && !error}
                     >
                       <span className="btn-text">
                         Login
-                        {/* {signinClicked && formIsvalidated && !error ? (
+                        {signinClicked && formIsvalidated && !error ? (
                           <div
                             class="spinner-border text-light spinner-border-sm"
                             role="status"
@@ -202,7 +326,7 @@ class SignInForEventRegistration extends React.Component {
                           </div>
                         ) : (
                           <div></div>
-                        )} */}
+                        )}
                       </span>
                     </button>
                     <div
@@ -217,21 +341,47 @@ class SignInForEventRegistration extends React.Component {
                     >
                       Don't have an account?{" "}
                       <Link
-                        to="/signup"
+                        to={`/signup/?intent=${signinForBuyingPlanIntent}&eventId=${signinForEventRegistrationEventId}`}
                         style={{ color: "#538BF7", textDecoration: "none" }}
                       >
                         Get started
                       </Link>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-      </>
-    );
-  }
-}
+      </div>
+      <Footer />
+    </>
+  );
+};
 
-export default connect(null, { signIn })(SignInForEventRegistration);
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.email) {
+    errors.email = "Email is required";
+  }
+
+  errors.email =
+    formValues.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formValues.email)
+      ? "Invalid email address"
+      : undefined;
+  if (!formValues.password) {
+    errors.password = "Password is required";
+  }
+  if (formValues.password && formValues.password.length < 8) {
+    errors.password = "Password length must be greater than 8";
+  }
+
+  return errors;
+};
+
+export default reduxForm({
+  form: "signInForm",
+  validate,
+})(Signin);

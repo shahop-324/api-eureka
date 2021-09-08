@@ -71,13 +71,25 @@ class App extends React.Component {
 
     socket.on("newLogin", (res) => {
       console.log("hey hitting the new login in App.js 64 ");
-      this.props.signIn(res);
+      this.props.signIn(
+        res,
+        this.props.signinForEventRegistrationEventId,
+        this.props.signinForBuyingPlanIntent
+      );
     });
     socket.on("newGoogleLogin", (res) => {
-      this.props.googleSignIn(res);
+      this.props.googleSignIn(
+        res,
+        this.props.signinForEventRegistrationEventId,
+        this.props.signinForBuyingPlanIntent
+      );
     });
     socket.on("newLinkedinLogin", (res) => {
-      this.props.newLinkedinLogin(res);
+      this.props.newLinkedinLogin(
+        res,
+        this.props.signinForEventRegistrationEventId,
+        this.props.signinForBuyingPlanIntent
+      );
     });
   };
 
@@ -586,6 +598,9 @@ class App extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
+  signinForBuyingPlanIntent: state.auth.signinForBuyingPlanIntent,
+  signinForEventRegistrationEventId:
+    state.auth.signinForEventRegistrationEventId,
 });
 
 export default connect(mapStateToProps, {

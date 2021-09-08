@@ -11,10 +11,13 @@ const authSlice = createSlice({
     referralCode: null,
     signInSucceded: false,
     signOutSucceded: false,
+
+    signinForEventRegistrationEventId: null,
+
+    signinForBuyingPlanIntent: null,
   },
 
   reducers: {
-    
     ResetError(state, action) {
       state.error = false;
       // state.isSignedIn = false;
@@ -47,7 +50,13 @@ const authSlice = createSlice({
     },
     disabledSignOutSucceded(state, action) {
       state.signOutSucceded = false;
-    }
+    },
+    signinForEventRegistration(state, action) {
+      state.signinForEventRegistration = action.payload.eventId;
+    },
+    signinForBuyingPlan(state, action) {
+      state.signinForBuyingPlanIntent = action.payload.intent;
+    },
   },
 });
 
