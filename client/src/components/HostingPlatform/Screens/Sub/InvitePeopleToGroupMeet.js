@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Faker from "faker";
+import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import "./../../../Styles/PeopleList.scss";
+import "./../../Styles/PeopleList.scss";
 import { Avatar, IconButton } from "@material-ui/core";
 
 const PeopleComponent = () => {
+  const [added, setAdded] = useState(false);
+
   return (
     <>
       <div
         className=" mb-3"
-        style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
+        style={{ display: "grid", gridTemplateColumns: "1fr 5fr 2fr" }}
       >
         <Avatar
           src={Faker.image.avatar()}
@@ -36,18 +39,41 @@ const PeopleComponent = () => {
             className="d-flex flex-row align-items-center justify-content-between"
           >
             <div>Product Manager, Evenz</div>
-
-            <div>
-              <ChatBubbleOutlineRoundedIcon className="chat-msg-hover-icon" />
-            </div>
           </div>
+        </div>
+        <div style={{ justifySelf: "end" }}>
+          {!added ? (
+            <button
+              onClick={() => {
+                setAdded(true);
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
+              Add
+            </button>
+          ) : (
+            <div className="d-flex flex-row align-items-center">
+              <CheckCircleRoundedIcon
+                style={{ fill: "#1EA73C" }}
+                className="me-3"
+              />
+              <button
+                onClick={() => {
+                  setAdded(false);
+                }}
+                className="btn btn-outline-danger btn-outline-text"
+              >
+                Remove
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-const PeopleList = ({ open, handleClose }) => {
+const InvitePeopleToGroupMeet = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -56,7 +82,6 @@ const PeopleList = ({ open, handleClose }) => {
       <Dialog
         fullScreen={fullScreen}
         open={open}
-        // onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <div className="people-list-for-chat-container p-3">
@@ -68,7 +93,7 @@ const PeopleList = ({ open, handleClose }) => {
                 color: "#212121",
               }}
             >
-              Start conversation
+              Invite others to group meet
             </span>
             <IconButton
               onClick={() => {
@@ -91,13 +116,7 @@ const PeopleList = ({ open, handleClose }) => {
             />
             <i class="search icon"></i>
           </div>
-
-          {/* <div className="my-3">
-            <hr />
-          </div> */}
-
           {/* Here goes list of people */}
-
           <PeopleComponent />
           <PeopleComponent />
           <PeopleComponent />
@@ -120,4 +139,4 @@ const PeopleList = ({ open, handleClose }) => {
   );
 };
 
-export default PeopleList;
+export default InvitePeopleToGroupMeet;

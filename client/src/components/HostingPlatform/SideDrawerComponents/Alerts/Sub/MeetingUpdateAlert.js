@@ -4,7 +4,7 @@ import Logo from "./../../../../../assets/images/Logo.png";
 
 import { Avatar } from "@material-ui/core";
 
-const SessionReminder = () => {
+const MeetingUpdateAlert = () => {
   return (
     <>
       <div className="general-alert-container px-4 py-3 mb-3">
@@ -17,7 +17,7 @@ const SessionReminder = () => {
             className="chat-box-name ms-3"
             style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
           >
-            <div>Reminder</div>
+            <div>Update</div>
 
             <div
               style={{
@@ -33,12 +33,12 @@ const SessionReminder = () => {
         </div>
 
         <div className="alert-text mb-3">
-          <b> Deploying serverless applications </b> is about to start in{" "}
-          <b> 15 min. </b>
+          <b> {Faker.name.findName()} </b> accepted your invitation to{" "}
+          <b> How to market you sass products.</b>
         </div>
       </div>
     </>
   );
 };
 
-export default SessionReminder;
+export default MeetingUpdateAlert;

@@ -18,9 +18,11 @@ import QuestionAnswerOutlinedIcon from "@material-ui/icons/QuestionAnswerOutline
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
+import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
+import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
 import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
 import { useDispatch } from "react-redux";
 import { createCommunityFeedback } from "./../../../actions";
@@ -65,7 +67,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleOverviewClick();
-            handleCloseDrawer &&  handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -123,7 +125,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleReviewsClick();
-            handleCloseDrawer &&  handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -151,7 +153,7 @@ const SideNav = (props) => {
         <div
           onClick={() => {
             props.handleQueriesClick();
-            handleCloseDrawer &&  handleCloseDrawer();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -261,12 +263,9 @@ const SideNav = (props) => {
             Recordings
           </div>
         </div>
-
-        <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
-
-        {/* <div
+        <div
           onClick={() => {
-            props.handleBillingClick();
+            props.handleIntegrationsClick();
             handleCloseDrawer && handleCloseDrawer();
           }}
           className={
@@ -280,7 +279,7 @@ const SideNav = (props) => {
               (props.activeIndex === "7" ? "btn-icon-active-d" : " ")
             }
           >
-            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
+            <SettingsEthernetRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -288,13 +287,12 @@ const SideNav = (props) => {
               (props.activeIndex === "7" ? "btn-text-active-d" : " ")
             }
           >
-            Billing
+            Integrations
           </div>
-        </div> */}
-
-        {/* <div
+        </div>
+        <div
           onClick={() => {
-            props.handleTeamManagementClick();
+            props.handleSchedulerClick();
             handleCloseDrawer && handleCloseDrawer();
           }}
           className={
@@ -308,7 +306,7 @@ const SideNav = (props) => {
               (props.activeIndex === "8" ? "btn-icon-active-d" : " ")
             }
           >
-            <PeopleOutlinedIcon style={{ fontSize: 26 }} />
+            <ScheduleRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -316,12 +314,15 @@ const SideNav = (props) => {
               (props.activeIndex === "8" ? "btn-text-active-d" : " ")
             }
           >
-            Team Management
+            Scheduler
           </div>
-        </div> */}
+        </div>
+
+        <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
+
         <div
           onClick={() => {
-            props.handleRevenueManagementClick();
+            props.handleBillingClick();
             handleCloseDrawer && handleCloseDrawer();
           }}
           className={
@@ -335,7 +336,7 @@ const SideNav = (props) => {
               (props.activeIndex === "9" ? "btn-icon-active-d" : " ")
             }
           >
-            <AttachMoneyRoundedIcon style={{ fontSize: 26 }} />
+            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -343,13 +344,14 @@ const SideNav = (props) => {
               (props.activeIndex === "9" ? "btn-text-active-d" : " ")
             }
           >
-            Payouts
+            Billing
           </div>
         </div>
 
         <div
           onClick={() => {
-            handleClickOpen();
+            props.handleTeamManagementClick();
+            handleCloseDrawer && handleCloseDrawer();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -362,12 +364,69 @@ const SideNav = (props) => {
               (props.activeIndex === "10" ? "btn-icon-active-d" : " ")
             }
           >
-            <FeedbackOutlinedIcon style={{ fontSize: 26 }} />
+            <PeopleOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
               (props.activeIndex === "10" ? "btn-text-active-d" : " ")
+            }
+          >
+            Team Management
+          </div>
+        </div>
+
+        {/* // ! We don't need to fall in administrative position managing payments for every community. */}
+
+        {/* <div
+          onClick={() => {
+            props.handleRevenueManagementClick();
+            handleCloseDrawer && handleCloseDrawer();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (props.activeIndex === "11" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (props.activeIndex === "11" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <AttachMoneyRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (props.activeIndex === "11" ? "btn-text-active-d" : " ")
+            }
+          >
+            Payouts
+          </div>
+        </div> */}
+
+        <div
+          onClick={() => {
+            handleClickOpen();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (props.activeIndex === "12" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (props.activeIndex === "12" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <FeedbackOutlinedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (props.activeIndex === "12" ? "btn-text-active-d" : " ")
             }
           >
             Feedback
@@ -401,7 +460,7 @@ const SideNav = (props) => {
           <Button
             onClick={() => {
               handleClose();
-              handleCloseDrawer &&  handleCloseDrawer();
+              handleCloseDrawer && handleCloseDrawer();
             }}
             color="primary"
           >

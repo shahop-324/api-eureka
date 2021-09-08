@@ -40,6 +40,8 @@ import ErrorBoundriesQueries from "../ErrorBoundries/ErrorBoundriesDashboardQuer
 import ErrorBoundriesEventManagement from "../ErrorBoundries/ErrorBoundriesDashboardEventManagement";
 
 import ErrorBoundary from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
+import Integrations from "./Integrations";
+import Scheduler from "./Scheduler";
 
 const DashboardRoot = () => {
   const params = useParams();
@@ -95,18 +97,28 @@ const DashboardRoot = () => {
     history.push(`/user/${userId}/community/recordings/${id}`);
   };
 
-  const handleBillingClick = () => {
+  const handleIntegrationsClick = () => {
     dispatch(navigationIndexForCommunityDash(7));
+    history.push(`/user/${userId}/community/integrations/${id}`);
+  };
+
+  const handleSchedulerClick = () => {
+    dispatch(navigationIndexForCommunityDash(8));
+    history.push(`/user/${userId}/community/integrations/${id}`);
+  };
+
+  const handleBillingClick = () => {
+    dispatch(navigationIndexForCommunityDash(9));
     history.push(`/user/${userId}/community/billing/${id}`);
   };
 
   const handleTeamManagementClick = () => {
-    dispatch(navigationIndexForCommunityDash(8));
+    dispatch(navigationIndexForCommunityDash(10));
     history.push(`/user/${userId}/community/team-management/${id}`);
   };
 
   const handleRevenueManagementClick = () => {
-    dispatch(navigationIndexForCommunityDash(9));
+    dispatch(navigationIndexForCommunityDash(11));
     history.push(`/user/${userId}/community/revenue-management/${id}`);
   };
 
@@ -135,6 +147,8 @@ const DashboardRoot = () => {
           handleRegistrationsClick={handleRegistrationsClick}
           handleCouponsClick={handleCouponsClick}
           handleRecordingsClick={handleRecordingsClick}
+          handleIntegrationsClick={handleIntegrationsClick}
+          handleSchedulerClick={handleSchedulerClick}
           handleBillingClick={handleBillingClick}
           handleTeamManagementClick={handleTeamManagementClick}
           handleRevenueManagementClick={handleRevenueManagementClick}
@@ -150,6 +164,8 @@ const DashboardRoot = () => {
               handleRegistrationsClick={handleRegistrationsClick}
               handleCouponsClick={handleCouponsClick}
               handleRecordingsClick={handleRecordingsClick}
+              handleIntegrationsClick={handleIntegrationsClick}
+              handleSchedulerClick={handleSchedulerClick}
               handleBillingClick={handleBillingClick}
               handleTeamManagementClick={handleTeamManagementClick}
               handleRevenueManagementClick={handleRevenueManagementClick}
@@ -209,19 +225,32 @@ const DashboardRoot = () => {
 
                 case "7":
                   return (
+                    <ErrorBoundriesRecordings>
+                      <Integrations />
+                    </ErrorBoundriesRecordings>
+                  );
+                case "8":
+                  return (
+                    <ErrorBoundriesRecordings>
+                      <Scheduler />
+                    </ErrorBoundriesRecordings>
+                  );
+
+                case "9":
+                  return (
                     <ErrorBoundriesBilling>
                       <Billing />
                     </ErrorBoundriesBilling>
                   );
 
-                case "8":
+                case "10":
                   return (
                     <ErrorBoundriesTeamManagement>
                       <TeamManagement />
                     </ErrorBoundriesTeamManagement>
                   );
 
-                case "9":
+                case "11":
                   return (
                     <ErrorBoundriesRevenueManagement>
                       <RevenueManagement />

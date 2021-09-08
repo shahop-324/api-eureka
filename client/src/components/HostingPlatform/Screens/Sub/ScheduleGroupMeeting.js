@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+
 import { reduxForm, Field } from "redux-form";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-
 import Select from "react-select";
+import InvitePeopleToGroupMeet from "./InvitePeopleToGroupMeet";
 
 const timeZoneOptions = [
   { value: "(GMT + 00:00) UTC", label: "(GMT + 00:00) UTC" },
@@ -16,6 +17,11 @@ const timeZoneOptions = [
     label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
   },
   { value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu" },
+];
+
+const peopleInEvent = [
+  // { value: "gu2892ojwoow2i92", label: "Shreyansh shah" },
+  // { value: "278910io9929020020okeokkl", label: "Omprakash shah" },
 ];
 
 const styles = {
@@ -138,7 +144,18 @@ const renderReactSelectTimeZone = ({
   </div>
 );
 
-const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
+const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <>
       <React.Fragment key="right">
@@ -262,6 +279,35 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
                 />
               </div>
 
+              <div class="mb-4 overlay-form-input-row">
+                <label
+                  Forhtml="selectTimeZone"
+                  class="form-label form-label-customized"
+                >
+                  People
+                </label>
+                <Field
+                  name="selectTimeZone"
+                  styles={styles}
+                  menuPlacement="auto"
+                  options={peopleInEvent}
+                  defaultValue={peopleInEvent[0]}
+                  id="selectTimeZone"
+                  component={renderReactSelectTimeZone}
+                />
+                <div className="d-flex flex-row align-items-center justify-content-end">
+                  <button
+                  onClick={() => {
+                    handleOpen();
+                  }}
+                    type="button"
+                    className="btn btn-outline-dark btn-outline-text mt-3"
+                  >
+                    Add people
+                  </button>
+                </div>
+              </div>
+
               <div
                 // className={props.showBlockButton === "false" ? "hide" : ""}
                 style={{ width: "100%" }}
@@ -279,11 +325,17 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
+
+<InvitePeopleToGroupMeet  open={open} handleClose={handleClose}  />
+
+
     </>
   );
 };
 
+// export default ScheduleGroupMeeting;
+
 export default reduxForm({
-  form: " scheduleOneToOneCallForm",
+  form: "scheduleGroupMeeting",
   // validate,
-})(ScheduleOneToOneCallForm);
+})(ScheduleGroupMeeting);

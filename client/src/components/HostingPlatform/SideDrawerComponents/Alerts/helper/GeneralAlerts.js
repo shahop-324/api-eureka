@@ -10,6 +10,7 @@ import GroupMeetAlert from "../Sub/GroupMeetAlert";
 import OneOnOneMeetAlert from "../Sub/OneOnOneMeetAlert";
 import SessionReminder from "../Sub/SessionReminder";
 import TableInvitationAlert from "../Sub/TableInvitationAlert";
+import MeetingUpdateAlert from "../Sub/MeetingUpdateAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const GeneralAlerts = (props) => {
   const classes = useStyles();
 
@@ -46,13 +45,15 @@ const GeneralAlerts = (props) => {
             {/* {isLoading ? :} */}
             {/* {renderAlertsList(eventAlerts)} */}
 
-           <GroupMeetAlert />
+            <GroupMeetAlert />
 
-           <OneOnOneMeetAlert />
+            <OneOnOneMeetAlert />
 
-           <SessionReminder />
+            <SessionReminder />
 
-           <TableInvitationAlert />
+            <TableInvitationAlert />
+
+            <MeetingUpdateAlert />
           </div>
         </div>
       </div>

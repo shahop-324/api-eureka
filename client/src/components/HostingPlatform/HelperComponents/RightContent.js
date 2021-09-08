@@ -30,6 +30,9 @@ const RightContent = () => {
     <>
       <div>
         <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
+
+        
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
@@ -169,6 +172,8 @@ const RightContent = () => {
               Moderation
             </div>
           </div>
+
+         
         </div>
       </div>
 
