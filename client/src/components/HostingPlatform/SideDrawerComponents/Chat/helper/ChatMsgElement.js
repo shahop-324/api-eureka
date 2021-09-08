@@ -129,7 +129,10 @@ const ChatMsgElement = ({
               className="chat-box-name ms-3"
               style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
             >
-              <div>{name}</div>
+              <div>
+                {name}
+                <span>Host</span>
+                </div>
 
               <div
                 style={{

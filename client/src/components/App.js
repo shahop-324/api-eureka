@@ -407,6 +407,14 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
+                  path="/user/:userId/community/integrations/:id"
+                  exact
+                  component={DashboardRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
                   path="/user/:userId/community/coupons/:id"
                   exact
                   component={DashboardRoot}

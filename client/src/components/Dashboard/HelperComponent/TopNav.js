@@ -61,6 +61,7 @@ const Topnav = ({
   handleRegistrationsClick,
   handleCouponsClick,
   handleRecordingsClick,
+  handleIntegrationsClick,
   handleBillingClick,
   handleTeamManagementClick,
   handleRevenueManagementClick,
@@ -226,6 +227,7 @@ const Topnav = ({
               handleRegistrationsClick={handleRegistrationsClick}
               handleCouponsClick={handleCouponsClick}
               handleRecordingsClick={handleRecordingsClick}
+              handleIntegrationsClick={handleIntegrationsClick}
               handleBillingClick={handleBillingClick}
               handleTeamManagementClick={handleTeamManagementClick}
               handleRevenueManagementClick={handleRevenueManagementClick}
