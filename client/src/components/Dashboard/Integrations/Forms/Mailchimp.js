@@ -34,19 +34,17 @@ const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
               />
             </div>
             <div>
-              <div className="d-flex flex-row align-items-center justify-content-end mb-4" style={{width: "100%"}}>
-                <a href={`${BaseURL}/auth/mailChimp`} style={{textDecoration:"none"}} >
+              <div className="d-flex flex-row align-items-center justify-content-end mb-4">
+                <a href={`${BaseURL}/auth/mailChimp`} style={{textDecoration:"none", width: "100%"}} >
                 <button className="btn btn-outline-primary btn-outline-text" style={{width: "100%"}}>
                   Authorize using mailchimp
                 </button>
-
                 </a>
-                
               </div>
               <div>
                 <div className="want-help-heading mb-3">Want help ?</div>
                 <div className="integration-guide-btn px-4 py-2">
-                  Guid to Integrate Mailchimp with Evenz.
+                  Guide to Integrate Mailchimp with Evenz.
                 </div>
               </div>
             </div>

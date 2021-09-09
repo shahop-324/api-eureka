@@ -45,36 +45,8 @@ const SideNav = ({
 
   return (
     <>
-      <div className="side-nav-wrapper py-4 pt-4">
-        <div className="event-poster-name-and-status-card">
-          <div className="px-3 mb-3 d-flex flex-row justify-content-between">
-            <Link
-              to={`/user/${userId}/community/event-management/${communityId}`}
-            >
-              <IconButton aria-label="back">
-                <ArrowBackIosIcon style={{ fontSize: 18 }} />
-              </IconButton>
-            </Link>
-            <button className="btn btn-outline-primary btn-outline-text me-2">
-              Publish
-            </button>
-          </div>
-
-          <div className="px-4 mb-3 sidenav-poster-container">
-            <img
-              src="https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg"
-              alt="event-poster"
-            />
-          </div>
-          <div className="px-4 d-flex flex-row justify-content-between">
-            <div className="sidenav-event-name" style={{ fontFamily: "Inter" }}>
-              The Craft Workshop
-            </div>
-          </div>
-        </div>
-        <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-          <Divider />
-        </div>
+      <div className="side-nav-wrapper lg-side-nav py-4 pt-4">
+       
         <div
           onClick={() => {
             handleAnalyticsClick();

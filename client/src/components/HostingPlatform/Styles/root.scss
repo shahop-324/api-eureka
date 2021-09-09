@@ -3,6 +3,11 @@
 $Side-Nav-bg-color: '#ffffff';
 $Shadow-inset-color: '#00000029';
 
+.lean-nav-wrapper {
+  height: 93vh !important;
+  overflow: auto !important;
+}
+
 // Defining Layout Grid
 .root-container-grid {
   position: fixed;

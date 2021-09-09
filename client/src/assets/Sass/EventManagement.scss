@@ -55,15 +55,14 @@ $font-family: "Inter";
 }
 
 .form-label-customized{
-
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.9rem;
+  line-height: 18px;
   /* identical to box height, or 133% */
   
-  text-transform: uppercase;
+  text-transform: capitalize;
   
   color: #757575;
 }

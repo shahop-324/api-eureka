@@ -45,6 +45,8 @@ const ViewAndEditMailList = ({ openDrawer, handleCloseDrawer }) => {
           <div className="px-4 py-3 view-and-edit-mail-list-container">
             <div className="d-flex flex-row align-items-center justify-content-between">
               <div className="mail-list-group-name">
+
+                
                 <div class="form-group">
                   <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3 py-2">
                     <input
@@ -89,6 +91,10 @@ const ViewAndEditMailList = ({ openDrawer, handleCloseDrawer }) => {
                     )}
                   </div>
                 </div>
+
+
+
+
               </div>
 
               <IconButton>

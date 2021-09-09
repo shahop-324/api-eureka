@@ -191,12 +191,14 @@ const Registrations = () => {
       .slice(0)
       .reverse()
       .map((registration) => {
+        console.log(registration)
         return (
           <RegistrationDetailsCard
             handleSeeMoreDetails={handleSeeMoreDetails}
             id={registration._id}
             key={registration._id}
             userImgURL={
+              registration.userImage &&
               registration.userImage.startsWith("https:")
                 ? registration.userImage
                 : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registration.userImage}`
@@ -337,7 +339,7 @@ const Registrations = () => {
                     }
                     src={
                       registrationDetails
-                        ? registrationDetails.userImage.startsWith("https://")
+                        ? registrationDetails.userImage && registrationDetails.userImage.startsWith("https://")
                           ? registrationDetails.userImage
                           : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registrationDetails.userImage}`
                         : ""

@@ -141,7 +141,6 @@ export default function ToggleSwitch() {
 
   return (
     <FormGroup>
-      
       <FormControlLabel
         control={<IOSSwitch checked={state.checkedB} onChange={handleOpen} name="checkedB" />}
         label="Deactivate this account."
