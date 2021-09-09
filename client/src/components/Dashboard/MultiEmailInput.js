@@ -13,9 +13,9 @@ function Alert(props) {
 
 const MultiEmailInput = (props) => {
   const input = props.input;
-  const [tags, setTags] = React.useState(["example@Email.com"]);
+  const [tags, setTags] = React.useState([]);
   useEffect(() => {
-    setTags(props.value ? props.value : ["example@Email.com"]);
+    setTags(props.value ? props.value : []);
   }, [props.value]);
 
   const [state, setState] = React.useState({

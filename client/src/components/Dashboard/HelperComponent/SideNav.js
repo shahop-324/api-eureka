@@ -236,7 +236,7 @@ const SideNav = (props) => {
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={() => {
             props.handleRecordingsClick();
             handleCloseDrawer && handleCloseDrawer();
@@ -262,7 +262,7 @@ const SideNav = (props) => {
           >
             Recordings
           </div>
-        </div>
+        </div> */}
         <div
           onClick={() => {
             props.handleIntegrationsClick();
@@ -290,7 +290,7 @@ const SideNav = (props) => {
             Integrations
           </div>
         </div>
-        <div
+        {/* <div
           onClick={() => {
             props.handleSchedulerClick();
             handleCloseDrawer && handleCloseDrawer();
@@ -316,7 +316,7 @@ const SideNav = (props) => {
           >
             Scheduler
           </div>
-        </div>
+        </div> */}
 
         <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
 

@@ -1,6 +1,7 @@
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
+import MailchimpConnect from "./Forms/Mailchimp";
 
 import { makeStyles } from "@material-ui/core/styles";
 const { REACT_APP_MY_ENV } = process.env;
@@ -25,6 +26,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Mailchimp = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -50,18 +61,21 @@ const Mailchimp = () => {
           </div>
 
           <div style={{ justifySelf: "end" }}>
-            <button className="btn btn-outline-primary btn-outline-text">
-              <a
-                href={`${BaseURL}/auth/mailchimp`}
-                style={{ textDecoration: "none" }}
-              >
-                {" "}
-                Add
-              </a>
+            <button
+              onClick={() => {
+                handleOpen();
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
+              Add
             </button>
           </div>
         </div>
       </div>
+      <MailchimpConnect
+        openDrawer={open}
+        handleCloseDrawer={handleCloseDrawer}
+      />
     </>
   );
 };

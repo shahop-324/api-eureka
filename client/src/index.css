@@ -1,6 +1,16 @@
 @import-normalize; /* bring in normalize.css styles */
 
 /* rest of app styles */
+.email-list-group {
+  border: 1px solid transparent;
+}
+
+.email-list-group:hover {
+  background-color: transparent !important;
+  border: 1px solid #538bf7;
+
+  cursor: pointer;
+}
 
 video {
   object-fit: contain !important;

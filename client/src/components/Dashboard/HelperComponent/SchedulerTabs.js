@@ -10,15 +10,15 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SchedulerTabs(props) {
-  const num = props.activeIndex * 1;
+export default function SchedulerTabs({activeIndex, handleChange}) {
+  const num = activeIndex * 1;
   const classes = useStyles();
   
   return (
     <Paper className={classes.root}>
       <Tabs
         value={num}
-        onChange={props.handleChange}
+        onChange={handleChange}
         indicatorColor="primary"
         textColor="primary"
         centered
