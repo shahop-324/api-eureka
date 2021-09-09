@@ -133,7 +133,7 @@ const Topnav = ({
 
   return (
     <>
-      <div className="row topnav-container px-3">
+      <div className="row topnav-container px-3 py-2">
         <div className="col-6 left">
           <div
             className="brand-logo-text d-flex flex-row align-items-center"

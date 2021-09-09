@@ -35,16 +35,10 @@ const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
             </div>
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-                <a
-                  href={`${BaseURL}/auth/mailChimp`}
-                  style={{ textDecoration: "none", width: "100%" }}
-                >
-                  <button
-                    className="btn btn-outline-primary btn-outline-text"
-                    style={{ width: "100%" }}
-                  >
-                    Authorize using mailchimp
-                  </button>
+                <a href={`${BaseURL}/auth/mailChimp`} style={{textDecoration:"none", width: "100%"}} >
+                <button className="btn btn-outline-primary btn-outline-text" style={{width: "100%"}}>
+                  Authorize using mailchimp
+                </button>
                 </a>
               </div>
               <div>

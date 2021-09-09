@@ -1,43 +1,20 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
 
-import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
-import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import PersonPinCircleIcon from "@material-ui/icons/PersonPinCircle";
-import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet";
-import VideocamIcon from "@material-ui/icons/Videocam";
-import LiveTvIcon from "@material-ui/icons/LiveTv";
-import MovieIcon from "@material-ui/icons/Movie";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import VideoLabelIcon from "@material-ui/icons/VideoLabel";
+
 
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
 import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
-import QuestionAnswerOutlinedIcon from "@material-ui/icons/QuestionAnswerOutlined";
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
-import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
-import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
-
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-
-import IconButton from "@material-ui/core/IconButton";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { Avatar } from "@material-ui/core";
+import { useParams } from "react-router-dom";
 
 const SideNavLean = ({
     activeIndex, 
@@ -64,13 +41,15 @@ const SideNavLean = ({
   const userId = params.userId;
   return (
     <>
+    
       {/* className="" */}
       <div
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="main-icon-btn-container py-4">
-          <div
+        {/* <a data-tip="Overview" className="ms-3"> */}
+        <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
                 handleOverviewClick();
@@ -101,6 +80,9 @@ const SideNavLean = ({
               Dashboard
             </div>
           </div>
+              {/* </a> */}
+
+            {/* <a data-tip="Event Management" className="">   */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -130,6 +112,10 @@ const SideNavLean = ({
               Event Management
             </div>
           </div>
+          {/* </a> */}
+
+          
+          {/* <a data-tip="Reviews" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -159,7 +145,11 @@ const SideNavLean = ({
               Reviews
             </div>
           </div>
+          {/* </a> */}
 
+         
+
+          {/* <a data-tip="Queries" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -189,6 +179,13 @@ const SideNavLean = ({
               Queries
             </div>
           </div>
+          {/* </a> */}
+
+
+          
+
+
+          {/* <a data-tip="Registrations" className=""> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
@@ -219,7 +216,14 @@ const SideNavLean = ({
               Registrations
             </div>
           </div>
+          {/* </a> */}
 
+
+          
+
+
+          
+          {/* <a data-tip="Coupons" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -249,7 +253,13 @@ const SideNavLean = ({
               Coupons
             </div>
           </div>
-          {/* <div
+          {/* </a> */}
+
+          
+
+          {/* 
+          // <a data-tip="Recordings" className="">
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
                 handleRecordingsClick();
@@ -277,7 +287,14 @@ const SideNavLean = ({
             >
               Recordings
             </div>
-          </div> */}
+          </div>
+          // </a>
+          */}
+
+
+
+
+{/* <a data-tip="Integrations" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -307,7 +324,17 @@ const SideNavLean = ({
               Integrations
             </div>
           </div>
-          {/* <div
+{/* </a> */}
+
+
+
+
+
+
+
+          {/* 
+          <a data-tip="Scheduler" className="">
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
                 handleSchedulerClick();
@@ -335,7 +362,11 @@ const SideNavLean = ({
             >
               Scheduler
             </div>
-          </div> */}
+          </div> 
+          </a>
+          */}
+
+{/* <a data-tip="Billing" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -365,6 +396,10 @@ const SideNavLean = ({
               Billing
             </div>
           </div>
+
+          {/* </a> */}
+
+          {/* <a data-tip="Team Management" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-5"
             onClick={() => {
@@ -394,7 +429,12 @@ const SideNavLean = ({
               Team Management
             </div>
           </div>
-          {/* <div
+          {/* </a> */}
+
+
+          {/*
+          <a data-tip="Payouts" className="">
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-4"
             onClick={() => {
                 handleRevenueManagementClick();
@@ -422,16 +462,13 @@ const SideNavLean = ({
             >
               Payouts
             </div>
-          </div> */}
-
-          
-
-
-    
-
-          
+          </div>
+          </a>
+          */}
         </div>
       </div>
+
+      {/* <ReactTooltip place="right" type="info" effect="solid" backgroundColor="#538BF7"/> */}
     </>
   );
 };
