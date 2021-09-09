@@ -139,14 +139,14 @@ const Topnav = ({
             className="brand-logo-text d-flex flex-row align-items-center"
             style={{ fontFamily: "Inter" }}
           >
-            <div className="me-3 dash-root-menu">
+            {/* <div className="me-3 dash-root-menu">
               <MenuRoundedIcon
                 onClick={() => {
                   setOpenDrawer(true);
                 }}
                 // style={{display: "none"}}
               />
-            </div>
+            </div> */}
             <a
               href="https://www.evenz.in/home"
               style={{ textDecoration: "none", color: "#538BF7" }}

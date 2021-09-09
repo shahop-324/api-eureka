@@ -42,6 +42,7 @@ import ErrorBoundriesEventManagement from "../ErrorBoundries/ErrorBoundriesDashb
 import ErrorBoundary from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
 import Integrations from "./Integrations";
 import Scheduler from "./Scheduler";
+import SideNavLean from "./HelperComponent/SideNavLean";
 
 const DashboardRoot = () => {
   const params = useParams();
@@ -154,7 +155,7 @@ const DashboardRoot = () => {
           handleRevenueManagementClick={handleRevenueManagementClick}
         />
         <div className="dashboard-body">
-          <div className="side-nav-container">
+          {/* <div className="side-nav-container"> */}
             <SideNav
               activeIndex={currentIndex}
               handleOverviewClick={handleOverviewClick}
@@ -170,7 +171,22 @@ const DashboardRoot = () => {
               handleTeamManagementClick={handleTeamManagementClick}
               handleRevenueManagementClick={handleRevenueManagementClick}
             />
-          </div>
+          <SideNavLean
+           activeIndex={currentIndex}
+           handleOverviewClick={handleOverviewClick}
+           handleEventManagementClick={handleEventManagementClick}
+           handleReviewsClick={handleReviewsClick}
+           handleQueriesClick={handleQueriesClick}
+           handleRegistrationsClick={handleRegistrationsClick}
+           handleCouponsClick={handleCouponsClick}
+           handleRecordingsClick={handleRecordingsClick}
+           handleIntegrationsClick={handleIntegrationsClick}
+           handleSchedulerClick={handleSchedulerClick}
+           handleBillingClick={handleBillingClick}
+           handleTeamManagementClick={handleTeamManagementClick}
+           handleRevenueManagementClick={handleRevenueManagementClick}
+          />
+          
           <div className="main-content-wrapper" style={{ minHeight: "90vh" }}>
             {(() => {
               switch (currentIndex) {

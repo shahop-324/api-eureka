@@ -14,7 +14,6 @@
   grid-template-columns: 0.7fr 9fr 1fr;
   grid-gap: 24px;
   align-items: center;
-
   background-color: #e9e9e9;
 }
 
@@ -628,9 +627,9 @@ $font-family: 'Ubuntu';
     grid-template-columns: 2fr 9fr !important;
   }
 
-  .side-nav-container {
-    display: none;
-  }
+  // .side-nav-container {
+  //   display: none;
+  // }
 
   .whats-new-button,
   .dash-notification,
@@ -646,7 +645,7 @@ $font-family: 'Ubuntu';
   .publish-btn-sm {
     display: none;
   }
-  .lg-side-nav {
+  .lg-side-nav, .side-nav-wrapper {
     display: inline-block;
   }
   .lean-side-nav {
@@ -672,7 +671,7 @@ $font-family: 'Ubuntu';
   .dashboard-body {
     grid-template-columns: 0.7fr 10fr;
   }
-  .lg-side-nav {
+  .lg-side-nav, .side-nav-wrapper {
     display: none;
   }
   .lean-side-nav {

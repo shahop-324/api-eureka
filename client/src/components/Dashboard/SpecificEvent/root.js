@@ -178,7 +178,6 @@ const SpecificEventRoot = () => {
         {/* Body section - left(side nav) & right(body content) */}
         <div className="dashboard-body">
           <SideNav
-          
             activeIndex={currentIndex}
             // handleEditEventClick={handleEditEventClick}
             handleAnalyticsClick={handleAnalyticsClick}
@@ -195,7 +194,6 @@ const SpecificEventRoot = () => {
             handleMailCampaignClick={handleMailCampaignClick}
           />
           <SideNavLean
-          
             activeIndex={currentIndex}
             // handleEditEventClick={handleEditEventClick}
             handleAnalyticsClick={handleAnalyticsClick}
