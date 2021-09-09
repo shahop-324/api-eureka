@@ -1,8 +1,10 @@
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
+import Eventbrite_logo from "./../../../assets/images/Eventbrite_integration.png";
 
 import { makeStyles } from "@material-ui/core/styles";
+import EventbritePrivateToken from "./Forms/EventbritePrivateToken";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +24,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Eventbrite = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -32,14 +44,11 @@ const Eventbrite = () => {
           style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
         >
           <Avatar
-            src={
-              "https://img.apksum.com/a4/com.eventbrite.attendee/8.0.2/icon.png"
-            }
+            src={Eventbrite_logo}
             alt={"Eventbrite"}
             className={classes.large}
             variant="rounded"
           />
-
           <div>
             <div className="integration-name mb-2">Eventbrite</div>
             <div className="integration-short-description">
@@ -47,14 +56,23 @@ const Eventbrite = () => {
               automate mailing link to participants for joining event.
             </div>
           </div>
-
           <div style={{ justifySelf: "end" }}>
-            <button className="btn btn-outline-primary btn-outline-text">
+            <button
+              onClick={() => {
+                handleOpen();
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
               Add
             </button>
           </div>
         </div>
       </div>
+
+      <EventbritePrivateToken
+        openDrawer={open}
+        handleCloseDrawer={handleCloseDrawer}
+      />
     </>
   );
 };

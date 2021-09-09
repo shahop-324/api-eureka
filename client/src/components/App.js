@@ -211,7 +211,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/pre-analytics"
+                  path="/user/:userId/community/:communityId/event/:eventId/analytics"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -227,7 +227,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/queries"
+                  path="/user/:userId/community/:communityId/event/:eventId/custom-registration"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -235,7 +235,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/reviews"
+                  path="/user/:userId/community/:communityId/event/:eventId/affiliates"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -243,7 +243,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/post-analytics"
+                  path="/user/:userId/community/:communityId/event/:eventId/interested-people"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -251,31 +251,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/polls"
-                  exact
-                  component={SpecificEventRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/stage-customisation"
-                  exact
-                  component={SpecificEventRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/uploaded-content"
-                  exact
-                  component={SpecificEventRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/rtmp-and-live-streaming"
+                  path="/user/:userId/community/:communityId/event/:eventId/leads"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -291,7 +267,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/email-customisation"
+                  path="/user/:userId/community/:communityId/event/:eventId/video-library"
                   exact
                   component={SpecificEventRoot}
                 />
@@ -299,7 +275,31 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/:communityId/event/:eventId/security-checks"
+                  path="/user/:userId/community/:communityId/event/:eventId/branding"
+                  exact
+                  component={SpecificEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/:communityId/event/:eventId/recordings"
+                  exact
+                  component={SpecificEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/:communityId/event/:eventId/live-streaming"
+                  exact
+                  component={SpecificEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/:communityId/event/:eventId/mail-campaign"
                   exact
                   component={SpecificEventRoot}
                 />

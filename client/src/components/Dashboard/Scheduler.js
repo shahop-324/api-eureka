@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -8,11 +8,13 @@ import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Registrations.scss";
 // import CustomPagination from "./HelperComponent/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
-import { alpha } from "@material-ui/core";
+import { alpha, Divider } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ReactTooltip from "react-tooltip";
 import CenteredTabs from "../UserAccount/UserAccountCenteredTabBar";
 import SchedulerTabs from "./HelperComponent/SchedulerTabs";
+import ScheduleListFields from "./SubComponents/SchedulerComponents/ScheduleListFields";
+import ScheduleDetailsCard from "./SubComponents/SchedulerComponents/ScheduleDetailsCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +76,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Scheduler = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setActiveIndex(newValue);
+  };
+
   const classes = useStyles();
 
   return (
@@ -92,52 +100,24 @@ const Scheduler = () => {
             <ReactTooltip place="bottom" type="dark" effect="float" />
           </div>
           <div className="sec-heading-action-button d-flex flex-row">
-            {/* <div
-              className={`${classes.search} me-3`}
-              style={{ backgroundColor: "#ffffff" }}
-            >
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div> */}
-            {/* <div className="me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="bottom"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div> */}
-            {/* <button className="btn btn-outline-primary btn-outline-text">
-              Suggest Integration
-            </button> */}
+            {/* Here goes right side search, filter and sort components */}
           </div>
         </div>
         <div className="px-4 py-4">
-        {/* <CenteredTabs
-                //   activeIndex={currentIndex}
-                //   handleChange={handleChange}
-                /> */}
-                <SchedulerTabs />
-          {/* <Eventbrite />
-          <Mailchimp />
-          <Intercom />
-          <Hubspot />
-          <Salesforce />
-          <Slack />
-          <Twitter />
-          <Marketo />
-          <Miro />
-          <Figma />
-          <Typeform /> */}
+          <SchedulerTabs
+            activeIndex={activeIndex}
+            handleChange={handleChange}
+          />
+
+<div className="event-management-content-grid px-3 my-3 py-4">
+<ScheduleListFields />
+
+<div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+            <Divider />
+          </div>
+          <ScheduleDetailsCard />
+</div>
+          
         </div>
       </div>
     </>

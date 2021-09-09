@@ -10,13 +10,32 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import CropFreeIcon from "@material-ui/icons/CropFree";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import PersonPinCircleIcon from "@material-ui/icons/PersonPinCircle";
+import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import LiveTvIcon from "@material-ui/icons/LiveTv";
+import MovieIcon from "@material-ui/icons/Movie";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import VideoLabelIcon from "@material-ui/icons/VideoLabel";
 import { Link, useParams } from "react-router-dom";
 
-const SideNav = (props) => {
+const SideNav = ({
+  activeIndex,
+  handleAnalyticsClick,
+  handleRegistrationsClick,
+  handleCustomRegistrationClick,
+  handleAffiliatesClick,
+  handleInterestedPeopleClick,
+  handleLeadsClick,
+  handleIntegrationsClick,
+  handleVideoLibraryClick,
+  handleBrandingClick,
+  handleRecordingsClick,
+  handleLiveStreamingClick,
+  handleMailCampaignClick,
+}) => {
   const params = useParams();
 
   // EVENT_ID, COMMUNITY_ID AND USER_ID
@@ -36,7 +55,6 @@ const SideNav = (props) => {
                 <ArrowBackIosIcon style={{ fontSize: 18 }} />
               </IconButton>
             </Link>
-
             <button className="btn btn-outline-primary btn-outline-text me-2">
               Publish
             </button>
@@ -58,16 +76,18 @@ const SideNav = (props) => {
           <Divider />
         </div>
         <div
-          onClick={props.handlePreAnalyticsClick}
+          onClick={() => {
+            handleAnalyticsClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "1" ? "btn-active-d" : " ")
+            (activeIndex === "1" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "1" ? "btn-icon-active-d" : " ")
+              (activeIndex === "1" ? "btn-icon-active-d" : " ")
             }
           >
             <TimelineRoundedIcon style={{ fontSize: 26 }} />
@@ -75,24 +95,25 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "1" ? "btn-text-active-d" : " ")
+              (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
             Analytics
           </div>
         </div>
-
         <div
-          onClick={props.handleRegistrationsClick}
+          onClick={() => {
+            handleRegistrationsClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "2" ? "btn-active-d" : " ")
+            (activeIndex === "2" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "2" ? "btn-icon-active-d" : " ")
+              (activeIndex === "2" ? "btn-icon-active-d" : " ")
             }
           >
             <PeopleOutlineRoundedIcon style={{ fontSize: 26 }} />
@@ -100,24 +121,52 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "2" ? "btn-text-active-d" : " ")
+              (activeIndex === "2" ? "btn-text-active-d" : " ")
             }
           >
             Registrations
           </div>
         </div>
-
         <div
-          onClick={props.handlePostAnalyticsClick}
+          onClick={() => {
+            handleCustomRegistrationClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "5" ? "btn-active-d" : " ")
+            (activeIndex === "3" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "5" ? "btn-icon-active-d" : " ")
+              (activeIndex === "3" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <AssignmentIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "3" ? "btn-text-active-d" : " ")
+            }
+          >
+            Custom Registration
+          </div>
+        </div>
+
+        <div
+          onClick={() => {
+            handleAffiliatesClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "4" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "4" ? "btn-icon-active-d" : " ")
             }
           >
             <AssignmentIndIcon style={{ fontSize: 26 }} />
@@ -125,7 +174,7 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "5" ? "btn-text-active-d" : " ")
+              (activeIndex === "4" ? "btn-text-active-d" : " ")
             }
           >
             Manage Affiliates
@@ -133,16 +182,18 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handlePollsClick}
+          onClick={() => {
+            handleInterestedPeopleClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "6" ? "btn-active-d" : " ")
+            (activeIndex === "5" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "6" ? "btn-icon-active-d" : " ")
+              (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
             <PersonPinCircleIcon style={{ fontSize: 26 }} />
@@ -150,7 +201,7 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "6" ? "btn-text-active-d" : " ")
+              (activeIndex === "5" ? "btn-text-active-d" : " ")
             }
           >
             Interested People
@@ -158,16 +209,18 @@ const SideNav = (props) => {
         </div>
 
         <div
-          onClick={props.handleStageCustomisationClick}
+          onClick={() => {
+            handleLeadsClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "7" ? "btn-active-d" : " ")
+            (activeIndex === "6" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "7" ? "btn-icon-active-d" : " ")
+              (activeIndex === "6" ? "btn-icon-active-d" : " ")
             }
           >
             <TrendingUpIcon style={{ fontSize: 26 }} />
@@ -175,49 +228,155 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "7" ? "btn-text-active-d" : " ")
+              (activeIndex === "6" ? "btn-text-active-d" : " ")
             }
           >
             Leads
           </div>
         </div>
-
         <div
-          onClick={props.handleUploadedContentClick}
+          onClick={() => {
+            handleIntegrationsClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "8" ? "btn-active-d" : " ")
+            (activeIndex === "7" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "8" ? "btn-icon-active-d" : " ")
+              (activeIndex === "7" ? "btn-icon-active-d" : " ")
             }
           >
-            <CropFreeIcon style={{ fontSize: 26 }} />
+            <SettingsEthernetIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "8" ? "btn-text-active-d" : " ")
+              (activeIndex === "7" ? "btn-text-active-d" : " ")
             }
           >
-            Check Ins
+            Integrations
           </div>
         </div>
-
         <div
-          onClick={props.handleRTMPAndLiveStreamingClick}
+          onClick={() => {
+            handleVideoLibraryClick();
+          }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "9" ? "btn-active-d" : " ")
+            (activeIndex === "8" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "9" ? "btn-icon-active-d" : " ")
+              (activeIndex === "8" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <VideocamIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "8" ? "btn-text-active-d" : " ")
+            }
+          >
+            Video Library
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            handleBrandingClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "9" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "9" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <VideoLabelIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "9" ? "btn-text-active-d" : " ")
+            }
+          >
+            Branding
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            handleRecordingsClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "10" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "10" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <MovieIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "10" ? "btn-text-active-d" : " ")
+            }
+          >
+            Recordings
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            handleLiveStreamingClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "11" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "11" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <LiveTvIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "11" ? "btn-text-active-d" : " ")
+            }
+          >
+            Live Streaming
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            handleMailCampaignClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "12" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "12" ? "btn-icon-active-d" : " ")
             }
           >
             <MailOutlineIcon style={{ fontSize: 26 }} />
@@ -225,7 +384,7 @@ const SideNav = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "9" ? "btn-text-active-d" : " ")
+              (activeIndex === "12" ? "btn-text-active-d" : " ")
             }
           >
             Mail Campaign

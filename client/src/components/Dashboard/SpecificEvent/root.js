@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { navigationIndexForSpecificEvent } from "../../../actions/index";
 import SideNav from "./sideNav";
 import Registrations from "./Pages/Registrations";
+import Integrations from "./Pages/Integrations";
 import Queries from "./Pages/Queries";
 import Reviews from "./Pages/Reviews";
 import EventAnalytics from "./Pages/Analytics";
@@ -48,18 +49,13 @@ const SpecificEventRoot = () => {
     };
   }, [dispatch]);
 
-  const handleEditEventClick = () => {
-    history.push(`/community/${communityId}/edit-event/${eventId}/basics`);
-  };
-
-  const handlePreAnalyticsClick = () => {
+  const handleAnalyticsClick = () => {
     dispatch(navigationIndexForSpecificEvent(1));
     // /user/${userId}/community/${communityId}/event/${eventId}
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`
+      `/user/${userId}/community/${communityId}/event/${eventId}/analytics`
     );
   };
-
   const handleRegistrationsClick = () => {
     dispatch(navigationIndexForSpecificEvent(2));
     history.push(
@@ -67,69 +63,70 @@ const SpecificEventRoot = () => {
     );
   };
 
-  const handleQueriesClick = () => {
+  const handleCustomRegistrationClick = () => {
     dispatch(navigationIndexForSpecificEvent(3));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/queries`
+      `/user/${userId}/community/${communityId}/event/${eventId}/custom-registration`
     );
   };
 
-  const handleReviewsClick = () => {
+  const handleAffiliatesClick = () => {
     dispatch(navigationIndexForSpecificEvent(4));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/reviews`
+      `/user/${userId}/community/${communityId}/event/${eventId}/affiliates`
     );
   };
 
-  const handlePostAnalyticsClick = () => {
+  const handleInterestedPeopleClick = () => {
     dispatch(navigationIndexForSpecificEvent(5));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/post-analytics`
+      `/user/${userId}/community/${communityId}/event/${eventId}/interested-people`
     );
   };
 
-  const handlePollsClick = () => {
+  const handleLeadsClick = () => {
     dispatch(navigationIndexForSpecificEvent(6));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/polls`
+      `/user/${userId}/community/${communityId}/event/${eventId}/leads`
     );
   };
 
-  const handleStageCustomisationClick = () => {
-    dispatch(navigationIndexForSpecificEvent(7));
-    history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/stage-customisation`
-    );
-  };
-
-  const handleUploadedContentClick = () => {
-    dispatch(navigationIndexForSpecificEvent(8));
-    history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/uploaded-content`
-    );
-  };
-  const handleRTMPAndLiveStreamingClick = () => {
-    dispatch(navigationIndexForSpecificEvent(9));
-    history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/rtmp-and-live-streaming`
-    );
-  };
   const handleIntegrationsClick = () => {
-    dispatch(navigationIndexForSpecificEvent(10));
+    dispatch(navigationIndexForSpecificEvent(7));
     history.push(
       `/user/${userId}/community/${communityId}/event/${eventId}/integrations`
     );
   };
-  const handleEmailCustomisationClick = () => {
-    dispatch(navigationIndexForSpecificEvent(11));
+
+  const handleVideoLibraryClick = () => {
+    dispatch(navigationIndexForSpecificEvent(8));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/email-customisation`
+      `/user/${userId}/community/${communityId}/event/${eventId}/video-library`
     );
   };
-  const handleSecurityChecksClick = () => {
+
+  const handleBrandingClick = () => {
+    dispatch(navigationIndexForSpecificEvent(9));
+    history.push(
+      `/user/${userId}/community/${communityId}/event/${eventId}/branding`
+    );
+  };
+  const handleRecordingsClick = () => {
+    dispatch(navigationIndexForSpecificEvent(10));
+    history.push(
+      `/user/${userId}/community/${communityId}/event/${eventId}/recordings`
+    );
+  };
+  const handleLiveStreamingClick = () => {
+    dispatch(navigationIndexForSpecificEvent(11));
+    history.push(
+      `/user/${userId}/community/${communityId}/event/${eventId}/live-streaming`
+    );
+  };
+  const handleMailCampaignClick = () => {
     dispatch(navigationIndexForSpecificEvent(12));
     history.push(
-      `/user/${userId}/community/${communityId}/event/${eventId}/security-checks`
+      `/user/${userId}/community/${communityId}/event/${eventId}/mail-campaign`
     );
   };
   let currentIndex = useSelector(
@@ -147,19 +144,19 @@ const SpecificEventRoot = () => {
         <div className="dashboard-body">
           <SideNav
             activeIndex={currentIndex}
-            handleEditEventClick={handleEditEventClick}
-            handlePreAnalyticsClick={handlePreAnalyticsClick}
+            // handleEditEventClick={handleEditEventClick}
+            handleAnalyticsClick={handleAnalyticsClick}
             handleRegistrationsClick={handleRegistrationsClick}
-            handleQueriesClick={handleQueriesClick}
-            handleReviewsClick={handleReviewsClick}
-            handlePostAnalyticsClick={handlePostAnalyticsClick}
-            handlePollsClick={handlePollsClick}
-            handleStageCustomisationClick={handleStageCustomisationClick}
-            handleUploadedContentClick={handleUploadedContentClick}
-            handleRTMPAndLiveStreamingClick={handleRTMPAndLiveStreamingClick}
+            handleCustomRegistrationClick={handleCustomRegistrationClick}
+            handleAffiliatesClick={handleAffiliatesClick}
+            handleInterestedPeopleClick={handleInterestedPeopleClick}
+            handleLeadsClick={handleLeadsClick}
             handleIntegrationsClick={handleIntegrationsClick}
-            handleEmailCustomisationClick={handleEmailCustomisationClick}
-            handleSecurityChecksClick={handleSecurityChecksClick}
+            handleVideoLibraryClick={handleVideoLibraryClick}
+            handleBrandingClick={handleBrandingClick}
+            handleRecordingsClick={handleRecordingsClick}
+            handleLiveStreamingClick={handleLiveStreamingClick}
+            handleMailCampaignClick={handleMailCampaignClick}
           />
 
           <div className="main-content-wrapper">
@@ -176,25 +173,31 @@ const SpecificEventRoot = () => {
                   );
 
                 case "3":
-                  return <Queries />;
+                  return <div>Here we will have custom registration form.</div>;
 
                 case "4":
-                  return <Reviews />;
+                  return <div>Here organisers can manage affiliates.</div>;
 
                 case "5":
-                  return <Affiliate />;
+                  return <div>Here see who is interested in thier event and can reach them.</div>;
 
                 case "6":
-                  return <InterestedPeople />;
+                  return <div>Here people who were booking tickets but left for some reasons will be recorded</div>;
 
                 case "7":
-                  return <Leads />;
+                  return <Integrations />;
 
                 case "8":
-                  return <CheckIns />;
+                  return <div>Here organisers can upload videos to play inside event.</div>;
 
                 case "9":
-                  return <MailCampaign />;
+                  return <div>Here organisers can do branding for their event.</div>;
+                case "10":
+                  return <div>Here organisers can view, download and share event recordings.</div>;
+                case "11":
+                  return <div>Here organisers can set up Custom RTMP live streaming.</div>;
+                case "12":
+                  return <div>Here organisers can set up mail campaigns to promote their event and reach large audience.</div>;
 
                 default:
                   return <div>You are a community Editing an event.</div>;
