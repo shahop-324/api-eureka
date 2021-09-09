@@ -4,6 +4,8 @@ import "./Styles/IntegrationCard.scss";
 import MailchimpConnect from "./Forms/Mailchimp";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import { useParams } from "react-router";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
@@ -26,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Mailchimp = () => {
+<<<<<<< HEAD
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -36,8 +39,11 @@ const Mailchimp = () => {
     setOpen(false);
   };
 
+=======
+  const params = useParams();
+>>>>>>> mailChimpIntegration
   const classes = useStyles();
-
+  const communityId = params.id;
   return (
     <>
       <div className="integration-card-container px-4 py-3 mb-4">
@@ -61,6 +67,7 @@ const Mailchimp = () => {
           </div>
 
           <div style={{ justifySelf: "end" }}>
+<<<<<<< HEAD
             <button
               onClick={() => {
                 handleOpen();
@@ -68,6 +75,16 @@ const Mailchimp = () => {
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
+=======
+            <button className="btn btn-outline-primary btn-outline-text">
+              <a
+                href={`${BaseURL}/auth/mailchimp/?communityId=${communityId}`}
+                style={{ textDecoration: "none" }}
+              >
+                {" "}
+                Add
+              </a>
+>>>>>>> mailChimpIntegration
             </button>
           </div>
         </div>

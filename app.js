@@ -54,6 +54,8 @@ const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
+
+const MailChimp = require("./models/mailChimpModel");
 const { promisify } = require("util");
 require("./services/passport");
 
@@ -255,12 +257,28 @@ app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
 
 // 2. The login link above will direct the user here, which will redirect
 // to Mailchimp's OAuth login page.
-app.get("/api-eureka/eureka/v1/auth/mailchimp", (req, res) => {
+app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
+  console.log(req.query.communityId);
+
+  const communityId = req.query.communityId;
+  // const existingMailChimp= await MailChimp.findById(communityId)
+
+  //  if(!existingMailChimp)
+  //  {
+
+  //   await MailChimp.create({
+
+  //         communityId
+  //     })
+
+  //  }
+
   res.redirect(
     `https://login.mailchimp.com/oauth2/authorize?${querystring.stringify({
       response_type: "code",
       client_id: MAILCHIMP_CLIENT_ID,
       redirect_uri: OAUTH_CALLBACK,
+      communityId,
     })}`
   );
 });
@@ -271,7 +289,9 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", (req, res) => {
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
   // Here we're exchanging the temporary code for the user's access token.
   //console.log(req.body.code);
+  console.log(req, "Hey i am counting on you request");
   console.log(req.query.code);
+  console.log(req.query.communityId, "Hey i am counting on you communityId");
 
   let accessToken = null;
   const config = {
@@ -302,6 +322,10 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
           },
         })
         .then((metadataResponse) => {
+          console.log(
+            metadataResponse,
+            "I am counting on you metaDataResponse"
+          );
           console.log(metadataResponse.data.dc);
           mailchimp.setConfig({
             accessToken,
