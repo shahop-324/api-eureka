@@ -17,6 +17,7 @@ const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
 const ReviewsIdsCommunityWise = require("../models/reviewsIdsCommunityWise");
 const SpeakersIdsCommunityWise = require("../models/speakersIdsCommunityWiseModel");
 const RegistrationsIdsCommunityWise = require("../models/registrationsIdsCommunityWiseModel");
+const MailChimp = require("../models/mailChimpModel");
 const Ticket = require("../models/ticketModel");
 const Mailer = require("../services/Mailer");
 const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
@@ -289,7 +290,9 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   const communityGettingRegistration = await Community.findById(
     eventGettingRegistration.createdBy
   );
-
+  const mailChimpIntegratedCommunity = await MailChimp.find({
+    communityId: communityGettingRegistration._id,
+  });
   const amountOfTicketAvailable =
     ticketWhichIsBeingUtilised.amountOfTicketAvailable;
   const numberOfTicketSoldPreviously =
