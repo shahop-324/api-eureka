@@ -143,7 +143,7 @@ export const signUp = (formValues, intent, eventId) => async (dispatch) => {
     //  history.push("/user/home");
     // window.location.href = REACT_APP_MY_ENV
     //   ? "http://localhost:3001/user/home"
-    //   : "https://www.evenz.in/user/home";
+    //   : "https://www.bluemeet.in/user/home";
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
     } else if (intent === "buyPlan") {
@@ -209,7 +209,7 @@ export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
     history.push("/user/home");
     // window.location.href = REACT_APP_MY_ENV
     //   ? "http://localhost:3001/user/home"
-    //   : "https://www.evenz.in/user/home";
+    //   : "https://www.bluemeet.in/user/home";
   }
 };
 
@@ -252,7 +252,7 @@ export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
       history.push("/user/home");
       // window.location.href = REACT_APP_MY_ENV
       //   ? "http://localhost:3001/user/home"
-      //   : "https://www.evenz.in/user/home";
+      //   : "https://www.bluemeet.in/user/home";
     }
     //history.push("/user/home");
   } catch (err) {
@@ -3824,7 +3824,7 @@ export const resetPassword =
       );
       window.location.href = REACT_APP_MY_ENV
         ? "http://localhost:3001/user/home"
-        : "https://www.evenz.in/user/home";
+        : "https://www.bluemeet.in/user/home";
     } catch (err) {
       console.log(err);
       dispatch(userActions.hasError(err.message));

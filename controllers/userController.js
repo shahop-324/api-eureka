@@ -293,6 +293,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   const mailChimpIntegratedCommunity = await MailChimp.find({
     communityId: communityGettingRegistration._id,
   });
+
   const amountOfTicketAvailable =
     ticketWhichIsBeingUtilised.amountOfTicketAvailable;
   const numberOfTicketSoldPreviously =

@@ -7,7 +7,7 @@ const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
   : "https://www.evenz.co.in/api-eureka/eureka/v1";
-const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
+const Mailchimp = ({ openDrawer, handleCloseDrawer, communityId, userId }) => {
   return (
     <>
       <React.Fragment key="right">
@@ -36,7 +36,7 @@ const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4">
                 <a
-                  href={`${BaseURL}/auth/mailChimp`}
+                  href={`${BaseURL}/auth/mailChimp?communityId=${communityId}&userId=${userId}`}
                   style={{ textDecoration: "none", width: "100%" }}
                 >
                   <button

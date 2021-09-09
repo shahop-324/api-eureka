@@ -56,6 +56,8 @@ const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
+const Community = require("./models/communityModel");
+
 const { promisify } = require("util");
 require("./services/passport");
 
@@ -75,16 +77,15 @@ const MAILCHIMP_CLIENT_SECRET =
 console.log(process.env.NODE_ENV, "klljlkl;kmfghytredswrtyuiop");
 const BASE_URL =
   process.env.NODE_ENV === "development"
-    ? "http://127.0.0.1:3000"
-    : "https://www.evenz.co.in";
-const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/eureka/v1/oauth/mailchimp/callback`;
+    ? "http://127.0.0.1:3001"
+    : "https://www.evenz.in";
 
 app.use(
   cors({
     origin: [
       "http://127.0.0.1:3001",
       "http://localhost:3001",
-      "https://www.evenz.in",
+      "https://www.bluemeet.in",
       "https://www.evenz.co.in",
       "https://evenz.co.in",
     ],
@@ -258,27 +259,25 @@ app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
 // 2. The login link above will direct the user here, which will redirect
 // to Mailchimp's OAuth login page.
 app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
-  console.log(req.query.communityId);
+  // const communityId = req.query.communityId;
+  // const userId = req.query.userId;
 
-  const communityId = req.query.communityId;
-  // const existingMailChimp= await MailChimp.findById(communityId)
+  // console.log(communityId, "i am counting on you communityId");
+  // console.log(userId, "i am counting on you userId");
+  // // http://127.0.0.1:3001/user/611f27e97f0edf6846ee1e6a/community/overview/61202c307f0edf6846ee1fad
+  // //  const OAUTH_CALLBACK = `${BASE_URL}/user/${611f27e97f0edf6846ee1e6a}/community/integrations/61202c307f0edf6846ee1fad`;
+  // const OAUTH_CALLBACK = `${BASE_URL}/user/${userId}/community/integrations/${communityId}`;
 
-  //  if(!existingMailChimp)
-  //  {
+  const OAUTH_CALLBACK = `${BASE_URL}/signin`;
+  // console.log(req.query.communityId);
 
-  //   await MailChimp.create({
-
-  //         communityId
-  //     })
-
-  //  }
+  // const communityId = req.query.communityId;
 
   res.redirect(
     `https://login.mailchimp.com/oauth2/authorize?${querystring.stringify({
       response_type: "code",
       client_id: MAILCHIMP_CLIENT_ID,
       redirect_uri: OAUTH_CALLBACK,
-      communityId,
     })}`
   );
 });
@@ -289,9 +288,9 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
   // Here we're exchanging the temporary code for the user's access token.
   //console.log(req.body.code);
-  console.log(req, "Hey i am counting on you request");
-  console.log(req.query.code);
-  console.log(req.query.communityId, "Hey i am counting on you communityId");
+  //console.log(req, "Hey i am counting on you request");
+  //console.log(req.query.code);
+  //console.log(req.query.communityId, "Hey i am counting on you communityId");
 
   let accessToken = null;
   const config = {
@@ -326,23 +325,45 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
             metadataResponse,
             "I am counting on you metaDataResponse"
           );
-          console.log(metadataResponse.data.dc);
-          mailchimp.setConfig({
-            accessToken,
-            server: metadataResponse.data.dc,
-          });
+          console.log(
+            metadataResponse.data.login.email,
+            "I am counting on you metadataResponse.data.login.email"
+          );
+          Community.find({ email: metadataResponse.data.login.email }).then(
+            (community) => {
+              MailChimp.create({
+                communityId: community._id,
+                accessToken,
+                server: metadataResponse.data.dc,
+              }).then(() => {
+                console.log(
+                  "mailChimpCommunityCreated",
+                  "hey i am counting on you mailchimp community id"
+                );
+                res.status(200).json({
+                  status: "SUCCESS",
+                });
+              });
+            }
+          );
 
-          mailchimp.ping.get().then((response) => {
-            console.log(response);
-          });
+          // console.log(metadataResponse.data.dc);
 
-          res.send(`
-    <p>This user's access token is ${accessToken} and their server prefix is ${metadataResponse.data.dc}.</p>
+          // mailchimp.setConfig({
+          //   accessToken,
+          //   server: metadataResponse.data.dc,
+          // });
 
-    <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
+          // mailchimp.ping.get().then((response) => {
+          //   console.log(response);
+          // });
 
+          //         res.send(`
+          //   <p>This user's access token is ${accessToken} and their server prefix is ${metadataResponse.data.dc}.</p>
 
-  `);
+          //   <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
+
+          // `);
         });
     });
 });

@@ -4,9 +4,12 @@ import "./Styles/IntegrationCard.scss";
 import MailchimpConnect from "./Forms/Mailchimp";
 
 import { makeStyles } from "@material-ui/core/styles";
-
+import { useEffect } from "react";
 import { useParams } from "react-router";
-
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -26,7 +29,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Mailchimp = () => {
   const [open, setOpen] = useState(false);
+  const urlSearchParams = new URLSearchParams(window.location.search);
 
+  const query = Object.fromEntries(urlSearchParams.entries());
+  useEffect(() => {
+    if (query.code) {
+      console.log(query.code, "I am counting on you query.code");
+    }
+  }, []);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -38,6 +48,7 @@ const Mailchimp = () => {
   const params = useParams();
   const classes = useStyles();
   const communityId = params.id;
+  const userId = params.userId;
   return (
     <>
       <div className="integration-card-container px-4 py-3 mb-4">
@@ -73,6 +84,8 @@ const Mailchimp = () => {
         </div>
       </div>
       <MailchimpConnect
+        communityId={communityId}
+        userId={userId}
         openDrawer={open}
         handleCloseDrawer={handleCloseDrawer}
       />
