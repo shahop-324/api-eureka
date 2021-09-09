@@ -61,16 +61,6 @@ const Mailchimp = () => {
           </div>
 
           <div style={{ justifySelf: "end" }}>
-<<<<<<< HEAD
-            <button className="btn btn-outline-primary btn-outline-text">
-              <a
-                href={`${BaseURL}/auth/mailchimp`}
-                style={{ textDecoration: "none" }}
-              >
-                {" "}
-                Add
-              </a>
-=======
             <button
               onClick={() => {
                 handleOpen();
@@ -78,7 +68,6 @@ const Mailchimp = () => {
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
->>>>>>> 095bfbc (mailchimp ui design)
             </button>
           </div>
         </div>
