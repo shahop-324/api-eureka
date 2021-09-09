@@ -25,7 +25,12 @@ import InterestedPeople from "./Pages/InterestedPeople";
 import Leads from "./Pages/Leads";
 import CheckIns from "./Pages/CheckIns";
 import MailCampaign from "./Pages/MailCampaign";
+import Chip from '@material-ui/core/Chip';
 import ErrorBoundriesRegistrations from "../../ErrorBoundries/ErrorBoundriesRegistrations";
+import SideNavLean from "./SideNavLean";
+import { Link } from "react-router-dom";
+import { IconButton } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 /* <Link to={`/user/${userId}/community/${communityId}/event/${eventId}`} style={{width: "100%"}}> 
             </Link> */
@@ -140,9 +145,57 @@ const SpecificEventRoot = () => {
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
         <Topnav />
+        <div>
+        <div className="dashboard-event-section-head py-2 pe-3">
+          <div className="d-flex flex-row align-items-center">
+          <Link
+              to={`/user/${userId}/community/event-management/${communityId}`}
+              className="me-3"
+            >
+              <IconButton aria-label="back" className="ms-4" >
+                <ArrowBackIosIcon style={{ fontSize: 18 }} />
+              </IconButton>
+            </Link>
+
+            <button className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+              Publish
+            </button>
+          </div>
+           
+            <div className="d-flex flex-row align-items-center">
+            <div className="event-name-head-text me-3">Confulence Global Summit 2021</div>
+            <Chip label="Upcoming" variant="outlined" style={{color: "#538BF7", border: "1px solid #538BF7"}} />
+            </div>
+            
+
+            <button className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+              Publish
+            </button>
+            
+          </div>
+          
+        </div>
         {/* Body section - left(side nav) & right(body content) */}
         <div className="dashboard-body">
           <SideNav
+          
+            activeIndex={currentIndex}
+            // handleEditEventClick={handleEditEventClick}
+            handleAnalyticsClick={handleAnalyticsClick}
+            handleRegistrationsClick={handleRegistrationsClick}
+            handleCustomRegistrationClick={handleCustomRegistrationClick}
+            handleAffiliatesClick={handleAffiliatesClick}
+            handleInterestedPeopleClick={handleInterestedPeopleClick}
+            handleLeadsClick={handleLeadsClick}
+            handleIntegrationsClick={handleIntegrationsClick}
+            handleVideoLibraryClick={handleVideoLibraryClick}
+            handleBrandingClick={handleBrandingClick}
+            handleRecordingsClick={handleRecordingsClick}
+            handleLiveStreamingClick={handleLiveStreamingClick}
+            handleMailCampaignClick={handleMailCampaignClick}
+          />
+          <SideNavLean
+          
             activeIndex={currentIndex}
             // handleEditEventClick={handleEditEventClick}
             handleAnalyticsClick={handleAnalyticsClick}

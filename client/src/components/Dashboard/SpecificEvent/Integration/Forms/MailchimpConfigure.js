@@ -1,27 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
-import Select from "react-select";
-
-const audienceList = [];
-
-const styles = {
-    control: (base) => ({
-      ...base,
-      fontFamily: "Inter",
-      fontWeight: "600",
-      color: "#757575",
-    }),
-    menu: (base) => ({
-      ...base,
-      fontFamily: "Inter",
-      fontWeight: "600",
-      color: "#757575",
-    }),
-  };
+import MailchimpGeneral from "../Sub/MailchimpGeneral";
+import MailchimpFormFields from "../Sub/MailchimpFormFields";
 
 const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
+  const [selectedTab, setSelectedTab] = useState("general");
+
   return (
     <>
       <React.Fragment key="right">
@@ -31,7 +17,7 @@ const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
           disableBackdropTransition={true}
         >
           <div className="integration-side-drawer-form px-4 py-4">
-            <div className="d-flex flex-row align-items-center justify-content-between">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-4">
               <div
                 style={{
                   fontWeight: "500",
@@ -50,46 +36,47 @@ const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
                 />
               </IconButton>
             </div>
-            <div style={{ textAlign: "center" }} className="mb-4"></div>
-            <div>
 
-            <div class="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                class="form-label form-label-customized"
+            <div className="d-flex flex-row align-items-center mb-5">
+              <div
+                onClick={() => {
+                  setSelectedTab("general");
+                }}
+                className={`integration-tab me-5 ${
+                  selectedTab === "general" ? "active-integration-tab" : ""
+                }`}
               >
-                Mailchimp audience
-              </label>
-              <Select
-                name="mailchimpList"
-                placeholder="Select list"
-                styles={styles}
-                menuPlacement="bottom"
-                options={audienceList}
-                // defaultValue={eventOptions[0]}
-                // component={renderReactSelect}
-              />
-            </div>
-
+                General
+              </div>
 
               <div
-                className="d-flex flex-row align-items-center justify-content-end mb-4"
-                style={{ width: "100%" }}
+                onClick={() => {
+                  setSelectedTab("formFields");
+                }}
+                className={`integration-tab me-5 ${
+                  selectedTab === "formFields" ? "active-integration-tab" : ""
+                }`}
               >
-                <button
-                  className="btn btn-outline-primary btn-outline-text"
-                //   style={{ width: "100%" }}
-                >
-                  Save
-                </button>
-              </div>
-              <div>
-                <div className="want-help-heading mb-3">Want help ?</div>
-                <div className="integration-guide-btn px-4 py-2">
-                  Guid to Integrate Mailchimp with Evenz.
-                </div>
+                Form fields
               </div>
             </div>
+
+            {/* Here goes general and form field components */}
+
+            {(() => {
+              switch (selectedTab) {
+                case "general":
+                  return <MailchimpGeneral />;
+
+                case "formFields":
+                  return <MailchimpFormFields />;
+
+                default:
+                  return (
+                    <div>Here you can configure mailchimp for this event.</div>
+                  );
+              }
+            })()}
           </div>
         </SwipeableDrawer>
       </React.Fragment>

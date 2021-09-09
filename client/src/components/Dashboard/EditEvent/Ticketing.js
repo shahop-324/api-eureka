@@ -22,8 +22,6 @@ import Loader from "../../Loader";
 import { useSnackbar } from "notistack";
 import { errorTrackerForFetchTickets } from "../../../actions";
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

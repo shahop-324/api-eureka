@@ -6,7 +6,7 @@
 .integration-name {
     font-weight: 600;
     font-family: "Ubuntu";
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     color: #212121;
 }
 
@@ -17,7 +17,8 @@
 }
 
 .integration-side-drawer-form {
-    min-width: 580px;
+    min-width: 600px;
+    max-width: 600px;
 }
 
 .want-help-heading {
@@ -42,4 +43,34 @@
     border: 1px solid #538BF7;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.form-small-text {
+    font-family: "Ubuntu";
+    font-size: 0.8rem;
+}
+
+.tag {
+    font-family: "Ubuntu";
+    font-weight: 500;
+    color: #538BF7;
+}
+
+.integration-tab {
+    font-family: "Ubuntu";
+    color: #6b6b6b;
+    font-weight: 500;
+    padding-bottom: 1%;
+    border-bottom: 2px solid transparent;
+}
+
+.integration-tab:hover {
+    color: #212121;
+    cursor: pointer;
+}
+
+.active-integration-tab {
+    color: #212121;
+    border-bottom: 2px solid #538BF7;
+
 }

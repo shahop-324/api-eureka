@@ -9,6 +9,22 @@
   overflow: hidden;
 }
 
+.dashboard-event-section-head {
+  display: grid;
+  grid-template-columns: 0.7fr 9fr 1fr;
+  grid-gap: 24px;
+  align-items: center;
+
+  background-color: #e9e9e9;
+}
+
+.event-name-head-text {
+  font-family: 'Ubuntu';
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #212121;
+}
+
 // Defining Variables
 //===========================================================================================//
 
@@ -33,7 +49,7 @@ $bg-color-light-sea: #eef3f6;
 
 $color-icon: #231f20;
 
-$font-family: 'Inter';
+$font-family: 'Ubuntu';
 
 // SideNav Styling
 //===========================================================================================//
@@ -95,7 +111,7 @@ $font-family: 'Inter';
 }
 
 .button-text-dashboard-sidenav {
-  font-family: Inter;
+  font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -140,7 +156,7 @@ $font-family: 'Inter';
 .sec-heading-text {
   font-family: $font-family;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1.5rem;
   line-height: 2rem;
   /* identical to box height, or 133% */
@@ -620,5 +636,46 @@ $font-family: 'Inter';
   .dash-notification,
   .dash-settings {
     display: none;
+  }
+}
+
+@media only screen and (min-width: '1441px') {
+  .publish-btn-lg {
+    display: inline-block;
+  }
+  .publish-btn-sm {
+    display: none;
+  }
+  .lg-side-nav {
+    display: inline-block;
+  }
+  .lean-side-nav {
+    display: none;
+  }
+  .dashboard-event-section-head {
+    grid-template-columns: 2fr 7fr 2fr;
+  }
+
+  .event-name-head-text {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+}
+
+@media only screen and (max-width: '1440px') {
+  .publish-btn-lg {
+    display: none;
+  }
+  .publish-btn-sm {
+    display: inline-block;
+  }
+  .dashboard-body {
+    grid-template-columns: 0.7fr 10fr;
+  }
+  .lg-side-nav {
+    display: none;
+  }
+  .lean-side-nav {
+    display: inline-block;
   }
 }

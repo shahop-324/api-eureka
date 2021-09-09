@@ -401,9 +401,9 @@ const validate = (formValues) => {
   if (!formValues.price) {
     errors.price = "Ticket price is required";
   }
-  if (formValues.price < 100) {
-    errors.price = "Minimum ticket price can be Rs. 100";
-  }
+  // if (formValues.price < 100) {
+  //   errors.price = "Minimum ticket price can be Rs. 100";
+  // }
   // if (!formValues.venueAreasAccessible) {
   //   errors.venueAreasAccessible = "Accessible venue areas is required";
   // }
