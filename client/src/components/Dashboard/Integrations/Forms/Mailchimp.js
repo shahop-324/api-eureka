@@ -3,7 +3,10 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
 import MailchimpIntegrationPNG from "./../../../../assets/images/int-3.png";
-
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1";
 const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
   return (
     <>
@@ -32,9 +35,13 @@ const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
             </div>
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4" style={{width: "100%"}}>
+                <a href={`${BaseURL}/auth/mailChimp`} style={{textDecoration:"none"}} >
                 <button className="btn btn-outline-primary btn-outline-text" style={{width: "100%"}}>
                   Authorize using mailchimp
                 </button>
+
+                </a>
+                
               </div>
               <div>
                 <div className="want-help-heading mb-3">Want help ?</div>
