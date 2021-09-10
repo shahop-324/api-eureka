@@ -80,6 +80,8 @@ const BASE_URL =
     ? "http://127.0.0.1:3001"
     : "https://www.evenz.in";
 
+    const OAUTH_CALLBACK = `${BASE_URL}/mailChimp`;
+
 app.use(
   cors({
     origin: [
@@ -268,7 +270,7 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
   // //  const OAUTH_CALLBACK = `${BASE_URL}/user/${611f27e97f0edf6846ee1e6a}/community/integrations/61202c307f0edf6846ee1fad`;
   // const OAUTH_CALLBACK = `${BASE_URL}/user/${userId}/community/integrations/${communityId}`;
 
-  const OAUTH_CALLBACK = `${BASE_URL}/mailChimp`;
+ 
   // console.log(req.query.communityId);
 
   // const communityId = req.query.communityId;
