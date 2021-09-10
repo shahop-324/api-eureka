@@ -36,7 +36,7 @@ const Mailchimp = ({ openDrawer, handleCloseDrawer, communityId, userId }) => {
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4">
                 <a
-                  href={`${BaseURL}/auth/mailChimp?communityId=${communityId}&userId=${userId}`}
+                  href={`${BaseURL}/auth/mailChimp`}
                   style={{ textDecoration: "none", width: "100%" }}
                 >
                   <button

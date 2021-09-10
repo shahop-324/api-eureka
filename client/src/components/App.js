@@ -55,6 +55,7 @@ import {
 import { signIn } from "../actions/index";
 
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
+import MailchimpConnect from "./MailchimpConnect";
 
 AOS.init();
 
@@ -109,6 +110,7 @@ class App extends React.Component {
           <div>
             <Switch>
               <Route path="/home" exact component={Home} />
+              <Route path="/mailchimp" exact component={MailchimpConnect} />
               <Route path="/" exact component={Home} />
 
               <Route path="/signup" exact component={Signup} />
@@ -392,7 +394,6 @@ class App extends React.Component {
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/queries/:id"

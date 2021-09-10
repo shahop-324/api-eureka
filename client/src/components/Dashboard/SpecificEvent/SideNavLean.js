@@ -82,7 +82,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Analytics
+              {/* Analytics */}
             </div>
           </div>
           <div
@@ -111,7 +111,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Registrations
+              {/* Registrations */}
             </div>
           </div>
           <div
@@ -140,7 +140,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Custom Registration
+              {/* Custom Registration */}
             </div>
           </div>
 
@@ -170,7 +170,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Manage Affiliates
+              {/* Manage Affiliates */}
             </div>
           </div>
 
@@ -200,7 +200,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Interested People
+              {/* Interested People */}
             </div>
           </div>
 
@@ -230,7 +230,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Leads
+              {/* Leads */}
             </div>
           </div>
           <div
@@ -259,7 +259,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Integrations
+              {/* Integrations */}
             </div>
           </div>
           <div
@@ -288,7 +288,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Video Library
+              {/* Video Library */}
             </div>
           </div>
           <div
@@ -317,7 +317,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Branding
+              {/* Branding */}
             </div>
           </div>
           <div
@@ -346,7 +346,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Recordings
+              {/* Recordings */}
             </div>
           </div>
           <div
@@ -375,7 +375,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Live Streaming
+              {/* Live Streaming */}
             </div>
           </div>
           <div
@@ -404,7 +404,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Mail Campaign
+              {/* Mail Campaign */}
             </div>
           </div>
         </div>

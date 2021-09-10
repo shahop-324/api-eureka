@@ -6,6 +6,10 @@ import MailchimpConnect from "./Forms/Mailchimp";
 import { makeStyles } from "@material-ui/core/styles";
 import { useEffect } from "react";
 import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+
+import { mailChimpIntegratedCommunity } from "../../../actions";
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
@@ -29,14 +33,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Mailchimp = () => {
   const [open, setOpen] = useState(false);
-  const urlSearchParams = new URLSearchParams(window.location.search);
 
-  const query = Object.fromEntries(urlSearchParams.entries());
-  useEffect(() => {
-    if (query.code) {
-      console.log(query.code, "I am counting on you query.code");
-    }
-  }, []);
+  const dispatch = useDispatch();
+  // const urlSearchParams = new URLSearchParams(window.location.search);
+
+  // const query = Object.fromEntries(urlSearchParams.entries());
+  // useEffect(() => {
+  //   if (query.code) {
+  //     console.log(query.code, "I am counting on you query.code");
+  //   }
+  // }, []);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -75,6 +81,7 @@ const Mailchimp = () => {
             <button
               onClick={() => {
                 handleOpen();
+                dispatch(mailChimpIntegratedCommunity(communityId));
               }}
               className="btn btn-outline-primary btn-outline-text"
             >
