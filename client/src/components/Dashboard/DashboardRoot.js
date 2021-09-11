@@ -45,6 +45,9 @@ import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
 
 const DashboardRoot = () => {
+
+  console.log(window.paypal);
+
   const params = useParams();
 
   const { error, isLoading } = useSelector((state) => state.community);
