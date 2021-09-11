@@ -35,6 +35,7 @@ import eventAlertSlice from "./eventAlertSlice";
 import eventPollSlice from "./eventPollSlice";
 import AvailableForNetworkingSlice from "./availableForNetworking";
 import StreamSlice from "./streamSlice";
+import paypalSlice from "./paypalSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -72,4 +73,5 @@ export default combineReducers({
   eventPoll: eventPollSlice.reducer,
   availableForNetworking: AvailableForNetworkingSlice.reducer,
   streams: StreamSlice.reducer,
+  paypal: paypalSlice.reducer,
 });

@@ -41,6 +41,7 @@ import { availableForNetworkingActions } from "../reducers/availableForNetworkin
 import { StreamActions } from "../reducers/streamSlice";
 import GlobalSnackbar from "../components/GlobalSnackbar";
 import socket from "../components/HostingPlatform/service/socket";
+import { paypalActions } from "../reducers/paypalSlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -5225,3 +5226,24 @@ export const fetchMailChimpAudiences =
       console.log(err);
     }
   };
+
+export const getPayPalConnectLink = () => async (dispatch, getState) => {
+  fetch(`${BaseURL}paypal/getPayPalAccessToken`, {
+    method: "GET",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then(async (res) => {
+    const payPalRes = await res.json();
+    console.log(payPalRes);
+
+    dispatch(
+      paypalActions.FetchLink({
+        link: payPalRes.data.links[1].href,
+      })
+    );
+
+    // window.location.href = payPalRes.data.links[1].href;
+  });
+};
