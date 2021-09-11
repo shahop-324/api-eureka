@@ -4,9 +4,12 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
 import MailchimpGeneral from "../Sub/MailchimpGeneral";
 import MailchimpFormFields from "../Sub/MailchimpFormFields";
+import { useSelector } from "react-redux";
 
 const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
   const [selectedTab, setSelectedTab] = useState("general");
+
+  
 
   return (
     <>

@@ -11,8 +11,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
 import { withStyles } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
 
-const audienceList = [];
+let audienceList = [];
 
 const styles = {
   control: (base) => ({
@@ -47,6 +48,15 @@ const RoyalBlueSwitch = withStyles({
 
 const MailchimpGeneral = () => {
   const [checked, setChecked] = React.useState(false);
+  
+  const ChimpyAudienceList = useSelector((state) => state.community.mailChimpAudiences);
+
+  audienceList = ChimpyAudienceList.map((list) => {
+    return {
+      value: list.id,
+      label: list.name
+    }
+  })
 
   const handleChange = () => {
     setChecked(!checked);
@@ -99,6 +109,7 @@ const MailchimpGeneral = () => {
             styles={styles}
             menuPlacement="bottom"
             options={audienceList}
+            onChange={(e) => console.log(e)}
           />
           <div className="form-label form-label-customized">Leads list</div>
           <Select
