@@ -12,8 +12,85 @@ import Switch from "@material-ui/core/Switch";
 
 import { withStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
+import { Field, reduxForm } from "redux-form";
 
 let audienceList = [];
+
+const renderInput = ({
+  input,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
+};
+
+const renderReactSelect = ({
+  input,
+  styles,
+  menuPlacement,
+  options,
+  defaultValue,
+  meta: { touched, error, warning },
+  name,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  
+    <div className={className}>
+      <Select
+        defaultValue={defaultValue}
+        styles={styles}
+        menuPlacement={menuPlacement}
+        name={name}
+        options={options}
+        value={input.value}
+        onChange={(value) => input.onChange(value)}
+        onBlur={() => input.onBlur()}
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+};
 
 const styles = {
   control: (base) => ({
@@ -46,7 +123,7 @@ const RoyalBlueSwitch = withStyles({
   track: {},
 })(Switch);
 
-const MailchimpGeneral = () => {
+const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
   const [checked, setChecked] = React.useState(false);
   
   const ChimpyAudienceList = useSelector((state) => state.community.mailChimpAudiences);
@@ -84,9 +161,19 @@ const MailchimpGeneral = () => {
     setEditMode(false);
   };
 
+  const onSubmit = (formValues) => {
+    console.log(formValues);
+  };
+
   return (
     <>
       <div>
+
+
+<form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+
+
+
         <div className="d-flex flex-column mb-5 overlay-form-input-row">
           <label
             for="communityName"
@@ -102,33 +189,37 @@ const MailchimpGeneral = () => {
           <div className="form-label form-label-customized">
             Registrants list
           </div>
-          <Select
-            className="mb-3"
-            name="mailchimpList"
+
+          <Field
+            name="registrantsList"
+            classes="mb-3"
             placeholder="Registrants list"
             styles={styles}
             menuPlacement="bottom"
             options={audienceList}
-            onChange={(e) => console.log(e)}
+            component={renderReactSelect}
+            // onChange={(e) => console.log(e)}
           />
           <div className="form-label form-label-customized">Leads list</div>
-          <Select
-            className="mb-3"
-            name="mailchimpList"
+          <Field
+            name="leadsList"
+            classes="mb-3"
             placeholder="Leads list"
             styles={styles}
             menuPlacement="bottom"
+            component={renderReactSelect}
             options={audienceList}
           />
           <div className="form-label form-label-customized">
             Interested people list
           </div>
-          <Select
-            name="mailchimpList"
+          <Field
+            name="interestedPeopleList"
             placeholder="Interested people list"
             styles={styles}
             menuPlacement="bottom"
             options={audienceList}
+            component={renderReactSelect}
           />
         </div>
         <div className="d-flex flex-column mb-5 overlay-form-input-row">
@@ -142,18 +233,19 @@ const MailchimpGeneral = () => {
 
           <div class="form-group">
             <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3 py-2">
-              <input
+              <Field
                 type="text"
                 readOnly={!editMode}
-                className="mail-group-name-input me-3"
+                classes="mail-group-name-input me-3"
                 style={{ width: "100%" }}
                 onChange={(e) => {
                   handleChangeTag(e);
                 }}
                 value={tag}
-                id="email-group-name"
-                aria-describedby="emailGroupName"
-                placeholder="Enter mail group name"
+                id="tag"
+                aria-describedby="tag"
+                placeholder="Enter tag"
+                component={renderInput}
               />
               {!editMode ? (
                 <EditRoundedIcon
@@ -231,7 +323,7 @@ const MailchimpGeneral = () => {
           className="d-flex flex-row align-items-center justify-content-end mb-4"
           style={{ width: "100%" }}
         >
-          <button className="btn btn-primary btn-outline-text">Save</button>
+          <button type="submit" className="btn btn-primary btn-outline-text">Save</button>
         </div>
         <div>
           <div className="want-help-heading mb-3">Want help ?</div>
@@ -239,9 +331,19 @@ const MailchimpGeneral = () => {
             Guid to Integrate Mailchimp with Evenz.
           </div>
         </div>
+
+
+</form>
+
+
       </div>
     </>
   );
 };
 
-export default MailchimpGeneral;
+
+
+export default reduxForm({
+  form: "mailchimpGeneralPreference",
+  // validate,
+})(MailchimpGeneral);
