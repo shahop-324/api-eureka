@@ -5206,12 +5206,4 @@ export const eventBuyingPlan = (intent) => async (dispatch, getState) => {
     })
   );
 };
-
-export const mailChimpIntegratedCommunity =
-  (communityId) => async (dispatch, getState) => {
-    dispatch(
-      communityActions.MailChimpIntegratedCommunity({
-        communityId,
-      })
-    );
-  };
+export const fetchMailChimpAudiences = () => async (dispatch, getState) => {};

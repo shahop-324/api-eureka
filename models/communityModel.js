@@ -49,6 +49,12 @@ const communitySchema = new mongoose.Schema(
       type: String,
       default: "Free",
     },
+     isConnectedMailChimp:{
+  type:Boolean,
+  default:false,
+
+     },
+
     planDetails: {
       planName: {
         type: String,

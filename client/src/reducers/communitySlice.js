@@ -9,7 +9,6 @@ const communitySlice = createSlice({
     isCommunityLoading: false,
     error: false,
     isLoading: true,
-    communityForMailChimpIntegration: null,
   },
   reducers: {
     ResetError(state, action) {
@@ -64,9 +63,6 @@ const communitySlice = createSlice({
     DeleteCommunity(state, action) {
       state.community = null;
       state.isLoading = false;
-    },
-    MailChimpIntegratedCommunity(state, action) {
-      state.communityForMailChimpIntegration = action.payload.communityId;
     },
   },
 });

@@ -10,7 +10,8 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-
+import {useDispatch} from  "react-redux";
+import {fetchMailChimpAudiences} from "../../../../../actions/index"
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -46,11 +47,14 @@ const Mailchimp = () => {
   const [open, setOpen] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
-
+  const dispatch=useDispatch();
   const handleChange = () => {
-
+ 
     if(!checked) {
+       dispatch(fetchMailChimpAudiences())
+
       setOpen(true);
+
     }
 
     setChecked(!checked);

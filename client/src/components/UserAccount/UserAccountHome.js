@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../../assets/css/hiddenScroll.css";
 import { CssBaseline } from "@material-ui/core";
 import UserAccountNav from "./UserAccountNav";
@@ -9,11 +9,7 @@ import UserAccountHomeMainBody from "./UserAccountHomeMainBodyComponent";
 import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import UserAccountRecordings from "./UserAccountRecordings";
-import {
-  errorTrackerForPersonalData,
-  fetchUserAllPersonalData,
-  MailChimpAuth,
-} from "../../actions/index";
+import { fetchUserAllPersonalData } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,38 +17,16 @@ import history from "../../history";
 import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
-import Tour from "reactour";
-
-const { REACT_APP_MY_ENV } = process.env;
-const steps = [
-  {
-    selector: ".first-step-user-section",
-    content: "This is my first Step",
-  },
-  // ...
-];
 
 const UserAccountHome = () => {
-  const { isLoading, error } = useSelector((state) => state.user);
-
-
-  const { isCommunityLoading } = useSelector((state) => state.community);
-
-  const [isTourOpen, setIsTourOpen] = useState(true);
+  const { isLoading } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
   useEffect(() => {
-    history.push("/user/home/");
-    // window.location.href = REACT_APP_MY_ENV
-    //   ? "http://localhost:3001/user/home"
-    //   : "https://www.evenz.in/user/home";
-
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
     console.log(params.code);
     dispatch(fetchUserAllPersonalData());
-    // dispatch(MailChimpAuth(params.code));
   }, [dispatch]);
 
   useEffect(() => {
@@ -97,13 +71,6 @@ const UserAccountHome = () => {
   };
 
   const { currentIndex } = useSelector((state) => state.navigation);
-
-  // if (error) {
-
-  //   dispatch(errorTrackerForPersonalData());
-  //   // alert(error);
-  //   // return null;
-  // }
 
   return (
     <>
@@ -163,12 +130,6 @@ const UserAccountHome = () => {
           </div>
         </div>
       )}
-
-      {/* <Tour
-        steps={steps}
-        isOpen={isTourOpen}
-        onRequestClose={() => setIsTourOpen(false)}
-      /> */}
     </>
   );
 };

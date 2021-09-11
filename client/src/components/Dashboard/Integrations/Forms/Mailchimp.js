@@ -7,7 +7,7 @@ const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
   : "https://www.evenz.co.in/api-eureka/eureka/v1";
-const Mailchimp = ({ openDrawer, handleCloseDrawer, communityId, userId }) => {
+const Mailchimp = ({ openDrawer, handleCloseDrawer }) => {
   return (
     <>
       <React.Fragment key="right">

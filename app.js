@@ -24,7 +24,6 @@ const { URLSearchParams } = require("url");
 const querystring = require("querystring");
 const http = require("http");
 const socketio = require("socket.io");
-// Imported Routes for Various Resources
 
 const uploadRoutes = require("./routes/uploadRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -61,7 +60,6 @@ const Community = require("./models/communityModel");
 const { promisify } = require("util");
 require("./services/passport");
 
-// Created a new express app
 const app = express();
 const urlToGetLinkedInAccessToken =
   "https://www.linkedin.com/oauth/v2/accessToken";
@@ -77,10 +75,10 @@ const MAILCHIMP_CLIENT_SECRET =
 console.log(process.env.NODE_ENV, "klljlkl;kmfghytredswrtyuiop");
 const BASE_URL =
   process.env.NODE_ENV === "development"
-    ? "http://127.0.0.1:3001"
-    : "https://www.evenz.in";
+    ? "http://127.0.0.1:3000"
+    : "https://www.evenz.co.in";
 
-    const OAUTH_CALLBACK = `${BASE_URL}/mailChimp`;
+const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/eureka/v1/oauth/mailchimp/callback`;
 
 app.use(
   cors({
@@ -91,7 +89,7 @@ app.use(
       "https://www.evenz.co.in",
       "https://evenz.co.in",
     ],
-    //origin: "*",
+
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
 
     credentials: true,
@@ -109,30 +107,18 @@ app.use(
     cookie: {
       secure: false,
     },
-    // maxAge: 30 * 24 * 60 * 60 * 1000,
-    // keys: [process.env.COOKIE_KEY],
   })
 );
-// app.use(session({ secret: "anything" }));
-// console.log(initialise, session);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 1. GLOBAL MIDDLEWARES
-
-// passport.js middleware functions
-
-// Set security HTTP headers
 app.use(helmet());
 
-// Development Logging
-// console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Limit Request rate from same IP
 const limiter = rateLimit({
   max: 100000,
   windowMs: 60 * 60 * 1000, // In one hour
@@ -141,10 +127,8 @@ const limiter = rateLimit({
 
 app.use("/eureka", limiter);
 
-// Body parser, reading data from body into req.body
-app.use(express.json({ limit: "10kb" })); // Middleware // use method is used to add middlewares to our middleware stack
+app.use(express.json({ limit: "10kb" }));
 
-// app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
@@ -198,7 +182,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
                 response.data.elements[0]["handle~"].emailAddress;
 
               res.status(200).json({ userProfile });
-              // }
             })
             .catch((error) => console.log("Error getting user email"));
         })
@@ -237,44 +220,13 @@ app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
-const createSendToken = (user, statusCode, req, res) => {
-  const token = signToken(user._id);
-
-  //remove password from output
-
-  res.status(statusCode).json({
-    status: "success",
-
-    token,
-    data: {
-      user,
-    },
-  });
-};
 app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
-  // createSendToken(req.user,200,req,res)
   const token = signToken(req.user._id);
 
   res.send({ user: req.user, token: token });
 });
 
-// 2. The login link above will direct the user here, which will redirect
-// to Mailchimp's OAuth login page.
 app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
-  // const communityId = req.query.communityId;
-  // const userId = req.query.userId;
-
-  // console.log(communityId, "i am counting on you communityId");
-  // console.log(userId, "i am counting on you userId");
-  // // http://127.0.0.1:3001/user/611f27e97f0edf6846ee1e6a/community/overview/61202c307f0edf6846ee1fad
-  // //  const OAUTH_CALLBACK = `${BASE_URL}/user/${611f27e97f0edf6846ee1e6a}/community/integrations/61202c307f0edf6846ee1fad`;
-  // const OAUTH_CALLBACK = `${BASE_URL}/user/${userId}/community/integrations/${communityId}`;
-
- 
-  // console.log(req.query.communityId);
-
-  // const communityId = req.query.communityId;
-
   res.redirect(
     `https://login.mailchimp.com/oauth2/authorize?${querystring.stringify({
       response_type: "code",
@@ -284,16 +236,8 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
   );
 });
 
-// 3. Once // 3. Once the user authorizes your app, Mailchimp will redirect the user to
-// this endpoint, along with a code you can use to exchange for the user's
-// access token.
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
-  // Here we're exchanging the temporary code for the user's access token.
-  //console.log(req.body.code);
-  //console.log(req, "Hey i am counting on you request");
-  //console.log(req.query.code);
-  //console.log(req.query.communityId, "Hey i am counting on you communityId");
-
+  console.log(req.query.code, "i am counting on you req.query.code");
   let accessToken = null;
   const config = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -314,7 +258,7 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
     )
     .then((response) => {
       accessToken = response.data.access_token;
-      console.log(accessToken);
+      console.log(accessToken, "i am counting on you access token");
 
       axios
         .get("https://login.mailchimp.com/oauth2/metadata", {
@@ -331,13 +275,26 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
             metadataResponse.data.login.email,
             "I am counting on you metadataResponse.data.login.email"
           );
-          Community.find({ email: metadataResponse.data.login.email }).then(
+          Community.findOne({ email: metadataResponse.data.login.email }).then(
             (community) => {
+              console.log(community, "i am counting on you community");
               MailChimp.create({
                 communityId: community._id,
                 accessToken,
                 server: metadataResponse.data.dc,
-              }).then(() => {
+              }).then(async () => {
+                console.log(
+                  community,
+                  "I am counting on you commmunity for save error checking"
+                );
+                community.isMailChimpConnected = true;
+                // const [a] = community;
+                await community.save({
+                  new: true,
+
+                  validateModifiedOnly: true,
+                });
+
                 console.log(
                   "mailChimpCommunityCreated",
                   "hey i am counting on you mailchimp community id"
@@ -348,24 +305,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
               });
             }
           );
-
-          // console.log(metadataResponse.data.dc);
-
-          // mailchimp.setConfig({
-          //   accessToken,
-          //   server: metadataResponse.data.dc,
-          // });
-
-          // mailchimp.ping.get().then((response) => {
-          //   console.log(response);
-          // });
-
-          //         res.send(`
-          //   <p>This user's access token is ${accessToken} and their server prefix is ${metadataResponse.data.dc}.</p>
-
-          //   <p>When pinging the Mailchimp Marketing API's ping endpoint, the server responded:<p>
-
-          // `);
         });
     });
 });
