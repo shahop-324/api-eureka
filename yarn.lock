@@ -4125,7 +4125,7 @@
     "@types/node" ">=8.1.0"
     "qs" "^6.6.0"
 
-"superagent@3.8.1":
+"superagent@^3.8.1", "superagent@3.8.1":
   "integrity" "sha512-VMBFLYgFuRdfeNQSMLbxGSLfmXL/xc+OO+BZp41Za/NRDBet/BNbkRJrYzCUu0u4GU0i/ml2dtT8b9qgkw9z6Q=="
   "resolved" "https://registry.npmjs.org/superagent/-/superagent-3.8.1.tgz"
   "version" "3.8.1"

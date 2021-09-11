@@ -15,6 +15,7 @@ const communitySchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
       required: [true, "Please provide your community email"],
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email"],
@@ -49,11 +50,10 @@ const communitySchema = new mongoose.Schema(
       type: String,
       default: "Free",
     },
-     isConnectedMailChimp:{
-  type:Boolean,
-  default:false,
-
-     },
+    isConnectedMailChimp: {
+      type: Boolean,
+      default: false,
+    },
 
     planDetails: {
       planName: {

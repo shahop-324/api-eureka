@@ -17,6 +17,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const session = require("cookie-session");
+const Event = require("./models/eventModel");
+var request = require("superagent");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 const fetch = require("node-fetch");
 const { URLSearchParams } = require("url");
@@ -278,36 +280,89 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
           Community.findOne({ email: metadataResponse.data.login.email }).then(
             (community) => {
               console.log(community, "i am counting on you community");
-              MailChimp.create({
-                communityId: community._id,
-                accessToken,
-                server: metadataResponse.data.dc,
-              }).then(async () => {
-                console.log(
-                  community,
-                  "I am counting on you commmunity for save error checking"
-                );
-                community.isMailChimpConnected = true;
-                // const [a] = community;
-                await community.save({
-                  new: true,
 
-                  validateModifiedOnly: true,
-                });
+              MailChimp.findOne({ communityId: community._id }).then(
+                (mailChimpCommunityAccount) => {
+                  console.log(
+                    mailChimpCommunityAccount,
+                    "i am counting on you mailChimpAccount"
+                  );
+                  if (!mailChimpCommunityAccount) {
+                    MailChimp.create({
+                      communityId: community._id,
+                      accessToken,
+                      server: metadataResponse.data.dc,
 
-                console.log(
-                  "mailChimpCommunityCreated",
-                  "hey i am counting on you mailchimp community id"
-                );
-                res.status(200).json({
-                  status: "SUCCESS",
-                });
-              });
+                      apiEndPoint: metadataResponse.data.api_endpoint,
+                    }).then(async () => {
+                      console.log(
+                        community,
+                        "I am counting on you commmunity for save error checking"
+                      );
+                      community.isMailChimpConnected = true;
+                      // const [a] = community;
+                      await community.save({
+                        new: true,
+
+                        validateModifiedOnly: true,
+                      });
+
+                      console.log(
+                        "mailChimpCommunityCreated",
+                        "hey i am counting on you mailchimp community id"
+                      );
+                      res.status(200).json({
+                        status: "SUCCESS",
+                      });
+                    });
+                  } else {
+                    res.status(200).json({
+                      status: "You already have one for same communityId",
+                    });
+                  }
+                }
+              );
             }
           );
         });
     });
 });
+
+app.get(
+  "/api-eureka/eureka/v1/fetchMailChimpAudiences",
+  async (req, res, next) => {
+    // 1. find by community id by event id
+    console.log(req.query.eventId, "i am counting on you req.query.eventId");
+    const eventData = await Event.findById(req.query.eventId);
+
+    //2. find the mailchimp account with community id
+
+    const communityId = eventData.createdBy;
+    console.log(communityId, "i am counting on you communityId");
+
+    const mailChimpData = await MailChimp.findOne({ communityId });
+    console.log(mailChimpData, "I am counting on you mailChimpData");
+    //3. dynamically form request for fetching list
+
+    //  fetch(`https://${mailChimpData.server}.api.mailchimp.com/3.0/lists`)
+    // https://us5.api.mailchimp.com
+    request
+      .get(mailChimpData.apiEndPoint + "/3.0/lists")
+      .set("Accept", "application/json")
+      .set("Authorization", "OAuth " + mailChimpData.accessToken)
+      .end((err, result) => {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          console.log(
+            result.body.lists,
+            "i am counting on you request.body.lists"
+          );
+          res.json(result.body.lists);
+        }
+      });
+  }
+);
 
 app.get("/api-eureka/eureka/v1/logout", (req, res) => {
   req.logout();

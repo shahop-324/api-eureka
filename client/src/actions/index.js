@@ -5206,4 +5206,21 @@ export const eventBuyingPlan = (intent) => async (dispatch, getState) => {
     })
   );
 };
-export const fetchMailChimpAudiences = () => async (dispatch, getState) => {};
+export const fetchMailChimpAudiences =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      console.log(eventId, "i am counting on you eventID index.js ");
+      const mailChimpAudienceList = await eureka.get(
+        `/eureka/v1/fetchMailChimpAudiences/?eventId=${eventId}`
+      );
+      console.log(mailChimpAudienceList.data);
+
+      dispatch(
+        communityActions.FetchMailChimpAudiences({
+          mailChimpAudiences: mailChimpAudienceList.data,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };

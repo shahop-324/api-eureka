@@ -15,9 +15,8 @@ const mailChimpSchema = new mongoose.Schema(
     audienceListId: {
       type: String,
     },
-    connected: {
-      type: Boolean,
-      default: false,
+    apiEndPoint: {
+      type: String,
     },
   },
 
