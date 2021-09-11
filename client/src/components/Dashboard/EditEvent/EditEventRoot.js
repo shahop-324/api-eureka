@@ -17,7 +17,10 @@ import Ticketing from "./Ticketing";
 import Networking from "./Networking";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
-import { errorTrackerForFetchParticularEventOfCommunity, fetchParticularEventOfCommunity } from "../../../actions";
+import {
+  errorTrackerForFetchParticularEventOfCommunity,
+  fetchParticularEventOfCommunity,
+} from "../../../actions";
 
 import { useParams } from "react-router";
 import { useEffect } from "react";
@@ -30,6 +33,7 @@ import ErrorBoundriesEditEventSponsors from "../../ErrorBoundries/ErrorBoundries
 import ErrorBoundriesEditEventTickets from "../../ErrorBoundries/ErrorBoundriesEditEventTicketing";
 
 import { useSnackbar } from "notistack";
+import SideNavEditLean from "../HelperComponent/SideNavEditLean";
 
 const EditEventRoot = () => {
   const params = useParams();
@@ -40,7 +44,7 @@ const EditEventRoot = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {error, isLoading} = useSelector((state) => state.event);
+  const { error, isLoading } = useSelector((state) => state.event);
 
   console.log(id);
   useEffect(() => {
@@ -99,7 +103,7 @@ const EditEventRoot = () => {
 
   console.log(currentIndex);
 
-  if(error) {
+  if (error) {
     enqueueSnackbar(error, {
       variant: "error",
     });
@@ -115,6 +119,17 @@ const EditEventRoot = () => {
         {/* Body section - left(side nav) & right(body content) */}
         <div className="dashboard-body dashboard-body-edit">
           <SideNavEdit
+            activeIndex={currentIndex}
+            handleBasicsClick={handleBasicsClick}
+            handleAboutClick={handleAboutClick}
+            handleSessionsClick={handleSessionsClick}
+            handleSpeakersClick={handleSpeakersClick}
+            handleBoothsClick={handleBoothsClick}
+            handleSponsorsClick={handleSponsorsClick}
+            handleTicketingClick={handleTicketingClick}
+            handleNetworkingClick={handleNetworkingClick}
+          />
+          <SideNavEditLean
             activeIndex={currentIndex}
             handleBasicsClick={handleBasicsClick}
             handleAboutClick={handleAboutClick}

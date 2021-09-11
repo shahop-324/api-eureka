@@ -24,7 +24,17 @@ import {
   fetchParticularEventOfCommunity,
 } from "../../../actions";
 
-const SideNavEdit = (props) => {
+const SideNavEdit = ({
+  activeIndex,
+  handleAboutClick,
+  handleBasicsClick,
+  handleBoothsClick,
+  handleNetworkingClick,
+  handleSessionsClick, 
+  handleSpeakersClick,
+  handleSponsorsClick,
+  handleTicketingClick
+}) => {
   const params = useParams();
   const dispatch = useDispatch();
 
@@ -133,16 +143,16 @@ const SideNavEdit = (props) => {
           <Divider />
         </div>
         <div
-          onClick={props.handleBasicsClick}
+          onClick={handleBasicsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "0" ? "btn-active-d" : " ")
+            (activeIndex === "0" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "0" ? "btn-icon-active-d" : " ")
+              (activeIndex === "0" ? "btn-icon-active-d" : " ")
             }
           >
             <CategoryIcon style={{ fontSize: 26 }} />
@@ -150,7 +160,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "0" ? "btn-text-active-d" : " ")
+              (activeIndex === "0" ? "btn-text-active-d" : " ")
             }
           >
             Basics
@@ -160,16 +170,16 @@ const SideNavEdit = (props) => {
         <div className="sidenav-group-headline ps-4 pe-4 my-4">Setup</div>
 
         <div
-          onClick={props.handleAboutClick}
+          onClick={handleAboutClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "1" ? "btn-active-d" : " ")
+            (activeIndex === "1" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "1" ? "btn-icon-active-d" : " ")
+              (activeIndex === "1" ? "btn-icon-active-d" : " ")
             }
           >
             <InfoRoundedIcon style={{ fontSize: 26 }} />
@@ -177,7 +187,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "1" ? "btn-text-active-d" : " ")
+              (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
             About Event
@@ -185,16 +195,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleSessionsClick}
+          onClick={handleSessionsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "2" ? "btn-active-d" : " ")
+            (activeIndex === "2" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "2" ? "btn-icon-active-d" : " ")
+              (activeIndex === "2" ? "btn-icon-active-d" : " ")
             }
           >
             <TrackChangesIcon style={{ fontSize: 26 }} />
@@ -202,7 +212,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "2" ? "btn-text-active-d" : " ")
+              (activeIndex === "2" ? "btn-text-active-d" : " ")
             }
           >
             Sessions
@@ -210,16 +220,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleSpeakersClick}
+          onClick={handleSpeakersClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "3" ? "btn-active-d" : " ")
+            (activeIndex === "3" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "3" ? "btn-icon-active-d" : " ")
+              (activeIndex === "3" ? "btn-icon-active-d" : " ")
             }
           >
             <RecordVoiceOverIcon style={{ fontSize: 26 }} />
@@ -227,7 +237,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "3" ? "btn-text-active-d" : " ")
+              (activeIndex === "3" ? "btn-text-active-d" : " ")
             }
           >
             Speakers
@@ -235,16 +245,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleBoothsClick}
+          onClick={handleBoothsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "4" ? "btn-active-d" : " ")
+            (activeIndex === "4" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "4" ? "btn-icon-active-d" : " ")
+              (activeIndex === "4" ? "btn-icon-active-d" : " ")
             }
           >
             <StorefrontOutlinedIcon style={{ fontSize: 26 }} />
@@ -252,7 +262,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "4" ? "btn-text-active-d" : " ")
+              (activeIndex === "4" ? "btn-text-active-d" : " ")
             }
           >
             Booths
@@ -260,16 +270,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleSponsorsClick}
+          onClick={handleSponsorsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "5" ? "btn-active-d" : " ")
+            (activeIndex === "5" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "5" ? "btn-icon-active-d" : " ")
+              (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
             <PersonOutlinedIcon style={{ fontSize: 26 }} />
@@ -277,7 +287,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "5" ? "btn-text-active-d" : " ")
+              (activeIndex === "5" ? "btn-text-active-d" : " ")
             }
           >
             Sponsors
@@ -285,16 +295,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleTicketingClick}
+          onClick={handleTicketingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "6" ? "btn-active-d" : " ")
+            (activeIndex === "6" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "6" ? "btn-icon-active-d" : " ")
+              (activeIndex === "6" ? "btn-icon-active-d" : " ")
             }
           >
             <ConfirmationNumberOutlinedIcon style={{ fontSize: 26 }} />
@@ -302,7 +312,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "6" ? "btn-text-active-d" : " ")
+              (activeIndex === "6" ? "btn-text-active-d" : " ")
             }
           >
             Ticketing
@@ -310,16 +320,16 @@ const SideNavEdit = (props) => {
         </div>
 
         <div
-          onClick={props.handleNetworkingClick}
+          onClick={handleNetworkingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (props.activeIndex === "7" ? "btn-active-d" : " ")
+            (activeIndex === "7" ? "btn-active-d" : " ")
           }
         >
           <div
             className={
               "mx-3 sidenav-icon " +
-              (props.activeIndex === "7" ? "btn-icon-active-d" : " ")
+              (activeIndex === "7" ? "btn-icon-active-d" : " ")
             }
           >
             <PeopleOutlineIcon style={{ fontSize: 26 }} />
@@ -327,7 +337,7 @@ const SideNavEdit = (props) => {
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
-              (props.activeIndex === "7" ? "btn-text-active-d" : " ")
+              (activeIndex === "7" ? "btn-text-active-d" : " ")
             }
           >
             Networking

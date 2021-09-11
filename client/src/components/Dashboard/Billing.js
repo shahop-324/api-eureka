@@ -55,7 +55,7 @@ const showPayPalConnect = async () => {
   });
 };
 
-showPayPalConnect();
+// showPayPalConnect();
 
 const Billing = () => {
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const Billing = () => {
               
             </a>
           </div> */}
-          <div style={{ width: "300px" }}>
+          {/* <div style={{ width: "300px" }}>
             {AACComponent ? (
               <AACComponent
 
@@ -103,7 +103,7 @@ const Billing = () => {
                   sandbox:
                     "AWulL9SIFX_aLmdGojavSIAgf9O3_ZgTyUETSYQkDjEX65WwtWddKF6D95w7nzwpnXFWFnhyRzsG9yfi",
                   production:
-                    "AU1NO4KqEbOitdJh6ntZ59E9ICcg6DPBKeiOD-LLCqVTmnQaYsyVBQuwBeymd-XZRpbELjA2lvsKCIGL",
+                    "ARBK59pvvrb8fmqnwP6xzqfUA2YGqppJSMe0VFmwUKS4OhXoXNHh67T5desykki_BwiN7JINcVp7iCmc",
                 }}
                 
                 pageType="login"
@@ -118,7 +118,7 @@ const Billing = () => {
             ) : (
               <></>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
