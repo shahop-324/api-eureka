@@ -124,7 +124,7 @@ const renderReactSelect = ({
   defaultValue,
 
   name,
-}) => {
+}) => (
   <div>
     <div>
       <Select
@@ -140,7 +140,7 @@ const renderReactSelect = ({
       />
     </div>
   </div>
-};
+);
 
 const AddNewSession = (props) => {
   let speakerOptions = [];

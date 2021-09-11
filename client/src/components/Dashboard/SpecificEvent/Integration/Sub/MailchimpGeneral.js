@@ -23,15 +23,17 @@ const renderInput = ({
   ariadescribedby,
   classes,
   placeholder,
+  readOnly,
 }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
-    <div className={className}>
+    <div >
       <input
+      readOnly={readOnly}
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
-        className={classes}
+        className="mail-group-name-input"
         placeholder={placeholder}
         required
       />
@@ -54,18 +56,20 @@ const renderInput = ({
 };
 
 const renderReactSelect = ({
+  isMulti,
   input,
+  meta: { touched, error, warning },
   styles,
   menuPlacement,
   options,
   defaultValue,
-  meta: { touched, error, warning },
+
   name,
-}) => {
-  const className = `field ${error && touched ? "error" : ""}`;
-  
-    <div className={className}>
+}) => (
+  <div>
+    <div>
       <Select
+        isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -76,21 +80,11 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <span>{error}</span>) ||
+          (warning && <span>{warning}</span>))}
     </div>
-};
+  </div>
+);
 
 const styles = {
   control: (base) => ({
@@ -200,7 +194,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
             component={renderReactSelect}
             // onChange={(e) => console.log(e)}
           />
-          <div className="form-label form-label-customized">Leads list</div>
+          <div className="form-label form-label-customized mt-3">Leads list</div>
           <Field
             name="leadsList"
             classes="mb-3"
@@ -210,7 +204,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
             component={renderReactSelect}
             options={audienceList}
           />
-          <div className="form-label form-label-customized">
+          <div className="form-label form-label-customized mt-3">
             Interested people list
           </div>
           <Field
@@ -232,11 +226,12 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
           </small>
 
           <div class="form-group">
-            <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3 py-2">
+            <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
               <Field
+              name="tag"
                 type="text"
                 readOnly={!editMode}
-                classes="mail-group-name-input me-3"
+                classes="mail-group-name-input"
                 style={{ width: "100%" }}
                 onChange={(e) => {
                   handleChangeTag(e);

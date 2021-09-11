@@ -58,49 +58,11 @@ const showPayPalConnect = async () => {
 showPayPalConnect();
 
 const Billing = () => {
-  const paypalSignupLink = useSelector((state) => state.paypal.link);
-
   const dispatch = useDispatch();
-
-  function onboardedCallback(authCode, sharedId) {
-    console.log("authCode", authCode);
-    console.log("sharedId", sharedId);
-    fetch("/seller-server/login-seller", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        authCode: authCode,
-        sharedId: sharedId,
-      }),
-    }).then(function (res) {
-      if (!res.ok) {
-        alert("Something went wrong!");
-      }
-    });
-  }
 
   useEffect(() => {
     dispatch(getPayPalConnectLink());
-
-    const script = document.createElement("script");
-
-    script.src =
-      "https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js";
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
   }, []);
-
-  const getAuthCodeAndSharedId = (authCode, sharedId) => {
-    console.log(authCode);
-    console.log(sharedId);
-  };
 
   const [openDrawer, setOpenDrawer] = useState(false);
   return (
@@ -130,30 +92,33 @@ const Billing = () => {
               
             </a>
           </div> */}
-<div style={{width: "300px"}}>
+          <div style={{ width: "300px" }}>
+            {AACComponent ? (
+              <AACComponent
 
-{AACComponent ? (
-            <AACComponent
-            // style={{width: "300px", color: "blue"}}
-              merchantId="GMBMW6HSY4YXG"
-              env="sandbox"
-              clientId={{
-                sandbox:
-                  "AWulL9SIFX_aLmdGojavSIAgf9O3_ZgTyUETSYQkDjEX65WwtWddKF6D95w7nzwpnXFWFnhyRzsG9yfi",
-              }}
-              pageType="login"
-              onLogin={(response) => {
-                if (response.err) {
-                  console.log(response.err);
-                } else {
-                  console.log(response.body.code);
-                }
-              }}
-            />
-          ) : (
-            <></>
-          )}
-</div>
+                // style={{width: "300px", color: "blue"}}
+                merchantId="GMBMW6HSY4YXG"
+                env="production"
+                clientId={{
+                  sandbox:
+                    "AWulL9SIFX_aLmdGojavSIAgf9O3_ZgTyUETSYQkDjEX65WwtWddKF6D95w7nzwpnXFWFnhyRzsG9yfi",
+                  production:
+                    "AU1NO4KqEbOitdJh6ntZ59E9ICcg6DPBKeiOD-LLCqVTmnQaYsyVBQuwBeymd-XZRpbELjA2lvsKCIGL",
+                }}
+                
+                pageType="login"
+                onLogin={(response) => {
+                  if (response.err) {
+                    console.log(response.err);
+                  } else {
+                    console.log(response.body.code);
+                  }
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
