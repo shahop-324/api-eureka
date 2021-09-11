@@ -5208,6 +5208,7 @@ export const eventBuyingPlan = (intent) => async (dispatch, getState) => {
 };
 export const fetchMailChimpAudiences =
   (eventId) => async (dispatch, getState) => {
+    dispatch(communityActions.startLoading());
     try {
       console.log(eventId, "i am counting on you eventID index.js ");
       const mailChimpAudienceList = await eureka.get(

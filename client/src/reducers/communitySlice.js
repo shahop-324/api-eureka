@@ -9,6 +9,7 @@ const communitySlice = createSlice({
     isCommunityLoading: false,
     error: false,
     isLoading: true,
+    mailChimpAudiences: [],
   },
   reducers: {
     ResetError(state, action) {
@@ -42,6 +43,11 @@ const communitySlice = createSlice({
 
       state.isCommunityLoading = false;
     },
+    FetchMailChimpAudiences(state, action) {
+      state.mailChimpAudiences = action.payload.mailChimpAudiences;
+      state.isLoading = false;
+    },
+
     FetchCommunity(state, action) {
       const newCommunity = action.payload.community;
       const existingCommunity = state.communities.find(
