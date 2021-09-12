@@ -19,35 +19,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const customStyles = {
-  control: (provided, state) => ({
-    ...provided,
-    background: '#fff',
-    borderColor: '#9e9e9e',
-    minHeight: '40px',
-    height: '40px',
-    paddingTop: "5px",
-    boxShadow: state.isFocused ? null : null,
-  }),
+// const customStyles = {
+//   control: (provided, state) => ({
+//     ...provided,
+//     background: '#fff',
+//     borderColor: '#9e9e9e',
+//     minHeight: '40px',
+//     height: '40px',
+//     paddingTop: "5px",
+//     boxShadow: state.isFocused ? null : null,
+//   }),
 
-  valueContainer: (provided, state) => ({
-    ...provided,
-    height: '40px',
-    padding: '0 6px',
-  }),
+//   valueContainer: (provided, state) => ({
+//     ...provided,
+//     height: '40px',
+//     padding: '0 6px',
+//   }),
 
-  input: (provided, state) => ({
-    ...provided,
-    margin: '0px',
-  }),
-  indicatorSeparator: state => ({
-    display: 'none',
-  }),
-  indicatorsContainer: (provided, state) => ({
-    ...provided,
-    height: '30px',
-  }),
-};
+//   input: (provided, state) => ({
+//     ...provided,
+//     margin: '0px',
+//   }),
+//   indicatorSeparator: state => ({
+//     display: 'none',
+//   }),
+//   indicatorsContainer: (provided, state) => ({
+//     ...provided,
+//     height: '30px',
+//   }),
+// };
 
 
 // const customStyles = {
@@ -98,7 +98,7 @@ export default function CustomPagination({
         <div className={`${classes.showingText} me-3`}>Showing</div>
         <div style={{ width: "40%" }}>
           <Select
-          styles={customStyles}
+          // styles={customStyles}
             menuPlacement="top"
             options={options}
             defaultValue={{
