@@ -15,27 +15,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "normal",
     fontSize: "0.9rem",
     lineHeight: "1rem",
-    /* identical to box height, or 129% */
-
     color: "#757575",
   },
 }));
-
-// const styles = {
-//   control: (base) => ({
-//     ...base,
-//     fontFamily: "Inter",
-//     fontWeight: "600",
-//     color: "#757575",
-//   }),
-//   menu: (base) => ({
-//     ...base,
-//     fontFamily: "Inter",
-//     fontWeight: "600",
-//     color: "#757575",
-//   }),
-// };
-
 
 const customStyles = {
   control: (provided, state) => ({

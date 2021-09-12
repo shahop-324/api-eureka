@@ -56,6 +56,7 @@ import { signIn } from "../actions/index";
 
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
 import SignInNew from "./Signin/SigninNew";
+import SignupNew from "./Signup/SignupNew";
 
 AOS.init();
 
@@ -115,6 +116,7 @@ class App extends React.Component {
 
               <Route path="/signup" exact component={Signup} />
               <Route path="/login" exact component={SignInNew} />
+              <Route path="/signup-new" exact component={SignupNew} />
 
               {!isSignedIn && <Route path="/signin" exact component={Signin} />}
 
