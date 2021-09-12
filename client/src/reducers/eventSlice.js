@@ -9,6 +9,7 @@ const eventSlice = createSlice({
 
     isLoading: true,
     error: false,
+    length: 0,
   },
 
   reducers: {
@@ -30,6 +31,7 @@ const eventSlice = createSlice({
     },
     FetchEvents(state, action) {
       state.events = action.payload.events;
+      state.length = action.payload.length;
       state.isLoading = false;
     },
     FetchEvent(state, action) {

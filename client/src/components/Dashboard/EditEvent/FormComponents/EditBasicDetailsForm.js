@@ -168,9 +168,12 @@ const timeZoneOptions = [
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
   { value: "(GMT + 00:00) Lisbon", label: "(GMT + 00:00) Lisbon" },
   { value: "(GMT + 00:00) London", label: "(GMT + 00:00) London" },
-  {value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii"},
-  {value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai", label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai"},
-  {value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu"}
+  { value: "(GMT-10:00) Hawaii", label: "(GMT-10:00) Hawaii" },
+  {
+    value: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
+    label: "(GMT+5:30) Chennai, Kolkata, New delhi, Mumbai",
+  },
+  { value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu" },
 ];
 
 const styles = {
@@ -189,7 +192,6 @@ const styles = {
 };
 
 const EditBasicDetailsForm = (props) => {
-
   const { enqueueSnackbar } = useSnackbar();
 
   const { handleSubmit, pristine, submitting, reset } = props;
@@ -219,8 +221,6 @@ const EditBasicDetailsForm = (props) => {
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
 
-    // console.log(ModifiedFormValues);
-    // showResults(ModifiedFormValues);
     dispatch(editEvent(ModifiedFormValues, id));
 
     props.openSavedChangesSnack();
@@ -239,7 +239,7 @@ const EditBasicDetailsForm = (props) => {
   }
 
   if (error) {
-      enqueueSnackbar(error, {
+    enqueueSnackbar(error, {
       variant: "error",
     });
     return dispatch(errorTrackerForeditEvent());
@@ -567,7 +567,6 @@ const mapStateToProps = (state) => ({
       state.event.eventDetails && state.event.eventDetails.service
         ? state.event.eventDetails.service
         : "",
-
   },
 });
 

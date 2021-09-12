@@ -21,29 +21,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const options = [
-  { value: "6", label: "6" },
-  { value: "10", label: "10" },
-  { value: "25", label: "25" },
-  { value: "50", label: "50" },
-];
-
-function BasicPagination() {
+function BasicPagination({ numOfPages, limit, handlePageChange }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       {/* <Pagination count={10} /> */}
-      <Pagination count={10} color="primary" />
+      <Pagination
+        count={10}
+        color="primary"
+        onChange={(event, page) => {
+          handlePageChange(page);
+        }}
+      />
       {/* <Pagination count={10} color="secondary" />
       <Pagination count={10} disabled /> */}
     </div>
   );
 }
 
-export default function CustomPagination() {
+export default function CustomPagination({
+  numOfPages,
+  currentPage,
+  limit,
+  totalResults,
+  handleLimitChange,
+  handlePageChange,
+
+  options,
+}) {
   const classes = useStyles();
   return (
-    <div className="pagination-row px-4 my-3 d-flex justify-content-between align-items-center">
+    <div className="pagination-row px-4 my-3 d-flex justify-content-between align-items-center pb-4">
       <div
         className="showing-n-per-page-wrapper d-flex flex-row align-items-center"
         style={{ minWidth: "245px" }}
@@ -53,13 +61,23 @@ export default function CustomPagination() {
           <Select
             menuPlacement="top"
             options={options}
-            defaultValue={options[1]}
+            defaultValue={{
+              value: limit,
+              label: limit,
+            }}
+            onChange={(e) => {
+              handleLimitChange(e);
+            }}
           />
         </div>
-        <div className={`${classes.showingText} ms-3`}>of 350</div>
+        <div className={`${classes.showingText} ms-3`}>of {totalResults}</div>
       </div>
       <div className="basic-pagination-wrapper d-flex flex-row align-items-center">
-        <BasicPagination />
+        <BasicPagination
+          numOfPages={numOfPages}
+          limit={limit}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );

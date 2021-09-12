@@ -506,7 +506,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "mailChimpAudienceListIdForRegistrants",
     "mailChimpAudienceListIdForLeads",
     "mailChimpAudienceListIdForInterestedPeople",
-    " addDirectAccessLinkToMailChimp"
+    "addDirectAccessLinkToMailChimp"
   );
 
   const updatedEvent = await Event.findByIdAndUpdate(

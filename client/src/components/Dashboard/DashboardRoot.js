@@ -45,7 +45,6 @@ import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
 
 const DashboardRoot = () => {
-
   console.log(window.paypal);
 
   const params = useParams();
@@ -73,7 +72,9 @@ const DashboardRoot = () => {
 
   const handleEventManagementClick = () => {
     dispatch(navigationIndexForCommunityDash(1));
-    history.push(`/user/${userId}/community/event-management/${id}`);
+    history.push(
+      `/user/${userId}/community/event-management/${id}/?limit=5&page=1`
+    );
   };
 
   const handleReviewsClick = () => {
@@ -159,37 +160,37 @@ const DashboardRoot = () => {
         />
         <div className="dashboard-body">
           {/* <div className="side-nav-container"> */}
-            <SideNav
-              activeIndex={currentIndex}
-              handleOverviewClick={handleOverviewClick}
-              handleEventManagementClick={handleEventManagementClick}
-              handleReviewsClick={handleReviewsClick}
-              handleQueriesClick={handleQueriesClick}
-              handleRegistrationsClick={handleRegistrationsClick}
-              handleCouponsClick={handleCouponsClick}
-              handleRecordingsClick={handleRecordingsClick}
-              handleIntegrationsClick={handleIntegrationsClick}
-              handleSchedulerClick={handleSchedulerClick}
-              handleBillingClick={handleBillingClick}
-              handleTeamManagementClick={handleTeamManagementClick}
-              handleRevenueManagementClick={handleRevenueManagementClick}
-            />
-          <SideNavLean
-           activeIndex={currentIndex}
-           handleOverviewClick={handleOverviewClick}
-           handleEventManagementClick={handleEventManagementClick}
-           handleReviewsClick={handleReviewsClick}
-           handleQueriesClick={handleQueriesClick}
-           handleRegistrationsClick={handleRegistrationsClick}
-           handleCouponsClick={handleCouponsClick}
-           handleRecordingsClick={handleRecordingsClick}
-           handleIntegrationsClick={handleIntegrationsClick}
-           handleSchedulerClick={handleSchedulerClick}
-           handleBillingClick={handleBillingClick}
-           handleTeamManagementClick={handleTeamManagementClick}
-           handleRevenueManagementClick={handleRevenueManagementClick}
+          <SideNav
+            activeIndex={currentIndex}
+            handleOverviewClick={handleOverviewClick}
+            handleEventManagementClick={handleEventManagementClick}
+            handleReviewsClick={handleReviewsClick}
+            handleQueriesClick={handleQueriesClick}
+            handleRegistrationsClick={handleRegistrationsClick}
+            handleCouponsClick={handleCouponsClick}
+            handleRecordingsClick={handleRecordingsClick}
+            handleIntegrationsClick={handleIntegrationsClick}
+            handleSchedulerClick={handleSchedulerClick}
+            handleBillingClick={handleBillingClick}
+            handleTeamManagementClick={handleTeamManagementClick}
+            handleRevenueManagementClick={handleRevenueManagementClick}
           />
-          
+          <SideNavLean
+            activeIndex={currentIndex}
+            handleOverviewClick={handleOverviewClick}
+            handleEventManagementClick={handleEventManagementClick}
+            handleReviewsClick={handleReviewsClick}
+            handleQueriesClick={handleQueriesClick}
+            handleRegistrationsClick={handleRegistrationsClick}
+            handleCouponsClick={handleCouponsClick}
+            handleRecordingsClick={handleRecordingsClick}
+            handleIntegrationsClick={handleIntegrationsClick}
+            handleSchedulerClick={handleSchedulerClick}
+            handleBillingClick={handleBillingClick}
+            handleTeamManagementClick={handleTeamManagementClick}
+            handleRevenueManagementClick={handleRevenueManagementClick}
+          />
+
           <div className="main-content-wrapper" style={{ minHeight: "90vh" }}>
             {(() => {
               switch (currentIndex) {

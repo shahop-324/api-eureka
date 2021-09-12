@@ -5,25 +5,24 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-// import CustomPagination from "./HelperComponent/Pagination";
+import CustomPagination from "./HelperComponent/Pagination";
 import EventListFields from "./HelperComponent/EventListFields";
 import EventDetailCard from "./HelperComponent/EventDetailsCard";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
-import {
-  fetchEventsOfParticularCommunity,
-} from "../../actions";
+import { fetchEventsOfParticularCommunity } from "../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import NoContentFound from "../NoContent";
-import NoEvent from './../../assets/images/noEvent.png';
+import NoEvent from "./../../assets/images/noEvent.png";
+import history from "./../../history";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -81,24 +80,56 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EventManagement = () => {
+  const params = useParams();
+
+  const userId = params.userId;
+  const communityId = params.id;
+
+  const options = [
+    { value: "5", label: "5" },
+    { value: "10", label: "10" },
+    { value: "15", label: "15" },
+    { value: "20", label: "20" },
+  ];
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+
+  const query = Object.fromEntries(urlSearchParams.entries());
+  const totalResults = useSelector((state) => state.event.length);
+  const limitOfPage = query.limit;
+  const pageNumber = query.page;
+  const numberOfPages = ((totalResults * 1) / limitOfPage) * 1;
+
   const [term, setTerm] = React.useState("");
 
+  const [limit, setLimit] = React.useState(limitOfPage);
+  const [page, setPage] = React.useState(pageNumber);
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+  const handleLimitChange = (value) => {
+    setLimit(value);
+  };
+
   const [open, setOpen] = React.useState(false);
-  const params = useParams();
   const dispatch = useDispatch();
-  const communityId = params.id;
 
   useEffect(() => {
     console.log(term);
 
     const timeoutId = setTimeout(() => {
-      dispatch(fetchEventsOfParticularCommunity(term));
+      dispatch(fetchEventsOfParticularCommunity(term, page, limit));
     }, 500);
+    console.log(limit);
+    history.push(
+      `/user/${userId}/community/event-management/${communityId}/?limit=${limit}&page=${page}`
+    );
 
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [dispatch, term]);
+  }, [dispatch, term, limit, page]);
 
   const classes = useStyles();
 
@@ -156,11 +187,33 @@ const EventManagement = () => {
   };
 
   if (error) {
-    // dispatch(errorTrackerForFetchEventsOfParticularCommunity());
     throw new Error(error);
-    // dispatch(navigationIndex)
-    // alert(error);
   }
+
+  console.log(window.location.href);
+  const len = window.location.href.split("?")[0].length;
+
+  const result = window.location.href.substring(len);
+  console.log(typeof result);
+  console.log(result);
+  //  let fullLocation = `${``}community/events`;
+  // let url = new URL(fullLocation);
+  // let search_params = url.searchParams;
+
+  // if (term) {
+  //   search_params.set("text", term);
+  // }
+  // if (page) {
+  //   search_params.set("page", page);
+  // }
+  // if (limit) {
+  //   search_params.set("limit", limit);
+  // }
+
+  // url.search = search_params.toString();
+  // let new_url = url.toString();
+
+  // console.log(new_url);
 
   return (
     <>
@@ -209,14 +262,26 @@ const EventManagement = () => {
             >
               <Loader />
             </div>
+          ) : typeof communityEvents !== "undefined" &&
+            communityEvents.length > 0 ? (
+            renderCommunityEventsList(communityEvents)
           ) : (
-            (typeof communityEvents !== 'undefined' && communityEvents.length > 0) ?
-              
-            renderCommunityEventsList(communityEvents) : <NoContentFound msgText="You have not created any event yet" img={NoEvent}/>
+            <NoContentFound
+              msgText="You have not created any event yet"
+              img={NoEvent}
+            />
           )}
         </div>
         {/* Here I have to use pagination */}
-        {/* <CustomPagination /> */}
+        <CustomPagination
+          numOfPages={numberOfPages}
+          limit={limit}
+          currentPage={page}
+          totalResults={totalResults}
+          handleLimitChange={handleLimitChange}
+          handlePageChange={handlePageChange}
+          options={options}
+        />
       </div>
       <Dialog
         fullScreen={fullScreen}

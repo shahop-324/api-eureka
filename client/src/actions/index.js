@@ -669,7 +669,7 @@ export const errorTrackerForFetchParticularEventOfCommunity =
     dispatch(eventActions.disabledError());
   };
 export const fetchEventsOfParticularCommunity =
-  (term) => async (dispatch, getState) => {
+  (term, page, limit) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
 
     const fetchEvents = async () => {
@@ -679,6 +679,12 @@ export const fetchEventsOfParticularCommunity =
 
       if (term) {
         search_params.set("text", term);
+      }
+      if (page) {
+        search_params.set("page", page);
+      }
+      if (limit) {
+        search_params.set("limit", limit);
       }
 
       url.search = search_params.toString();
@@ -713,6 +719,8 @@ export const fetchEventsOfParticularCommunity =
       dispatch(
         eventActions.FetchEvents({
           events: eventsResult.events,
+
+          length: eventsResult.length,
         })
       );
       // );
