@@ -501,7 +501,12 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "visibility",
     "editingComment",
     "image",
-    "publishedStatus"
+    "publishedStatus",
+    "mailChimpAudienceTag",
+    "mailChimpAudienceListIdForRegistrants",
+    "mailChimpAudienceListIdForLeads",
+    "mailChimpAudienceListIdForInterestedPeople",
+    " addDirectAccessLinkToMailChimp"
   );
 
   const updatedEvent = await Event.findByIdAndUpdate(

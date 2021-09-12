@@ -231,6 +231,26 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    mailChimpAudienceListIdForRegistrants: {
+      type: String,
+    },
+    mailChimpAudienceListIdForLeads: {
+      type: String,
+    },
+    mailChimpAudienceListIdForInterestedPeople: {
+      type: String,
+    },
+
+    mailChimpAudienceTag: {
+      type: String,
+    },
+
+    addDirectAccessLinkToMailChimp: {
+      type: Boolean,
+      default: false,
+    },
+
     publishedStatus: {
       type: String,
       default: "Draft",

@@ -141,10 +141,7 @@ export const signUp = (formValues, intent, eventId) => async (dispatch) => {
         user: res.data.data.user,
       })
     );
-    //  history.push("/user/home");
-    // window.location.href = REACT_APP_MY_ENV
-    //   ? "http://localhost:3001/user/home"
-    //   : "https://www.bluemeet.in/user/home";
+
     if (intent === "eventRegistration") {
       history.push(`/event-landing-page/${eventId}`);
     } else if (intent === "buyPlan") {
@@ -168,10 +165,7 @@ export const linkedinSignIn =
       const res = await eureka.get(`/getUserCredentials/?code=${code}`);
       console.log(res.data);
       const result = res.data.userProfile;
-      // // const formValues=res.data;
-      // res = await eureka.post("/eureka/v1/users/linkedinSignIn", {
-      //   ...res.data,
-      // });
+
       result.referralCode = getState().user.referralCode;
       socket.emit("linkedinSignIn", { result });
     } catch (err) {
@@ -208,9 +202,6 @@ export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
     dispatch(fetchUserAllPersonalData());
   } else {
     history.push("/user/home");
-    // window.location.href = REACT_APP_MY_ENV
-    //   ? "http://localhost:3001/user/home"
-    //   : "https://www.bluemeet.in/user/home";
   }
 };
 
@@ -220,10 +211,6 @@ export const errorTrackerForLinkedinSignIn =
   };
 export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
   try {
-    // const res = await eureka.post("/eureka/v1/users/googleSignIn", {
-    //   ...formValues,
-    // });
-    // console.log(res.data.data.user);
     dispatch(
       authActions.SignIn({
         token: res.token,
@@ -251,15 +238,9 @@ export const googleSignIn = (res, intent, eventId) => async (dispatch) => {
       dispatch(fetchUserAllPersonalData());
     } else {
       history.push("/user/home");
-      // window.location.href = REACT_APP_MY_ENV
-      //   ? "http://localhost:3001/user/home"
-      //   : "https://www.bluemeet.in/user/home";
     }
-    //history.push("/user/home");
   } catch (err) {
     console.log(err);
-    // dispatch(authActions.hasError(err.response.data.message));
-    // alert(err.response.data.message);
   }
 };
 
@@ -280,9 +261,6 @@ export const signOut = () => async (dispatch, getState) => {
       })
       .then(() => {
         window.gapi.auth2.getAuthInstance().signOut();
-
-        // this.onAuthChange(this.auth.isSignedIn.get());
-        // this.auth.isSignedIn.listen(this.onAuthChange);
       });
   });
 
@@ -298,7 +276,6 @@ export const signOut = () => async (dispatch, getState) => {
   //TODO Home page
 };
 
-///community auth
 export const createCommunity =
   (formValues, file, userId) => async (dispatch, getState) => {
     console.log(formValues);
@@ -473,13 +450,7 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
         token: res.token,
       })
     );
-    // dispatch(
-    //   communityActions.CreateCommunity({
-    //     community: res.communityDoc,
-    //   })
-    // );
-    // /user/:userId/community/overview/:id
-    // history.push(`/user/${userId}/community/overview/${res.communityDoc.id}`);
+
     window.location.href = `/user/${userId}/community/overview/${res.communityDoc.id}`;
   } catch (e) {
     dispatch(communityActions.hasError(e.message));
@@ -490,68 +461,7 @@ export const errorTrackerForCommunitySignIn =
   () => async (dispatch, getState) => {
     dispatch(communityActions.disabledError());
   };
-// authentication with google auth
 
-// export const googleSignIn = () => async (dispatch) => {
-//   const signIn = async () => {
-//    // console.log("mai yaha se gujara hue");
-//     const headers = new Headers();
-//     headers.append("Content-Type", "application/json");
-//     headers.append("Accept", "application/json");
-//     headers.append("Cache", "no-cache");
-
-//     const params = {
-//       dataType: "json",
-//       method: "GET",
-//       headers,
-//       credentials: "include",
-//     };
-//     const response = await fetch(
-//       "${BaseURL}current_user",
-//       params
-//     );
-
-//     if (!response.ok) {
-//       if (!response.message) {
-//         throw new Error("Something went wrong");
-//       } else {
-//         throw new Error(response.message);
-//       }
-//     }
-
-//     const res = await response.json();
-//     return res;
-//   };
-
-//   try {
-//     const res = await signIn();
-//     console.log(res);
-
-//     dispatch(
-//       userActions.CreateUser({
-//         user: res.user,
-//       })
-//     );
-//     dispatch(
-//       authActions.SignIn({
-//         token: res.token,
-//       })
-//     );
-//     dispatch(
-//       googleAuthActions.TrackerGoogleLogin({
-//         isClicked: false,
-//       })
-//     );
-//   } catch (err) {
-//     alert(err.message);
-//     dispatch(authActions.hasError(err.message));
-//   }
-// };
-
-// export const errorTrackerForGoogleSignIn = () => async (dispatch, getState) => {
-//   dispatch(authActions.disabledError());
-//   dispatch(googleAuthActions.disabledError());
-// };
 export const googleSignOut = () => async (dispatch, getState) => {
   dispatch(authActions.SignOut());
 };
@@ -5223,8 +5133,14 @@ export const fetchMailChimpAudiences =
         })
       );
     } catch (err) {
-      console.log(err);
+      dispatch(communityActions.hasError(err.message));
+      // console.log(err);
     }
+  };
+
+export const errorTrackerForFetchMailChimpAudiences =
+  () => async (dispatch, getState) => {
+    dispatch(communityActions.disabledError());
   };
 
 export const getPayPalConnectLink = () => async (dispatch, getState) => {
