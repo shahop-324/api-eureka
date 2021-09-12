@@ -34,15 +34,21 @@ import ErrorBoundriesEditEventTickets from "../../ErrorBoundries/ErrorBoundriesE
 
 import { useSnackbar } from "notistack";
 import SideNavEditLean from "../HelperComponent/SideNavEditLean";
+import { Chip, IconButton } from "@material-ui/core";
+import ArrowBackIosRoundedIcon from '@material-ui/icons/ArrowBackIosRounded';
+import { Link } from "react-router-dom";
 
 const EditEventRoot = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
   const id = params.id;
+
   const communityId = params.communityId;
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const userId = useSelector((state) => state.user.userDetails._id);
 
   const { error, isLoading } = useSelector((state) => state.event);
 
@@ -116,6 +122,33 @@ const EditEventRoot = () => {
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
         <Topnav />
+        <div className="dashboard-event-section-head py-2 pe-3">
+          <div className="d-flex flex-row align-items-center">
+          <Link
+              to={`/user/${userId}/community/event-management/${communityId}`}
+              className="me-3"
+            >
+              <IconButton aria-label="back" className="ms-4" >
+                <ArrowBackIosRoundedIcon style={{ fontSize: 18 }} />
+              </IconButton>
+            </Link>
+
+            <button className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+              Publish
+            </button>
+          </div>
+           
+            <div className="d-flex flex-row align-items-center">
+            <div className="event-name-head-text me-3">Confulence Global Summit 2021</div>
+            <Chip label="Upcoming" variant="outlined" style={{color: "#538BF7", border: "1px solid #538BF7"}} />
+            </div>
+            
+
+            <button className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+              Publish
+            </button>
+            
+          </div>
         {/* Body section - left(side nav) & right(body content) */}
         <div className="dashboard-body dashboard-body-edit">
           <SideNavEdit

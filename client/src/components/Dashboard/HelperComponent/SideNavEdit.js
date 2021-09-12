@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
-
 import IconButton from "@material-ui/core/IconButton";
 import { Divider } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -14,7 +13,6 @@ import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -30,10 +28,10 @@ const SideNavEdit = ({
   handleBasicsClick,
   handleBoothsClick,
   handleNetworkingClick,
-  handleSessionsClick, 
+  handleSessionsClick,
   handleSpeakersClick,
   handleSponsorsClick,
-  handleTicketingClick
+  handleTicketingClick,
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -96,49 +94,6 @@ const SideNavEdit = ({
   return (
     <>
       <div className="side-nav-wrapper py-4 pt-4">
-        <div className="event-poster-name-and-status-card">
-          <div className="px-3 mb-3 d-flex flex-row justify-content-between">
-            <Link
-              to={`/user/${userId}/community/event-management/${communityId}`}
-            >
-              <IconButton aria-label="back">
-                <ArrowBackIosIcon style={{ fontSize: 18 }} />
-              </IconButton>
-            </Link>
-            {isLoading ? (
-              <div class="spinner-border spinner-border-sm" role="status">
-                <span class="sr-only text-primary">Loading...</span>
-              </div>
-            ) : isAlreadyPublished ? (
-              <div className="me-3 px-3 py-2 answered-status-chip">
-                Published
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  isReadyToPublish
-                    ? dispatch(editEvent({ publishedStatus: "Published" }, id))
-                    : alert(
-                        "Please add about event, session, speaker and ticket to publish."
-                      );
-                }}
-                className="btn btn-outline-primary btn-outline-text me-2"
-              >
-                Publish
-              </button>
-            )}
-          </div>
-
-          <div className="px-4 mb-3 sidenav-poster-container">
-            <img src={url} alt="event-poster" />
-          </div>
-          <div className="px-4 d-flex flex-row justify-content-between">
-            <div className="sidenav-event-name" style={{fontFamily: "Inter"}}>{event.eventName}</div>
-            {/* <div className=" px-3 py-2 user-registration-status-chip">
-              Draft
-            </div> */}
-          </div>
-        </div>
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>

@@ -9,8 +9,6 @@ import { useSelector } from "react-redux";
 const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
   const [selectedTab, setSelectedTab] = useState("general");
 
-  
-
   return (
     <>
       <React.Fragment key="right">

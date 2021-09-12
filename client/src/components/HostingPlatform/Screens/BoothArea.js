@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../Styles/booth.scss";
 import LanguageRoundedIcon from "@material-ui/icons/LanguageRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import ClassIcon from "@material-ui/icons/Class";
+import LiveTvIcon from "@material-ui/icons/LiveTv";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
-import { Avatar, makeStyles } from "@material-ui/core";
+import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
 import Faker from "faker";
+import BoothLiveStream from "./BoothLiveStream";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +33,26 @@ const useStyles = makeStyles((theme) => ({
 // <LobbyAgenda socket={socket} />
 
 const BoothArea = () => {
+  const [openLiveStream, setOpenLiveStream] = useState(false);
+
+  const [openAssets, setOpenAssets] = useState(false);
+
+  const handleOpenLiveStream = () => {
+    setOpenLiveStream(true);
+  };
+
+  const handleCloseLiveStream = () => {
+    setOpenLiveStream(false);
+  };
+
+  const handleOpenAssets = () => {
+    setOpenAssets(true);
+  };
+
+  const handleCloseAssets = () => {
+    setOpenAssets(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -38,19 +61,43 @@ const BoothArea = () => {
         style={{ maxWidth: "1360px", margin: "0 auto" }}
         className="py-4 px-5"
       >
-        <div className="d-flex flex-row align-items-center mb-4">
-          <div
-            style={{
-              backgroundColor: "#94949436",
-              width: "fit-content",
-              borderRadius: "5px",
-            }}
-            className="px-2 py-1"
-          >
-            <ArrowBackIosRoundedIcon style={{ fontSize: "20px" }} />
+        <div className="d-flex flex-row align-items-center justify-content-between mb-4">
+          <div className="d-flex flex-row align-items-center">
+            <div
+              style={{
+                backgroundColor: "#94949436",
+                width: "fit-content",
+                borderRadius: "5px",
+              }}
+              className="px-2 py-1"
+            >
+              <ArrowBackIosRoundedIcon style={{ fontSize: "20px" }} />
+            </div>
+            <div
+              className="ms-3"
+              style={{ color: "#212121", fontWeight: "500" }}
+            >
+              Back
+            </div>
           </div>
-          <div className="ms-3" style={{ color: "#212121", fontWeight: "500" }}>
-            Back
+
+          <div>
+            <button
+              onClick={() => {
+                handleOpenAssets();
+              }}
+              className="btn btn-outline-primary btn-outline-text me-3"
+            >
+              Assets
+            </button>
+            <button
+              onClick={() => {
+                handleOpenLiveStream();
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
+              Watch Live
+            </button>
           </div>
         </div>
 
@@ -59,6 +106,7 @@ const BoothArea = () => {
             src="https://www.threatstack.com/wp-content/uploads/2017/06/docker-cloud-twitter-card.png"
             alt="booth banner"
             style={{
+              // position: "absolute",
               width: "100%",
               maxHeight: "400px",
               objectFit: "cover",
@@ -186,6 +234,10 @@ const BoothArea = () => {
 
         <Rooms />
       </div>
+
+
+<BoothLiveStream open={openLiveStream} handleClose={handleCloseLiveStream} />
+
     </>
   );
 };
