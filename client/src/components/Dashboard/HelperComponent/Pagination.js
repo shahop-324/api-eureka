@@ -21,6 +21,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const styles = {
+  control: (base) => ({
+    ...base,
+    fontFamily: "Inter",
+    fontWeight: "600",
+    color: "#757575",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Inter",
+    fontWeight: "600",
+    color: "#757575",
+  }),
+};
+
 function BasicPagination({ numOfPages, limit, handlePageChange }) {
   const classes = useStyles();
   return (
@@ -59,6 +74,7 @@ export default function CustomPagination({
         <div className={`${classes.showingText} me-3`}>Showing</div>
         <div style={{ width: "40%" }}>
           <Select
+          styles={styles}
             menuPlacement="top"
             options={options}
             defaultValue={{

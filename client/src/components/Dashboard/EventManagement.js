@@ -109,7 +109,7 @@ const EventManagement = () => {
     setPage(page);
   };
   const handleLimitChange = (value) => {
-    setLimit(value);
+    setLimit(value.value);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -190,30 +190,7 @@ const EventManagement = () => {
     throw new Error(error);
   }
 
-  console.log(window.location.href);
-  const len = window.location.href.split("?")[0].length;
 
-  const result = window.location.href.substring(len);
-  console.log(typeof result);
-  console.log(result);
-  //  let fullLocation = `${``}community/events`;
-  // let url = new URL(fullLocation);
-  // let search_params = url.searchParams;
-
-  // if (term) {
-  //   search_params.set("text", term);
-  // }
-  // if (page) {
-  //   search_params.set("page", page);
-  // }
-  // if (limit) {
-  //   search_params.set("limit", limit);
-  // }
-
-  // url.search = search_params.toString();
-  // let new_url = url.toString();
-
-  // console.log(new_url);
 
   return (
     <>

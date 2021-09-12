@@ -204,73 +204,75 @@ const SignInNew = ({ handleSubmit }) => {
             </div>
           </div>
         </div>
-        <div  className="d-flex flex-column justify-content-center align-items-center auth-right px-4">
-            <div style={{ maxWidth: "520px"}}>
+        <div className="d-flex flex-column justify-content-center align-items-center auth-right px-4">
+          <div style={{ maxWidth: "520px" }}>
             <div className="auth-form-heading mb-5">Welcome Back!</div>
 
-<div className="oauth-btns mb-5">
-  <GoogleBtn />
-  <LinkedInBtn />
-</div>
-
-
-<div>
-            <form onSubmit={handleSubmit(onSubmit)} className="ui form error mb-5">
-              <div className="mb-4">
-                <div class="form-group">
-                  <label
-                    for="emailAddress"
-                    className="form-label  ui-form-label"
-                  >
-                    Email address
-                  </label>
-                  <Field
-                    type="email"
-                    classes="form-control"
-                    id="emailAddress"
-                    name="email"
-                    ariadescribedby="Enter Email Address"
-                    placeholder="Enter Email"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-5">
-                <div class="form-group">
-                  <label
-                    for="UserPassword"
-                    className="form-label  ui-form-label"
-                  >
-                    Password
-                  </label>
-                  <Field
-                    type="password"
-                    classes="form-control"
-                    id="UserPassword"
-                    name="password"
-                    ariaddescribedby="Enter Password "
-                    placeholder="Enter password"
-                    component={RenderPassword}
-                  />
-                </div>
-              </div>
-
-
-<button className="btn btn-primary ui-btn-filled">Sign in</button>
-
-            </form>
-
-            <div className="form-link-text mb-3">Forgot Password?</div>
-            <div className="form-link-text"> <span className="form-text-gray">Don't have an account?</span> Sign up</div>
-          </div>
-
-
-
+            <div className="oauth-btns mb-5">
+              <GoogleBtn />
+              <LinkedInBtn />
             </div>
-          
 
-          
+            <div>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="ui form error mb-5"
+              >
+                <div className="mb-4">
+                  <div class="form-group">
+                    <label
+                      for="emailAddress"
+                      className="form-label  ui-form-label"
+                    >
+                      Email address
+                    </label>
+                    <Field
+                      type="email"
+                      classes="form-control"
+                      id="emailAddress"
+                      name="email"
+                      ariadescribedby="Enter Email Address"
+                      placeholder="Enter Email"
+                      component={renderInput}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-5">
+                  <div class="form-group">
+                    <label
+                      for="UserPassword"
+                      className="form-label  ui-form-label"
+                    >
+                      Password
+                    </label>
+                    <Field
+                      type="password"
+                      classes="form-control"
+                      id="UserPassword"
+                      name="password"
+                      ariaddescribedby="Enter Password "
+                      placeholder="Enter password"
+                      component={RenderPassword}
+                    />
+                  </div>
+                </div>
+
+                <button className="btn btn-primary ui-btn-filled">
+                  Sign in
+                </button>
+              </form>
+
+              <div className="form-link-text mb-3">Forgot Password?</div>
+              <div className="form-link-text">
+                {" "}
+                <span className="form-text-gray">
+                  Don't have an account?
+                </span>{" "}
+                Sign up
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
