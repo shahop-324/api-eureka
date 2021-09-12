@@ -98,7 +98,7 @@ const EventManagement = () => {
   const totalResults = useSelector((state) => state.event.length);
   const limitOfPage = query.limit;
   const pageNumber = query.page;
-  const numberOfPages = ((totalResults * 1) / limitOfPage) * 1;
+  const numberOfPages = Math.ceil(((totalResults * 1) / limitOfPage) * 1);
 
   const [term, setTerm] = React.useState("");
 
@@ -189,8 +189,6 @@ const EventManagement = () => {
   if (error) {
     throw new Error(error);
   }
-
-
 
   return (
     <>

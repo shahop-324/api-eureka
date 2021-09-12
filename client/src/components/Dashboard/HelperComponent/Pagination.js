@@ -21,28 +21,70 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
+// const styles = {
+//   control: (base) => ({
+//     ...base,
+//     fontFamily: "Inter",
+//     fontWeight: "600",
+//     color: "#757575",
+//   }),
+//   menu: (base) => ({
+//     ...base,
+//     fontFamily: "Inter",
+//     fontWeight: "600",
+//     color: "#757575",
+//   }),
+// };
+
+
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    background: '#fff',
+    borderColor: '#9e9e9e',
+    minHeight: '40px',
+    height: '40px',
+    paddingTop: "5px",
+    boxShadow: state.isFocused ? null : null,
   }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
+
+  valueContainer: (provided, state) => ({
+    ...provided,
+    height: '40px',
+    padding: '0 6px',
+  }),
+
+  input: (provided, state) => ({
+    ...provided,
+    margin: '0px',
+  }),
+  indicatorSeparator: state => ({
+    display: 'none',
+  }),
+  indicatorsContainer: (provided, state) => ({
+    ...provided,
+    height: '30px',
   }),
 };
 
+
+// const customStyles = {
+//   control: base => ({
+//     ...base,
+//     height: 35,
+//     minHeight: 35
+//   })
+// };
+
+
 function BasicPagination({ numOfPages, limit, handlePageChange }) {
+  console.log(numOfPages, "40");
   const classes = useStyles();
   return (
     <div className={classes.root}>
       {/* <Pagination count={10} /> */}
       <Pagination
-        count={10}
+        count={numOfPages}
         color="primary"
         onChange={(event, page) => {
           handlePageChange(page);
@@ -74,7 +116,7 @@ export default function CustomPagination({
         <div className={`${classes.showingText} me-3`}>Showing</div>
         <div style={{ width: "40%" }}>
           <Select
-          styles={styles}
+          styles={customStyles}
             menuPlacement="top"
             options={options}
             defaultValue={{
