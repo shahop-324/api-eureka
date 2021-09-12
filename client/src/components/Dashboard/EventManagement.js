@@ -102,8 +102,8 @@ const EventManagement = () => {
 
   const [term, setTerm] = React.useState("");
 
-  const [limit, setLimit] = React.useState(limitOfPage);
-  const [page, setPage] = React.useState(pageNumber);
+  const [limit, setLimit] = React.useState(5);
+  const [page, setPage] = React.useState(1);
 
   const handlePageChange = (page) => {
     setPage(page);

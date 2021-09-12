@@ -99,14 +99,14 @@ $font-family-sec: 'Lato';
   }
 }
 
-// input {
-//   margin-top: 5px !important;
-//   padding-top: 12px !important;
-//   padding-bottom: 12px !important;
-//   font-family: $font-family;
-//   color: $color-grey-dark;
-//   font-size: 0.9rem !important;
-// }
+.formatted-input {
+  margin-top: 5px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  font-family: $font-family;
+  color: $color-grey-dark;
+  font-size: 0.9rem !important;
+}
 
 .ui-form-label {
   text-align: left !important;

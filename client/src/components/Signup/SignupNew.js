@@ -30,7 +30,7 @@ const renderInput = ({
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
-        className={`${classes}`}
+        className={`${classes} formatted-input`}
         placeholder={placeholder}
         required
       />
@@ -70,7 +70,7 @@ const RenderPassword = ({
         type={show ? "text" : "password"}
         {...input}
         aria-describedby={ariadescribedby}
-        className={`${classes}`}
+        className={`${classes} formatted-input`}
         placeholder={placeholder}
         required
       />
