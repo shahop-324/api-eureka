@@ -136,7 +136,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
       },
     });
 
-  const features = new apiFeatures(query, req.query).textFilter();
+  const features = new apiFeatures(query, req.query).textFilter().paginate();
 
   const events = await features.query;
 
