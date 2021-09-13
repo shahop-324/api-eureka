@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
-import TypeformEnable from "./Forms/TypeformEnable";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Typeform = () => {
+const GooglCalender = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -43,16 +43,17 @@ const Typeform = () => {
           style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
         >
           <Avatar
-            src={"https://tripetto.com/images/alternatives/typeform.png"}
-            alt={"Mailchimp"}
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Calendar_icon_%282020%29.svg/1024px-Google_Calendar_icon_%282020%29.svg.png"
+            }
+            alt={"Google Sheets"}
             className={classes.large}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Typeform</div>
+            <div className="integration-name mb-2">Google Calender</div>
             <div className="integration-short-description">
-              Engage your attendees using Q&A, Polls, Quizes using Typeform with
-              evenz.
+              Create events in google calender whenever you create an event.
             </div>
           </div>
 
@@ -69,9 +70,10 @@ const Typeform = () => {
           </div>
         </div>
       </div>
-      <TypeformEnable openDrawer={open} handleCloseDrawer={handleClose} />
+
+      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
     </>
   );
 };
 
-export default Typeform;
+export default GooglCalender;

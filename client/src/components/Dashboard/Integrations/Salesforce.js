@@ -57,10 +57,14 @@ const Salesforce = () => {
             </div>
           </div>
 
-          <div style={{ justifySelf: "end" }}>
-            <button onClick={() => {
-              handleOpenSalesforce();
-            }} className="btn btn-outline-primary btn-outline-text">
+          <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
+          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+            <button
+              onClick={() => {
+                handleOpenSalesforce();
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
               Add
             </button>
           </div>

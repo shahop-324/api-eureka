@@ -410,11 +410,20 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, res) => {
       console.log("username: " + res.username);
       console.log("display name: " + res.display_name);
 
-      res.status(200).json({
-        status: "SUCCESS",
-      });
+      console.log("Access Token:" + conn.accessToken);
+      console.log("Instance url:" + conn.instanceUrl);
+
+      // res.status(200).json({
+      //   status: "SUCCESS",
+      // });
+
+
     });
   });
+
+   res.status(200).json({
+        status: "SUCCESS",
+      });
 });
 
 module.exports = app;

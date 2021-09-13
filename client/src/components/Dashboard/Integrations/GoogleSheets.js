@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
-import TypeformEnable from "./Forms/TypeformEnable";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Typeform = () => {
+const GoogleSheets = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -43,21 +43,22 @@ const Typeform = () => {
           style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
         >
           <Avatar
-            src={"https://tripetto.com/images/alternatives/typeform.png"}
-            alt={"Mailchimp"}
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Google_Sheets_2020_Logo.svg/1200px-Google_Sheets_2020_Logo.svg.png"
+            }
+            alt={"Google Sheets"}
             className={classes.large}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Typeform</div>
+            <div className="integration-name mb-2">Google Sheets</div>
             <div className="integration-short-description">
-              Engage your attendees using Q&A, Polls, Quizes using Typeform with
-              evenz.
+              Sync your attendee, speakers, booths, sponsors, leads and interested people directly with google sheets.
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <button type="button" class="btn btn-primary btn-outline-text me-3">Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();
@@ -69,9 +70,10 @@ const Typeform = () => {
           </div>
         </div>
       </div>
-      <TypeformEnable openDrawer={open} handleCloseDrawer={handleClose} />
+
+      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
     </>
   );
 };
 
-export default Typeform;
+export default GoogleSheets;

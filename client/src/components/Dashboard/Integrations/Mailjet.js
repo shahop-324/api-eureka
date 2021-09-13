@@ -1,9 +1,7 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
 import { makeStyles } from "@material-ui/core/styles";
-import TypeformEnable from "./Forms/TypeformEnable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Typeform = () => {
+const Mailjet = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -43,16 +41,17 @@ const Typeform = () => {
           style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
         >
           <Avatar
-            src={"https://tripetto.com/images/alternatives/typeform.png"}
-            alt={"Mailchimp"}
+            src={
+              "https://pbs.twimg.com/profile_images/1356623341633875970/tcAYE0Ma_400x400.png"
+            }
+            alt={"Google Sheets"}
             className={classes.large}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Typeform</div>
+            <div className="integration-name mb-2">Mailjet</div>
             <div className="integration-short-description">
-              Engage your attendees using Q&A, Polls, Quizes using Typeform with
-              evenz.
+              Sync attendee, leads and interested people to mailjet
             </div>
           </div>
 
@@ -69,9 +68,10 @@ const Typeform = () => {
           </div>
         </div>
       </div>
-      <TypeformEnable openDrawer={open} handleCloseDrawer={handleClose} />
+
+      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
     </>
   );
 };
 
-export default Typeform;
+export default Mailjet;
