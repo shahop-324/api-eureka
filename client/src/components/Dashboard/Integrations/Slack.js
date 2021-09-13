@@ -1,8 +1,9 @@
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
+import SlackAuth from "./Forms/SlackAuth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Slack = () => {
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   const classes = useStyles();
 
   return (
@@ -47,12 +59,15 @@ const Slack = () => {
           </div>
 
           <div style={{ justifySelf: "end" }}>
-            <button className="btn btn-outline-primary btn-outline-text">
+            <button onClick={() => {
+              handleOpen()
+            }} className="btn btn-outline-primary btn-outline-text">
               Add
             </button>
           </div>
         </div>
       </div>
+      <SlackAuth openDrawer={open}  handleCloseDrawer={handleClose} />
     </>
   );
 };
