@@ -1,10 +1,11 @@
-// 
+//
 
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
+import HubspotAuth from "./Forms/HubspotAuth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Hubspot = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -45,17 +56,25 @@ const Hubspot = () => {
           <div>
             <div className="integration-name mb-2">Hubspot</div>
             <div className="integration-short-description">
-              Sync your leads and registered users data to hubspot to level up your marketing.
+              Sync your leads and registered users data to hubspot to level up
+              your marketing.
             </div>
           </div>
 
           <div style={{ justifySelf: "end" }}>
-            <button className="btn btn-outline-primary btn-outline-text">
+            <button
+              onClick={() => {
+                handleOpen();
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
               Add
             </button>
           </div>
         </div>
       </div>
+
+      <HubspotAuth openDrawer={open} handleCloseDrawer={handleClose} />
     </>
   );
 };
