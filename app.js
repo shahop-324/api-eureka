@@ -9,6 +9,8 @@ const helmet = require("helmet");
 const mongosanitize = require("express-mongo-sanitize");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
+
+const jsforce = require("jsforce");
 const passport = require("passport");
 const xss = require("xss-clean");
 const AppError = require("./utils/appError");
@@ -372,5 +374,43 @@ app.get("/api-eureka/eureka/v1/logout", (req, res) => {
 });
 app.use("/api-eureka/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
+
+app.get("/api-eureka/v1/auth/salesforce", function (req, res) {
+  const oauth2 = new jsforce.OAuth2({
+    clientId: process.env.MAILCHIMP_CLIENT_ID,
+    clientSecret: process.env.MAILCHIMP_CLIENT_SECRET_ID,
+    redirectUri: process.env.MAILCHIMP_REDIRECT_URI,
+  });
+  res.redirect(oauth2.getAuthorizationUrl({}));
+});
+
+app.get("/api-eureka/v1/oauth/salesforce/callback", (req, res) => {
+  console.log(req.query.code, "I am counting on you salesforce code");
+
+  const oauth2 = new jsforce.OAuth2({
+    clientId: process.env.MAILCHIMP_CLIENT_ID,
+    clientSecret: process.env.MAILCHIMP_CLIENT_SECRET_ID,
+    redirectUri: process.env.MAILCHIMP_REDIRECT_URI,
+  });
+  const conn = new jsforce.Connection({ oauth2: oauth2 });
+  conn.authorize(req.query.code, function (err, userInfo) {
+    if (err) {
+      return console.error(err);
+    }
+    const conn2 = new jsforce.Connection({
+      instanceUrl: conn.instanceUrl,
+      accessToken: conn.accessToken,
+    });
+    conn2.identity(function (err, res) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("user ID: " + res.user_id);
+      console.log("organization ID: " + res.organization_id);
+      console.log("username: " + res.username);
+      console.log("display name: " + res.display_name);
+    });
+  });
+});
 
 module.exports = app;

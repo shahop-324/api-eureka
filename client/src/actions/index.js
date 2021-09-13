@@ -1,4 +1,3 @@
-import { useSnackbar } from "notistack";
 import eureka from "../apis/eureka";
 import { authActions } from "../reducers/authSlice";
 import { eventActions } from "../reducers/eventSlice";
@@ -31,28 +30,17 @@ import { affiliateActions } from "../reducers/affiliateSlice";
 import { interestedPeopleActions } from "../reducers/interestedPeopleSlice";
 import { sessionChatActions } from "../reducers/sessionChatSlice";
 
-import { LinkedInApi, NodeServer } from "../components/LinkedinConfig";
-import axios from "axios";
-
 import { eventAlertActions } from "../reducers/eventAlertSlice";
 import { eventPollActions } from "../reducers/eventPollSlice";
 import { availableForNetworkingActions } from "../reducers/availableForNetworking";
 
-import { StreamActions } from "../reducers/streamSlice";
-import GlobalSnackbar from "../components/GlobalSnackbar";
 import socket from "../components/HostingPlatform/service/socket";
 import { paypalActions } from "../reducers/paypalSlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
-// authentication with id and password
-const urlToGetLinkedInAccessToken =
-  "https://www.linkedin.com/oauth/v2/accessToken";
-const urlToGetUserProfile =
-  "https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName,profilePicture(displayImage~digitalmediaAsset:playableStreams))";
-const urlToGetUserEmail =
-  "https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))";
+
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
     console.log(id);
@@ -76,12 +64,7 @@ export const signInForSpeaker =
   };
 
 export const signIn = (res, intent, eventId) => async (dispatch) => {
-  // console.log({ ...formValues });
-
   try {
-    // const res = await eureka.post("/eureka/v1/users/login", { ...formValues });
-    // console.log(res.data);
-    console.log(res);
     dispatch(
       authActions.SignIn({
         token: res.token,
