@@ -1,5 +1,9 @@
 // Defining variables
 
+.hosting-platform-basic-grid {
+  height: 92vh;
+}
+
 $Side-Nav-bg-color: '#ffffff';
 $Shadow-inset-color: '#00000029';
 
@@ -114,6 +118,7 @@ $Shadow-inset-color: '#00000029';
 
 .right-top-nav-h {
   height: 8vh;
+  // margin-right: -400px;
   // border: 1px solid goldenrod;
 }
 
@@ -227,7 +232,7 @@ $Shadow-inset-color: '#00000029';
 .lobby-nav-btn {
   padding-bottom: 8px;
   text-align: left;
-  font: normal normal 500 1.25rem/1.5rem Ubuntu;
+  font: normal normal 500 1.05rem/1.5rem Ubuntu;
   color: #a3a2a2;
   opacity: 1;
   letter-spacing: 0px;

@@ -12,7 +12,7 @@ import Avatar from "@material-ui/core/Avatar";
 import "./../index.css";
 import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
-import "./../assets/css/CardStyle.css";
+import "./../assets/css/CardStyle.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
   communitySignIn,

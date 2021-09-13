@@ -5,7 +5,7 @@ import history from "./../history";
 import './../index.css';
 import './../assets/css/style.css';
 import './../assets/css/UserAccountStyle.css';
-import './../assets/css/CardStyle.css';
+import './../assets/css/CardStyle.scss';
 
 const PaidPriceSelector = (props) => {
   const [minPrice, setMinPrice] = useState(0);

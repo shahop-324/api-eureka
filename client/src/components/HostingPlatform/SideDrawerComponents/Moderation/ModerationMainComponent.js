@@ -15,7 +15,13 @@ const ModerationMainComponent = (props) => {
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
+          <div className="d-flex flex-column mb-3">
           <div className="event-platform-side-drawer-heading">Moderation</div>
+          <div className="setting-tab-sub-text">
+                  Take actions and moderate event activity
+                </div>
+          </div>
+          
 
           <div
             onClick={() => {

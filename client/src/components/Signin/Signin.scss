@@ -108,6 +108,11 @@ $font-family-sec: 'Lato';
   font-size: 0.9rem !important;
 }
 
+.icon-hover:hover{
+  cursor: pointer;
+  fill: #1b2653 !important;
+}
+
 .ui-form-label {
   text-align: left !important;
   font-weight: 500 !important;

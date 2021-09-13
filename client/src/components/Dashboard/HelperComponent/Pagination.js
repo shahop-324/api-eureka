@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 //   }),
 // };
 
-
 // const customStyles = {
 //   control: base => ({
 //     ...base,
@@ -58,14 +57,15 @@ const useStyles = makeStyles((theme) => ({
 //   })
 // };
 
-
-function BasicPagination({ numOfPages, limit, handlePageChange }) {
+function BasicPagination({ numOfPages, limit, handlePageChange, page }) {
   console.log(numOfPages, "40");
   const classes = useStyles();
   return (
     <div className={classes.root}>
       {/* <Pagination count={10} /> */}
       <Pagination
+        shape="rounded"
+        page={page * 1}
         count={numOfPages}
         color="primary"
         onChange={(event, page) => {
@@ -85,7 +85,7 @@ export default function CustomPagination({
   totalResults,
   handleLimitChange,
   handlePageChange,
-
+  page,
   options,
 }) {
   const classes = useStyles();
@@ -98,7 +98,7 @@ export default function CustomPagination({
         <div className={`${classes.showingText} me-3`}>Showing</div>
         <div style={{ width: "40%" }}>
           <Select
-          // styles={customStyles}
+            // styles={customStyles}
             menuPlacement="top"
             options={options}
             defaultValue={{
@@ -114,6 +114,7 @@ export default function CustomPagination({
       </div>
       <div className="basic-pagination-wrapper d-flex flex-row align-items-center">
         <BasicPagination
+          page={page}
           numOfPages={numOfPages}
           limit={limit}
           handlePageChange={handlePageChange}

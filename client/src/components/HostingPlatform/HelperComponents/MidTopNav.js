@@ -3,7 +3,7 @@ import "./../Styles/root.scss";
 
 import RightContent from "./RightContent";
 
-const MidTopNav = ({eventName}) => {
+const MidTopNav = ({ eventName }) => {
   return (
     <>
       <div className="mid-top-nav ps-3 py-2 d-flex flex-row justify-content-between align-items-center">

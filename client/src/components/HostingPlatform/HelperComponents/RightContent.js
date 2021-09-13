@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../Styles/root.scss";
 
 import GroupIcon from "@material-ui/icons/Group";
 
 import DashboardIcon from "@material-ui/icons/Dashboard";
 
+
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import SecurityIcon from "@material-ui/icons/Security";
+import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import NotificationsRoundedIcon from "@material-ui/icons/NotificationsRounded";
@@ -16,23 +18,60 @@ import MainPeopleComponent from "../SideDrawerComponents/People/MainPeopleCompon
 import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainComponent";
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
+import SettingsDrawer from "./SettingsDrawer";
 
 const RightContent = () => {
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const [selectedTab, setSelectedTab] = React.useState("");
+  const [openSettings, setOpenSettings] = useState(false);
+
+  const [selectedTab, setSelectedTab] = useState("");
 
   const resetSelectedTab = () => {
     setSelectedTab("");
   };
 
+  const handleOpenSettings = () => {
+    setOpenSettings(true);
+  }
+
+  const handleCloseSettings = () => {
+    setOpenSettings(false);
+  }
+
   return (
     <>
       <div>
         <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
-
-        
-
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
+            onClick={() => {
+              // setSelectedTab("feed");
+              // setOpenDrawer(true);
+              handleOpenSettings();
+            }}
+            style={{ borderRight: "1px solid #D3D2D2" }}
+          >
+            <div
+              className={`icon-wrapper ${
+                selectedTab === "feed" ? "active-wrapper-h" : " "
+              } py-2 px-3 mb-1`}
+            >
+              <SettingsRoundedIcon
+                className={`icon-btn-h ${
+                  selectedTab === "feed" ? "icon-btn-active-h" : " "
+                }`}
+                style={{ fontSize: "19" }}
+              />
+            </div>
+            <div
+              className={`icon-btn-text ${
+                selectedTab === "feed" ? "icon-btn-text-active-h" : " "
+              }`}
+            >
+              Settings
+            </div>
+          </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
@@ -172,8 +211,6 @@ const RightContent = () => {
               Moderation
             </div>
           </div>
-
-         
         </div>
       </div>
 
@@ -369,10 +406,12 @@ const RightContent = () => {
                   );
 
                 case "moderation":
-                  return <ModerationMainComponent 
-                  setOpenDrawer={setOpenDrawer}
+                  return (
+                    <ModerationMainComponent
+                      setOpenDrawer={setOpenDrawer}
                       resetSelectedTab={resetSelectedTab}
-                  />;
+                    />
+                  );
 
                 default:
                   return <div>You are a User visting hosting platform.</div>;
@@ -381,6 +420,8 @@ const RightContent = () => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
+
+      <SettingsDrawer openDrawer={openSettings} handleCloseDrawer={handleCloseSettings}/>
     </>
   );
 };

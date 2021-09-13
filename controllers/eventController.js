@@ -119,6 +119,8 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
+  const allEvents = await Event.find({createdBy: mongoose.Types.ObjectId(communityId)})
+
   const query = Event.find({ createdBy: mongoose.Types.ObjectId(communityId) })
     .populate("sponsors")
     .populate("tickets")
@@ -141,7 +143,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const events = await features.query;
 
   res.status(200).json({
-    length: events.length,
+    length: allEvents.length,
     status: "success",
     events,
   });

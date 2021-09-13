@@ -1,6 +1,7 @@
 import { Avatar } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
+import SalesforceAuth from "./Forms/SalesforceAuth";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -23,6 +24,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Salesforce = () => {
   const classes = useStyles();
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpenSalesforce = () => {
+    setOpen(true);
+  }
+
+  const handleCloseSalesforce = () => {
+    setOpen(false);
+  }
 
   return (
     <>
@@ -47,12 +58,16 @@ const Salesforce = () => {
           </div>
 
           <div style={{ justifySelf: "end" }}>
-            <button className="btn btn-outline-primary btn-outline-text">
+            <button onClick={() => {
+              handleOpenSalesforce();
+            }} className="btn btn-outline-primary btn-outline-text">
               Add
             </button>
           </div>
         </div>
       </div>
+
+      <SalesforceAuth openDrawer={open} handleCloseDrawer={handleCloseSalesforce} />
     </>
   );
 };
