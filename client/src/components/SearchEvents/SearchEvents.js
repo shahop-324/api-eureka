@@ -212,13 +212,13 @@ const SearchEvents = () => {
     return eventsList.map((event) => {
       const now = new Date(event.startDate);
       const end = new Date(event.endDate);
-      const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+      const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
       // console.log(x);
 
-      const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
+      const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
 
-      const startTime=dateFormat(event.startTime, "mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "mmm dS, h:MM TT")
+      const startTime=dateFormat(event.startTime, "ddd mmm dS, h:MM TT")
+      const endTime=dateFormat(event.endTime, "ddd mmm dS, h:MM TT")
 
       return (
         <EventCard

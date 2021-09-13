@@ -13,9 +13,14 @@ const MainChatComponent = (props) => {
   return (
     <>
       <div>
-        <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
+        <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-4">
+          <div className="d-flex flex-column">
           <div className="event-platform-side-drawer-heading">Messages</div>
-
+          <div className="setting-tab-sub-text">
+                  Event wide and private Messages
+                </div>
+          </div>
+          
           <div
             onClick={() => {
               props.resetSelectedTab();

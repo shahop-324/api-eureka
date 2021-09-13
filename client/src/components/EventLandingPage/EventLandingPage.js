@@ -551,7 +551,9 @@ const EventLandingPage = (props) => {
 
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
                   <Avatar
-                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
+                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${
+                      event.createdBy.image ? event.createdBy.image : "#"
+                    }`}
                     className="hosted-by-community-logo"
                     alt={event.createdBy.name}
                     variant="rounded"

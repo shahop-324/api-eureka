@@ -113,7 +113,10 @@ const PollsMainComponent = (props) => {
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
-          <div className="event-platform-side-drawer-heading">Polls</div>
+          <div className="d-flex flex-column mb-3">
+            <div className="event-platform-side-drawer-heading">Polls</div>
+            <div className="setting-tab-sub-text">Event wide polls</div>
+          </div>
 
           <div
             onClick={() => {
@@ -165,7 +168,10 @@ const PollsMainComponent = (props) => {
 
         {/* here comes people component */}
 
-        <div className="people-container pt-2 px-2 d-flex flex-column justify-content-between" style={{ height: "73vh" }}>
+        <div
+          className="people-container pt-2 px-2 d-flex flex-column justify-content-between"
+          style={{ height: "73vh" }}
+        >
           {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
 
           <div

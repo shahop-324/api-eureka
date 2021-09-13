@@ -6,6 +6,10 @@
   box-shadow: inset 0px 0px 6px #cccccc29;
   border-radius: 20px;
   padding: 0 !important;
+
+  img {
+    transition: all 0.2s ease-in-out;
+  }
 }
 
 .event-card-img-container {
@@ -38,7 +42,7 @@
 } */
 
 .event-card-date-main {
-  font-family: "Inter";
+  font-family: 'Inter';
   font-style: normal;
   font-weight: bold;
   font-size: 0.9rem;
@@ -51,7 +55,7 @@
 }
 
 .event-card-name-main {
-  font-family: "Inter";
+  font-family: 'Inter';
   font-style: normal;
   font-weight: bold;
   font-size: 1.25rem;
@@ -62,7 +66,7 @@
 }
 
 .event-card-price-main {
-  font-family: "Inter";
+  font-family: 'Inter';
   font-style: normal;
   font-weight: bold;
   font-size: 0.9rem;
@@ -85,44 +89,50 @@
 }
 
 .you-have-no-event-coming-text {
-
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
   font-size: 0.95rem;
   line-height: 18px;
   /* identical to box height, or 129% */
-  
-  
+
   color: #757575;
 }
 
 .btn-text-customised {
   font-family: Inter;
-font-style: normal;
-font-weight: bold;
-font-size: 0.95rem;
-line-height: 16px;
-/* identical to box height, or 114% */
+  font-style: normal;
+  font-weight: bold;
+  font-size: 0.95rem;
+  line-height: 16px;
+  /* identical to box height, or 114% */
 
-
-color: #FFFFFF;
+  color: #ffffff;
 }
 
 .btn-color-customised {
-  background-color: #538BF7;
+  background-color: #538bf7;
 }
 
 .event-card-main:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 2px 0 rgba(233, 233, 233, 0.609),
+    0 6px 20px 0 rgba(196, 195, 195, 0.746);
   cursor: pointer;
   /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.2)); */
+  transition: all 0.2s ease-in-out;
+  img {
+    object-fit: cover;
+  }
 }
 
-.rating-indicator  {
-  background-color: #538BF7;
+.rating-indicator {
+  background-color: #538bf7;
   border-radius: 5px;
   color: #ffffff;
   font-weight: 500;
   font-size: 0.8rem;
+}
+
+.favourite-icon:hover {
+  fill: #c2351c;
 }

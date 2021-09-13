@@ -37,6 +37,11 @@
   background-color: #ffffff78;
 }
 
+.hosting-platform-basic-grid {
+  display: grid;
+  grid-template-columns: 5fr 1.2fr;
+}
+
 .diamond-sponsor-stand-container,
 .platinum-and-gold-sponsor-stand-container {
   //   border: 1px solid green;
@@ -92,16 +97,14 @@
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  
 
   clip-path: polygon(80% 0, 100% 8%, 100% 100%, 0 100%, 0 0);
 }
 
 .reception-quick-links-container {
-
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
 
   width: 94.5%;
   margin-left: auto;
@@ -156,13 +159,13 @@
 }
 
 .recepetion-host-name-and-follow-container {
-    text-align: end;
-    justify-self: flex-end;
-    border: 1px solid #538BF7;
-    border-radius: 5px;
+  text-align: end;
+  justify-self: flex-end;
+  border: 1px solid #538bf7;
+  border-radius: 5px;
 }
 
 .sponsor-stand-image:hover {
-    transform: scale(1.2);
-    cursor: pointer;
+  transform: scale(1.2);
+  cursor: pointer;
 }

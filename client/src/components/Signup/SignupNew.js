@@ -76,6 +76,7 @@ const RenderPassword = ({
       />
       {show ? (
         <VisibilityOffOutlinedIcon
+        className={"icon-hover"}
           onClick={() => {
             setShow(false);
           }}
@@ -88,6 +89,7 @@ const RenderPassword = ({
         />
       ) : (
         <RemoveRedEyeOutlinedIcon
+        className={"icon-hover"}
           onClick={() => {
             setShow(true);
           }}
@@ -167,7 +169,7 @@ const SignupNew = ({ handleSubmit }) => {
             ></img>
 
             <div className="auth-hero-heading py-3 mb-4">
-              The leading virtual & <br /> hybrid events platform
+              Meet your one stop <br /> Events solution
             </div>
 
             <div className="auth-highlights">

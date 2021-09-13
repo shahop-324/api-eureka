@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import PeopleList from "./helper/PeopleList";
 
 const DropdownIcon = ({ switchView, view }) => (
-
   <Dropdown
     // text="Grid"
     icon={`${view} layout`}
@@ -72,8 +71,13 @@ const MainPeopleComponent = (props) => {
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
-          <div className="event-platform-side-drawer-heading">
-            People in event
+          <div className="d-flex flex-column mb-3">
+            <div className="event-platform-side-drawer-heading">
+              People in event
+            </div>
+            <div className="setting-tab-sub-text">
+              Interect with other people in event
+            </div>
           </div>
 
           <div
@@ -94,16 +98,16 @@ const MainPeopleComponent = (props) => {
 
         <div className="people-container pt-2 px-2">
           <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
-          <div class="ui icon input me-3" style={{ width: "100%" }}>
-          <input
-            type="text"
-            placeholder="Search people..."
-            className="form-control"
-          />
-          <i class="search icon"></i>
-        </div>
+            <div class="ui icon input me-3" style={{ width: "100%" }}>
+              <input
+                type="text"
+                placeholder="Search people..."
+                className="form-control"
+              />
+              <i class="search icon"></i>
+            </div>
 
-            <DropdownIcon switchView={switchView} view={view}/>
+            <DropdownIcon switchView={switchView} view={view} />
           </div>
 
           {(() => {

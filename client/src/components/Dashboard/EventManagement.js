@@ -110,6 +110,10 @@ const EventManagement = () => {
   };
   const handleLimitChange = (value) => {
     setLimit(value.value);
+
+    if (totalResults < value.value) {
+      setPage(Math.ceil(((totalResults * 1) / value.value) * 1));
+    }
   };
 
   const [open, setOpen] = React.useState(false);
@@ -249,6 +253,7 @@ const EventManagement = () => {
         </div>
         {/* Here I have to use pagination */}
         <CustomPagination
+        page={page}
           numOfPages={numberOfPages}
           limit={limit}
           currentPage={page}

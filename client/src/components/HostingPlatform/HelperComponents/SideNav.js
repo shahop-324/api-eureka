@@ -168,7 +168,7 @@ const SideNav = (props) => {
           
         </div>
 
-        <div className="logout-btn-side-nav-h">
+        {/* <div className="logout-btn-side-nav-h">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={props.handleLogoutClick}
@@ -205,7 +205,12 @@ const SideNav = (props) => {
               Leave
             </div>
           </div>
-        </div>
+        </div> */}
+
+
+
+
+
       </div>
     </>
   );

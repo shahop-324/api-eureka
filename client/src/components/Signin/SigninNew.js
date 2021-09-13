@@ -79,6 +79,7 @@ const RenderPassword = ({
       />
       {show ? (
         <VisibilityOffOutlinedIcon
+        className={"icon-hover"}
           onClick={() => {
             setShow(false);
           }}
@@ -91,6 +92,7 @@ const RenderPassword = ({
         />
       ) : (
         <RemoveRedEyeOutlinedIcon
+        className={"icon-hover"}
           onClick={() => {
             setShow(true);
           }}

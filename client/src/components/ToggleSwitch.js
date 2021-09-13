@@ -18,7 +18,7 @@ import Slide from '@material-ui/core/Slide';
 import './../index.css';
 import './../assets/css/style.css';
 import './../assets/css/UserAccountStyle.css';
-import './../assets/css/CardStyle.css';
+import './../assets/css/CardStyle.scss';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

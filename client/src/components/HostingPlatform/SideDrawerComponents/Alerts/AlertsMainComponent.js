@@ -14,8 +14,12 @@ const MainChatComponent = (props) => {
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-2">
-          <div className="event-platform-side-drawer-heading">Alerts</div>
-
+          <div className="d-flex flex-column mb-3">
+            <div className="event-platform-side-drawer-heading">Alerts</div>
+            <div className="setting-tab-sub-text">
+              Alerts from event organiser and Bluemeet
+            </div>
+          </div>
           <div
             onClick={() => {
               props.resetSelectedTab();
@@ -49,7 +53,7 @@ const MainChatComponent = (props) => {
               selectedTab === "general" ? "slider-btn-active" : " "
             } d-flex flex-row align-items-center justify-content-center`}
           >
-           General
+            General
           </div>
         </div>
 
