@@ -57,7 +57,7 @@ const PeopleProfile = ({ open, handleClose }) => {
         // onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <div className="people-profile-container p-3">
+        <div className="people-profile-container p-3" style={{minWidth: "480px"}}>
           <div className="d-flex flex-row align-items-center justify-content-between">
             <span
               style={{

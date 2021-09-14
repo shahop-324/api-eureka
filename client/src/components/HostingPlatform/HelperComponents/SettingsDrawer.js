@@ -5,10 +5,33 @@ import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounde
 import "./../Styles/Settings.scss";
 import { Divider, IconButton } from "@material-ui/core";
 import CustomizeEvent from "./CustomiseEvent";
+import UpdateEventProfile from "./UpdateEventProfile";
+import CameraAndMic from "./Camera&Mic";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
 
+  const [openAudioAndVideo, setOpenAudioAndVideo] = useState(false);
+
   const [openCustomise, setOpenCustomise] = useState(false);
+
+  const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
+
+  const handleOpenAudioAndVideo = () => {
+    setOpenAudioAndVideo(true);
+  }
+
+  const handleCloseAudioAndVideo = () => {
+    setOpenAudioAndVideo(false);
+  }
+
+  const handleOpenUpdateProfile = () => {
+    setOpenUpdateProfile(true);
+  }
+
+  const handleCloseUpdateProfile = () => {
+    setOpenUpdateProfile(false);
+  }
+
 
   const handleOpenCustomise = () => {
     setOpenCustomise(true);
@@ -56,7 +79,9 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+            <div onClick={() => {
+              handleOpenUpdateProfile()
+            }} className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
               <div>
                 <div className="setting-tab-text mb-1">Update profile</div>
                 <div className="setting-tab-sub-text">
@@ -68,13 +93,41 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+            <div onClick={() => {
+              handleOpenAudioAndVideo();
+            }} className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
               <div>
                 <div className="setting-tab-text mb-1">
                   Audio and Video settings
                 </div>
                 <div className="setting-tab-sub-text">
                   Test and update your camera and mic preferences
+                </div>
+              </div>
+
+              <IconButton>
+                <ArrowForwardIosRoundedIcon className="icon-btn" />
+              </IconButton>
+            </div>
+            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+              <div>
+                <div className="setting-tab-text mb-1">Notification Settings</div>
+                <div className="setting-tab-sub-text">
+                  Enable/disable notification popups and sound
+                </div>
+              </div>
+
+              <IconButton>
+                <ArrowForwardIosRoundedIcon className="icon-btn" />
+              </IconButton>
+            </div>
+            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+              <div>
+                <div className="setting-tab-text mb-1">
+                  Security & Privacy
+                </div>
+                <div className="setting-tab-sub-text">
+                  Manage your profile visbility & block <br/> list for a  better experience
                 </div>
               </div>
 
@@ -121,6 +174,8 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
       </React.Fragment>
 
       <CustomizeEvent openDrawer={openCustomise} handleCloseDrawer={handleCloseCustomise} />
+      <UpdateEventProfile openDrawer={openUpdateProfile} handleCloseDrawer={handleCloseUpdateProfile}/>
+      <CameraAndMic open={openAudioAndVideo} handleClose={handleCloseAudioAndVideo}/>
     </>
   );
 };

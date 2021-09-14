@@ -17,6 +17,9 @@ import CreateTheme from "./CreateTheme";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
+import FormGroup from "@material-ui/core/FormGroup";
+import Switch from "@material-ui/core/Switch";
+
 const RoyalBlueRadio = withStyles({
   root: {
     color: "#538BF7",
@@ -27,8 +30,28 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
+const RoyalBlueSwitch = withStyles({
+  switchBase: {
+    color: "#538BF7",
+    "&$checked": {
+      color: "#3474F3",
+    },
+    "&$checked + $track": {
+      backgroundColor: "#145DF0",
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
   const [openCreateTheme, setOpenCreateTheme] = useState(false);
+
+  const [checked, setChecked] = React.useState(false);
+
+  const handleChangeToggle = () => {
+    setChecked(!checked);
+  };
 
   const handleOpenTheme = () => {
     setOpenCreateTheme(true);
@@ -142,8 +165,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Live chat</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -153,8 +187,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">People in event</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -164,8 +209,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Private Meetings</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -175,8 +231,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Private chat</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -186,8 +253,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Q & A</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -197,8 +275,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Attendee count</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -208,8 +297,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Emoji reactions on stage</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -219,8 +319,19 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Bluemeet Feedback Rating</div>
 
                   <div>
-                    <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div>
+                    {/* <VisibilityOffIcon className="icon-btn" />
+                    <div className="show-hide-text">hide</div> */}
+                    <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <RoyalBlueSwitch
+                      checked={checked}
+                      onChange={handleChangeToggle}
+                      name="mailchimpSwitch"
+                    />
+                  }
+                />
+              </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">

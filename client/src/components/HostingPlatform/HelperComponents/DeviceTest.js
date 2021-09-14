@@ -9,18 +9,21 @@ import "./../Styles/Compatibility.scss";
 import { Dropdown } from "semantic-ui-react";
 import ProgressBar from "./VolumeIndicator";
 
-
+import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
+import MicRoundedIcon from "@material-ui/icons/MicRounded";
+import "./../../../index.css";
 
 const videoContainer = document.getElementById("camera-device-test-output");
 
+
 // console.log(videoContainer);
 
-const DeviceTest = ({ handleBack, handleNext }) => {
+const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
   const [audioLevel, setAudioLevel] = useState(0);
 
-  const [audioDevices, setAudioDevices] = useState([]);
+  const [audioDevices, setAudioDevices] = useState(null);
 
-  const [videoDevices, setVideoDevices] = useState([]);
+  const [videoDevices, setVideoDevices] = useState(null);
 
   const [microphoneId, setMicrophoneId] = useState("");
 
@@ -60,7 +63,9 @@ const DeviceTest = ({ handleBack, handleNext }) => {
           if (changedDevice.state === "ACTIVE") {
             audioTrack.setDevice(changedDevice.device.deviceId);
             // Switch to an existing device when the current device is unplugged.
-          } else if (changedDevice.device.label === audioTrack.getTrackLabel()) {
+          } else if (
+            changedDevice.device.label === audioTrack.getTrackLabel()
+          ) {
             const oldMicrophones = await AgoraRTC.getMicrophones();
             oldMicrophones[0] &&
               audioTrack.setDevice(oldMicrophones[0].deviceId);
@@ -76,7 +81,6 @@ const DeviceTest = ({ handleBack, handleNext }) => {
 
   useEffect(() => {
     testDeviceHandler();
-    
   }, []);
 
   console.log(typeof audioLevel, audioLevel);
@@ -86,7 +90,7 @@ const DeviceTest = ({ handleBack, handleNext }) => {
   const isLoading = user.isLoading;
   const error = user.error;
 
-  if (isLoading) {
+  if (isLoading || !audioDevices || !videoDevices) {
     return (
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
@@ -97,19 +101,16 @@ const DeviceTest = ({ handleBack, handleNext }) => {
     return alert(error);
   }
   const image = user.userDetails.image;
-  
 
   let imgURL;
 
-  if(image) {
+  if (image) {
     if (image.startsWith("https://lh3.googleusercontent.com")) {
       imgURL = image;
     } else {
       imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
     }
   }
-
-  
 
   const renderVideoDevices = () => {
     return videoDevices.map((device) => {
@@ -123,54 +124,194 @@ const DeviceTest = ({ handleBack, handleNext }) => {
     });
   };
 
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
+  const filler1Percent = () => {
+    if (audioLevel > 0 && audioLevel >= 20) {
+      return "100%";
+    }
+    if (audioLevel > 0 && audioLevel < 20) {
+      let percent = (((20 - audioLevel) * 1) / 100) * 20;
+      console.log(percent);
+      return percent + "%";
+    }
+  };
+
+  const filler2Percent = () => {
+    if (audioLevel > 20 && audioLevel >= 40) {
+      return "100%";
+    }
+    if (audioLevel > 20 && audioLevel < 40) {
+      let percent = (((40 - audioLevel) * 1) / 100) * 20;
+      console.log(percent);
+      return percent + "%";
+    }
+    if (audioLevel < 20) {
+      return "0%";
+    }
+  };
+  const filler3Percent = () => {
+    if (audioLevel > 40 && audioLevel >= 60) {
+      return "100%";
+    }
+    if (audioLevel > 40 && audioLevel < 60) {
+      let percent = (((60 - audioLevel) * 1) / 100) * 20;
+      console.log(percent);
+      return percent + "%";
+    }
+    if (audioLevel < 40) {
+      return "0%";
+    }
+  };
+  const filler4Percent = () => {
+    if (audioLevel > 60 && audioLevel >= 80) {
+      return "100%";
+    }
+    if (audioLevel > 60 && audioLevel < 80) {
+      let percent = (((80 - audioLevel) * 1) / 100) * 20;
+      console.log(percent);
+      return percent + "%";
+    }
+    if (audioLevel < 60) {
+      return "0%";
+    }
+  };
+  const filler5Percent = () => {
+    if (audioLevel > 80 && audioLevel >= 100) {
+      return "100%";
+    }
+    if (audioLevel > 80 && audioLevel < 100) {
+      let percent = (((100 - audioLevel) * 1) / 100) * 20;
+      console.log(percent);
+      return percent + "%";
+    }
+    if (audioLevel < 80) {
+      return "0%";
+    }
+  };
+
+  const filler1 = {
+    width: filler1Percent(),
+    height: "100%",
+    borderRadius: "25px",
+    backgroundColor: "#538BF7",
+  };
+  const filler2 = {
+    width: filler2Percent(),
+    height: "100%",
+    borderRadius: "25px",
+    backgroundColor: "#538BF7",
+  };
+  const filler3 = {
+    width: filler3Percent(),
+    height: "100%",
+    backgroundColor: "#538BF7",
+    borderRadius: "25px",
+  };
+  const filler4 = {
+    width: filler4Percent(),
+    height: "100%",
+    backgroundColor: "#538BF7",
+    borderRadius: "25px",
+  };
+  const filler5 = {
+    width: filler5Percent(),
+    height: "100%",
+    backgroundColor: "#538BF7",
+    borderRadius: "25px",
+  };
+
   return (
     <>
       <div className="centered-box d-flex flex-column align-items-center justify-content-center">
         <div className="compatibility-test-section d-flex flex-row align-items-center">
           <div className="centered-box compatibility-box px-4 py-4">
-            <div className="video-and-audio-test-box">
-              <div
-                className="video-test-box mb-4"
-                id="camera-device-test-output"
-              >
-                {/* <div
-                  className="centered-box d-flex flex-row align-items-center"
-                  style={{ height: "100%" }}
+            <div>
+              <div className="video-and-audio-test-box mb-4">
+                <div
+                  style={{
+                    position: "relative",
+                    overflow: "hidden",
+                    borderRadius: "10px",
+                    backgroundColor: "#ffffff",
+                    border: "none",
+                  }}
+                  className="video-test-box mb-4"
+                  id="camera-device-test-output"
                 >
-                  <Avatar
-                    className="centered-box"
-                    src={imgURL}
-                    alt={userName}
-                    variant="rounded"
-                    style={{ height: "4rem", width: "4rem" }}
-                  />
-                </div> */}
+                  <div
+                    className="d-flex flex-row align-items-center justify-content-around px-5"
+                    style={{
+                      position: "absolute",
+                      bottom: "15px",
+                      left: "80px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: "#EBEBEBE8",
+                        width: "fit-content",
+                        borderRadius: "5px",
+                        alignSelf: "center",
+                        zIndex: "10",
+                      }}
+                      className="px-1 py-1 me-5"
+                    >
+                      <VideocamRoundedIcon
+                        style={{ fontSize: "18", fill: "#313131" }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: "#EBEBEBE8",
+                        width: "fit-content",
+                        borderRadius: "5px",
+                        alignSelf: "center",
+                        zIndex: "10",
+                      }}
+                      className="px-1 py-1 ms-5"
+                    >
+                      <MicRoundedIcon
+                        style={{ fontSize: "18", fill: "#313131" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="align-items-center"
+                  style={{ display: "grid", gridTemplateColumns: "1.1fr 15fr" }}
+                >
+                  <MicRoundedIcon style={{ fontSize: "18", fill: "#777777" }} />
+                  <ProgressBar bgcolor="#538BF7" completed={audioLevel} maxWidth={"380px"} />
+                </div>
               </div>
-              <ProgressBar bgcolor="#538BF7" completed={audioLevel} />
-              <div className="audio-level-indicator mb-4"></div>
+
               <div className="audio-and-video-device-selector d-flex flex-row align-items-center justify-content-between">
                 {/* <DropdownVideoIcon /> */}
                 <Dropdown
-                  text="Video"
+                  text={truncateText(videoDevices[0].label, 15)}
                   icon="video"
-                  floating
+                  upward
+                  // floating
                   labeled
                   button
-                  className="icon"
-                  style={{ fontSize: "14px" }}
+                  className="icon me-5"
+                  style={{ fontSize: "12px" }}
                 >
                   <Dropdown.Menu>{renderVideoDevices()}</Dropdown.Menu>
                 </Dropdown>
 
-                
                 <Dropdown
-                  text="Audio"
-                  icon="microphone icon"
-                  floating
+                  text={truncateText(audioDevices[0].label, 15)}
+                  icon={"microphone icon"}
+                  upward
+                  // floating
                   labeled
                   button
                   className="icon"
-                  style={{ fontSize: "14px" }}
+                  style={{ fontSize: "12px" }}
                 >
                   <Dropdown.Menu>{renderAudioDevices()}</Dropdown.Menu>
                 </Dropdown>
@@ -180,15 +321,17 @@ const DeviceTest = ({ handleBack, handleNext }) => {
             <div className="test-actions-btns d-flex flex-column justify-content-center px-5">
               <button
                 className="btn btn-outline-text btn-primary mb-4"
-                onClick={handleNext}
+                onClick={() => {
+                  handleStateChange("speaker test");
+                }}
               >
-                Proceed
+                Test Camera and Speaker
               </button>
               <button
                 className="btn btn-outline-text btn-outline-primary"
                 onClick={handleBack}
               >
-                Cancel
+                Close
               </button>
             </div>
           </div>

@@ -25,37 +25,9 @@ import { getPayPalConnectLink } from "../../actions";
 
 let AACComponent;
 
-const loadPaypal = () => {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = "https://www.paypalobjects.com/payouts/js/payouts_aac.js";
-    script.onload = () => {
-      resolve(true);
-    };
-    script.onerror = () => {
-      resolve(false);
-    };
-    document.body.appendChild(script);
-  });
-};
 
-const showPayPalConnect = async () => {
-  const res = await loadPaypal();
 
-  if (!res) {
-    alert("Paypal SDK failed to load. Are you online?");
-    return;
-  }
 
-  console.log(window.paypal);
-
-  AACComponent = window.paypal.PayoutsAAC.driver("react", {
-    React,
-    ReactDOM,
-  });
-};
-
-// showPayPalConnect();
 
 const Billing = () => {
   const dispatch = useDispatch();

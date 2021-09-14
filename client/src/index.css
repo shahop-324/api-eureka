@@ -12,9 +12,16 @@
   cursor: pointer;
 }
 
-video {
-  object-fit: contain !important;
+.text {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: "Ubuntu" !important;
+  color: #333333 !important;
 }
+
+/* video {
+  object-fit: contain !important;
+} */
 
 /* .screen-share-container {
   object-fit: contain !important;
