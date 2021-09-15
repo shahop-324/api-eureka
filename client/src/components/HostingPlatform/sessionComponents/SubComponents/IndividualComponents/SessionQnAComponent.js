@@ -56,7 +56,7 @@ const SessionQnAComponent = () => {
     <>
       <div
         className="chat-msg-container pt-2 px-2"
-        style={{ backgroundColor: "#A1A1A175" }}
+        style={{ backgroundColor: "transparent", border: "none" }}
       >
         <div
           className="scrollable-chat-element-container"
@@ -115,7 +115,7 @@ const SessionQnAComponent = () => {
             </div> */}
           </div>
         </div>
-        <QnAInput />
+        {/* <QnAInput /> */}
       </div>
     </>
   );

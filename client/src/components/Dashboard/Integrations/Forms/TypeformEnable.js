@@ -2,7 +2,7 @@ import React from "react";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
-import TypeformIntegrationPNG from "./../../../../assets/images/int-7.png";
+import TypeformIntegrationPNG from "./../../../../assets/images/int-12.png";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
@@ -43,7 +43,7 @@ const TypeformEnable = ({ openDrawer, handleCloseDrawer }) => {
                     className="btn btn-outline-primary btn-outline-text"
                     style={{ width: "100%" }}
                   >
-                    Authorize using Typeform
+                    Enable typeform
                   </button>
                 </a>
               </div>

@@ -23,8 +23,14 @@ import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/Billi
 import { useDispatch } from "react-redux";
 import { getPayPalConnectLink } from "../../actions";
 
+<<<<<<< HEAD
+=======
+let AACComponent;
 
-// showPayPalConnect();
+
+
+>>>>>>> dcc19c1f52445fd45f170568272eff3bb9c71e4c
+
 
 const Billing = () => {
   const dispatch = useDispatch();

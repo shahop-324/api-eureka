@@ -16,7 +16,7 @@ import Loader from "../../../../../Loader";
 import IndividualPoll from "./IndividualPoll";
 // import { PollComponent } from "./helper/PollComponent";
 
-const SessionPollsComponent = (props) => {
+const SessionPollsComponent = () => {
   const params = useParams();
 
   const { eventPolls, isLoading, error } = useSelector(
@@ -109,7 +109,7 @@ const SessionPollsComponent = (props) => {
           </div>
         </div>
       </div>
-      <CreateNewPollForm open={open} handleClose={handleClose} />
+      {/* <CreateNewPollForm open={open} handleClose={handleClose} /> */}
     </>
   );
 };

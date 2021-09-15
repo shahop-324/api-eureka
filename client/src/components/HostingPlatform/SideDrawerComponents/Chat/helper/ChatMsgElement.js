@@ -66,60 +66,6 @@ const ChatMsgElement = ({
         }}
       >
         <div style={{ position: "relative" }}>
-          {/* <div
-            className="chat-elm-emoji flex-row align-items-center justify-content-between px-2 py-2"
-            style={{ display: visibility }}
-          >
-            <img
-              src={Emoji1}
-              alt={"Happy"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji2}
-              alt={"Haha"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji3}
-              alt={"Ewww"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji4}
-              alt={"Wow"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji5}
-              alt={"Hi"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji6}
-              alt={"All good"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji7}
-              alt={"Like"}
-              style={{ display: visibility }}
-              className="me-2 chat-msg-emoji"
-            />
-            <img
-              src={Emoji8}
-              alt={"Clap"}
-              style={{ display: visibility }}
-              className="chat-msg-emoji"
-            />
-          </div> */}
-
           <div
             className=" mb-2"
             style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
@@ -127,17 +73,17 @@ const ChatMsgElement = ({
             <Avatar src={image} alt={name} variant="rounded" />
             <div
               className="chat-box-name ms-3"
-              style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
+              style={{ textTransform: "capitalize", fontFamily: "Ubuntu", color: "#fff" }}
             >
               <div>
                 {name}
-                <span>Host</span>
+                {/* <span>Host</span> */}
                 </div>
 
               <div
                 style={{
                   fontWeight: "500",
-                  color: "#4B4B4B",
+                  color: "#FFFFFF",
                   fontSize: "0.7rem",
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
@@ -165,28 +111,28 @@ const ChatMsgElement = ({
                   createReplyWidget(name, image, msgText);
                 }}
                 className="chat-msg-hover-icon me-2"
-                style={{ display: visibility }}
+                style={{ display: visibility, fontSize: "18px" }}
               />
               <ReportOutlinedIcon
                 onClick={() => {
                   setOpen(true);
                 }}
                 className="chat-msg-hover-icon me-2"
-                style={{ display: visibility }}
+                style={{ display: visibility, fontSize: "18px" }}
               />
               <DeleteOutlineRoundedIcon
                 onClick={() => {
                   setOpenDelete(true);
                 }}
                 className="chat-msg-hover-icon"
-                style={{ display: visibility }}
+                style={{ display: visibility, fontSize: "18px" }}
               />
             </div>
             <div
               className="chat-msg-text ms-3 p-3"
-              style={{ borderTopLeftRadius: "0" }}
+              style={{ borderTopLeftRadius: "0", color: "#212121" }}
             >
-              <div>{msgText}</div>
+              <div >{msgText}</div>
             </div>
           </div>
         </div>

@@ -8,13 +8,24 @@
 .email-list-group:hover {
   background-color: transparent !important;
   border: 1px solid #538bf7;
-
   cursor: pointer;
 }
 
-video {
-  object-fit: contain !important;
+.device-test-btn:hover {
+  background-color: #cfcdcd !important;
+  cursor: pointer;
 }
+
+.text {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: "Ubuntu" !important;
+  color: #333333 !important;
+}
+
+/* video {
+  object-fit: contain !important;
+} */
 
 /* .screen-share-container {
   object-fit: contain !important;

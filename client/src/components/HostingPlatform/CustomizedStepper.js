@@ -206,12 +206,12 @@ export default function CustomizedStepper() {
                   />
                 );
 
-              case 1:
-                return (
-                  <DeviceTest handleNext={handleNext} handleBack={handleBack} />
-                );
+              // case 1:
+              //   return (
+              //     <DeviceTest handleNext={handleNext} handleBack={handleBack} />
+              //   );
 
-              case 2:
+              case 1:
                 return (
                   <NetworkTest
                     handleNext={handleNext}
