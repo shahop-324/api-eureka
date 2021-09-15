@@ -57,6 +57,7 @@ import { signIn } from "../actions/index";
 import BoothArea from "./HostingPlatform/Screens/BoothArea";
 import SignInNew from "./Signin/SigninNew";
 import SignupNew from "./Signup/SignupNew";
+import SessionStage from "./HostingPlatform/Screens/SessionStage";
 
 AOS.init();
 
@@ -110,6 +111,8 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
+              
+              <Route path="/test" exact component={SessionStage} />
               <Route path="/home" exact component={Home} />
 
               <Route path="/" exact component={Home} />

@@ -34,23 +34,34 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer }) => {
               />
             </div>
             <div>
-              <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-                <a
-                  href={`${BaseURL}/auth/mailChimp`}
-                  style={{ textDecoration: "none", width: "100%" }}
+              <div className="mb-3">
+                <label
+                  Forhtml="eventStartDate"
+                  class="form-label form-label-customized"
                 >
-                  <button
-                    className="btn btn-outline-primary btn-outline-text"
-                    style={{ width: "100%" }}
-                  >
-                    Authorize using Hubspot
-                  </button>
-                </a>
+                  Hubspot Api key
+                </label>
+
+                <input
+                  type="text"
+                  className="me-3 form-control"
+                  style={{ width: "100%" }}
+                  onChange={(e) => {}}
+                  id="hubspot-api-key"
+                  aria-describedby="emailGroupName"
+                  placeholder="Hubspot API Key"
+                />
               </div>
+              <div className="d-flex flex-row align-items-center justify-content-end mb-4">
+                <button className="btn btn-outline-primary btn-outline-text">
+                  Connect
+                </button>
+              </div>
+
               <div>
                 <div className="want-help-heading mb-3">Want help ?</div>
                 <div className="integration-guide-btn px-4 py-2">
-                  Guide to Integrate Hubspot with Evenz.
+                  Guid to Integrate Hubspot with Evenz.
                 </div>
               </div>
             </div>

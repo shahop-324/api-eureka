@@ -299,6 +299,12 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         // Handle any error that may happen when processing plan for a community
       }
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
+
+
+      
+
+
+
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 
       try {
