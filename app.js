@@ -13,7 +13,7 @@ const bodyParser = require("body-parser");
 const jsforce = require("jsforce");
 const passport = require("passport");
 const xss = require("xss-clean");
-const AppError = require("./utils/appError");
+
 const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -21,13 +21,8 @@ const jwt = require("jsonwebtoken");
 const session = require("cookie-session");
 const Event = require("./models/eventModel");
 var request = require("superagent");
-const mailchimp = require("@mailchimp/mailchimp_marketing");
-const fetch = require("node-fetch");
-const { URLSearchParams } = require("url");
 
 const querystring = require("querystring");
-const http = require("http");
-const socketio = require("socket.io");
 
 const uploadRoutes = require("./routes/uploadRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -56,10 +51,13 @@ const communityPlanRoutes = require("./routes/communityPlanRoutes");
 const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const paypalRoutes = require("./routes/payPalRoutes");
+
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
+
+const Hubspot = require("./models/hubspotModel");
 const Community = require("./models/communityModel");
 
 const { promisify } = require("util");
@@ -401,6 +399,31 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, res) => {
       instanceUrl: conn.instanceUrl,
       accessToken: conn.accessToken,
     });
+
+    conn2
+      .sobject("Account__c")
+      .create({ Name: "dino testing" }, function (err, ret) {
+        if (err || !ret.success) {
+          return console.error(err, ret);
+        }
+
+        const conn3 = new jsforce.Connection({
+          instanceUrl: conn.instanceUrl,
+          accessToken: conn.accessToken,
+        });
+
+        console.log("Created record id : " + ret.id);
+        conn3.sobject("Account__c").retrieve(ret.id, function (err, account) {
+          if (err) {
+            return console.error(err);
+          }
+          console.log("Name : " + account.Name);
+          // ...
+        });
+
+        // ...
+      });
+
     conn2.identity(function (err, res) {
       if (err) {
         return console.error(err);
@@ -409,11 +432,11 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, res) => {
       console.log("organization ID: " + res.organization_id);
       console.log("username: " + res.username);
       console.log("display name: " + res.display_name);
-
-      res.status(200).json({
-        status: "SUCCESS",
-      });
     });
+  });
+
+  res.status(200).json({
+    status: "SUCCESS",
   });
 });
 

@@ -157,7 +157,7 @@ export const linkedinSignIn =
   };
 
 export const newLinkedinLogin = (res, intent, eventId) => async (dispatch) => {
-  // console.log(res.data.user);
+  console.log(res.data.user);
   dispatch(
     authActions.SignIn({
       token: res.token,

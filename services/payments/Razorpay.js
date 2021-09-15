@@ -99,7 +99,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
   if (planName === "Basic") {
     priceToBeCharged = 0;
   } else if (planName === "Starter") {
-    priceToBeCharged =  0.51 * 100 * 1; // In Cents
+    priceToBeCharged = 0.51 * 100 * 1; // In Cents
   } else if (planName === "Professional") {
     priceToBeCharged = 39 * 75 * 100 * 1; // In INR (paise)
   }
@@ -250,18 +250,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         console.log("userId", paymentEntity.notes.userId);
         console.log("Plan Name", paymentEntity.notes.planName);
 
-        //       let referrer;
-        // if (req.body.referralCode) {
-        //   referrer = await User.findOneAndUpdate(
-        //     { referralCode: req.body.referralCode },
-
-        //     { $inc: { signupUsingReferral: 1 } },
-
-        //     {
-        //       new: true,
-        //       validateModifiedOnly: true,
-        //     }
-        //   );
         let referrer;
 
         if (paymentEntity.notes.referral) {
@@ -544,9 +532,14 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           from: "shreyanshshah242@gmail.com", // Change to your verified sender
           subject: "Your Event Registration Confirmation.",
           text: "You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! ",
-          html: EventRegistrationTemplate(userName, eventName, ticketType, amount),
+          html: EventRegistrationTemplate(
+            userName,
+            eventName,
+            ticketType,
+            amount
+          ),
         };
-    
+
         sgMail
           .send(msg)
           .then(() => {
@@ -555,7 +548,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           .catch((error) => {
             console.error(error);
           });
-
       } catch (err) {
         console.log(err);
       }

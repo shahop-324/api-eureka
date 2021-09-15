@@ -36,7 +36,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer }) => {
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4">
                 <a
-                  href={`${BaseURL}/auth/mailChimp`}
+                  href={`${BaseURL}/auth/hubspot`}
                   style={{ textDecoration: "none", width: "100%" }}
                 >
                   <button
