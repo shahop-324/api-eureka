@@ -4,7 +4,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DeviceTest from "./DeviceTest";
 import Test from "./Test";
-import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 const CameraAndMic = ({ open, handleClose }) => {
   const theme = useTheme();
@@ -24,11 +24,16 @@ const CameraAndMic = ({ open, handleClose }) => {
         open={open}
         aria-labelledby="responsive-dialog-title"
       >
-          <div onClick={() => {
-              handleClose();
-          }} className="d-flex flex-row align-items-center justify-content-end">
-              <CancelRoundedIcon />
-          </div>
+        <div
+          onClick={() => {
+            handleClose();
+            setState("switch devices");
+          }}
+          className="d-flex flex-row align-items-center justify-content-end px-3 py-3 icon-btn"
+        >
+          <CancelRoundedIcon />
+        </div>
+
         <div className="px-5 py-4">
           {(() => {
             switch (state) {
@@ -41,6 +46,10 @@ const CameraAndMic = ({ open, handleClose }) => {
                   />
                 );
               case "speaker test":
+                return (
+                  <Test handleStateChange={handleStateChange} state={state} />
+                );
+              case "microphone test":
                 return (
                   <Test handleStateChange={handleStateChange} state={state} />
                 );

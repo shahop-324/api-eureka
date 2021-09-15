@@ -10,14 +10,192 @@ import { Dropdown } from "semantic-ui-react";
 import ProgressBar from "./VolumeIndicator";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import "./../../../index.css";
-import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
-const Speaker = () => {
-  return <></>;
+const Speaker = ({
+  audioDevices,
+  truncateText,
+  audioLevel,
+  renderAudioDevices,
+  handleStateChange
+}) => {
+  return (
+    <>
+    {audioDevices ? <div className="">
+        <div
+          style={{
+            fontFamily: "Ubuntu",
+            fontWeight: "500",
+            fontSize: "0.9rem",
+            textAlign: "center",
+          }}
+          className="mb-5"
+        >
+          You have 3 Speaker, now testing speaker 1
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: "Ubuntu",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+          }}
+          className="mb-5"
+        >
+          Let's test your speaker
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <button
+            style={{ textAlign: "center" }}
+            className="btn btn-outline-primary btn-outline-text px-5 py-2"
+          >
+            Play Ringtone
+          </button>
+        </div>
+
+        <div className="my-4">
+          <Divider />
+        </div>
+
+        <div style={{ textAlign: "center" }} className="mb-3">
+          <Dropdown
+            text={truncateText(audioDevices[0].label, 40)}
+            icon={"microphone icon"}
+            upward
+            // floating
+            labeled
+            button
+            className="icon"
+            style={{ fontSize: "12px" }}
+          >
+            <Dropdown.Menu style={{ fontSize: "12px" }}>
+              {renderAudioDevices()}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+
+        <div style={{ textAlign: "center", maxWidth: "360px" }}>
+          <div
+            className="align-items-center"
+            style={{ display: "grid", gridTemplateColumns: "2fr 10fr" }}
+          >
+            <div
+              style={{
+                textAlign: "center",
+                fontFamily: "Ubuntu",
+                fontWeight: "500",
+                fontSize: "0.75rem",
+                letterSpacing: "0.2px",
+              }}
+            >
+              Audio level
+            </div>
+            <ProgressBar
+              bgcolor="#538BF7"
+              completed={audioLevel}
+              maxWidth={"250px"}
+            />
+          </div>
+        </div>
+      </div> : <></> }
+      
+    </>
+  );
 };
 
-const Camera = () => {
-  return <></>;
+const Microphone = ({
+  handleStateChange,
+  audioDevices,
+  truncateText,
+  audioLevel,
+  renderAudioDevices,
+}) => {
+  return (
+    <>
+    {audioDevices ?  <div  className="">
+        <div
+          style={{
+            fontFamily: "Ubuntu",
+            fontWeight: "500",
+            fontSize: "0.9rem",
+            textAlign: "center",
+          }}
+          className="mb-5"
+        >
+          You have 3 Microphone, now testing microphone 1
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: "Ubuntu",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+          }}
+          className="mb-5"
+        >
+          Please speak out loud to test your microphone
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <button
+            style={{ textAlign: "center" }}
+            className="btn btn-outline-primary btn-outline-text px-5 py-2"
+          >
+            Continue
+          </button>
+        </div>
+
+        <div className="my-4">
+          <Divider />
+        </div>
+
+        <div style={{ textAlign: "center" }} className="mb-3">
+          <Dropdown
+            text={truncateText(audioDevices[0].label, 40)}
+            icon={"microphone icon"}
+            upward
+            // floating
+            labeled
+            button
+            className="icon"
+            style={{ fontSize: "12px" }}
+          >
+            <Dropdown.Menu style={{ fontSize: "12px" }}>
+              {renderAudioDevices()}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+
+        <div style={{ textAlign: "center", maxWidth: "360px" }}>
+          <div
+            className="align-items-center"
+            style={{ display: "grid", gridTemplateColumns: "2fr 10fr" }}
+          >
+            <div
+              style={{
+                textAlign: "center",
+                fontFamily: "Ubuntu",
+                fontWeight: "500",
+                fontSize: "0.75rem",
+                letterSpacing: "0.2px",
+              }}
+            >
+              Audio level
+            </div>
+            <ProgressBar
+              bgcolor="#538BF7"
+              completed={audioLevel}
+              maxWidth={"250px"}
+            />
+          </div>
+        </div>
+      </div> : <></> }
+     
+    </>
+  );
 };
 
 const Test = ({ state, handleStateChange }) => {
@@ -30,9 +208,6 @@ const Test = ({ state, handleStateChange }) => {
   AgoraRTC.getDevices().then((devices) => {
     const audioDevices = devices.filter(function (device) {
       return device.kind === "audioinput";
-    });
-    const videoDevices = devices.filter(function (device) {
-      return device.kind === "videoinput";
     });
 
     setAudioDevices(audioDevices);
@@ -57,21 +232,23 @@ const Test = ({ state, handleStateChange }) => {
     return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
 
-  if (!audioDevices) {
-    return (
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    );
-  }
+  // if (!audioDevices) {
+  //   return (
+  //     <div class="spinner-border" role="status">
+  //       <span class="sr-only">Loading...</span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
-      <div className="">
-          
+      <div className="" style={{width: "422px"}}>
         <div>
           <div className="d-flex flex-row align-items-center justify-content-around px-5 mb-5">
             <div
+            onClick={() => {
+              handleStateChange("speaker test")
+            }}
               style={{
                 backgroundColor: "#EBEBEBE8",
                 width: "fit-content",
@@ -79,11 +256,11 @@ const Test = ({ state, handleStateChange }) => {
                 alignSelf: "center",
                 zIndex: "10",
               }}
-              className="d-flex flex-column align-items-center px-2 py-2 me-5"
+              className="d-flex flex-column align-items-center px-2 py-2 me-5 device-test-btn"
             >
               <SurroundSoundIcon
                 style={{ fontSize: "18", fill: "#313131" }}
-                className="mb-2"
+                className="mb-2 icon-btn"
               />
               <div
                 style={{
@@ -96,6 +273,9 @@ const Test = ({ state, handleStateChange }) => {
               </div>
             </div>
             <div
+            onClick={() => {
+              handleStateChange("speaker test")
+            }}
               style={{
                 backgroundColor: "#EBEBEBE8",
                 width: "fit-content",
@@ -103,11 +283,14 @@ const Test = ({ state, handleStateChange }) => {
                 alignSelf: "center",
                 zIndex: "10",
               }}
-              className="d-flex flex-column align-items-center px-2 py-2 ms-5"
+              className="d-flex flex-column align-items-center px-2 py-2 ms-5 device-test-btn"
             >
               <MicRoundedIcon
+              onClick={() => {
+                handleStateChange("microphone test")
+              }}
                 style={{ fontSize: "18", fill: "#313131" }}
-                className="mb-2"
+                className="mb-2 icon-btn"
               />
               <div
                 style={{
@@ -121,76 +304,32 @@ const Test = ({ state, handleStateChange }) => {
             </div>
           </div>
 
-          <div className="">
-            <div
-              style={{
-                fontFamily: "Ubuntu",
-                fontWeight: "500",
-                fontSize: "0.9rem",
-                textAlign: "center",
-              }}
-              className="mb-5"
-            >
-              You have 3 Speaker, now testing speaker 1
-            </div>
-
-            <div
-              style={{
-                textAlign: "center",
-                fontFamily: "Ubuntu",
-                fontWeight: "600",
-                fontSize: "1.2rem",
-              }}
-              className="mb-5"
-            >
-              Let's test your speaker
-            </div>
-
-            <div style={{ textAlign: "center" }}>
-              <button
-                style={{ textAlign: "center" }}
-                className="btn btn-outline-primary btn-outline-text px-5 py-2"
-              >
-                Play Ringtone
-              </button>
-            </div>
-
-            <div className="my-4">
-              <Divider />
-            </div>
-
-            <div style={{ textAlign: "center" }} className="mb-3">
-              <Dropdown
-                text={truncateText(audioDevices[0].label, 40)}
-                icon={"microphone icon"}
-                upward
-                // floating
-                labeled
-                button
-                className="icon"
-                style={{ fontSize: "12px" }}
-              >
-                <Dropdown.Menu style={{ fontSize: "12px" }}>{renderAudioDevices()}</Dropdown.Menu>
-              </Dropdown>
-            </div>
-
-            <div style={{ textAlign: "center", maxWidth: "360px" }} >
-              <div
-                className="align-items-center"
-                style={{ display: "grid", gridTemplateColumns: "2fr 10fr" }}
-              >
-                
-                <div style={{
-                textAlign: "center",
-                fontFamily: "Ubuntu",
-                fontWeight: "500",
-                fontSize: "0.75rem",
-                letterSpacing: "0.2px"
-              }} >Audio level</div>
-                <ProgressBar bgcolor="#538BF7" completed={audioLevel} maxWidth={"250px"}/>
-              </div>
-            </div>
-          </div>
+          {(() => {
+            switch (state) {
+              case "speaker test":
+                return (
+                  <Speaker
+                    handleStateChange={handleStateChange}
+                    audioDevices={audioDevices}
+                    truncateText={truncateText}
+                    audioLevel={audioLevel}
+                    renderAudioDevices={renderAudioDevices}
+                  />
+                );
+              case "microphone test":
+                return (
+                  <Microphone
+                    handleStateChange={handleStateChange}
+                    audioDevices={audioDevices}
+                    truncateText={truncateText}
+                    audioLevel={audioLevel}
+                    renderAudioDevices={renderAudioDevices}
+                  />
+                );
+              default:
+                break;
+            }
+          })()}
         </div>
       </div>
     </>

@@ -15,7 +15,6 @@ import "./../../../index.css";
 
 const videoContainer = document.getElementById("camera-device-test-output");
 
-
 // console.log(videoContainer);
 
 const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
@@ -90,13 +89,13 @@ const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
   const isLoading = user.isLoading;
   const error = user.error;
 
-  if (isLoading || !audioDevices || !videoDevices) {
-    return (
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    );
-  }
+  // if ( !audioDevices || !videoDevices) {
+  //   return (
+  //     <div class="spinner-border" role="status">
+  //       <span class="sr-only">Loading...</span>
+  //     </div>
+  //   );
+  // }
   if (error) {
     return alert(error);
   }
@@ -290,7 +289,7 @@ const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
 
               <div className="audio-and-video-device-selector d-flex flex-row align-items-center justify-content-between">
                 {/* <DropdownVideoIcon /> */}
-                <Dropdown
+                {videoDevices ? <Dropdown
                   text={truncateText(videoDevices[0].label, 15)}
                   icon="video"
                   upward
@@ -301,20 +300,24 @@ const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
                   style={{ fontSize: "12px" }}
                 >
                   <Dropdown.Menu>{renderVideoDevices()}</Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> : <> </>}
 
-                <Dropdown
-                  text={truncateText(audioDevices[0].label, 15)}
-                  icon={"microphone icon"}
-                  upward
-                  // floating
-                  labeled
-                  button
-                  className="icon"
-                  style={{ fontSize: "12px" }}
-                >
-                  <Dropdown.Menu>{renderAudioDevices()}</Dropdown.Menu>
-                </Dropdown>
+{
+  audioDevices ? 
+  <Dropdown
+  text={truncateText(audioDevices[0].label, 15)}
+  icon={"microphone icon"}
+  upward
+  // floating
+  labeled
+  button
+  className="icon"
+  style={{ fontSize: "12px" }}
+>
+  <Dropdown.Menu>{renderAudioDevices()}</Dropdown.Menu>
+</Dropdown> : <> </>
+}
+               
               </div>
             </div>
 

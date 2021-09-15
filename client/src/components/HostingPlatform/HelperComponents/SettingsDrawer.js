@@ -7,6 +7,7 @@ import { Divider, IconButton } from "@material-ui/core";
 import CustomizeEvent from "./CustomiseEvent";
 import UpdateEventProfile from "./UpdateEventProfile";
 import CameraAndMic from "./Camera&Mic";
+import NotificationSettings from "./NotificationSettings";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
 
@@ -14,10 +15,20 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
 
   const [openCustomise, setOpenCustomise] = useState(false);
 
+  const [openNotificationSettings, setOpenNotificationSettings] = useState(false);
+
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
 
   const handleOpenAudioAndVideo = () => {
     setOpenAudioAndVideo(true);
+  }
+
+  const handleOpenNotificationSettings = () => {
+    setOpenNotificationSettings(true);
+  }
+
+  const handleCloseNotificationSettings = () => {
+    setOpenNotificationSettings(false);
   }
 
   const handleCloseAudioAndVideo = () => {
@@ -109,7 +120,9 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+            <div onClick={() => {
+              handleOpenNotificationSettings();
+            }} className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
               <div>
                 <div className="setting-tab-text mb-1">Notification Settings</div>
                 <div className="setting-tab-sub-text">
@@ -121,7 +134,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+            {/* <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
               <div>
                 <div className="setting-tab-text mb-1">
                   Security & Privacy
@@ -134,7 +147,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
               <IconButton>
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
-            </div>
+            </div> */}
             <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
               <div>
                 <div className="setting-tab-text mb-1">User dashboard</div>
@@ -174,6 +187,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
       </React.Fragment>
 
       <CustomizeEvent openDrawer={openCustomise} handleCloseDrawer={handleCloseCustomise} />
+      <NotificationSettings openDrawer={openNotificationSettings} handleCloseDrawer={handleCloseNotificationSettings} />
       <UpdateEventProfile openDrawer={openUpdateProfile} handleCloseDrawer={handleCloseUpdateProfile}/>
       <CameraAndMic open={openAudioAndVideo} handleClose={handleCloseAudioAndVideo}/>
     </>
