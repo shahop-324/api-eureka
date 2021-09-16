@@ -19,6 +19,11 @@ import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainCompone
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
 import SettingsDrawer from "./SettingsDrawer";
+import styled from 'styled-components';
+
+const DrawerBackground = styled.div`
+background-color: #ffffff;
+`
 
 const RightContent = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -221,7 +226,7 @@ const RightContent = () => {
           open={openDrawer}
           disableBackdropTransition={true}
         >
-          <div className="event-platform-right-drawer px-4 py-1">
+          <DrawerBackground className="event-platform-right-drawer px-4 py-1">
             <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3">
               <div
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
@@ -417,7 +422,7 @@ const RightContent = () => {
                   return <div>You are a User visting hosting platform.</div>;
               }
             })()}
-          </div>
+          </DrawerBackground>
         </SwipeableDrawer>
       </React.Fragment>
 

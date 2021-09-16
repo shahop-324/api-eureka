@@ -27,6 +27,14 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { useBeforeunload } from 'react-beforeunload';
 
+import styled from 'styled-components';
+
+const TableScreenBody = styled.div`
+background-color: #152d35 !important;
+
+
+`
+
 // ? Local tracks and client are being managed in rtc object
 
 // ? main view is being managed in mainView object
@@ -348,7 +356,7 @@ const TableScreen = ({
           margin: "0 auto 0 auto",
         }}
       >
-        <div style={{ backgroundColor: "#3D3D3D" }} className="px-4">
+        <TableScreenBody  className="px-4">
           <div className="table-screen-header d-flex flex-row align-items-center justify-content-between pt-3">
             <div className="table-num-and-heading px-2">
               <span
@@ -511,16 +519,16 @@ const TableScreen = ({
               </div>
             </div>
 
-            <div className="" style={{display: "grid", gridTemplateColumns: "8fr 1fr"}}>
+            <div className="" style={{display: "grid", gridTemplateColumns: "8fr 0.5fr"}}>
               <div className="table-side-drawer"></div>
               <div>
                 <IconButton className="ms-3">
-                <KeyboardTabRoundedIcon style={{ fill: "#D3D3D3", size: "24" }}/>
+                <KeyboardTabRoundedIcon style={{ fill: "#D3D3D3", size: "20" }}/>
                   </IconButton>
               </div>
             </div>
           </div>
-        </div>
+        </TableScreenBody>
       </Dialog>
     </>
   );

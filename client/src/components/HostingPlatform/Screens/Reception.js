@@ -12,14 +12,19 @@ import Amazon from "./../../../assets/images/amazon_PNG27.png";
 import MakeMyTrip from "./../../../assets/images/MakeMyTrip_Logo.png";
 import YourStory from "./../../../assets/images/yourstory.png";
 import Razorpay from "./../../../assets/images/razorpay.png";
+import styled from 'styled-components';
 
 import { Avatar } from "@material-ui/core";
+
+const ReceptionBackground = styled.div`
+background-color: #345b63 !important;
+`
 
 const Reception = () => {
   return (
     <>
       <div className="reception-container " style={{ position: "absolute" }}>
-        <div className="opaque-layer "></div>
+        <ReceptionBackground className="opaque-layer "></ReceptionBackground>
         <div
           style={{
             display: "grid",

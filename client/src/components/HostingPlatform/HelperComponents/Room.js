@@ -17,8 +17,22 @@ import LOWER_5_CHAIR from "../chairComponents/Lower_5_Chair";
 import LOWER_6_CHAIR from "../chairComponents/Lower_6_Chair";
 import LOWER_7_CHAIR from "../chairComponents/Lower_7_Chair";
 import { roomsActions } from "../../../reducers/roomsSlice";
-
 import TableScreen from "../Screens/TableScreen";
+
+import styled from 'styled-components';
+
+const RoomWraper = styled.div`
+background-color: #345b63 !important;
+
+&:hover {
+  border: 1px solid #dcc7be;
+}
+`
+
+const RoomNumber = styled.div`
+color: #dcc7be;
+`
+
 
 const Room = ({ id, num }) => {
   const [openTableScreen, setOpenTableScreen] = useState(false);
@@ -50,9 +64,11 @@ const Room = ({ id, num }) => {
 
   return (
     <>
-      <div className="room-wrapper px-4 py-3">
-        <div className="room-num-and-edit-wrapper d-flex flex-row justify-content-between align-items-center">
-          <div className="room-number">{num}</div>
+    <RoomWraper className="room-wrapper px-4 py-3">
+
+    <div className="room-num-and-edit-wrapper d-flex flex-row justify-content-between align-items-center">
+          
+          <RoomNumber className="room-number">{num}</RoomNumber>
           <IconButton
             aria-label="edit-room-details"
             onClick={() => {
@@ -89,7 +105,7 @@ const Room = ({ id, num }) => {
 
           <div className="col-6 room-table px-5 py-4">
             <div className="table-logo-container px-2 py-2">
-              <img src={Amazon} alt="logo" style={{maxWidth: "100%", maxHeight: "100%"}}/>
+              {/* <img src={Amazon} alt="logo" style={{maxWidth: "100%", maxHeight: "100%"}}/> */}
             </div>
           </div>
 
@@ -111,8 +127,11 @@ const Room = ({ id, num }) => {
           {/* // LOWER_7_CHAIR */}
           {/* <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
         </div>
-      </div>
+      
 
+    </RoomWraper>
+      
+       
       {/* Table Screen here */}
 
       {openTableScreen ? <TableScreen

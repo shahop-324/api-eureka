@@ -5,13 +5,18 @@ import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
-import WeekendIcon from '@material-ui/icons/Weekend';
+import WeekendIcon from "@material-ui/icons/Weekend";
 
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { signOut } from "../../../actions"; 
+import { signOut } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
+import styled from "styled-components";
+
+const SideNavBody = styled.div`
+  background-color: #233E44 !important;
+`;
 
 const SideNav = (props) => {
   const userDetails = useSelector((state) => state.user.userDetails);
@@ -25,13 +30,20 @@ const SideNav = (props) => {
   const dispatch = useDispatch();
   return (
     <>
-      <div className="h-side-nav">
-        <div className="community-logo-container d-flex flex-row align-items-center justify-content-center py-2 px-3" style={{height: "9vh"}}>
+      <SideNavBody className="h-side-nav">
+        <div
+          className="community-logo-container d-flex flex-row align-items-center justify-content-center py-2 px-3"
+          style={{ height: "9vh" }}
+        >
           {/* Community Logo */}
-          <Avatar   src={props.communityLogo} alt={props.communityName} variant="rounded"/>
+          <Avatar
+            src={props.communityLogo}
+            alt={props.communityName}
+            variant="rounded"
+          />
         </div>
         <div className="main-icon-btn-container py-3">
-        <div
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={props.handleReceptionClick}
           >
@@ -165,7 +177,6 @@ const SideNav = (props) => {
               Booths
             </div>
           </div>
-          
         </div>
 
         {/* <div className="logout-btn-side-nav-h">
@@ -206,12 +217,7 @@ const SideNav = (props) => {
             </div>
           </div>
         </div> */}
-
-
-
-
-
-      </div>
+      </SideNavBody>
     </>
   );
 };

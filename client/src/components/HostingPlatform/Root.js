@@ -38,6 +38,14 @@ import Loader from "../Loader";
 import Reception from "./Screens/Reception";
 import BoothArea from "./Screens/BoothArea";
 
+import styled from "styled-components";
+
+const RootBackground = styled.div`
+  background-color: #345b63;
+
+  min-height: 92vh;
+`;
+
 const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -303,58 +311,82 @@ const Root = () => {
               switch (currentIndex) {
                 case "0":
                   return (
-                    <div className="layer-3-mh" style={{position: "relative"}}>
-                      <div className="opaque-layer " style={{height: "100%"}}></div>
-                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer "
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
                         <LobbyAgenda socket={socket} />
                       </div>
-                    </div>
+                    </RootBackground>
                   );
 
                 case "1":
                   return (
-                    <div className="layer-3-mh" style={{position: "relative"}}>
-                      <div className="opaque-layer " style={{height: "100%"}}></div>
-                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer "
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
                         <Sessions />{" "}
                       </div>
-                    </div>
+                    </RootBackground>
                   );
 
                 case "2":
                   return (
-                    <div className="layer-3-mh" style={{position: "relative"}}>
+                    <RootBackground style={{ position: "relative" }}>
                       <div className="opaque-layer "></div>
-                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
                         <Networking />{" "}
                       </div>
-                    </div>
+                    </RootBackground>
                   );
                 case "3":
                   return (
-                    <div className="layer-3-mh" style={{position: "relative"}}>
-                      <div className="opaque-layer " style={{height: "100%"}}></div>
-                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer "
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
                         <Rooms />{" "}
                       </div>
-                    </div>
+                    </RootBackground>
                   );
 
                 case "4":
                   return (
-                    <div className="layer-3-mh " style={{position: "relative"}}>
-                      <div className="opaque-layer " style={{height: "100%"}}></div>
-                      <div style={{ maxWidth: "1360px", margin: "0 auto" }} className="py-4 px-5">
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer"
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
                         {/* <Booths />{" "} */}
                         <BoothArea />
                       </div>
-                    </div>
+                    </RootBackground>
                   );
                 case "5":
-                  return (
-                   
-                    <Reception />
-                  );
+                  return <Reception />;
 
                 default:
                   return <div>You are a User visting hosting platform.</div>;

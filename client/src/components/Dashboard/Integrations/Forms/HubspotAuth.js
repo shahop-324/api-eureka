@@ -86,6 +86,39 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
+
+
+              <div className="mb-3">
+                <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    Hubspot Webhook URL
+                  </label>
+                <div
+              className="referral-link-and-copy-to-clipboard"
+              
+            >
+              <div class="ui action input" style={{ minWidth: "400px", width: "100%" }}>
+                <input
+                  type="text"
+                  value={"Web hook url"}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  class="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard.writeText("web hook url");
+                    alert("copied to clipboard!");
+                  }}
+                >
+                  <i class="copy outline icon"></i>
+                </button>
+              </div>
+            </div>
+            </div>
+
                 <div className="mb-3">
                   <label
                     Forhtml="eventStartDate"
@@ -113,6 +146,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                   </button>
                 </div>
 
+
                 <div>
                   <div className="want-help-heading mb-3">Want help ?</div>
                   <div className="integration-guide-btn px-4 py-2">
@@ -121,6 +155,8 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                 </div>
               </div>
             </form>
+
+            
           </div>
         </SwipeableDrawer>
       </React.Fragment>

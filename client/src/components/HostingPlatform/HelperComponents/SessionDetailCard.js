@@ -13,6 +13,8 @@ import {
   setSessionRoleAndJoinSession,
 } from "../../../actions";
 
+import styled from "styled-components";
+
 const useStyles = makeStyles((theme) => ({
   small: {
     width: theme.spacing(3),
@@ -23,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(7),
   },
 }));
+
+const SessionDetailCardBody = styled.div`
+  background-color: #152d35;
+`;
 
 const SessionSpeakerCard = ({ name, headline, image }) => {
   const classes = useStyles();
@@ -207,7 +213,7 @@ const SessionDetailCard = ({
                     getRTCTokenForSpeaker(
                       id,
                       sessionRole,
-                      
+
                       eventId,
                       communityId,
                       userId
