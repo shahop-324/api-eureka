@@ -18,6 +18,7 @@ import Networking from "./Networking";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
 import {
+  editEvent,
   errorTrackerForFetchParticularEventOfCommunity,
   fetchParticularEventOfCommunity,
 } from "../../../actions";
@@ -133,7 +134,9 @@ const EditEventRoot = () => {
               </IconButton>
             </Link>
 
-            <button className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+            <button onClick={() => {
+              editEvent({publishedStatus: "Published"})
+            }} className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
               Publish
             </button>
           </div>
@@ -144,7 +147,9 @@ const EditEventRoot = () => {
             </div>
             
 
-            <button className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
+            <button onClick={() => {
+              editEvent({publishedStatus: "Published"})
+            }} className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
               Publish
             </button>
             
