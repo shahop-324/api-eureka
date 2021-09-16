@@ -68,7 +68,6 @@ const SideNavEditLean = ({
                   (activeIndex === "0" ? "icon-btn-active-h" : "")
                 }
               />
-
               {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
             </div>
             <div

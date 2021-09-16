@@ -25,6 +25,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PhotoBoothBody = styled.div`
+  width: 400px;
+  height: 558px;
+  background-color: #152d35;
+`;
+
+const BtnOutlined = styled.div`
+  padding: 5px 8px;
+  background-color: transparent;
+  /* border: 1px solid #345b63; */
+
+  min-width: 50px;
+
+
+  color: #152d35;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 3px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /* position: absolute;
+  bottom: -30px; */
+`;
+
+const PhotoGrid = styled.div`
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+grid-gap: 16px;
+padding: 10px;
+`
+
+const PhotoElement = styled.div`
+
+
 
 `
 
@@ -35,18 +72,27 @@ const PhotoBooth = ({ open, handleClose }) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        aria-labelledby="responsive-dialog-title"
-      >
+     
 
-<div>
+        <Dialog
+          style={{ backgroundColor: "#2121217E" }}
+          fullScreen={fullScreen}
+          open={open}
+          aria-labelledby="responsive-dialog-title"
+        >
+            <div className="d-flex flex-column justify-content-between align-items-center">
+          <BtnOutlined>Close photo booth</BtnOutlined>
 
+
+
+          <BtnOutlined>Download</BtnOutlined>
 </div>
 
 
-      </Dialog>
+
+          <PhotoBoothBody></PhotoBoothBody>
+        </Dialog>
+      
     </>
   );
 };

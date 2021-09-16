@@ -28,6 +28,7 @@ import QnA from "../../Elements/Q&A";
 import ChatElement from "../../Elements/ChatElement";
 
 import { Dropdown } from "semantic-ui-react";
+import PhotoBooth from "../../Elements/PhotoBooth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -399,6 +400,8 @@ const SessionVideoContainer = styled.div`
 const SessionStage = () => {
   const classes = useStyles();
 
+  const [openPhotoBooth, setOpenPhotoBooth] = useState(false);
+
   const [activeLinkTab, setActiveLinkTab] = useState("chat");
 
   const [activeTab, setActiveTab] = useState("activity");
@@ -408,6 +411,14 @@ const SessionStage = () => {
   const switchView = (view) => {
     setView(view);
   };
+
+  const handleOpenPhotoBooth = () => {
+    setOpenPhotoBooth(true);
+  }
+
+  const handleClosePhotoBooth = () => {
+    setOpenPhotoBooth(false);
+  }
 
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
@@ -1052,7 +1063,9 @@ const SessionStage = () => {
             <IconButton className="me-4">
               <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
             </IconButton>
-            <IconButton className="me-4">
+            <IconButton onClick={() => {
+              handleOpenPhotoBooth();
+            }} className="me-4">
               <PhotoCameraIcon style={{ fontSize: "20px" }} />
             </IconButton>
           </div>
@@ -1065,6 +1078,9 @@ const SessionStage = () => {
         </StageControl>
       </div>
       {/* <Button>Styled</Button> */}
+
+      <PhotoBooth open={openPhotoBooth} handleClose={handleClosePhotoBooth} />
+      
     </>
   );
 };

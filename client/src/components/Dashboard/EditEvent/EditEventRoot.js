@@ -45,6 +45,8 @@ const EditEventRoot = () => {
 
   const id = params.id;
 
+  // const eventId = params.eventId;
+
   const communityId = params.communityId;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -135,7 +137,7 @@ const EditEventRoot = () => {
             </Link>
 
             <button onClick={() => {
-              editEvent({publishedStatus: "Published"})
+             dispatch(editEvent({publishedStatus: "Published"}, id)) 
             }} className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
               Publish
             </button>
@@ -148,7 +150,7 @@ const EditEventRoot = () => {
             
 
             <button onClick={() => {
-              editEvent({publishedStatus: "Published"})
+               dispatch(editEvent({publishedStatus: "Published"}, id)) 
             }} className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
               Publish
             </button>
