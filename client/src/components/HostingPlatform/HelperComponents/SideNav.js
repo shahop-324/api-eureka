@@ -1,11 +1,15 @@
 import React from "react";
 import "./../Styles/root.scss";
 
-import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
+// import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
+
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
-import WeekendIcon from "@material-ui/icons/Weekend";
+
+import WeekendIcon from "@mui/icons-material/Weekend";
 
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { signOut } from "../../../actions";
@@ -14,8 +18,10 @@ import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
 import styled from "styled-components";
 
+import { styled as MUIStyled } from "@mui/material/styles";
+
 const SideNavBody = styled.div`
-  background-color: #233E44 !important;
+  background-color: #233e44 !important;
 `;
 
 const SideNav = (props) => {

@@ -68,7 +68,7 @@ $Shadow-inset-color: '#00000029';
 }
 
 .icon-btn-active-h {
-  color: #538bf7;
+  color: #538bf7 !important;
 }
 
 .icon-btn-text {
@@ -78,9 +78,9 @@ $Shadow-inset-color: '#00000029';
   opacity: 1;
 }
 
-.icon-btn-text-active-h {
-  color: #538bf7;
-}
+// .icon-btn-text-active-h {
+//   color: #538bf7;
+// }
 
 .mid-top-nav {
   height: auto;

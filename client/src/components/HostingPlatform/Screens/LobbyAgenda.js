@@ -24,6 +24,16 @@ const LobbyLinkBtn = styled.div`
   }
 `;
 
+const ThemedBackgroundButton = styled.div`
+background-color: #152d35;
+text-decoration: none !important;
+`
+
+const ThemedText = styled.div`
+color: #152d35 !important;
+font-family: "Ubuntu";
+`
+
 const LobbyAgenda = () => {
   const [selectedTab, setSelectedTab] = useState("agenda");
 

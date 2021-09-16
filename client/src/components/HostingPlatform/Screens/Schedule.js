@@ -12,6 +12,8 @@ import SessionDetailCardsList from "../HelperComponents/SessionDetailCardsList";
 
 import { Dropdown, Input } from "semantic-ui-react";
 
+import styled from 'styled-components';
+
 import {
   errorTrackerForFetchSessionsForUser,
   fetchSessionsForUser,
@@ -124,6 +126,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ThemedBackgroundButton = styled.div`
+background-color: #152d35;
+text-decoration: none !important;
+border: 1px solid #152d35;
+`
+
+const ThemedText = styled.div`
+color: #152d35 !important;
+font-family: "Ubuntu";
+`
+
 const Schedule = () => {
   const classes = useStyles();
 
@@ -168,9 +181,9 @@ const Schedule = () => {
       <div className="lobby-agenda-section">
         <div className="session-btn-and-filter-search-wrapper d-flex flex-row justify-content-between mb-5">
           <div className="all-and-my-sessions-w d-flex flex-row">
-            <button className="btn btn-primary btn-outline-text me-4">
+            <ThemedBackgroundButton className="btn btn-primary btn-outline-text me-4">
               All Sessions
-            </button>
+            </ThemedBackgroundButton>
             <button className="btn btn-light btn-outline-text me-4">
               My Sessions
             </button>

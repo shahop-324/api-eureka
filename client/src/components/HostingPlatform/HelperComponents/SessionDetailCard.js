@@ -30,6 +30,16 @@ const SessionDetailCardBody = styled.div`
   background-color: #152d35;
 `;
 
+const ThemedBackgroundButton = styled.div`
+background-color: #152d35;
+text-decoration: none !important;
+`
+
+const ThemedText = styled.div`
+color: #152d35 !important;
+font-family: "Ubuntu";
+`
+
 const SessionSpeakerCard = ({ name, headline, image }) => {
   const classes = useStyles();
   return (
@@ -182,7 +192,7 @@ const SessionDetailCard = ({
             <div className="session-day mb-2 px-3 pt-3">{day}</div>
             <div className="session-date mb-2 px-3">{date}</div>
 
-            <div className="session-time px-3 pb-3">{time}</div>
+            <ThemedText className="session-time px-3 pb-3">{time}</ThemedText>
           </div>
         </div>
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
@@ -279,10 +289,12 @@ const SessionDetailCard = ({
                   )
                 );
               }}
-              className="btn-filled-h px-4 py-3 ms-3 join-session-btn"
-              style={{ backgroundColor: bgColor, textDecoration: "none" }}
+              
+              style={{  textDecoration: "none" }}
             >
+              <ThemedBackgroundButton className="btn-filled-h px-4 py-3 ms-3 join-session-btn">
               {btnText}
+              </ThemedBackgroundButton>
             </Link>
           </div>
         </div>

@@ -518,7 +518,6 @@ const TableScreen = ({
                 </div>
               </div>
             </div>
-
             <div className="" style={{display: "grid", gridTemplateColumns: "8fr 0.5fr"}}>
               <div className="table-side-drawer"></div>
               <div>
