@@ -7,6 +7,8 @@ const Event = require("../../models/eventModel");
 const Coupon = require("../../models/couponModel");
 const EventOrder = require("../../models/eventOrder");
 const EventTransaction = require("../../models/eventTransactionModel");
+const hubspot = require("@hubspot/api-client");
+
 const Community = require("../../models/communityModel");
 const User = require("../../models/userModel");
 const EventTransactionIdsCommunityWise = require("../../models/eventTransactionIdsCommunityWise");
@@ -120,21 +122,6 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      // console.log("userId", userId);
-      // console.log("ticketId", ticketId);
-      // console.log("eventId", eventId);
-      // console.log("couponId", couponId);
-      // console.log("communityId", communityId);
-
-      // const newEventOrder = await EventOrder.create({
-      //   eventOrderEntity: order,
-      //   order_id: order.id,
-      //   created_by: userId,
-      //   created_for_event: eventId,
-      //   created_for_community: communityId,
-      //   created_for_ticket: ticketId,
-      //   created_at: Date.now(),
-      // });
 
       res.status(200).json({
         status: "success",
@@ -143,61 +130,6 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
     }
   );
 });
-
-// exports.createCommunityBillingPlanOrder = catchAsync(async (req, res, next) => {
-//   const communityId = req.community.id;
-//   const selectedPlanId = req.body.selectedPlanId;
-
-//   let amountToBeCharged = 0;
-
-//   switch (selectedPlanId) {
-//     case "PLAN_EVENZ_001Basics":
-//       amountToBeCharged = 99 * 75 * 100;
-//       break;
-//     case "PLAN_EVENZ_001Pro":
-//       amountToBeCharged = 599 * 75 * 100;
-//       break;
-//     case "PLAN_EVENZ_001Free":
-//       amountToBeCharged = 0 * 75 * 100;
-//       break;
-
-//     default:
-//       amountToBeCharged = 99 * 75 * 100;
-//   }
-
-//   const newOrder = razorpay.orders.create(
-//     {
-//       amount: amountToBeCharged,
-//       currency: "INR",
-//       receipt: UUID(),
-//       notes: {
-//         selectedPlanId: selectedPlanId,
-//         communityId: communityId,
-//       },
-//     },
-//     (err, order) => {
-//       // console.log("newOrder", newOrder);
-
-//       // Here Create New Community Plan order document
-//       // const newEventOrder = await EventOrder.create({
-//       //   eventOrderEntity: order,
-//       //   order_id: order.id,
-//       //   created_by: userId,
-//       //   created_for_event: eventId,
-//       //   created_for_community: communityId,
-//       //   created_for_ticket: ticketId,
-//       //   created_at: Date.now(),
-//       // });
-//       console.log(err);
-//       console.log(order);
-
-//       res.status(200).json({
-//         status: "success",
-//         data: order,
-//       });
-//     }
-//   );
-// });
 
 exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
   const secret = "sbvhqi839pqp’;a;s;sbuhwuhbhauxwvcywg3638228282fhvhyw";
@@ -237,13 +169,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
     if (paymentEntity.notes.transaction_type === "community_plan") {
       try {
-        // Process community plan purchase
         console.info("This was a community plan purchase");
         console.log("This was a community plan purchase");
-
-        // communityId: selectedCommunity,
-        // userId: userDetails._id,
-        // referral: referral,
 
         console.log("communityId", paymentEntity.notes.communityId);
         console.log("referral", paymentEntity.notes.referral);
@@ -287,11 +214,41 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         // Handle any error that may happen when processing plan for a community
       }
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
+      //1. find community by communityId
+      //2. and do post request on hubspot server contacts for creating list using api key
 
+      const community = await Community.findById(
+        paymentEntity.notes.communityId
+      );
+      const hubspotApiKey = community.hubspotApiKey;
 
-      
+      // we are sending eventName,ticketType,firstName,lastName,email,contact
 
+      const { eventName } = await Event.findById(paymentEntity.notes.eventId);
+      const ticket = await Ticket.findById(paymentEntity.notes.ticketId);
+      console.log(ticket.name);
+      const user = await User.findById(paymentEntity.notes.userId);
 
+      // const properties = {
+      //   firstName: user.firstName,
+
+      //   lastName: user.lastName,
+      //   email: paymentEntity.email,
+      //   contact: paymentEntity.contact,
+      // };
+
+      const properties = {
+        properties: [
+          { property: "email", value: paymentEntity.email },
+          { property: "firstName", value: user.firstName },
+        ],
+      };
+      const hubspotResponse = await axios.post(
+        `https://hubspot.api.com/contacts/v1/contact?hapiKey=${hubspotApiKey}`,
+        { ...properties }
+      );
+
+      console.log(hubspotResponse);
 
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 

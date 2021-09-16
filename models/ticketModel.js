@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const ticketSchema = new mongoose.Schema(
   {
-    //   //name,price ,description,amountofticketLabel
-    //   //community connected with stripe
     eventId: {
       type: mongoose.Schema.ObjectId,
       ref: "Event",
@@ -67,14 +65,18 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-ticketSchema.index({ name: "text",description:"text", price: "text", currency: "text", status: "text"});
+ticketSchema.index({
+  name: "text",
+  description: "text",
+  price: "text",
+  currency: "text",
+  status: "text",
+});
 
-ticketSchema.pre(/^find/, function(next) {
- 
+ticketSchema.pre(/^find/, function (next) {
   this.find({ status: { $ne: "Deleted" } });
   next();
 });
-
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 module.exports = Ticket;

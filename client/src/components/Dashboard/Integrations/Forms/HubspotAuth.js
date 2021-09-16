@@ -3,11 +3,61 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
 import HubspotIntegrationPNG from "./../../../../assets/images/int-4.png";
-const { REACT_APP_MY_ENV } = process.env;
-const BaseURL = REACT_APP_MY_ENV
-  ? "http://localhost:3000/api-eureka/eureka/v1"
-  : "https://www.evenz.co.in/api-eureka/eureka/v1";
-const HubspotAuth = ({ openDrawer, handleCloseDrawer }) => {
+import { connect } from "react-redux";
+import { reduxForm, Field } from "redux-form";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { editCommunity } from "../../../../actions";
+const renderInput = ({
+  input,
+  value,
+  meta: { touched, error, warning },
+  type,
+  ariadescribedby,
+  classes,
+  placeholder,
+}) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        {...input}
+        aria-describedby={ariadescribedby}
+        className={classes}
+        placeholder={placeholder}
+        required
+        style={{ width: "100%" }}
+      />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
+};
+
+const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
+  const params = useParams();
+  const communityId = params.id;
+
+  const dispatch = useDispatch();
+  const onSubmit = (formValues) => {
+    console.log(formValues);
+    dispatch(editCommunity(communityId, formValues));
+  };
+
   return (
     <>
       <React.Fragment key="right">
@@ -33,50 +83,75 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer }) => {
                 alt="integration illustration"
               />
             </div>
-            <div>
-<<<<<<< HEAD
-              <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-                <a
-                  href={`${BaseURL}/auth/hubspot`}
-                  style={{ textDecoration: "none", width: "100%" }}
-=======
-              <div className="mb-3">
-                <label
-                  Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
->>>>>>> dcc19c1f52445fd45f170568272eff3bb9c71e4c
-                >
-                  Hubspot Api key
-                </label>
 
-                <input
-                  type="text"
-                  className="me-3 form-control"
-                  style={{ width: "100%" }}
-                  onChange={(e) => {}}
-                  id="hubspot-api-key"
-                  aria-describedby="emailGroupName"
-                  placeholder="Hubspot API Key"
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-                <button className="btn btn-outline-primary btn-outline-text">
-                  Connect
-                </button>
-              </div>
-
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div>
-                <div className="want-help-heading mb-3">Want help ?</div>
-                <div className="integration-guide-btn px-4 py-2">
-                  Guid to Integrate Hubspot with Evenz.
+                <div className="mb-3">
+                  <label
+                    Forhtml="eventStartDate"
+                    class="form-label form-label-customized"
+                  >
+                    Hubspot Api key
+                  </label>
+
+                  <Field
+                    type="text"
+                    classes="me-3 form-control"
+                    name="hubspotApiKey"
+                    id="hubspot-api-key"
+                    ariadescribedby="emailGroupName"
+                    placeholder="Hubspot API Key"
+                    component={renderInput}
+                  />
+                </div>
+                <div className="d-flex flex-row align-items-center justify-content-end mb-4">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-primary btn-outline-text"
+                  >
+                    Connect
+                  </button>
+                </div>
+
+                <div>
+                  <div className="want-help-heading mb-3">Want help ?</div>
+                  <div className="integration-guide-btn px-4 py-2">
+                    Guid to Integrate Hubspot with Evenz.
+                  </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </SwipeableDrawer>
       </React.Fragment>
     </>
   );
 };
+const validate = (formValues) => {
+  const errors = {};
 
-export default HubspotAuth;
+  if (!formValues.hubspotApiKey) {
+    errors.hubspotApiKey = "Api key required";
+  }
+
+  return errors;
+};
+
+const mapStateToProps = (state) => ({
+  initialValues: {
+    hubspotApiKey:
+      state.community.communityDetails &&
+      state.community.communityDetails.hubspotApiKey
+        ? state.community.communityDetails.hubspotApiKey
+        : null,
+  },
+});
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: "hubSpotForm",
+    validate,
+    enableReinitialize: true,
+    destroyOnUnmount: false,
+  })(HubspotAuth)
+);

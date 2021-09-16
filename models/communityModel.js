@@ -38,6 +38,10 @@ const communitySchema = new mongoose.Schema(
           "A community must sign the policy before using this application",
       },
     },
+    hubspotApiKey: {
+      type: String,
+    },
+
     subscribedToCommunityMailList: {
       type: Boolean,
       default: false,

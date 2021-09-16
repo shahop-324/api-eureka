@@ -161,12 +161,8 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 };
 
 const EditBooth = (props) => {
-  const { handleSubmit, pristine, submitting, reset } = props;
+  const { handleSubmit, reset } = props;
   const { detailError, isLoadingDetail } = useSelector((state) => state.booth);
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const classes = useStyles();
   const theme = useTheme();
@@ -177,14 +173,6 @@ const EditBooth = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-
-  // const imgKey = useSelector((state) => state.booth.boothDetails.image);
-
-  // const event = useSelector((state) => {
-  //   return state.event.events.find((event) => {
-  //     return event.id === id;
-  //   });
-  // });
 
   const booth = useSelector((state) => {
     return state.booth.booths.find((booth) => {
@@ -228,7 +216,6 @@ const EditBooth = (props) => {
 
     dispatch(editBooth(ModifiedFormValues, file, props.id));
 
-    // showResults(ModifiedFormValues);
     props.handleClose();
   };
 
@@ -484,7 +471,6 @@ const EditBooth = (props) => {
               >
                 <button
                   className="btn btn-outline-primary btn-outline-text me-3"
-         
                   // disabled={pristine || submitting}
                   onClick={reset}
                 >

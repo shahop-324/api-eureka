@@ -23,15 +23,6 @@ import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/Billi
 import { useDispatch } from "react-redux";
 import { getPayPalConnectLink } from "../../actions";
 
-<<<<<<< HEAD
-=======
-let AACComponent;
-
-
-
->>>>>>> dcc19c1f52445fd45f170568272eff3bb9c71e4c
-
-
 const Billing = () => {
   const dispatch = useDispatch();
 
@@ -54,46 +45,6 @@ const Billing = () => {
             alt={"Paypal logo"}
             className="px-4 me-4"
           />
-          {/* <div>
-            <a
-              rel="noreferrer"
-              target="_blank"
-              data-paypal-onboard-complete="onboardedCallback"
-              href={`${paypalSignupLink}&displayMode=minibrowser`}
-              data-paypal-button="true"
-            >
-              
-                Connect with PayPal
-              
-            </a>
-          </div> */}
-          {/* <div style={{ width: "300px" }}>
-            {AACComponent ? (
-              <AACComponent
-
-                // style={{width: "300px", color: "blue"}}
-                merchantId="GMBMW6HSY4YXG"
-                env="production"
-                clientId={{
-                  sandbox:
-                    "AWulL9SIFX_aLmdGojavSIAgf9O3_ZgTyUETSYQkDjEX65WwtWddKF6D95w7nzwpnXFWFnhyRzsG9yfi",
-                  production:
-                    "ARBK59pvvrb8fmqnwP6xzqfUA2YGqppJSMe0VFmwUKS4OhXoXNHh67T5desykki_BwiN7JINcVp7iCmc",
-                }}
-                
-                pageType="login"
-                onLogin={(response) => {
-                  if (response.err) {
-                    console.log(response.err);
-                  } else {
-                    console.log(response.body.code);
-                  }
-                }}
-              />
-            ) : (
-              <></>
-            )}
-          </div> */}
         </div>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">

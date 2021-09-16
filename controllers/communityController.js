@@ -368,7 +368,8 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
     "paymentGateway",
-    "paypalOnboardingData"
+    "paypalOnboardingData",
+    "hubspotApiKey"
   );
 
   const updatedCommunity = await Community.findByIdAndUpdate(
