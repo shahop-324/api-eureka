@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import Faker from 'faker';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,17 +29,22 @@ const PhotoBoothBody = styled.div`
   width: 400px;
   height: 558px;
   background-color: #152d35;
+
+  display: flex ;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
-  /* border: 1px solid #345b63; */
+  border: 1px solid #dcc7be;
 
   min-width: 50px;
+  width: 46%;
 
-
-  color: #152d35;
+  color: #dcc7be;
   font-family: "Ubuntu";
   font-weight: 500;
   font-size: 0.8rem;
@@ -50,20 +56,46 @@ const BtnOutlined = styled.div`
   justify-content: center;
   /* position: absolute;
   bottom: -30px; */
+
+  &:hover {
+      background-color: #dcc7be;
+      color: #152d35;
+      cursor: pointer;
+  }
 `;
 
 const PhotoGrid = styled.div`
-display: grid;
-grid-template-columns: 1fr 1fr 1fr;
-grid-gap: 16px;
-padding: 10px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 16px;
+  padding: 20px;
+`;
+
+const SelfPhoto = styled.div`
+  background-image: linear-gradient(to right, #2F333569 , #1C3F4B79);
+  border-radius: 10px;
+
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 4;
+
+  object-fit: cover;
+
+  
+
+  align-self: center;
+  justify-self: center;
+  
 `
 
 const PhotoElement = styled.div`
-
-
-
-`
+  height: 80px;
+  background-image: linear-gradient(to right, #2F333569 , #1C3F4B79);
+  border-radius: 10px;
+`;
 
 const PhotoBooth = ({ open, handleClose }) => {
   const classes = useStyles();
@@ -72,27 +104,62 @@ const PhotoBooth = ({ open, handleClose }) => {
 
   return (
     <>
-     
+      <Dialog
+        style={{ backgroundColor: "#2121217E" }}
+        fullScreen={fullScreen}
+        open={open}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <PhotoBoothBody >
+          <PhotoGrid>
+            <PhotoElement >
+                <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover" }} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <SelfPhoto >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </SelfPhoto>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be", objectFit: "cover"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+            <PhotoElement >
+            <img src={Faker.image.avatar()} style={{borderRadius: "10px", border: "1px solid #dcc7be"}} alt={Faker.name.findName()}></img>
+            </PhotoElement>
+          </PhotoGrid>
 
-        <Dialog
-          style={{ backgroundColor: "#2121217E" }}
-          fullScreen={fullScreen}
-          open={open}
-          aria-labelledby="responsive-dialog-title"
-        >
-            <div className="d-flex flex-column justify-content-between align-items-center">
-          <BtnOutlined>Close photo booth</BtnOutlined>
-
-
-
-          <BtnOutlined>Download</BtnOutlined>
-</div>
-
-
-
-          <PhotoBoothBody></PhotoBoothBody>
-        </Dialog>
-      
+         
+        </PhotoBoothBody>
+        <div className="d-flex flex-row align-items-center justify-content-around py-3" style={{backgroundColor: "#152d35"}}>
+        <BtnOutlined>Take snap</BtnOutlined>
+        <BtnOutlined onClick={handleClose}>Close</BtnOutlined>
+        </div>
+      </Dialog>
     </>
   );
 };

@@ -147,8 +147,6 @@ const EditEventRoot = () => {
             <div className="event-name-head-text me-3">Confulence Global Summit 2021</div>
             <Chip label="Upcoming" variant="outlined" style={{color: "#538BF7", border: "1px solid #538BF7"}} />
             </div>
-            
-
             <button onClick={() => {
                dispatch(editEvent({publishedStatus: "Published"}, id)) 
             }} className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
