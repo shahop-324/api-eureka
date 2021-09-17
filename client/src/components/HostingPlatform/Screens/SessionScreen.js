@@ -54,7 +54,7 @@ import SessionStatusMsg from "../ComplimentaryParts/SessionStatusMsg";
 import NotYetStarted from "./../../../assets/images/NotYetStarted.png";
 import InCallDeviceTest from "../HelperComponents/InCallDeviceTest";
 import RemotePlayer from "../SessionStreamingComponents.js/RemotePlayer";
-import LocalPlayer from "../SessionStreamingComponents.js/LocalPlayer";
+import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPlayer";
 import ScreenTrackPlayer from "./../SessionStreamingComponents.js/ScreenTrackPlayer";
 
 let rtc = {
@@ -779,7 +779,7 @@ const SessionScreen = () => {
     } = peopleInThisSession.find((people) => people.userId === userUID);
 
     return (
-      <LocalPlayer
+      <GalleryVideoPlayer
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}

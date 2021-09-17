@@ -36,19 +36,43 @@ const StageBody = styled.div`
   position: relative;
 
   display: grid;
-  grid-template-columns: 5fr 1.55fr;
+  grid-template-columns: ${(props) =>
+    props.openSideDrawer && props.openSideDrawer ? "5fr 1.55fr" : "1fr"};
   /* grid-gap: 8px; */
 `;
 
 const GalleryView = styled.div`
   height: 85vh;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: ${(props) =>
+    props.col && props.col ? props.col : "1fr 1fr 1fr 1fr"};
+  grid-template-rows: ${(props) =>
+    props.row && props.row ? props.row : "1fr 1fr"};
   grid-gap: 24px;
   /* justify-content: center; */
 
   padding: 8vh 3vw;
 `;
+
+const GridView = styled.div`
+height: 85vh;
+display: grid;
+grid-template-columns: 4fr 1.3fr;
+grid-gap: 24px;
+
+padding: 8vh 3vw;
+
+`
+
+const GridViewMini = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 16px;
+
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+`
 
 const StageControl = styled.div`
   height: 7vh;
@@ -159,9 +183,7 @@ const BtnDanger = styled.div`
 `;
 
 const IconButton = styled.div`
-  background-color: #ffffffa9;
-
-  color: #1f545e;
+  max-width: fit-content;
   padding: 7px;
   border-radius: 10px;
 
@@ -169,12 +191,27 @@ const IconButton = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  border: 1px solid #1f545e;
+  color: #ffffff;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+
+    border: 1px solid #ffffffa9;
+    background-color: #ffffffa9;
+    color: #1f545e;
+  }
 `;
 
 const VideoStreamContainer = styled.div`
   background-color: #83838383;
   border-radius: 20px;
   height: "180px";
+
+  overflow: hidden;
+  border-radius: 10px;
 `;
 
 const SessionSideDrawer = styled.div`
@@ -281,7 +318,7 @@ const PersonName = styled.div`
 `;
 
 const UserRoleTag = styled.div`
-  background-color: #152d35;
+  background-color: #152d35 !important;
   height: max-content;
   border-radius: 5px;
 
@@ -348,6 +385,8 @@ const ExpandIcon = styled(LastPageRoundedIcon)`
   }
 `;
 
+
+
 export {
   Button,
   StageNav,
@@ -376,4 +415,6 @@ export {
   BrandLogo,
   ChipModified,
   GalleryView,
+  GridView,
+  GridViewMini,
 };
