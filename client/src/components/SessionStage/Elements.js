@@ -64,6 +64,15 @@ padding: 8vh 3vw;
 
 `
 
+const SpotlightView = styled.div`
+height: 85vh;
+display: grid;
+grid-template-columns: 1fr;
+grid-gap: 24px;
+
+padding: 8vh 3vw;
+`
+
 const GridViewMini = styled.div`
   display: grid;
   grid-auto-flow: column;
@@ -417,4 +426,5 @@ export {
   GalleryView,
   GridView,
   GridViewMini,
+  SpotlightView,
 };

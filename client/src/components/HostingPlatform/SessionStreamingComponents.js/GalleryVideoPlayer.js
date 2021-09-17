@@ -18,6 +18,8 @@ import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
 
 import PushPinRoundedIcon from "@mui/icons-material/PushPinRounded";
 
+import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
+
 // const VideoOverlayIconBtn = styled.div`
 
 // `
@@ -58,14 +60,69 @@ const SoundWaveAnimation = () => {
   );
 };
 
+const StillSoundWave = () => {
+  return (
+    <>
+      <div className="still-wave">
+        <span className="wave-stroke-still"></span>
+        <span className="wave-stroke-still"></span>
+        <span className="wave-stroke-still"></span>
+        <span className="wave-stroke-still"></span>
+        <span className="wave-stroke-still"></span>
+      </div>
+    </>
+  );
+};
+
 const GalleryVideoPlayer = ({
+  audioStreamStat, // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
+  videoStreamStat, // Its an array of objects {uid: uid, videoIsEnabled: Boolean (true | false)}
   role,
   localPlayerId,
   userName,
   userImage,
   userOrganisation,
   userDesignation,
+  volumeIndicators, // array of these objects => {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 }) => {
+  let audioIsEnabled = true;
+
+  let videoIsEnabled = true;
+
+  let showWave = false;
+
+  if (volumeIndicators) {
+    const [volumeData] = volumeIndicators.filter(
+      (object) => object.uid === localPlayerId
+    );
+
+    if (volumeData) {
+      showWave = volumeData.isSpeaking;
+    }
+  }
+
+  if (audioStreamStat) {
+    const audioStreamData = audioStreamStat.find(
+      (element) => element.uid === localPlayerId
+    );
+
+    if (audioStreamData) {
+      audioIsEnabled = audioStreamData.audioIsEnabled;
+    }
+  }
+
+  if (videoStreamStat) {
+    const videoStreamData = videoStreamStat.find(
+      (element) => element.uid === localPlayerId
+    );
+
+    if (videoStreamData) {
+      videoIsEnabled = videoStreamData.videoIsEnabled;
+    }
+  }
+
+  // Now show muted icon if !audioIsEnabled & avatar if !videoIsEnabled
+
   const { id } = useSelector((state) => state.eventAccessToken);
 
   const roleSuffix = id === localPlayerId ? "(You)" : "";
@@ -92,13 +149,15 @@ const GalleryVideoPlayer = ({
             </IconButton>
           </div> */}
           <div id={`avatar_box_${localPlayerId}`} className="avatar_box">
-            <Avatar
-              variant="rounded"
-              src={userImage}
-              alt={userName}
-              style={{ backgroundColor: "#538BF7" }}
-              sx={{ width: 72, height: 72 }}
-            />
+            {!videoIsEnabled && (
+              <Avatar
+                variant="rounded"
+                src={userImage}
+                alt={userName}
+                style={{ backgroundColor: "#538BF7" }}
+                sx={{ width: 72, height: 72 }}
+              />
+            )}
           </div>
           <div id={`user_identity_${localPlayerId}`} className="user-identity">
             <div style={{ color: "#F7F453" }}>
@@ -106,7 +165,15 @@ const GalleryVideoPlayer = ({
             </div>
             <div className="d-flex flex-row align-items-center">
               <div className="me-2">{`${userDesignation} ${userOrganisation}`}</div>
-              <SoundWaveAnimation />
+              {audioIsEnabled ? (
+                showWave ? (
+                  <SoundWaveAnimation />
+                ) : (
+                  <StillSoundWave />
+                )
+              ) : (
+                <MicOffOutlinedIcon style={{ color: "red" }} />
+              )}
             </div>
           </div>
         </div>

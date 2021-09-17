@@ -9,6 +9,7 @@ import {
   GalleryView,
   GridView,
   GridViewMini,
+  SpotlightView,
 } from "./../../../components/SessionStage/Elements";
 
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
@@ -49,6 +50,12 @@ let rtc = {
 };
 
 const SessionStage = () => {
+  const [volumeIndicators, setVolumeIndicators] = useState([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
+
+  const [audioStreamStat, setAudioStreamStat] = useState([]); // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
+
+  const [videoStreamStat, setVideoStreamStat] = useState([]); // Its an array of objects {uid: uid, videoIsEnabled: Boolean (true | false)}
+
   const [view, setView] = useState("gallery");
 
   const [allStreams, setAllStreams] = useState([]);
@@ -59,9 +66,55 @@ const SessionStage = () => {
 
   const [prominentStream, setProminentStream] = useState(null);
 
+  const [screenStream, setScreenStream] = useState(null);
+
+  const [nonProminent, setNonProminent] = useState([]);
+
   const [localStream, setLocalStream] = useState(null); // This is to keep track of local video track
 
   const [remoteStreams, setRemoteStreams] = useState([]);
+
+  const handleAudioIsEnabledChange = (uid, bool) => {
+    setAudioStreamStat((prevArr) => {
+      // 1. Check if there is already one entry for this uid
+      const existing = prevArr.find((element) => element.uid === uid);
+
+      if (existing) {
+        // Take out every other entry and then push new entry on top of it
+        // and then save that in audioStreamStat
+
+        let filtered = prevArr.filter((element) => element.uid !== uid);
+
+        filtered.push({ uid: uid, audioIsEnabled: bool });
+        return filtered;
+      } else {
+        let stat = audioStreamStat;
+        stat.push({ uid: uid, audioIsEnabled: bool });
+        return stat;
+      }
+    });
+  };
+
+  const handleVideoIsEnabledChange = (uid, bool) => {
+    setVideoStreamStat((prevArr) => {
+      // 1. Check if there is already one entry for this uid
+      const existing = prevArr.find((element) => element.uid === uid);
+
+      if (existing) {
+        // Take out every other entry and then push new entry on top of it
+        // and then save that in videoStreamStat
+
+        let filtered = prevArr.filter((element) => element.uid !== uid);
+
+        filtered.push({ uid: uid, videoIsEnabled: bool });
+        return filtered;
+      } else {
+        let stat = videoStreamStat;
+        stat.push({ uid: uid, videoIsEnabled: bool });
+        return stat;
+      }
+    });
+  };
 
   const handleAddToAllStreams = (stream, uid) => {
     setAllStreams((prevStreams) => {
@@ -134,7 +187,11 @@ const SessionStage = () => {
 
   const handleSwitchToGalleryView = () => {
     setView("gallery");
-  }
+  };
+
+  const handleSwitchToSpotlightView = () => {
+    setView("spotlight");
+  };
 
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
@@ -143,24 +200,37 @@ const SessionStage = () => {
   const turnOffVideo = async (uid) => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(false);
-    document.getElementById(`avatar_box_${uid}`).style.display = "inline-block";
+
+    // document.getElementById(`avatar_box_${uid}`).style.display = "inline-block";
+
+    handleVideoIsEnabledChange(uid, false);
+
     setVideoIsEnabled(false);
   };
   const turnOnVideo = async (uid) => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(true);
-    document.getElementById(`avatar_box_${uid}`).style.display = "none";
+    // document.getElementById(`avatar_box_${uid}`).style.display = "none";
+
+    handleVideoIsEnabledChange(uid, true);
+
     setVideoIsEnabled(true);
   };
 
-  const turnOffAudio = async () => {
+  const turnOffAudio = async (uid) => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(false);
+
+    handleAudioIsEnabledChange(uid, false);
+
     setAudioIsEnabled(false);
   };
-  const turnOnAudio = async () => {
+  const turnOnAudio = async (uid) => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(true);
+
+    handleAudioIsEnabledChange(uid, true);
+
     setAudioIsEnabled(true);
   };
 
@@ -366,15 +436,16 @@ const SessionStage = () => {
           // Get `RemoteVideoTrack` in the `user` object.
           const remoteVideoTrack = user.videoTrack;
 
-          // Remote video track is now added to allStreams and so it will start playing
-
-          // handleAddToAllStreams(remoteVideoTrack, uid);
-
           // If user was already in session then just play his video in his respective container
 
           if (document.getElementById(uid)) {
             remoteVideoTrack.play(uid);
           }
+
+          handleAddToAllStreams(remoteVideoTrack, uid);
+
+          handleVideoIsEnabledChange(uid, true);
+
         }
         // If the subscribed track is audio.
         if (mediaType === "audio") {
@@ -382,6 +453,8 @@ const SessionStage = () => {
           const remoteAudioTrack = user.audioTrack;
           // Play the audio track. No need to pass any DOM element.
           remoteAudioTrack.play();
+
+          handleAudioIsEnabledChange(uid, true);
         }
 
         // Now return after this as this was existing user
@@ -397,9 +470,26 @@ const SessionStage = () => {
         // Get `RemoteVideoTrack` in the `user` object.
         const remoteVideoTrack = user.videoTrack;
 
+        if (uid.startsWith("screen")) {
+          // Set view to screen share mode (grid mode)
+
+          setView("screenShare");
+
+          // Set this screen share stream as screenStream
+          setScreenStream({ uid: uid, stream: remoteVideoTrack });
+
+          // We already have all streams maintained in allStreams
+
+          // So adopt grid mode and then render screenStream as mainStream and rest all as mini stream
+        }
+
         // Remote video track is now added to allStreams and so it will start playing
 
-        handleAddToAllStreams(remoteVideoTrack, uid);
+        if (!uid.startsWith("screen")) {
+          handleAddToAllStreams(remoteVideoTrack, uid);
+
+          handleVideoIsEnabledChange(uid, true);
+        }
       }
 
       // If the subscribed track is audio.
@@ -408,11 +498,23 @@ const SessionStage = () => {
         const remoteAudioTrack = user.audioTrack;
         // Play the audio track. No need to pass any DOM element.
         remoteAudioTrack.play();
+
+        handleAudioIsEnabledChange(uid, true);
       }
     });
 
-    rtc.client.on("user-unpublished", (user) => {
-      const userId = user.uid.toString();
+    rtc.client.on("user-unpublished", (user, mediaType) => {
+      const uid = user.uid.toString();
+
+      // 1. Manage audio muted
+      if (mediaType === "audio") {
+        handleAudioIsEnabledChange(uid, false);
+      }
+
+      // 2. Manage video muted
+      if (mediaType === "video") {
+        handleVideoIsEnabledChange(uid, false);
+      }
 
       console.info(`User with UID ${userId} unpublished media stream.`);
     });
@@ -425,6 +527,10 @@ const SessionStage = () => {
       }
 
       handleRemoveFromAllStreams(uid);
+
+      handleAudioIsEnabledChange(uid, false);
+
+      handleVideoIsEnabledChange(uid, false);
 
       console.info(`User with UID ${uid} just left the meeting.`);
     });
@@ -442,13 +548,8 @@ const SessionStage = () => {
           });
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
             encoderConfig: "1080p_1",
+            optimizationMode: "detail",
           });
-
-          // setLocalStream({ stream: rtc.localVideoTrack, uid: options.uid });
-
-          // localStream_o = { stream: rtc.localVideoTrack, uid: options.uid };
-
-          // MainStreamId = options.uid;
 
           // Set to all streams
           handleAddToAllStreams(rtc.localVideoTrack, options.uid);
@@ -459,8 +560,118 @@ const SessionStage = () => {
           await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
 
           console.info("publish success!");
+
+          handleVideoIsEnabledChange(options.uid, true);
+          handleAudioIsEnabledChange(options.uid, true);
         }
       });
+
+    rtc.client
+      .enableDualStream()
+      .then(() => {
+        console.log("Enable Dual stream success!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // Find active speakers
+    rtc.client.enableAudioVolumeIndicator();
+
+    rtc.client.on("volume-indicator", (volumes) => {
+      let arr = [];
+
+      volumeIndicators.forEach((element) => {
+        arr.push({
+          uid: element.uid,
+          volume: element.volume,
+          isSpeaking: false,
+        });
+      });
+
+      setVolumeIndicators(arr);
+
+      volumes.forEach((volume) => {
+        console.log(`UID ${volume.uid} Level ${volume.level}`);
+
+        if (volume.level > 5) {
+          // volume.uid.toString() is speaking
+          setVolumeIndicators((prev) => {
+            const filtered = prev.filter(
+              (object) => object.uid !== volume.uid.toString()
+            );
+
+            filtered.push({
+              uid: volume.uid.toString(),
+              volume: volume.level,
+              isSpeaking: true,
+            });
+
+            return filtered;
+          });
+        } else if (volume.level < 5) {
+          // volume.uid.toString() is not speaking
+
+          setVolumeIndicators((prev) => {
+            const filtered = prev.filter(
+              (object) => object.uid !== volume.uid.toString()
+            );
+
+            filtered.push({
+              uid: volume.uid.toString(),
+              volume: volume.level,
+              isSpeaking: false,
+            });
+
+            return filtered;
+          });
+        }
+      });
+
+      // Find who is loudest
+
+      if (!volumes[0]) return;
+
+      console.log(volumes, "This is volumes array");
+
+      let loudest = volumes[0].level;
+      let loudestUID = volumes[0].uid;
+
+      for (let i = 0; i < volumes.length; i++) {
+        if (loudest < volumes[i].level) {
+          loudest = volumes[i].level;
+          loudestUID = volumes[i].uid;
+        }
+      }
+
+      console.log(loudestUID);
+
+      // Get loudest person with this UID from allStreams
+
+      const [LoudestPerson] = allStreams.filter(
+        (object) => object.uid === loudestUID
+      );
+
+      // LoudestPerson is an object {stream: (video stream) | uid: uid (user identifier)}
+
+      // Set this as prominentStream Now
+
+      // Now we will get to know who is loudest every 2 seconds and we will update the ui accordingly
+
+      handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
+
+      // Now set all except prominent in nonProminent streams
+
+      // nonProminent is an array of all except prominent
+
+      const nonProminent = allStreams.filter(
+        (object) => object.uid !== loudestUID
+      );
+
+      setNonProminent(nonProminent);
+
+      // Now we can just use prominent and non prominent to render spotlight view and non screen share and not pinned view of grid mode
+    });
 
     setInterval(() => {
       if (!rtc.localAudioTrack) return;
@@ -545,6 +756,9 @@ const SessionStage = () => {
 
     return (
       <GalleryVideoPlayer
+        audioStreamStat={audioStreamStat}
+        videoStreamStat={videoStreamStat}
+        volumeIndicators={volumeIndicators}
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
@@ -590,6 +804,9 @@ const SessionStage = () => {
 
       return (
         <GalleryVideoPlayer
+          audioStreamStat={audioStreamStat}
+          videoStreamStat={videoStreamStat}
+          volumeIndicators={volumeIndicators}
           localStream={stream}
           role={sessionRole}
           localPlayerId={uid}
@@ -634,6 +851,9 @@ const SessionStage = () => {
 
     return (
       <GalleryVideoPlayer
+        audioStreamStat={audioStreamStat}
+        videoStreamStat={videoStreamStat}
+        volumeIndicators={volumeIndicators}
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
@@ -678,6 +898,9 @@ const SessionStage = () => {
 
       return (
         <GalleryVideoPlayer
+          audioStreamStat={audioStreamStat}
+          videoStreamStat={videoStreamStat}
+          volumeIndicators={volumeIndicators}
           localStream={stream}
           role={sessionRole}
           localPlayerId={uid}
@@ -690,9 +913,55 @@ const SessionStage = () => {
     });
   };
 
+  const renderProminentStream = (prominentStream) => {
+    console.log("render prominent stream fxn was fired");
+    console.log(prominentStream);
+
+    if (!prominentStream) return;
+    const { stream, uid } = prominentStream;
+
+    if (!stream || !uid) return;
+    // console.log(stream, uid);
+    console.log("I reached at line 611 (This is render prominent stream)");
+    let userUID = uid;
+
+    if (uid.startsWith("screen")) {
+      userUID = userUID.slice(7);
+      console.error(userUID);
+      prominentStream.stream.play("session-main-view-container");
+    }
+
+    if (document.getElementById(uid)) {
+      prominentStream.stream.play(uid);
+    }
+
+    const {
+      userName,
+      userImage,
+      userOrganisation,
+      userDesignation,
+      sessionRole,
+    } = peopleInThisSession.find((people) => people.userId === userUID);
+
+    return (
+      <GalleryVideoPlayer
+        audioStreamStat={audioStreamStat}
+        videoStreamStat={videoStreamStat}
+        volumeIndicators={volumeIndicators}
+        localStream={stream}
+        role={sessionRole}
+        localPlayerId={uid}
+        userName={userName}
+        userImage={userImage}
+        userOrganisation={userOrganisation}
+        userDesignation={userDesignation}
+      />
+    );
+  };
+
   useEffect(() => {
     startAdvancedLiveStreaming();
-  }, []);
+  }, [volumeIndicators]);
 
   return (
     <>
@@ -752,7 +1021,21 @@ const SessionStage = () => {
                     );
 
                   case "spotlight":
-                    return <div>This is spotlight view</div>;
+                    return (
+                      <SpotlightView>
+                        {prominentStream &&
+                          renderProminentStream(prominentStream)}
+                      </SpotlightView>
+                    );
+                  case "screenShare":
+                    return (
+                      <GridView>
+                        {screenStream && renderMainStream(screenStream)}
+                        <GridViewMini>
+                          {allStreams && renderMiniStreams(allStreams)}
+                        </GridViewMini>
+                      </GridView>
+                    );
 
                   default:
                     break;
@@ -768,8 +1051,9 @@ const SessionStage = () => {
 
         {/* Stage Controls components */}
         <StageControlsComponent
-        handleSwitchToGalleryView={handleSwitchToGalleryView}
+          handleSwitchToGalleryView={handleSwitchToGalleryView}
           handleSwitchToGridView={handleSwitchToGridView}
+          handleSwitchToSpotlightView={handleSwitchToSpotlightView}
           handleOpenPhotoBooth={handleOpenPhotoBooth}
           videoIsEnabled={videoIsEnabled}
           turnOffVideo={turnOffVideo}

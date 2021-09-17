@@ -31,6 +31,7 @@ import { getRTCTokenForScreenShare } from "../../actions";
 const StageControlsComponent = ({
   handleSwitchToGalleryView,
   handleSwitchToGridView,
+  handleSwitchToSpotlightView,
   handleOpenPhotoBooth,
   videoIsEnabled,
   audioIsEnabled,
@@ -95,7 +96,9 @@ const StageControlsComponent = ({
               </IconButton>
             </a>
 
-            <a data-tip={"Spotlight view"} className="">
+            <a onClick={() => {
+              handleSwitchToSpotlightView();
+            }} data-tip={"Spotlight view"} className="">
               <IconButton className="me-3">
                 <AccountBoxOutlinedIcon style={{ fontSize: "20px" }} />
               </IconButton>
@@ -134,7 +137,7 @@ const StageControlsComponent = ({
           >
             <IconButton
               onClick={() => {
-                audioIsEnabled ? turnOffAudio() : turnOnAudio();
+                audioIsEnabled ? turnOffAudio(options.uid) : turnOnAudio(options.uid);
               }}
               className="me-4"
             >
@@ -158,13 +161,13 @@ const StageControlsComponent = ({
           >
             <IconButton
               onClick={() => {
-                // dispatch(
-                //   getRTCTokenForScreenShare(
-                //     sessionId,
-                //     userId,
-                //     startScreenCall
-                //   )
-                // );
+                dispatch(
+                  getRTCTokenForScreenShare(
+                    sessionId,
+                    userId,
+                    startScreenCall
+                  )
+                );
                 // TODO Execute this logic to start sharing screen
                 screenSharingIsEnabled
                   ? setScreenSharingIsEnabled(false)
