@@ -445,7 +445,6 @@ const SessionStage = () => {
           handleAddToAllStreams(remoteVideoTrack, uid);
 
           handleVideoIsEnabledChange(uid, true);
-
         }
         // If the subscribed track is audio.
         if (mediaType === "audio") {
@@ -544,11 +543,14 @@ const SessionStage = () => {
 
         if (agoraRole !== "audience") {
           rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
-            encoderConfig: "high_quality_stereo",
+            encoderConfig: {
+              sampleRate: 48000,
+              stereo: true,
+              bitrate: 128,
+            },
           });
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: "1080p_1",
-            optimizationMode: "detail",
+            encoderConfig: "240p_1",
           });
 
           // Set to all streams
