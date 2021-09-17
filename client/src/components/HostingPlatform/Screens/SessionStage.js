@@ -550,7 +550,7 @@ const SessionStage = () => {
             },
           });
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: "240p_1",
+            encoderConfig: "120p_1",
           });
 
           // Set to all streams
@@ -963,7 +963,7 @@ const SessionStage = () => {
 
   useEffect(() => {
     startAdvancedLiveStreaming();
-  }, [volumeIndicators]);
+  }, []);
 
   return (
     <>
