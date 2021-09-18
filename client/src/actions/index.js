@@ -4446,6 +4446,7 @@ export const getRTCTokenForScreenShare =
       );
 
       startScreenCall();
+     
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));

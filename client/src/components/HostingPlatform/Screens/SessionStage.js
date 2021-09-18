@@ -266,7 +266,7 @@ const SessionStage = () => {
 
   const handleStopScreenShare = async () => {
     rtc.localScreenTrack && rtc.localScreenTrack.close();
-    await rtc.screenClient.unpublish(rtc.localScreenTrack);
+    // await rtc.screenClient.unpublish(rtc.localScreenTrack);
     await rtc.screenClient.leave().then(() => {
       setView("gallery");
     });
@@ -402,7 +402,23 @@ const SessionStage = () => {
     await rtc.screenClient.setClientRole("host");
 
     await rtc.screenClient.publish(rtc.localScreenTrack);
+
+    return rtc.localScreenTrack;
   };
+
+  // const shareScreenEvent = () => {
+  //   startScreenCall();
+  //   const track = startScreenCall();
+
+  //   if(track) {
+  //     track.on('track-ended', () => {
+  //       console.log('screen share track-ended');
+  //       handleStopScreenShare();
+  //     })
+  //   }
+  // }
+
+  // if(r)
 
   const startAdvancedLiveStreaming = async () => {
     // Created client object using Agora SDK
@@ -505,6 +521,7 @@ const SessionStage = () => {
       const uid = user.uid.toString();
 
       if (uid.startsWith("screen")) {
+        rtc.localScreenTrack && rtc.localScreenTrack.close();
         await rtc.screenClient.leave().then(() => {
           setView("gallery");
         });
@@ -784,6 +801,7 @@ const SessionStage = () => {
           turnOnAudio={turnOnAudio}
           screenSharingIsEnabled={screenSharingIsEnabled}
           startScreenCall={startScreenCall}
+          
           setScreenSharingIsEnabled={setScreenSharingIsEnabled}
         />
 

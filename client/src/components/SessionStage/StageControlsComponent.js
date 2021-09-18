@@ -182,7 +182,7 @@ const StageControlsComponent = ({
                     getRTCTokenForScreenShare(
                       sessionId,
                       userId,
-                      startScreenCall
+                      startScreenCall,
                     )
                   );
                   setScreenSharingIsEnabled(true);
