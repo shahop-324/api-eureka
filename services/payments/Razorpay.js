@@ -2,14 +2,17 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const UUID = require("uuid/v4");
 const catchAsync = require("../../utils/catchAsync");
+
+const hubspot = require("@hubspot/api-client");
+const axios = require("axios");
 const Ticket = require("../../models/ticketModel");
 const Event = require("../../models/eventModel");
 const Coupon = require("../../models/couponModel");
 const EventOrder = require("../../models/eventOrder");
 const EventTransaction = require("../../models/eventTransactionModel");
-const hubspot = require("@hubspot/api-client");
 
 const Community = require("../../models/communityModel");
+const SalesForce = require("../../models/salesForceModel");
 const User = require("../../models/userModel");
 const EventTransactionIdsCommunityWise = require("../../models/eventTransactionIdsCommunityWise");
 const Registration = require("../../models/registrationsModel");
@@ -222,6 +225,10 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       );
       const hubspotApiKey = community.hubspotApiKey;
 
+      const salesForceAccount = await SalesForce.findOne({
+        communityId: paymentEntity.notes.communityId,
+      });
+
       // we are sending eventName,ticketType,firstName,lastName,email,contact
 
       const { eventName } = await Event.findById(paymentEntity.notes.eventId);
@@ -236,19 +243,70 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       //   email: paymentEntity.email,
       //   contact: paymentEntity.contact,
       // };
+      console.log("i am counting on you hubspot api rajorpay.js");
+      // const properties = {
+      //   properties: [
+      //     { property: "email", value: paymentEntity.email },
+      //     { property: "firstName", value: user.firstName },
+      //   ],
+      // };
+      console.log(hubspotApiKey);
+      console.log(
+        paymentEntity.email,
+        "i am counting on you paymentEntity.email razorpay.js"
+      );
+      console.log(
+        user.firstName,
+        "i am counting on you user.firstName razorpay.js"
+      );
+      // try {
+      //   const hubspotResponse = await axios.post(
+      //     `https://hubspot.api.com/contacts/v1/contact?hapiKey=${hubspotApiKey}`,
+      //     { properties }
+      //   );
+
+      //   console.log(hubspotResponse);
+      // } catch (err) {
+      //   console, log(err);
+      // }
+
+      const hubspotClient = new hubspot.Client({ apiKey: hubspotApiKey });
 
       const properties = {
-        properties: [
-          { property: "email", value: paymentEntity.email },
-          { property: "firstName", value: user.firstName },
-        ],
+        email: user.email,
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phone: paymentEntity.contact,
+        eventName,
+        ticket: ticket.name,
       };
-      const hubspotResponse = await axios.post(
-        `https://hubspot.api.com/contacts/v1/contact?hapiKey=${hubspotApiKey}`,
-        { ...properties }
-      );
+      const simplePublicObjectInput = { properties };
 
-      console.log(hubspotResponse);
+      try {
+        const apiResponse = await hubspotClient.crm.contacts.basicApi.create(
+          simplePublicObjectInput
+        );
+        console.log(JSON.stringify(apiResponse.body, null, 2));
+      } catch (e) {
+        e.message === "HTTP request failed"
+          ? console.error(JSON.stringify(e.response, null, 2))
+          : console.error(e);
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authroziation: `Bearer ${salesForceAccount.accessToken}`,
+      };
+      const res = await axios.post(
+        "https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/",
+        {
+          FirstName: "Dinesh",
+          LastName: "Shah",
+          Email: "dinesh.shah@evenz.in",
+        },
+        { headers }
+      );
+      console.log(res, "i am counting on you salesforce res");
 
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 

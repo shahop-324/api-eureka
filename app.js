@@ -56,7 +56,7 @@ const paypalRoutes = require("./routes/payPalRoutes");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
-
+const SalesForce = require("./models/salesForceModel");
 const Hubspot = require("./models/hubspotModel");
 const Community = require("./models/communityModel");
 
@@ -279,12 +279,12 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
             metadataResponse.data.login.email,
             "I am counting on you metadataResponse.data.login.email"
           );
-          Community.findOne({ email: metadataResponse.data.login.email }).then(
-            (community) => {
+          Community.findOne({ email: metadataResponse.data.login.email })
+            .then((community) => {
               console.log(community, "i am counting on you community");
 
-              MailChimp.findOne({ communityId: community._id }).then(
-                (mailChimpCommunityAccount) => {
+              MailChimp.findOne({ communityId: community._id })
+                .then((mailChimpCommunityAccount) => {
                   console.log(
                     mailChimpCommunityAccount,
                     "i am counting on you mailChimpAccount"
@@ -296,37 +296,40 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                       server: metadataResponse.data.dc,
 
                       apiEndPoint: metadataResponse.data.api_endpoint,
-                    }).then(async () => {
-                      console.log(
-                        community,
-                        "I am counting on you commmunity for save error checking"
-                      );
-                      community.isMailChimpConnected = true;
-                      // const [a] = community;
-                      await community.save({
-                        new: true,
+                    })
+                      .then(async () => {
+                        console.log(
+                          community,
+                          "I am counting on you commmunity for save error checking"
+                        );
+                        community.isMailChimpConnected = true;
+                        // const [a] = community;
+                        await community.save({
+                          new: true,
 
-                        validateModifiedOnly: true,
-                      });
+                          validateModifiedOnly: true,
+                        });
 
-                      console.log(
-                        "mailChimpCommunityCreated",
-                        "hey i am counting on you mailchimp community id"
-                      );
-                      res.status(200).json({
-                        status: "SUCCESS",
-                      });
-                    });
+                        console.log(
+                          "mailChimpCommunityCreated",
+                          "hey i am counting on you mailchimp community id"
+                        );
+                        res.status(200).json({
+                          status: "SUCCESS",
+                        });
+                      })
+                      .catch((error) => console.log(error));
                   } else {
                     res.status(200).json({
                       status: "You already have one for same communityId",
                     });
                   }
-                }
-              );
-            }
-          );
-        });
+                })
+                .catch((error) => console.log(error));
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
     });
 });
 
@@ -373,4 +376,91 @@ app.get("/api-eureka/eureka/v1/logout", (req, res) => {
 app.use("/api-eureka/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
+app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
+  const oauth2 = new jsforce.OAuth2({
+    clientId: process.env.SALESFORCE_CLIENT_ID,
+    clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
+    redirectUri: process.env.SALESFORCE_REDIRECT_URI,
+  });
+  res.redirect(oauth2.getAuthorizationUrl({}));
+});
+
+app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
+  console.log(req.query.code, "I am counting on you salesforce code");
+
+  const oauth2 = new jsforce.OAuth2({
+    clientId: process.env.SALESFORCE_CLIENT_ID,
+    clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
+    redirectUri: process.env.SALESFORCE_REDIRECT_URI,
+  });
+  const conn = new jsforce.Connection({ oauth2: oauth2 });
+  conn.authorize(req.query.code, function (err, userInfo) {
+    if (err) {
+      return console.error(err);
+    }
+    const conn2 = new jsforce.Connection({
+      instanceUrl: conn.instanceUrl,
+      accessToken: conn.accessToken,
+    });
+
+    conn2.identity(function (err, res) {
+      if (err) {
+        return console.error(err);
+      }
+
+      //console.log("res:" + res);
+      console.log("user ID: " + res.user_id);
+      console.log("organization ID: " + res.organization_id);
+      console.log("username: " + res.username);
+      console.log("display name: " + res.display_name);
+
+      console.log("Access Token:" + conn.accessToken);
+      console.log("Instance url:" + conn.instanceUrl);
+
+      Community.findOne({ email: res.username })
+        .then((community) => {
+          console.log(community, "i am counting on you community");
+
+          SalesForce.findOne({ communityId: community._id })
+            .then((salesForceCommunityAccount) => {
+              console.log(
+                salesForceCommunityAccount,
+                "i am counting on you salesForceAccount"
+              );
+              if (!salesForceCommunityAccount) {
+                SalesForce.create({
+                  communityId: community._id,
+                  accessToken: conn.accessToken,
+                  instanceUrl: conn.instanceUrl,
+                })
+                  .then(async () => {
+                    console.log(
+                      community,
+                      "I am counting on you commmunity for save error checking"
+                    );
+                    community.isSalesForceConnected = true;
+                    // const [a] = community;
+                    await community.save({
+                      new: true,
+
+                      validateModifiedOnly: true,
+                    });
+
+                    response.status(200).json({
+                      status: "SUCCESS",
+                    });
+                  })
+                  .catch((err) => console.log(err));
+              } else {
+                response.status(200).json({
+                  status: "You already have one for same communityId",
+                });
+              }
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
+  });
+});
 module.exports = app;

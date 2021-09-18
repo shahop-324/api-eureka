@@ -29,6 +29,11 @@ const communitySchema = new mongoose.Schema(
         "A Community name must have less or equal than 100 characters",
       ],
     },
+    isSalesForceConnected:{
+      type:Boolean,
+      default:false
+    },
+
     policySigned: {
       type: Boolean,
       required: [true, "A community must sign policy"],
