@@ -15,7 +15,7 @@ import Eventbrite from "./../../Integrations/Eventbrite";
 import Mailchimp from "./../Integration/Cards/Mailchimp";
 import Intercom from "./../../Integrations/Intercomm";
 import Hubspot from "./../../Integrations/Hubspot";
-import Salesforce from "./../../Integrations/Salesforce";
+import Salesforce from "./../Integration/Cards/Salesforce";
 import Slack from "./../../Integrations/Slack";
 import Twitter from "./../../Integrations/Twitter";
 import Marketo from "./../../Integrations/Marketo";
@@ -150,6 +150,7 @@ const Integrations = () => {
         <div className="px-4 py-4">
         {/* <Eventbrite /> */}
         <Mailchimp />
+        <Salesforce />
         {/* <Intercom />
         <Hubspot />
         <Salesforce />

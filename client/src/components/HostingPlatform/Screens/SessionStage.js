@@ -299,7 +299,6 @@ const SessionStage = () => {
   let row = "1fr 1fr";
 
   const handleChangeGrid = () => {
-  
     if (allStreams.length * 1 === 1) {
       col = "1fr";
       row = "1fr";
@@ -335,8 +334,6 @@ const SessionStage = () => {
     dispatch(fetchSessionForSessionStage(sessionId));
 
     socket.on("updatedSession", ({ session }) => {
-  
-
       dispatch(
         // ! TODO
         sessionActions.EditSession({
@@ -346,8 +343,6 @@ const SessionStage = () => {
     });
 
     socket.on("updatedCurrentSession", ({ session }) => {
-  
-
       dispatch(
         // ! TODO
         sessionActions.FetchSession({
@@ -357,8 +352,6 @@ const SessionStage = () => {
     });
 
     socket.on("stageMembers", ({ stageMembers }) => {
-   
-
       dispatch(
         // ! TODO
         stageActions.FetchStageMembers({
@@ -368,7 +361,6 @@ const SessionStage = () => {
     });
 
     socket.on("sessionRoomData", ({ sessionUsers }) => {
-    
       dispatch(
         // ! TODO
         userActions.FetchPeopleInSession({
@@ -588,6 +580,9 @@ const SessionStage = () => {
 
           handleVideoIsEnabledChange(options.uid, true);
           handleAudioIsEnabledChange(options.uid, true);
+
+          turnOffAudio(options.uid)
+          turnOffVideo(options.uid)
         }
       });
 
@@ -617,8 +612,6 @@ const SessionStage = () => {
       setVolumeIndicators(arr);
 
       volumes.forEach((volume) => {
-        
-
         if (volume.level > 5) {
           // volume.uid.toString() is speaking
           setVolumeIndicators((prev) => {
@@ -657,8 +650,6 @@ const SessionStage = () => {
 
       if (!volumes[0]) return;
 
-      
-
       let loudest = volumes[0].level;
       let loudestUID = volumes[0].uid;
 
@@ -668,8 +659,6 @@ const SessionStage = () => {
           loudestUID = volumes[i].uid;
         }
       }
-
-    
 
       // Get loudest person with this UID from allStreams
 
@@ -714,6 +703,14 @@ const SessionStage = () => {
         rtc.localVideoTrack && rtc.localVideoTrack.close();
       }
 
+      if (rtc.localScreenTrack) {
+        rtc.localScreenTrack.close();
+      }
+
+      if (rtc.screenClient) {
+        await rtc.screenClient.leave();
+      }
+
       // Traverse all remote users.
       rtc.client.remoteUsers.forEach((user) => {
         // Destroy the dynamically created DIV containers.
@@ -735,6 +732,14 @@ const SessionStage = () => {
     if (agoraRole === "host") {
       rtc.localAudioTrack && rtc.localAudioTrack.close();
       rtc.localVideoTrack && rtc.localVideoTrack.close();
+    }
+
+    if (rtc.localScreenTrack) {
+      rtc.localScreenTrack.close();
+    }
+
+    if (rtc.screenClient) {
+      await rtc.screenClient.leave();
     }
 
     // Traverse all remote users.
@@ -760,54 +765,54 @@ const SessionStage = () => {
       <div>
         {/* Stage Nav Goes here */}
         <StageNavComponent />
-        <div id="stage-full-screen-element" className="d-flex flex-column align-items-center" style={{height: "100%"}}>
-        <StageBody openSideDrawer={sideDrawerOpen}>
-          {/* Stream body goes here */}
-          <StreamBody
-            handleOpenSideDrawer={handleOpenSideDrawer}
-            sideDrawerOpen={sideDrawerOpen}
-            col={col}
-            row={row}
-            allStreams={allStreams}
-            screenStream={screenStream}
-            prominentStream={prominentStream}
-            mainStream={mainStream}
-            miniStreams={miniStreams}
-            view={view}
-            audioStreamStat={audioStreamStat}
-            videoStreamStat={videoStreamStat}
-            volumeIndicators={volumeIndicators}
-            peopleInThisSession={peopleInThisSession}
+        <div
+          id="stage-full-screen-element"
+          className="d-flex flex-column align-items-center"
+          style={{ height: "100%" }}
+        >
+          <StageBody openSideDrawer={sideDrawerOpen}>
+            {/* Stream body goes here */}
+            <StreamBody
+              handleOpenSideDrawer={handleOpenSideDrawer}
+              sideDrawerOpen={sideDrawerOpen}
+              col={col}
+              row={row}
+              allStreams={allStreams}
+              screenStream={screenStream}
+              prominentStream={prominentStream}
+              mainStream={mainStream}
+              miniStreams={miniStreams}
+              view={view}
+              audioStreamStat={audioStreamStat}
+              videoStreamStat={videoStreamStat}
+              volumeIndicators={volumeIndicators}
+              peopleInThisSession={peopleInThisSession}
+            />
+
+            {/* Stage side drawer component goes here */}
+
+            {sideDrawerOpen && <StageSideDrawerComponent />}
+          </StageBody>
+
+          {/* Stage Controls components */}
+          <StageControlsComponent
+            handleStopScreenShare={handleStopScreenShare}
+            handleSwitchToGalleryView={handleSwitchToGalleryView}
+            handleSwitchToGridView={handleSwitchToGridView}
+            handleSwitchToSpotlightView={handleSwitchToSpotlightView}
+            handleOpenPhotoBooth={handleOpenPhotoBooth}
+            videoIsEnabled={videoIsEnabled}
+            turnOffVideo={turnOffVideo}
+            turnOnVideo={turnOnVideo}
+            options={options}
+            audioIsEnabled={audioIsEnabled}
+            turnOffAudio={turnOffAudio}
+            turnOnAudio={turnOnAudio}
+            screenSharingIsEnabled={screenSharingIsEnabled}
+            startScreenCall={startScreenCall}
+            setScreenSharingIsEnabled={setScreenSharingIsEnabled}
           />
-
-          {/* Stage side drawer component goes here */}
-
-          {sideDrawerOpen && <StageSideDrawerComponent />}
-        </StageBody>
-
-        {/* Stage Controls components */}
-        <StageControlsComponent
-          handleStopScreenShare={handleStopScreenShare}
-          handleSwitchToGalleryView={handleSwitchToGalleryView}
-          handleSwitchToGridView={handleSwitchToGridView}
-          handleSwitchToSpotlightView={handleSwitchToSpotlightView}
-          handleOpenPhotoBooth={handleOpenPhotoBooth}
-          videoIsEnabled={videoIsEnabled}
-          turnOffVideo={turnOffVideo}
-          turnOnVideo={turnOnVideo}
-          options={options}
-          audioIsEnabled={audioIsEnabled}
-          turnOffAudio={turnOffAudio}
-          turnOnAudio={turnOnAudio}
-          screenSharingIsEnabled={screenSharingIsEnabled}
-          startScreenCall={startScreenCall}
-          
-          setScreenSharingIsEnabled={setScreenSharingIsEnabled}
-        />
-
         </div>
-
-       
       </div>
 
       <PhotoBooth open={openPhotoBooth} handleClose={handleClosePhotoBooth} />
