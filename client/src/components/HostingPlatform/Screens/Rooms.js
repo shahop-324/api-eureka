@@ -13,10 +13,6 @@ import {
   fetchNumberOfPeopleOnTable,
 } from "../../../actions";
 
-
-
-
-
 const Rooms = () => {
   const dispatch = useDispatch();
   const params = useParams();

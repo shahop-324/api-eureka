@@ -12,6 +12,48 @@ import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
 import Faker from "faker";
 import BoothLiveStream from "./BoothLiveStream";
+import styled  from "styled-components";
+
+const ThemedBackgroundButtonOutlined = styled.div`
+background-color: transparent;
+text-decoration: none !important;
+border: 1px solid #152d35 !important;
+color: #152d35;
+
+outline: none !important;
+
+&:hover {
+  background-color: #152d35;
+  color: #ffffff;
+  cursor: pointer;
+
+}
+`
+const ThemedBackgroundButtonFilled = styled.div`
+
+
+
+
+outline: none !important;
+
+background-color: #152d35;
+border: 1px solid #152d35 !important;
+  color: #ffffff;
+ 
+
+&:hover {
+  background-color: transparent;
+  color: #152d35;
+
+  background-color: transparent;
+text-decoration: none !important;
+
+  cursor: pointer;
+
+}
+`
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,22 +124,22 @@ const BoothArea = () => {
           </div>
 
           <div>
-            <button
+            <ThemedBackgroundButtonOutlined
               onClick={() => {
                 handleOpenAssets();
               }}
               className="btn btn-outline-primary btn-outline-text me-3"
             >
               Assets
-            </button>
-            <button
+            </ThemedBackgroundButtonOutlined>
+            <ThemedBackgroundButtonOutlined
               onClick={() => {
                 handleOpenLiveStream();
               }}
               className="btn btn-outline-primary btn-outline-text"
             >
               Watch Live
-            </button>
+            </ThemedBackgroundButtonOutlined>
           </div>
         </div>
 
@@ -169,9 +211,9 @@ const BoothArea = () => {
             </div>
 
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
-              <button className="btn btn-primary btn-outline-text">
+              <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
                 Mark as interested
-              </button>
+              </ThemedBackgroundButtonFilled>
             </div>
           </div>
         </div>

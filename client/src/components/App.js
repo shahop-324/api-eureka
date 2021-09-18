@@ -582,7 +582,7 @@ class App extends React.Component {
                 <Route
                   path="/community/:communityId/event/:eventId/hosting-platform/session/:sessionId"
                   exact
-                  component={SessionScreen}
+                  component={SessionStage}
                 />
               )}
 

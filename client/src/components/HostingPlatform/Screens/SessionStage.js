@@ -1,1086 +1,822 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Chip from "@material-ui/core/Chip";
-import Faker from "faker";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 
-import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
-import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
-import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded"; // Resume
-import HomeRoundedIcon from "@material-ui/icons/HomeRounded"; // Live Stage
-import AlbumRoundedIcon from "@material-ui/icons/AlbumRounded"; // Recording
-import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
-import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
-import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
-import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
-import KeyboardTabRoundedIcon from "@material-ui/icons/KeyboardTabRounded"; // Keyboard tab rounded Icon
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import {
+  StageBody,
+  CollapseIcon,
+  VideoStreamContainer,
+  GalleryView,
+  GridView,
+  GridViewMini,
+  SpotlightView,
+} from "./../../../components/SessionStage/Elements";
+
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
 import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
 
-import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded"; // Watching group
-
-import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
-import ViewCompactRoundedIcon from "@material-ui/icons/ViewCompactRounded";
-import AccountBoxOutlinedIcon from "@material-ui/icons/AccountBoxOutlined";
-import { Avatar, makeStyles } from "@material-ui/core";
-import Poll from "../../Elements/Poll";
-import QnA from "../../Elements/Q&A";
-import ChatElement from "../../Elements/ChatElement";
-
-import { Dropdown } from "semantic-ui-react";
 import PhotoBooth from "../../Elements/PhotoBooth";
+import StageNavComponent from "../../SessionStage/StageNavComponent";
+import StageControlsComponent from "../../SessionStage/StageControlsComponent";
+import StageSideDrawerComponent from "../../SessionStage/StageSideDrawer";
+import { IconButton } from "@material-ui/core";
+import { useParams } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
-}));
+import { useDispatch, useSelector } from "react-redux";
+import socket from "../service/socket";
 
-const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown
-    // text="Grid"
-    icon={`${view} layout`}
-    // floating
-    // labeled
-    button
-    className="icon"
-  >
-    <Dropdown.Menu style={{ right: "0", left: "auto" }}>
-      <Dropdown.Item
-        icon="list layout"
-        text="List"
-        onClick={() => {
-          switchView("list");
-        }}
-      />
-      <Dropdown.Item
-        icon="grid layout"
-        text="Grid"
-        onClick={() => {
-          switchView("grid");
-        }}
-      />
-    </Dropdown.Menu>
-  </Dropdown>
-);
+import { userActions } from "../../../reducers/userSlice";
+import { stageActions } from "../../../reducers/stageSlice";
+import { sessionActions } from "../../../reducers/sessionSlice";
+import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPlayer";
+import AgoraRTC from "agora-rtc-sdk-ng";
 
-const Button = styled.div`
-  font-family: "Ubuntu";
-  font-weight: 500;
-  border: none;
-  background-color: #0b4f6c;
-  color: #dcc7be;
-  padding: 7px 12px;
-  width: max-content;
-  border-radius: 3px;
-  font-size: 0.9rem;
-`;
+import history from "../../../history";
+import ReactTooltip from "react-tooltip";
 
-const StageNav = styled.div`
-  height: 7vh;
-  background-color: #152d35;
-  width: 100%;
+import {
+  errorTrackerForFetchSessionForSessionStage,
+  fetchSessionForSessionStage,
+  getRTCToken,
+  getRTCTokenForScreenShare,
+} from "../../../actions";
+import ShareScreenPlayer from "../SessionStreamingComponents.js/ShareScreenPlayer";
+import StreamBody from "../Functions/Stage/StreamBody";
 
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 24px;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const StageBody = styled.div`
-  height: 86vh;
-  background-color: #345b63;
-  width: 100%;
-
-  position: relative;
-
-  display: grid;
-  grid-template-columns: 5fr 1.55fr;
-  /* grid-gap: 8px; */
-`;
-
-const GalleryView = styled.div`
-  height: 85vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 24px;
-  /* justify-content: center; */
-
-  padding: 8vh 3vw;
-`;
-
-const StageControl = styled.div`
-  height: 7vh;
-  background-color: #152d35;
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 24px;
-  align-items: center;
-`;
-
-const BrandLogo = styled.div`
-  height: 36px;
-  width: 36px;
-  background-color: #ffffff;
-  border-radius: 5px;
-`;
-
-const SessionName = styled.div`
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.82rem;
-  color: #ffffff;
-`;
-
-const ChipModified = styled.div`
-  color: #ffffff;
-  background-color: #f05050;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.82rem;
-  padding: 5px 15px;
-  border-radius: 15px;
-`;
-
-const BtnFilled = styled.div`
-  background-color: #345b63;
-  padding: 5px 8px;
-
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.8rem;
-  border-radius: 3px;
-  color: #dcc7be;
-  max-width: fit-content;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #1f545e;
-    color: #ffffff;
-  }
-`;
-
-const BtnOutlined = styled.div`
-  padding: 5px 8px;
-  background-color: transparent;
-  border: 1px solid #345b63;
-
-  color: #dcc7be;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.8rem;
-  border-radius: 3px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-const PeopleWatching = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  color: #ffffff;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.8rem;
-  border-radius: 3px;
-`;
-
-const BtnDanger = styled.div`
-  background-color: #dd352f;
-  padding: 10px 16px;
-
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.82rem;
-  border-radius: 3px;
-  color: #ffffff;
-  max-width: fit-content;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #ce2d2d;
-    color: #ffffff;
-  }
-`;
-
-const IconButton = styled.div`
-  background-color: #ffffffa9;
-
-  color: #1f545e;
-  padding: 7px;
-  border-radius: 10px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-const VideoStreamContainer = styled.div`
-  background-color: #83838383;
-  border-radius: 20px;
-  height: "180px";
-`;
-
-const SessionSideDrawer = styled.div`
-  padding: 6px 6px;
-  width: 100%;
-  height: 100%;
-  background-color: #212121;
-
-  background: rgba(220, 225, 225, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  /* border-radius: 10px; */
-  border: 1px solid rgba(255, 255, 255, 0.18);
-`;
-
-const SessionSideIconBtnNav = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 12px;
-
-  padding: 12px 7px;
-`;
-
-const TabButton = styled.div`
-  font-weight: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.7rem;
-
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  color: #ffffff;
-  background-color: ${(props) => (props.active ? "#152d35" : "#264049")};
-
-  padding: 5px 15px;
-  border-radius: 5px;
-  text-align: center;
-
-  &:hover {
-    background-color: #152d35;
-    cursor: pointer;
-  }
-`;
-const Divider = styled.div`
-  background-color: #ffffff46;
-  height: 1px;
-  width: 100%;
-
-  padding: 0px 7px;
-  margin-bottom: 10px;
-`;
-
-const SessionLinkNav = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-
-  border-bottom: 1px solid #152d35;
-`;
-
-const LinkTab = styled.div`
-  font-weight: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.8rem;
-
-  color: ${(props) => (props.active ? "#152d35" : "#ffffff")};
-
-  border-bottom: ${(props) => props.active && "1px solid #152d35"};
-
-  padding: 6px 10px;
-  text-align: center;
-
-  &:hover {
-    color: #152d35;
-    /* border-bottom: 1px solid #152d35; */
-    cursor: pointer;
-  }
-`;
-
-const PeopleListWidget = styled.div`
-  width: 100%;
-  height: auto;
-  padding: 15px;
-
-  background: #152d3509;
-  /* box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); */
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-`;
-
-const PersonName = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.76rem;
-  color: #212121;
-  display: block;
-`;
-
-const UserRoleTag = styled.div`
-  background-color: #152d35;
-  height: max-content;
-  border-radius: 5px;
-
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.7rem;
-  color: #ffffff;
-
-  padding: 4px 8px;
-`;
-
-const ViewCompleteProfileBtn = styled.div`
-  border: 1px solid #152d35;
-  background-color: transparent;
-  color: #152d35;
-  font-weight: 500;
-  font-size: 0.7rem;
-  font-family: "Ubuntu";
-
-  width: 100%;
-  text-align: center;
-  padding: 3px 10px;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #152d35;
-    color: #ffff;
-    cursor: pointer;
-  }
-`;
-
-const SessionVideoContainer = styled.div`
-  width: 100%;
-  height: auto;
-  padding: 15px;
-
-  background: #152d3509;
-  /* box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); */
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-`;
+let rtc = {
+  localAudioTrack: null,
+  localVideoTrack: null,
+  localScreenTrack: null,
+  client: null,
+  screenClient: null,
+};
 
 const SessionStage = () => {
-  const classes = useStyles();
+  const [volumeIndicators, setVolumeIndicators] = useState([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
+
+  const [audioStreamStat, setAudioStreamStat] = useState([]); // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
+
+  const [videoStreamStat, setVideoStreamStat] = useState([]); // Its an array of objects {uid: uid, videoIsEnabled: Boolean (true | false)}
+
+  const [view, setView] = useState("gallery");
+
+  const [allStreams, setAllStreams] = useState([]);
+
+  const [mainStream, setMainStream] = useState(null);
+
+  const [miniStreams, setMiniStreams] = useState([]);
+
+  const [prominentStream, setProminentStream] = useState(null);
+
+  const [screenStream, setScreenStream] = useState(null);
+
+  const [nonProminent, setNonProminent] = useState([]);
+
+  const [localStream, setLocalStream] = useState(null); // This is to keep track of local video track
+
+  const [remoteStreams, setRemoteStreams] = useState([]);
+
+  const handleAudioIsEnabledChange = (uid, bool) => {
+    setAudioStreamStat((prevArr) => {
+      // 1. Check if there is already one entry for this uid
+      const existing = prevArr.find((element) => element.uid === uid);
+
+      if (existing) {
+        // Take out every other entry and then push new entry on top of it
+        // and then save that in audioStreamStat
+
+        let filtered = prevArr.filter((element) => element.uid !== uid);
+
+        filtered.push({ uid: uid, audioIsEnabled: bool });
+        return filtered;
+      } else {
+        let stat = audioStreamStat;
+        stat.push({ uid: uid, audioIsEnabled: bool });
+        return stat;
+      }
+    });
+  };
+
+  const handleVideoIsEnabledChange = (uid, bool) => {
+    setVideoStreamStat((prevArr) => {
+      // 1. Check if there is already one entry for this uid
+      const existing = prevArr.find((element) => element.uid === uid);
+
+      if (existing) {
+        // Take out every other entry and then push new entry on top of it
+        // and then save that in videoStreamStat
+
+        let filtered = prevArr.filter((element) => element.uid !== uid);
+
+        filtered.push({ uid: uid, videoIsEnabled: bool });
+        return filtered;
+      } else {
+        let stat = videoStreamStat;
+        stat.push({ uid: uid, videoIsEnabled: bool });
+        return stat;
+      }
+    });
+  };
+
+  const handleAddToAllStreams = (stream, uid) => {
+    setAllStreams((prevStreams) => {
+      prevStreams.push({ stream: stream, uid: uid });
+      return prevStreams;
+    });
+  };
+
+  const handleRemoveFromAllStreams = (uid) => {
+    setAllStreams((prevStreams) => {
+      return prevStreams.filter((object) => object.uid !== uid);
+    });
+  };
+
+  const handleChangeMainStream = (stream, uid) => {
+    setMainStream({ stream: stream, uid: uid });
+  };
+
+  const handleAddToMiniStreams = (stream, uid) => {
+    setMiniStreams((prevMiniStreams) =>
+      prevMiniStreams.push({ stream: stream, uid: uid })
+    );
+  };
+
+  const handleRemoveFromMiniStreams = (uid) => {
+    setMiniStreams((prevStreams) => {
+      return prevStreams.filter((object) => object.uid !== uid);
+    });
+  };
+
+  const handleChangeProminentStream = (stream, uid) => {
+    setProminentStream({ stream: stream, uid: uid });
+  };
+
+  const handleChangeLocalStream = (stream, uid) => {
+    setLocalStream({ stream: stream, uid: uid });
+  };
+
+  const handleAddToRemoteStreams = (stream, uid) => {
+    setRemoteStreams((prevStreams) => {
+      return prevStreams.push({ stream: stream, uid: uid });
+    });
+  };
+
+  const handleRemoveFromRemoteStreams = (uid) => {
+    setRemoteStreams((prevStreams) => {
+      return prevStreams.filter((object) => object.uid !== uid);
+    });
+  };
+
+  const handleSwitchToGridView = () => {
+    const [firstStream] = allStreams;
+
+    // Set first stream from all streams as main stream
+
+    handleChangeMainStream(firstStream.stream, firstStream.uid);
+
+    // Set rest of streams from all streams as mini streams
+
+    allStreams.forEach((element, index) => {
+      if (index !== 0) {
+        miniStreams.push(element);
+      }
+    });
+
+    // Set view as grid now
+
+    setView("grid");
+  };
+
+  const handleSwitchToGalleryView = () => {
+    setView("gallery");
+  };
+
+  const handleSwitchToSpotlightView = () => {
+    setView("spotlight");
+  };
+
+  const [videoIsEnabled, setVideoIsEnabled] = useState(true);
+  const [audioIsEnabled, setAudioIsEnabled] = useState(true);
+  const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
+
+  const turnOffVideo = async (uid) => {
+    if (!rtc.localVideoTrack) return;
+    await rtc.localVideoTrack.setEnabled(false);
+
+    handleVideoIsEnabledChange(uid, false);
+
+    setVideoIsEnabled(false);
+  };
+  const turnOnVideo = async (uid) => {
+    if (!rtc.localVideoTrack) return;
+    await rtc.localVideoTrack.setEnabled(true);
+
+    handleVideoIsEnabledChange(uid, true);
+
+    setVideoIsEnabled(true);
+  };
+
+  const turnOffAudio = async (uid) => {
+    if (!rtc.localAudioTrack) return;
+    await rtc.localAudioTrack.setEnabled(false);
+
+    handleAudioIsEnabledChange(uid, false);
+
+    setAudioIsEnabled(false);
+  };
+  const turnOnAudio = async (uid) => {
+    if (!rtc.localAudioTrack) return;
+    await rtc.localAudioTrack.setEnabled(true);
+
+    handleAudioIsEnabledChange(uid, true);
+
+    setAudioIsEnabled(true);
+  };
+
+  const { peopleInThisSession } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const sessionId = params.sessionId;
+  const eventId = params.eventId;
+  const communityId = params.communityId;
+
+  const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
 
   const [openPhotoBooth, setOpenPhotoBooth] = useState(false);
 
-  const [activeLinkTab, setActiveLinkTab] = useState("chat");
+  const [uplinkStat, setUplinkStat] = useState("");
+  const [downlinkStat, setDownLinkStat] = useState("");
 
-  const [activeTab, setActiveTab] = useState("activity");
+  const [localVolumeLevel, setLocalVolumeLevel] = useState("");
 
-  const [view, setView] = useState("grid");
-
-  const switchView = (view) => {
-    setView(view);
+  const handleOpenSideDrawer = () => {
+    setSideDrawerOpen(!sideDrawerOpen);
   };
 
   const handleOpenPhotoBooth = () => {
     setOpenPhotoBooth(true);
-  }
+  };
 
   const handleClosePhotoBooth = () => {
     setOpenPhotoBooth(false);
+  };
+
+  const handleStopScreenShare = async () => {
+    rtc.localScreenTrack && rtc.localScreenTrack.close();
+    // await rtc.screenClient.unpublish(rtc.localScreenTrack);
+    await rtc.screenClient.leave().then(() => {
+      setView("gallery");
+    });
+  };
+
+  const userId = useSelector((state) => state.eventAccessToken.id);
+
+  const { token, screenToken } = useSelector((state) => state.RTC);
+
+  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+
+  const agoraRole = sessionRole !== "audience" ? "host" : "audience";
+
+  // Defined options for connecting to Agora RTC server
+
+  let options = {
+    // Pass your app ID here.
+    appId: "702d57c3092c4fd389eb7ea5a505d471",
+    // Set the channel name.
+    channel: sessionId,
+    // Set the user role in the channel.
+    role: agoraRole,
+    // Use a temp token
+    token: token,
+    // Uid
+    uid: userId,
+  };
+
+  let col = "1fr 1fr 1fr 1fr";
+  let row = "1fr 1fr";
+
+  const handleChangeGrid = () => {
+    if (allStreams.length * 1 === 1) {
+      col = "1fr";
+      row = "1fr";
+    }
+    if (allStreams.length * 1 === 2) {
+      col = "1fr 1fr";
+      row = "1fr";
+    }
+    if (allStreams.length * 1 === 3) {
+      col = "1fr 1fr 1fr";
+      row = "1fr";
+    }
+  };
+
+  useEffect(() => {
+    handleChangeGrid();
+  }, [allStreams]);
+
+  if (allStreams.length * 1 === 1) {
+    col = "1fr";
+    row = "1fr";
+  }
+  if (allStreams.length * 1 === 2) {
+    col = "1fr 1fr";
+    row = "1fr";
+  }
+  if (allStreams.length * 1 === 3) {
+    col = "1fr 1fr 1fr";
+    row = "1fr";
   }
 
-  const [name, setName] = useState(null);
-  const [image, setImage] = useState(null);
-  const [msg, setMsg] = useState(null);
+  useEffect(() => {
+    dispatch(fetchSessionForSessionStage(sessionId));
 
-  const createReplyWidget = (name, img, msg) => {
-    setName(name);
-    setImage(img);
-    setMsg(msg);
+    socket.on("updatedSession", ({ session }) => {
+      dispatch(
+        // ! TODO
+        sessionActions.EditSession({
+          session: session,
+        })
+      );
+    });
 
-    console.log("create reply widget was invoked");
+    socket.on("updatedCurrentSession", ({ session }) => {
+      dispatch(
+        // ! TODO
+        sessionActions.FetchSession({
+          session: session,
+        })
+      );
+    });
+
+    socket.on("stageMembers", ({ stageMembers }) => {
+      dispatch(
+        // ! TODO
+        stageActions.FetchStageMembers({
+          stageMembers: stageMembers,
+        })
+      );
+    });
+
+    socket.on("sessionRoomData", ({ sessionUsers }) => {
+      dispatch(
+        // ! TODO
+        userActions.FetchPeopleInSession({
+          peopleInThisSession: sessionUsers,
+        })
+      );
+    });
+
+    window.addEventListener("beforeunload", leaveStreaming);
+
+    return () => {
+      leaveStreaming();
+    };
+  }, [dispatch, sessionId]);
+
+  // This is for screen sharing purpose
+
+  const startScreenCall = async () => {
+    rtc.screenClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    rtc.client.setClientRole(options.role);
+
+    await rtc.screenClient.join(
+      options.appId,
+      sessionId,
+      screenToken,
+      `screen_${userId}`
+    );
+
+    rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack();
+
+    await rtc.screenClient.setClientRole("host");
+
+    await rtc.screenClient.publish(rtc.localScreenTrack);
+
+    return rtc.localScreenTrack;
   };
 
-  const destroyReplyWidget = () => {
-    setName(null);
-    setImage(null);
-    setMsg(null);
+  // const shareScreenEvent = () => {
+  //   startScreenCall();
+  //   const track = startScreenCall();
+
+  //   if(track) {
+  //     track.on('track-ended', () => {
+  //       console.log('screen share track-ended');
+  //       handleStopScreenShare();
+  //     })
+  //   }
+  // }
+
+  // if(r)
+
+  const startAdvancedLiveStreaming = async () => {
+    // Created client object using Agora SDK
+    rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+
+    // Set client role
+    rtc.client.setClientRole(options.role);
+
+    // Get client network quality
+    rtc.client.on("network-quality", (stats) => {
+      setDownLinkStat(stats.downlinkNetworkQuality);
+      setUplinkStat(stats.uplinkNetworkQuality);
+    });
+
+    // Listen for event "user-published" explanation: Some kind of audio or video stream is published
+    rtc.client.on("user-published", async (user, mediaType) => {
+      console.info("some media stream was just published");
+
+      const uid = user.uid.toString();
+
+      if (document.getElementById(uid)) {
+        console.info("Already in session!");
+
+        // Subscribe to a remote user.
+        await rtc.client.subscribe(user, mediaType);
+        console.info("subscribe success");
+
+        // If the subscribed track is video.
+        if (mediaType === "video") {
+          // Get `RemoteVideoTrack` in the `user` object.
+          const remoteVideoTrack = user.videoTrack;
+
+          // If user was already in session then just play his video in his respective container
+
+          if (document.getElementById(uid)) {
+            remoteVideoTrack.play(uid);
+          }
+
+          handleAddToAllStreams(remoteVideoTrack, uid);
+
+          handleVideoIsEnabledChange(uid, true);
+        }
+        // If the subscribed track is audio.
+        if (mediaType === "audio") {
+          // Get `RemoteAudioTrack` in the `user` object.
+          const remoteAudioTrack = user.audioTrack;
+          // Play the audio track. No need to pass any DOM element.
+          remoteAudioTrack.play();
+
+          handleAudioIsEnabledChange(uid, true);
+        }
+
+        // Now return after this as this was existing user
+        return;
+      }
+
+      // Subscribe to a remote user.
+      await rtc.client.subscribe(user, mediaType);
+      console.log("subscribe success");
+
+      // If the subscribed track is video.
+      if (mediaType === "video") {
+        // Get `RemoteVideoTrack` in the `user` object.
+        const remoteVideoTrack = user.videoTrack;
+
+        if (uid.startsWith("screen")) {
+          // Set view to screen share mode (grid mode)
+
+          setView("screenShare");
+
+          // Set this screen share stream as screenStream
+          setScreenStream({ uid: uid, stream: remoteVideoTrack });
+
+          // We already have all streams maintained in allStreams
+
+          // So adopt grid mode and then render screenStream as mainStream and rest all as mini stream
+        }
+
+        // Remote video track is now added to allStreams and so it will start playing
+
+        if (!uid.startsWith("screen")) {
+          handleAddToAllStreams(remoteVideoTrack, uid);
+
+          handleVideoIsEnabledChange(uid, true);
+        }
+      }
+
+      // If the subscribed track is audio.
+      if (mediaType === "audio") {
+        // Get `RemoteAudioTrack` in the `user` object.
+        const remoteAudioTrack = user.audioTrack;
+        // Play the audio track. No need to pass any DOM element.
+        remoteAudioTrack.play();
+
+        handleAudioIsEnabledChange(uid, true);
+      }
+    });
+
+    rtc.client.on("user-unpublished", async (user, mediaType) => {
+      const uid = user.uid.toString();
+
+      if (uid.startsWith("screen")) {
+        rtc.localScreenTrack && rtc.localScreenTrack.close();
+        await rtc.screenClient.leave().then(() => {
+          setView("gallery");
+        });
+        setScreenSharingIsEnabled(false);
+      }
+
+      // 1. Manage audio muted
+      if (mediaType === "audio") {
+        handleAudioIsEnabledChange(uid, false);
+      }
+
+      // 2. Manage video muted
+      if (mediaType === "video") {
+        handleVideoIsEnabledChange(uid, false);
+      }
+
+      console.info(`User with UID ${userId} unpublished media stream.`);
+    });
+
+    rtc.client.on("user-left", (user) => {
+      const uid = user.uid.toString(); // the id of stream that just left
+
+      if (uid.startsWith("screen")) {
+        console.log("screen sharing track unpblished");
+      }
+
+      handleRemoveFromAllStreams(uid);
+
+      handleAudioIsEnabledChange(uid, false);
+
+      handleVideoIsEnabledChange(uid, false);
+
+      console.info(`User with UID ${uid} just left the meeting.`);
+    });
+
+    await rtc.client
+      .join(options.appId, options.channel, options.token, options.uid)
+      .then(async () => {
+        console.info("Bluemeet: Joined RTC channel");
+
+        // If its host or speaker who just joined channel
+
+        if (agoraRole !== "audience") {
+          rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
+            encoderConfig: {
+              sampleRate: 48000,
+              stereo: true,
+              bitrate: 128,
+            },
+          });
+          rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
+            encoderConfig: "120p_1",
+          });
+
+          // Set to all streams
+          handleAddToAllStreams(rtc.localVideoTrack, options.uid);
+
+          // Set to local stream
+          handleChangeLocalStream(rtc.localVideoTrack, options.uid);
+
+          await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+
+          console.info("publish success!");
+
+          handleVideoIsEnabledChange(options.uid, true);
+          handleAudioIsEnabledChange(options.uid, true);
+
+          turnOffAudio(options.uid)
+          turnOffVideo(options.uid)
+        }
+      });
+
+    rtc.client
+      .enableDualStream()
+      .then(() => {
+        console.log("Enable Dual stream success!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // Find active speakers
+    rtc.client.enableAudioVolumeIndicator();
+
+    rtc.client.on("volume-indicator", (volumes) => {
+      let arr = [];
+
+      volumeIndicators.forEach((element) => {
+        arr.push({
+          uid: element.uid,
+          volume: element.volume,
+          isSpeaking: false,
+        });
+      });
+
+      setVolumeIndicators(arr);
+
+      volumes.forEach((volume) => {
+        if (volume.level > 5) {
+          // volume.uid.toString() is speaking
+          setVolumeIndicators((prev) => {
+            const filtered = prev.filter(
+              (object) => object.uid !== volume.uid.toString()
+            );
+
+            filtered.push({
+              uid: volume.uid.toString(),
+              volume: volume.level,
+              isSpeaking: true,
+            });
+
+            return filtered;
+          });
+        } else if (volume.level < 5) {
+          // volume.uid.toString() is not speaking
+
+          setVolumeIndicators((prev) => {
+            const filtered = prev.filter(
+              (object) => object.uid !== volume.uid.toString()
+            );
+
+            filtered.push({
+              uid: volume.uid.toString(),
+              volume: volume.level,
+              isSpeaking: false,
+            });
+
+            return filtered;
+          });
+        }
+      });
+
+      // Find who is loudest
+
+      if (!volumes[0]) return;
+
+      let loudest = volumes[0].level;
+      let loudestUID = volumes[0].uid;
+
+      for (let i = 0; i < volumes.length; i++) {
+        if (loudest < volumes[i].level) {
+          loudest = volumes[i].level;
+          loudestUID = volumes[i].uid;
+        }
+      }
+
+      // Get loudest person with this UID from allStreams
+
+      const [LoudestPerson] = allStreams.filter(
+        (object) => object.uid === loudestUID
+      );
+
+      // LoudestPerson is an object {stream: (video stream) | uid: uid (user identifier)}
+
+      // Set this as prominentStream Now
+
+      // Now we will get to know who is loudest every 2 seconds and we will update the ui accordingly
+
+      if (LoudestPerson) {
+        if (LoudestPerson.stream && LoudestPerson.uid) {
+          handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
+        }
+      }
+
+      // Now set all except prominent in nonProminent streams
+
+      // nonProminent is an array of all except prominent
+
+      const nonProminent = allStreams.filter(
+        (object) => object.uid !== loudestUID
+      );
+
+      setNonProminent(nonProminent);
+
+      // Now we can just use prominent and non prominent to render spotlight view and non screen share and not pinned view of grid mode
+    });
+
+    setInterval(() => {
+      if (!rtc.localAudioTrack) return;
+      const level = rtc.localAudioTrack.getVolumeLevel();
+      setLocalVolumeLevel(level * 100);
+    }, 1000);
+
+    document.getElementById("leave-session").onclick = async function () {
+      if (agoraRole === "host") {
+        rtc.localAudioTrack && rtc.localAudioTrack.close();
+        rtc.localVideoTrack && rtc.localVideoTrack.close();
+      }
+
+      if (rtc.localScreenTrack) {
+        rtc.localScreenTrack.close();
+      }
+
+      if (rtc.screenClient) {
+        await rtc.screenClient.leave();
+      }
+
+      // Traverse all remote users.
+      rtc.client.remoteUsers.forEach((user) => {
+        // Destroy the dynamically created DIV containers.
+        const playerContainer = document.getElementById(user.uid);
+        playerContainer && playerContainer.remove();
+
+        // ReactDOM.unmountComponentAtNode(document.getElementById(user.uid));
+      });
+
+      // Leave the channel.
+      await rtc.client.leave();
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+      );
+    };
   };
+
+  const leaveStreaming = async () => {
+    if (agoraRole === "host") {
+      rtc.localAudioTrack && rtc.localAudioTrack.close();
+      rtc.localVideoTrack && rtc.localVideoTrack.close();
+    }
+
+    if (rtc.localScreenTrack) {
+      rtc.localScreenTrack.close();
+    }
+
+    if (rtc.screenClient) {
+      await rtc.screenClient.leave();
+    }
+
+    // Traverse all remote users.
+    rtc.client.remoteUsers.forEach((user) => {
+      // Destroy the dynamically created DIV containers.
+      const playerContainer = document.getElementById(user.uid);
+      playerContainer && playerContainer.remove();
+    });
+
+    // Leave the channel.
+    await rtc.client.leave();
+    history.push(
+      `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+    );
+  };
+
+  useEffect(() => {
+    startAdvancedLiveStreaming();
+  }, []);
 
   return (
     <>
       <div>
-        <StageNav className="px-3 py-1">
-          <div className="d-flex flex-row align-items-center">
-            <BrandLogo className="me-3" />
-            <SessionName className="me-3">
-              Annual Founder Q&A with community
-            </SessionName>
-            {/* <Chip label="Live" color="secondary" /> */}
-            <ChipModified>Live</ChipModified>
-          </div>
-
-          <div className="d-flex flex-row align-items-center justify-content-center">
-            <BtnOutlined className="me-3">
-              <PauseRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              Take break
-            </BtnOutlined>
-            <BtnFilled className="me-3">
-              <HomeRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              Live stage
-            </BtnFilled>
-            <BtnOutlined>
-              <StopRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              End session
-            </BtnOutlined>
-          </div>
-
-          <div className="d-flex flex-row align-items-center justify-content-end">
-            <BtnOutlined className="me-3">
-              <AlbumRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              Recording
-            </BtnOutlined>
-
-            <PeopleWatching className="me-3">
-              <PeopleOutlineRoundedIcon className="me-2" />
-              2,340 watching
-            </PeopleWatching>
-            <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
-              variant="rounded"
-            />
-          </div>
-          {/* <div>1</div>
-          <div>2</div>
-          <div>3</div> */}
-        </StageNav>
-
-        <StageBody>
-          <div>
-            <FirstPageRoundedIcon
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "16px",
-                color: "#ffffff",
-              }}
+        {/* Stage Nav Goes here */}
+        <StageNavComponent />
+        <div
+          id="stage-full-screen-element"
+          className="d-flex flex-column align-items-center"
+          style={{ height: "100%" }}
+        >
+          <StageBody openSideDrawer={sideDrawerOpen}>
+            {/* Stream body goes here */}
+            <StreamBody
+              handleOpenSideDrawer={handleOpenSideDrawer}
+              sideDrawerOpen={sideDrawerOpen}
+              col={col}
+              row={row}
+              allStreams={allStreams}
+              screenStream={screenStream}
+              prominentStream={prominentStream}
+              mainStream={mainStream}
+              miniStreams={miniStreams}
+              view={view}
+              audioStreamStat={audioStreamStat}
+              videoStreamStat={videoStreamStat}
+              volumeIndicators={volumeIndicators}
+              peopleInThisSession={peopleInThisSession}
             />
 
-            <div className="">
-              <GalleryView>
-                <VideoStreamContainer />
-                <VideoStreamContainer />
-                <VideoStreamContainer />
-                <VideoStreamContainer />
-                <VideoStreamContainer />
-              </GalleryView>
-            </div>
-          </div>
+            {/* Stage side drawer component goes here */}
 
-          <SessionSideDrawer>
-            <SessionSideIconBtnNav>
-              <TabButton
-                active={activeTab === "activity" ? true : false}
-                onClick={() => {
-                  setActiveTab("activity");
-                }}
-              >
-                Activity
-              </TabButton>
-              <TabButton
-                active={activeTab === "people" ? true : false}
-                onClick={() => {
-                  setActiveTab("people");
-                }}
-              >
-                People
-              </TabButton>
-              <TabButton
-                active={activeTab === "raisedHands" ? true : false}
-                onClick={() => {
-                  setActiveTab("raisedHands");
-                }}
-              >
-                Raised hands
-              </TabButton>
-              <TabButton
-                active={activeTab === "videos" ? true : false}
-                onClick={() => {
-                  setActiveTab("videos");
-                }}
-              >
-                Videos
-              </TabButton>
-            </SessionSideIconBtnNav>
+            {sideDrawerOpen && <StageSideDrawerComponent />}
+          </StageBody>
 
-            {/* <MainChatComponent /> */}
-
-            <div>
-              <Divider />
-            </div>
-
-            {(() => {
-              switch (activeTab) {
-                case "activity":
-                  return (
-                    <>
-                      <div>
-                        <SessionLinkNav>
-                          <LinkTab
-                            onClick={() => {
-                              setActiveLinkTab("chat");
-                            }}
-                            active={activeLinkTab === "chat" ? true : false}
-                          >
-                            Chat
-                          </LinkTab>
-                          <LinkTab
-                            onClick={() => {
-                              setActiveLinkTab("q&a");
-                            }}
-                            active={activeLinkTab === "q&a" ? true : false}
-                          >
-                            Q&A
-                          </LinkTab>
-                          <LinkTab
-                            onClick={() => {
-                              setActiveLinkTab("poll");
-                            }}
-                            active={activeLinkTab === "poll" ? true : false}
-                          >
-                            Poll
-                          </LinkTab>
-                        </SessionLinkNav>
-
-                        {(() => {
-                          switch (activeLinkTab) {
-                            case "chat":
-                              return (
-                                <div
-                                  className="d-flex flex-column"
-                                  style={{ height: "100%" }}
-                                >
-                                  {/* <div style={{ height: "69vh" }} className="py-3 px-3">
-                          <ChatMsgElement
-                            createReplyWidget={createReplyWidget}
-                            msgText={"Hi There"}
-                            image={Faker.image.avatar()}
-                            name={Faker.name.findName()}
-                          />
-                        </div> */}
-                                  <div
-                                    style={{ height: "69vh" }}
-                                    className="py-3 px-3"
-                                  >
-                                    <ChatElement />
-                                  </div>
-
-                                  {/* <div className="px-3">
-                          <MsgInput
-                            name={name}
-                            image={image}
-                            msg={msg}
-                            destroyReplyWidget={destroyReplyWidget}
-                            //  sendChannelMessage={sendChannelMessage}
-                          />
-                        </div> */}
-                                </div>
-                              );
-                            case "q&a":
-                              return (
-                                <div
-                                  className="d-flex flex-column"
-                                  style={{ height: "100%" }}
-                                >
-                                  <div
-                                    style={{ height: "69vh" }}
-                                    className="py-3 px-3"
-                                  >
-                                    {/* <SessionQnAComponent /> */}
-                                    <QnA />
-                                  </div>
-                                </div>
-                              );
-                            case "poll":
-                              return (
-                                <div
-                                  className="d-flex flex-column"
-                                  style={{ height: "100%" }}
-                                >
-                                  <div
-                                    style={{ height: "69vh" }}
-                                    className="py-3 px-3"
-                                  >
-                                    <Poll />
-                                  </div>
-                                </div>
-                              );
-
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    </>
-                  );
-
-                case "people":
-                  return (
-                    <div>
-                      <div className=" pt-2 px-2">
-                        <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
-                          <div
-                            class="ui icon input me-3"
-                            style={{ width: "100%" }}
-                          >
-                            <input
-                              type="text"
-                              placeholder="Search people..."
-                              className="form-control"
-                            />
-                            <i class="search icon"></i>
-                          </div>
-
-                          <DropdownIcon switchView={switchView} view={view} />
-                        </div>
-
-                        {(() => {
-                          switch (view) {
-                            case "grid":
-                              return (
-                                <div className="people-list-grid">
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                  <Avatar
-                                    src={Faker.image.avatar()}
-                                    variant="rounded"
-                                    className={classes.large}
-                                  />
-                                </div>
-                                // <div className="people-list-grid">
-                                //   {renderPeopleList(currentlyInEvent)}
-                                // </div>
-                              );
-                            case "list":
-                              return (
-                                <div>
-                                  <PeopleListWidget className="mb-3">
-                                    <div className="d-flex flex-row mb-4 justify-content-between">
-                                      <div className="d-flex flex-row">
-                                        <Avatar
-                                          src={Faker.image.avatar()}
-                                          alt={Faker.name.findName()}
-                                          variant="rounded"
-                                          className="me-3"
-                                        />
-                                        <div>
-                                          <PersonName>
-                                            {Faker.name.findName()}
-                                          </PersonName>
-                                          <PersonName>
-                                            {"Product manager, Bluemeet"}
-                                          </PersonName>
-                                        </div>
-                                      </div>
-
-                                      <UserRoleTag>Host</UserRoleTag>
-                                    </div>
-                                    <ViewCompleteProfileBtn>
-                                      View complete profile
-                                    </ViewCompleteProfileBtn>
-                                  </PeopleListWidget>
-                                  <PeopleListWidget className="mb-3">
-                                    <div className="d-flex flex-row mb-4 justify-content-between">
-                                      <div className="d-flex flex-row">
-                                        <Avatar
-                                          src={Faker.image.avatar()}
-                                          alt={Faker.name.findName()}
-                                          variant="rounded"
-                                          className="me-3"
-                                        />
-                                        <div>
-                                          <PersonName>
-                                            {Faker.name.findName()}
-                                          </PersonName>
-                                          <PersonName>
-                                            {"Product manager, Bluemeet"}
-                                          </PersonName>
-                                        </div>
-                                      </div>
-
-                                      <UserRoleTag>Host</UserRoleTag>
-                                    </div>
-                                    <ViewCompleteProfileBtn>
-                                      View complete profile
-                                    </ViewCompleteProfileBtn>
-                                  </PeopleListWidget>
-                                  <PeopleListWidget className="mb-3">
-                                    <div className="d-flex flex-row mb-4 justify-content-between">
-                                      <div className="d-flex flex-row">
-                                        <Avatar
-                                          src={Faker.image.avatar()}
-                                          alt={Faker.name.findName()}
-                                          variant="rounded"
-                                          className="me-3"
-                                        />
-                                        <div>
-                                          <PersonName>
-                                            {Faker.name.findName()}
-                                          </PersonName>
-                                          <PersonName>
-                                            {"Product manager, Bluemeet"}
-                                          </PersonName>
-                                        </div>
-                                      </div>
-
-                                      <UserRoleTag>Host</UserRoleTag>
-                                    </div>
-                                    <ViewCompleteProfileBtn>
-                                      View complete profile
-                                    </ViewCompleteProfileBtn>
-                                  </PeopleListWidget>
-                                </div>
-                              );
-
-                            default:
-                              return (
-                                <div>You are viewing people in this event.</div>
-                              );
-                          }
-                        })()}
-                      </div>
-                    </div>
-                  );
-                case "raisedHands":
-                  return (
-                    <div>
-                      <PeopleListWidget className="mb-3">
-                        <div className="d-flex flex-row mb-4 justify-content-between">
-                          <div className="d-flex flex-row">
-                            <Avatar
-                              src={Faker.image.avatar()}
-                              alt={Faker.name.findName()}
-                              variant="rounded"
-                              className="me-3"
-                            />
-                            <div>
-                              <PersonName>{Faker.name.findName()}</PersonName>
-                              <PersonName>
-                                {"Product manager, Bluemeet"}
-                              </PersonName>
-                            </div>
-                          </div>
-
-                          {/* <UserRoleTag>Host</UserRoleTag> */}
-                        </div>
-                        <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                          <IconButton className="me-4">
-                            <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <ScreenShareRoundedIcon
-                              style={{ fontSize: "20px" }}
-                            />
-                          </IconButton>
-                        </div>
-                        <ViewCompleteProfileBtn>
-                          Put on stage
-                        </ViewCompleteProfileBtn>
-                      </PeopleListWidget>
-                      <PeopleListWidget className="mb-3">
-                        <div className="d-flex flex-row mb-4 justify-content-between">
-                          <div className="d-flex flex-row">
-                            <Avatar
-                              src={Faker.image.avatar()}
-                              alt={Faker.name.findName()}
-                              variant="rounded"
-                              className="me-3"
-                            />
-                            <div>
-                              <PersonName>{Faker.name.findName()}</PersonName>
-                              <PersonName>
-                                {"Product manager, Bluemeet"}
-                              </PersonName>
-                            </div>
-                          </div>
-
-                          {/* <UserRoleTag>Host</UserRoleTag> */}
-                        </div>
-                        <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                          <IconButton className="me-4">
-                            <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <ScreenShareRoundedIcon
-                              style={{ fontSize: "20px" }}
-                            />
-                          </IconButton>
-                        </div>
-
-                        <ViewCompleteProfileBtn>
-                          Put on stage
-                        </ViewCompleteProfileBtn>
-                      </PeopleListWidget>
-                      <PeopleListWidget className="mb-3">
-                        <div className="d-flex flex-row mb-4 justify-content-between">
-                          <div className="d-flex flex-row">
-                            <Avatar
-                              src={Faker.image.avatar()}
-                              alt={Faker.name.findName()}
-                              variant="rounded"
-                              className="me-3"
-                            />
-                            <div>
-                              <PersonName>{Faker.name.findName()}</PersonName>
-                              <PersonName>
-                                {"Product manager, Bluemeet"}
-                              </PersonName>
-                            </div>
-                          </div>
-
-                          {/* <UserRoleTag>Host</UserRoleTag> */}
-                        </div>
-                        <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                          <IconButton className="me-4">
-                            <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                          </IconButton>
-                          <IconButton className="me-4">
-                            <ScreenShareRoundedIcon
-                              style={{ fontSize: "20px" }}
-                            />
-                          </IconButton>
-                        </div>
-                        <ViewCompleteProfileBtn>
-                          Put on stage
-                        </ViewCompleteProfileBtn>
-                      </PeopleListWidget>
-                    </div>
-                  );
-                case "videos":
-                  return (
-                    <div>
-                      <SessionVideoContainer className="mb-3">
-                        <img
-                          src="https://jungletopp.com/wp-content/uploads/2020/11/youtube.jpg"
-                          style={{ borderRadius: "5px" }}
-                          className="mb-3"
-                          alt="video cover"
-                        ></img>
-
-                        <BtnOutlined>
-                          <PlayArrowRoundedIcon
-                            className="me-2"
-                            style={{ fontSize: "20px" }}
-                          />
-                          Play on stage
-                        </BtnOutlined>
-                      </SessionVideoContainer>
-                      <SessionVideoContainer className="mb-3">
-                        <img
-                          src="https://i.ytimg.com/vi/8YbZuaBP9B8/maxresdefault.jpg"
-                          style={{ borderRadius: "5px" }}
-                          className="mb-3"
-                          alt="video cover"
-                        ></img>
-
-                        <div className="d-flex flex-row align-items-center justify-content-between">
-                          <BtnOutlined style={{ width: "48%" }}>
-                            <PauseRoundedIcon
-                              className="me-2"
-                              style={{ fontSize: "20px" }}
-                            />
-                            Pause
-                          </BtnOutlined>
-                          <BtnOutlined style={{ width: "48%" }}>
-                            <StopRoundedIcon
-                              className="me-2"
-                              style={{ fontSize: "20px" }}
-                            />
-                            Stop playing
-                          </BtnOutlined>
-                        </div>
-                      </SessionVideoContainer>
-                    </div>
-                  );
-
-                default:
-                  break;
-              }
-            })()}
-          </SessionSideDrawer>
-          {/* <div className="session-side-drawer"></div> */}
-        </StageBody>
-
-        <StageControl className="px-3 py-1">
-          <div className="d-flex flex-row align-items-center">
-            <BtnDanger className="me-3">Leave</BtnDanger>
-
-            <div className="stage-left-controls d-flex flex-row  align-items-center">
-              {/* <div className="room-no-text">Table 1</div> */}
-              <IconButton className="me-3">
-                <AppsRoundedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-              <IconButton className="me-3">
-                <ViewCompactRoundedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-              <IconButton className="me-3">
-                <AccountBoxOutlinedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-            </div>
-          </div>
-
-          <div className="d-flex flex-row align-items-center justify-content-center">
-            <IconButton className="me-4">
-              <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-            <IconButton className="me-4">
-              <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-            <IconButton className="me-4">
-              <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-            <IconButton onClick={() => {
-              handleOpenPhotoBooth();
-            }} className="me-4">
-              <PhotoCameraIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-          </div>
-
-          <div className="d-flex flex-row align-items-center justify-content-end">
-            <SettingsRoundedIcon
-              style={{ color: "#FFFFFF", fontSize: "20px" }}
-            />
-          </div>
-        </StageControl>
+          {/* Stage Controls components */}
+          <StageControlsComponent
+            handleStopScreenShare={handleStopScreenShare}
+            handleSwitchToGalleryView={handleSwitchToGalleryView}
+            handleSwitchToGridView={handleSwitchToGridView}
+            handleSwitchToSpotlightView={handleSwitchToSpotlightView}
+            handleOpenPhotoBooth={handleOpenPhotoBooth}
+            videoIsEnabled={videoIsEnabled}
+            turnOffVideo={turnOffVideo}
+            turnOnVideo={turnOnVideo}
+            options={options}
+            audioIsEnabled={audioIsEnabled}
+            turnOffAudio={turnOffAudio}
+            turnOnAudio={turnOnAudio}
+            screenSharingIsEnabled={screenSharingIsEnabled}
+            startScreenCall={startScreenCall}
+            setScreenSharingIsEnabled={setScreenSharingIsEnabled}
+          />
+        </div>
       </div>
-      {/* <Button>Styled</Button> */}
 
       <PhotoBooth open={openPhotoBooth} handleClose={handleClosePhotoBooth} />
-      
+      <ReactTooltip place="top" type="light" effect="float" />
     </>
   );
 };

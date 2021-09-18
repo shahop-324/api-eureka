@@ -93,7 +93,7 @@ const SideNavEdit = ({
 
   return (
     <>
-      <div className="side-nav-wrapper py-4 pt-4">
+      <div className="side-nav-wrapper py-4 pt-4" >
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
