@@ -5,6 +5,10 @@
   border: 1px solid transparent;
 }
 
+.icon-btn:hover {
+  color: #242424;
+}
+
 .email-list-group:hover {
   background-color: transparent !important;
   border: 1px solid #538bf7;

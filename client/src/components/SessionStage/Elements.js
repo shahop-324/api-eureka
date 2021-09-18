@@ -39,7 +39,7 @@ const StageBody = styled.div`
   display: grid;
   grid-template-columns: ${(props) =>
     props.openSideDrawer && props.openSideDrawer ? "5fr 1.55fr" : "1fr"};
-    align-items: center;
+  align-items: center;
   /* grid-gap: 8px; */
 `;
 
@@ -333,9 +333,20 @@ const PersonName = styled.div`
   font-size: 0.76rem;
   color: #212121;
   display: block;
+  text-transform: capitalize;
+`;
+
+const PersonOrgDesignation = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.7rem;
+  color: #3F3F3F;
+  display: block;
+  text-transform: capitalize;
 `;
 
 const UserRoleTag = styled.div`
+  text-align: center;
   background-color: #152d35 !important;
   height: max-content;
   border-radius: 5px;
@@ -403,6 +414,19 @@ const ExpandIcon = styled(LastPageRoundedIcon)`
   }
 `;
 
+const PersonInfoPopUp = styled.div`
+  border-radius: 10px;
+  background-color: #ffffff;
+  min-height: 60px;
+  width: 300px;
+`;
+
+const IconBtnSmall = styled.div`
+
+`
+
+
+
 export {
   Button,
   StageNav,
@@ -434,4 +458,6 @@ export {
   GridView,
   GridViewMini,
   SpotlightView,
+  PersonInfoPopUp,
+  PersonOrgDesignation,
 };
