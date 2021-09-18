@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
 
 import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
 import ViewCompactRoundedIcon from "@material-ui/icons/ViewCompactRounded";
@@ -24,11 +24,16 @@ import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 
+import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
+import FullscreenExitRoundedIcon from "@mui/icons-material/FullscreenExitRounded";
+
 import MicOffIcon from "@mui/icons-material/MicOff";
 import { useDispatch, useSelector } from "react-redux";
 import { getRTCTokenForScreenShare } from "../../actions";
+import { el } from "date-fns/locale";
 
 const StageControlsComponent = ({
+  handleStopScreenShare,
   handleSwitchToGalleryView,
   handleSwitchToGridView,
   handleSwitchToSpotlightView,
@@ -44,6 +49,8 @@ const StageControlsComponent = ({
   startScreenCall,
   setScreenSharingIsEnabled,
 }) => {
+  const [fullScreen, setFullScreen] = useState(false);
+
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -96,9 +103,13 @@ const StageControlsComponent = ({
               </IconButton>
             </a>
 
-            <a onClick={() => {
-              handleSwitchToSpotlightView();
-            }} data-tip={"Spotlight view"} className="">
+            <a
+              onClick={() => {
+                handleSwitchToSpotlightView();
+              }}
+              data-tip={"Spotlight view"}
+              className=""
+            >
               <IconButton className="me-3">
                 <AccountBoxOutlinedIcon style={{ fontSize: "20px" }} />
               </IconButton>
@@ -137,7 +148,9 @@ const StageControlsComponent = ({
           >
             <IconButton
               onClick={() => {
-                audioIsEnabled ? turnOffAudio(options.uid) : turnOnAudio(options.uid);
+                audioIsEnabled
+                  ? turnOffAudio(options.uid)
+                  : turnOnAudio(options.uid);
               }}
               className="me-4"
             >
@@ -161,17 +174,24 @@ const StageControlsComponent = ({
           >
             <IconButton
               onClick={() => {
-                dispatch(
-                  getRTCTokenForScreenShare(
-                    sessionId,
-                    userId,
-                    startScreenCall
-                  )
-                );
-                // TODO Execute this logic to start sharing screen
-                screenSharingIsEnabled
-                  ? setScreenSharingIsEnabled(false)
-                  : setScreenSharingIsEnabled(true);
+                if (screenSharingIsEnabled) {
+                  handleStopScreenShare();
+                  setScreenSharingIsEnabled(false);
+                } else {
+                  dispatch(
+                    getRTCTokenForScreenShare(
+                      sessionId,
+                      userId,
+                      startScreenCall
+                    )
+                  );
+                  setScreenSharingIsEnabled(true);
+                }
+
+                // // TODO Execute this logic to start sharing screen
+                // screenSharingIsEnabled
+                //   ? setScreenSharingIsEnabled(false)
+                //   : setScreenSharingIsEnabled(true);
               }}
               className="me-4"
             >
@@ -198,6 +218,34 @@ const StageControlsComponent = ({
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-end">
+          <a data-tip={"Full screen"} className="">
+            <IconButton
+              onClick={() => {
+                // handleOpenPhotoBooth();
+                if (fullScreen) {
+                  // Logic for exiting full screen mode
+
+                  setFullScreen(false);
+                  
+                  document.exitFullscreen();
+                } else {
+                  // Logic for entering full screen mode
+                  let elem = document.getElementById(
+                    "stage-full-screen-element"
+                  );
+
+                  if (!elem) return;
+
+                  setFullScreen(true);
+
+                  elem.requestFullscreen();
+                }
+              }}
+              className="me-4"
+            >
+              <FullscreenRoundedIcon style={{ fontSize: "20px" }} />
+            </IconButton>
+          </a>
           <a data-tip={"Settings"} className="">
             <SettingsRoundedIcon
               style={{ color: "#FFFFFF", fontSize: "20px" }}

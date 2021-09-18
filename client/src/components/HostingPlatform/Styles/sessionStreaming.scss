@@ -17,6 +17,13 @@
   width: 100%;
   height: 100%;
   z-index: 101;
+
+}
+
+.screen-share-container {
+  video {
+    object-fit: contain !important;
+  }
 }
 
 .user-identity {

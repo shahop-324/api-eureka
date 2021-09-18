@@ -155,26 +155,24 @@ const GalleryVideoPlayer = ({
                 src={userImage}
                 alt={userName}
                 style={{ backgroundColor: "#538BF7" }}
-                sx={{ width: 72, height: 72 }}
+                sx={{ width: "72px", height: "72px" }}
               />
             )}
           </div>
           <div id={`user_identity_${localPlayerId}`} className="user-identity">
-            <div style={{ color: "#F7F453" }}>
-              {userName + " " + roleSuffix}
-            </div>
-            <div className="d-flex flex-row align-items-center">
-              <div className="me-2">{`${userDesignation} ${userOrganisation}`}</div>
-              {audioIsEnabled ? (
+            <div className="d-flex flex-row align-items-center" style={{ color: "#F7F453" }}>
+            <div className="me-2">  {userName + " " + roleSuffix} </div>
+            {audioIsEnabled ? (
                 showWave ? (
                   <SoundWaveAnimation />
                 ) : (
                   <StillSoundWave />
                 )
               ) : (
-                <MicOffOutlinedIcon style={{ color: "red" }} />
+                <MicOffOutlinedIcon style={{ color: "#DA1E1E" }} />
               )}
             </div>
+            
           </div>
         </div>
       </VideoStreamContainer>

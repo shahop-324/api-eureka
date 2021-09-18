@@ -40,6 +40,8 @@ import {
   getRTCToken,
   getRTCTokenForScreenShare,
 } from "../../../actions";
+import ShareScreenPlayer from "../SessionStreamingComponents.js/ShareScreenPlayer";
+import StreamBody from "../Functions/Stage/StreamBody";
 
 let rtc = {
   localAudioTrack: null,
@@ -201,8 +203,6 @@ const SessionStage = () => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(false);
 
-    // document.getElementById(`avatar_box_${uid}`).style.display = "inline-block";
-
     handleVideoIsEnabledChange(uid, false);
 
     setVideoIsEnabled(false);
@@ -210,7 +210,6 @@ const SessionStage = () => {
   const turnOnVideo = async (uid) => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(true);
-    // document.getElementById(`avatar_box_${uid}`).style.display = "none";
 
     handleVideoIsEnabledChange(uid, true);
 
@@ -236,10 +235,6 @@ const SessionStage = () => {
 
   const { peopleInThisSession } = useSelector((state) => state.user);
 
-  let localStream_o;
-
-  let MainStreamId; // Keep Track of main stream id
-
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -258,7 +253,6 @@ const SessionStage = () => {
   const [localVolumeLevel, setLocalVolumeLevel] = useState("");
 
   const handleOpenSideDrawer = () => {
-    console.log("Toggle side drawer pressed");
     setSideDrawerOpen(!sideDrawerOpen);
   };
 
@@ -268,6 +262,14 @@ const SessionStage = () => {
 
   const handleClosePhotoBooth = () => {
     setOpenPhotoBooth(false);
+  };
+
+  const handleStopScreenShare = async () => {
+    rtc.localScreenTrack && rtc.localScreenTrack.close();
+    await rtc.screenClient.unpublish(rtc.localScreenTrack);
+    await rtc.screenClient.leave().then(() => {
+      setView("gallery");
+    });
   };
 
   const userId = useSelector((state) => state.eventAccessToken.id);
@@ -297,7 +299,7 @@ const SessionStage = () => {
   let row = "1fr 1fr";
 
   const handleChangeGrid = () => {
-    console.error(allStreams);
+  
     if (allStreams.length * 1 === 1) {
       col = "1fr";
       row = "1fr";
@@ -333,7 +335,7 @@ const SessionStage = () => {
     dispatch(fetchSessionForSessionStage(sessionId));
 
     socket.on("updatedSession", ({ session }) => {
-      console.log(session);
+  
 
       dispatch(
         // ! TODO
@@ -344,7 +346,7 @@ const SessionStage = () => {
     });
 
     socket.on("updatedCurrentSession", ({ session }) => {
-      console.log(session);
+  
 
       dispatch(
         // ! TODO
@@ -355,9 +357,8 @@ const SessionStage = () => {
     });
 
     socket.on("stageMembers", ({ stageMembers }) => {
-      console.log("I recieved no. of people on stage");
+   
 
-      console.log(stageMembers);
       dispatch(
         // ! TODO
         stageActions.FetchStageMembers({
@@ -367,9 +368,7 @@ const SessionStage = () => {
     });
 
     socket.on("sessionRoomData", ({ sessionUsers }) => {
-      console.log("I recieved session room data");
-
-      console.log(sessionUsers);
+    
       dispatch(
         // ! TODO
         userActions.FetchPeopleInSession({
@@ -502,8 +501,15 @@ const SessionStage = () => {
       }
     });
 
-    rtc.client.on("user-unpublished", (user, mediaType) => {
+    rtc.client.on("user-unpublished", async (user, mediaType) => {
       const uid = user.uid.toString();
+
+      if (uid.startsWith("screen")) {
+        await rtc.screenClient.leave().then(() => {
+          setView("gallery");
+        });
+        setScreenSharingIsEnabled(false);
+      }
 
       // 1. Manage audio muted
       if (mediaType === "audio") {
@@ -594,7 +600,7 @@ const SessionStage = () => {
       setVolumeIndicators(arr);
 
       volumes.forEach((volume) => {
-        console.log(`UID ${volume.uid} Level ${volume.level}`);
+        
 
         if (volume.level > 5) {
           // volume.uid.toString() is speaking
@@ -634,7 +640,7 @@ const SessionStage = () => {
 
       if (!volumes[0]) return;
 
-      console.log(volumes, "This is volumes array");
+      
 
       let loudest = volumes[0].level;
       let loudestUID = volumes[0].uid;
@@ -646,7 +652,7 @@ const SessionStage = () => {
         }
       }
 
-      console.log(loudestUID);
+    
 
       // Get loudest person with this UID from allStreams
 
@@ -660,7 +666,11 @@ const SessionStage = () => {
 
       // Now we will get to know who is loudest every 2 seconds and we will update the ui accordingly
 
-      handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
+      if (LoudestPerson) {
+        if (LoudestPerson.stream && LoudestPerson.uid) {
+          handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
+        }
+      }
 
       // Now set all except prominent in nonProminent streams
 
@@ -678,9 +688,7 @@ const SessionStage = () => {
     setInterval(() => {
       if (!rtc.localAudioTrack) return;
       const level = rtc.localAudioTrack.getVolumeLevel();
-      // setAudioLevel(level * 100);
       setLocalVolumeLevel(level * 100);
-      // console.log("local stream audio level", level);
     }, 1000);
 
     document.getElementById("leave-session").onclick = async function () {
@@ -726,241 +734,6 @@ const SessionStage = () => {
     );
   };
 
-  const renderLocalStream = (allStreams) => {
-    console.log("render local stream fxn was fired");
-    console.log(allStreams);
-
-    if (!allStreams) return;
-    const { stream, uid } = allStreams;
-
-    if (!stream || !uid) return;
-    // console.log(stream, uid);
-    console.log("I reached at line 736");
-    let userUID = uid;
-
-    if (uid.startsWith("screen")) {
-      userUID = userUID.slice(7);
-      console.error(userUID);
-      allStreams.stream.play("session-main-view-container");
-    }
-
-    if (document.getElementById(uid)) {
-      allStreams.stream.play(uid);
-    }
-
-    const {
-      userName,
-      userImage,
-      userOrganisation,
-      userDesignation,
-      sessionRole,
-    } = peopleInThisSession.find((people) => people.userId === userUID);
-
-    return (
-      <GalleryVideoPlayer
-        audioStreamStat={audioStreamStat}
-        videoStreamStat={videoStreamStat}
-        volumeIndicators={volumeIndicators}
-        localStream={stream}
-        role={sessionRole}
-        localPlayerId={uid}
-        userName={userName}
-        userImage={userImage}
-        userOrganisation={userOrganisation}
-        userDesignation={userDesignation}
-      />
-    );
-  };
-
-  const renderGalleryView = (allStreams) => {
-    console.log("render Gallery view  fxn was fired");
-    console.log(allStreams);
-
-    if (!allStreams) return;
-
-    return allStreams.map((OneStream) => {
-      const { stream, uid } = OneStream;
-
-      // if (!stream || !uid) return;
-
-      console.log("I reached at line 479");
-      let userUID = uid;
-
-      if (uid.startsWith("screen")) {
-        userUID = userUID.slice(7);
-        console.error(userUID);
-        allStreams.stream.play("session-main-view-container");
-      }
-
-      if (document.getElementById(uid)) {
-        OneStream.stream.play(uid);
-      }
-
-      const {
-        userName,
-        userImage,
-        userOrganisation,
-        userDesignation,
-        sessionRole,
-      } = peopleInThisSession.find((people) => people.userId === userUID);
-
-      return (
-        <GalleryVideoPlayer
-          audioStreamStat={audioStreamStat}
-          videoStreamStat={videoStreamStat}
-          volumeIndicators={volumeIndicators}
-          localStream={stream}
-          role={sessionRole}
-          localPlayerId={uid}
-          userName={userName}
-          userImage={userImage}
-          userOrganisation={userOrganisation}
-          userDesignation={userDesignation}
-        />
-      );
-    });
-  };
-
-  const renderMainStream = (mainStream) => {
-    console.log("render main stream fxn was fired");
-    console.log(mainStream);
-
-    if (!mainStream) return;
-    const { stream, uid } = mainStream;
-
-    if (!stream || !uid) return;
-    // console.log(stream, uid);
-    console.log("I reached at line 611 (This is render main stream)");
-    let userUID = uid;
-
-    if (uid.startsWith("screen")) {
-      userUID = userUID.slice(7);
-      console.error(userUID);
-      mainStream.stream.play("session-main-view-container");
-    }
-
-    if (document.getElementById(uid)) {
-      mainStream.stream.play(uid);
-    }
-
-    const {
-      userName,
-      userImage,
-      userOrganisation,
-      userDesignation,
-      sessionRole,
-    } = peopleInThisSession.find((people) => people.userId === userUID);
-
-    return (
-      <GalleryVideoPlayer
-        audioStreamStat={audioStreamStat}
-        videoStreamStat={videoStreamStat}
-        volumeIndicators={volumeIndicators}
-        localStream={stream}
-        role={sessionRole}
-        localPlayerId={uid}
-        userName={userName}
-        userImage={userImage}
-        userOrganisation={userOrganisation}
-        userDesignation={userDesignation}
-      />
-    );
-  };
-
-  const renderMiniStreams = (miniStreams) => {
-    console.log("render mini Streams  fxn was fired");
-    console.log(miniStreams);
-
-    if (!miniStreams) return;
-
-    return miniStreams.map((OneStream) => {
-      const { stream, uid } = OneStream;
-
-      // if (!stream || !uid) return;
-
-      console.log("I reached at line 479");
-      let userUID = uid;
-
-      if (uid.startsWith("screen")) {
-        userUID = userUID.slice(7);
-        console.error(userUID);
-        miniStreams.stream.play("session-main-view-container");
-      }
-
-      if (document.getElementById(uid)) {
-        OneStream.stream.play(uid);
-      }
-      const {
-        userName,
-        userImage,
-        userOrganisation,
-        userDesignation,
-        sessionRole,
-      } = peopleInThisSession.find((people) => people.userId === userUID);
-
-      return (
-        <GalleryVideoPlayer
-          audioStreamStat={audioStreamStat}
-          videoStreamStat={videoStreamStat}
-          volumeIndicators={volumeIndicators}
-          localStream={stream}
-          role={sessionRole}
-          localPlayerId={uid}
-          userName={userName}
-          userImage={userImage}
-          userOrganisation={userOrganisation}
-          userDesignation={userDesignation}
-        />
-      );
-    });
-  };
-
-  const renderProminentStream = (prominentStream) => {
-    console.log("render prominent stream fxn was fired");
-    console.log(prominentStream);
-
-    if (!prominentStream) return;
-    const { stream, uid } = prominentStream;
-
-    if (!stream || !uid) return;
-    // console.log(stream, uid);
-    console.log("I reached at line 611 (This is render prominent stream)");
-    let userUID = uid;
-
-    if (uid.startsWith("screen")) {
-      userUID = userUID.slice(7);
-      console.error(userUID);
-      prominentStream.stream.play("session-main-view-container");
-    }
-
-    if (document.getElementById(uid)) {
-      prominentStream.stream.play(uid);
-    }
-
-    const {
-      userName,
-      userImage,
-      userOrganisation,
-      userDesignation,
-      sessionRole,
-    } = peopleInThisSession.find((people) => people.userId === userUID);
-
-    return (
-      <GalleryVideoPlayer
-        audioStreamStat={audioStreamStat}
-        videoStreamStat={videoStreamStat}
-        volumeIndicators={volumeIndicators}
-        localStream={stream}
-        role={sessionRole}
-        localPlayerId={uid}
-        userName={userName}
-        userImage={userImage}
-        userOrganisation={userOrganisation}
-        userDesignation={userDesignation}
-      />
-    );
-  };
-
   useEffect(() => {
     startAdvancedLiveStreaming();
   }, []);
@@ -970,81 +743,25 @@ const SessionStage = () => {
       <div>
         {/* Stage Nav Goes here */}
         <StageNavComponent />
-
+        <div id="stage-full-screen-element" className="d-flex flex-column align-items-center" style={{height: "100%"}}>
         <StageBody openSideDrawer={sideDrawerOpen}>
-          <div>
-            <a
-              onClick={handleOpenSideDrawer}
-              // data-tip={
-              //   sideDrawerOpen
-              //     ? "Close session activity"
-              //     : "Open session activity"
-              // }
-              className=""
-              style={{
-                padding: "8px",
-                backgroundColor: "#DDDDDD",
-                borderRadius: "5px",
-                maxWidth: "fit-content",
-                position: "absolute",
-                top: "10px",
-                right: "20px",
-                zIndex: "1",
-              }}
-            >
-              {sideDrawerOpen ? (
-                <LastPageRoundedIcon />
-              ) : (
-                <FirstPageRoundedIcon />
-              )}
-            </a>
-
-            <div className="">
-              {(() => {
-                switch (view) {
-                  case "gallery":
-                    return (
-                      <GalleryView col={col} row={row}>
-                        {allStreams && renderGalleryView(allStreams)}
-                      </GalleryView>
-                    );
-                  case "grid":
-                    return (
-                      <GridView>
-                        {/* Render main stream here */}
-                        {/* <VideoStreamContainer /> */}
-                        {mainStream && renderMainStream(mainStream)}
-                        <GridViewMini>
-                          {/* <VideoStreamContainer /> */}
-                          {miniStreams && renderMiniStreams(miniStreams)}
-                          {/* Render mini views here */}
-                        </GridViewMini>
-                      </GridView>
-                    );
-
-                  case "spotlight":
-                    return (
-                      <SpotlightView>
-                        {prominentStream &&
-                          renderProminentStream(prominentStream)}
-                      </SpotlightView>
-                    );
-                  case "screenShare":
-                    return (
-                      <GridView>
-                        {screenStream && renderMainStream(screenStream)}
-                        <GridViewMini>
-                          {allStreams && renderMiniStreams(allStreams)}
-                        </GridViewMini>
-                      </GridView>
-                    );
-
-                  default:
-                    break;
-                }
-              })()}
-            </div>
-          </div>
+          {/* Stream body goes here */}
+          <StreamBody
+            handleOpenSideDrawer={handleOpenSideDrawer}
+            sideDrawerOpen={sideDrawerOpen}
+            col={col}
+            row={row}
+            allStreams={allStreams}
+            screenStream={screenStream}
+            prominentStream={prominentStream}
+            mainStream={mainStream}
+            miniStreams={miniStreams}
+            view={view}
+            audioStreamStat={audioStreamStat}
+            videoStreamStat={videoStreamStat}
+            volumeIndicators={volumeIndicators}
+            peopleInThisSession={peopleInThisSession}
+          />
 
           {/* Stage side drawer component goes here */}
 
@@ -1053,6 +770,7 @@ const SessionStage = () => {
 
         {/* Stage Controls components */}
         <StageControlsComponent
+          handleStopScreenShare={handleStopScreenShare}
           handleSwitchToGalleryView={handleSwitchToGalleryView}
           handleSwitchToGridView={handleSwitchToGridView}
           handleSwitchToSpotlightView={handleSwitchToSpotlightView}
@@ -1068,6 +786,10 @@ const SessionStage = () => {
           startScreenCall={startScreenCall}
           setScreenSharingIsEnabled={setScreenSharingIsEnabled}
         />
+
+        </div>
+
+       
       </div>
 
       <PhotoBooth open={openPhotoBooth} handleClose={handleClosePhotoBooth} />

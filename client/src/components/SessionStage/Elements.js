@@ -29,7 +29,8 @@ const StageNav = styled.div`
 `;
 
 const StageBody = styled.div`
-  height: 86vh;
+  min-height: 86vh;
+  height: 92%;
   background-color: #345b63;
   width: 100%;
 
@@ -38,11 +39,13 @@ const StageBody = styled.div`
   display: grid;
   grid-template-columns: ${(props) =>
     props.openSideDrawer && props.openSideDrawer ? "5fr 1.55fr" : "1fr"};
+    align-items: center;
   /* grid-gap: 8px; */
 `;
 
 const GalleryView = styled.div`
-  height: 85vh;
+  min-height: 85vh;
+  height: 90%;
   display: grid;
   grid-template-columns: ${(props) =>
     props.col && props.col ? props.col : "1fr 1fr 1fr 1fr"};
@@ -55,23 +58,24 @@ const GalleryView = styled.div`
 `;
 
 const GridView = styled.div`
-height: 85vh;
-display: grid;
-grid-template-columns: 4fr 1.3fr;
-grid-gap: 24px;
+  min-height: 85vh;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 4fr 1.3fr;
+  grid-gap: 24px;
 
-padding: 8vh 3vw;
-
-`
+  padding: 8vh 3vw;
+`;
 
 const SpotlightView = styled.div`
-height: 85vh;
-display: grid;
-grid-template-columns: 1fr;
-grid-gap: 24px;
+  min-height: 85vh;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 24px;
 
-padding: 8vh 3vw;
-`
+  padding: 8vh 3vw;
+`;
 
 const GridViewMini = styled.div`
   display: grid;
@@ -81,10 +85,11 @@ const GridViewMini = styled.div`
   /* grid-template-columns: 1fr 1fr 1fr 1fr; */
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-`
+`;
 
 const StageControl = styled.div`
-  height: 7vh;
+  min-height: 7vh;
+  height: 8%;
   background-color: #152d35;
   width: 100%;
 
@@ -221,6 +226,10 @@ const VideoStreamContainer = styled.div`
 
   overflow: hidden;
   border-radius: 10px;
+
+  /* video {
+    object-fit: contain !important;
+  } */
 `;
 
 const SessionSideDrawer = styled.div`
@@ -393,8 +402,6 @@ const ExpandIcon = styled(LastPageRoundedIcon)`
     color: #212121;
   }
 `;
-
-
 
 export {
   Button,
