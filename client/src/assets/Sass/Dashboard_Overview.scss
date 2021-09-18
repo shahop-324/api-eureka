@@ -173,7 +173,7 @@ $font-family: 'Ubuntu';
 .main-content-wrapper {
   max-width: 1500px;
   overflow: auto;
-  height: 93vh;
+  height: 83vh;
 }
 
 .overview-content-grid {
@@ -624,9 +624,9 @@ $font-family: 'Ubuntu';
   .dashboard-body {
     grid-template-columns: 1fr;
   }
-  .dashboard-body-edit {
-    grid-template-columns: 2fr 9fr !important;
-  }
+  // .dashboard-body-edit {
+  //   grid-template-columns: 2fr 9fr !important;
+  // }
 
   // .side-nav-container {
   //   display: none;

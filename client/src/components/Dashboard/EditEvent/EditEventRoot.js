@@ -179,7 +179,7 @@ const EditEventRoot = () => {
             handleNetworkingClick={handleNetworkingClick}
           />
 
-          <div className="main-content-wrapper">
+          <div className="main-content-wrapper" style={{height: "83vh"}}>
             {(() => {
               switch (currentIndex) {
                 case "0":

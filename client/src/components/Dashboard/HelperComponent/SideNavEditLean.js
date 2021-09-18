@@ -4,7 +4,6 @@ import "./../../HostingPlatform/Styles/root.scss";
 
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
-
 import CategoryIcon from "@material-ui/icons/Category";
 import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 import TrackChangesIcon from "@material-ui/icons/TrackChanges";
@@ -15,22 +14,20 @@ import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumbe
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 
-
-
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const SideNavEditLean = ({
-    activeIndex,
-    handleAboutClick,
-    handleBasicsClick,
-    handleBoothsClick,
-    handleNetworkingClick,
-    handleSessionsClick, 
-    handleSpeakersClick,
-    handleSponsorsClick,
-    handleTicketingClick
-  }) => {
+  activeIndex,
+  handleAboutClick,
+  handleBasicsClick,
+  handleBoothsClick,
+  handleNetworkingClick,
+  handleSessionsClick,
+  handleSpeakersClick,
+  handleSponsorsClick,
+  handleTicketingClick,
+}) => {
   const userDetails = useSelector((state) => state.user.userDetails);
   const params = useParams();
 
@@ -46,14 +43,18 @@ const SideNavEditLean = ({
       {/* className="" */}
       <div
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
-        style={{ backgroundColor: "#ffffff" }}
+        style={{
+          backgroundColor: "#ffffff",
+          height: "82.5vh !important",
+          overflow: "auto !important",
+        }}
       >
         <div className="main-icon-btn-container py-4">
-        {/* <a data-tip="Overview" className="ms-3"> */}
-        <div
+          {/* <a data-tip="Overview" className="ms-3"> */}
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleBasicsClick();
+              handleBasicsClick();
             }}
           >
             <div
@@ -80,13 +81,13 @@ const SideNavEditLean = ({
               Basics
             </div>
           </div>
-              {/* </a> */}
+          {/* </a> */}
 
-            {/* <a data-tip="Event Management" className="">   */}
+          {/* <a data-tip="Event Management" className="">   */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleAboutClick();
+              handleAboutClick();
             }}
           >
             <div
@@ -114,12 +115,11 @@ const SideNavEditLean = ({
           </div>
           {/* </a> */}
 
-          
           {/* <a data-tip="Reviews" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleSessionsClick();
+              handleSessionsClick();
             }}
           >
             <div
@@ -147,13 +147,11 @@ const SideNavEditLean = ({
           </div>
           {/* </a> */}
 
-         
-
           {/* <a data-tip="Queries" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleSpeakersClick();
+              handleSpeakersClick();
             }}
           >
             <div
@@ -181,16 +179,12 @@ const SideNavEditLean = ({
           </div>
           {/* </a> */}
 
-
-          
-
-
           {/* <a data-tip="Registrations" className=""> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleBoothsClick();
+              handleBoothsClick();
             }}
           >
             <div
@@ -218,16 +212,11 @@ const SideNavEditLean = ({
           </div>
           {/* </a> */}
 
-
-          
-
-
-          
           {/* <a data-tip="Coupons" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleSponsorsClick();
+              handleSponsorsClick();
             }}
           >
             <div
@@ -255,14 +244,11 @@ const SideNavEditLean = ({
           </div>
           {/* </a> */}
 
-          
-
-          
-           {/* <a data-tip="Recordings" className=""> */}
+          {/* <a data-tip="Recordings" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleTicketingClick();
+              handleTicketingClick();
             }}
           >
             <div
@@ -288,17 +274,13 @@ const SideNavEditLean = ({
               Ticketing
             </div>
           </div>
-           {/* </a> */}
-         
+          {/* </a> */}
 
-
-
-
-{/* <a data-tip="Integrations" className=""> */}
+          {/* <a data-tip="Integrations" className=""> */}
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-                handleNetworkingClick();
+              handleNetworkingClick();
             }}
           >
             <div
@@ -324,12 +306,7 @@ const SideNavEditLean = ({
               Networking
             </div>
           </div>
-{/* </a> */}
-
-
-
-
-
+          {/* </a> */}
         </div>
       </div>
 

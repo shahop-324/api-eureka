@@ -32,6 +32,7 @@ import { makeStyles } from "@material-ui/core";
 import Poll from "./../Elements/Poll";
 import QnA from "../Elements/Q&A";
 import ChatElement from "../Elements/ChatElement";
+import ChatMain from "./Chat/ChatMain";
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown
@@ -172,34 +173,9 @@ const StageSideDrawerComponent = () => {
                       switch (activeLinkTab) {
                         case "chat":
                           return (
-                            <div
-                              className="d-flex flex-column"
-                              style={{ height: "100%" }}
-                            >
-                              {/* <div style={{ height: "69vh" }} className="py-3 px-3">
-                          <ChatMsgElement
-                            createReplyWidget={createReplyWidget}
-                            msgText={"Hi There"}
-                            image={Faker.image.avatar()}
-                            name={Faker.name.findName()}
-                          />
-                        </div> */}
-                              <div
-                                style={{ height: "69vh" }}
-                                className="py-3 px-3"
-                              >
-                                <ChatElement />
-                              </div>
-
-                              {/* <div className="px-3">
-                          <MsgInput
-                            name={name}
-                            image={image}
-                            msg={msg}
-                            destroyReplyWidget={destroyReplyWidget}
-                            //  sendChannelMessage={sendChannelMessage}
-                          />
-                        </div> */}
+                            <div className="d-flex flex-column align-items-center justify-content-between">
+                            
+                            
                             </div>
                           );
                         case "q&a":
