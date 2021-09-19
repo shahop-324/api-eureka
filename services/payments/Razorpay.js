@@ -67,11 +67,11 @@ exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
       },
     },
     async (err, order) => {
-      console.log("userId", userId);
-      console.log("ticketId", ticketId);
-      console.log("eventId", eventId);
-      console.log("couponId", couponId);
-      console.log("communityId", communityId);
+      // console.log("userId", userId);
+      // console.log("ticketId", ticketId);
+      // console.log("eventId", eventId);
+      // console.log("couponId", couponId);
+      // console.log("communityId", communityId);
 
       const newEventOrder = await EventOrder.create({
         eventOrderEntity: order,
@@ -123,7 +123,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
     },
     async (err, order) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       }
 
       res.status(200).json({
@@ -137,7 +137,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
 exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
   const secret = "sbvhqi839pqp’;a;s;sbuhwuhbhauxwvcywg3638228282fhvhyw";
 
-  console.log(req.body.payload.payment.entity);
+  // console.log(req.body.payload.payment.entity);
 
   const paymentEntity = req.body.payload.payment.entity;
 
@@ -145,40 +145,40 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
 
-  console.log(digest, req.headers["x-razorpay-signature"]);
+  // console.log(digest, req.headers["x-razorpay-signature"]);
 
   if (digest === req.headers["x-razorpay-signature"]) {
-    console.log("Request is legit");
+    // console.log("Request is legit");
 
-    console.log("referral", paymentEntity.notes.referral);
-    console.log("transaction_type", paymentEntity.notes.transaction_type);
-    console.log("userId", paymentEntity.notes.userId);
-    console.log("ticketId", paymentEntity.notes.ticketId);
-    console.log("eventId", paymentEntity.notes.eventId);
-    console.log("couponId", paymentEntity.notes.couponId);
-    console.log("communityId", paymentEntity.notes.communityId);
-    console.log("razorpayFee", paymentEntity.fee);
-    console.log("GST", paymentEntity.tax);
-    console.log("Created By Mail", paymentEntity.email);
-    console.log("Created By Contact", paymentEntity.contact);
-    console.log("Amount Charged", paymentEntity.amount);
-    console.log("Currency", paymentEntity.currency);
-    console.log("Order Id", paymentEntity.order_id);
-    console.log("Razorpay Pay Id", paymentEntity.id); // this is razorpay pay_id
-    console.log("Transaction Status", paymentEntity.status);
-    console.log("Transaction Description", paymentEntity.description);
-    console.log("Transaction Created At", paymentEntity.created_at);
-    console.log("Plan Name", paymentEntity.notes.planName);
+    // console.log("referral", paymentEntity.notes.referral);
+    // console.log("transaction_type", paymentEntity.notes.transaction_type);
+    // console.log("userId", paymentEntity.notes.userId);
+    // console.log("ticketId", paymentEntity.notes.ticketId);
+    // console.log("eventId", paymentEntity.notes.eventId);
+    // console.log("couponId", paymentEntity.notes.couponId);
+    // console.log("communityId", paymentEntity.notes.communityId);
+    // console.log("razorpayFee", paymentEntity.fee);
+    // console.log("GST", paymentEntity.tax);
+    // console.log("Created By Mail", paymentEntity.email);
+    // console.log("Created By Contact", paymentEntity.contact);
+    // console.log("Amount Charged", paymentEntity.amount);
+    // console.log("Currency", paymentEntity.currency);
+    // console.log("Order Id", paymentEntity.order_id);
+    // console.log("Razorpay Pay Id", paymentEntity.id); // this is razorpay pay_id
+    // console.log("Transaction Status", paymentEntity.status);
+    // console.log("Transaction Description", paymentEntity.description);
+    // console.log("Transaction Created At", paymentEntity.created_at);
+    // console.log("Plan Name", paymentEntity.notes.planName);
 
     if (paymentEntity.notes.transaction_type === "community_plan") {
       try {
-        console.info("This was a community plan purchase");
-        console.log("This was a community plan purchase");
+        // console.info("This was a community plan purchase");
+        // console.log("This was a community plan purchase");
 
-        console.log("communityId", paymentEntity.notes.communityId);
-        console.log("referral", paymentEntity.notes.referral);
-        console.log("userId", paymentEntity.notes.userId);
-        console.log("Plan Name", paymentEntity.notes.planName);
+        // console.log("communityId", paymentEntity.notes.communityId);
+        // console.log("referral", paymentEntity.notes.referral);
+        // console.log("userId", paymentEntity.notes.userId);
+        // console.log("Plan Name", paymentEntity.notes.planName);
 
         let referrer;
 
@@ -233,7 +233,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
       const { eventName } = await Event.findById(paymentEntity.notes.eventId);
       const ticket = await Ticket.findById(paymentEntity.notes.ticketId);
-      console.log(ticket.name);
+      // console.log(ticket.name);
       const user = await User.findById(paymentEntity.notes.userId);
 
       // const properties = {
@@ -242,23 +242,23 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       //   lastName: user.lastName,
       //   email: paymentEntity.email,
       //   contact: paymentEntity.contact,
-      // };
-      console.log("i am counting on you hubspot api rajorpay.js");
+      // // };
+      // console.log("i am counting on you hubspot api rajorpay.js");
       // const properties = {
       //   properties: [
       //     { property: "email", value: paymentEntity.email },
       //     { property: "firstName", value: user.firstName },
       //   ],
       // };
-      console.log(hubspotApiKey);
-      console.log(
-        paymentEntity.email,
-        "i am counting on you paymentEntity.email razorpay.js"
-      );
-      console.log(
-        user.firstName,
-        "i am counting on you user.firstName razorpay.js"
-      );
+      // console.log(hubspotApiKey);
+      // console.log(
+      //   paymentEntity.email,
+      //   "i am counting on you paymentEntity.email razorpay.js"
+      // );
+      // console.log(
+      //   user.firstName,
+      //   "i am counting on you user.firstName razorpay.js"
+      // );
       // try {
       //   const hubspotResponse = await axios.post(
       //     `https://hubspot.api.com/contacts/v1/contact?hapiKey=${hubspotApiKey}`,
@@ -297,16 +297,51 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         "Content-Type": "application/json",
         Authroziation: `Bearer ${salesForceAccount.accessToken}`,
       };
-      const res = await axios.post(
-        "https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/",
-        {
-          FirstName: "Dinesh",
-          LastName: "Shah",
-          Email: "dinesh.shah@evenz.in",
-        },
-        { headers }
-      );
-      console.log(res, "i am counting on you salesforce res");
+      // const res = await axios.post(
+      //   "https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/",
+      //   {
+      //     FirstName: "Dinesh",
+      //     LastName: "Shah",
+      //     Email: "dinesh.shah@evenz.in",
+      //   },
+      //   { headers }
+      // );
+      // console.log(res, "i am counting on you salesforce res");
+      // console.log(
+      //   salesForceAccount.accessToken,
+      //   "i am counting on you salesForceAccount access token"
+      // );
+      try {
+        const res = await fetch(
+          `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${salesForceAccount.accessToken}`,
+            },
+
+            body: JSON.stringify({
+              FirstName: "Dinesh",
+              LastName: "Shah",
+              Email: "dinesh.shah@evenz.in",
+            }),
+          }
+        );
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
+        const result = await res.json();
+        console.log(result);
+      } catch (err) {
+        console.log(err);
+      }
 
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 

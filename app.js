@@ -170,6 +170,8 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
       axios
         .get(urlToGetUserProfile, config)
         .then((response) => {
+          console.log(response, "i am counting on you linkedin response");
+
           userProfile.firstName = response.data["localizedFirstName"];
           userProfile.lastName = response.data["localizedLastName"];
           userProfile.image =
