@@ -284,9 +284,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             },
 
             body: JSON.stringify({
-              FirstName: "Dinesh",
-              LastName: "Shah",
-              Email: "dinesh.shah@evenz.in",
+              FirstName: "Dinesh 4",
+              LastName: "Shah 4",
+              Email: "dinesh4.shah@evenz.in",
             }),
           }
         );

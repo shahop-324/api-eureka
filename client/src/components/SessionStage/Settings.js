@@ -16,6 +16,8 @@ import Box from '@mui/material/Box';
 import "./../../index.css";
 import StreamSettings from "./SubComponent/StreamSettings";
 import SessionCustomisation from "./SubComponent/SessionCustomisation";
+import EnableDisableLiveStreaming from "./SubComponent/EnableDisableLiveStreaming";
+import ImageEnhancement from "./SubComponent/ImageEnhancement";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -67,14 +69,14 @@ function TabPanel(props) {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: 'divider' }}
+          sx={{ borderRight: 1, borderColor: 'divider'  }}
         >
           <Tab label="Stream Settings" {...a11yProps(0)} className="custom-mui-tab"/>
           <Tab label="Customisation" {...a11yProps(1)} className="custom-mui-tab"/>
           <Tab label="Live streaming" {...a11yProps(2)} className="custom-mui-tab"/>
           <Tab label="Image enhancement" {...a11yProps(3)} className="custom-mui-tab"/>
-          <Tab label="Statistics" {...a11yProps(4)} className="custom-mui-tab"/>
-          <Tab label="Shortcuts" {...a11yProps(5)} className="custom-mui-tab"/>
+          {/* <Tab label="Statistics" {...a11yProps(4)} className="custom-mui-tab"/> */}
+          <Tab label="Shortcuts" {...a11yProps(4)} className="custom-mui-tab"/>
         </Tabs>
         <TabPanel value={value} index={0}>
           <StreamSettings />
@@ -83,20 +85,20 @@ function TabPanel(props) {
           <SessionCustomisation />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Start or stop live streaming on varoius RTMP server
+          <EnableDisableLiveStreaming />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Button to test and switch media devices (dropdown to switch to available device)
+          <ImageEnhancement />
         </TabPanel>
         <TabPanel value={value} index={4}>
-          Remove Blemish and other apply other image enhancement features
+         Table of shortcuts
         </TabPanel>
-        <TabPanel value={value} index={5}>
+        {/* <TabPanel value={value} index={5}>
           Stream stats
         </TabPanel>
         <TabPanel value={value} index={6}>
           Shortucts table
-        </TabPanel>
+        </TabPanel> */}
       </Box>
     );
   }

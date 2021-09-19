@@ -10,11 +10,13 @@
 }
 
 .custom-mui-tab {
+  padding-right: 6px !important;
   font-size: 0.8rem !important;
   font-weight: 500 !important;
   color: #212121 !important;
   font-family: "Ubuntu" !important;
   text-transform: capitalize !important;
+  
 }
 
 .email-list-group:hover {

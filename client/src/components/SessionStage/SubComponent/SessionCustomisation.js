@@ -163,7 +163,6 @@ const SessionCustomisation = () => {
     setChecked(!checked);
   };
 
-
   return (
     <>
       <CustomHorizontalTabWarpper className="px-3 mb-4">
