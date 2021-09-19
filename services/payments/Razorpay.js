@@ -249,10 +249,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       console.log(properties, "i am counting on you properties of razorpay");
       const simplePublicObjectInput = { properties };
 
-
-
-      if(hubspotApiKey)
-      {
+      if (hubspotApiKey) {
         try {
           const apiResponse = await hubspotClient.crm.contacts.basicApi.create(
             simplePublicObjectInput
@@ -263,10 +260,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             ? console.error(JSON.stringify(e.response, null, 2))
             : console.error(e);
         }
-  
-
       }
-     
+
       console.log(
         salesForceAccount.accessToken,
         "i am counting on ypu sales force account access token"
@@ -284,9 +279,14 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             },
 
             body: JSON.stringify({
-              FirstName: "Dinesh",
-              LastName: "Shah",
-              Email: "dinesh.shah@evenz.in",
+              FirstName: user.firstName,
+              LastName: user.lastName,
+              Email: paymentEntity.email,
+              Description: `Event name: ${event.eventName} , Ticket name: ${
+                ticket.name
+              } ,Price:${
+                paymentEntity.amount
+              },Date and time of booking:${Date.now()} `,
             }),
           }
         );
