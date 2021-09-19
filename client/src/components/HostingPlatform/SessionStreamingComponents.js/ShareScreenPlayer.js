@@ -29,7 +29,7 @@ const ShareScreenPlayer = ({
       <VideoStreamContainer style={{objectFit: "contain"}}>
         <div id={localPlayerId} className="session-local-video-player screen-share-container">
           <UserRoleTag className="session-role px-3 py-1">{role}</UserRoleTag>
-          <div
+          {/* <div
             className="d-flex flex-row align-items-center"
             style={{
               position: "absolute",
@@ -44,7 +44,7 @@ const ShareScreenPlayer = ({
             <IconButton >
               <ZoomOutMapRoundedIcon style={{ fontSize: "20px" }} />
             </IconButton>
-          </div>
+          </div> */}
          
           <div id={`user_identity_${localPlayerId}`} className="user-identity">
             <div className="d-flex flex-row align-items-center" style={{ color: "#F7F453" }}>

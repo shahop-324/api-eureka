@@ -131,7 +131,7 @@ const AddNewCoupon = (props) => {
     ModifiedFormValues.discountPercentage = formValues.discountPercentage;
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
-      formValues.numberOfDiscountsAvailable;
+    formValues.numberOfDiscountsAvailable;
 
     // showResults(ModifiedFormValues);
     dispatch(createCoupon(ModifiedFormValues));

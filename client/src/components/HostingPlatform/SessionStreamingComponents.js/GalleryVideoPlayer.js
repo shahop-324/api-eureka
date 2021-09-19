@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../Styles/sessionStreaming.scss";
 import { useSelector } from "react-redux";
 
@@ -6,6 +6,10 @@ import {
   UserRoleTag,
   VideoStreamContainer,
   IconButton,
+  PersonInfoPopUp,
+  PersonName,
+  ViewCompleteProfileBtn,
+  PersonOrgDesignation,
 } from "../../SessionStage/Elements";
 
 import Avatar from "@mui/material/Avatar";
@@ -19,32 +23,15 @@ import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
 import PushPinRoundedIcon from "@mui/icons-material/PushPinRounded";
 
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
+import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
+import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 
-// const VideoOverlayIconBtn = styled.div`
+import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
+import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
+import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
 
-// `
-
-// const IconButton = styled.div`
-//   padding: 7px;
-//   border-radius: 10px;
-
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: center;
-
-//   border: 1px solid #1f545e;
-//   color: #ffffff;
-//   background-color: transparent;
-
-//   &:hover {
-//     cursor: pointer;
-
-//     border: 1px solid #ffffffa9;
-//     background-color: #ffffffa9;
-//     color: #1f545e;
-//   }
-// `;
+import { Popup } from "semantic-ui-react";
+import PersonProfile from "../PersonProfile";
 
 const SoundWaveAnimation = () => {
   return (
@@ -85,6 +72,12 @@ const GalleryVideoPlayer = ({
   userDesignation,
   volumeIndicators, // array of these objects => {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleCloseProfile = () => {
+    setOpen(false);
+  };
+
   let audioIsEnabled = true;
 
   let videoIsEnabled = true;
@@ -132,22 +125,6 @@ const GalleryVideoPlayer = ({
       <VideoStreamContainer>
         <div id={localPlayerId} className="session-local-video-player">
           <UserRoleTag className="session-role px-3 py-1">{role}</UserRoleTag>
-          {/* <div
-            className="d-flex flex-row align-items-center"
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              right: "10px",
-              zIndex: "2",
-            }}
-          >
-            <IconButton  className="me-4">
-              <PushPinRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-            <IconButton >
-              <ZoomOutMapRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-          </div> */}
           <div id={`avatar_box_${localPlayerId}`} className="avatar_box">
             {!videoIsEnabled && (
               <Avatar
@@ -155,27 +132,100 @@ const GalleryVideoPlayer = ({
                 src={userImage}
                 alt={userName}
                 style={{ backgroundColor: "#538BF7" }}
-                sx={{ width: "72px", height: "72px" }}
+                // sx={{ width: "72px", height: "72px" }}
               />
             )}
           </div>
-          <div id={`user_identity_${localPlayerId}`} className="user-identity">
-            <div className="d-flex flex-row align-items-center" style={{ color: "#F7F453" }}>
-            <div className="me-2">  {userName + " " + roleSuffix} </div>
-            {audioIsEnabled ? (
-                showWave ? (
-                  <SoundWaveAnimation />
-                ) : (
-                  <StillSoundWave />
-                )
-              ) : (
-                <MicOffOutlinedIcon style={{ color: "#DA1E1E" }} />
-              )}
-            </div>
-            
-          </div>
+          <Popup
+            hoverable={true}
+            content={
+              <PersonInfoPopUp>
+                <div
+                  style={{
+                    display: "grid",
+
+                    gridTemplateColumns: "0.75fr 4fr 1fr",
+                    gridGap: "16px",
+                  }}
+                  className="mb-3"
+                >
+                  <Avatar
+                    src={userImage}
+                    alt={userName}
+                    variant="rounded"
+                    className="me-3"
+                  />
+                  <div>
+                    <PersonName className="mb-1">{userName}</PersonName>
+                    <PersonOrgDesignation>{`${userDesignation}, ${userOrganisation}`}</PersonOrgDesignation>
+                  </div>
+
+                  <UserRoleTag>{role}</UserRoleTag>
+                  <div></div>
+
+                  <div className="d-flex flex-row align-items-center">
+                    <IconButton className="me-3">
+                      <VideocamRoundedIcon
+                        style={{ fontSize: "16px", color: "green" }}
+                      />
+                    </IconButton>
+                    <IconButton className="me-3">
+                      <MicNoneRoundedIcon
+                        style={{ fontSize: "16px", color: "green" }}
+                      />
+                    </IconButton>
+                    <IconButton className="me-3">
+                      <ScreenShareRoundedIcon
+                        style={{ fontSize: "16px", color: "green" }}
+                      />
+                    </IconButton>
+                  </div>
+                </div>
+
+                <div>
+                  <ViewCompleteProfileBtn
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    View complete profile
+                  </ViewCompleteProfileBtn>
+                </div>
+              </PersonInfoPopUp>
+            }
+            trigger={
+              <div
+                id={`user_identity_${localPlayerId}`}
+                className="user-identity"
+              >
+                <div
+                  className="d-flex flex-row align-items-center"
+                  style={{ color: "#F7F453" }}
+                >
+                  <div className="me-2"> {userName + " " + roleSuffix} </div>
+                  {audioIsEnabled ? (
+                    showWave ? (
+                      <SoundWaveAnimation />
+                    ) : (
+                      <StillSoundWave />
+                    )
+                  ) : (
+                    <MicOffOutlinedIcon style={{ color: "#DA1E1E" }} />
+                  )}
+                </div>
+              </div>
+            }
+          />
         </div>
       </VideoStreamContainer>
+      <PersonProfile
+        open={open}
+        handleClose={handleCloseProfile}
+        userImage={userImage}
+        userName={userName}
+        userOrganisation={userOrganisation}
+        userDesignation={userDesignation}
+      />
     </>
   );
 };
