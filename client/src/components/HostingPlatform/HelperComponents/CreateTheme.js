@@ -5,20 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { IconButton } from "@material-ui/core";
 
-import {
-  SketchPicker,
-  TwitterPicker,
-  GithubPicker,
-  AlphaPicker,
-  ChromePicker,
-  CirclePicker,
-  CompactPicker,
-  HuePicker,
-  MaterialPicker,
-  PhotoshopPicker,
-  SliderPicker,
-  SwatchesPicker,
-} from "react-color";
+import { TwitterPicker } from "react-color";
 import Select from "react-select";
 
 const fontOptions = [];

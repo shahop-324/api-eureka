@@ -395,6 +395,13 @@ const SessionStage = () => {
 
     await rtc.screenClient.publish(rtc.localScreenTrack);
 
+    rtc.localScreenTrack.on("track-ended", () => {
+      // alert("screen sharing stopped");
+      console.info("screen sharing stopped");
+
+      handleStopScreenShare();
+    });
+
     return rtc.localScreenTrack;
   };
 
@@ -581,8 +588,8 @@ const SessionStage = () => {
           handleVideoIsEnabledChange(options.uid, true);
           handleAudioIsEnabledChange(options.uid, true);
 
-          turnOffAudio(options.uid)
-          turnOffVideo(options.uid)
+          turnOffAudio(options.uid);
+          turnOffVideo(options.uid);
         }
       });
 
@@ -760,6 +767,14 @@ const SessionStage = () => {
     startAdvancedLiveStreaming();
   }, []);
 
+  // navigator.mediaDevices.getUserMedia(..).then((stream) => {..});
+
+  navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+    stream.getVideoTracks()[0].onended = () => {
+      console.info("Screen share has ended");
+    };
+  });
+
   return (
     <>
       <div>
@@ -771,6 +786,7 @@ const SessionStage = () => {
           style={{ height: "100%" }}
         >
           <StageBody openSideDrawer={sideDrawerOpen}>
+           
             {/* Stream body goes here */}
             <StreamBody
               handleOpenSideDrawer={handleOpenSideDrawer}
