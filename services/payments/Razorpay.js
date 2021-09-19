@@ -213,13 +213,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             }
           );
         }
-      } catch (err) {
-        // Handle any error that may happen when processing plan for a community
-      }
+      } catch (err) {}
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
-      //1. find community by communityId
-      //2. and do post request on hubspot server contacts for creating list using api key
-
       const community = await Community.findById(
         paymentEntity.notes.communityId
       );
@@ -229,46 +224,10 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityId: paymentEntity.notes.communityId,
       });
 
-      // we are sending eventName,ticketType,firstName,lastName,email,contact
-
-      const { eventName } = await Event.findById(paymentEntity.notes.eventId);
+      const event = await Event.findById(paymentEntity.notes.eventId);
       const ticket = await Ticket.findById(paymentEntity.notes.ticketId);
-      // console.log(ticket.name);
+
       const user = await User.findById(paymentEntity.notes.userId);
-
-      // const properties = {
-      //   firstName: user.firstName,
-
-      //   lastName: user.lastName,
-      //   email: paymentEntity.email,
-      //   contact: paymentEntity.contact,
-      // // };
-      // console.log("i am counting on you hubspot api rajorpay.js");
-      // const properties = {
-      //   properties: [
-      //     { property: "email", value: paymentEntity.email },
-      //     { property: "firstName", value: user.firstName },
-      //   ],
-      // };
-      // console.log(hubspotApiKey);
-      // console.log(
-      //   paymentEntity.email,
-      //   "i am counting on you paymentEntity.email razorpay.js"
-      // );
-      // console.log(
-      //   user.firstName,
-      //   "i am counting on you user.firstName razorpay.js"
-      // );
-      // try {
-      //   const hubspotResponse = await axios.post(
-      //     `https://hubspot.api.com/contacts/v1/contact?hapiKey=${hubspotApiKey}`,
-      //     { properties }
-      //   );
-
-      //   console.log(hubspotResponse);
-      // } catch (err) {
-      //   console, log(err);
-      // }
 
       const hubspotClient = new hubspot.Client({ apiKey: hubspotApiKey });
 
@@ -276,41 +235,43 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         email: user.email,
         firstname: user.firstName,
         lastname: user.lastName,
-        phone: paymentEntity.contact,
-        eventName,
-        ticket: ticket.name,
+        company: event.eventName,
       };
+
+      // const properties = {
+      //   company: "Bluemeet",
+      //   email: "dinesh.shah@evenz.in",
+      //   firstname: "dinesh",
+      //   lastname: "shah",
+      //   phone: "8103032829",
+      //   website: "www.evenz.in",
+      // };
+      console.log(properties, "i am counting on you properties of razorpay");
       const simplePublicObjectInput = { properties };
 
-      try {
-        const apiResponse = await hubspotClient.crm.contacts.basicApi.create(
-          simplePublicObjectInput
-        );
-        console.log(JSON.stringify(apiResponse.body, null, 2));
-      } catch (e) {
-        e.message === "HTTP request failed"
-          ? console.error(JSON.stringify(e.response, null, 2))
-          : console.error(e);
-      }
 
-      const headers = {
-        "Content-Type": "application/json",
-        Authroziation: `Bearer ${salesForceAccount.accessToken}`,
-      };
-      // const res = await axios.post(
-      //   "https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/",
-      //   {
-      //     FirstName: "Dinesh",
-      //     LastName: "Shah",
-      //     Email: "dinesh.shah@evenz.in",
-      //   },
-      //   { headers }
-      // );
-      // console.log(res, "i am counting on you salesforce res");
-      // console.log(
-      //   salesForceAccount.accessToken,
-      //   "i am counting on you salesForceAccount access token"
-      // );
+
+      if(hubspotApiKey)
+      {
+        try {
+          const apiResponse = await hubspotClient.crm.contacts.basicApi.create(
+            simplePublicObjectInput
+          );
+          console.log(JSON.stringify(apiResponse.body, null, 2));
+        } catch (e) {
+          e.message === "HTTP request failed"
+            ? console.error(JSON.stringify(e.response, null, 2))
+            : console.error(e);
+        }
+  
+
+      }
+     
+      console.log(
+        salesForceAccount.accessToken,
+        "i am counting on ypu sales force account access token"
+      );
+
       try {
         const res = await fetch(
           `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/`,
