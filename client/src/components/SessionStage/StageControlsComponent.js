@@ -10,6 +10,8 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
+// import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded"; // Tools Icon
+import WidgetsIcon from '@mui/icons-material/Widgets'; // Tools Icon
 
 import { BtnDanger, StageControl, IconButton } from "./Elements";
 
@@ -37,6 +39,7 @@ import Switch from "@material-ui/core/Switch";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 
 import Settings from "./Settings";
+import Tools from "./Tools";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -120,6 +123,12 @@ const StageControlsComponent = ({
   const [fullScreen, setFullScreen] = useState(false);
 
   const [openSettings, setOpenSettings] = useState(false);
+
+  const [showTools, setShowTools] = useState(false);
+
+  const handleCloseTools = () => {
+    setShowTools(false);
+  }
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
@@ -318,6 +327,16 @@ const StageControlsComponent = ({
           </div>
 
           <IconButton
+          className="me-4"
+            onClick={() => {
+              setShowTools(true);
+            }}
+          >
+            <WidgetsIcon style={{ fontSize: "20px" }} />
+          </IconButton>
+
+
+          <IconButton
             onClick={() => {
               // handleOpenPhotoBooth();
               if (fullScreen) {
@@ -352,6 +371,7 @@ const StageControlsComponent = ({
         </div>
       </StageControl>
 
+      <Tools open={showTools} handleClose={handleCloseTools} />
       <ReactTooltip place="top" type="light" effect="float" />
       <Settings open={openSettings} handleClose={handleCloseSettings} />
     </>

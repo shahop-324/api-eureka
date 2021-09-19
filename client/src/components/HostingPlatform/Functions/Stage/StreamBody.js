@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
 import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+
 import Tools from "./../../../SessionStage/Tools";
 import styled from "styled-components";
 
@@ -60,11 +60,7 @@ const StreamBody = ({
   peopleInThisSession,
 }) => {
 
-  const [showTools, setShowTools] = useState(false);
-
-  const handleCloseTools = () => {
-    setShowTools(false);
-  }
+  
 
   return (
     <>
@@ -91,11 +87,7 @@ const StreamBody = ({
           {sideDrawerOpen ? <LastPageRoundedIcon /> : <FirstPageRoundedIcon />}
         </a>
 
-        <StageToolsIconBtn onClick={() => {
-          setShowTools(true);
-        }}>
-          <DashboardRoundedIcon style={{ fontSize: "19px" }} />
-        </StageToolsIconBtn>
+        
 
         <div className="">
           {(() => {
@@ -182,7 +174,7 @@ const StreamBody = ({
         </div>
       </div>
 
-      <Tools open={showTools} handleClose={handleCloseTools} />
+      
     </>
   );
 };
