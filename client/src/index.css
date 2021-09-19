@@ -9,6 +9,16 @@
   color: #242424;
 }
 
+.custom-mui-tab {
+  padding-right: 12px !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #212121 !important;
+  font-family: "Ubuntu" !important;
+  text-transform: capitalize !important;
+  
+}
+
 .email-list-group:hover {
   background-color: transparent !important;
   border: 1px solid #538bf7;
@@ -346,12 +356,11 @@ code {
   background-color: #538af7;
   width: max-content;
   border-radius: 5px;
-  
 }
 
 .session-running-status-container {
-color: #ffffff;
-font-size: 0.83rem;
-font-weight: 600;
-font-family: "Inter";
+  color: #ffffff;
+  font-size: 0.83rem;
+  font-weight: 600;
+  font-family: "Inter";
 }

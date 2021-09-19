@@ -2,7 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const UUID = require("uuid/v4");
 const catchAsync = require("../../utils/catchAsync");
-
+var request = require("request");
 const hubspot = require("@hubspot/api-client");
 const axios = require("axios");
 const Ticket = require("../../models/ticketModel");
@@ -27,6 +27,45 @@ const razorpay = new Razorpay({
   key_id: "rzp_live_bDVAURs4oXxSGi",
   key_secret: "TFitnOVh9eOIFK3qdZsfCLfQ",
 });
+
+
+const hubspotIntegration =  catchAsync(async(hapikey)=>{
+
+  var options = { method: 'POST',
+  url: 'https://api.hubapi.com/contacts/v1/contact/',
+  qs: { hapikey: hapikey },
+  headers: 
+   { 
+     'Content-Type': 'application/json' },
+  body: 
+   { properties: 
+      [ { property: 'email', value: 'testingapis@hubspot.com' },
+        { property: 'firstname', value: 'test' },
+        { property: 'lastname', value: 'testerson' },
+        { property: 'website', value: 'http://hubspot.com' },
+        { property: 'company', value: 'HubSpot' },
+        { property: 'phone', value: '555-122-2323' },
+        { property: 'address', value: '25 First Street' },
+        { property: 'city', value: 'Cambridge' },
+        { property: 'state', value: 'MA' },
+        { property: 'zip', value: '02139' } ] },
+  json: true };
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log(body);
+});
+
+      
+
+
+
+
+
+
+}
+)
 
 exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -236,6 +275,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         firstname: user.firstName,
         lastname: user.lastName,
         company: event.eventName,
+        hs_lead_status: "UNQUALIFIED",
       };
 
       // const properties = {
@@ -279,6 +319,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             },
 
             body: JSON.stringify({
+<<<<<<< HEAD
               FirstName: user.firstName,
               LastName: user.lastName,
               Email: paymentEntity.email,
@@ -287,6 +328,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
               } ,Price:${
                 paymentEntity.amount
               },Date and time of booking:${Date.now()} `,
+=======
+              FirstName: "Dinesh 4",
+              LastName: "Shah 4",
+              Email: "dinesh4.shah@evenz.in",
+>>>>>>> cce8d9a9e5b0009cf1fac2c4f64b1e9c1ccb35dc
             }),
           }
         );

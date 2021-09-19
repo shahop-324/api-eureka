@@ -68,7 +68,7 @@ const ButtonFilledDark = styled.div`
   padding: 6px 10px;
   text-align: center;
 
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
@@ -89,7 +89,7 @@ const ButtonOutlinedDark = styled.div`
   padding: 6px 10px;
   text-align: center;
 
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
@@ -117,6 +117,7 @@ const PersonProfile = ({
   userOrganisation,
   userDesignation,
 }) => {
+  
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 

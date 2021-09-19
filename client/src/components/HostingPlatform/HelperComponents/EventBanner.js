@@ -1,9 +1,7 @@
 import React from 'react';
 
 import './../Styles/root.scss';
-
 import Human from './../../../assets/images/humaaans-sitting-1.png';
-
 import {makeStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -29,7 +27,7 @@ const EventBanner = ({eventName, shortDescription, createdBy}) => {
     return (
         <>
         <div className="event-banner-card d-flex flex-row align-items-center mb-5">
-                <div className="banner-side-l px-5 mx-3">
+                {/* <div className="banner-side-l px-5 mx-3">
                   <div className="welcome-to-text mb-2">Welcome to,</div>
                   <div className="event-big-name mb-2">
                     {eventName}
@@ -53,10 +51,10 @@ const EventBanner = ({eventName, shortDescription, createdBy}) => {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="banner-side-r">
+                </div> */}
+                {/* <div className="banner-side-r">
                   <img src={Human} alt="human-welcoming-illustration" />
-                </div>
+                </div> */}
               </div>
         </>
     )

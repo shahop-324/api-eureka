@@ -151,6 +151,11 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <Divider />
               </div>
 
+
+
+
+
+
               <div>
                 <div className="d-flex flex-column mb-4">
                   <div className="event-platform-side-drawer-heading">
@@ -338,6 +343,11 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <Divider />
                 </div>
               </div>
+
+
+
+
+
             </div>
           </div>
         </SwipeableDrawer>
