@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 
 import { reduxForm, Field } from "redux-form";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -27,15 +28,17 @@ const peopleInEvent = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
+    fontSize: "0.8rem",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
+    fontSize: "0.8rem",
   }),
 };
 
@@ -144,17 +147,31 @@ const renderReactSelectTimeZone = ({
   </div>
 );
 
-const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
+const FormLabel = styled.div`
+  font-weight: 500;
+  font-size: 0.85rem;
+  font-family: "Ubuntu";
+  color: #152d35;
 
+  margin-bottom: 6px;
+`;
+
+const SmallDescriptiveText = styled.small`
+  font-weight: 400;
+
+  font-family: "Ubuntu";
+`;
+
+const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
-  }
+  };
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>
@@ -196,9 +213,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
 
             <form className="">
               <div class="mb-4 overlay-form-input-row">
-                <label for="eventName" class="form-label form-label-customized">
-                  Meet Title
-                </label>
+                <FormLabel>Title</FormLabel>
                 <Field
                   name="eventName"
                   type="text"
@@ -210,12 +225,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
               </div>
 
               <div class="mb-4 overlay-form-input-row">
-                <label
-                  for="shortDescription"
-                  class="form-label form-label-customized"
-                >
-                  Short description
-                </label>
+                <FormLabel>Agenda</FormLabel>
                 <Field
                   name="shortDescription"
                   type="text"
@@ -228,12 +238,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
 
               <div class="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
-                  >
-                    Start Date
-                  </label>
+                  <FormLabel>Date</FormLabel>
                   <Field
                     name="startDate"
                     type="date"
@@ -244,12 +249,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                   />
                 </div>
                 <div>
-                  <label
-                    Forhtml="eventStartTime"
-                    class="form-label form-label-customized"
-                  >
-                    Start Time
-                  </label>
+                  <FormLabel>Time</FormLabel>
                   <Field
                     name="startTime"
                     type="time"
@@ -262,12 +262,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
               </div>
 
               <div class="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="selectTimeZone"
-                  class="form-label form-label-customized"
-                >
-                  Select timezone
-                </label>
+                <FormLabel>Timezone</FormLabel>
                 <Field
                   name="selectTimeZone"
                   styles={styles}
@@ -280,13 +275,9 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
               </div>
 
               <div class="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="selectTimeZone"
-                  class="form-label form-label-customized"
-                >
-                  People
-                </label>
-                <Field
+                <FormLabel>Participants</FormLabel>
+                <SmallDescriptiveText>No one has been invited</SmallDescriptiveText>
+                {/* <Field
                   name="selectTimeZone"
                   styles={styles}
                   menuPlacement="auto"
@@ -294,16 +285,17 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                   defaultValue={peopleInEvent[0]}
                   id="selectTimeZone"
                   component={renderReactSelectTimeZone}
-                />
+                /> */}
                 <div className="d-flex flex-row align-items-center justify-content-end">
                   <button
-                  onClick={() => {
-                    handleOpen();
-                  }}
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      handleOpen();
+                    }}
                     type="button"
                     className="btn btn-outline-dark btn-outline-text mt-3"
                   >
-                    Add people
+                    Invite people
                   </button>
                 </div>
               </div>
@@ -326,9 +318,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
         </SwipeableDrawer>
       </React.Fragment>
 
-<InvitePeopleToGroupMeet  open={open} handleClose={handleClose}  />
-
-
+      <InvitePeopleToGroupMeet open={open} handleClose={handleClose} />
     </>
   );
 };

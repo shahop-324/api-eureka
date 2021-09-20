@@ -7,7 +7,10 @@ import { useParams } from "react-router-dom";
 import Schedule from "./Schedule";
 import MyMeetings from "./MyMeetings";
 import Reminders from "./Reminders";
+import About from './About';
 import styled from 'styled-components';
+import Speakers from "./Sub/Speakers";
+import Hosts from "./Sub/Hosts";
 
 // const LobbyLinkBtn = styled.div`
 // color: ${props =>  props.active ? "#152d35" : "#dcc7be"}
@@ -34,8 +37,42 @@ color: #152d35 !important;
 font-family: "Ubuntu";
 `
 
+const CustomHorizontalTabWarpper = styled.div`
+  min-width: 500px;
+  height: auto;
+  border-radius: 10px;
+  background-color: #345b63;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+`;
+
+const CustomTabButton = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #fff;
+  align-self: center;
+
+  text-align: center;
+  padding: 6px 12px;
+  background-color: ${(props) =>
+    props.active && props.active ? "#152d35" : "#345b63"};
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  &:hover {
+    /* border: 1px solid #fff; */
+    background-color: #A0A0A057;
+    cursor: pointer;
+  }
+`;
+
 const LobbyAgenda = () => {
-  const [selectedTab, setSelectedTab] = useState("agenda");
+  const [selectedTab, setSelectedTab] = useState("about");
 
   const dispatch = useDispatch();
 
@@ -67,7 +104,54 @@ const LobbyAgenda = () => {
         createdBy={createdBy}
       />
 
-      <div className="lobby-navigation-wrapper d-flex flex-row mb-4">
+<CustomHorizontalTabWarpper className="px-3 mb-4">
+        <CustomTabButton
+          active={selectedTab === "about" ? true : false}
+          onClick={() => {
+            setSelectedTab("about");
+          }}
+        >
+          About
+        </CustomTabButton>
+        <CustomTabButton
+          active={selectedTab === "myMeetings" ? true : false}
+          onClick={() => {
+            setSelectedTab("myMeetings");
+          }}
+        >
+          My meetings
+        </CustomTabButton>
+        <CustomTabButton
+          active={selectedTab === "speakers" ? true : false}
+          onClick={() => {
+            setSelectedTab("speakers");
+          }}
+        >
+          Speakers
+        </CustomTabButton>
+        <CustomTabButton
+          active={selectedTab === "hosts" ? true : false}
+          onClick={() => {
+            setSelectedTab("hosts");
+          }}
+        >
+          Hosts
+        </CustomTabButton>
+        
+      </CustomHorizontalTabWarpper>
+
+      {/* <div className="lobby-navigation-wrapper d-flex flex-row mb-4">
+        <LobbyLinkBtn
+        active={selectedTab === "about" ? true : false}
+          onClick={() => {
+            setSelectedTab("about");
+          }}
+          className={`me-5 lobby-nav-btn ${
+            selectedTab === "about" ? "lobby-nav-btn-active" : ""
+          } `}
+        >
+          About
+        </LobbyLinkBtn>
         <LobbyLinkBtn
         active={selectedTab === "agenda" ? true : false}
           onClick={() => {
@@ -101,15 +185,18 @@ const LobbyAgenda = () => {
         >
           Reminders
         </LobbyLinkBtn>
-      </div>
+      </div> */}
       {(() => {
         switch (selectedTab) {
-          case "agenda":
-            return <Schedule />;
+          case "about": 
+          return <About />;
+         
           case "myMeetings":
             return <MyMeetings />;
-          case "reminders":
-            return <Reminders />;
+          case "speakers":
+            return <Speakers />;
+          case "hosts":
+            return <Hosts />;
           default:
             return <div>You are inside lobby.</div>;
         }

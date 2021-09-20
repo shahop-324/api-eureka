@@ -319,7 +319,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             },
 
             body: JSON.stringify({
-<<<<<<< HEAD
               FirstName: user.firstName,
               LastName: user.lastName,
               Email: paymentEntity.email,
@@ -328,11 +327,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
               } ,Price:${
                 paymentEntity.amount
               },Date and time of booking:${Date.now()} `,
-=======
-              FirstName: "Dinesh 4",
-              LastName: "Shah 4",
-              Email: "dinesh4.shah@evenz.in",
->>>>>>> cce8d9a9e5b0009cf1fac2c4f64b1e9c1ccb35dc
             }),
           }
         );

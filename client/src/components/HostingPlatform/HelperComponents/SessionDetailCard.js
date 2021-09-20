@@ -298,6 +298,12 @@ const SessionDetailCard = ({
             </Link>
           </div>
         </div>
+
+
+
+
+
+        
       </div>
     </>
   );

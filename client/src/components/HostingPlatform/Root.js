@@ -39,6 +39,7 @@ import Reception from "./Screens/Reception";
 import BoothArea from "./Screens/BoothArea";
 
 import styled from "styled-components";
+import SocialSpace from "./Screens/SocialSpace";
 
 const RootBackground = styled.div`
   background-color: #345b63;
@@ -227,8 +228,24 @@ const Root = () => {
     return null;
   }
 
-  const handleLobbyClick = () => {
+  const handleReceptionClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
+
+    history.push(
+      `/community/${communityId}/event/${eventId}/hosting-platform/reception`
+    );
+  };
+
+  const handleLobbyClick = () => {
+    dispatch(navigationIndexForHostingPlatform(1));
+
+    history.push(
+      `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+    );
+  };
+
+  const handleSocialSpaceClick = () => {
+    dispatch(navigationIndexForHostingPlatform(2));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
@@ -236,7 +253,7 @@ const Root = () => {
   };
 
   const handleSessionsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(1));
+    dispatch(navigationIndexForHostingPlatform(3));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/Sessions`
@@ -244,7 +261,7 @@ const Root = () => {
   };
 
   const handleNetworkingClick = () => {
-    dispatch(navigationIndexForHostingPlatform(2));
+    dispatch(navigationIndexForHostingPlatform(4));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/networking`
@@ -252,7 +269,7 @@ const Root = () => {
   };
 
   const handleRoomsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(3));
+    dispatch(navigationIndexForHostingPlatform(5));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/rooms`
@@ -260,20 +277,14 @@ const Root = () => {
   };
 
   const handleBoothsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(4));
+    dispatch(navigationIndexForHostingPlatform(6));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/booths`
     );
   };
 
-  const handleReceptionClick = () => {
-    dispatch(navigationIndexForHostingPlatform(5));
-
-    history.push(
-      `/community/${communityId}/event/${eventId}/hosting-platform/reception`
-    );
-  };
+  
 
   const handleLogoutClick = () => {
     // write logic for logging out here
@@ -299,6 +310,7 @@ const Root = () => {
           handleBoothsClick={handleBoothsClick}
           handleReceptionClick={handleReceptionClick}
           handleLogoutClick={handleLogoutClick}
+          handleSocialSpaceClick={handleSocialSpaceClick}
         />
 
         {/* Mid container */}
@@ -310,6 +322,9 @@ const Root = () => {
             {(() => {
               switch (currentIndex) {
                 case "0":
+                  return <Reception />;
+
+                case "1":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div
@@ -324,8 +339,26 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
+                case "2":
+                  return (
+                    
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer "
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
+                        <SocialSpace />
+                        
+                        
+                      </div>
+                    </RootBackground>
+                  );
 
-                case "1":
+                case "3":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div
@@ -341,7 +374,7 @@ const Root = () => {
                     </RootBackground>
                   );
 
-                case "2":
+                case "4":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div className="opaque-layer "></div>
@@ -353,7 +386,7 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
-                case "3":
+                case "5":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div
@@ -369,7 +402,7 @@ const Root = () => {
                     </RootBackground>
                   );
 
-                case "4":
+                case "6":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div
@@ -385,8 +418,6 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
-                case "5":
-                  return <Reception />;
 
                 default:
                   return <div>You are a User visting hosting platform.</div>;
