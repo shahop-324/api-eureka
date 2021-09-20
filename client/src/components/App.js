@@ -88,6 +88,7 @@ class App extends React.Component {
       );
     });
     socket.on("newLinkedinLogin", (res) => {
+      console.log(res, "i am counting on you res linkedin app");
       this.props.newLinkedinLogin(
         res,
         this.props.signinForEventRegistrationEventId,
@@ -111,7 +112,6 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              
               <Route path="/test" exact component={SessionStage} />
               <Route path="/home" exact component={Home} />
 
