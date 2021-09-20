@@ -11,6 +11,27 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
+import Select from "react-select";
+
+const styles = {
+    control: (base) => ({
+      ...base,
+      fontFamily: "Ubuntu",
+      fontWeight: "500",
+      color: "#757575",
+      fontSize: "0.8rem",
+    }),
+    menu: (base) => ({
+      ...base,
+      fontFamily: "Ubuntu",
+      fontWeight: "500",
+      color: "#757575",
+      fontSize: "0.8rem",
+    }),
+  };
+
+const trackOptions = [];
+
 const MyMeetingsFilterBody = styled.div`
   background-color: #ffffff;
   width: 568px;
@@ -85,7 +106,7 @@ const WidgetHeadlineWithClose = styled.div`
   border-bottom: 1px solid #152d35;
 `;
 
-const MyMeetingsFilter = ({ open, handleClose }) => {
+const SessionsFilter = ({ open, handleClose }) => {
   const [statusAlignment, setStatusAlignment] = React.useState("all");
   const [priorityAlignment, setPriorityAlignment] = React.useState("all");
 
@@ -122,6 +143,17 @@ const MyMeetingsFilter = ({ open, handleClose }) => {
             </div>
           </WidgetHeadlineWithClose>
 
+          <FormLabel>Track</FormLabel>
+          <Select
+          className="mb-4"
+        defaultValue={trackOptions[0]}
+        styles={styles}
+        menuPlacement={"bottom"}
+        name={"session track"}
+        options={trackOptions}  
+        // onChange={(value) => input.onChange(value)}
+      />
+
           <FormLabel>Status</FormLabel>
 
           <ToggleButtonGroup
@@ -138,6 +170,8 @@ const MyMeetingsFilter = ({ open, handleClose }) => {
             <ToggleButton value="ended">Ended</ToggleButton>
           </ToggleButtonGroup>
 
+          {/*  */}
+
           <FormLabel>Date</FormLabel>
           <input type="date" className="form-control mb-4"></input>
          
@@ -152,4 +186,4 @@ const MyMeetingsFilter = ({ open, handleClose }) => {
   );
 };
 
-export default MyMeetingsFilter;
+export default SessionsFilter;

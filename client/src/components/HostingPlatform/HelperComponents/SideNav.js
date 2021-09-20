@@ -36,7 +36,7 @@ const SideNav = ({
   handleRoomsClick,
   handleBoothsClick,
   handleSessionsClick,
-  handleSocialSpaceClick,
+  // handleSocialSpaceClick,
 }) => {
   const userDetails = useSelector((state) => state.user.userDetails);
   const userId = userDetails._id;
@@ -112,7 +112,7 @@ const SideNav = ({
               Lobby
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleSocialSpaceClick}
           >
@@ -137,7 +137,7 @@ const SideNav = ({
             >
               Social space
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleSessionsClick}

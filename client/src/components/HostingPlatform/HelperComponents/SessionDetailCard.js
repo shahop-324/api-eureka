@@ -14,6 +14,8 @@ import {
 } from "../../../actions";
 
 import styled from "styled-components";
+import Chip from '@mui/material/Chip';
+import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -146,6 +148,10 @@ const SessionDetailCard = ({
 
   const roleToBeDisplayed = role;
 
+  const handleClick = () => {
+    console.info('You clicked the Chip.');
+  };
+
   // const readFilePro = file => {
   //   return new Promise((resolve, reject) => {
   //     fs.readFile(file, (err, data) => {
@@ -196,7 +202,15 @@ const SessionDetailCard = ({
           </div>
         </div>
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
-          <div className="session-title mb-3">{name}</div>
+          <div className="d-flex flex-row align-items-center">
+
+          <div className="session-title mb-3 me-3">{name}</div>
+
+          <Chip className="mb-3" icon={<AddCircleOutlineRoundedIcon />} label="Set priority" variant="outlined" onClick={handleClick} />
+          
+
+          </div>
+          
           <div className="session-running-status-container px-2 py-2 mb-3">
             <div className="session-running-status">Upcoming</div>
           </div>
