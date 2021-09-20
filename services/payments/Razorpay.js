@@ -2,7 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const UUID = require("uuid/v4");
 const catchAsync = require("../../utils/catchAsync");
-var request = require("request");
+
 const hubspot = require("@hubspot/api-client");
 const axios = require("axios");
 const Ticket = require("../../models/ticketModel");
@@ -11,6 +11,7 @@ const Coupon = require("../../models/couponModel");
 const EventOrder = require("../../models/eventOrder");
 const EventTransaction = require("../../models/eventTransactionModel");
 
+var request = require("request");
 const Community = require("../../models/communityModel");
 const SalesForce = require("../../models/salesForceModel");
 const User = require("../../models/userModel");
@@ -28,44 +29,34 @@ const razorpay = new Razorpay({
   key_secret: "TFitnOVh9eOIFK3qdZsfCLfQ",
 });
 
+const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
+  var options = {
+    method: "POST",
+    url: "https://api.hubapi.com/contacts/v1/contact/",
+    qs: { hapikey: hapikey },
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: {
+      properties: [
+        { property: "email", value: email },
+        { property: "firstname", value: firstName },
+        { property: "lastname", value: lastName },
 
-const hubspotIntegration =  catchAsync(async(hapikey)=>{
+        { property: "company", value: company },
+        // { property: "hs_lead_status", value: "Connected" },
+        { property: "lifecyclestage", value: "subscriber" },
+      ],
+    },
+    json: true,
+  };
 
-  var options = { method: 'POST',
-  url: 'https://api.hubapi.com/contacts/v1/contact/',
-  qs: { hapikey: hapikey },
-  headers: 
-   { 
-     'Content-Type': 'application/json' },
-  body: 
-   { properties: 
-      [ { property: 'email', value: 'testingapis@hubspot.com' },
-        { property: 'firstname', value: 'test' },
-        { property: 'lastname', value: 'testerson' },
-        { property: 'website', value: 'http://hubspot.com' },
-        { property: 'company', value: 'HubSpot' },
-        { property: 'phone', value: '555-122-2323' },
-        { property: 'address', value: '25 First Street' },
-        { property: 'city', value: 'Cambridge' },
-        { property: 'state', value: 'MA' },
-        { property: 'zip', value: '02139' } ] },
-  json: true };
+  request(options, function (error, response, body) {
+    if (error) return new appError(error, 401);
 
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-
-  console.log(body);
-});
-
-      
-
-
-
-
-
-
-}
-)
+    console.log(body);
+  });
+};
 
 exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -106,12 +97,6 @@ exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
       },
     },
     async (err, order) => {
-      // console.log("userId", userId);
-      // console.log("ticketId", ticketId);
-      // console.log("eventId", eventId);
-      // console.log("couponId", couponId);
-      // console.log("communityId", communityId);
-
       const newEventOrder = await EventOrder.create({
         eventOrderEntity: order,
         order_id: order.id,
@@ -257,7 +242,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       const community = await Community.findById(
         paymentEntity.notes.communityId
       );
-      const hubspotApiKey = community.hubspotApiKey;
+      const hapikey = community.hubspotApiKey;
 
       const salesForceAccount = await SalesForce.findOne({
         communityId: paymentEntity.notes.communityId,
@@ -268,39 +253,16 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
       const user = await User.findById(paymentEntity.notes.userId);
 
-      const hubspotClient = new hubspot.Client({ apiKey: hubspotApiKey });
-
-      const properties = {
-        email: user.email,
-        firstname: user.firstName,
-        lastname: user.lastName,
-        company: event.eventName,
-        hs_lead_status: "UNQUALIFIED",
-      };
-
-      // const properties = {
-      //   company: "Bluemeet",
-      //   email: "dinesh.shah@evenz.in",
-      //   firstname: "dinesh",
-      //   lastname: "shah",
-      //   phone: "8103032829",
-      //   website: "www.evenz.in",
-      // };
-      console.log(properties, "i am counting on you properties of razorpay");
-      const simplePublicObjectInput = { properties };
-
-      if (hubspotApiKey) {
-        try {
-          const apiResponse = await hubspotClient.crm.contacts.basicApi.create(
-            simplePublicObjectInput
-          );
-          console.log(JSON.stringify(apiResponse.body, null, 2));
-        } catch (e) {
-          e.message === "HTTP request failed"
-            ? console.error(JSON.stringify(e.response, null, 2))
-            : console.error(e);
-        }
+      if (hapikey) {
+        hubspotIntegration(
+          hapikey,
+          user.firstName,
+          user.lastName,
+          user.email,
+          event.eventName
+        );
       }
+
 
       console.log(
         salesForceAccount.accessToken,
@@ -319,7 +281,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             },
 
             body: JSON.stringify({
-<<<<<<< HEAD
               FirstName: user.firstName,
               LastName: user.lastName,
               Email: paymentEntity.email,
@@ -328,11 +289,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
               } ,Price:${
                 paymentEntity.amount
               },Date and time of booking:${Date.now()} `,
-=======
-              FirstName: "Dinesh 4",
-              LastName: "Shah 4",
-              Email: "dinesh4.shah@evenz.in",
->>>>>>> cce8d9a9e5b0009cf1fac2c4f64b1e9c1ccb35dc
             }),
           }
         );
@@ -349,6 +305,43 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       } catch (err) {
         console.log(err);
       }
+
+      // try {
+      //   const res = await fetch(
+      //     `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateLead/`,
+      //     {
+      //       method: "POST",
+
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: `Bearer ${salesForceAccount.accessToken}`,
+      //       },
+
+      //       body: JSON.stringify({
+      //         FirstName: user.firstName,
+      //         LastName: user.lastName,
+      //         Email: paymentEntity.email,
+      //         Description: `Event name: ${event.eventName} , Ticket name: ${
+      //           ticket.name
+      //         } ,Price:${
+      //           paymentEntity.amount
+      //         },Date and time of booking:${Date.now()} `,
+      //       }),
+      //     }
+      //   );
+
+      //   if (!res.ok) {
+      //     if (!res.message) {
+      //       throw new Error("Something went wrong");
+      //     } else {
+      //       throw new Error(res.message);
+      //     }
+      //   }
+      //   const result = await res.json();
+      //   console.log(result);
+      // } catch (err) {
+      //   console.log(err);
+      // }
 
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 
