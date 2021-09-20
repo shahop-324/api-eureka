@@ -8,6 +8,8 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
+import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded';
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 
 import WeekendIcon from "@mui/icons-material/Weekend";
 
@@ -24,7 +26,18 @@ const SideNavBody = styled.div`
   background-color: #233e44 !important;
 `;
 
-const SideNav = (props) => {
+const SideNav = ({
+  activeIndex,
+  communityLogo,
+  communityName,
+  handleReceptionClick,
+  handleLobbyClick,
+  handleNetworkingClick,
+  handleRoomsClick,
+  handleBoothsClick,
+  handleSessionsClick,
+  // handleSocialSpaceClick,
+}) => {
   const userDetails = useSelector((state) => state.user.userDetails);
   const userId = userDetails._id;
 
@@ -32,7 +45,7 @@ const SideNav = (props) => {
 
   const eventId = params.eventId;
 
-  console.log(props.activeIndex);
+  console.log(activeIndex);
   const dispatch = useDispatch();
   return (
     <>
@@ -42,27 +55,23 @@ const SideNav = (props) => {
           style={{ height: "9vh" }}
         >
           {/* Community Logo */}
-          <Avatar
-            src={props.communityLogo}
-            alt={props.communityName}
-            variant="rounded"
-          />
+          <Avatar src={communityLogo} alt={communityName} variant="rounded" />
         </div>
         <div className="main-icon-btn-container py-3">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleReceptionClick}
+            onClick={handleReceptionClick}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "5" ? "active-wrapper-h" : "")
+                (activeIndex === "0" ? "active-wrapper-h" : "")
               }
             >
               <HomeRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "5" ? "icon-btn-active-h" : "")
+                  (activeIndex === "0" ? "icon-btn-active-h" : "")
                 }
               />
 
@@ -71,7 +80,7 @@ const SideNav = (props) => {
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "5" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "0" ? "icon-btn-text-active-h" : "")
               }
             >
               Reception
@@ -79,51 +88,103 @@ const SideNav = (props) => {
           </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleLobbyClick}
+            onClick={handleLobbyClick}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "0" ? "active-wrapper-h" : "")
+                (activeIndex === "1" ? "active-wrapper-h" : "")
               }
             >
               <WeekendIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "0" ? "icon-btn-active-h" : "")
+                  (activeIndex === "1" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "0" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "1" ? "icon-btn-text-active-h" : "")
               }
             >
               Lobby
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleNetworkingClick}
+            onClick={handleSocialSpaceClick}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "2" ? "active-wrapper-h" : "")
+                (activeIndex === "2" ? "active-wrapper-h" : "")
+              }
+            >
+              <GroupsRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "2" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "2" ? "icon-btn-text-active-h" : "")
+              }
+            >
+              Social space
+            </div>
+          </div> */}
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={handleSessionsClick}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "3" ? "active-wrapper-h" : "")
+              }
+            >
+              <VideocamRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "3" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "3" ? "icon-btn-text-active-h" : "")
+              }
+            >
+              Sessions
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={handleNetworkingClick}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "4" ? "active-wrapper-h" : "")
               }
             >
               <WifiTetheringRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "2" ? "icon-btn-active-h" : "")
+                  (activeIndex === "4" ? "icon-btn-active-h" : "")
                 }
               ></WifiTetheringRoundedIcon>
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "2" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "4" ? "icon-btn-text-active-h" : "")
               }
             >
               Networking
@@ -132,25 +193,25 @@ const SideNav = (props) => {
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleRoomsClick}
+            onClick={handleRoomsClick}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "3" ? "active-wrapper-h" : "")
+                (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
               <GrainRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "3" ? "icon-btn-active-h" : "")
+                  (activeIndex === "5" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "3" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
               }
             >
               Rooms
@@ -159,25 +220,25 @@ const SideNav = (props) => {
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleBoothsClick}
+            onClick={handleBoothsClick}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "4" ? "active-wrapper-h" : "")
+                (activeIndex === "6" ? "active-wrapper-h" : "")
               }
             >
               <StorefrontRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "4" ? "icon-btn-active-h" : "")
+                  (activeIndex === "6" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "4" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "6" ? "icon-btn-text-active-h" : "")
               }
             >
               Booths
@@ -188,12 +249,12 @@ const SideNav = (props) => {
         {/* <div className="logout-btn-side-nav-h">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={props.handleLogoutClick}
+            onClick={handleLogoutClick}
           >
             <Link
               onClick={() => {
                 // history.push("/signin");
-                props.socket.emit(
+                socket.emit(
                   "disconnectUser",
                   { userId, eventId },
                   () => {}
@@ -203,20 +264,20 @@ const SideNav = (props) => {
               to="/signin"
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (props.activeIndex === "5" ? "active-wrapper-h" : "")
+                (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
               <ExitToAppIcon
                 className={
                   "icon-btn-h " +
-                  (props.activeIndex === "5" ? "icon-btn-active-h" : "")
+                  (activeIndex === "5" ? "icon-btn-active-h" : "")
                 }
               />
             </Link>
             <div
               className={
                 "icon-btn-text " +
-                (props.activeIndex === "5" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
               }
             >
               Leave

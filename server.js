@@ -1365,6 +1365,7 @@ io.on("connect", (socket) => {
     const user = await User.findOne({
       linkedinId: linkedinId,
     });
+    console.log(user, "This is linkedin user");
     if (user) {
       const isUserLoggedInAlready = await LoggedInUsers.find({
         userId: user._id,
@@ -1466,6 +1467,34 @@ io.on("connect", (socket) => {
           });
         }
       } else {
+        const user = await new User({
+          linkedinId: linkedinId,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          policySigned: true,
+          subscribedToMailList: true,
+          image: image,
+        }).save({ validateModifiedOnly: true });
+
+        const name = `${firstName} ${lastName}`;
+        await MailList.create({
+          name: name,
+          email: email,
+        });
+        await LoggedInUsers.create({
+          userId: user._id,
+        });
+
+        const token = signToken(user._id);
+
+        console.log(token, "hey hitting logging in server.js");
+        socket.emit("newLinkedinLogin", {
+          token,
+          data: { user },
+        });
+      }
+      else {
         const user = await new User({
           linkedinId: linkedinId,
           email: email,

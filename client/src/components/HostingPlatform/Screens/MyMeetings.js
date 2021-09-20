@@ -3,41 +3,12 @@ import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 
-import { Dropdown, Input } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import ScheduleGroupMeeting from "./Sub/ScheduleGroupMeeting";
+import MyMeetingsFilter from "./Sub/MyMeetingsFilter";
 
-const tagOptions = [
-  {
-    key: "Important",
-    text: "Important",
-    value: "Important",
-    label: { color: "red", empty: true, circular: true },
-  },
-  {
-    key: "Announcement",
-    text: "Announcement",
-    value: "Announcement",
-    label: { color: "blue", empty: true, circular: true },
-  },
-  {
-    key: "Cannot Fix",
-    text: "Cannot Fix",
-    value: "Cannot Fix",
-    label: { color: "black", empty: true, circular: true },
-  },
-  {
-    key: "News",
-    text: "News",
-    value: "News",
-    label: { color: "purple", empty: true, circular: true },
-  },
-  {
-    key: "Enhancement",
-    text: "Enhancement",
-    value: "Enhancement",
-    label: { color: "orange", empty: true, circular: true },
-  },
-];
+import styled from "styled-components";
+import MyMeetingCard from "./Sub/MyMeetingCard";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -113,8 +84,69 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ButtonFilledDark = styled.div`
+  align-self: center;
+  padding: 6px 10px;
+  text-align: center;
+
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #ffffff;
+  font-family: "Ubuntu";
+
+  background-color: #152d35;
+
+  border: 1px solid #152d35;
+  border-radius: 5px;
+
+  &:hover {
+    color: #152d35;
+    background-color: transparent;
+    cursor: pointer;
+  }
+`;
+
+const ButtonOutlinedDark = styled.div`
+  padding: 6px 10px;
+  text-align: center;
+
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #ffffff;
+  font-family: "Ubuntu";
+
+  color: #152d35;
+  background-color: transparent;
+
+  border: 1px solid #152d35;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #152d35;
+
+    color: #ffffff;
+
+    cursor: pointer;
+  }
+`;
+
+const NoMeetingsFoundMsg = styled.div`
+  text-align: center;
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+
+  color: #152d35;
+`;
+
 const MyMeetings = () => {
   const [open, setOpen] = useState(false);
+
+  const [openFilter, setOpenFilter] = useState(false);
+
+  const handleCloseFilter = () => {
+    setOpenFilter(false);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -130,18 +162,15 @@ const MyMeetings = () => {
     <>
       <div className="session-btn-and-filter-search-wrapper d-flex flex-row justify-content-between mb-5">
         <div className="search-box-and-filter-icon-btn-w d-flex flex-row">
-          <Dropdown icon="filter" floating button className="icon">
-            <Dropdown.Menu>
-              <Input icon="search" iconPosition="left" className="search" />
-              <Dropdown.Divider />
-              <Dropdown.Header icon="tags" content="Tag Label" />
-              <Dropdown.Menu scrolling>
-                {tagOptions.map((option) => (
-                  <Dropdown.Item key={option.value} {...option} />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown.Menu>
-          </Dropdown>
+          <Dropdown
+            icon="filter"
+            floating
+            button
+            className="icon"
+            onClick={() => {
+              setOpenFilter(true);
+            }}
+          ></Dropdown>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -157,22 +186,54 @@ const MyMeetings = () => {
           </div>
         </div>
 
-        <div className="all-and-my-sessions-w d-flex flex-row">
-          <button
+        <div className="all-and-my-sessions-w d-flex flex-row align-items-center">
+          {/* <button
             onClick={() => {
               handleOpen();
             }}
             className="btn btn-primary btn-outline-text me-4"
           >
             Create New Meet
-          </button>
+          </button> */}
+          <ButtonFilledDark
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Create new meet
+          </ButtonFilledDark>
         </div>
       </div>
+
+{/* // ! Show this when no meetings are scheduled */}
+
+      {/* <div
+        style={{ width: "300px", marginLeft: "auto", marginRight: "auto" }}
+        className="my-5"
+      >
+        <NoMeetingsFoundMsg className="mb-3">No scheduleded meetings found</NoMeetingsFoundMsg>
+
+        <div>
+          <ButtonOutlinedDark
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Create new meet
+          </ButtonOutlinedDark>
+        </div>
+      </div> */}
+
+      {/* // ! Show this when meetings are scheduled */}
+
+      <MyMeetingCard />
 
       <ScheduleGroupMeeting
         openDrawer={open}
         handleCloseDrawer={handleCloseDrawer}
       />
+
+      <MyMeetingsFilter open={openFilter} handleClose={handleCloseFilter} />
     </>
   );
 };

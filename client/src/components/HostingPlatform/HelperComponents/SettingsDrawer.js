@@ -9,6 +9,12 @@ import UpdateEventProfile from "./UpdateEventProfile";
 import CameraAndMic from "./Camera&Mic";
 import NotificationSettings from "./NotificationSettings";
 import history from "../../../history";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+
+import { signOut } from "../../../actions";
+import socket from "../service/socket";
+import { Link } from "react-router-dom";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
   const [openAudioAndVideo, setOpenAudioAndVideo] = useState(false);
@@ -19,6 +25,15 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
     useState(false);
 
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
+
+  const userDetails = useSelector((state) => state.user.userDetails);
+  const userId = userDetails._id;
+
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const dispatch = useDispatch();
 
   const handleOpenAudioAndVideo = () => {
     setOpenAudioAndVideo(true);
@@ -193,12 +208,22 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
             </div>
 
             <div>
-              <button
+              <Link
+              to="/home"
+               onClick={() => {
+                // history.push("/signin");
+                socket.emit(
+                  "disconnectUser",
+                  { userId, eventId },
+                  () => {}
+                );
+                dispatch(signOut());
+              }}
                 className="btn btn-outline-danger btn-outline-text"
-                style={{ width: "100%" }}
+                style={{ width: "100%", textDecoration: "none" }}
               >
                 Logout
-              </button>
+              </Link>
             </div>
           </div>
         </SwipeableDrawer>
