@@ -1,7 +1,6 @@
 // (userName, eventName, ticketType, amount)
 
 module.exports = (user, eventName, ticketType, amount) => {
-    console.log(user);
     return `
         <html>
           <body>

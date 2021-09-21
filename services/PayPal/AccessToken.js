@@ -21,11 +21,11 @@ exports.getPayPalAccessToken = catchAsync(async (req, res, next) => {
     }
   ).then(async (paypalRes) => {
     paypalRes = await paypalRes.json();
-    console.log(paypalRes);
+   
 
     const access_token = paypalRes.access_token;
 
-    console.log(access_token, "This is access_token");
+  
 
     fetch(`https://api-m.sandbox.paypal.com/v2/customer/partner-referrals`, {
       method: "POST",
@@ -75,7 +75,6 @@ exports.getPayPalAccessToken = catchAsync(async (req, res, next) => {
       }),
     }).then(async (payPalLinkRes) => {
       payPalLinkRes = await payPalLinkRes.json();
-      console.log(payPalLinkRes);
 
       res.status(200).json({
         status: "success",

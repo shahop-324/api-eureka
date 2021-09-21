@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
@@ -74,12 +71,10 @@ const {
 } = lobbyController;
 io.on("connect", (socket) => {
   socket.on("joinNetworking", async ({ eventId, userId }, callback) => {
-    console.log("I reached in Join networking");
     await Event.findById(eventId, async (err, eventDoc) => {
       if (err) {
         console.log(err);
       } else {
-        console.log();
         eventDoc.currentlyInNetworking.push(userId);
 
         eventDoc.save(
@@ -98,12 +93,12 @@ io.on("connect", (socket) => {
   });
 
   socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
-    console.log("I reached in Leave networking");
+  
     await Event.findById(eventId, async (err, eventDoc) => {
       if (err) {
         console.log(err);
       } else {
-        console.log();
+       
         eventDoc.currentlyInNetworking;
 
         const index = eventDoc.currentlyInNetworking.indexOf(userId);
@@ -131,8 +126,7 @@ io.on("connect", (socket) => {
   socket.on(
     "startNetworking",
     async ({ eventId, userId, userName, image, socketId }, callback) => {
-      console.log("I reached in start networking");
-      console.log(socketId);
+      
 
       const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
         const availableInThisEvent = await AvailableForNetworking.find({
@@ -235,16 +229,14 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(sessionDoc);
+             
                 sessionDoc.chatMessages.push(chatMsgDoc._id);
 
                 sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
                   if (err) {
                     console.log(err);
                   } else {
-                    // io.to(sessionId).emit("newSessionMsg", {
-                    //   newMsg: chatMsgDoc,
-                    // });
+                   
 
                     io.in(sessionId).emit("newSessionMsg", {
                       newMsg: chatMsgDoc,
@@ -614,7 +606,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            console.log(doc.currentlyInEvent);
+           
             io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
           }
         })
@@ -748,7 +740,7 @@ io.on("connect", (socket) => {
       callback
     ) => {
       socket.join(sessionId);
-      console.log(`I joined session with id ${sessionId}`);
+     
 
       const fetchCurrentMessages = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
@@ -936,10 +928,7 @@ io.on("connect", (socket) => {
   );
 
   socket.on("updatePoll", async ({ userId, selectedPoll, selectedOption }) => {
-    console.log("I am in update polls section.");
-    console.log("User Id: ", userId);
-    console.log("selected Poll Id: ", selectedPoll);
-    console.log("Selected poll option: ", selectedOption);
+   
 
     await EventPoll.findById(selectedPoll, async (err, pollDoc) => {
       if (err) {
@@ -1041,7 +1030,6 @@ io.on("connect", (socket) => {
           }
         }
       );
-      console.log("I reached in event poll section.");
     }
   );
 
@@ -1058,7 +1046,6 @@ io.on("connect", (socket) => {
       organisation,
       designation,
     }) => {
-      console.log("I reached in event alert section.");
       await EventAlert.create(
         {
           alertMsg,
@@ -1079,7 +1066,7 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(eventDoc);
+              
                 eventDoc.alerts.push(eventAlertDoc._id);
 
                 eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
@@ -1096,7 +1083,7 @@ io.on("connect", (socket) => {
           }
         }
       );
-      console.log("I reached in event alert section.");
+    
     }
   );
 
@@ -1137,7 +1124,7 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(eventDoc);
+               
                 eventDoc.chatMessages.push(chatMsgDoc._id);
 
                 eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
@@ -1240,7 +1227,6 @@ io.on("connect", (socket) => {
     const token = signToken(user._id);
 
     user.password = undefined;
-    console.log(token, "hey hitting logging in server.js");
     socket.emit("newLogin", {
       token,
       data: { user },
@@ -1251,7 +1237,7 @@ io.on("connect", (socket) => {
     "googleSignIn",
 
     async ({ ModifiedFormValues }) => {
-      console.log("hey hitting googleSignIn", ModifiedFormValues);
+     
       const { googleId, firstName, lastName, image, email, referralCode } =
         ModifiedFormValues;
       const user = await User.findOne({ googleId: googleId });
@@ -1259,10 +1245,7 @@ io.on("connect", (socket) => {
         const isUserLoggedInAlready = await LoggedInUsers.find({
           userId: user._id,
         });
-        console.log(
-          isUserLoggedInAlready[0],
-          "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj"
-        );
+    
 
         if (isUserLoggedInAlready.length > 0) {
           socket.broadcast.emit("logOutUser", {
@@ -1280,7 +1263,7 @@ io.on("connect", (socket) => {
 
         const token = signToken(user._id);
 
-        console.log(token, "hey hitting logging in server.js");
+      
         socket.emit("newGoogleLogin", {
           token,
           data: { user },
@@ -1321,7 +1304,7 @@ io.on("connect", (socket) => {
 
             const token = signToken(user._id);
 
-            console.log(token, "hey hitting logging in server.js");
+           
             socket.emit("newGoogleLogin", {
               token,
               data: { user },
@@ -1348,7 +1331,7 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-          console.log(token, "hey hitting logging in server.js");
+       
           socket.emit("newGoogleLogin", {
             token,
             data: { user },
@@ -1361,17 +1344,16 @@ io.on("connect", (socket) => {
   socket.on("linkedinSignIn", async ({ result }) => {
     const { linkedinId, firstName, lastName, email, image, referralCode } =
       result;
-    console.log(result);
+   
     const user = await User.findOne({
       linkedinId: linkedinId,
     });
-    console.log(user, "This is linkedin user");
+   
     if (user) {
       const isUserLoggedInAlready = await LoggedInUsers.find({
         userId: user._id,
       });
-      console.log(isUserLoggedInAlready[0], "jkkkkkjjjjjjjjjjjjjjjjjjjjjjjjjj");
-
+     
       if (isUserLoggedInAlready.length > 0) {
         socket.broadcast.emit("logOutUser", {
           userId: user._id,
@@ -1388,14 +1370,14 @@ io.on("connect", (socket) => {
 
       const token = signToken(user._id);
 
-      console.log(token, "hey hitting logging in server.js");
+     
       socket.emit("newLinkedinLogin", {
         token,
         data: { user },
       });
       //  we already have a record with the givenuserProfile ID
       //done(null, existingUser);
-      // console.log(existingUser);
+     
       // createSendToken(existingUser, 200, req, res);
     } else {
       let referrer;
@@ -1433,7 +1415,7 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-          console.log(token, "hey hitting logging in server.js");
+         
           socket.emit("newLinkedinLogin", {
             token,
             data: { user },
@@ -1460,7 +1442,7 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-          console.log(token, "hey hitting logging in server.js");
+        
           socket.emit("newLinkedinLogin", {
             token,
             data: { user },
@@ -1488,21 +1470,18 @@ io.on("connect", (socket) => {
 
         const token = signToken(user._id);
 
-        console.log(token, "hey hitting logging in server.js");
+       
         socket.emit("newLinkedinLogin", {
           token,
           data: { user },
         });
       }
-<<<<<<< HEAD
-=======
       
->>>>>>> 3d23f57 (c)
     }
   });
 
   socket.on("logOut", async (user) => {
-    console.log("hey hitting logout user in server.js");
+   
     await LoggedInUsers.findOneAndDelete({
       userId: user.userId,
     });

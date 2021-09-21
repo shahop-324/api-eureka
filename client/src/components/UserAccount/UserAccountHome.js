@@ -17,6 +17,27 @@ import history from "../../history";
 import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
+import styled from "styled-components";
+
+import AvatarMenu from "../AvatarMenu";
+import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+
+const BtnOutlinedWithIcon = styled.div`
+  border: 1px solid #152d35;
+  color: #152d35;
+  padding: 8px 16px;
+  border-radius: 10px;
+
+  font-size: 0.8rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+
+  &:hover {
+    background-color: #152d35;
+    color: #dcc7be;
+    cursor: pointer;
+  }
+`;
 
 const UserAccountHome = () => {
   const { isLoading } = useSelector((state) => state.user);
@@ -93,14 +114,27 @@ const UserAccountHome = () => {
             width: "auto",
           }}
         >
-          <UserAccountNav />
+          {/* <UserAccountNav /> */}
           <div className="user-account-body">
             <UserAccountSideNav className="first-step-user-section" />
-
             <div
               className="user-account-main-body"
-              style={{ minWidth: "1024px", overflow: "visible" }}
+              style={{
+                minWidth: "1024px",
+                overflow: "visible",
+                position: "relative",
+              }}
             >
+              <div className="opaque-layer" style={{ height: "100%" }}></div>
+              <div class="d-flex flex-row align-items-center justify-content-end py-2 px-2">
+            <BtnOutlinedWithIcon>
+              <ExploreRoundedIcon className="me-3" />
+              Explore Events
+            </BtnOutlinedWithIcon>
+            <div className="ms-3">
+              <AvatarMenu />
+            </div>
+          </div>
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs
                   activeIndex={currentIndex}

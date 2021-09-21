@@ -7,18 +7,14 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   const communityWhichWantsAllItsReviews = await Community.findById(
     req.community._id
   );
-  // console.log(communityWhichWantsAllItsReviews.reviewsDocId);
-  // const x = await ReviewsRef.findById(
-  //   communityWhichWantsAllItsReviews.reviewsDocId
-  // );
-  // console.log(x);
+
   const communityAllReviews = await ReviewsRef.findById(
     communityWhichWantsAllItsReviews.reviewsDocId
   )
     .populate('reviews')
     .select('reviews');
   const obj = await JSON.parse(JSON.stringify(communityAllReviews));
-  console.log(obj);
+
   const { reviews } = obj;
   res.status(200).json({
     status: 'success',
@@ -36,7 +32,7 @@ exports.getAllReviewsForOneEvent = catchAsync(async (req, res, next) => {
       select: 'userName rating reviewComment userImg',
     })
     .select('reviews');
-  console.log(reviewDocs);
+
   const obj = await JSON.parse(JSON.stringify(reviewDocs));
   const { reviews } = obj;
   res.status(200).json({

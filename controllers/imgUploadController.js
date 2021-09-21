@@ -9,9 +9,6 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.S3_SECRET_KEY,
 });
 
-console.log('Access Key', process.env.S3_ACCESS_KEY);
-console.log('Secret Key', process.env.S3_SECRET_KEY);
-
 exports.uploadImg = catchAsync((req, res, next) => {
   const userId = req.user.id;
   const key = `${userId}/${UUID()}.jpeg`;

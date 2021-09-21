@@ -11,8 +11,7 @@ const twilioApiKey = "SKb8e9a6ebe19fff9a6ccd4a447a324b0";
 const twilioApiSecret = "1Ytl4glaSsxQyTV8WlcsdFKPhaAso7EN";
 
 exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
-    console.log(req.body.tableId);
-    console.log(req.user._id);
+   
   const tableId = req.body.tableId;
   const userId = req.user._id;
   // Create an access token which we will sign and return to the client,
@@ -37,7 +36,7 @@ exports.createRoomAccessToken = catchAsync(async (req, res, next) => {
 
   const twillioAccessToken = token.toJwt();
 
-  console.log(token.toJwt());
+ 
 
   res.status(201).json({
     status: "success",

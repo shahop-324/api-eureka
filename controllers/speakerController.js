@@ -11,7 +11,6 @@ const filterObj = (obj, ...allowedFields) => {
 };
 exports.getParticularSpeaker = catchAsync(async (req, res, next) => {
   const speaker = await Speaker.findById(req.params.id).populate("sessions");
-  console.log(speaker);
 
   res.status(200).json({
     status: "SUCCESS",
@@ -23,7 +22,7 @@ exports.getParticularSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSpeaker = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+ 
   const filteredBody = filterObj(
     req.body,
     "status",
@@ -38,8 +37,6 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "image",
   );
 
-  console.log("filteredBody", filteredBody);
-
   const updatedSpeaker = await Speaker.findByIdAndUpdate(
     req.params.id,
     filteredBody,
@@ -49,7 +46,6 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     }
   ).populate("sessions");
 
-  console.log("updatedSpeaker", updatedSpeaker);
   res.status(200).json({
     status: "success",
     data: { updatedSpeaker },
@@ -85,7 +81,6 @@ exports.getAllSpeakers = catchAsync(async (req, res, next) => {
     .sessionFilter();
   const speakers = await features.query;
 
-  console.log(speakers);
   res.status(200).json({
     status: "SUCCESS",
     data: {

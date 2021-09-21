@@ -64,8 +64,7 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
-    // eslint-disable-next-line no-console
-    // console.log(error._message);
+  
 
     error.message = err.message;
 

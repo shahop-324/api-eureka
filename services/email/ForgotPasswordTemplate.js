@@ -1,5 +1,5 @@
 module.exports = (user, url) => {
-  console.log(user);
+
   return `
       <html>
         <body>

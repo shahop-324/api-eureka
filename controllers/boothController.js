@@ -19,7 +19,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          console.log(updatedUser.socialMediaHandles);
+         
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
@@ -70,7 +70,7 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
-  console.log(req.query, 72);
+
 
   const query = Booth.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
@@ -79,7 +79,7 @@ exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
   const features = new apiFeatures(query, req.query).textFilter().tagFilter();
   const booths = await features.query;
 
-  console.log(booths);
+
   res.status(200).json({
     status: "SUCCESS",
     data: booths,
@@ -91,7 +91,7 @@ exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
 
   const booth = await Booth.findById(boothId);
 
-  console.log(booth);
+
 
   res.status(200).json({
     status: "success",
@@ -100,7 +100,7 @@ exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBooth = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+
   const boothId = req.params.id;
 
   const updatedBooth = await Booth.findByIdAndUpdate(
@@ -122,7 +122,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     req.body.socialMediaHandles,
     updatedBooth
   );
-  console.log("This is processedBoothObj", processedBoothObj);
+
 
   if (req.body.image) {
     processedBoothObj.image = req.body.image;
@@ -133,7 +133,6 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     validateModifiedOnly: true,
   });
 
-  console.log(doublyUpdatedBooth);
 
   res.status(200).json({
     status: "success",

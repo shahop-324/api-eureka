@@ -12,13 +12,13 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getOneCoupon = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
+
 
   const coupon = await Coupon.findById(req.params.id).populate(
     "discountForEventId"
   );
 
-  console.log(coupon);
+ 
 
   res.status(200).json({
     status: "success",
@@ -27,7 +27,7 @@ exports.getOneCoupon = catchAsync(async (req, res, next) => {
 });
 
 exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
-  console.log("I reached in create new coupon");
+
   const eventId = req.body.discountForEventId;
   const communityId = req.community.id;
 
@@ -60,7 +60,7 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllCoupons = catchAsync(async (req, res, next) => {
-  console.log(" I reached in get all coupons");
+
   let couponDocs = await Community.findById(req.community.id)
     .select("coupons")
     .populate({

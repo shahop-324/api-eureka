@@ -34,7 +34,7 @@ exports.createFundTransferRequest = catchAsync(async (req, res, next) => {
   sgMail
     .send(msg)
     .then(() => {
-      console.log("Email sent");
+     
       res.status(201).json({
         status: "success",
         message: "Request sent for processing!",
@@ -42,6 +42,6 @@ exports.createFundTransferRequest = catchAsync(async (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.error(error);
+      
     });
 });

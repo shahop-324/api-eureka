@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 const axios = require("axios");
 const qs = require("query-string");
 const morgan = require("morgan");
@@ -75,7 +73,6 @@ const MAILCHIMP_CLIENT_ID = "919814706970";
 const MAILCHIMP_CLIENT_SECRET =
   "3837302297576b7845b5ced8bd4691bb69ac7b8c5f90645887";
 
-console.log(process.env.NODE_ENV, "klljlkl;kmfghytredswrtyuiop");
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:3000"
@@ -161,7 +158,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
     .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
     .then((response) => {
       accessToken = response.data.access_token;
-      console.log(accessToken);
       const config = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -170,7 +166,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
       axios
         .get(urlToGetUserProfile, config)
         .then((response) => {
-          console.log(response, "i am counting on you linkedin response");
 
           userProfile.firstName = response.data["localizedFirstName"];
           userProfile.lastName = response.data["localizedLastName"];
@@ -243,7 +238,6 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
-  console.log(req.query.code, "i am counting on you req.query.code");
   let accessToken = null;
   const config = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -264,7 +258,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
     )
     .then((response) => {
       accessToken = response.data.access_token;
-      console.log(accessToken, "i am counting on you access token");
 
       axios
         .get("https://login.mailchimp.com/oauth2/metadata", {
@@ -273,24 +266,14 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
           },
         })
         .then((metadataResponse) => {
-          console.log(
-            metadataResponse,
-            "I am counting on you metaDataResponse"
-          );
-          console.log(
-            metadataResponse.data.login.email,
-            "I am counting on you metadataResponse.data.login.email"
-          );
+          
           Community.findOne({ email: metadataResponse.data.login.email })
             .then((community) => {
-              console.log(community, "i am counting on you community");
+             
 
               MailChimp.findOne({ communityId: community._id })
                 .then((mailChimpCommunityAccount) => {
-                  console.log(
-                    mailChimpCommunityAccount,
-                    "i am counting on you mailChimpAccount"
-                  );
+                  
                   if (!mailChimpCommunityAccount) {
                     MailChimp.create({
                       communityId: community._id,
@@ -300,10 +283,7 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                       apiEndPoint: metadataResponse.data.api_endpoint,
                     })
                       .then(async () => {
-                        console.log(
-                          community,
-                          "I am counting on you commmunity for save error checking"
-                        );
+                        
                         community.isMailChimpConnected = true;
                         // const [a] = community;
                         await community.save({
@@ -312,10 +292,7 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                           validateModifiedOnly: true,
                         });
 
-                        console.log(
-                          "mailChimpCommunityCreated",
-                          "hey i am counting on you mailchimp community id"
-                        );
+                       
                         res.status(200).json({
                           status: "SUCCESS",
                         });
@@ -339,16 +316,16 @@ app.get(
   "/api-eureka/eureka/v1/fetchMailChimpAudiences",
   async (req, res, next) => {
     // 1. find by community id by event id
-    console.log(req.query.eventId, "i am counting on you req.query.eventId");
+   
     const eventData = await Event.findById(req.query.eventId);
 
     //2. find the mailchimp account with community id
 
     const communityId = eventData.createdBy;
-    console.log(communityId, "i am counting on you communityId");
+   
 
     const mailChimpData = await MailChimp.findOne({ communityId });
-    console.log(mailChimpData, "I am counting on you mailChimpData");
+  
     //3. dynamically form request for fetching list
 
     //  fetch(`https://${mailChimpData.server}.api.mailchimp.com/3.0/lists`)
@@ -361,10 +338,7 @@ app.get(
         if (err) {
           res.status(500).json(err);
         } else {
-          console.log(
-            result.body.lists,
-            "i am counting on you request.body.lists"
-          );
+          
           res.json(result.body.lists);
         }
       });
@@ -388,7 +362,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
-  console.log(req.query.code, "I am counting on you salesforce code");
+
 
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
@@ -410,25 +384,22 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
         return console.error(err);
       }
 
-      //console.log("res:" + res);
-      console.log("user ID: " + res.user_id);
-      console.log("organization ID: " + res.organization_id);
-      console.log("username: " + res.username);
-      console.log("display name: " + res.display_name);
+      // //console.log("res:" + res);
+      // console.log("user ID: " + res.user_id);
+      // console.log("organization ID: " + res.organization_id);
+      // console.log("username: " + res.username);
+      // console.log("display name: " + res.display_name);
 
-      console.log("Access Token:" + conn.accessToken);
-      console.log("Instance url:" + conn.instanceUrl);
-      console.log(conn.refreshToken, "i am counting on you refresh token");
+      // console.log("Access Token:" + conn.accessToken);
+      // console.log("Instance url:" + conn.instanceUrl);
+      // console.log(conn.refreshToken, "i am counting on you refresh token");
       Community.findOne({ email: res.username })
         .then((community) => {
-          console.log(community, "i am counting on you community");
+         
 
           SalesForce.findOne({ communityId: community._id })
             .then((salesForceCommunityAccount) => {
-              console.log(
-                salesForceCommunityAccount,
-                "i am counting on you salesForceAccount"
-              );
+             
               if (!salesForceCommunityAccount) {
                 SalesForce.create({
                   communityId: community._id,
@@ -437,10 +408,7 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                   refreshToken: conn.refreshToken,
                 })
                   .then(async () => {
-                    console.log(
-                      community,
-                      "I am counting on you commmunity for save error checking"
-                    );
+                    
                     community.isSalesForceConnected = true;
                     // const [a] = community;
                     await community.save({
