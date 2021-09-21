@@ -259,6 +259,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       );
 
       try {
+        // const res = await axios.post(
+        //   `https://login.salesforce.com/services/oauth2/token?refresh_token=${refreshTokenSalesforce}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${SALESFORCE_REDIRECT_URI}`
+        // );
+        // console.log(res.data, "i am countin on you salesforce refresh token");
+
         const res = await fetch(
           `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/`,
           {
@@ -280,6 +285,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
               },Date and time of booking:${Date.now()} `,
             }),
           }
+        );
+
+        console.log(
+          res,
+          "i am counting on you res razorpay for error  detection"
         );
         console.log(res.status, "1 i am counting on you response status 400");
         if (!res.ok) {
