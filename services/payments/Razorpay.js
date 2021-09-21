@@ -161,15 +161,11 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
 exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
   const secret = "sbvhqi839pqp’;a;s;sbuhwuhbhauxwvcywg3638228282fhvhyw";
 
-  // console.log(req.body.payload.payment.entity);
-
   const paymentEntity = req.body.payload.payment.entity;
 
   const shasum = crypto.createHmac("sha256", secret);
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
-
-  // console.log(digest, req.headers["x-razorpay-signature"]);
 
   if (digest === req.headers["x-razorpay-signature"]) {
     // console.log("Request is legit");
@@ -196,14 +192,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
     if (paymentEntity.notes.transaction_type === "community_plan") {
       try {
-        // console.info("This was a community plan purchase");
-        // console.log("This was a community plan purchase");
-
-        // console.log("communityId", paymentEntity.notes.communityId);
-        // console.log("referral", paymentEntity.notes.referral);
-        // console.log("userId", paymentEntity.notes.userId);
-        // console.log("Plan Name", paymentEntity.notes.planName);
-
         let referrer;
 
         if (paymentEntity.notes.referral) {
@@ -237,7 +225,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             }
           );
         }
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
       const community = await Community.findById(
         paymentEntity.notes.communityId
@@ -262,7 +252,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           event.eventName
         );
       }
-
 
       console.log(
         salesForceAccount.accessToken,
@@ -292,10 +281,11 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             }),
           }
         );
-
+        console.log(res.status, "1 i am counting on you response status 400");
         if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
+          console.log(res.status, "2 i am counting on you response status 400");
+          if (res.status == "400") {
+            throw new Error("unauthorizied access token is expired");
           } else {
             throw new Error(res.message);
           }
@@ -305,43 +295,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       } catch (err) {
         console.log(err);
       }
-
-      // try {
-      //   const res = await fetch(
-      //     `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateLead/`,
-      //     {
-      //       method: "POST",
-
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: `Bearer ${salesForceAccount.accessToken}`,
-      //       },
-
-      //       body: JSON.stringify({
-      //         FirstName: user.firstName,
-      //         LastName: user.lastName,
-      //         Email: paymentEntity.email,
-      //         Description: `Event name: ${event.eventName} , Ticket name: ${
-      //           ticket.name
-      //         } ,Price:${
-      //           paymentEntity.amount
-      //         },Date and time of booking:${Date.now()} `,
-      //       }),
-      //     }
-      //   );
-
-      //   if (!res.ok) {
-      //     if (!res.message) {
-      //       throw new Error("Something went wrong");
-      //     } else {
-      //       throw new Error(res.message);
-      //     }
-      //   }
-      //   const result = await res.json();
-      //   console.log(result);
-      // } catch (err) {
-      //   console.log(err);
-      // }
 
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 

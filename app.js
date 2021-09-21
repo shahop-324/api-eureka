@@ -418,7 +418,7 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
 
       console.log("Access Token:" + conn.accessToken);
       console.log("Instance url:" + conn.instanceUrl);
-
+      console.log(conn.refreshToken, "i am counting on you refresh token");
       Community.findOne({ email: res.username })
         .then((community) => {
           console.log(community, "i am counting on you community");
@@ -434,6 +434,7 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                   communityId: community._id,
                   accessToken: conn.accessToken,
                   instanceUrl: conn.instanceUrl,
+                  refreshToken: conn.refreshToken,
                 })
                   .then(async () => {
                     console.log(

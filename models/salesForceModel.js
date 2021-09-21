@@ -12,6 +12,9 @@ const salesForceSchema = new mongoose.Schema(
     instanceUrl: {
       type: String,
     },
+    refreshToken: {
+      type: String,
+    },
   },
 
   {

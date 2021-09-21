@@ -88,11 +88,8 @@ class App extends React.Component {
       );
     });
     socket.on("newLinkedinLogin", (res) => {
-<<<<<<< HEAD
       console.log(res, "i am counting on you res linkedin app");
-=======
-      console.log("New likedin login was triggered.")
->>>>>>> c20003421ce05d11faad6bc32024662024dfa28a
+      console.log("New likedin login was triggered.");
       this.props.newLinkedinLogin(
         res,
         this.props.signinForEventRegistrationEventId,
