@@ -197,7 +197,6 @@ const SessionDetailCard = ({
           <div className="session-date-day-time d-flex flex-column align-items-center">
             <div className="session-day mb-2 px-3 pt-3">{day}</div>
             <div className="session-date mb-2 px-3">{date}</div>
-
             <ThemedText className="session-time px-3 pb-3">{time}</ThemedText>
           </div>
         </div>

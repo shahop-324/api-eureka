@@ -400,69 +400,82 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
     if (err) {
       return console.error(err);
     }
-    const conn2 = new jsforce.Connection({
-      instanceUrl: conn.instanceUrl,
-      accessToken: conn.accessToken,
-    });
 
-    conn2.identity(function (err, res) {
-      if (err) {
-        return console.error(err);
-      }
 
-      //console.log("res:" + res);
-      console.log("user ID: " + res.user_id);
-      console.log("organization ID: " + res.organization_id);
-      console.log("username: " + res.username);
-      console.log("display name: " + res.display_name);
+    console.log(conn.accessToken);
+    console.log(conn.refreshToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
 
-      console.log("Access Token:" + conn.accessToken);
-      console.log("Instance url:" + conn.instanceUrl);
+      console.log(conn,"i am counting on you conn of salesforce");
+      res.send('success'); // or your desired response
 
-      Community.findOne({ email: res.username })
-        .then((community) => {
-          console.log(community, "i am counting on you community");
+    // const conn2 = new jsforce.Connection({
+    //   instanceUrl: conn.instanceUrl,
+    //   accessToken: conn.accessToken,
 
-          SalesForce.findOne({ communityId: community._id })
-            .then((salesForceCommunityAccount) => {
-              console.log(
-                salesForceCommunityAccount,
-                "i am counting on you salesForceAccount"
-              );
-              if (!salesForceCommunityAccount) {
-                SalesForce.create({
-                  communityId: community._id,
-                  accessToken: conn.accessToken,
-                  instanceUrl: conn.instanceUrl,
-                })
-                  .then(async () => {
-                    console.log(
-                      community,
-                      "I am counting on you commmunity for save error checking"
-                    );
-                    community.isSalesForceConnected = true;
-                    // const [a] = community;
-                    await community.save({
-                      new: true,
+    // });
 
-                      validateModifiedOnly: true,
-                    });
 
-                    response.status(200).json({
-                      status: "SUCCESS",
-                    });
-                  })
-                  .catch((err) => console.log(err));
-              } else {
-                response.status(200).json({
-                  status: "You already have one for same communityId",
-                });
-              }
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    });
+
+    // conn2.identity(function (err, res) {
+    //   if (err) {
+    //     return console.error(err);
+    //   }
+
+    //   //console.log("res:" + res);
+    //   console.log("user ID: " + res.user_id);
+    //   console.log("organization ID: " + res.organization_id);
+    //   console.log("username: " + res.username);
+    //   console.log("display name: " + res.display_name);
+
+      
+
+    //   Community.findOne({ email: res.username })
+    //     .then((community) => {
+    //       console.log(community, "i am counting on you community");
+
+    //       SalesForce.findOne({ communityId: community._id })
+    //         .then((salesForceCommunityAccount) => {
+    //           console.log(
+    //             salesForceCommunityAccount,
+    //             "i am counting on you salesForceAccount"
+    //           );
+    //           if (!salesForceCommunityAccount) {
+    //             SalesForce.create({
+    //               communityId: community._id,
+    //               accessToken: conn.accessToken,
+    //               instanceUrl: conn.instanceUrl,
+    //             })
+    //               .then(async () => {
+    //                 console.log(
+    //                   community,
+    //                   "I am counting on you commmunity for save error checking"
+    //                 );
+    //                 community.isSalesForceConnected = true;
+    //                 // const [a] = community;
+    //                 await community.save({
+    //                   new: true,
+
+    //                   validateModifiedOnly: true,
+    //                 });
+
+    //                 response.status(200).json({
+    //                   status: "SUCCESS",
+    //                 });
+    //               })
+    //               .catch((err) => console.log(err));
+    //           } else {
+    //             response.status(200).json({
+    //               status: "You already have one for same communityId",
+    //             });
+    //           }
+    //         })
+    //         .catch((err) => console.log(err));
+    //     })
+    //     .catch((err) => console.log(err));
+    // });
   });
 });
 module.exports = app;
