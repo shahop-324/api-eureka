@@ -53,7 +53,7 @@ const updateSession = ({ id, sessionStatus, sessionId, room }) => {
 // Remove session (setting status to ended)
 
 const removeSession = (id) => {
-  //console.log(users,"20 lobby controller")
+
   const index = sessions.findIndex((session) => session.id === id);
 
   if (index !== -1) return sessions.splice(index, 1)[0];
@@ -71,10 +71,10 @@ const removeUser = async (userId, eventId) => {
     { new: true },
     (err, doc) => {
       if(err) {
-        console.log(err);
+       
       }
       else {
-        console.log(doc);
+      
         return doc;
       }
     }
@@ -93,9 +93,9 @@ const removeUserFromSession = async (userId, sessionId) => {
     { new: true },
     (err, doc) => {
       if (err) {
-        console.log(err);
+      
       } else {
-        console.log(doc);
+     
         return doc;
       }
     }
@@ -129,10 +129,10 @@ const addUserInSession = ({ id, userId, room, role }) => {
 };
 
 // const removeUser = (id) => {
-//   console.log(users, "20 lobby controller");
+
 //   const index = users.findIndex((user) => user.id === id);
 
-//   console.log(index);
+
 
 //   if (index !== -1) return users.splice(index, 1)[0];
 // };

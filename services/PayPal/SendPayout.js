@@ -19,12 +19,11 @@ exports.sendPayout = catchAsync(async (req, res, next) => {
     }
   ).then(async (paypalRes) => {
     paypalRes = await paypalRes.json();
-    console.log(paypalRes);
+  
 
     const access_token = paypalRes.access_token;
 
-    console.log(access_token, "This is access_token");
-
+   
     fetch(`https://api-m.sandbox.paypal.com/v1/payments/payouts`, {
       method: "POST",
 
@@ -56,8 +55,7 @@ exports.sendPayout = catchAsync(async (req, res, next) => {
       }),
     }).then(async (payPalPayoutRes) => {
       payPalPayoutRes = await payPalPayoutRes.json();
-      console.log(payPalPayoutRes);
-
+  
       res.status(200).json({
         status: "success",
         data: payPalPayoutRes,

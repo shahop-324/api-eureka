@@ -11,11 +11,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 exports.createStripeAccount = catchAsync(async (req, res, next) => {
   const returnURL = req.body.return_url;
   const communityId = req.community.id;
-  console.log("communityConnectingToStripe", communityId);
+ 
 
   const communityConnectingToStripe = await Community.findById(communityId);
 
-  console.log(communityConnectingToStripe.stripeAccountId);
+ 
 
   let account = {};
 
@@ -36,7 +36,7 @@ exports.createStripeAccount = catchAsync(async (req, res, next) => {
     account.id = communityConnectingToStripe.stripeAccountId;
   }
 
-  console.log(account.id);
+ 
 
   const accountLinks = await stripe.accountLinks.create({
     account: account.id,
@@ -54,10 +54,7 @@ exports.createStripeAccount = catchAsync(async (req, res, next) => {
 exports.getConnectedAccountStatus = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
-  console.log(
-    "Checking Stripe connect account status for community Id: ",
-    communityId
-  );
+ 
 
   const communityConnectingToStripe = await Community.findById(communityId);
 
@@ -65,7 +62,6 @@ exports.getConnectedAccountStatus = catchAsync(async (req, res, next) => {
 
   const account = await stripe.accounts.retrieve(connectedAccountId);
 
-  console.log(account);
 
   res.status(200).json({
     status: "success",
@@ -107,10 +103,6 @@ exports.getEventRegistrationCheckoutSession = catchAsync(
 
     const connectedStripeAccountId =
       communityGettingRegistration.stripeAccountId;
-
-    // console.log(connectedStripeAccountId);
-    // console.log(userId, eventId, ticketId, couponId);
-    // console.log(eventGettingRegistration);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -156,12 +148,7 @@ exports.ListenForEvents = catchAsync(async (req, res, next) => {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
     const connectedAccountId = event.account;
-    console.log("session: ", event.data.object);
-    console.log("connected Account: ", event.account);
-    // handleCompletedCheckoutSession(connectedAccountId, session);
   }
-
-  console.log(event.type);
 
   res.status(200).json({
     status: "success",

@@ -1,7 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import VerticalTabs from "./UserAccountVerticalTabs";
+import styled from 'styled-components';
+
+
+
 // import { useSnackbar } from "notistack";
+
+
 
 const UserAccountHomeMainBody = () => {
     
@@ -16,7 +22,9 @@ const UserAccountHomeMainBody = () => {
 //   }
 
   return (
+
     <div className="user-account-main-body-home-content">
+      
       <div
         className="user-account-main-body-home-content-left ps-2"
         style={{ overflow: "auto", height: "100%" }}

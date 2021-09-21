@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
-
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
@@ -84,10 +81,10 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
 // .populate({path: 'spells', options: { sort: [['damages', 'asc']] }})
 // Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
-  console.log(req.user);
+  
 
   const response = await Event.findById(req.params.id, (err, data) => {
-    console.log(data, "89");
+   
   })
     .populate({
       path: "tickets",
@@ -114,7 +111,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
         match: { status: "Active" },
       },
     });
-  console.log(response, "114");
+
 
   await Event.findByIdAndUpdate(
     req.params.id,
@@ -144,7 +141,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-          console.log(updatedUser.socialMediaHandles);
+         
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
@@ -239,7 +236,7 @@ exports.updateCommunity = catchAsync(async (req, res) => {
   //   runValidators: true,
   // });
   const communityGettingUpdate = await Community.findById(communityId);
-  console.log(communityGettingUpdate);
+ 
   //i am going to create one function which takes obj and  updatedUser and we get  from req.body.socialMediaHandles and pass into function
 
   //create function let say fillSocialMediaHandler
@@ -315,18 +312,14 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
-  console.log(xahs);
+ 
 
   // create a new registration for that event and update corresponding user, event and community document
 
   // Update corresponding ticket that its amount avaliable is reduced by 1 and also update if ticket is sold out
 
-  // console.log(communityGettingRegistration);
-  // const { analytics } = communityGettingRegistrations;
-  // console.log(analytics);
-
   const communityId = eventGettingRegistration.createdBy;
-  console.log(communityId);
+ 
   const numberOfRegistrationsReceived = await Event.findOneAndUpdate(
     { _id: req.params.eventId },
     {
@@ -340,7 +333,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
     }
   );
 
-  console.log(numberOfRegistrationsReceived);
+
   const x = await Community.findOneAndUpdate(
     { _id: communityId },
     {
@@ -356,7 +349,6 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-  console.log(x);
 
   // communityGettingRegistration.analytics.totalRegistrations += 1;
 
@@ -388,7 +380,7 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
   const document = await RegistrationsIdsCommunityWise.findById(
     registrationsDocId
   );
-  console.log(document);
+
   document.registrationsId.push(newRegistration.id);
   await document.save({ validateModifiedOnly: true });
 
@@ -448,7 +440,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 
   // 2) Update corresponding event document for which review is created
-  console.log(newAvgRatingForEvent);
+
   await Event.findByIdAndUpdate(eventId, {
     eventAverageRating: newAvgRatingForEvent,
     numberOfRatingsReceived: newNumofRatingsForEvent,
@@ -579,9 +571,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // const key = req.body.key;
-  // console.log(key);
 
-  console.log("updated you ");
   const userId = req.user.id;
   const filteredBody = filterObj(
     req.body,
@@ -598,12 +588,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "notificationBasedOnMyPreference",
     "image"
   );
-  console.log(filteredBody);
+
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
     new: true,
     runValidators: true,
   });
-  console.log(updatedUser);
+
   // const twiceUpdatedUser = await User.findByIdAndUpdate(
   //   userId,
   //   {image: key},
@@ -612,8 +602,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   //     runValidators: true,
   //   }
   // );
-
-  // console.log(twiceUpdatedUser.image);
 
   res.status(201).json({
     status: "success",
@@ -641,8 +629,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 // TODO
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  console.log("I reached here in forgot password");
-  console.log(req.body);
+
   // 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
@@ -658,8 +645,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 2) Generate the random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-
-  console.log(resetToken);
 
   // 3) Send it to user's email
   try {
@@ -678,14 +663,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     sgMail
       .send(msg)
       .then(() => {
-        console.log("Email sent");
         res.status(200).json({
           status: "success",
           message: "Token sent to email!",
         });
       })
       .catch((error) => {
-        console.error(error);
+    
       });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -701,9 +685,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 // TODO
 exports.createNewCommunity = catchAsync(async (req, res, next) => {
-  // console.log(req);
-  console.log(req.body.image);
-  console.log(req.user);
+
   const userId = req.user.id;
   const userCreatingCommunity = await User.findById(userId);
   const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
@@ -781,7 +763,6 @@ exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
       },
     });
 
-  console.log(registeredInEventsList);
   res.status(200).json({
     status: "SUCCESS",
     data: {

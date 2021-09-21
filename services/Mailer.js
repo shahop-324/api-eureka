@@ -1,11 +1,11 @@
 const sendgrid = require('sendgrid');
 const helper = sendgrid.mail;
 
-console.log(process.env.SENDGRID_KEY);
+
 
 class Mailer extends helper.Mail {
   constructor(recipients, content) {
-      console.log(recipients);
+    
     super();
 
     this.sgApi = sendgrid(process.env.SENDGRID_KEY);

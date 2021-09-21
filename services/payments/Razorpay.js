@@ -53,8 +53,6 @@ const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
 
   request(options, function (error, response, body) {
     if (error) return new appError(error, 401);
-
-    console.log(body);
   });
 };
 
@@ -147,7 +145,6 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
     },
     async (err, order) => {
       if (err) {
-        // console.log(err);
       }
 
       res.status(200).json({
@@ -225,9 +222,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             }
           );
         }
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
       const community = await Community.findById(
         paymentEntity.notes.communityId
@@ -252,11 +247,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           event.eventName
         );
       }
-
-      console.log(
-        salesForceAccount.accessToken,
-        "i am counting on ypu sales force account access token"
-      );
 
       try {
         // const res = await axios.post(
@@ -293,7 +283,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         );
         console.log(res.status, "1 i am counting on you response status 400");
         if (!res.ok) {
-          console.log(res.status, "2 i am counting on you response status 400");
           if (res.status == "400") {
             throw new Error("unauthorizied access token is expired");
           } else {
@@ -301,7 +290,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           }
         }
         const result = await res.json();
-        console.log(result);
       } catch (err) {
         console.log(err);
       }
@@ -540,9 +528,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         await userDoingEventTransaction.save({ validateModifiedOnly: true });
         await eventGettingEventTransaction.save({ validateModifiedOnly: true });
         await ticketBeingPurchased.save({ validateModifiedOnly: true });
-
-        console.log("This is a payment made for event registration.");
-        console.info("This is a payment made for event registration.");
 
         // DONE VVIP Adding revenue in community account
 

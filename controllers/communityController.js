@@ -14,7 +14,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getParticularCommunity = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
+
   const community = await Community.findById(req.params.id);
   res.status(200).json({
     status: "success",
@@ -22,7 +22,7 @@ exports.getParticularCommunity = catchAsync(async (req, res, next) => {
   });
 });
 exports.selectPlan = catchAsync(async (req, res, next) => {
-  console.log("We are able to reach this middleware function, Over and Out.");
+
   const selectedPlan = req.body.plan;
   const planRenewDuration = req.body.planRenewDuration;
   const userId = req.user.id;
@@ -326,15 +326,15 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
       }
     );
   const token = generateToken(community.id, newCustomPlan.id);
-  // console.log(token);
+
 
   const redeemURL = `${req.protocol}://${req.get(
     "host"
   )}/eureka/v1/customPlan/redeemCustomPlan/${token}`;
-  console.log(redeemURL);
+ 
   const message = `Get Access to your custom plan by clicking here ${redeemURL}`;
 
-  console.log(community.email);
+
 
   // await sendEmail({
   //   email: community.email,
@@ -350,9 +350,9 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
 
 exports.redeemCustomPlan = catchAsync(async (req, res, next) => {
   const token = req.params.token;
-  console.log(token);
+ 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+
   res.status(201).json({
     status: "success",
     message: "This route is yet being implemented",

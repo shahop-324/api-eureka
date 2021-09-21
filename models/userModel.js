@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
@@ -259,7 +258,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
       this.passwordChangedAt.getTime() / 1000,
       10
     );
-    console.log(changedTimeStamp, JWTTimeStamp);
     return JWTTimeStamp < changedTimeStamp;
   }
 
@@ -274,8 +272,6 @@ userSchema.methods.createPasswordResetToken = function () {
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-
-  // console.log({ resetToken }, this.passwordResetToken);
 
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 

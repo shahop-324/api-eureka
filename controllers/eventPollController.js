@@ -4,7 +4,7 @@ const Event = require("../models/eventModel");
 exports.getPreviousEventPoll = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
 
-  console.log(eventId);
+
 
   const eventPolls = await Event.findById(eventId)
     .select("polls")

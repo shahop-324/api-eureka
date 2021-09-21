@@ -12,7 +12,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 exports.getParticularSession = catchAsync(async (req, res, next) => {
   const session = await Session.findById(req.params.id).populate("speaker");
-  console.log(session);
+
 
   res.status(200).json({
     status: "SUCCESS",
@@ -24,7 +24,7 @@ exports.getParticularSession = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSession = catchAsync(async (req, res, next) => {
-  console.log(req.body, 90897, 25);
+
   const filteredBody = filterObj(
     req.body,
     "name",
@@ -70,8 +70,6 @@ exports.DeleteSession = catchAsync(async (req, res, next) => {
 
 exports.getAllSessions = catchAsync(async (req, res, next) => {
 
-  console.log(req.query, 73);
-
   const query = Session.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
    // sessionId: mongoose.Types.ObjectId(req.query.sessionId),
@@ -81,7 +79,7 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
   const features = new apiFeatures(query, req.query).textFilter();
   const sessions = await features.query;
 
-  console.log(sessions);
+ 
   res.status(200).json({
     status: "SUCCESS",
     data: {
@@ -101,7 +99,6 @@ exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
   const features = new apiFeatures(query, req.query).textFilter();
   const sessions = await features.query;
 
-  console.log(sessions);
   res.status(200).json({
     status: "SUCCESS",
     data: {

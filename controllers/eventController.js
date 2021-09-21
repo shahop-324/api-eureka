@@ -75,11 +75,9 @@ const fillSocialMediaHandler = (object) => {
   return newObj;
 };
 
-/* eslint-disable no-console */
+
 exports.createEvent = catchAsync(async (req, res, next) => {
-  console.log(req.community);
-  console.log("op", new Date(req.body.startTime));
-  console.log("op 222", new Date(req.body.endTime));
+
 
   const communityId = req.community._id;
   const communityGettingEvent = await Community.findById(communityId);
@@ -168,18 +166,17 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const eventId = req.params.id;
 
-  console.log(req.body, "line 149");
+  
 
   // fetch event for which I have to create a booth
   const eventGettingBooth = await Event.findById(eventId);
 
   // Create a new booth document with recived
-  console.log(eventGettingBooth);
+
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
 
-  console.log("This is processedObj", processedObj);
   const createdBooth = await Booth.create({
     name: req.body.name,
     emails: req.body.emails,
@@ -233,15 +230,13 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
-  console.log(req.body, "Line 233");
+
 
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
   const eventGettingSpeaker = await Event.findById(eventId);
   const allSessionsInThisEvent = eventGettingSpeaker.session;
-
-  console.log(sessionsMappedByCommunity);
 
   // const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
 
@@ -262,7 +257,6 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
   }
 
-  console.log("processedArray", processedArray);
 
   const communityGettingSpeaker = await Community.findById(communityId);
 
@@ -292,16 +286,16 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   sgMail
     .send(msg)
     .then(async () => {
-      console.log("Email sent");
+     
     })
     .catch((error) => {
-      console.error(error);
+    
     });
 
   const document = await SpeakersIdsCommunityWise.findById(
     communityGettingSpeaker.speakersDocIdCommunityWise
   );
-  console.log(document);
+
   document.speakersIds.push(speaker._id);
   eventGettingSpeaker.speaker.push(speaker._id);
   await eventGettingSpeaker.save({ validateModifiedOnly: true });
@@ -342,9 +336,7 @@ exports.addSession = catchAsync(async (req, res, next) => {
       speakersMappedByCommunityForSession
     );
   }
-  // console.log(`allSessionsInThisEvent:`, allSessionsInThisEvent);
-  // console.log(`sessionsMappedByCommunity:`, sessionsMappedByCommunity);
-  // console.log(`processedArray:`, processedArray);
+ 
 
   const session = await Session.create({
     name: req.body.name,
@@ -399,7 +391,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     bio: req.body.bio,
     sessions: processedArray,
   });
-  console.log(updatedSpeaker);
+
 
   res.status(200).json({
     status: "success",
@@ -489,7 +481,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
-  console.log(req.body, 435);
+ 
   const filteredBody = filterObj(
     req.body,
     "eventName",
@@ -527,7 +519,6 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
 });
 
 exports.updateEventDescription = catchAsync(async (req, res, next) => {
-  console.log(req.body.editingComment);
 
   const updatedEvent = await Event.findByIdAndUpdate(
     req.params.id,
@@ -575,7 +566,6 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     updatedMaxPrice = currentPriceValue;
   }
 
-  console.log(ticketId);
 
   const updatedTicket = await Ticket.findByIdAndUpdate(
     ticketId,
@@ -596,7 +586,7 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     maxTicketPrice: updatedMaxPrice,
   });
 
-  console.log(updatedTicket);
+
 
   res.status(200).json({
     status: "success",
@@ -608,7 +598,7 @@ exports.getAllTickets = catchAsync(async (req, res, next) => {
   let tickets = await Event.findById(req.params.id)
     .select("tickets")
     .populate("tickets");
-  console.log(tickets);
+
 
   tickets = tickets.tickets.filter((ticket) => ticket.status !== "Deleted");
 
@@ -620,7 +610,7 @@ exports.getAllTickets = catchAsync(async (req, res, next) => {
 
 exports.getOneTicket = catchAsync(async (req, res, next) => {
   let ticket = await Ticket.findById(req.params.id);
-  console.log(ticket);
+
 
   res.status(200).json({
     status: "Success",

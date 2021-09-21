@@ -19,10 +19,18 @@ export default function CenteredTabs(props) {
       <Tabs
         value={num}
         onChange={props.handleChange}
-        indicatorColor="primary"
-        textColor="primary"
+        indicatorColor="#152d35"
+        textColor="#152d35"
         centered
         variant="fullWidth"
+        inkBarStyle={{background: 'blue'}}
+        TabIndicatorProps={{
+          style: {
+            backgroundColor: "#152d35",
+            color: "#152d35",
+           }
+          }}
+        
       >
         <Tab label="Home" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} />
         <Tab label="Events" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}}/>

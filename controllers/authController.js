@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-// eslint-disable-next-line no-unused-vars
+
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const Community = require("../models/communityModel");
@@ -90,7 +89,7 @@ exports.signup = catchAsync(async (req, res) => {
   // check if someone referred this new user
 
   let referrer;
-  console.log(req.body.referralCode, "hey hitting auth controller signup");
+ 
   if (req.body.referralCode) {
     referrer = await User.findOneAndUpdate(
       { referralCode: req.body.referralCode },
@@ -102,7 +101,7 @@ exports.signup = catchAsync(async (req, res) => {
         validateModifiedOnly: true,
       }
     );
-    console.log(referrer, "hey hitting auth controller signup");
+   
     if (referrer) {
       const newUser = await User.create({
         firstName: req.body.firstName,
@@ -202,15 +201,13 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.communityLogin = catchAsync(async (req, res, next) => {
-  // console.log(req.user.id);
-  // console.log(req.params.id);
+  
 
   createSendTokenForCommunityLogin(req.user.id, req.params.id, 200, req, res);
 });
 
 exports.protectCommunity = catchAsync(async (req, res, next) => {
-  console.log(req.body, 163);
-  console.log("I reached here", "auth line 161");
+  
 
   // 1) Getting token and check if it's there
   let token;
@@ -231,18 +228,18 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log(token);
+
 
   // 2) Verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+ 
 
   const freshUser = await User.findById(decoded.userId);
   const freshCommunity = await Community.findById(decoded.communityId);
-  console.log(freshCommunity);
+  
   req.user = freshUser;
   req.community = freshCommunity;
-  console.log(req.community);
+
   next();
 });
 

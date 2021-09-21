@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-
 const catchAsync = require("../utils/catchAsync");
 const Event = require("../models/eventModel");
 const Community = require("../models/communityModel");
@@ -13,8 +10,6 @@ exports.getAllRegistrations = catchAsync(async (req, res, next) => {
 
   const registrations = await Registration.find({ eventByCommunityId: communityId });
 
-  console.log(registrations);
-
   res.status(200).json({
     status: "success",
     length: registrations.length,
@@ -25,8 +20,6 @@ exports.getAllRegistrations = catchAsync(async (req, res, next) => {
 exports.getOneRegistration = catchAsync(async (req, res, next) => {
   const registrationId = req.params.id;
   const registration = await Registration.findById(registrationId);
-
-  console.log(registration);
 
   res.status(200).json({
     status: 'success',
@@ -43,10 +36,7 @@ exports.getAllRegistrationsForOneEvent = catchAsync(async (req, res, next) => {
 
   const obj = await JSON.parse(JSON.stringify(json));
   const { registrations } = obj;
-
-  console.log(obj.registrations, "These are all this event's registrations.");
-
-
+  
   res.status(200).json({
     status: "success",
     length: registrations.length,

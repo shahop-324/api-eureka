@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import Faker from "faker";
+import PersonProfile from "../../PersonProfile";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -98,6 +99,12 @@ const SpeakerCardRight = styled.div`
 `;
 
 const SpeakerCardComponent = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -119,7 +126,13 @@ const SpeakerCardComponent = () => {
             <ProfileSmallText>Prdouct Manager, Bluemeet</ProfileSmallText>
           </div>
 
-          <ButtonOutlinedDark>Know more</ButtonOutlinedDark>
+          <ButtonOutlinedDark
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Know more
+          </ButtonOutlinedDark>
 
           <div></div>
         </SpeakerCardleft>
@@ -132,6 +145,15 @@ const SpeakerCardComponent = () => {
           Presentations process.
         </SpeakerCardRight>
       </SpeakerCardBody>
+
+      <PersonProfile
+        open={open}
+        handleClose={handleClose}
+        userName={Faker.name.findName()}
+        userImage={Faker.image.avatar()}
+        userOrganisation={"Google Inc."}
+        userDesignation={"VP"}
+      />
     </>
   );
 };

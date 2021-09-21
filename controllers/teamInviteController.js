@@ -62,18 +62,18 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
   sgMail
     .send(msg)
     .then(async () => {
-      console.log("Email sent");
+   
       // 3.) Store newly created invitation in notYetAcceptedInvitations of Community Doc
       communityDoc.notYetAcceptedInvitations.push(newlyCreatedInvitation._id);
       await communityDoc.save({validateModifiedOnly: true});
 
-      console.log(newlyCreatedInvitation);
+     
       res.status(200).json({
         status: "success",
         message: "Invite Link sent to email!",
       });
     })
     .catch((error) => {
-      console.error(error);
+    
     });
 });

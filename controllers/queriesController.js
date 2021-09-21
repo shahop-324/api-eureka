@@ -14,8 +14,6 @@ exports.getAllQueries = catchAsync(async (req, res, next) => {
 
     const queries = await features.query;
 
-    console.log(queries);
-
   res.status(200).json({
     status: "success",
     data: queries,
@@ -37,7 +35,6 @@ exports.answerQuery = catchAsync(async (req, res, next) => {
     new: true, 
     validateModifiedOnly: true,
   });
-  console.log(updatedQueryDoc, 40);
 
   res.status(200).json({
     status: "success",

@@ -1,5 +1,7 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
+import styled from "styled-components";
+import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,6 +15,87 @@ import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
 import maleMascot from "./../../assets/images/winkingPerson.png";
 import { useSnackbar } from "notistack";
+
+const SideNavPaper = styled.div`
+  width: 100%;
+  background-color: #ffffff;
+`;
+
+const BtnOutlinedWithIcon = styled.div`
+  border: 1px solid #152d35;
+  color: #152d35;
+  padding: 8px 16px;
+  border-radius: 10px;
+
+  font-size: 0.8rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+
+  &:hover {
+    background-color: #152d35;
+    color: #dcc7be;
+    cursor: pointer;
+  }
+`;
+
+const ProfileTabPaper = styled.div`
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 #152d353f;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+`;
+
+const CommunitiesHeading = styled.div`
+  font-size: 0.9rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #152d35;
+  letter-spacing: 0.15px;
+`;
+const CommunityTabPaper = styled.div`
+  background-color: transparent;
+  border-radius: 10px;
+
+  color: #152d35 !important;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+
+  /* width: 100%; */
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+
+  &:hover {
+    color: #152d35 !important;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 #152d353f;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+`;
+
+const ProfileName = styled.div`
+  color: #152d35 !important;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+`;
+
+const ProfileEmail = styled.div`
+  color: #152d35 !important;
+  font-family: "Ubuntu";
+  font-weight: 400;
+  font-size: 0.75rem;
+  text-transform: none;
+`;
 
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
@@ -33,13 +116,12 @@ const CommunityProfileTab = (props) => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-   return dispatch(errorTrackerForCommunitySignIn());
-    
+    return dispatch(errorTrackerForCommunitySignIn());
   }
 
   return (
-    <div
-      className="user-community-tab px-4 py-2 mb-3"
+    <CommunityTabPaper
+      className="px-4 py-2 mb-3 mx-2"
       onClick={onClickCommunityTab}
     >
       <Avatar
@@ -49,14 +131,9 @@ const CommunityProfileTab = (props) => {
         style={{ alignSelf: "center" }}
       />
       <div className="d-flex flex-column justify-content-center align-items-left ms-3">
-        <div
-          className="community-profile-name mb-1"
-          style={{ fontSize: "0.9rem" }}
-        >
-          {props.name}
-        </div>
+        <div className="mb-1">{props.name}</div>
       </div>
-    </div>
+    </CommunityTabPaper>
   );
 };
 
@@ -66,7 +143,7 @@ class UserProfileTab extends React.Component {
     console.log(name, email);
 
     return (
-      <div className="user-profile-tab px-4 py-2 mb-4">
+      <ProfileTabPaper className="user-profile-tab px-4 py-2 mb-4 mx-2">
         <Avatar
           alt={name}
           variant="rounded"
@@ -74,12 +151,10 @@ class UserProfileTab extends React.Component {
           style={{ alignSelf: "center" }}
         />
         <div className="d-flex flex-column justify-content-between align-items-left ms-3">
-          <div className="user-profile-name mb-1" style={{ fontSize: "1rem" }}>
-            {name}
-          </div>
-          <div className="user-profile-email">{email}</div>
+          <ProfileName className="mb-1">{name}</ProfileName>
+          <ProfileEmail>{email}</ProfileEmail>
         </div>
-      </div>
+      </ProfileTabPaper>
     );
   }
 }
@@ -153,11 +228,21 @@ const UserAccountSideNav = () => {
   }
 
   return (
-    <div className="user-account-side-nav-bar">
+    <SideNavPaper>
+      <div className="px-3 py-2 mb-4 mt-3">
+        <img
+          src={BluemeetLOGO}
+          alt="bluemeet logo"
+          style={{ width: "120px" }}
+        />
+      </div>
+
       <UserProfileTab name={name} email={email} imageURL={userImageURL} />
 
       <div className="user-community-tab-section">
-        <div className="user-community-tab-headline px-4 mb-3">Communities</div>
+        <CommunitiesHeading className="user-community-tab-headline px-4 mb-3">
+          Communities
+        </CommunitiesHeading>
         <div
           className="user-community-tab-list mb-4"
           style={{ overflow: "auto", height: "77vh" }}
@@ -179,17 +264,20 @@ const UserAccountSideNav = () => {
             />
           )}
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
-            <button
-              className="btn btn-outline-text  btn-outline-primary  py-2"
-              onClick={handleClickOpen}
+            {/* <button
+              className="btn btn-outline-text btn-outline-light py-2"
+             
             >
+              
+            </button> */}
+            <BtnOutlinedWithIcon className="py-2" onClick={handleClickOpen}>
               Create New Community
-            </button>
+            </BtnOutlinedWithIcon>
             <CreateNewCommunityForm closeHandler={handleClose} open={open} />
           </div>
         </div>
       </div>
-    </div>
+    </SideNavPaper>
   );
 };
 export default UserAccountSideNav;

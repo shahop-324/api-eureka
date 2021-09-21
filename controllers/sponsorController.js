@@ -35,8 +35,6 @@ exports.deleteSponsor = catchAsync(async (req, res, next) => {
 exports.updateSponsor = catchAsync(async (req, res, next) => {
   const sponsorId = req.params.id;
 
-  console.log(sponsorId, "sponsorId");
-
   const updatedSponsor = await Sponsor.findByIdAndUpdate(
     sponsorId,
     {
@@ -71,8 +69,6 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
 //     .select("sponsors")
 //     .populate("sponsors");
 
-//   console.log(sponsors);
-
 //   sponsors = sponsors.sponsors.filter((sponsor) => sponsor.docStatus !== "Deleted");
 
 //   res.status(200).json({
@@ -82,7 +78,6 @@ exports.updateSponsor = catchAsync(async (req, res, next) => {
 // });
 
 exports.getAllSponsors = catchAsync(async (req, res, next) => {
-  console.log(req.query, 76);
 
   const query = Sponsor.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
@@ -93,7 +88,6 @@ exports.getAllSponsors = catchAsync(async (req, res, next) => {
     .sponsorFilter();
   const sponsors = await features.query;
 
-  console.log(sponsors);
   res.status(200).json({
     status: "SUCCESS",
     data: sponsors,
