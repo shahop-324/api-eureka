@@ -387,29 +387,33 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
-app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
+app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", async(req, response) => {
   console.log(req.query.code, "I am counting on you salesforce code");
 
-  const oauth2 = new jsforce.OAuth2({
-    clientId: process.env.SALESFORCE_CLIENT_ID,
-    clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-    redirectUri: process.env.SALESFORCE_REDIRECT_URI,
-  });
-  const conn = new jsforce.Connection({ oauth2: oauth2 });
-  conn.authorize(req.query.code, function (err, userInfo) {
-    if (err) {
-      return console.error(err);
-    }
 
 
-    console.log(conn.accessToken);
-    console.log(conn.refreshToken);
-    console.log(conn.instanceUrl);
-    console.log("User ID: " + userInfo.id);
-    console.log("Org ID: " + userInfo.organizationId);
+    const result= await axios.post(`https://akatsuki5-dev-ed.my.salesforce.com/services/oauth2/token?code=${req.query.code}&grant_type=authorization_code&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`)
+    console.log(result.data,"i am counitng on you result of salesforce");
+  // const oauth2 = new jsforce.OAuth2({
+  //   clientId: process.env.SALESFORCE_CLIENT_ID,
+  //   clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
+  //   redirectUri: process.env.SALESFORCE_REDIRECT_URI,
+  // });
+  // const conn = new jsforce.Connection({ oauth2: oauth2 });
+  // conn.authorize(req.query.code, function (err, userInfo) {
+  //   if (err) {
+  //     return console.error(err);
+  //   }
 
-      console.log(conn,"i am counting on you conn of salesforce");
-      res.send('success'); // or your desired response
+
+  //   console.log(conn.accessToken,"i am counting on you salesforce access token");
+  //   console.log(conn.refreshToken,"i am counting on you salesforce refresh token");
+  //   console.log(conn.instanceUrl,"i am counting on you salesforce instance url");
+  //   console.log("User ID: " + userInfo.id);
+  //   console.log("Org ID: " + userInfo.organizationId);
+
+      //console.log(conn,"i am counting on you conn of salesforce");
+      response.send('success'); // or your desired response
 
     // const conn2 = new jsforce.Connection({
     //   instanceUrl: conn.instanceUrl,
@@ -477,5 +481,5 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
     //     .catch((err) => console.log(err));
     // });
   });
-});
+// });
 module.exports = app;
