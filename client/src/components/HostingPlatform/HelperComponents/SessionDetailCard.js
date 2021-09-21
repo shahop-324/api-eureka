@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../../../index.css";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
@@ -14,8 +14,11 @@ import {
 } from "../../../actions";
 
 import styled from "styled-components";
-import Chip from '@mui/material/Chip';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
+import Chip from "@mui/material/Chip";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+
+import SetReminder from "./../Screens/Sub/SetReminder";
+import SetPriority from "./../Screens/Sub/SetPriority";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -33,14 +36,14 @@ const SessionDetailCardBody = styled.div`
 `;
 
 const ThemedBackgroundButton = styled.div`
-background-color: #152d35;
-text-decoration: none !important;
-`
+  background-color: #152d35;
+  text-decoration: none !important;
+`;
 
 const ThemedText = styled.div`
-color: #152d35 !important;
-font-family: "Ubuntu";
-`
+  color: #152d35 !important;
+  font-family: "Ubuntu";
+`;
 
 const SessionSpeakerCard = ({ name, headline, image }) => {
   const classes = useStyles();
@@ -86,6 +89,18 @@ const SessionDetailCard = ({
   duration,
   speakers,
 }) => {
+  const [openPriority, setOpenPriority] = useState(false);
+
+  const [openReminder, setOpenReminder] = useState(false);
+
+  const handleClosePriority = () => {
+    setOpenPriority(false);
+  };
+
+  const handleCloseReminder = () => {
+    setOpenReminder(false);
+  };
+
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -149,7 +164,7 @@ const SessionDetailCard = ({
   const roleToBeDisplayed = role;
 
   const handleClick = () => {
-    console.info('You clicked the Chip.');
+    console.info("You clicked the Chip.");
   };
 
   // const readFilePro = file => {
@@ -203,14 +218,19 @@ const SessionDetailCard = ({
         </div>
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
           <div className="d-flex flex-row align-items-center">
+            <div className="session-title mb-3 me-3">{name}</div>
 
-          <div className="session-title mb-3 me-3">{name}</div>
-
-          <Chip className="mb-3" icon={<AddCircleOutlineRoundedIcon />} label="Set priority" variant="outlined" onClick={handleClick} />
-          
-
+            <Chip
+              className="mb-3"
+              icon={<AddCircleOutlineRoundedIcon />}
+              label="Set priority"
+              variant="outlined"
+              onClick={() => {
+                setOpenPriority(true);
+              }}
+            />
           </div>
-          
+
           <div className="session-running-status-container px-2 py-2 mb-3">
             <div className="session-running-status">Upcoming</div>
           </div>
@@ -226,7 +246,12 @@ const SessionDetailCard = ({
           className={`d-flex flex-row justify-content-end align-items-start`}
         >
           <div className="d-flex flex-row justify-content-end align-items-center">
-            <IconButton aria-label="notification">
+            <IconButton
+              onClick={() => {
+                setOpenReminder(true);
+              }}
+              aria-label="notification"
+            >
               <NotificationsNoneOutlinedIcon />
             </IconButton>
             <Link
@@ -303,22 +328,19 @@ const SessionDetailCard = ({
                   )
                 );
               }}
-              
-              style={{  textDecoration: "none" }}
+              style={{ textDecoration: "none" }}
             >
               <ThemedBackgroundButton className="btn-filled-h px-4 py-3 ms-3 join-session-btn">
-              {btnText}
+                {btnText}
               </ThemedBackgroundButton>
             </Link>
           </div>
         </div>
-
-
-
-
-
-        
       </div>
+
+      <SetReminder open={openReminder} handleClose={handleCloseReminder} />
+
+      <SetPriority open={openPriority} handleClose={handleClosePriority} />
     </>
   );
 };
