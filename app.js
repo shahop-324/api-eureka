@@ -49,6 +49,7 @@ const communityPlanRoutes = require("./routes/communityPlanRoutes");
 const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const paypalRoutes = require("./routes/payPalRoutes");
+const zapierRoutes = require("./routes/zapierRoutes");
 
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
@@ -88,6 +89,8 @@ app.use(
       "https://www.bluemeet.in",
       "https://www.evenz.co.in",
       "https://evenz.co.in",
+      "https://zapier.com",
+      "https://www.zapier.com",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
@@ -218,6 +221,7 @@ app.use("/api-eureka/eureka/v1/communityPlan", communityPlanRoutes);
 app.use("/api-eureka/eureka/v1/affiliate", affiliateRoutes);
 app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 app.use("/api-eureka/eureka/v1/paypal", paypalRoutes);
+app.use("/api-eureka/eureka/v1/zapier", zapierRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

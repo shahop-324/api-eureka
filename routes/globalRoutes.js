@@ -54,7 +54,7 @@ router.post(
 router.post(
   "/getLiveStreamingTokenForJoiningTable",
   globalController.generateLiveStreamingTokenForJoiningTable
-)
+);
 
 router.post(
   "/getLiveStreamingTokenForSpeaker",
@@ -79,12 +79,11 @@ router.post(
 
 router.get(
   "/availableForNetworking/:eventId",
- networkingController.getAllAvailableForNetworking
+  networkingController.getAllAvailableForNetworking
 );
 
-router.get(
-  "/getTawkLink/:communityId",
-  globalController.getTawkLink
-)
+router.get("/getTawkLink/:communityId", globalController.getTawkLink);
+
+router.get("/getAllEvents", globalController.getAllEvents);
 
 module.exports = router;

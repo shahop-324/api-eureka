@@ -349,7 +349,10 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 exports.authenticateCommunity = catchAsync(async (req, res, next) => {
-  const { apiKey, apiSecret } = req.body;
+  const { apiKey, apiSecret } = req.query;
+
+  console.log(apiKey);
+  console.log(apiSecret);
 
   // 1) Check if apiKey and apiSecret Exist
   if (!apiKey || !apiSecret) {
@@ -368,10 +371,9 @@ exports.authenticateCommunity = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorrect api key or secret", 401));
   }
 
+  const CommunityDoc = await Community.findById(credentialDoc.communityId);
+
   // 3) If everything ok, send pass on to next middleware
-  res.status(200).json({
-    status: "success",
-    message: "This requested has been successfully authenticated",
-  });
+  res.status(200).json(CommunityDoc);
 });
 

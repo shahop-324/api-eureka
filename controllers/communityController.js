@@ -4,6 +4,8 @@ const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { promisify } = require("util");
+const CommunityCredentials = require("../models/CommunityCredentialsModel");
+const { v4: uuidv4 } = require("uuid");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -14,7 +16,6 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getParticularCommunity = catchAsync(async (req, res, next) => {
-
   const community = await Community.findById(req.params.id);
   res.status(200).json({
     status: "success",
@@ -22,7 +23,6 @@ exports.getParticularCommunity = catchAsync(async (req, res, next) => {
   });
 });
 exports.selectPlan = catchAsync(async (req, res, next) => {
-
   const selectedPlan = req.body.plan;
   const planRenewDuration = req.body.planRenewDuration;
   const userId = req.user.id;
@@ -327,14 +327,11 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
     );
   const token = generateToken(community.id, newCustomPlan.id);
 
-
   const redeemURL = `${req.protocol}://${req.get(
     "host"
   )}/eureka/v1/customPlan/redeemCustomPlan/${token}`;
- 
+
   const message = `Get Access to your custom plan by clicking here ${redeemURL}`;
-
-
 
   // await sendEmail({
   //   email: community.email,
@@ -350,7 +347,7 @@ exports.customPlanGeneration = catchAsync(async (req, res, next) => {
 
 exports.redeemCustomPlan = catchAsync(async (req, res, next) => {
   const token = req.params.token;
- 
+
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   res.status(201).json({
@@ -383,5 +380,47 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedCommunity,
+  });
+});
+
+exports.generateApiKey = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+  const userId = req.body.userId;
+  const label = req.body.label;
+
+  const CommunityGettingApiKey = await Community.findById(communityId);
+
+  const newApiCredentials = await CommunityCredentials.create({
+    communityId: communityId,
+    label: label,
+    APIKey: `bluk_${uuidv4()}`,
+    APISecret: `bluS_${uuidv4()}`,
+    isEnabled: true,
+    createdAt: Date.now(),
+    createdBy: userId,
+  });
+
+  CommunityGettingApiKey.credentials.push(newApiCredentials._id);
+
+  await CommunityGettingApiKey.save({ new: true, validateModifiedOnly: true });
+
+  res.status(201).json({
+    status: "success",
+    message: "Successfully create new api credentials",
+    data: newApiCredentials,
+  });
+});
+
+exports.getApiKeys = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const apiKeyDocs = await CommunityCredentials.find({
+    communityId: communityId,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "successfully fetched all api keys",
+    data: apiKeyDocs,
   });
 });

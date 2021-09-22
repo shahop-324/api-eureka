@@ -147,7 +147,7 @@ const EventDetailCard = ({
                 to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
-                // disabled
+                  // disabled
                   onClick={() => {
                     dispatch(
                       generateEventAccessToken(
@@ -164,7 +164,6 @@ const EventDetailCard = ({
                 >
                   Visit
                 </button>
-                <button className="btn btn-outline-dark btn-outline-text">share on linkedin</button>
               </Link>
             </div>
           </div>

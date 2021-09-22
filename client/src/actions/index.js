@@ -38,6 +38,7 @@ import socket from "../components/HostingPlatform/service/socket";
 import { paypalActions } from "../reducers/paypalSlice";
 import { tawkActions } from "../reducers/tawkSlice";
 import { eventbriteActions } from "../reducers/eventbriteSlice";
+import { apiKeyActions } from "../reducers/apiKeySlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -5345,7 +5346,7 @@ export const saveEventbriteConfigurationForEvent =
   async (dispatch, getState) => {
     try {
       const res = await fetch(
-        `${BaseURL}/event/saveEventbriteConf/${bluemeetEventId}`,
+        `${BaseURL}event/saveEventbriteConf/${bluemeetEventId}`,
         {
           method: "PATCH",
 
@@ -5377,3 +5378,82 @@ export const saveEventbriteConfigurationForEvent =
       console.log("error saving eventbrite configuration to database");
     }
   };
+
+export const generateAPICredentials =
+  (communityId, userId, label) => async (dispatch, getState) => {
+    dispatch(apiKeyActions.startLoading());
+    try {
+      // Submit a request to generate new set of API Key and secret
+      const res = await fetch(
+        `${BaseURL}community/generateApiKey/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            userId: userId,
+            label: label,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        apiKeyActions.CreateApiKey({
+          apiKey: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(apiKeyActions.hasError(error.message));
+    }
+  };
+
+export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
+  dispatch(apiKeyActions.startLoading());
+
+  try {
+    const res = await fetch(`${BaseURL}community/getApiKeys/${communityId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      apiKeyActions.FetchApiKeys({
+        apiKeys: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(apiKeyActions.hasError(error.message));
+  }
+};
