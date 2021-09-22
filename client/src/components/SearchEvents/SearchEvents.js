@@ -233,6 +233,7 @@ const SearchEvents = () => {
           rating={(event.communityRating * 1.0).toFixed(1)}
           startTime={startTime}
           endTime={endTime}
+          communityId={event.createdBy.id}
         />
       );
     });

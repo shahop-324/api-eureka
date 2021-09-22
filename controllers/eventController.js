@@ -75,10 +75,7 @@ const fillSocialMediaHandler = (object) => {
   return newObj;
 };
 
-
 exports.createEvent = catchAsync(async (req, res, next) => {
-
-
   const communityId = req.community._id;
   const communityGettingEvent = await Community.findById(communityId);
   const document = await EventsIdsCommunityWise.findById(
@@ -117,7 +114,9 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
-  const allEvents = await Event.find({createdBy: mongoose.Types.ObjectId(communityId)})
+  const allEvents = await Event.find({
+    createdBy: mongoose.Types.ObjectId(communityId),
+  });
 
   const query = Event.find({ createdBy: mongoose.Types.ObjectId(communityId) })
     .populate("sponsors")
@@ -166,13 +165,10 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const eventId = req.params.id;
 
-  
-
   // fetch event for which I have to create a booth
   const eventGettingBooth = await Event.findById(eventId);
 
   // Create a new booth document with recived
-
 
   // Create a new booth document with recived req.body info
   const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
@@ -230,8 +226,6 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
-
-
   const eventId = req.params.eventId;
   const communityId = req.community._id;
   const sessionsMappedByCommunity = req.body.sessions;
@@ -256,7 +250,6 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   if (sessionsMappedByCommunity != undefined) {
     processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
   }
-
 
   const communityGettingSpeaker = await Community.findById(communityId);
 
@@ -285,12 +278,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
   sgMail
     .send(msg)
-    .then(async () => {
-     
-    })
-    .catch((error) => {
-    
-    });
+    .then(async () => {})
+    .catch((error) => {});
 
   const document = await SpeakersIdsCommunityWise.findById(
     communityGettingSpeaker.speakersDocIdCommunityWise
@@ -336,7 +325,6 @@ exports.addSession = catchAsync(async (req, res, next) => {
       speakersMappedByCommunityForSession
     );
   }
- 
 
   const session = await Session.create({
     name: req.body.name,
@@ -391,7 +379,6 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     bio: req.body.bio,
     sessions: processedArray,
   });
-
 
   res.status(200).json({
     status: "success",
@@ -481,7 +468,6 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
- 
   const filteredBody = filterObj(
     req.body,
     "eventName",
@@ -519,7 +505,6 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
 });
 
 exports.updateEventDescription = catchAsync(async (req, res, next) => {
-
   const updatedEvent = await Event.findByIdAndUpdate(
     req.params.id,
     { editingComment: JSON.stringify(req.body.editingComment) },
@@ -566,7 +551,6 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     updatedMaxPrice = currentPriceValue;
   }
 
-
   const updatedTicket = await Ticket.findByIdAndUpdate(
     ticketId,
     {
@@ -586,8 +570,6 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
     maxTicketPrice: updatedMaxPrice,
   });
 
-
-
   res.status(200).json({
     status: "success",
     data: updatedTicket,
@@ -599,7 +581,6 @@ exports.getAllTickets = catchAsync(async (req, res, next) => {
     .select("tickets")
     .populate("tickets");
 
-
   tickets = tickets.tickets.filter((ticket) => ticket.status !== "Deleted");
 
   res.status(200).json({
@@ -610,7 +591,6 @@ exports.getAllTickets = catchAsync(async (req, res, next) => {
 
 exports.getOneTicket = catchAsync(async (req, res, next) => {
   let ticket = await Ticket.findById(req.params.id);
-
 
   res.status(200).json({
     status: "Success",
@@ -681,5 +661,27 @@ exports.getAffiliates = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: eventAffiliates,
+  });
+});
+
+exports.saveEventbriteConf = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const { eventbriteOrganisation, eventbriteEvent, eventbriteWebhookData } =
+    req.body;
+
+  const updatedEventDoc = Event.findByIdAndUpdate(
+    eventId,
+    {
+      eventbriteOrganisation,
+      eventbriteEvent,
+      eventbriteWebhookData,
+    },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    message: "Successfully saved eventbrite configurations.",
   });
 });

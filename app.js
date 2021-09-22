@@ -338,10 +338,9 @@ app.get(
         if (err) {
           res.status(500).json(err);
         } else {
-          
           res.json(result.body.lists);
         }
-      });
+    });
   }
 );
 

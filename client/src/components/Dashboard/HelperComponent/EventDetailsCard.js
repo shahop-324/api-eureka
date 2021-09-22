@@ -164,6 +164,7 @@ const EventDetailCard = ({
                 >
                   Visit
                 </button>
+                <button className="btn btn-outline-dark btn-outline-text">share on linkedin</button>
               </Link>
             </div>
           </div>

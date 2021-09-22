@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const Community = require("../models/communityModel");
@@ -11,6 +10,7 @@ const crypto = require("crypto");
 const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
 const LoggedInUsers = require("../models/loggedInUsers");
+const CommunityCredentials = require("../models/CommunityCredentialsModel");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -89,7 +89,7 @@ exports.signup = catchAsync(async (req, res) => {
   // check if someone referred this new user
 
   let referrer;
- 
+
   if (req.body.referralCode) {
     referrer = await User.findOneAndUpdate(
       { referralCode: req.body.referralCode },
@@ -101,7 +101,7 @@ exports.signup = catchAsync(async (req, res) => {
         validateModifiedOnly: true,
       }
     );
-   
+
     if (referrer) {
       const newUser = await User.create({
         firstName: req.body.firstName,
@@ -201,14 +201,10 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.communityLogin = catchAsync(async (req, res, next) => {
-  
-
   createSendTokenForCommunityLogin(req.user.id, req.params.id, 200, req, res);
 });
 
 exports.protectCommunity = catchAsync(async (req, res, next) => {
-  
-
   // 1) Getting token and check if it's there
   let token;
 
@@ -228,15 +224,12 @@ exports.protectCommunity = catchAsync(async (req, res, next) => {
     );
   }
 
-
-
   // 2) Verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
- 
 
   const freshUser = await User.findById(decoded.userId);
   const freshCommunity = await Community.findById(decoded.communityId);
-  
+
   req.user = freshUser;
   req.community = freshCommunity;
 
@@ -354,3 +347,31 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // 4) Log user in, send JWT
   createSendToken(user, 200, req, res);
 });
+
+exports.authenticateCommunity = catchAsync(async (req, res, next) => {
+  const { apiKey, apiSecret } = req.body;
+
+  // 1) Check if apiKey and apiSecret Exist
+  if (!apiKey || !apiSecret) {
+    return next(new AppError("Please provide apiKey and apiSecret!", 400));
+  }
+
+  // 2) Check if community exists && credentials are correct
+  const credentialDoc = await CommunityCredentials.findOne({
+    APIKey: apiKey,
+  }).select("+APISecret");
+
+  if (
+    !credentialDoc ||
+    !(apiSecret.toString() === credentialDoc.APISecret.toString())
+  ) {
+    return next(new AppError("Incorrect api key or secret", 401));
+  }
+
+  // 3) If everything ok, send pass on to next middleware
+  res.status(200).json({
+    status: "success",
+    message: "This requested has been successfully authenticated",
+  });
+});
+

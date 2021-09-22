@@ -46,7 +46,7 @@ const EventCard = ({
       >
         <Link
           onClick={() => dispatch(fetchEvent(id))}
-          to={`/event-landing-page/${id}`}
+          to={`/event-landing-page/${id}/${communityId}`}
         >
           <img src={image} className="poster-img" alt="event-poster" />
         </Link>
@@ -65,7 +65,7 @@ const EventCard = ({
           {" "}
           <Link
             onClick={() => dispatch(fetchEvent(id))}
-            to={`/event-Landing-page/${id}`}
+            to={`/event-Landing-page/${id}/${communityId}`}
             style={{
               textTransform: "capitalize",
               textDecoration: "none",

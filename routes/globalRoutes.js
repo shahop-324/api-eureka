@@ -82,4 +82,9 @@ router.get(
  networkingController.getAllAvailableForNetworking
 );
 
+router.get(
+  "/getTawkLink/:communityId",
+  globalController.getTawkLink
+)
+
 module.exports = router;

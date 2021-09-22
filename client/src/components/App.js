@@ -186,7 +186,7 @@ class App extends React.Component {
 
               <Route path="/explore-events/" exact component={ExploreEvents} />
               <Route
-                path="/event-landing-page/:id"
+                path="/event-landing-page/:id/:communityId"
                 exact
                 component={EventLandingPage}
               />

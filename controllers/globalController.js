@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const Event = require("../models/eventModel");
 const User = require("../models/userModel");
@@ -12,6 +11,7 @@ const {
   RtcRole,
   RtmRole,
 } = require("agora-access-token");
+const Community = require("../models/communityModel");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
   req.query.sort = "-numberOfRegistrationsReceived";
@@ -34,7 +34,6 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     },
     { status: "inactive" }
   );
-
 
   const query = Event.find({
     $and: [
@@ -63,7 +62,6 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
         match: { status: "Active" },
       },
     });
-  
 
   const features = new apiFeatures(query, req.query)
     .priceWiseFilter()
@@ -177,7 +175,6 @@ exports.generateTokenForVideoCall = catchAsync(async (req, res, next) => {
     privilegeExpiredTs
   );
 
-
   res.status(200).json({
     status: "success",
     token: token,
@@ -207,7 +204,6 @@ exports.generateRTMToken = catchAsync(async (req, res, next) => {
     privilegeExpiredTs
   );
 
-
   res.status(200).json({
     status: "success",
     token: token,
@@ -236,7 +232,6 @@ exports.generateRTMTokenForSpeaker = catchAsync(async (req, res, next) => {
     RtmRole,
     privilegeExpiredTs
   );
-
 
   res.status(200).json({
     status: "success",
@@ -279,111 +274,127 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.generateLiveStreamingTokenForJoiningTable = catchAsync(async (req, res, next) => {
-  const tableId = req.body.tableId;
-  const userId = req.body.userId;
-  const isPublisher = true;
+exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
+  async (req, res, next) => {
+    const tableId = req.body.tableId;
+    const userId = req.body.userId;
+    const isPublisher = true;
 
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
-  const channelName = tableId;
-  const uid = userId;
-  const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const channelName = tableId;
+    const uid = userId;
+    const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
 
-  const expirationTimeInSeconds = 3600;
+    const expirationTimeInSeconds = 3600;
 
-  const currentTimestamp = Math.floor(Date.now() / 1000);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
 
-  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
-  // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+    // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
-  // Build token with uid
-  const token = RtcTokenBuilder.buildTokenWithUid(
-    appID,
-    appCertificate,
-    channelName,
-    uid,
-    role,
-    privilegeExpiredTs
-  );
+    // Build token with uid
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      uid,
+      role,
+      privilegeExpiredTs
+    );
+
+    res.status(200).json({
+      status: "success",
+      token: token,
+    });
+  }
+);
+
+exports.generateTokenForLiveStreamingForSpeaker = catchAsync(
+  async (req, res, next) => {
+    const channel = req.body.sessionId;
+    const userId = req.body.speakerId;
+    const isPublisher = req.body.role === "host" ? true : false;
+
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const channelName = channel;
+    const uid = userId;
+    const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+
+    const expirationTimeInSeconds = 3600;
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    // IMPORTANT! Build token with either the uid or with the user account.
+    // Comment out the option you do not want to use below.
+
+    // Build token with uid
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      uid,
+      role,
+      privilegeExpiredTs
+    );
+
+    res.status(200).json({
+      status: "success",
+      token: token,
+    });
+  }
+);
+
+exports.generateTokenForLiveStreamingForScreenShare = catchAsync(
+  async (req, res, next) => {
+    const channel = req.body.sessionId;
+    const myUID = req.body.uid;
+
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const channelName = channel;
+    const uid = myUID;
+    const role = RtcRole.PUBLISHER;
+
+    const expirationTimeInSeconds = 3600;
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    // IMPORTANT! Build token with either the uid or with the user account.
+    // Comment out the option you do not want to use below.
+
+    // Build token with uid
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      uid,
+      role,
+      privilegeExpiredTs
+    );
+
+    res.status(200).json({
+      status: "success",
+      token: token,
+    });
+  }
+);
+
+exports.getTawkLink = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const communityDoc = await Community.findById(communityId);
+
+  const tawkLink = communityDoc.tawkLink;
 
   res.status(200).json({
-    status: "success",
-    token: token,
-  });
-});
-
-
-exports.generateTokenForLiveStreamingForSpeaker = catchAsync(async (req, res, next) => {
-  const channel = req.body.sessionId;
-  const userId = req.body.speakerId;
-  const isPublisher = req.body.role === "host" ? true : false;
-
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
-  const channelName = channel;
-  const uid = userId;
-  const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
-
-  const expirationTimeInSeconds = 3600;
-
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-
-  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
-
-  // IMPORTANT! Build token with either the uid or with the user account. 
-  // Comment out the option you do not want to use below.
-
-  // Build token with uid
-  const token = RtcTokenBuilder.buildTokenWithUid(
-    appID,
-    appCertificate,
-    channelName,
-    uid,
-    role,
-    privilegeExpiredTs
-  );
-
-  res.status(200).json({
-    status: "success",
-    token: token,
-  });
-});
-
-exports.generateTokenForLiveStreamingForScreenShare = catchAsync(async (req, res, next) => {
-  
-  const channel = req.body.sessionId;
-  const myUID = req.body.uid;
-  
-  const appID = "702d57c3092c4fd389eb7ea5a505d471";
-  const appCertificate = "d8311f38cf434445805478cb8c93a334";
-  const channelName = channel;
-  const uid = myUID;
-  const role = RtcRole.PUBLISHER;
-
-  const expirationTimeInSeconds = 3600;
-
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-
-  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
-
-  // IMPORTANT! Build token with either the uid or with the user account. 
-  // Comment out the option you do not want to use below.
-
-  // Build token with uid
-  const token = RtcTokenBuilder.buildTokenWithUid(
-    appID,
-    appCertificate,
-    channelName,
-    uid,
-    role,
-    privilegeExpiredTs
-  );
-
-
-  res.status(200).json({
-    status: "success",
-    token: token,
+    data: { tawkLink: tawkLink },
+    message: "success",
   });
 });

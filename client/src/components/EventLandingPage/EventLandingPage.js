@@ -15,6 +15,7 @@ import {
   createQuery,
   errorTrackerForFetchEvent,
   fetchEvent,
+  getCommunityTawkLink,
 } from "../../actions/index";
 
 import SessionCard from "./HelperComponent/SessionCard";
@@ -131,11 +132,18 @@ const EventLandingPage = (props) => {
 
   const { isLoading, error } = useSelector((state) => state.event);
 
+  const isTakwLinkLoading = useSelector((state) => state.tawk.isLoading);
+
+  const tawkLink = useSelector((state) => state.tawk.directChatLink);
+
+  const communityId = params.communityId;
+
   const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getCommunityTawkLink(communityId));
     dispatch(fetchEvent(id));
   }, [dispatch, id]);
 
@@ -183,7 +191,7 @@ const EventLandingPage = (props) => {
   const { userDetails } = useSelector((state) => state.user);
   let event = useSelector((state) => state.event.eventDetails);
 
-  if (isLoading) {
+  if (isLoading || isTakwLinkLoading) {
     return (
       <div
         className="d-flex flex-row align-items-center justify-content-center"
@@ -196,6 +204,20 @@ const EventLandingPage = (props) => {
   if (error) {
     return dispatch(errorTrackerForFetchEvent());
   }
+
+  const chatBot = (tawkLink) => {
+    var Tawk_API = Tawk_API || {},
+      Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"),
+        s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = `https://embed.tawk.to/${tawkLink}`;
+      s1.charset = "UTF-8";
+      s1.setAttribute("crossorigin", "*");
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  };
 
   console.log(event);
 
@@ -402,6 +424,7 @@ const EventLandingPage = (props) => {
 
   return (
     <>
+      {tawkLink && chatBot(tawkLink)}
       {formatDate()}
       <CssBaseline />
       <div

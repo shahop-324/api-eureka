@@ -133,13 +133,6 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
 
   const { isLoading, error } = useSelector((state) => state.community);
 
-  audienceList = ChimpyAudienceList.map((list) => {
-    return {
-      value: list.id,
-      label: list.name,
-    };
-  });
-
   const handleChange = () => {
     setChecked(!checked);
   };
@@ -197,6 +190,13 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
     alert(error);
     return;
   }
+
+  audienceList = ChimpyAudienceList.map((list) => {
+    return {
+      value: list.id,
+      label: list.name,
+    };
+  });
 
   return (
     <>

@@ -36,6 +36,8 @@ import { availableForNetworkingActions } from "../reducers/availableForNetworkin
 
 import socket from "../components/HostingPlatform/service/socket";
 import { paypalActions } from "../reducers/paypalSlice";
+import { tawkActions } from "../reducers/tawkSlice";
+import { eventbriteActions } from "../reducers/eventbriteSlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -4446,7 +4448,6 @@ export const getRTCTokenForScreenShare =
       );
 
       startScreenCall();
-     
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
@@ -5155,3 +5156,224 @@ export const getPayPalConnectLink = () => async (dispatch, getState) => {
     // window.location.href = payPalRes.data.links[1].href;
   });
 };
+
+export const getCommunityTawkLink =
+  (communityId) => async (dispatch, getState) => {
+    dispatch(tawkActions.startLoading());
+    try {
+      const res = await fetch(`${BaseURL}getTawkLink/${communityId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      console.log(result);
+      dispatch(
+        tawkActions.UpdateTawkLink({
+          link: result.data.tawkLink,
+        })
+      );
+    } catch (err) {
+      dispatch(tawkActions.hasError(err.message));
+    }
+  };
+
+export const getEventbriteOrganisations =
+  (privateToken) => async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/users/me/organizations/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+      dispatch(
+        eventbriteActions.UpdateOrganisationList({
+          organizations: result.organizations,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const getEventbriteEventsByOrganisation =
+  (privateToken, orgId) => async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/organizations/${orgId}/events/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        eventbriteActions.UpdateEventsList({
+          events: result.events,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const createEventbriteWebhookForEventRegistrations =
+  (privateToken, orgId, eventId, bluemeetEventId) =>
+  async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/organizations/${orgId}/webhooks/`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            endpoint_url: `https://www.evenz.co.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
+            actions: "order.placed",
+            event_id: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      const saveToDBres = await fetch(
+        `${BaseURL}events/saveEventbriteConf/${bluemeetEventId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({
+            eventbriteOrganisation: orgId,
+            eventbriteEvent: eventId,
+            eventbriteWebhookData: result,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const SaveResult = await res.json();
+      console.log(SaveResult);
+
+      console.log("Successfully configured eventbrite integration.");
+
+      console.log(result);
+
+      dispatch(
+        eventbriteActions.UpdateWebhook({
+          webhookData: result,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const saveEventbriteConfigurationForEvent =
+  (bluemeetEventId, orgId, eventId, webhookData) =>
+  async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}/event/saveEventbriteConf/${bluemeetEventId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({
+            eventbriteOrganisation: orgId,
+            eventbriteEvent: eventId,
+            eventbriteWebhookData: webhookData,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      console.log("Successfully configured eventbrite integration.");
+    } catch (error) {
+      console.log("error saving eventbrite configuration to database");
+    }
+  };

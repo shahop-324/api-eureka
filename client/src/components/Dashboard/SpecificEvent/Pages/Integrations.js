@@ -11,17 +11,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import { alpha } from "@material-ui/core";
 import Select from 'react-select';
-import Eventbrite from "./../../Integrations/Eventbrite";
+import Eventbrite from "./../Integration/Cards/Eventbrite";
 import Mailchimp from "./../Integration/Cards/Mailchimp";
+import Tawk from "./../Integration/Cards/Tawk";
 import Intercom from "./../../Integrations/Intercomm";
-import Hubspot from "./../../Integrations/Hubspot";
+
+import Hubspot from "./../Integration/Cards/Hubspot";
 import Salesforce from "./../Integration/Cards/Salesforce";
 import Slack from "./../../Integrations/Slack";
 import Twitter from "./../../Integrations/Twitter";
 import Marketo from "./../../Integrations/Marketo";
 import Miro from "./../../Integrations/Miro";
 import Figma from "./../../Integrations/Figma";
-import Typeform from "./../../Integrations/Typeform";
+import Typeform from "./../Integration/Cards/Typeform";
 
 const options = [
   { value: "All", label: "All Integrations" },
@@ -148,9 +150,12 @@ const Integrations = () => {
           </div>
         </div>
         <div className="px-4 py-4">
-        {/* <Eventbrite /> */}
+        <Eventbrite />
         <Mailchimp />
         <Salesforce />
+        <Hubspot />
+        <Tawk />
+        <Typeform />
         {/* <Intercom />
         <Hubspot />
         <Salesforce />
