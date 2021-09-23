@@ -1,8 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import React from 'react';
 import styled from 'styled-components';
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
@@ -10,7 +8,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import FormGroup from "@material-ui/core/FormGroup";

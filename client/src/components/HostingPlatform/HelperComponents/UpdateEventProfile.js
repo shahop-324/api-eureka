@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./../Styles/UpdateEventProfile.scss";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -7,7 +8,6 @@ import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import { connect, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Select from "react-select";
-import PeopleProfile from "../SideDrawerComponents/People/helper/PeopleProfile";
 import ScheduleOneToOneCallForm from "../SideDrawerComponents/Chat/Sub/ScheduleOneToOneCallForm";
 import Ripple from "../../ActiveStatusRipple";
 
@@ -15,11 +15,7 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
-import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 import { Divider } from "@material-ui/core";
-
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { withStyles } from "@material-ui/styles";
 import LanguageIcon from '@material-ui/icons/Language';
 
@@ -178,10 +174,6 @@ const UpdateEventProfile = ({
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);

@@ -2,8 +2,6 @@ import styled from "styled-components";
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
 import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
 
-import { IconButton as MUIIconButton } from "@material-ui/core";
-
 const Button = styled.div`
   font-family: "Ubuntu";
   font-weight: 500;
@@ -421,9 +419,6 @@ const PersonInfoPopUp = styled.div`
   width: 300px;
 `;
 
-const IconBtnSmall = styled.div`
-
-`
 
 
 

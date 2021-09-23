@@ -1,10 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
-
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-
-
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
 import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
@@ -13,8 +10,6 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 
 const SideNavLean = ({
     activeIndex, 
@@ -29,16 +24,8 @@ const SideNavLean = ({
     handleBillingClick,
     handleTeamManagementClick,
 }) => {
-  const userDetails = useSelector((state) => state.user.userDetails);
-  const params = useParams();
-
   console.log(activeIndex);
-  const dispatch = useDispatch();
 
-  // EVENT_ID, COMMUNITY_ID AND USER_ID
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-  const userId = params.userId;
   return (
     <>
     

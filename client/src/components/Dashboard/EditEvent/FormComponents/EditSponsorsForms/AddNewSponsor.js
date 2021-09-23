@@ -134,10 +134,6 @@ const AddNewSponsor = (props) => {
   const { error, isLoading } = useSelector((state) => state.sponsor);
   const params = useParams();
   const id = params.id;
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },

@@ -1,7 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import VerticalTabs from "./UserAccountVerticalTabs";
-import styled from 'styled-components';
+
 
 
 

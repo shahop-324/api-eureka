@@ -9,11 +9,11 @@ import "./../../../../index.css";
 import "./../../../../assets/Sass/EditEvent/Networking.scss";
 import { useDispatch } from "react-redux";
 import { fetchNetworking } from "./../../../../actions";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Select from "react-select";
 
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { EditorState } from "draft-js";
 
 const MailCampaign = () => {
   const params = useParams();

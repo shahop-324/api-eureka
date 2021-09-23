@@ -1,22 +1,12 @@
 import React, { useState } from "react";
-import { Avatar, IconButton } from "@material-ui/core";
+import { Avatar } from "@material-ui/core";
 import "./../../../Styles/root.scss";
 import "./../../../Styles/chatComponent.scss";
 import ReplyRoundedIcon from "@material-ui/icons/ReplyRounded";
-import MoreHorizRoundedIcon from "@material-ui/icons/MoreHorizRounded";
 import ReportOutlinedIcon from "@material-ui/icons/ReportOutlined";
 import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
 
-import SentimentSatisfiedRoundedIcon from "@material-ui/icons/SentimentSatisfiedRounded";
-import ReportRoundedIcon from "@material-ui/icons/ReportRounded";
-import Emoji1 from "./../../../../../assets/images/emoji1.png";
-import Emoji2 from "./../../../../../assets/images/emoji2.png";
-import Emoji3 from "./../../../../../assets/images/emoji3.png";
-import Emoji4 from "./../../../../../assets/images/emoji4.png";
-import Emoji5 from "./../../../../../assets/images/emoji5.png";
-import Emoji6 from "./../../../../../assets/images/emoji6.png";
-import Emoji7 from "./../../../../../assets/images/emoji7.png";
-import Emoji8 from "./../../../../../assets/images/emoji8.png";
+
 import ReportMsg from "./ReportMsg";
 import DeleteMsg from "./DeleteMsg";
 

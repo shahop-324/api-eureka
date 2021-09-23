@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
@@ -95,6 +96,7 @@ const Signin = (props) => {
 
     dispatch(resetAuthError());
     setSigninClicked(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, error]);
   const { signinForBuyingPlanIntent, signinForEventRegistrationEventId } =
     useSelector((state) => state.auth);

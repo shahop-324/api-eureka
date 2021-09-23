@@ -55,16 +55,12 @@ const RenderCustomCheckboxLabels = ({ input, label, value }) => {
 
 const EditNotificationSettings = (props) => {
 
-  const { error, isLoading, succeded } = useSelector((state) => state.user);
+  const { error } = useSelector((state) => state.user);
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { handleSubmit, pristine, submitting } = props;
-
-  // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const showResults = (formValues) => {
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+  
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
     // console.log(formValues);

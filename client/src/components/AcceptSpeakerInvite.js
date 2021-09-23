@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import "./../index.css";
-import Faker from "faker";
 import AvatarMenu from "./AvatarMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCommunity, fetchEvent, fetchSpeaker, generateEventAccessToken, signInForSpeaker } from "../actions";
@@ -12,7 +12,7 @@ const AcceptSpeakerInvite = () => {
 
   const dispatch = useDispatch();
 
-  const { speakerDetails, isLoading, error } = useSelector(
+  const { speakerDetails } = useSelector(
     (state) => state.speaker
   );
   

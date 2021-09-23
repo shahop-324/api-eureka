@@ -135,11 +135,7 @@ const EditSponosor = (props) => {
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.sponsor
   );
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
+  
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },

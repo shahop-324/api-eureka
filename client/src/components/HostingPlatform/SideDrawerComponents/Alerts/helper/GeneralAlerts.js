@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Avatar, makeStyles } from "@material-ui/core";
-import Faker from "faker";
 
 import "./../Styles/alerts.scss";
 
@@ -12,25 +10,8 @@ import SessionReminder from "../Sub/SessionReminder";
 import TableInvitationAlert from "../Sub/TableInvitationAlert";
 import MeetingUpdateAlert from "../Sub/MeetingUpdateAlert";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
-  },
-}));
 
 const GeneralAlerts = (props) => {
-  const classes = useStyles();
 
   return (
     <>

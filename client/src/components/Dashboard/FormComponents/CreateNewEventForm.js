@@ -192,11 +192,6 @@ const styles = {
 const CreateNewEventForm = (props) => {
   const { handleSubmit } = props;
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const dispatch = useDispatch();
 
   const onSubmit = (formValues) => {

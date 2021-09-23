@@ -8,7 +8,7 @@ import Loader from "../Loader";
 import { useSnackbar } from "notistack";
 
 const UserAccountEventsMainBody = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(madeJustForYou());

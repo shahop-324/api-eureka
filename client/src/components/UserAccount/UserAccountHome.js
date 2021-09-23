@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import "./../../assets/css/hiddenScroll.css";
 import { CssBaseline } from "@material-ui/core";
-import UserAccountNav from "./UserAccountNav";
 import "./../../assets/css/UserAccountStyle.css";
 import CenteredTabs from "./UserAccountCenteredTabBar";
 import UserAccountSideNav from "./UserAccountSideNav";

@@ -17,10 +17,9 @@ import CustomizedSwitchForNetworking from "../../ToggleSwitch";
 import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { editNetworking, errorTrackerForEditNetworking, errorTrackerForFetchNetworking } from "../../../../../actions";
+import { editNetworking } from "../../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../../Loader";
-import { useSnackbar } from "notistack";
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -68,21 +67,14 @@ const renderInput = ({
 };
 
 const NetworkingFormRight = (props) => {
-  const { enqueueSnackbar } = useSnackbar();
-
   const { handleSubmit, pristine, reset, submitting } = props;
 
-  const { networkingSettings, isLoading, error } = useSelector(
+  const { networkingSettings, isLoading } = useSelector(
     (state) => state.networking
   );
 
   const params = useParams();
   const id = params.id;
-
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const dispatch = useDispatch();
 

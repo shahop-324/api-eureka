@@ -9,11 +9,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import { useDispatch } from "react-redux";
-
 
 const DeleteAPIKey = ({openDelete, handleCloseDelete}) => {
-  const dispatch = useDispatch();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));

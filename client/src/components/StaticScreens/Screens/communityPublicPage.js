@@ -11,13 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import StarOutlineRoundedIcon from '@material-ui/icons/StarOutlineRounded';
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
-import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
-import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
-import PropTypes from "prop-types";
 
 
 

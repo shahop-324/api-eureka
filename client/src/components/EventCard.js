@@ -1,12 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.scss";
 import styled from "styled-components";
-
-import { Divider } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEvent, generateEventAccessToken } from "../actions";
+import { fetchEvent } from "../actions";
 import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
 import Fab from "@material-ui/core/Fab";
 import FavoriteIcon from "@material-ui/icons/Favorite";

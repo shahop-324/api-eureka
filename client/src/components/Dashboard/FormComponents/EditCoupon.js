@@ -138,11 +138,6 @@ const EditCoupon = (props) => {
     setState({ vertical: "top", horizontal: "center", open: false });
   };
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const onSubmit = (formValues) => {
     console.log(formValues);
    

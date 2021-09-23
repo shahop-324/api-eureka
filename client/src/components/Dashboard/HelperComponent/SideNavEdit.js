@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
-import IconButton from "@material-ui/core/IconButton";
 import { Divider } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
 import CategoryIcon from "@material-ui/icons/Category";
 import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
@@ -17,7 +15,6 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
-  editEvent,
   errorTrackerForeditEvent,
   fetchParticularEventOfCommunity,
 } from "../../../actions";
@@ -36,12 +33,9 @@ const SideNavEdit = ({
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useSelector((state) => state.event);
+  const { error } = useSelector((state) => state.event);
 
   const id = params.id;
-  const communityId = params.communityId;
-
-  const userId = useSelector((state) => state.user.userDetails._id);
 
   useEffect(() => {
     dispatch(fetchParticularEventOfCommunity(id));
@@ -53,7 +47,7 @@ const SideNavEdit = ({
     });
   });
 
-  let isAlreadyPublished = true;
+  // let isAlreadyPublished = true;
 
   let isDescriptionPresent = false;
   let isSessionPresent = false;
@@ -65,10 +59,10 @@ const SideNavEdit = ({
   event.tickets[0] && (isTicketPresent = true);
   event.editingComment && (isDescriptionPresent = true);
 
-  let isReadyToPublish = false;
+  // let isReadyToPublish = false;
 
   if (event.publishedStatus === "Draft") {
-    isAlreadyPublished = false;
+    // isAlreadyPublished = false;
   }
 
   if (
@@ -77,12 +71,12 @@ const SideNavEdit = ({
     isTicketPresent &&
     isDescriptionPresent
   ) {
-    isReadyToPublish = true;
+    // isReadyToPublish = true;
   }
 
-  let url = " #";
+  // let url = " #";
   if (event) {
-    url = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`;
+    // url = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`;
   }
 
   if (error) {

@@ -2,11 +2,6 @@ import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
-
-import IconButton from "@material-ui/core/IconButton";
-import { Divider } from "@material-ui/core";
-
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -19,7 +14,6 @@ import LiveTvIcon from "@material-ui/icons/LiveTv";
 import MovieIcon from "@material-ui/icons/Movie";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import VideoLabelIcon from "@material-ui/icons/VideoLabel";
-import { Link, useParams } from "react-router-dom";
 
 const SideNav = ({
   activeIndex,
@@ -36,12 +30,6 @@ const SideNav = ({
   handleLiveStreamingClick,
   handleMailCampaignClick,
 }) => {
-  const params = useParams();
-
-  // EVENT_ID, COMMUNITY_ID AND USER_ID
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-  const userId = params.userId;
 
   return (
     <>

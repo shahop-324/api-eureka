@@ -4,7 +4,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Faker from "faker";
 import CheckCircleRoundedIcon from "@material-ui/icons/CheckCircleRounded";
-import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../Styles/PeopleList.scss";

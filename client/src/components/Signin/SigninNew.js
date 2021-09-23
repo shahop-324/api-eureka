@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import "./Signin.scss";
 import LogoLight from "./../../assets/Logo/Logo_light.svg";
-import bar_chart_circle from "./../../assets/Icons/bar_chart_circle.svg";
-import bulb from "./../../assets/Icons/bulb.svg";
-import command from "./../../assets/Icons/command.svg";
 import BubbleChartIcon from "@material-ui/icons/BubbleChart";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 import RemoveRedEyeRoundedIcon from "@material-ui/icons/RemoveRedEyeRounded";

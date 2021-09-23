@@ -5,21 +5,11 @@ import { connect, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 
 const useStyles = makeStyles((theme) => ({
-    // root: {
-    //   flexGrow: 1,
-    //   backgroundColor: theme.palette.background.paper,
-    //   width: "100%",
-    //   display: "flex",
-    //   minHeight: "76.5vh",
-    // },
-    large: {
-      width: theme.spacing(10),
-      height: theme.spacing(10),
-    },
-    // tabs: {
-    //   borderRight: `1px solid ${theme.palette.divider}`,
-    // },
-  }));
+  large: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+  },
+}));
 
 const renderInput = ({
   input,
@@ -41,14 +31,21 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }} className="my-1">
+          <div
+            style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }}
+            className="my-1"
+          >
             {error}
           </div>
         )) ||
           (warning && (
             <div
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "400", fontSize: "0.87rem" }}
+              style={{
+                color: "#8B780D",
+                fontWeight: "400",
+                fontSize: "0.87rem",
+              }}
             >
               {warning}
             </div>
@@ -81,14 +78,21 @@ const renderTextArea = ({
 
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }} className="my-1">
+          <div
+            style={{ color: "red", fontWeight: "400", fontSize: "0.87rem" }}
+            className="my-1"
+          >
             {error}
           </div>
         )) ||
           (warning && (
             <div
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "400", fontSize: "0.87rem" }}
+              style={{
+                color: "#8B780D",
+                fontWeight: "400",
+                fontSize: "0.87rem",
+              }}
             >
               {warning}
             </div>
@@ -97,63 +101,49 @@ const renderTextArea = ({
   );
 };
 
-const CommunityProfileTab = ({handleSubmit,
-    pristine,
-    reset,
-    submitting,}) => {
+const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
+  const classes = useStyles();
 
-        const classes = useStyles();
+  const { communityDetails } = useSelector((state) => state.community);
+  let imgKey;
+  if (communityDetails) {
+    imgKey = communityDetails.image;
+  }
 
-    const [openSettings, setOpenSettings] = React.useState(false);
+  let imgUrl;
+  if (imgKey && !imgKey.startsWith("https")) {
+    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+  } else {
+    imgUrl = imgKey;
+  }
 
-    const handleClickOpenSettings = () => {
-      setOpenSettings(true);
+  const [file, setFile] = useState(null);
+  const [fileToPreview, setFileToPreview] = useState(imgUrl);
+
+  const onFileChange = (event) => {
+    console.log(event.target.files[0]);
+    setFile(event.target.files[0]);
+    setFileToPreview(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const onSubmit = (formValues) => {
+    // setEditProfileClicked(true);
+    console.log(formValues);
+    const ModifiedFormValues = {};
+    ModifiedFormValues.name = formValues.communityName;
+    ModifiedFormValues.headline = formValues.communityHeadline;
+    ModifiedFormValues.email = formValues.communityEmail;
+    const groupedSocialHandles = {
+      linkedin: formValues.communityLinkedin,
+      facebook: formValues.communityFacebook,
+      twitter: formValues.communityTwitter,
+      website: formValues.communityWebsite,
     };
-  
-    const handleCloseReferral = () => {
-      setOpenSettings(false);
-    };
-
-    const { communityDetails } = useSelector((state) => state.community);
-    let imgKey;
-    if (communityDetails) {
-      imgKey = communityDetails.image;
-    }
-  
-    let imgUrl;
-    if (imgKey && !imgKey.startsWith("https")) {
-      imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
-    } else {
-      imgUrl = imgKey;
-    }
-
-    const [file, setFile] = useState(null);
-    const [fileToPreview, setFileToPreview] = useState(imgUrl);
-  
-    const onFileChange = (event) => {
-      console.log(event.target.files[0]);
-      setFile(event.target.files[0]);
-      setFileToPreview(URL.createObjectURL(event.target.files[0]));
-    };
-
-    const onSubmit = (formValues) => {
-        // setEditProfileClicked(true);
-        console.log(formValues);
-        const ModifiedFormValues = {};
-        ModifiedFormValues.name = formValues.communityName;
-        ModifiedFormValues.headline = formValues.communityHeadline;
-        ModifiedFormValues.email = formValues.communityEmail;
-        const groupedSocialHandles = {
-          linkedin: formValues.communityLinkedin,
-          facebook: formValues.communityFacebook,
-          twitter: formValues.communityTwitter,
-          website: formValues.communityWebsite,
-        };
-        ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
-         console.log(file);
-        console.log(ModifiedFormValues);
-        // dispatch(editUser(ModifiedFormValues, file));
-      };
+    ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
+    console.log(file);
+    console.log(ModifiedFormValues);
+    // dispatch(editUser(ModifiedFormValues, file));
+  };
 
   return (
     <>
@@ -166,7 +156,7 @@ const CommunityProfileTab = ({handleSubmit,
                 alt={communityDetails.name}
                 src={fileToPreview}
                 className={classes.large}
-                style={{objectFit: "contain"}}
+                style={{ objectFit: "contain" }}
               />
             </div>
             <label
@@ -341,63 +331,62 @@ const CommunityProfileTab = ({handleSubmit,
   );
 };
 
-
 const mapStateToProps = (state) => ({
-    initialValues: {
-      communityName: state.community.communityDetails.name
-        ? state.community.communityDetails.name
-        : "",
-      communityHeadline: state.community.communityDetails.headline
-        ? state.community.communityDetails.headline
-        : "",
-      communityEmail: state.community.communityDetails.email ? state.community.communityDetails.email : "",
-      
-      communityLinkedin:
-        state.community.communityDetails.socialMediaHandles &&
-        state.community.communityDetails.socialMediaHandles.linkedin
-          ? state.community.communityDetails.socialMediaHandles.linkedin
-          : "",
-      communityFacebook:
-        state.community.communityDetails.socialMediaHandles &&
-        state.community.communityDetails.socialMediaHandles.facebook
-          ? state.community.communityDetails.socialMediaHandles.facebook
-          : "",
-      communityTwitter:
-        state.community.communityDetails.socialMediaHandles &&
-        state.community.communityDetails.socialMediaHandles.twitter
-          ? state.community.communityDetails.socialMediaHandles.twitter
-          : "",
-      communityWebsite:
-        state.community.communityDetails.socialMediaHandles &&
-        state.community.communityDetails.socialMediaHandles.website
-          ? state.community.communityDetails.socialMediaHandles.website
-          : "",
-    },
-  });
+  initialValues: {
+    communityName: state.community.communityDetails.name
+      ? state.community.communityDetails.name
+      : "",
+    communityHeadline: state.community.communityDetails.headline
+      ? state.community.communityDetails.headline
+      : "",
+    communityEmail: state.community.communityDetails.email
+      ? state.community.communityDetails.email
+      : "",
 
+    communityLinkedin:
+      state.community.communityDetails.socialMediaHandles &&
+      state.community.communityDetails.socialMediaHandles.linkedin
+        ? state.community.communityDetails.socialMediaHandles.linkedin
+        : "",
+    communityFacebook:
+      state.community.communityDetails.socialMediaHandles &&
+      state.community.communityDetails.socialMediaHandles.facebook
+        ? state.community.communityDetails.socialMediaHandles.facebook
+        : "",
+    communityTwitter:
+      state.community.communityDetails.socialMediaHandles &&
+      state.community.communityDetails.socialMediaHandles.twitter
+        ? state.community.communityDetails.socialMediaHandles.twitter
+        : "",
+    communityWebsite:
+      state.community.communityDetails.socialMediaHandles &&
+      state.community.communityDetails.socialMediaHandles.website
+        ? state.community.communityDetails.socialMediaHandles.website
+        : "",
+  },
+});
 
-  const validate = (formValues) => {
-    const errors = {};
-  
-    if (!formValues.communityName) {
-      errors.communityName = "Community name is required";
-    }
-    if (!formValues.communityHeadline) {
-      errors.communityHeadline = "Community headline is required";
-    }
-    if (!formValues.communityEmail) {
-      errors.communityEmail = "Email is required";
-    }
-    return errors;
-  };
+const validate = (formValues) => {
+  const errors = {};
+
+  if (!formValues.communityName) {
+    errors.communityName = "Community name is required";
+  }
+  if (!formValues.communityHeadline) {
+    errors.communityHeadline = "Community headline is required";
+  }
+  if (!formValues.communityEmail) {
+    errors.communityEmail = "Email is required";
+  }
+  return errors;
+};
 
 export default connect(mapStateToProps)(
-    reduxForm({
-      form: "editCommunityProfile",
-  
-      validate,
-      enableReinitialize: true,
-      destroyOnUnmount: false,
-    })(CommunityProfileTab)
-  );
-  
+  reduxForm({
+    form: "editCommunityProfile",
+
+    validate,
+    enableReinitialize: true,
+    destroyOnUnmount: false,
+  })(CommunityProfileTab)
+);

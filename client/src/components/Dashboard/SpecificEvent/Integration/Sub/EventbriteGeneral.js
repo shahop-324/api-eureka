@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 
 import Select from "react-select";
@@ -9,40 +10,8 @@ import {
   getEventbriteOrganisations,
 } from "../../../../../actions";
 import { useParams } from "react-router";
-let audienceList = [];
 let organisationsList = [];
 let eventsList = [];
-
-const renderReactSelect = ({
-  isMulti,
-  input,
-  meta: { touched, error, warning },
-  styles,
-  menuPlacement,
-  options,
-  defaultValue,
-
-  name,
-}) => (
-  <div>
-    <div>
-      <Select
-        isMulti={isMulti}
-        defaultValue={defaultValue}
-        styles={styles}
-        menuPlacement={menuPlacement}
-        name={name}
-        options={options}
-        value={input.value}
-        onChange={(value) => input.onChange(value)}
-        onBlur={() => input.onBlur()}
-      />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
 
 const styles = {
   control: (base) => ({
@@ -79,7 +48,7 @@ const EventbriteGeneral = ({
 
   const [selectedEvent, setSelectedEvent] = useState(eventsList[0]);
 
-  const { organisations, events, isLoading, error } = useSelector(
+  const { organisations, events } = useSelector(
     (state) => state.eventbrite
   );
 
@@ -90,24 +59,6 @@ const EventbriteGeneral = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
   };
-
-  //   if (isLoading) {
-  //     return (
-  //       <div
-  //         className="d-flex flex-row align-items-center justify-content-center"
-  //         style={{ width: "100%", height: "80vh" }}
-  //       >
-  //         {" "}
-  //         <Loader />{" "}
-  //       </div>
-  //     );
-  //   }
-
-  //   if (error) {
-  //     dispatch(errorTrackerForFetchMailChimpAudiences());
-  //     alert(error);
-  //     return;
-  //   }
 
   organisationsList = organisations.map((organisation) => {
     return {

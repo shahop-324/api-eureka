@@ -3,7 +3,6 @@ import dateFormat from "dateformat";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import { useEffect } from "react";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { connect, useSelector } from "react-redux";
@@ -16,7 +15,6 @@ import { useDispatch } from "react-redux";
 import {
   editSession,
   errorTrackerForEditSession,
-  fetchParticularSessionOfEvent,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
@@ -149,14 +147,6 @@ const EditSession = (props) => {
   );
   const dispatch = useDispatch();
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
-  // useEffect(() => {
-  //   dispatch(fetchParticularSessionOfEvent(props.id));
-  // }, [props.id, dispatch]);
   const speakers = useSelector((state) => state.speaker.speakers);
 
   const speakerOptions = speakers.map((speaker) => {

@@ -4743,7 +4743,7 @@ export const generatePayoutLink =
     };
 
     const authToken = btoa(
-      "rzp_live_bDVAURs4oXxSGi" + ":" + "TFitnOVh9eOIFK3qdZsfCLfQ"
+      "rzp_live_bDVAURs4oXxSGi:TFitnOVh9eOIFK3qdZsfCLfQ"
     );
 
     try {
@@ -5299,7 +5299,7 @@ export const createEventbriteWebhookForEventRegistrations =
 
       const result = await res.json();
 
-      const saveToDBres = await fetch(
+      await fetch(
         `${BaseURL}events/saveEventbriteConf/${bluemeetEventId}`,
         {
           method: "PATCH",

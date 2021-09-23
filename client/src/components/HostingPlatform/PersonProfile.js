@@ -14,10 +14,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-
 import CancelIcon from '@mui/icons-material/Cancel';
-
-import { BtnOutlined } from "../SessionStage/Elements";
 
 const PersonProfileBody = styled.div`
   width: 360px;

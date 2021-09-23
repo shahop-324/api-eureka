@@ -1,5 +1,5 @@
 import { Avatar } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import "./../../../Integrations/Styles/IntegrationCard.scss";
 
 import FormGroup from "@material-ui/core/FormGroup";
@@ -9,9 +9,6 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-
-import { useParams } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -44,12 +41,9 @@ const RoyalBlueSwitch = withStyles({
 })(Switch);
 
 const Tawk = () => {
-  const params = useParams();
-  const eventId = params.eventId;
-  const [open, setOpen] = useState(false);
+
 
   const [checked, setChecked] = React.useState(false);
-  const dispatch = useDispatch();
   const handleChange = () => {
     if (!checked) {
     //   dispatch(fetchMailChimpAudiences(eventId));
@@ -58,10 +52,6 @@ const Tawk = () => {
     }
 
     setChecked(!checked);
-  };
-
-  const handleCloseDrawer = () => {
-    setOpen(false);
   };
 
   const classes = useStyles();

@@ -14,15 +14,9 @@ import Select from 'react-select';
 import Eventbrite from "./../Integration/Cards/Eventbrite";
 import Mailchimp from "./../Integration/Cards/Mailchimp";
 import Tawk from "./../Integration/Cards/Tawk";
-import Intercom from "./../../Integrations/Intercomm";
 
 import Hubspot from "./../Integration/Cards/Hubspot";
 import Salesforce from "./../Integration/Cards/Salesforce";
-import Slack from "./../../Integrations/Slack";
-import Twitter from "./../../Integrations/Twitter";
-import Marketo from "./../../Integrations/Marketo";
-import Miro from "./../../Integrations/Miro";
-import Figma from "./../../Integrations/Figma";
 import Typeform from "./../Integration/Cards/Typeform";
 
 const options = [

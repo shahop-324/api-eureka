@@ -56,36 +56,6 @@ const styles = {
   }),
 };
 
-const renderMultiReactSelect = ({
-  isMulti,
-  input,
-  meta: { touched, error, warning },
-  styles,
-  menuPlacement,
-  options,
-  defaultValue,
-
-  name,
-}) => (
-  <div>
-    <div>
-      <Select
-        isMulti={isMulti}
-        defaultValue={defaultValue}
-        styles={styles}
-        menuPlacement={menuPlacement}
-        name={name}
-        options={options}
-        value={input.value}
-        onChange={(value) => input.onChange(value)}
-        onBlur={() => input.onBlur()}
-      />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
 
 const renderReactSelect = ({
   isMulti,

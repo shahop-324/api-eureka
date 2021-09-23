@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
@@ -6,7 +7,6 @@ import "./../../../../assets/Sass/SideNav.scss";
 import "./../../../../assets/Sass/TopNav.scss";
 import "./../../../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import CustomPagination from "../../HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -18,7 +18,6 @@ import { Button } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import {
   fetchRegistrationsOfParticularEvent,
-  errorTrackerForFetchRegistrationsOfParticularEvent,
 } from "../../../../actions";
 import { useParams } from "react-router-dom";
 import Loader from "../../../Loader";
@@ -33,13 +32,6 @@ const options = [
   { value: "VIP Ticket", label: "VIP Ticket" },
 ];
 
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
 
 const styles = {
   control: (base) => ({
@@ -119,8 +111,6 @@ const Registrations = () => {
   const params = useParams();
 
   const eventId = params.eventId;
-  const communityId = params.communityId;
-  const userId = params.userId;
 
   const { isLoading, error, registrations } = useSelector(
     (state) => state.registration

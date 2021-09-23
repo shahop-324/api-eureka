@@ -17,13 +17,10 @@ import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
 import QuestionAnswerOutlinedIcon from "@material-ui/icons/QuestionAnswerOutlined";
 import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
-import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
-import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
-import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
 import { useDispatch } from "react-redux";
 import { createCommunityFeedback } from "./../../../actions";
 

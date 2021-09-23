@@ -14,21 +14,21 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Select from "react-select";
 
 const styles = {
-    control: (base) => ({
-      ...base,
-      fontFamily: "Ubuntu",
-      fontWeight: "500",
-      color: "#757575",
-      fontSize: "0.8rem",
-    }),
-    menu: (base) => ({
-      ...base,
-      fontFamily: "Ubuntu",
-      fontWeight: "500",
-      color: "#757575",
-      fontSize: "0.8rem",
-    }),
-  };
+  control: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+    fontSize: "0.8rem",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+    fontSize: "0.8rem",
+  }),
+};
 
 const trackOptions = [];
 
@@ -108,14 +108,9 @@ const WidgetHeadlineWithClose = styled.div`
 
 const SessionsFilter = ({ open, handleClose }) => {
   const [statusAlignment, setStatusAlignment] = React.useState("all");
-  const [priorityAlignment, setPriorityAlignment] = React.useState("all");
 
   const handleChangeStatus = (event, newAlignment) => {
     setStatusAlignment(newAlignment);
-  };
-
-  const handleChangePriority = (event, newAlignment) => {
-    setPriorityAlignment(newAlignment);
   };
 
   const theme = useTheme();
@@ -145,14 +140,14 @@ const SessionsFilter = ({ open, handleClose }) => {
 
           <FormLabel>Track</FormLabel>
           <Select
-          className="mb-4"
-        defaultValue={trackOptions[0]}
-        styles={styles}
-        menuPlacement={"bottom"}
-        name={"session track"}
-        options={trackOptions}  
-        // onChange={(value) => input.onChange(value)}
-      />
+            className="mb-4"
+            defaultValue={trackOptions[0]}
+            styles={styles}
+            menuPlacement={"bottom"}
+            name={"session track"}
+            options={trackOptions}
+            // onChange={(value) => input.onChange(value)}
+          />
 
           <FormLabel>Status</FormLabel>
 
@@ -174,7 +169,6 @@ const SessionsFilter = ({ open, handleClose }) => {
 
           <FormLabel>Date</FormLabel>
           <input type="date" className="form-control mb-4"></input>
-         
 
           <div className="d-flex flex-row align-items-center justify-content-end ">
             <ButtonOutlinedDark className="me-3">Clear</ButtonOutlinedDark>

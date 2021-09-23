@@ -8,7 +8,7 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import socket from "./../../../service/socket";
 
@@ -50,9 +50,6 @@ const renderTextArea = ({
 
 const EditAlert = (props) => {
   const { handleSubmit, pristine, submitting } = props;
-
-  const dispatch = useDispatch();
-
   const params = useParams();
 
   const eventId = params.eventId;

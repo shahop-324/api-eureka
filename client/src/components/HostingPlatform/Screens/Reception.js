@@ -6,15 +6,12 @@ import Zoho from "./../../../assets/images/zoho-logo-2.png";
 import Google from "./../../../assets/images/580b57fcd9996e24bc43c51f.png";
 import ZenDesk from "./../../../assets/images/0620_zendesk-logo.png";
 import twilio from "./../../../assets/images/twilio.svg";
-import BITS from "./../../../assets/images/BITS_university_logo.gif";
 import CNBC from "./../../../assets/images/cnbc-logo-transparent.png";
 import Amazon from "./../../../assets/images/amazon_PNG27.png";
 import MakeMyTrip from "./../../../assets/images/MakeMyTrip_Logo.png";
 import YourStory from "./../../../assets/images/yourstory.png";
 import Razorpay from "./../../../assets/images/razorpay.png";
 import styled from 'styled-components';
-
-import { Avatar } from "@material-ui/core";
 
 const ReceptionBackground = styled.div`
 background-color: #345b63 !important;

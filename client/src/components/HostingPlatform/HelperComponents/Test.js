@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import SurroundSoundIcon from "@material-ui/icons/SurroundSound";
 import { Divider } from "@material-ui/core";
@@ -10,7 +10,6 @@ import { Dropdown } from "semantic-ui-react";
 import ProgressBar from "./VolumeIndicator";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import "./../../../index.css";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 const Speaker = ({
   audioDevices,

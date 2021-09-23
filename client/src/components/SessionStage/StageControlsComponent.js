@@ -17,38 +17,23 @@ import { BtnDanger, StageControl, IconButton } from "./Elements";
 
 import history from "../../history";
 import { useParams } from "react-router";
-
-import { Button, Popup } from "semantic-ui-react";
 import ReactTooltip from "react-tooltip";
-
-import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 
 import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
-import FullscreenExitRoundedIcon from "@mui/icons-material/FullscreenExitRounded";
-
-import MicOffIcon from "@mui/icons-material/MicOff";
 import { useDispatch, useSelector } from "react-redux";
 import { getRTCTokenForScreenShare } from "../../actions";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 import Settings from "./Settings";
 import Tools from "./Tools";
 
-const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
-  },
-}));
 
 const IOSSwitch = withStyles((theme) => ({
   root: {

@@ -4,8 +4,6 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-import { makeStyles } from "@material-ui/core/styles";
-
 import { withStyles } from "@material-ui/core/styles";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import { IconButton } from "@material-ui/core";

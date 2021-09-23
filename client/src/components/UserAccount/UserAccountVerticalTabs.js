@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VerticalTabs() {
+  // eslint-disable-next-line no-unused-vars
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const classes = useStyles();

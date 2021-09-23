@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Faker from "faker";
 import "./../../../../index.css";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";

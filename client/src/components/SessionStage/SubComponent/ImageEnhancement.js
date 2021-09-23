@@ -2,18 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 import PropTypes from "prop-types";
-import Slider, { SliderThumb } from "@mui/material/Slider";
+import Slider from "@mui/material/Slider";
 import { styled as MUIStyled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 
-const ImageEnhancementGrid = styled.div`
-  width: 500px;
-  height: 400px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 16px;
-`;
+
 
 const Controls = styled.div`
   width: 300px;

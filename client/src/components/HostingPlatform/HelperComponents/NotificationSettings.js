@@ -3,32 +3,13 @@ import "./../Styles/Settings.scss";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
-import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import { IconButton, Divider } from "@material-ui/core";
-
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import { withStyles } from "@material-ui/core/styles";
 import CreateTheme from "./CreateTheme";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
-
-const RoyalBlueRadio = withStyles({
-  root: {
-    color: "#538BF7",
-    "&$checked": {
-      color: "#3274F6",
-    },
-  },
-  checked: {},
-})((props) => <Radio color="default" {...props} />);
 
 const RoyalBlueSwitch = withStyles({
   switchBase: {
@@ -53,19 +34,13 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
     setChecked(!checked);
   };
 
-  const handleOpenTheme = () => {
-    setOpenCreateTheme(true);
-  };
+
 
   const handleCloseTheme = () => {
     setOpenCreateTheme(false);
   };
 
-  const [value, setValue] = React.useState("dark");
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
 
   return (
     <>

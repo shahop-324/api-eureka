@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Faker from "faker";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";

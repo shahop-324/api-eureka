@@ -20,11 +20,6 @@ const timeZoneOptions = [
   { value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu" },
 ];
 
-const peopleInEvent = [
-  // { value: "gu2892ojwoow2i92", label: "Shreyansh shah" },
-  // { value: "278910io9929020020okeokkl", label: "Omprakash shah" },
-];
-
 const styles = {
   control: (base) => ({
     ...base,

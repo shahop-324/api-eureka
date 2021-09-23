@@ -147,11 +147,6 @@ const EditTicket = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
   const { detailError, isLoadingDetail } = useSelector((state) => state.ticket);
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const currencyOptions = [
     // { value: "USD", label: "US Dollars" },
     // { value: "AED", label: "United Arab Emirates Dirham" },
@@ -160,13 +155,13 @@ const EditTicket = (props) => {
     // { value: "CAD", label: "Canadian Dollar" },
   ];
 
-  const venueAreaOptions = [
-    { value: "Sessions", label: "Sessions" },
-    { value: "Speed Networking", label: "Speed Networking" },
-    { value: "Group Based Networking", label: "Group Based Networking" },
-    { value: "Social Lounge", label: "Social Lounge" },
-    { value: "Booths", label: "Booths" },
-  ];
+  // const venueAreaOptions = [
+  //   { value: "Sessions", label: "Sessions" },
+  //   { value: "Speed Networking", label: "Speed Networking" },
+  //   { value: "Group Based Networking", label: "Group Based Networking" },
+  //   { value: "Social Lounge", label: "Social Lounge" },
+  //   { value: "Booths", label: "Booths" },
+  // ];
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 

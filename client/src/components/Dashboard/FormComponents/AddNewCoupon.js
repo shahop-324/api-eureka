@@ -105,11 +105,6 @@ const AddNewCoupon = (props) => {
   const { handleSubmit } = props;
   const dispatch = useDispatch();
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const events = useSelector((state) => state.event.events);
 
   if (events) {

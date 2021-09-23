@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Dialog, IconButton } from "@material-ui/core";
 import React, { useState } from "react";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -10,8 +11,6 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
-
-import AgoraRTC from "agora-rtc-sdk-ng";
 import { makeStyles } from "@material-ui/core";
 
 let rtc = {
@@ -36,7 +35,6 @@ const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
 
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
-  const [screenSharingIsEnabled, setScreenSharingIsEnabled] = useState(false);
 
   const turnOffVideo = async () => {
     if (!rtc.localVideoTrack) return;
@@ -83,8 +81,7 @@ const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
     row = "1fr 1fr";
   }
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("lg");

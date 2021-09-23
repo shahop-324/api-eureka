@@ -10,7 +10,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { addNewAffiliate, createCoupon } from "./../../../../actions";
+import { addNewAffiliate } from "./../../../../actions";
 import { useParams } from "react-router-dom";
 import validator from 'validator';
 

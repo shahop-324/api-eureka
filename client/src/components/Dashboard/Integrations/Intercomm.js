@@ -1,10 +1,8 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
 import { makeStyles } from "@material-ui/core/styles";
 import IntercomAppID from "./Forms/IntercomAppID";
-import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {

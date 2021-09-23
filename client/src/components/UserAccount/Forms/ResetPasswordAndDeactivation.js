@@ -1,21 +1,10 @@
 import React from "react";
-import ToggleSwitch from "../../ToggleSwitch";
-import Ripple from "./../../ActiveStatusRipple";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { editUserPassword, errorTrackerForEditUser } from "../../../actions";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-const renderError = ({ touched, error }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 
 const renderInputOldPass = ({
   type,
@@ -89,16 +78,12 @@ const renderInput = ({
 
 const ResetPasswordAndDeactivation = (props) => {
 
-  const { error, isLoading, succeded } = useSelector((state) => state.user);
+  const { error } = useSelector((state) => state.user);
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { pristine, valid, submitting, handleSubmit } = props;
-  // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const showResults = async (formValues) => {
-    // await sleep(500); // simulate server latency
-    // window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
     dispatch(editUserPassword(formValues));

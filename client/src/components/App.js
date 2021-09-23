@@ -17,7 +17,6 @@ import Ticketing from "./Dashboard/EditEvent/Ticketing";
 import Sponsors from "./Dashboard/EditEvent/Sponsor";
 import Networking from "./Dashboard/EditEvent/Networking";
 import Root from "./HostingPlatform/Root";
-import SessionScreen from "./HostingPlatform/Screens/SessionScreen";
 import ForgotPassword from "./ForgotPassword/ForgotPassword";
 import ResetPassword from "./ResetPassword/ResetPassword";
 import DashboardRoot from "./Dashboard/DashboardRoot";

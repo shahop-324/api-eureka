@@ -1,14 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState} from "react";
+import React from "react";
 import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
 import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
 
-import Tools from "./../../../SessionStage/Tools";
-import styled from "styled-components";
-
 import {
   renderGalleryView,
-  renderLocalStream,
   renderMainStream,
   renderMiniStreams,
   renderProminentStream,
@@ -21,27 +17,6 @@ import {
   SpotlightView,
   GridViewMini,
 } from "../../../SessionStage/Elements";
-
-const StageToolsIconBtn = styled.div`
-  padding: 6px;
-  border-radius: 10px;
-
-  position: absolute;
-  top: 50%;
-  left: 0px;
-  z-index: 1;
-
-  color: #ececec;
-  background-color: transparent;
-  border: 1px solid #152d35;
-
-  &:hover {
-    color: #152d35;
-    background-color: #ffffff;
-    border: 1px solid #152d35;
-    cursor: pointer;
-  }
-`;
 
 const StreamBody = ({
   handleOpenSideDrawer,

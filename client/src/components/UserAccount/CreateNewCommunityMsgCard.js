@@ -1,6 +1,5 @@
 import React from "react";
 import "./../../assets/css/UserAccountStyle.css";
-import WinkingPerson from "./../../assets/images/winkingPerson.png";
 
 const CreateNewCommunityMsgCard = ({msgText, img}) => {
   return (

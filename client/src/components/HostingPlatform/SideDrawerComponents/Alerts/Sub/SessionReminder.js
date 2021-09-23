@@ -1,5 +1,4 @@
 import React from "react";
-import Faker from "faker";
 import Logo from "./../../../../../assets/images/Logo.png";
 
 import { Avatar } from "@material-ui/core";

@@ -1,25 +1,20 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
 import {
   StageBody,
-  CollapseIcon,
-  VideoStreamContainer,
-  GalleryView,
-  GridView,
-  GridViewMini,
-  SpotlightView,
+
 } from "./../../../components/SessionStage/Elements";
 
-import LastPageRoundedIcon from "@material-ui/icons/LastPageRounded";
-import FirstPageRoundedIcon from "@material-ui/icons/FirstPageRounded";
+
 
 import PhotoBooth from "../../Elements/PhotoBooth";
 import StageNavComponent from "../../SessionStage/StageNavComponent";
 import StageControlsComponent from "../../SessionStage/StageControlsComponent";
 import StageSideDrawerComponent from "../../SessionStage/StageSideDrawer";
-import { IconButton } from "@material-ui/core";
+
 import { useParams } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -35,12 +30,10 @@ import history from "../../../history";
 import ReactTooltip from "react-tooltip";
 
 import {
-  errorTrackerForFetchSessionForSessionStage,
+ 
   fetchSessionForSessionStage,
-  getRTCToken,
-  getRTCTokenForScreenShare,
+
 } from "../../../actions";
-import ShareScreenPlayer from "../SessionStreamingComponents.js/ShareScreenPlayer";
 import StreamBody from "../Functions/Stage/StreamBody";
 
 let rtc = {

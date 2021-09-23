@@ -7,7 +7,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { Divider } from "@material-ui/core";
 import socket from "./../../../service/socket";
@@ -62,8 +62,6 @@ const CreateNewPoll = (props) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const dispatch = useDispatch();
 
   const onSubmit = async (formValues) => {
     console.log(formValues);

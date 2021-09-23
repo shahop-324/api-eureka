@@ -43,7 +43,7 @@ const categories = [
 
 const SearchEvents = () => {
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar} = useSnackbar();
 
   const dispatch = useDispatch();
 

@@ -10,10 +10,7 @@ import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-
-
 import RecordingsListFields from "./HelperComponent/RecordingsListFields";
-import RecordingsDetailsCard from "./HelperComponent/RecordingsDetailsCard";
 
 import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
@@ -21,9 +18,6 @@ import Downloading from './../../assets/images/Downloading.png';
 
 const options = [
   { value: "All", label: "All Events" },
-  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  // { value: "Startup conference", label: "Startup conference" },
-  // { value: "Design Meetup", label: "Design Meetup" },
 ];
 
 const timelineOptions = [

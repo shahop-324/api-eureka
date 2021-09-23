@@ -31,8 +31,6 @@ import { makeStyles } from "@material-ui/core";
 
 import Poll from "./../Elements/Poll";
 import QnA from "../Elements/Q&A";
-import ChatElement from "../Elements/ChatElement";
-import ChatMain from "./Chat/ChatMain";
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown

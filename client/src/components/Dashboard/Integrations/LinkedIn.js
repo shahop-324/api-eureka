@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";

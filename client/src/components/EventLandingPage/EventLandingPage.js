@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -123,10 +125,6 @@ const AccordionDetails = withStyles((theme) => ({
 
 const EventLandingPage = (props) => {
   const params = useParams();
-
-  const { signInSucceded } = useSelector((state) => state.auth);
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 

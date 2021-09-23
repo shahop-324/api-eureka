@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import styled from 'styled-components';
 import EventbriteGeneral from '../Sub/EventbriteGeneral';
 
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import AvatarMenu from "../AvatarMenu";
 import styled from "styled-components";

@@ -13,7 +13,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteBooth,
   errorTrackerForDeleteBooth,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";

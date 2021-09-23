@@ -5,8 +5,6 @@ import MailchimpConnect from "./Forms/Mailchimp";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useParams } from "react-router";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",

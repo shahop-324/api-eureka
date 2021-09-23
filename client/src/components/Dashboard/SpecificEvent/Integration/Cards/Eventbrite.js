@@ -1,7 +1,6 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./../../../Integrations/Styles/IntegrationCard.scss";
-import MailchimpConfigure from "../Forms/MailchimpConfigure";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,13 +9,9 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchMailChimpAudiences } from "../../../../../actions/index";
+import { useSelector } from "react-redux";
 
 import EventbriteLogo from "./../../../../../assets/images/Eventbrite_integration.png";
-// import Eventbrite_logo from "./../../../assets/images/Eventbrite_integration.png";
-
-import { useParams } from "react-router-dom";
 import EventbriteConfigure from "../Forms/EventbriteConfigure";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,13 +47,9 @@ const RoyalBlueSwitch = withStyles({
 const Eventbrite = () => {
 
   const {eventbritePrivateToken} = useSelector((state) => state.community.communityDetails);
-
-  const params = useParams();
-  const eventId = params.eventId;
   const [open, setOpen] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
-  const dispatch = useDispatch();
   const handleChange = () => {
     if (!checked) {
       //   dispatch(fetchMailChimpAudiences(eventId));

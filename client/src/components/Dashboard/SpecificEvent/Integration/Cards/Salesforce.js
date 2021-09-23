@@ -10,8 +10,6 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-import { fetchMailChimpAudiences } from "../../../../../actions/index";
 
 import { useParams } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
@@ -52,12 +50,10 @@ const Salesforce = () => {
   const [open, setOpen] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
-  const dispatch = useDispatch();
   const handleChange = () => {
     if (!checked) {
-    //   dispatch(fetchMailChimpAudiences(eventId));
-
-    //   setOpen(true);
+      //   dispatch(fetchMailChimpAudiences(eventId));
+      //   setOpen(true);
     }
 
     setChecked(!checked);
@@ -81,7 +77,9 @@ const Salesforce = () => {
           }}
         >
           <Avatar
-            src={"https://www.salesforce.com/news/wp-content/uploads/sites/3/2021/05/Salesforce-logo.jpg"}
+            src={
+              "https://www.salesforce.com/news/wp-content/uploads/sites/3/2021/05/Salesforce-logo.jpg"
+            }
             alt={"Mailchimp"}
             className={classes.large}
             variant="rounded"
@@ -90,7 +88,8 @@ const Salesforce = () => {
           <div>
             <div className="integration-name mb-2">Salesforce</div>
             <div className="integration-short-description">
-              Manage your customer relationship by allowing bluemeet to push attendee, leads and interested people in your salesforce account.
+              Manage your customer relationship by allowing bluemeet to push
+              attendee, leads and interested people in your salesforce account.
             </div>
           </div>
 

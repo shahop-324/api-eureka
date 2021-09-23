@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import "./../../../index.css";
@@ -179,9 +180,9 @@ const renderEventPreferences = ({
 let EditProfileForm = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, succeded } = useSelector((state) => state.user);
+  const { error, succeded } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -203,7 +204,7 @@ let EditProfileForm = (props) => {
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
-  const [editProfileClicked, setEditProfileClicked] = useState(false);
+  const [ setEditProfileClicked] = useState(false);
 
   useEffect(() => {
     dispatch(resetUserError());

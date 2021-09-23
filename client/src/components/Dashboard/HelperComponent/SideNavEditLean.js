@@ -1,9 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
-
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-
 import CategoryIcon from "@material-ui/icons/Category";
 import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 import TrackChangesIcon from "@material-ui/icons/TrackChanges";
@@ -11,11 +8,7 @@ import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
-
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 
 const SideNavEditLean = ({
   activeIndex,
@@ -28,16 +21,9 @@ const SideNavEditLean = ({
   handleSponsorsClick,
   handleTicketingClick,
 }) => {
-  const userDetails = useSelector((state) => state.user.userDetails);
-  const params = useParams();
 
   console.log(activeIndex);
-  const dispatch = useDispatch();
 
-  // EVENT_ID, COMMUNITY_ID AND USER_ID
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-  const userId = params.userId;
   return (
     <>
       {/* className="" */}
