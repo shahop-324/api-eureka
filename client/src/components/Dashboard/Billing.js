@@ -82,7 +82,12 @@ const Billing = () => {
       </div>
 
       <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={openDrawer}>
+        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
           <div
             className="registration-more-details-right-drawer px-4 py-4"
             style={{ width: "45vw" }}

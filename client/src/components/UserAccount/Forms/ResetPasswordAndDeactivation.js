@@ -103,7 +103,7 @@ const ResetPasswordAndDeactivation = (props) => {
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div className="mb-5">
             <h3 className="booked-ticket-sub-heading mb-3">Change Password</h3>
-            <div class="form-group mb-4">
+            <div className="form-group mb-4">
               <Field
                 name="oldPass"
                 type="password"
@@ -114,7 +114,7 @@ const ResetPasswordAndDeactivation = (props) => {
 
               <small
                 id="emailHelp"
-                class="form-text"
+                className="form-text"
                 style={{
                   color: "#538BF7",
                   cursor: "pointer",
@@ -128,7 +128,7 @@ const ResetPasswordAndDeactivation = (props) => {
               </small>
             </div>
 
-            <div class="form-group mb-4">
+            <div className="form-group mb-4">
               <Field
                 name="newPass"
                 type="password"
@@ -138,7 +138,7 @@ const ResetPasswordAndDeactivation = (props) => {
               />
             </div>
 
-            <div class="form-group mb-4">
+            <div className="form-group mb-4">
               <Field
                 name="confirmPass"
                 type="password"

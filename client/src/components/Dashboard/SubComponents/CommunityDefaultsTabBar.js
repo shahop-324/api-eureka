@@ -254,10 +254,10 @@
 //     <>
 //       <div className="user-account-edit-profile px-4 py-4">
 //         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <label
 //               Forhtml="selectTimeZone"
-//               class="form-label form-label-customized"
+//               className="form-label form-label-customized"
 //             >
 //               Timezone
 //             </label>
@@ -272,12 +272,12 @@
 //             />
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <p className="form-label form-label-customized">Mode of event</p>
-//             <div class="form-check mb-2">
+//             <div className="form-check mb-2">
 //               <Field
 //                 name="mode_of_event"
-//                 class="form-check-input"
+//                 className="form-check-input"
 //                 type="radio"
 //                 // name="flexRadioDefault"
 //                 id="flexRadioDefault1"
@@ -286,7 +286,7 @@
 //                 component="input"
 //               />
 //               <label
-//                 class="form-check-label"
+//                 className="form-check-label"
 //                 style={{
 //                   fontFamily: "Inter",
 //                   fontWeight: "500",
@@ -297,9 +297,9 @@
 //                 Online
 //               </label>
 //             </div>
-//             <div class="form-check">
+//             <div className="form-check">
 //               <Field
-//                 class="form-check-input"
+//                 className="form-check-input"
 //                 type="radio"
 //                 name="mode_of_event"
 //                 id="flexRadioDefault2"
@@ -309,7 +309,7 @@
 //                 component="input"
 //               />
 //               <label
-//                 class="form-check-label"
+//                 className="form-check-label"
 //                 style={{
 //                   fontFamily: "Inter",
 //                   fontWeight: "500",
@@ -322,12 +322,12 @@
 //             </div>
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <p className="form-label form-label-customized">Event visibility</p>
-//             <div class="form-check mb-2">
+//             <div className="form-check mb-2">
 //               <Field
 //                 name="visibility"
-//                 class="form-check-input"
+//                 className="form-check-input"
 //                 type="radio"
 //                 // name="flexRadioDefault"
 //                 id="flexRadioDefault1"
@@ -336,7 +336,7 @@
 //                 component="input"
 //               />
 //               <label
-//                 class="form-check-label"
+//                 className="form-check-label"
 //                 style={{
 //                   fontFamily: "Inter",
 //                   fontWeight: "500",
@@ -348,15 +348,15 @@
 //               </label>
 //               <div
 //                 id="emailHelp"
-//                 class="form-text"
+//                 className="form-text"
 //                 style={{ fontSize: "13px" }}
 //               >
 //                 Upgrade to a paid plan to create public events.
 //               </div>
 //             </div>
-//             <div class="form-check">
+//             <div className="form-check">
 //               <Field
-//                 class="form-check-input"
+//                 className="form-check-input"
 //                 type="radio"
 //                 name="visibility"
 //                 id="flexRadioDefault2"
@@ -366,7 +366,7 @@
 //                 component="input"
 //               />
 //               <label
-//                 class="form-check-label"
+//                 className="form-check-label"
 //                 style={{
 //                   fontFamily: "Inter",
 //                   fontWeight: "500",
@@ -379,10 +379,10 @@
 //             </div>
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <label
 //               Forhtml="selectTimeZone"
-//               class="form-label form-label-customized"
+//               className="form-label form-label-customized"
 //             >
 //               Event Type
 //             </label>
@@ -397,10 +397,10 @@
 //             />
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <label
 //               Forhtml="selectTimeZone"
-//               class="form-label form-label-customized"
+//               className="form-label form-label-customized"
 //             >
 //               Event category
 //             </label>
@@ -416,10 +416,10 @@
 //             />
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row">
+//           <div className="mb-4 overlay-form-input-row">
 //             <label
 //               Forhtml="selectTimeZone"
-//               class="form-label form-label-customized"
+//               className="form-label form-label-customized"
 //             >
 //               Ticketing Currency
 //             </label>
@@ -447,10 +447,10 @@
 //           </div>
 
 //           <div className="row edit-profile-form-row mb-3">
-//             <div class="form-group">
+//             <div className="form-group">
 //               <label
 //                 for="communityHeadline"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 Street Address
 //               </label>
@@ -466,11 +466,11 @@
 //             </div>
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row">
+//           <div className="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row">
 //             <div>
 //               <label
 //                 Forhtml="eventStartDate"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 City
 //               </label>
@@ -485,7 +485,7 @@
 //             <div>
 //               <label
 //                 Forhtml="eventStartTime"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 State
 //               </label>
@@ -499,11 +499,11 @@
 //             </div>
 //           </div>
 
-//           <div class="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row">
+//           <div className="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row">
 //             <div>
 //               <label
 //                 Forhtml="eventStartDate"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 Landmark
 //               </label>
@@ -518,7 +518,7 @@
 //             <div>
 //               <label
 //                 Forhtml="eventStartTime"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 Pincode
 //               </label>
@@ -533,10 +533,10 @@
 //           </div>
 
 //           <div className="row edit-profile-form-row mb-3">
-//             <div class="form-group">
+//             <div className="form-group">
 //               <label
 //                 for="communityHeadline"
-//                 class="form-label form-label-customized"
+//                 className="form-label form-label-customized"
 //               >
 //                 Country
 //               </label>

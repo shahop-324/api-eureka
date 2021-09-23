@@ -431,29 +431,29 @@ const EventLandingPage = (props) => {
       >
         <div className="row nav-section">
           <nav
-            class="navbar navbar-expand-lg navbar-light bg-light"
+            className="navbar navbar-expand-lg navbar-light bg-light"
             style={{ backgroundColor: "#ffffff" }}
           >
-            <div class="container-fluid">
+            <div className="container-fluid">
               <Link
                 to="/home"
-                class="navbar-brand"
+                className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
                 Evenz
               </Link>
               <button
-                class="navbar-toggler"
+                className="navbar-toggler"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
               >
-                <span class="navbar-toggler-icon"></span>
+                <span className="navbar-toggler-icon"></span>
               </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
                     <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
                       <AvatarMenu />
@@ -461,18 +461,18 @@ const EventLandingPage = (props) => {
                   ) : (
                     <div className="d-flex flex-row align-items-center justify-content-center">
                       {" "}
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                          class="btn btn-outline-primary btn-outline-text me-3"
+                          className="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
                         </Link>
                       </li>
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                          class="btn btn-primary btn-outline-text"
+                          className="btn btn-primary btn-outline-text"
                         >
                           Get Started
                         </Link>
@@ -1037,7 +1037,7 @@ const EventLandingPage = (props) => {
                     Still have any queries before making call?
                   </div>
                   <form
-                    // class="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
+                    // className="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
                     style={{ width: "100%" }}
                   >
                     <div
@@ -1049,7 +1049,7 @@ const EventLandingPage = (props) => {
                         style={{ width: "82%" }}
                       >
                         <input
-                          class="form-control mr-sm-2"
+                          className="form-control mr-sm-2"
                           type="search"
                           value={queryText}
                           placeholder="Your question"
@@ -1058,7 +1058,7 @@ const EventLandingPage = (props) => {
                         />
                         <button
                           disabled={!isSignedIn}
-                          class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
+                          className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
                           onClick={handleAskQuery}
                         >
                           Ask

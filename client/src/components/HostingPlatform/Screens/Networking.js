@@ -64,8 +64,8 @@ const Networking = () => {
       {/* <FloatingAvatars /> */}
       <div>
         <div>
-          <div class="sonar-wrapper">
-            <div class="sonar-emitter" style={{ position: "relative" }}>
+          <div className="sonar-wrapper">
+            <div className="sonar-emitter" style={{ position: "relative" }}>
               <Avatar
               alt={firstName}
                 src={
@@ -83,12 +83,12 @@ const Networking = () => {
                   border: "2px solid #538BF7",
                 }}
               />
-              <div class="sonar-wave"></div>
-              <div class="sonar-wave"></div>
-              <div class="sonar-wave"></div>
-              <div class="sonar-wave"></div>
-              <div class="sonar-wave"></div>
-              <div class="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
             </div>
           </div>
         </div>

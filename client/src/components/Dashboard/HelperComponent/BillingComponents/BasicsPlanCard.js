@@ -198,7 +198,12 @@ const BasicPlanCard = () => {
 
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer}>
+        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Review Plan Details</div>

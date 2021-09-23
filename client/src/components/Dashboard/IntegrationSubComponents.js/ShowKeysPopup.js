@@ -34,7 +34,7 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
           </div>
           <label
             Forhtml="eventEndDate"
-            class="form-label form-label-customized"
+            className="form-label form-label-customized"
           >
             API key
           </label>
@@ -42,7 +42,7 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
             className="referral-link-and-copy-to-clipboard mb-4"
             style={{ textAlign: "center" }}
           >
-            <div class="ui action input" style={{ minWidth: "400px" }}>
+            <div className="ui action input" style={{ minWidth: "400px" }}>
               <input
                 type="text"
                 value={APIKey}
@@ -50,20 +50,20 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
                 placeholder="Search..."
               />
               <button
-                class="ui icon button"
+                className="ui icon button"
                 onClick={() => {
                   navigator.clipboard.writeText(APIKey);
                   alert("copied to clipboard!");
                 }}
               >
-                <i class="copy outline icon"></i>
+                <i className="copy outline icon"></i>
               </button>
             </div>
           </div>
 
           <label
             Forhtml="eventEndDate"
-            class="form-label form-label-customized"
+            className="form-label form-label-customized"
           >
             API secret
           </label>
@@ -71,7 +71,7 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
             className="referral-link-and-copy-to-clipboard"
             style={{ textAlign: "center" }}
           >
-            <div class="ui action input" style={{ minWidth: "400px" }}>
+            <div className="ui action input" style={{ minWidth: "400px" }}>
               <input
                 type="text"
                 value={APISecret}
@@ -79,13 +79,13 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
                 placeholder="Search..."
               />
               <button
-                class="ui icon button"
+                className="ui icon button"
                 onClick={() => {
                   navigator.clipboard.writeText(APISecret);
                   alert("copied to clipboard!");
                 }}
               >
-                <i class="copy outline icon"></i>
+                <i className="copy outline icon"></i>
               </button>
             </div>
           </div>

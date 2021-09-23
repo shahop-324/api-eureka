@@ -26,6 +26,12 @@ const TawkDirectChatLink = ({ openDrawer, handleCloseDrawer }) => {
       <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
+          onOpen={() => {
+            console.log("Side nav was opended")
+          }}
+          onClose={() => {
+            console.log("Side nav was closed")
+          }}
           open={openDrawer}
           disableBackdropTransition={true}
         >
@@ -50,7 +56,7 @@ const TawkDirectChatLink = ({ openDrawer, handleCloseDrawer }) => {
               <div className="mb-3">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Direct Chat Link
                 </label>

@@ -126,7 +126,7 @@ const UserAccountHome = () => {
               }}
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
-              <div class="d-flex flex-row align-items-center justify-content-end py-2 px-2">
+              <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
             <BtnOutlinedWithIcon>
               <ExploreRoundedIcon className="me-3" />
               Explore Events

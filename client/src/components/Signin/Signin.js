@@ -223,7 +223,7 @@ const Signin = (props) => {
                 >
                   <div className="row">
                     <div className="mb-3">
-                      <div class="form-group">
+                      <div className="form-group">
                         <label
                           for="emailAddress"
                           className="form-label form-label-customized"
@@ -244,7 +244,7 @@ const Signin = (props) => {
                   </div>
                   <div className="row mb-3">
                     <div className="mb-3">
-                      <div class="form-group">
+                      <div className="form-group">
                         <label
                           for="UserPassword"
                           className="form-label form-label-customized"
@@ -315,10 +315,10 @@ const Signin = (props) => {
                         Login
                         {signinClicked && formIsvalidated && !error ? (
                           <div
-                            class="spinner-border text-light spinner-border-sm"
+                            className="spinner-border text-light spinner-border-sm"
                             role="status"
                           >
-                            <span class="sr-only">Loading...</span>
+                            <span className="sr-only">Loading...</span>
                           </div>
                         ) : (
                           <div></div>

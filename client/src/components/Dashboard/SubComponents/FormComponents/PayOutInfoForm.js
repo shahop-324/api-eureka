@@ -74,10 +74,10 @@ const PayOutInfoForm = ({ handleSubmit }) => {
         <div className="generate-payout-link-modal p-4"></div>
 
         <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
+          <div className="form-group">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Account Number
             </label>
@@ -94,10 +94,10 @@ const PayOutInfoForm = ({ handleSubmit }) => {
         </div>
 
         <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
+          <div className="form-group">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               IFSC Code
             </label>
@@ -114,10 +114,10 @@ const PayOutInfoForm = ({ handleSubmit }) => {
         </div>
 
         <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
+          <div className="form-group">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Benificiary Name
             </label>
@@ -134,10 +134,10 @@ const PayOutInfoForm = ({ handleSubmit }) => {
         </div>
 
         <div className="mb-4 overlay-form-input-row d-flex flex-column px-5">
-          <div class="form-group">
+          <div className="form-group">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               contact Number
             </label>

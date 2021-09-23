@@ -218,7 +218,7 @@ const SignInNew = ({ handleSubmit }) => {
                 className="ui form error mb-5"
               >
                 <div className="mb-4">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="emailAddress"
                       className="form-label  ui-form-label"
@@ -238,7 +238,7 @@ const SignInNew = ({ handleSubmit }) => {
                 </div>
 
                 <div className="mb-5">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="UserPassword"
                       className="form-label  ui-form-label"

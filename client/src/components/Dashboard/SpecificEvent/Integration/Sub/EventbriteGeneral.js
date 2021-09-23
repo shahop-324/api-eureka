@@ -82,7 +82,7 @@ const EventbriteGeneral = ({
             <div className="mb-4">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
                 style={{ color: "#212121" }}
               >
                 Eventbrite organisation
@@ -116,9 +116,9 @@ const EventbriteGeneral = ({
             </div>
             <div>
               <label
-                className="mt-4"
+                
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized mt-4"
                 style={{ color: "#212121" }}
               >
                 Eventbrite event

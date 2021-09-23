@@ -21,7 +21,7 @@ class LinkedinAuth extends React.Component {
               style={{ width: "100%" }}
             >
               <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
-                <img class="" src={linkedInSVG} alt="linkedin-signin" />
+                <img className="" src={linkedInSVG} alt="linkedin-signin" />
                 <div className="sign-in-with-google-text ms-4">
                   Sign in with linkedin
                 </div>

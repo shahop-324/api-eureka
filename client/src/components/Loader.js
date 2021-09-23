@@ -4,7 +4,7 @@ import "./../index.css";
 const Loader = () => {
   return (
     <>
-      <div class="blob-7"></div>
+      <div className="blob-7"></div>
     </>
   );
 };

@@ -2,10 +2,10 @@ import React from 'react';
 
 const AccordionItem = (props) => {
   return (
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingOne">
         <button
-          class="accordion-button"
+          className="accordion-button"
     
           data-bs-toggle="collapse"
           data-bs-target={props.dataBsTarget}
@@ -17,11 +17,11 @@ const AccordionItem = (props) => {
       </h2>
       <div
         id="collapseOne"
-        class="accordion-collapse collapse show"
+        className="accordion-collapse collapse show"
         aria-labelledby="headingOne"
         data-bs-parent="#accordionExample"
       >
-        <div class="accordion-body">
+        <div className="accordion-body">
           <strong>This is the first item's accordion body.</strong> It is shown
           by default, until the collapse plugin adds the appropriate classes
           that we use to style each element. These classes control the overall

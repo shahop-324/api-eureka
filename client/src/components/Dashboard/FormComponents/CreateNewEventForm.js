@@ -265,8 +265,8 @@ const CreateNewEventForm = (props) => {
           >
             Let's create an all new event for your community.
           </h5>
-          <div class="mb-4 overlay-form-input-row">
-            <label for="eventName" class="form-label form-label-customized">
+          <div className="mb-4 overlay-form-input-row">
+            <label for="eventName" className="form-label form-label-customized">
               Event Name
             </label>
             <Field
@@ -279,10 +279,10 @@ const CreateNewEventForm = (props) => {
             />
           </div>
 
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               for="shortDescription"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Short description
             </label>
@@ -295,11 +295,11 @@ const CreateNewEventForm = (props) => {
               component={renderTextArea}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Start Date
               </label>
@@ -315,7 +315,7 @@ const CreateNewEventForm = (props) => {
             <div>
               <label
                 Forhtml="eventStartTime"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Start Time
               </label>
@@ -329,11 +329,11 @@ const CreateNewEventForm = (props) => {
               />
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 End Date
               </label>
@@ -349,7 +349,7 @@ const CreateNewEventForm = (props) => {
             <div>
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 End Time
               </label>
@@ -363,10 +363,10 @@ const CreateNewEventForm = (props) => {
               />
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectTimeZone"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Select timezone
             </label>
@@ -380,10 +380,10 @@ const CreateNewEventForm = (props) => {
               component={renderReactSelectTimeZone}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectCategories"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Select categories
             </label>
@@ -397,14 +397,14 @@ const CreateNewEventForm = (props) => {
               component={renderReactSelect}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <p className="form-label form-label-customized">
               Which service would you like to use ?
             </p>
-            <div class="form-check mb-2">
+            <div className="form-check mb-2">
               <Field
                 name="service"
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 // name="flexRadioDefault"
                 id="flexRadioDefault1"
@@ -413,7 +413,7 @@ const CreateNewEventForm = (props) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",
@@ -424,9 +424,9 @@ const CreateNewEventForm = (props) => {
                 Hosting & Management
               </label>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="service"
                 id="flexRadioDefault2"
@@ -436,7 +436,7 @@ const CreateNewEventForm = (props) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",
@@ -449,12 +449,12 @@ const CreateNewEventForm = (props) => {
             </div>
           </div>
 
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <p className="form-label form-label-customized">Event Visibility</p>
-            <div class="form-check mb-2">
+            <div className="form-check mb-2">
               <Field
                 name="visibility"
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 // name="flexRadioDefault"
                 id="flexRadioDefault1"
@@ -463,7 +463,7 @@ const CreateNewEventForm = (props) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",
@@ -475,15 +475,15 @@ const CreateNewEventForm = (props) => {
               </label>
               <div
                 id="emailHelp"
-                class="form-text"
+                className="form-text"
                 style={{ fontSize: "13px" }}
               >
                 Upgrade to a paid plan to create public events.
               </div>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="visibility"
                 id="flexRadioDefault2"
@@ -493,7 +493,7 @@ const CreateNewEventForm = (props) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",

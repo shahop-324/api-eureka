@@ -118,11 +118,11 @@ const CreateNewAlert = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Your Message
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="alertMsg"
                   type="text"

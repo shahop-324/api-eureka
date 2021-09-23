@@ -239,10 +239,10 @@ const EditSession = (props) => {
                   </IconButton>
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   Forhtml="sessionName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Session Name
                 </label>
@@ -256,10 +256,10 @@ const EditSession = (props) => {
                   component={renderInput}
                 />
               </div>
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   Forhtml="description"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Short Description
                 </label>
@@ -272,11 +272,11 @@ const EditSession = (props) => {
                   component={renderTextArea}
                 />
               </div>
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Date
                   </label>
@@ -291,7 +291,7 @@ const EditSession = (props) => {
                 <div>
                   <label
                     Forhtml="eventStartTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Time
                   </label>
@@ -304,11 +304,11 @@ const EditSession = (props) => {
                   />
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <label
                     Forhtml="eventEndDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     End Date
                   </label>
@@ -323,7 +323,7 @@ const EditSession = (props) => {
                 <div>
                   <label
                     Forhtml="eventEndTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     End Time
                   </label>
@@ -336,8 +336,8 @@ const EditSession = (props) => {
                   />
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row">
-                <label for="speakers" class="form-label form-label-customized">
+              <div className="mb-4 overlay-form-input-row">
+                <label for="speakers" className="form-label form-label-customized">
                   Speakers
                 </label>
                 <Field

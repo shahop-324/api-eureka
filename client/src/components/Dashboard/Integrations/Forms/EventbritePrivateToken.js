@@ -28,6 +28,12 @@ const EventbritePrivateToken = ({ openDrawer, handleCloseDrawer }) => {
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
+          onOpen={() => {
+            console.log("Side nav was opended")
+          }}
+          onClose={() => {
+            console.log("Side nav was closed")
+          }}
         >
           <div className="integration-side-drawer-form px-4 py-4">
             <div>
@@ -50,7 +56,7 @@ const EventbritePrivateToken = ({ openDrawer, handleCloseDrawer }) => {
               <div className="mb-3">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Eventbrite Private Token
                 </label>

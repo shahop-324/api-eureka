@@ -219,13 +219,13 @@ const StageSideDrawerComponent = () => {
                 <div>
                   <div className=" pt-2 px-2">
                     <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
-                      <div class="ui icon input me-3" style={{ width: "100%" }}>
+                      <div className="ui icon input me-3" style={{ width: "100%" }}>
                         <input
                           type="text"
                           placeholder="Search people..."
                           className="form-control"
                         />
-                        <i class="search icon"></i>
+                        <i className="search icon"></i>
                       </div>
 
                       <DropdownIcon switchView={switchView} view={view} />

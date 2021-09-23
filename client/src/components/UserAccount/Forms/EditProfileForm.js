@@ -281,7 +281,7 @@ let EditProfileForm = (props) => {
             </div>
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Avatar
             </label>
@@ -301,10 +301,10 @@ let EditProfileForm = (props) => {
               gridGap: "24px",
             }}
           >
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 First name
               </label>
@@ -320,10 +320,10 @@ let EditProfileForm = (props) => {
               />
             </div>
 
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Last name
               </label>
@@ -340,10 +340,10 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Headline
               </label>
@@ -360,10 +360,10 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 E-mail
               </label>
@@ -385,7 +385,7 @@ let EditProfileForm = (props) => {
           >
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               contact Number
             </label>
@@ -398,7 +398,7 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Event Preferences
             </label>
@@ -411,11 +411,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               LinkedIn
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="linkedin"
                 type="text"
@@ -431,11 +431,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Facebook
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="facebook"
                 type="text"
@@ -451,11 +451,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Twitter
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="twitter"
                 type="text"
@@ -471,11 +471,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-5">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Website
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="website"
                 type="text"

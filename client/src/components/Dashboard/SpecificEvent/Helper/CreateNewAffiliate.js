@@ -113,11 +113,11 @@ const CreateNewAffiliate = (props) => {
               </div>
             </div>
 
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="affiliateFirstName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   First Name
                 </label>
@@ -127,12 +127,12 @@ const CreateNewAffiliate = (props) => {
                   classes="form-control"
                   component={renderInput}
                 />
-                {/* <input type="date" class="form-control" /> */}
+                {/* <input type="date" className="form-control" /> */}
               </div>
               <div>
                 <label
                   Forhtml="affiliateLastName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Last Name
                 </label>
@@ -144,10 +144,10 @@ const CreateNewAffiliate = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="affiliateEmail"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Email
               </label>
@@ -159,10 +159,10 @@ const CreateNewAffiliate = (props) => {
                 component={renderInput}
               />
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="affliateCommisionValue"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Commision Value
               </label>

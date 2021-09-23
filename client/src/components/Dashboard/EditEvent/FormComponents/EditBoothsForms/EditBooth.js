@@ -271,7 +271,7 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityHeadline"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Logo
                 </label>
@@ -284,11 +284,11 @@ const EditBooth = (props) => {
                 />
               </div>
 
-              <div class="mb-3 overlay-form-input-row ">
+              <div className="mb-3 overlay-form-input-row ">
                 <div>
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Name
                   </label>
@@ -306,11 +306,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Tagline
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="tagline"
                     type="text"
@@ -327,11 +327,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Description
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="description"
                     type="text"
@@ -346,11 +346,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Emails
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   {/* <MultiEmailInput /> */}
 
                   <Field name="multiEmail" component={renderMultiEmail} />
@@ -360,11 +360,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Tags
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field name="multiTags" component={renderMultiTags} />
                   {/* <MultiTagInput /> */}
                 </div>
@@ -373,11 +373,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   LinkedIn
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="linkedIn"
                     type="text"
@@ -392,11 +392,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Twitter
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="twitter"
                     type="text"
@@ -411,11 +411,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Facebook
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="facebook"
                     type="text"
@@ -430,11 +430,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Instagram
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="instagram"
                     type="text"
@@ -449,11 +449,11 @@ const EditBooth = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Website
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="website"
                     type="text"

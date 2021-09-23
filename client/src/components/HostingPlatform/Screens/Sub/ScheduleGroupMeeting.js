@@ -172,6 +172,12 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -207,7 +213,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
             </div>
 
             <form className="">
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <FormLabel>Title</FormLabel>
                 <Field
                   name="eventName"
@@ -219,7 +225,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                 />
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <FormLabel>Agenda</FormLabel>
                 <Field
                   name="shortDescription"
@@ -231,7 +237,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                 />
               </div>
 
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <FormLabel>Date</FormLabel>
                   <Field
@@ -256,7 +262,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                 </div>
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <FormLabel>Timezone</FormLabel>
                 <Field
                   name="selectTimeZone"
@@ -269,7 +275,7 @@ const ScheduleGroupMeeting = ({ openDrawer, handleCloseDrawer }) => {
                 />
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <FormLabel>Participants</FormLabel>
                 <SmallDescriptiveText>No one has been invited</SmallDescriptiveText>
                 {/* <Field

@@ -189,7 +189,12 @@ const RequestDemo = ({
   return (
     <>
       <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={openDemoForm}>
+        <SwipeableDrawer anchor="right" open={openDemoForm} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Let's Schedule a meet</div>
@@ -218,10 +223,10 @@ const RequestDemo = ({
                     gridGap: "24px",
                   }}
                 >
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       First name
                     </label>
@@ -236,10 +241,10 @@ const RequestDemo = ({
                     />
                   </div>
 
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       Last name
                     </label>
@@ -255,10 +260,10 @@ const RequestDemo = ({
                 </div>
 
                 <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       Work E-mail
                     </label>
@@ -279,7 +284,7 @@ const RequestDemo = ({
                 >
                   <label
                     for="communityHeadline"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     contact Number
                   </label>
@@ -291,10 +296,10 @@ const RequestDemo = ({
                 </div>
 
                 <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       Company
                     </label>
@@ -310,10 +315,10 @@ const RequestDemo = ({
                 </div>
 
                 <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       Job Title
                     </label>
@@ -331,7 +336,7 @@ const RequestDemo = ({
                 <div className="row edit-profile-form-row mb-3">
                   <label
                     for="communityHeadline"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Select Your Region
                   </label>
@@ -343,18 +348,18 @@ const RequestDemo = ({
                 </div>
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   for="communityHeadline"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Are you an event agency ?
                 </label>
 
-                <div class="form-check mb-2">
+                <div className="form-check mb-2">
                   <Field
                     name="eventAgency"
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     // name="flexRadioDefault"
                     id="flexRadioDefault1"
@@ -362,13 +367,13 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <label class="form-check-label" for="flexRadioDefault1">
+                  <label className="form-check-label" for="flexRadioDefault1">
                     Yes
                   </label>
                 </div>
-                <div class="form-check">
+                <div className="form-check">
                   <Field
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     name="eventAgency"
                     id="flexRadioDefault2"
@@ -377,7 +382,7 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <label class="form-check-label" for="flexRadioDefault2">
+                  <label className="form-check-label" for="flexRadioDefault2">
                     No
                   </label>
                 </div>
@@ -387,7 +392,7 @@ const RequestDemo = ({
                 <div className="col">
                   <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="checkbox"
                       // value={this.state.policySigned}
                       name="signinToMailList"

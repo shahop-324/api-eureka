@@ -241,7 +241,7 @@ const EditSponosor = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityHeadline"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Logo
                 </label>
@@ -254,11 +254,11 @@ const EditSponosor = (props) => {
                 />
               </div>
 
-              <div class="mb-3 overlay-form-input-row ">
+              <div className="mb-3 overlay-form-input-row ">
                 <div>
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Organisation Name
                   </label>
@@ -273,10 +273,10 @@ const EditSponosor = (props) => {
                 </div>
               </div>
 
-              <div class="mb-3 overlay-form-input-row">
+              <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Select Category
                 </label>
@@ -294,11 +294,11 @@ const EditSponosor = (props) => {
               <div className="mb-3 overlay-form-input-row">
                 <label
                   for="communityName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Website
                 </label>
-                <div class="form-group">
+                <div className="form-group">
                   <Field
                     name="website"
                     type="text"

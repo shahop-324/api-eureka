@@ -136,7 +136,7 @@ const PollsMainComponent = (props) => {
           <div style={{ width: "47%" }}>
             <label
               for="shortDescription"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
               style={{ fontSize: "0.7rem" }}
             >
               Answered status
@@ -152,7 +152,7 @@ const PollsMainComponent = (props) => {
           <div style={{ width: "47%" }}>
             <label
               for="shortDescription"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
               style={{ fontSize: "0.7rem" }}
             >
               Expiry status

@@ -36,10 +36,10 @@ const CameraAndMicSettings = () => {
   return (
     <>
       <form>
-        <div class="mb-4 overlay-form-input-row">
+        <div className="mb-4 overlay-form-input-row">
           <label
             Forhtml="selectCamera"
-            class="form-label form-label-customized"
+            className="form-label form-label-customized"
           >
             Camera
           </label>
@@ -53,10 +53,10 @@ const CameraAndMicSettings = () => {
           />
         </div>
 
-        <div class="mb-4 overlay-form-input-row">
+        <div className="mb-4 overlay-form-input-row">
           <label
             Forhtml="selectMicrophone"
-            class="form-label form-label-customized"
+            className="form-label form-label-customized"
           >
             Microphone
           </label>
@@ -81,13 +81,13 @@ const CameraAndMicSettings = () => {
         </div>
 
         <div
-          class="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row"
+          className="mb-4 overlay-form-input-row form-row-2-in-1 row edit-profile-form-row"
           style={{ marginLeft: "0", marginRight: "0", padding: "0" }}
         >
           <div style={{ padding: "0" }}>
             <label
               Forhtml="eventStartDate"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Min Bitrate
             </label>
@@ -101,7 +101,7 @@ const CameraAndMicSettings = () => {
           <div style={{ padding: "0" }}>
             <label
               Forhtml="eventStartTime"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Max Bitrate
             </label>
@@ -118,10 +118,10 @@ const CameraAndMicSettings = () => {
           className="row edit-profile-form-row mb-3"
           style={{ marginLeft: "0", marginRight: "0" }}
         >
-          <div class="form-group" style={{ padding: "0" }}>
+          <div className="form-group" style={{ padding: "0" }}>
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Framerate
             </label>
@@ -140,10 +140,10 @@ const CameraAndMicSettings = () => {
           className="row edit-profile-form-row mb-3"
           style={{ marginLeft: "0", marginRight: "0" }}
         >
-          <div class="form-group" style={{ padding: "0" }}>
+          <div className="form-group" style={{ padding: "0" }}>
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Resolution
             </label>

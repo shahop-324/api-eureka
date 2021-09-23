@@ -196,7 +196,12 @@ const Topnav = ({
 
       <React.Fragment key="left">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="left" open={openDrawer}>
+        <SwipeableDrawer anchor="left" open={openDrawer} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
           <div
             className="registration-more-details-right-drawer py-4"
             style={{ minWidth: "18.18vw" }}

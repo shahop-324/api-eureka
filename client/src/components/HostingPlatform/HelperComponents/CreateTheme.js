@@ -54,8 +54,8 @@ const CreateTheme = ({ open, handleClose }) => {
               </IconButton>
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row">
-            <label for="eventName" class="form-label form-label-customized">
+          <div className="mb-4 overlay-form-input-row">
+            <label for="eventName" className="form-label form-label-customized">
               Theme name
             </label>
             <input
@@ -67,8 +67,8 @@ const CreateTheme = ({ open, handleClose }) => {
               //   component={renderInput}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row">
-            <label for="eventName" class="form-label form-label-customized">
+          <div className="mb-4 overlay-form-input-row">
+            <label for="eventName" className="form-label form-label-customized">
               Font Family
             </label>
 
@@ -84,7 +84,7 @@ const CreateTheme = ({ open, handleClose }) => {
             />
           </div>
           <div className="mb-4">
-            <label class="form-label form-label-customized">Color</label>
+            <label className="form-label form-label-customized">Color</label>
             <div
               className="theme-color-preview mb-3"
               style={{ backgroundColor: background }}

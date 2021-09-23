@@ -353,7 +353,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
           Got a coupon code?
         </div>
         <div
-          class="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
+          className="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
           style={{ width: "100%" }}
         >
           <input
@@ -367,7 +367,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
             onChange={handleCouponChange}
           />
           <button
-            class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
+            className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
             onClick={handleCouponValidation}
           >
             Apply

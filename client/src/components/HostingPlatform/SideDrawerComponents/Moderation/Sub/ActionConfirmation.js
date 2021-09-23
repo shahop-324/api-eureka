@@ -114,13 +114,13 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
               </div>
 
               <div
-                class="mb-4 overlay-form-input-row form-row-2-in-1 d-flex flex-row align-items-center"
+                className="mb-4 overlay-form-input-row form-row-2-in-1 d-flex flex-row align-items-center"
                 style={{ display: visibility }}
               >
                 <div style={{ display: visibility }}>
                   <label
                     Forhtml="suspendTillDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                     style={{ display: visibility }}
                   >
                     Suspend till date
@@ -138,7 +138,7 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                   <label
                     style={{ display: visibility }}
                     Forhtml="suspendedTillTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Suspend till time
                   </label>
@@ -153,10 +153,10 @@ const ActionConfirmation = ({ openDrawer, handleCloseDrawer, intent }) => {
                 </div>
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   for="shortDescription"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Your Message
                 </label>

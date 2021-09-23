@@ -38,6 +38,12 @@ const ViewAndEditMailList = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -47,7 +53,7 @@ const ViewAndEditMailList = ({ openDrawer, handleCloseDrawer }) => {
               <div className="mail-list-group-name">
 
                 
-                <div class="form-group">
+                <div className="form-group">
                   <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3 py-2">
                     <input
                       type="text"
@@ -112,7 +118,7 @@ const ViewAndEditMailList = ({ openDrawer, handleCloseDrawer }) => {
             </div>
             <label
               Forhtml="eventStartDate"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Add people to List
             </label>

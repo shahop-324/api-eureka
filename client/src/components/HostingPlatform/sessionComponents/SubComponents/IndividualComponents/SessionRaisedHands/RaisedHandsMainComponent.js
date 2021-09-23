@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import "./../../../../Styles/chatComponent.scss";
 import "./../../../../Styles/qnaComponent.scss";
@@ -10,10 +10,8 @@ import {
   fetchPreviousSessionChatMessages,
   fetchSessionChats,
 } from "../../../../../../actions";
-import QnAInput from "./../QnAInput";
 import { Avatar } from "@material-ui/core";
 import Faker from "faker";
-import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 
 const RaisedHandMainComponent = () => {
   const dispatch = useDispatch();

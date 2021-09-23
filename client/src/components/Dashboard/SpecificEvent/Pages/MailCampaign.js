@@ -88,8 +88,8 @@ const MailCampaign = () => {
             </div>
 
             <div className="ms-3 me-3" style={{ minWidth: "250px" }}>
-              <div class="mb-4 overlay-form-input-row">
-                <label for="eventName" class="form-label form-label-customized">
+              <div className="mb-4 overlay-form-input-row">
+                <label for="eventName" className="form-label form-label-customized">
                   Mail Subject
                 </label>
                 <input

@@ -252,7 +252,12 @@ const TeamManagement = (props) => {
       </div>
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer}>
+        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Add New Member</div>
@@ -274,10 +279,10 @@ const TeamManagement = (props) => {
             <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
               <div className="side-drawer-more-details-content-section">
                 <div className="row edit-profile-form-row mb-3">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="communityHeadline"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       E-mail
                     </label>
@@ -296,7 +301,7 @@ const TeamManagement = (props) => {
                 <div className="row edit-profile-form-row mb-3">
                   <label
                     for="communityHeadline"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Set Permissions
                   </label>

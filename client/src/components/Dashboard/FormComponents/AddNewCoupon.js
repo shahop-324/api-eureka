@@ -157,10 +157,10 @@ const AddNewCoupon = (props) => {
                 </IconButton>
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Select Event
               </label>
@@ -173,11 +173,11 @@ const AddNewCoupon = (props) => {
                 component={renderReactSelect}
               />
             </div>
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Expiry Date
                 </label>
@@ -188,12 +188,12 @@ const AddNewCoupon = (props) => {
                   classes="form-control"
                   component={renderInput}
                 />
-                {/* <input type="date" class="form-control" /> */}
+                {/* <input type="date" className="form-control" /> */}
               </div>
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Expiry Time
                 </label>
@@ -205,10 +205,10 @@ const AddNewCoupon = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Discount Percentage
               </label>
@@ -221,10 +221,10 @@ const AddNewCoupon = (props) => {
                 component={renderInput}
               />
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Coupon code
               </label>
@@ -239,10 +239,10 @@ const AddNewCoupon = (props) => {
               />
             </div>
 
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Number Of Discounts Available
               </label>

@@ -127,11 +127,11 @@ const CreateNewPoll = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Question
                 </label>
@@ -152,12 +152,12 @@ const CreateNewPoll = (props) => {
 
             <label
               Forhtml="eventStartDate"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Answer
             </label>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_1"
@@ -169,7 +169,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_2"
@@ -181,7 +181,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_3"
@@ -193,7 +193,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_4"
@@ -206,11 +206,11 @@ const CreateNewPoll = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="pollExpiryTime"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Time Limit{" "}
                   <div

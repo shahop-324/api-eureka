@@ -44,10 +44,10 @@ const TopNav = () => {
         className="row nav-section"
         style={{ marginLeft: "auto", marginRight: "auto" }}
       >
-        <nav class="navbar navbar-expand-xxl navbar-light pt-3">
-          <div class="container">
+        <nav className="navbar navbar-expand-xxl navbar-light pt-3">
+          <div className="container">
             {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
-            <span class="navbar-brand nav-brand-name-home">
+            <span className="navbar-brand nav-brand-name-home">
               <a
                 href="https://www.evenz.in/home"
                 style={{ textDecoration: "none", color: "#ffffff" }}
@@ -57,7 +57,7 @@ const TopNav = () => {
             </span>
 
             <button
-              class="navbar-toggler"
+              className="navbar-toggler"
               type="button"
               data-bs-toggle="collapse"
               // data-bs-target="#navbarSupportedContent"
@@ -83,11 +83,11 @@ const TopNav = () => {
               )}
             </button>
             <div
-              class="collapse navbar-collapse navbar-collapse-dark"
+              className="collapse navbar-collapse navbar-collapse-dark"
               id="navbarSupportedContent"
             >
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+              <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li className="nav-item" style={{ alignSelf: "center" }}>
                   {/* <div className="nav-link-btn nav-link-btn-dark me-4">
                         Features
                       </div> */}
@@ -202,7 +202,7 @@ const TopNav = () => {
                   </Dropdown>
                 </li>
 
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+                <li className="nav-item" style={{ alignSelf: "center" }}>
                   <div
                     className="nav-link-btn nav-link-btn-dark me-4"
                     style={{ fontWeight: "600" }}
@@ -215,7 +215,7 @@ const TopNav = () => {
                     </Link>
                   </div>
                 </li>
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+                <li className="nav-item" style={{ alignSelf: "center" }}>
                   <div
                     className="nav-link-btn nav-link-btn-dark me-4"
                     style={{ fontWeight: "600" }}
@@ -228,7 +228,7 @@ const TopNav = () => {
                     </Link>
                   </div>
                 </li>
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+                <li className="nav-item" style={{ alignSelf: "center" }}>
                   <div
                     className="nav-link-btn nav-link-btn-dark me-4"
                     style={{ fontWeight: "600" }}
@@ -241,7 +241,7 @@ const TopNav = () => {
                     </Link>
                   </div>
                 </li>
-                {/* <li class="nav-item" style={{ alignSelf: "center" }}>
+                {/* <li className="nav-item" style={{ alignSelf: "center" }}>
                   <div
                     className="nav-link-btn nav-link-btn-dark me-4"
                     style={{ fontWeight: "600" }}
@@ -255,7 +255,7 @@ const TopNav = () => {
                   </div>
                 </li> */}
 
-<li class="nav-item" style={{ alignSelf: "center" }}>
+<li className="nav-item" style={{ alignSelf: "center" }}>
                   {/* <div className="nav-link-btn nav-link-btn-dark me-4">
                         Features
                       </div> */}
@@ -309,7 +309,7 @@ const TopNav = () => {
                   </Dropdown>
                 </li>
 
-                <li class="nav-item" style={{ alignSelf: "center" }}>
+                <li className="nav-item" style={{ alignSelf: "center" }}>
                 { !isSignedIn ?  <a
                 href="/signin"
                 type="button"
@@ -329,7 +329,12 @@ const TopNav = () => {
 
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer}>
+        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }} >
           <div
             className="registration-more-details-right-drawer px-4 py-4"
             style={{ width: "100vw" }}

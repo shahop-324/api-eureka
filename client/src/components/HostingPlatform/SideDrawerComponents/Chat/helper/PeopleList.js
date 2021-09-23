@@ -83,13 +83,13 @@ const PeopleList = ({ open, handleClose }) => {
             <hr />
           </div>
 
-          <div class="ui icon input mb-3" style={{ width: "100%" }}>
+          <div className="ui icon input mb-3" style={{ width: "100%" }}>
             <input
               type="text"
               placeholder="Search people..."
               className="form-control"
             />
-            <i class="search icon"></i>
+            <i className="search icon"></i>
           </div>
 
           {/* <div className="my-3">

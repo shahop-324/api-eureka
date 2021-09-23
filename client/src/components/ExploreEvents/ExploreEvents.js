@@ -23,13 +23,13 @@ class ExploreEvents extends React.Component {
               className="explore-nav max-width-explore-page"
               style={{ margin: "0 auto" }}
             >
-              <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="container-fluid">
+              <nav className="navbar navbar-expand-lg navbar-light">
+                <div className="container-fluid">
                   
                     <span style={{ color: "#538BF7" }}>Evenz</span>
                   
                   <button
-                    class="navbar-toggler"
+                    className="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
@@ -37,23 +37,23 @@ class ExploreEvents extends React.Component {
                     aria-expanded="false"
                     aria-label="Toggle navigation"
                   >
-                    <span class="navbar-toggler-icon"></span>
+                    <span className="navbar-toggler-icon"></span>
                   </button>
                   <div
-                    class="collapse navbar-collapse"
+                    className="collapse navbar-collapse"
                     id="navbarSupportedContent"
                   >
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                      <li class="nav-item">
+                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                      <li className="nav-item">
                         
-                          <button type="button" class="btn btn-outline-primary">
+                          <button type="button" className="btn btn-outline-primary">
                             Login
                           </button>
                         
                       </li>
-                      <li class="nav-item">
+                      <li className="nav-item">
                         
-                          <button type="button" class="btn btn-primary">
+                          <button type="button" className="btn btn-primary">
                             Get Started
                           </button>
                         
@@ -79,14 +79,14 @@ class ExploreEvents extends React.Component {
                 </div>
 
                 <div className="row hero-search">
-                  <form class="d-flex" style={{ padding: "0" }}>
+                  <form className="d-flex" style={{ padding: "0" }}>
                     <input
-                      class="form-control me-2"
+                      className="form-control me-2"
                       type="search"
                       placeholder="Search events"
                       aria-label="Search"
                     />
-                    <button class="btn btn-primary" type="submit">
+                    <button className="btn btn-primary" type="submit">
                       <i className="fa fa-search"></i>
                     </button>
                   </form>
@@ -859,7 +859,7 @@ class ExploreEvents extends React.Component {
                   <div className="pre-footer-hero-btn d-flex flex-row justify-content-start">
                     <button
                       type="button"
-                      class="btn btn-light pre-footer-btn-light"
+                      className="btn btn-light pre-footer-btn-light"
                     >
                       Host a free event
                     </button>

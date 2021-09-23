@@ -47,7 +47,7 @@ const PaidPriceSelector = (props) => {
       <div className="row">
         <div className="col-6">
           <div className="mb-3 me-3">
-            <label for="exampleInputEmail1" class="form-label">
+            <label for="exampleInputEmail1" className="form-label">
               Min
             </label>
             <input
@@ -62,7 +62,7 @@ const PaidPriceSelector = (props) => {
         </div>
         <div className="col-6">
           <div className="mb-3">
-            <label for="exampleInputEmail1" class="form-label">
+            <label for="exampleInputEmail1" className="form-label">
               Max
             </label>
             <input

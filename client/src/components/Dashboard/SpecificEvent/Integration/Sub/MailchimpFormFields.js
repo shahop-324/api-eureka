@@ -36,7 +36,7 @@ const FormFieldMapComponent = ({ add, remove }) => {
           alignItems: "center",
         }}
       >
-        <div class="overlay-form-input-row ">
+        <div className="overlay-form-input-row ">
           <input
             name="name"
             type="text"

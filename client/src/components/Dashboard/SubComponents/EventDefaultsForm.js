@@ -111,10 +111,10 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
     <>
       <div className="user-account-edit-profile px-4 py-4">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectTimeZone"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Timezone
             </label>
@@ -129,12 +129,12 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
             />
           </div>
 
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <p className="form-label form-label-customized">Event visibility</p>
-            <div class="form-check mb-2">
+            <div className="form-check mb-2">
               <Field
                 name="defaultVisibility"
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 // name="flexRadioDefault"
                 id="flexRadioDefault1"
@@ -143,7 +143,7 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",
@@ -155,15 +155,15 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
               </label>
               <div
                 id="emailHelp"
-                class="form-text"
+                className="form-text"
                 style={{ fontSize: "13px" }}
               >
                 Upgrade to a paid plan to create public events.
               </div>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="defaultVisibility"
                 id="flexRadioDefault2"
@@ -173,7 +173,7 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
                 component="input"
               />
               <label
-                class="form-check-label"
+                className="form-check-label"
                 style={{
                   fontFamily: "Inter",
                   fontWeight: "500",
@@ -185,10 +185,10 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
               </label>
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectCategories"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Event Category
             </label>
@@ -203,10 +203,10 @@ const EventDefaultsForm = ({ handleSubmit, pristine, reset, submitting }) => {
             />
           </div>
 
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectTimeZone"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Ticketing Currency
             </label>

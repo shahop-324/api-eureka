@@ -161,7 +161,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
             </div>
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Avatar
             </label>
@@ -175,10 +175,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Community Name
               </label>
@@ -194,10 +194,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Headline
               </label>
@@ -212,10 +212,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityEmail"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 E-mail
               </label>
@@ -232,11 +232,11 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityLinkedin"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               LinkedIn
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="communityLinkedin"
                 type="text"
@@ -251,11 +251,11 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Facebook
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="facebook"
                 type="text"
@@ -270,11 +270,11 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Twitter
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="twitter"
                 type="text"
@@ -289,11 +289,11 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           <div className="row edit-profile-form-row mb-5">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Website
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="website"
                 type="text"

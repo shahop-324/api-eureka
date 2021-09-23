@@ -59,7 +59,7 @@ const Linkedin = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();
