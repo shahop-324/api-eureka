@@ -102,7 +102,7 @@
   "scripts": {
     "start:dev": "REACT_APP_MY_ENV=development PORT=3001 react-scripts start",
     "start": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts --max_old_space_size=8192 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
