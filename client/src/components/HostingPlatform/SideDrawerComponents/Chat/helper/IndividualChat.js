@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
@@ -8,7 +9,6 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 
 import Ripple from "../../../../ActiveStatusRipple";
 import MsgInput from "./MsgInput";
-import IncomingChat from "../Sub/IncomingChatMsg";
 import ChatMsgElement from "./ChatMsgElement";
 import OutgoingChatMsgElement from "./OutgoingChatElement";
 
@@ -17,7 +17,7 @@ const IndividualChat = ({
   exitPersonalChat,
   handleOpenVideoOptions,
 }) => {
-  const [status, setStatus] = useState("active");
+  const [status] = useState("active");
 
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);

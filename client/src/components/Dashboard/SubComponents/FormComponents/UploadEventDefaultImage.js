@@ -86,7 +86,7 @@ const UploadEventDefaultImageForm = (props) => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="event-image-form-wrapper py-4" style={{maxWidth: "400px"}}>
-          <label for="eventName" class="form-label form-label-customized">
+          <label for="eventName" className="form-label form-label-customized">
             Event image
           </label>
           <div className="my-2">

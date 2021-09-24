@@ -49,6 +49,7 @@ const communityPlanRoutes = require("./routes/communityPlanRoutes");
 const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const paypalRoutes = require("./routes/payPalRoutes");
+const zapierRoutes = require("./routes/zapierRoutes");
 
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
@@ -88,6 +89,9 @@ app.use(
       "https://www.bluemeet.in",
       "https://www.evenz.co.in",
       "https://evenz.co.in",
+      "https://zapier.com",
+      "https://www.zapier.com",
+      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
@@ -97,7 +101,37 @@ app.use(
 );
 
 app.use(cookieParser());
+// app.use(bodyParser.json());
+// app.use(bodyParser.raw({ type: "application/json" }));
+// app.use(bodyParser.json({
+//   verify: function (req, res, buf) {
+//     var url = req.originalUrl;
+//     if (url.startsWith('/stripe')) {
+//        req.rawBody = buf.toString();
+//     }
+//   }
+// }));
+
+// Use JSON parser for all non-webhook routes
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      const url = req.originalUrl;
+      if (
+        url.startsWith("/api-eureka/eureka/v1/stripe/eventTicketPurchased") ||
+        url.startsWith("/api-eureka/eureka/v1/stripe/eventPurchaseFailed")
+      ) {
+        req.rawBody = buf.toString();
+      }
+    },
+  })
+);
+
+// Setup express response and body parser configurations
+app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -217,6 +251,7 @@ app.use("/api-eureka/eureka/v1/communityPlan", communityPlanRoutes);
 app.use("/api-eureka/eureka/v1/affiliate", affiliateRoutes);
 app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 app.use("/api-eureka/eureka/v1/paypal", paypalRoutes);
+app.use("/api-eureka/eureka/v1/zapier", zapierRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

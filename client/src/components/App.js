@@ -17,7 +17,6 @@ import Ticketing from "./Dashboard/EditEvent/Ticketing";
 import Sponsors from "./Dashboard/EditEvent/Sponsor";
 import Networking from "./Dashboard/EditEvent/Networking";
 import Root from "./HostingPlatform/Root";
-import SessionScreen from "./HostingPlatform/Screens/SessionScreen";
 import ForgotPassword from "./ForgotPassword/ForgotPassword";
 import ResetPassword from "./ResetPassword/ResetPassword";
 import DashboardRoot from "./Dashboard/DashboardRoot";
@@ -58,6 +57,9 @@ import BoothArea from "./HostingPlatform/Screens/BoothArea";
 import SignInNew from "./Signin/SigninNew";
 import SignupNew from "./Signup/SignupNew";
 import SessionStage from "./HostingPlatform/Screens/SessionStage";
+import CheckConnectedStatus from "./PaymentHandlingComponents/CheckConnectedStatus";
+import SuccessfullyConnected from "./PaymentHandlingComponents/SuccessfullyConnected";
+import NotConnected from "./PaymentHandlingComponents/NotConnected";
 
 AOS.init();
 
@@ -111,11 +113,11 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route path="/test" exact component={SessionStage} />
+              <Route path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId" exact component={CheckConnectedStatus} />
+              <Route path="/onboarded-successfully/user/:userId/community/:communityId/account/:accountId" exact component={SuccessfullyConnected} />
+              <Route path="/not-onboarded-yet/user/:userId/community/:communityId/account/:accountId" exact component={NotConnected} />
               <Route path="/home" exact component={Home} />
-
               <Route path="/" exact component={Home} />
-
               <Route path="/signup" exact component={Signup} />
               <Route path="/login" exact component={SignInNew} />
               <Route path="/signup-new" exact component={SignupNew} />
@@ -186,7 +188,7 @@ class App extends React.Component {
 
               <Route path="/explore-events/" exact component={ExploreEvents} />
               <Route
-                path="/event-landing-page/:id"
+                path="/event-landing-page/:id/:communityId"
                 exact
                 component={EventLandingPage}
               />

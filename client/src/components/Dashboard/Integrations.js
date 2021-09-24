@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -10,27 +10,13 @@ import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import { alpha } from "@material-ui/core";
-import Select from 'react-select';
-import Eventbrite from "./Integrations/Eventbrite";
-import Mailchimp from "./Integrations/Mailchimp";
-import Intercom from "./Integrations/Intercomm";
-import Hubspot from "./Integrations/Hubspot";
-import Salesforce from "./Integrations/Salesforce";
-import Slack from "./Integrations/Slack";
-import Twitter from "./Integrations/Twitter";
-import Marketo from "./Integrations/Marketo";
-import Miro from "./Integrations/Miro";
-import Figma from "./Integrations/Figma";
-import Typeform from "./Integrations/Typeform";
-import GoogleSheets from "./Integrations/GoogleSheets";
-import GooglCalender from "./Integrations/GoogleCalender";
-import GoogleSlides from "./Integrations/GooglSlides";
-import Linkedin from "./Integrations/LinkedIn";
-import Drip from "./Integrations/Drip";
-import ActiveCampaign from "./Integrations/ActiveCampaign";
-import Salesmate from "./Integrations/Salesmate";
-import Mailjet from "./Integrations/Mailjet";
-import SendinBlue from "./Integrations/SendinBlue";
+import Select from "react-select";
+
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import IntegrationsSub from "./IntegrationSubComponents.js/IntegrationsSub";
+import ApiKeysSub from "./IntegrationSubComponents.js/ApiKeysSub";
+import GenerateApiKey from "./IntegrationSubComponents.js/Forms/GenerateApiKey";
 
 const options = [
   { value: "All", label: "All Integrations" },
@@ -120,14 +106,45 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Integrations = () => {
-  
+  const [alignment, setAlignment] = React.useState("integrations");
+
+  const [openGenerateApikey, setOpenGenerateApikey] = useState(false);
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
+  const handleCloseOpenGenerateApiKey = () => {
+    setOpenGenerateApikey(false);
+  };
+
   const classes = useStyles();
 
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Integrations</div>
+          
+          {(() => {
+              switch (alignment) {
+                case "integrations":
+                  return (
+                    <div className="sec-heading-text">Integrations</div>
+                  );
+
+                case "streamdestination":
+                  return <div className="sec-heading-text">Stream destination</div>
+
+                case "apikeys":
+                  return <div className="sec-heading-text">Api keys</div>
+
+                  case "webhooks":
+                  return <div className="sec-heading-text">Webhooks</div>
+
+                default:
+                  break;
+              }
+            })()}
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search} me-3`}
@@ -145,41 +162,102 @@ const Integrations = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <div className="me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="bottom"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
-            <button className="btn btn-outline-primary btn-outline-text">Suggest Integration</button>
+
+            {(() => {
+              switch (alignment) {
+                case "integrations":
+                  return (
+                    <div className="me-3" style={{ minWidth: "250px" }}>
+                      <Select
+                        styles={styles}
+                        menuPlacement="bottom"
+                        options={options}
+                        defaultValue={options[0]}
+                      />
+                    </div>
+                  );
+
+                // case "apikeys":
+                //   return <button className="btn btn-primary btn-outline-text">
+                //   Generate new Key
+                // </button>
+
+                default:
+                  break;
+              }
+            })()}
+
+            {(() => {
+              switch (alignment) {
+                case "integrations":
+                  return (
+                    <button className="btn btn-outline-primary btn-outline-text">
+                      Suggest Integration
+                    </button>
+                  );
+
+                case "apikeys":
+                  return (
+                    <button
+                      onClick={() => {
+                        setOpenGenerateApikey(true);
+                      }}
+                      className="btn btn-primary btn-outline-text"
+                    >
+                      Generate new Key
+                    </button>
+                  );
+
+                default:
+                  break;
+              }
+            })()}
           </div>
         </div>
         <div className="px-4 py-4">
-        <Eventbrite />
-        <Mailchimp />
-        <Intercom />
-        <Hubspot />
-        <Slack />
-        <Twitter />
-        <Marketo />
-        <Miro />
-        <Figma />
-        <Typeform />
-        <GoogleSheets />
-        <GooglCalender />
-        <GoogleSlides />
-        <Linkedin />
-        <Drip />
-        <ActiveCampaign />
-        <Salesmate />
-        <Mailjet />
-        <SendinBlue />
-        <Salesforce />
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+          >
+            <ToggleButton value="integrations">Integrations</ToggleButton>
+            <ToggleButton value="streamdestination">
+              Stream destination
+            </ToggleButton>
+            <ToggleButton value="apikeys">API Keys</ToggleButton>
+            <ToggleButton value="webhooks">Webhooks</ToggleButton>
+          </ToggleButtonGroup>
         </div>
+
+        {(() => {
+          switch (alignment) {
+            case "integrations":
+              return <IntegrationsSub />;
+
+            case "streamdestination":
+              return <div>We will have stream destination setup ui here.</div>;
+
+            case "apikeys":
+              return <ApiKeysSub />;
+
+            case "webhooks":
+              return (
+                <div>
+                  We will have webhooks configuration, management and testing
+                  ui.
+                </div>
+              );
+
+            default:
+              break;
+          }
+        })()}
       </div>
-      
+      <GenerateApiKey
+        openDrawer={openGenerateApikey}
+        handleCloseDrawer={handleCloseOpenGenerateApiKey}
+      />
     </>
   );
 };

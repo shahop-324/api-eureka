@@ -276,7 +276,7 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Avatar
               </label>
@@ -289,11 +289,11 @@ const AddNewSpeaker = (props) => {
               />
             </div>
 
-            <div class="mb-3 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-3 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   First Name
                 </label>
@@ -309,7 +309,7 @@ const AddNewSpeaker = (props) => {
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Last Name
                 </label>
@@ -327,11 +327,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Organisation
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="organisation"
                   type="text"
@@ -346,11 +346,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Headline
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="headline"
                   type="text"
@@ -365,11 +365,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Email
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="email"
                   type="email"
@@ -381,10 +381,10 @@ const AddNewSpeaker = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row">
+            <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Select Sessions
               </label>
@@ -402,11 +402,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Linkedin
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="linkedin"
                   type="text"
@@ -421,11 +421,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Facebook
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="facebook"
                   type="text"
@@ -440,11 +440,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Twitter
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="twitter"
                   type="text"
@@ -459,11 +459,11 @@ const AddNewSpeaker = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Website
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="website"
                   type="text"

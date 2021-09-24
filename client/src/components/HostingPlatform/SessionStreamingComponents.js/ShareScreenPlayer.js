@@ -5,12 +5,8 @@ import { useSelector } from "react-redux";
 import {
   UserRoleTag,
   VideoStreamContainer,
-  IconButton,
 } from "../../SessionStage/Elements";
 
-import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
-
-import PushPinRoundedIcon from "@mui/icons-material/PushPinRounded";
 
 const ShareScreenPlayer = ({
   role,

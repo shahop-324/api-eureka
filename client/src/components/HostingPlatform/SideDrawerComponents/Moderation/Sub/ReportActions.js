@@ -9,7 +9,6 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import "./../Styles/report.scss";
-import { makeStyles } from "@material-ui/core/styles";
 import ActionConfirmation from "./ActionConfirmation";
 
 const ReportActions = ({ open, handleClose }) => {

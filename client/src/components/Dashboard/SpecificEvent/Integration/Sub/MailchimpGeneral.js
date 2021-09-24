@@ -133,13 +133,6 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
 
   const { isLoading, error } = useSelector((state) => state.community);
 
-  audienceList = ChimpyAudienceList.map((list) => {
-    return {
-      value: list.id,
-      label: list.name,
-    };
-  });
-
   const handleChange = () => {
     setChecked(!checked);
   };
@@ -198,6 +191,13 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
     return;
   }
 
+  audienceList = ChimpyAudienceList.map((list) => {
+    return {
+      value: list.id,
+      label: list.name,
+    };
+  });
+
   return (
     <>
       <div>
@@ -205,7 +205,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
           <div className="d-flex flex-column mb-5 overlay-form-input-row">
             <label
               for="communityName"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
               style={{ color: "#212121" }}
             >
               Mailchimp audience
@@ -253,7 +253,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
             />
           </div>
           <div className="d-flex flex-column mb-5 overlay-form-input-row">
-            <label for="communityName" class="form-label form-label-customized">
+            <label for="communityName" className="form-label form-label-customized">
               Audience tag
             </label>
             <small className="mb-3 form-small-text">
@@ -261,7 +261,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
               are captured as leads or interested people.
             </small>
 
-            <div class="form-group">
+            <div className="form-group">
               <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
                 <Field
                   name="tag"
@@ -310,7 +310,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
           </div>
 
           <div className="d-flex flex-column mb-4 overlay-form-input-row">
-            <label for="communityName" class="form-label form-label-customized">
+            <label for="communityName" className="form-label form-label-customized">
               Add direct access link
             </label>
             <small className="mb-3 form-small-text">

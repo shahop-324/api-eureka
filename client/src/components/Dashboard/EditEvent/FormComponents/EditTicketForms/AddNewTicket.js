@@ -242,11 +242,11 @@ const AddNewTicket = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Ticket Name
                 </label>
@@ -261,10 +261,10 @@ const AddNewTicket = (props) => {
               </div>
             </div>
 
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Short Description
               </label>
@@ -278,11 +278,11 @@ const AddNewTicket = (props) => {
               />
             </div>
 
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Currency
                 </label>
@@ -299,7 +299,7 @@ const AddNewTicket = (props) => {
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Price
                 </label>
@@ -314,10 +314,10 @@ const AddNewTicket = (props) => {
               </div>
             </div>
 
-            {/* <div class="mb-3 overlay-form-input-row">
+            {/* <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Select Available Venue Areas
               </label>
@@ -337,11 +337,11 @@ const AddNewTicket = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Number of ticket available
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="numberOfTicketAvailable"
                   type="number"
@@ -362,7 +362,7 @@ const AddNewTicket = (props) => {
               />
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
                 style={{ marginBottom: "0", alignSelf: "center" }}
               >
                 Share Recordings

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import "./../../../index.css";
@@ -179,9 +181,9 @@ const renderEventPreferences = ({
 let EditProfileForm = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, succeded } = useSelector((state) => state.user);
+  const { error, succeded } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -203,7 +205,7 @@ let EditProfileForm = (props) => {
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
-  const [editProfileClicked, setEditProfileClicked] = useState(false);
+  const [ editProfileClicked, setEditProfileClicked] = useState(false);
 
   useEffect(() => {
     dispatch(resetUserError());
@@ -280,7 +282,7 @@ let EditProfileForm = (props) => {
             </div>
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Avatar
             </label>
@@ -300,10 +302,10 @@ let EditProfileForm = (props) => {
               gridGap: "24px",
             }}
           >
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 First name
               </label>
@@ -319,10 +321,10 @@ let EditProfileForm = (props) => {
               />
             </div>
 
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Last name
               </label>
@@ -339,10 +341,10 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Headline
               </label>
@@ -359,10 +361,10 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <div class="form-group">
+            <div className="form-group">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 E-mail
               </label>
@@ -384,7 +386,7 @@ let EditProfileForm = (props) => {
           >
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               contact Number
             </label>
@@ -397,7 +399,7 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Event Preferences
             </label>
@@ -410,11 +412,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               LinkedIn
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="linkedin"
                 type="text"
@@ -430,11 +432,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Facebook
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="facebook"
                 type="text"
@@ -450,11 +452,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Twitter
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="twitter"
                 type="text"
@@ -470,11 +472,11 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-5">
             <label
               for="communityHeadline"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Website
             </label>
-            <div class="form-group">
+            <div className="form-group">
               <Field
                 name="website"
                 type="text"

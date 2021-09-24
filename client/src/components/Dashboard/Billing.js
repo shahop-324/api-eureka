@@ -1,12 +1,14 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-
-import PayPalLOGO from "./../../assets/images/paypal-logo.png";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Billing.scss";
+import styled from "styled-components";
+import Ripple from "./../ActiveStatusRipple";
 
 import BasicPlanCard from "./HelperComponent/BillingComponents/BasicsPlanCard";
 import ProPlanCard from "./HelperComponent/BillingComponents/ProPlanCard";
@@ -20,17 +22,59 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { IconButton } from "@material-ui/core";
 import BillingListFields from "./HelperComponent/BillingComponents/BillingListFields";
 import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/BillingHistoryDetailsCard";
-import { useDispatch } from "react-redux";
-import { getPayPalConnectLink } from "../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCommunity,
+  getStripeConnectLink,
+} from "../../actions";
+import { useParams } from "react-router-dom";
+
+const StripeAccountCardBody = styled.div`
+  background-color: #ffffff;
+  border-radius: 10px;
+  height: auto;
+  width: 100%;
+  max-width: 1460px;
+`;
+
+const NoteContainer = styled.div`
+  width: 100%;
+  height: auto;
+  background-color: #525f7f;
+  border-radius: 10px;
+  border-left: 8px solid #152d35;
+`;
+
+const NoteText = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.85rem;
+  color: #ffffff;
+`;
 
 const Billing = () => {
+  const { isStripeEnabled, verifiedStripeAccountId } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  const params = useParams();
+
+  const communityId = params.id;
+
+  const userId = params.userId;
+
+  console.log(userId, communityId);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPayPalConnectLink());
+    dispatch(fetchCommunity(communityId));
   }, []);
 
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const color = isStripeEnabled ? "#90EE7D" : "#dfe769";
+
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
@@ -38,14 +82,76 @@ const Billing = () => {
           <div className="sec-heading-text">Accept Payments</div>
         </div>
 
-        <div className="connect-with-paypal-section d-flex flex-row align-items-center px-4 py-4">
-          <img
-            src={PayPalLOGO}
-            style={{ maxWidth: "200px", borderRight: "1px solid #538BF7" }}
-            alt={"Paypal logo"}
-            className="px-4 me-4"
-          />
-        </div>
+        <StripeAccountCardBody
+          className="px-4 mx-3 mb-4 py-4 d-flex flex-column align-items-center justify-content-center"
+          style={{
+            backgroundColor: "#ffffff",
+            boxShadow: "0px 5px 20px rgb(176 195 211 / 16%)",
+            borderRadius: "20px",
+          }}
+        >
+          {isStripeEnabled ? (
+            <div className="mb-3">
+              <button className="btn btn-outline-danger btn-outline-text me-3">
+                Terminate connection
+              </button>
+              <button className="btn btn-outline-info btn-outline-text">
+                Change account
+              </button>
+            </div>
+          ) : (
+            <a
+              onClick={() => {
+                dispatch(getStripeConnectLink(userId, communityId));
+              }}
+              href="#"
+              className="stripe-connect slate mb-3"
+            >
+              <span>Connect with</span>
+            </a>
+          )}
+
+          <div className="d-flex flex-row justify-content-end mb-3">
+            <div className="btn-outline-text current-plan-will-renew-at me-3">
+              Current status:
+            </div>
+
+            {isStripeEnabled ? (
+              <div
+                className="d-flex flex-row align-items-center event-field-label field-label-value"
+                style={{ color: "#75BF72", fontFamily: "Ubuntu" }}
+              >
+                <Ripple /> Connected{" "}
+              </div>
+            ) : (
+              <div
+                style={{
+                  fontFamily: "Ubuntu",
+                  fontWeight: "500",
+                  color: "#D64329",
+                }}
+              >
+                Not connected
+              </div>
+            )}
+          </div>
+          <div className="d-flex flex-row justify-content-end mb-3">
+            <div className="btn-outline-text current-plan-will-renew-at me-3">
+              Account no:{" "}
+              <span className="ms-3">
+                {isStripeEnabled ? verifiedStripeAccountId : "---"}
+              </span>
+            </div>
+          </div>
+
+          <NoteContainer className="px-4 py-3">
+            <NoteText style={{ color: color }}>
+              {isStripeEnabled
+                ? "Your community is connnected to stripe for secure transactions."
+                : "Please connect your account with stripe for secure payments."}
+            </NoteText>
+          </NoteContainer>
+        </StripeAccountCardBody>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Billing</div>
@@ -81,7 +187,16 @@ const Billing = () => {
       </div>
 
       <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={openDrawer}>
+        <SwipeableDrawer
+          anchor="right"
+          open={openDrawer}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
           <div
             className="registration-more-details-right-drawer px-4 py-4"
             style={{ width: "45vw" }}

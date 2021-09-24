@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import styled from "styled-components";
@@ -9,7 +10,6 @@ import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
 import {
   communitySignIn,
   errorTrackerForCommunitySignIn,
-  errorTrackerForPersonalData,
 } from "../../actions";
 import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
@@ -162,8 +162,6 @@ class UserProfileTab extends React.Component {
 const UserAccountSideNav = () => {
   const { isLoading, error } = useSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
-
-  const dispatch = useDispatch();
 
   const { isCommunityLoading } = useSelector((state) => state.community);
 

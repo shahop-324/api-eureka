@@ -17,23 +17,13 @@ import { navigationIndexForSpecificEvent } from "../../../actions/index";
 import SideNav from "./sideNav";
 import Registrations from "./Pages/Registrations";
 import Integrations from "./Pages/Integrations";
-import Queries from "./Pages/Queries";
-import Reviews from "./Pages/Reviews";
 import EventAnalytics from "./Pages/Analytics";
-import Affiliate from "./Pages/Affiliate";
-import InterestedPeople from "./Pages/InterestedPeople";
-import Leads from "./Pages/Leads";
-import CheckIns from "./Pages/CheckIns";
-import MailCampaign from "./Pages/MailCampaign";
 import Chip from '@material-ui/core/Chip';
 import ErrorBoundriesRegistrations from "../../ErrorBoundries/ErrorBoundriesRegistrations";
 import SideNavLean from "./SideNavLean";
 import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-
-/* <Link to={`/user/${userId}/community/${communityId}/event/${eventId}`} style={{width: "100%"}}> 
-            </Link> */
 
 const SpecificEventRoot = () => {
   const params = useParams();

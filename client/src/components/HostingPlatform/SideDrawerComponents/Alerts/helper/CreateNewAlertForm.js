@@ -8,7 +8,7 @@ import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import socket from "./../../../service/socket";
 
@@ -50,8 +50,6 @@ const renderTextArea = ({
 
 const CreateNewAlert = (props) => {
   const { handleSubmit, pristine, submitting } = props;
-
-  const dispatch = useDispatch();
 
   const params = useParams();
 
@@ -120,11 +118,11 @@ const CreateNewAlert = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Your Message
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="alertMsg"
                   type="text"

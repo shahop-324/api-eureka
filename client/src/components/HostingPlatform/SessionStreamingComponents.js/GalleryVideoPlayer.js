@@ -14,17 +14,7 @@ import {
 
 import Avatar from "@mui/material/Avatar";
 
-import styled from "styled-components";
-
-import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
-
-import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
-
-import PushPinRoundedIcon from "@mui/icons-material/PushPinRounded";
-
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
-import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
-import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon

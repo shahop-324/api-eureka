@@ -59,14 +59,6 @@ const ProfileSmallText = styled.div`
   text-transform: capitalize;
 `;
 
-const ProfileMediumText = styled.div`
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: #222222;
-  font-family: "Ubuntu";
-  text-transform: capitalize;
-`;
-
 const ButtonOutlinedDark = styled.div`
   padding: 6px 10px;
   text-align: center;

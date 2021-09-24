@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import "./../Styles/alertDetails.scss";
-import Faker from "faker";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
@@ -44,6 +44,12 @@ const PrivateMeetDetails = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}

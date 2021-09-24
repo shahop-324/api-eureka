@@ -192,7 +192,7 @@ const Signup = (props) => {
                     }}
                   >
                     <div className="">
-                      <div class="form-group">
+                      <div className="form-group">
                         <label
                           for="firstName"
                           className="form-label form-label-customized"
@@ -212,7 +212,7 @@ const Signup = (props) => {
                     </div>
                     <div className="">
                       <div className="mb-3">
-                        <div class="form-group">
+                        <div className="form-group">
                           <label
                             for="lastName"
                             className="form-label form-label-customized"
@@ -238,7 +238,7 @@ const Signup = (props) => {
 
                   <div className="row" style={{ marginBottom: "2%" }}>
                     <div className="mb-3">
-                      <div class="form-group">
+                      <div className="form-group">
                         <label
                           for="emailAddress"
                           className="form-label form-label-customized"
@@ -265,7 +265,7 @@ const Signup = (props) => {
                     style={{ padding: "0 0%", alignItems: "center" }}
                   >
                     <div className="mb-3">
-                      <div class="form-group">
+                      <div className="form-group">
                         <label
                           for="password"
                           className="form-label form-label-customized"
@@ -354,10 +354,10 @@ const Signup = (props) => {
                         Register
                         {signupClicked && formIsvalidated && !error ? (
                           <div
-                            class="spinner-border text-light spinner-border-sm ms-3"
+                            className="spinner-border text-light spinner-border-sm ms-3"
                             role="status"
                           >
-                            <span class="sr-only">Loading...</span>
+                            <span className="sr-only">Loading...</span>
                           </div>
                         ) : (
                           <div></div>

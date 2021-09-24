@@ -129,10 +129,6 @@ const Booths = () => {
     };
   }, [dispatch, term, tagText, id]);
 
-  const handleNewBooth = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };

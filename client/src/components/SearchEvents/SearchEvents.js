@@ -43,7 +43,7 @@ const categories = [
 
 const SearchEvents = () => {
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar} = useSnackbar();
 
   const dispatch = useDispatch();
 
@@ -233,6 +233,7 @@ const SearchEvents = () => {
           rating={(event.communityRating * 1.0).toFixed(1)}
           startTime={startTime}
           endTime={endTime}
+          communityId={event.createdBy.id}
         />
       );
     });
@@ -318,17 +319,17 @@ const SearchEvents = () => {
       <CssBaseline />
       <div className="">
         <div className="row nav-section">
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container-fluid">
               <Link
                 to="/home"
-                class="navbar-brand"
+                className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
                 Evenz
               </Link>
               <button
-                class="navbar-toggler"
+                className="navbar-toggler"
                
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
@@ -336,27 +337,27 @@ const SearchEvents = () => {
                 aria-expanded="false"
                 aria-label="Toggle navigation"
               >
-                <span class="navbar-toggler-icon"></span>
+                <span className="navbar-toggler-icon"></span>
               </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <form
                   onSubmit={onSubmitTextSearch}
-                  class="d-flex special"
+                  className="d-flex special"
                   style={{ marginLeft: "2%", alignSelf: "center" }}
                 >
                   <input
-                    class="form-control me-2"
+                    className="form-control me-2"
                     type="search"
                     placeholder="Search events"
                     aria-label="Search"
                     value={text}
                     onChange={onChangeSearchEvents}
                   />
-                  <button class="btn btn-outline-primary" type="submit">
+                  <button className="btn btn-outline-primary" type="submit">
                     <i className="fa fa-search"></i>
                   </button>
                 </form>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
                     <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center" >
                       <AvatarMenu />
@@ -364,20 +365,20 @@ const SearchEvents = () => {
                   ) : (
                     <div className="d-flex flex-row align-items-center justify-content-center">
                       {" "}
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
                          
-                          class="btn btn-outline-primary btn-outline-text me-3"
+                          className="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
                         </Link>
                       </li>
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
                          
-                          class="btn btn-primary btn-outline-text"
+                          className="btn btn-primary btn-outline-text"
                         >
                           Get Started
                         </Link>
@@ -416,7 +417,7 @@ const SearchEvents = () => {
                   data-bs-target="#collapseExample"
                   aria-expanded="false"
                   aria-controls="collapseExample"
-                  class="btn btn-outline-secondary"
+                  className="btn btn-outline-secondary"
                 >
                   Filter
                 </button> */}
@@ -470,9 +471,9 @@ const SearchEvents = () => {
                   Price (in USD)
                 </div>
                 <div className="price-filter-input">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="price"
                       id="filterAnyPrice"
@@ -480,16 +481,16 @@ const SearchEvents = () => {
                       onChange={onPriceFilterChange}
                     />
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                       for="filterAnyPrice"
                     >
                       Any Price
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="price"
                       id="filterfree"
@@ -497,16 +498,16 @@ const SearchEvents = () => {
                       onChange={onPriceFilterChange}
                     />
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                       for="filterfree"
                     >
                       Free
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="price"
                       id="filterpaid"
@@ -514,7 +515,7 @@ const SearchEvents = () => {
                       onChange={onPriceFilterChange}
                     />
                     <label
-                      class="form-check-label mb-3"
+                      className="form-check-label mb-3"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                     >
                       Paid
@@ -542,9 +543,9 @@ const SearchEvents = () => {
                   Community Rating
                 </div>
                 <div className="price-filter-input">
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       id="flexRadioDefault4"
@@ -552,16 +553,16 @@ const SearchEvents = () => {
                       onChange={onRatingFilterChange}
                     />
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                       for="flexRadioDefault4"
                     >
                       Any Rating
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       id="flexRadioDefault5"
@@ -569,16 +570,16 @@ const SearchEvents = () => {
                       onChange={onRatingFilterChange}
                     />
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                       for="flexRadioDefault5"
                     >
                       Above 4
                     </label>
                   </div>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="radio"
                       name="rating"
                       id="flexRadioDefault6"
@@ -586,7 +587,7 @@ const SearchEvents = () => {
                       onChange={onRatingFilterChange}
                     />
                     <label
-                      class="form-check-label"
+                      className="form-check-label"
                       style={{ fontFamily: "Inter", fontWeight: "500" }}
                       for="flexRadioDefault6"
                     >

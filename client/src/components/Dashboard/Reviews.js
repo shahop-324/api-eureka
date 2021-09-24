@@ -13,15 +13,11 @@ import SearchIcon from "@material-ui/icons/Search";
 import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
 import ApexGaugeChart from "./ChartComponents/ApexGaugeChart";
-import ReviewCard from "./HelperComponent/ReviewCard";
 import ReviewsPNG from './../../assets/images/reviews.png';
 import NoContentFound from "../NoContent";
 
 const options = [
   { value: "All", label: "All Events" },
-  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  // { value: "Startup conference", label: "Startup conference" },
-  // { value: "Design Meetup", label: "Design Meetup" },
 ];
 
 const ratingOptions = [

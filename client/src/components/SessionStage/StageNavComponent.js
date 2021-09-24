@@ -1,6 +1,5 @@
 import React from "react";
-import { Avatar, makeStyles } from "@material-ui/core";
-import Faker from "faker";
+import { Avatar } from "@material-ui/core";
 
 import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
 import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
@@ -16,8 +15,6 @@ import {
   ChipModified,
   SessionName,
   PeopleWatching,
-  ExpandIcon,
-  Button,
   BtnOutlined,
   StageNav,
 } from "./Elements";

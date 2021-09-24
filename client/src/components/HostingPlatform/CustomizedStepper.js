@@ -10,7 +10,6 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import RouterIcon from "@material-ui/icons/Router";
 import VideoLabelIcon from "@material-ui/icons/VideoLabel";
 import StepConnector from "@material-ui/core/StepConnector";
-import DeviceTest from "./HelperComponents/DeviceTest";
 import BrowserTest from "./HelperComponents/BrowserTest";
 import NetworkTest from "./HelperComponents/NetworkTest";
 

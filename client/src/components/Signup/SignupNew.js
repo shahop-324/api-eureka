@@ -218,7 +218,7 @@ const SignupNew = ({ handleSubmit }) => {
                 className="ui form error mb-5"
               >
                   <div className="mb-4" style={{display: "grid",gridTemplateColumns: "1fr 1fr", gridGap: "24px", alignItems: "center"}}>
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="emailAddress"
                       className="form-label  ui-form-label"
@@ -235,7 +235,7 @@ const SignupNew = ({ handleSubmit }) => {
                       component={renderInput}
                     />
                   </div>
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="emailAddress"
                       className="form-label  ui-form-label"
@@ -254,7 +254,7 @@ const SignupNew = ({ handleSubmit }) => {
                   </div>
                       </div>
                 <div className="mb-4">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="emailAddress"
                       className="form-label  ui-form-label"
@@ -274,7 +274,7 @@ const SignupNew = ({ handleSubmit }) => {
                 </div>
 
                 <div className="mb-5">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="UserPassword"
                       className="form-label  ui-form-label"

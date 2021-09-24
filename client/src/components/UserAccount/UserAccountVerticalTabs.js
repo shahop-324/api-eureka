@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VerticalTabs() {
+  // eslint-disable-next-line no-unused-vars
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const classes = useStyles();
@@ -139,7 +140,9 @@ export default function VerticalTabs() {
               maxPrice={event.maxTicketPrice}
               id={event.id}
               showBtn={true}
-              communityId={event.createdBy}
+              communityId={
+               typeof event.createdBy === String ? event.createdBy : event.createdBy.id
+              }
               endDate={formatedEndDate}
               startTime={startTime}
               endTime={endTime}
@@ -184,7 +187,9 @@ export default function VerticalTabs() {
               maxPrice={event.maxTicketPrice}
               id={event.id}
               showBtn={true}
-              communityId={event.createdBy}
+              communityId={
+                typeof event.createdBy === String ? event.createdBy : event.createdBy.id
+              }
               endDate={formatedEndDate}
               startTime={startTime}
               endTime={endTime}
@@ -221,7 +226,9 @@ export default function VerticalTabs() {
             maxPrice={event.maxTicketPrice}
             id={event.id}
             showBtn={true}
-            communityId={event.createdBy}
+            communityId={
+              typeof event.createdBy === String ? event.createdBy : event.createdBy.id
+            }
             endDate={formatedEndDate}
             startTime={startTime}
             endTime={endTime}
@@ -244,15 +251,46 @@ export default function VerticalTabs() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="All" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(0)} />
-        <Tab label="This Week" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(1)} />
-        <Tab label="This Month" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(2)} />
+        <Tab
+          label="All"
+          style={{
+            fontWeight: "500",
+            fontFamily: "Inter",
+            textTransform: "capitalize",
+          }}
+          {...a11yProps(0)}
+        />
+        <Tab
+          label="This Week"
+          style={{
+            fontWeight: "500",
+            fontFamily: "Inter",
+            textTransform: "capitalize",
+          }}
+          {...a11yProps(1)}
+        />
+        <Tab
+          label="This Month"
+          style={{
+            fontWeight: "500",
+            fontFamily: "Inter",
+            textTransform: "capitalize",
+          }}
+          {...a11yProps(2)}
+        />
       </Tabs>
       <TabPanel value={value} index={0}>
-        {typeof registeredInEvents !== 'undefined' && registeredInEvents.length > 0 ?  <div className="user-account-home-event-card-grid px-2 py-2">
-          {renderAllRegisteredEvents()}
-        </div> : <div className="d-flex flex-row align-items-center justify-content-center"> <YouHaveNoEventComing msgText="You have no event coming at all" /></div>  }
-        
+        {typeof registeredInEvents !== "undefined" &&
+        registeredInEvents.length > 0 ? (
+          <div className="user-account-home-event-card-grid px-2 py-2">
+            {renderAllRegisteredEvents()}
+          </div>
+        ) : (
+          <div className="d-flex flex-row align-items-center justify-content-center">
+            {" "}
+            <YouHaveNoEventComing msgText="You have no event coming at all" />
+          </div>
+        )}
       </TabPanel>
       <TabPanel value={value} index={1}>
         {}

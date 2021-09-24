@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import AvatarMenu from "../AvatarMenu";
 import styled from "styled-components";
@@ -46,7 +45,7 @@ class UserAccountNav extends React.Component {
 
           <img src={BluemeetLOGO} alt="bluemeet logo" style={{width: "120px"}}/>
 
-          <div class="d-flex flex-row align-items-center">
+          <div className="d-flex flex-row align-items-center">
             <BtnOutlinedWithIcon>
               <ExploreRoundedIcon className="me-3" />
               Explore Events

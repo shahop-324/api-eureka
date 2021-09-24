@@ -1,44 +1,28 @@
-import React, { useState } from 'react';
-import { Dialog } from '@material-ui/core';
+/* eslint-disable no-unused-vars */
+import React, { useState } from "react";
+import { Dialog } from "@material-ui/core";
 import "./../Styles/boothLiveStream.scss";
 
-
-const BoothLiveStream = ({open, handleClose}) => {
-
-    const [fullWidth, setFullWidth] = useState(true);
+const BoothLiveStream = ({ open, handleClose }) => {
+  const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState("lg");
 
-    return (
-        <>
-<Dialog
+  return (
+    <>
+      <Dialog
         fullWidth={fullWidth}
         maxWidth={maxWidth}
         open={open}
         aria-labelledby="customized-dialog-title"
         style={{
-        //   maxWidth: "1600px",
-        //   minWidth: "998px",
           height: "100vh",
           margin: "0 auto 0 auto",
         }}
       >
-
-
-<div className="booth-live-stream-container">
-
-</div>
-
-
+        <div className="booth-live-stream-container"></div>
       </Dialog>
-
-
-
-
-
-
-
-        </>
-    )
-}
+    </>
+  );
+};
 
 export default BoothLiveStream;

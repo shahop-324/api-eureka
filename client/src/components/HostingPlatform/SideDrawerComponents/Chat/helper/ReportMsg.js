@@ -131,7 +131,7 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
           >
             <label
               Forhtml="eventEndDate"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
               style={{ textTransform: "initial" }}
             >
               What's wrong with this ?

@@ -187,16 +187,16 @@ const ContactUs = (props) => {
               <div className="contact-us-form-container px-5 py-5 ">
                 <form onSubmit={handleSubmit(onSubmit)} className="justify-content-center d-flex flex-column justify-content-center px-4 py-4 my-5 ui form error">
                   <div className="input-col-2-in-1 mb-4">
-                    <div class="mb-3">
+                    <div className="mb-3">
                       <label
                         for="firstName"
-                        class="form-label form-label-customized"
+                        className="form-label form-label-customized"
                       >
                         First Name
                       </label>
                       {/* <input
                         type="email"
-                        class="form-control"
+                        className="form-control"
                         id="firstName"
                         placeholder="John"
                       /> */}
@@ -209,16 +209,16 @@ const ContactUs = (props) => {
                       />
                     </div>
 
-                    <div class="mb-3">
+                    <div className="mb-3">
                       <label
                         for="lastName"
-                        class="form-label form-label-customized"
+                        className="form-label form-label-customized"
                       >
                         Last Name
                       </label>
                       {/* <input
                         type="email"
-                        class="form-control"
+                        className="form-control"
                         id="lastName"
                         placeholder="Doe"
                       /> */}
@@ -233,16 +233,16 @@ const ContactUs = (props) => {
                     </div>
                   </div>
                   <div className="input-col-2-in-1 mb-4">
-                    <div class="mb-3">
+                    <div className="mb-3">
                       <label
                         for="contactNumber"
-                        class="form-label form-label-customized"
+                        className="form-label form-label-customized"
                       >
                         Contact No.
                       </label>
                       {/* <input
                         type="tel"
-                        class="form-control"
+                        className="form-control"
                         id="contactNumber"
                         placeholder="+91 9770668454"
                       /> */}
@@ -265,16 +265,16 @@ const ContactUs = (props) => {
                       </small>
                     </div>
 
-                    <div class="mb-3">
+                    <div className="mb-3">
                       <label
                         for="contactEmail"
-                        class="form-label form-label-customized"
+                        className="form-label form-label-customized"
                       >
                         Email address
                       </label>
                       {/* <input
                         type="email"
-                        class="form-control"
+                        className="form-control"
                         id="contactEmail"
                         placeholder="john@example.com"
                       /> */}
@@ -288,15 +288,15 @@ const ContactUs = (props) => {
                     </div>
                   </div>
 
-                  <div class="mb-3">
+                  <div className="mb-3">
                     <label
                       for="message"
-                      class="form-label form-label-customized"
+                      className="form-label form-label-customized"
                     >
                       Your Message
                     </label>
                     {/* <textarea
-                      class="form-control"
+                      className="form-control"
                       id="message"
                       rows="5"
                     ></textarea> */}

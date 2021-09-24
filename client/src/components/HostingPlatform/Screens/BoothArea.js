@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./../Styles/booth.scss";
 import LanguageRoundedIcon from "@material-ui/icons/LanguageRounded";
@@ -5,10 +6,8 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import ClassIcon from "@material-ui/icons/Class";
-import LiveTvIcon from "@material-ui/icons/LiveTv";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
-import { Avatar, IconButton, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
 import Faker from "faker";
 import BoothLiveStream from "./BoothLiveStream";
@@ -91,9 +90,6 @@ const BoothArea = () => {
     setOpenAssets(true);
   };
 
-  const handleCloseAssets = () => {
-    setOpenAssets(false);
-  };
 
   const classes = useStyles();
 

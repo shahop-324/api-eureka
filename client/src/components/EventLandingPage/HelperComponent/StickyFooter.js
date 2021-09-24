@@ -233,7 +233,7 @@ const StickyFooter = () => {
               Still have any queries before making call?
             </div>
             <form
-              // class="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
+              // className="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
               style={{ width: "100%" }}
             >
               <div
@@ -242,7 +242,7 @@ const StickyFooter = () => {
               >
                 <div className="d-flex flex-row mb-3" style={{ width: "82%" }}>
                   <input
-                    class="form-control mr-sm-2"
+                    className="form-control mr-sm-2"
                     type="search"
                     value={queryText}
                     placeholder="Your question"
@@ -251,7 +251,7 @@ const StickyFooter = () => {
                   />
                   <button
                     disabled={!isSignedIn}
-                    class="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
+                    className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
                
                     onClick={handleAskQuery}
                   >

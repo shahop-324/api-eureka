@@ -3,19 +3,14 @@ import "./../Styles/Settings.scss";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import { IconButton, Divider } from "@material-ui/core";
 
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import { withStyles } from "@material-ui/core/styles";
 import CreateTheme from "./CreateTheme";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
@@ -71,6 +66,12 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -151,11 +152,6 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 <Divider />
               </div>
 
-
-
-
-
-
               <div>
                 <div className="d-flex flex-column mb-4">
                   <div className="event-platform-side-drawer-heading">
@@ -173,82 +169,88 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">People in event</div>
+                  <div className="hosting-platform-widget-name">
+                    People in event
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Private Meetings</div>
+                  <div className="hosting-platform-widget-name">
+                    Private Meetings
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Private chat</div>
+                  <div className="hosting-platform-widget-name">
+                    Private chat
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
@@ -261,93 +263,94 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Attendee count</div>
+                  <div className="hosting-platform-widget-name">
+                    Attendee count
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Emoji reactions on stage</div>
+                  <div className="hosting-platform-widget-name">
+                    Emoji reactions on stage
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
                 <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                  <div className="hosting-platform-widget-name">Bluemeet Feedback Rating</div>
+                  <div className="hosting-platform-widget-name">
+                    Bluemeet Feedback Rating
+                  </div>
 
                   <div>
                     {/* <VisibilityOffIcon className="icon-btn" />
                     <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <RoyalBlueSwitch
-                      checked={checked}
-                      onChange={handleChangeToggle}
-                      name="mailchimpSwitch"
-                    />
-                  }
-                />
-              </FormGroup>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={checked}
+                            onChange={handleChangeToggle}
+                            name="mailchimpSwitch"
+                          />
+                        }
+                      />
+                    </FormGroup>
                   </div>
                 </div>
                 <div className="my-3">
                   <Divider />
                 </div>
               </div>
-
-
-
-
-
             </div>
           </div>
         </SwipeableDrawer>

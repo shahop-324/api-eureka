@@ -96,7 +96,7 @@ const ResetPassword =(props)=> {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="row">
                       <div className="mb-3">
-                        <div class="form-group">
+                        <div className="form-group">
                           <label for="emailAddress" className="mb-2 form-label form-label-customized">
                             New Password
                           </label>
@@ -113,7 +113,7 @@ const ResetPassword =(props)=> {
                         </div>
                       </div>
                       <div className="mb-3">
-                        <div class="form-group">
+                        <div className="form-group">
                           <label for="emailAddress" className="mb-2 form-label form-label-customized">
                           Confirm new Password
                           </label>

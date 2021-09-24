@@ -19,11 +19,11 @@ import { useSnackbar } from "notistack";
 // import draftToHtml from "draftjs-to-html";
 
 const About = (props) => {
-  const { handleSubmit, pristine, submitting, reset } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading } = useSelector((state) => state.event);
+  const { error } = useSelector((state) => state.event);
 
   const aboutText = useSelector(
     (state) => state.event.eventDetails.editingComment

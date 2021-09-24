@@ -29,9 +29,9 @@ const communitySchema = new mongoose.Schema(
         "A Community name must have less or equal than 100 characters",
       ],
     },
-    isSalesForceConnected:{
-      type:Boolean,
-      default:false
+    isSalesForceConnected: {
+      type: Boolean,
+      default: false,
     },
 
     policySigned: {
@@ -434,6 +434,28 @@ const communitySchema = new mongoose.Schema(
         ref: "TeamInvite",
       },
     ],
+    tawkLink: {
+      type: String,
+    },
+    eventbritePrivateToken: {
+      type: String,
+    },
+    credentials: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "CommunityCredentials",
+      },
+    ],
+    connectedStripeAccountId: {
+      type: String,
+    },
+    isStripeEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedStripeAccountId: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },

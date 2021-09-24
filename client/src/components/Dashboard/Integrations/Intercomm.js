@@ -1,7 +1,6 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
 import { makeStyles } from "@material-ui/core/styles";
 import IntercomAppID from "./Forms/IntercomAppID";
 
@@ -22,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Intercom = () => {
+const Tawk = () => {
+ 
 
   const [open, setOpen] = useState(false);
 
@@ -45,7 +45,7 @@ const Intercom = () => {
         >
           <Avatar
             src={
-              "https://leadsbridge.com/wp-content/themes/leadsbridge/img/integration-lg-logos/logo75.png"
+              "https://www.tawk.to/wp-content/uploads/2020/04/tawk-sitelogo.png"
             }
             alt={"Mailchimp"}
             className={classes.large}
@@ -53,14 +53,20 @@ const Intercom = () => {
           />
 
           <div>
-            <div className="integration-name mb-2">Intercom</div>
+            <div className="integration-name mb-2">TAWK.to</div>
             <div className="integration-short-description">
-              Get in touch with your attendees as they visit your event pages and solve their queries to boost registrations.
+              Get in touch with your attendees as they visit your event pages
+              and solve their queries to boost registrations.
             </div>
           </div>
 
-          <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <div
+            className="d-flex flex-row align-items-center"
+            style={{ justifySelf: "end" }}
+          >
+            <button type="button" className="btn btn-primary btn-outline-text me-3">
+              Upgrade
+            </button>
             <button
               onClick={() => {
                 handleOpen();
@@ -73,12 +79,9 @@ const Intercom = () => {
         </div>
       </div>
 
-      <IntercomAppID
-        openDrawer={open}
-        handleCloseDrawer={handleCloseDrawer}
-      />
+      <IntercomAppID openDrawer={open} handleCloseDrawer={handleCloseDrawer} />
     </>
   );
 };
 
-export default Intercom;
+export default Tawk;

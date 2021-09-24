@@ -36,6 +36,9 @@ import { availableForNetworkingActions } from "../reducers/availableForNetworkin
 
 import socket from "../components/HostingPlatform/service/socket";
 import { paypalActions } from "../reducers/paypalSlice";
+import { tawkActions } from "../reducers/tawkSlice";
+import { eventbriteActions } from "../reducers/eventbriteSlice";
+import { apiKeyActions } from "../reducers/apiKeySlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -2347,7 +2350,7 @@ export const madeJustForYou = () => async (dispatch) => {
   dispatch(eventActions.startLoading());
   try {
     const res = await eureka.get("eureka/v1/exploreEvents/madeJustForYou");
-    console.log(res.data);
+    console.log(res.data, "This is made just for you");
 
     dispatch(
       eventActions.FetchEvents({
@@ -3427,62 +3430,53 @@ export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledError());
 };
 
-// export const connectToStripe = (return_url) => async (dispatch, getState) => {
-//   console.log("I entered connect to stripe action");
-//   try {
-//     let res = await fetch(`${BaseURL}stripe/createStripeAccount`, {
-//       method: "POST",
+export const getStripeConnectLink =
+  (userId, communityId) => async (dispatch, getState) => {
+    console.log("I entered connect to stripe action");
+    try {
+      let res = await fetch(`${BaseURL}stripe/getConnectFlowLink`, {
+        method: "POST",
 
-//       body: JSON.stringify({
-//         return_url: return_url,
-//       }),
+        body: JSON.stringify({
+          return_url: `https://6031-182-70-236-184.ngrok.io/check-stripe-status/user/${userId}/community/${communityId}/account/`,
+          refresh_url: `https://6031-182-70-236-184.ngrok.io/not-onboarded-yet/user/${userId}/community/${communityId}/account/`,
+        }),
 
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${getState().communityAuth.token}`,
-//       },
-//     });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
-//     res = await res.json();
-//     console.log(res);
-//     window.location.href = res.data.url;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+      res = await res.json();
+      console.log(res);
+      window.location.href = res.links.url;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
+    console.log(formValues);
     try {
-      const checkoutSession = await fetch(
-        `${BaseURL}stripe/getEventRegistrationCheckoutSession`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      const res = await fetch(`${BaseURL}stripe/createCheckoutSession`, {
+        method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
-      if (!checkoutSession.ok) {
-        if (!checkoutSession.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(checkoutSession.message);
-        }
-      }
+        body: JSON.stringify(formValues),
 
-      const res = await checkoutSession.json();
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
-      console.log(res);
+      const result = await res.json();
+      console.log(result);
 
-      window.location.href = res.data.url;
-    } catch (err) {
-      console.log(err);
+      window.location.href = result.session.url;
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -4446,7 +4440,6 @@ export const getRTCTokenForScreenShare =
       );
 
       startScreenCall();
-     
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
@@ -4740,9 +4733,7 @@ export const generatePayoutLink =
       },
     };
 
-    const authToken = btoa(
-      "rzp_live_bDVAURs4oXxSGi" + ":" + "TFitnOVh9eOIFK3qdZsfCLfQ"
-    );
+    const authToken = btoa("rzp_live_bDVAURs4oXxSGi:TFitnOVh9eOIFK3qdZsfCLfQ");
 
     try {
       let res = await fetch(`https://api.razorpay.com/v1/payout-links`, {
@@ -5155,3 +5146,339 @@ export const getPayPalConnectLink = () => async (dispatch, getState) => {
     // window.location.href = payPalRes.data.links[1].href;
   });
 };
+
+export const getCommunityTawkLink =
+  (communityId) => async (dispatch, getState) => {
+    dispatch(tawkActions.startLoading());
+    try {
+      const res = await fetch(`${BaseURL}getTawkLink/${communityId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      console.log(result);
+      dispatch(
+        tawkActions.UpdateTawkLink({
+          link: result.data.tawkLink,
+        })
+      );
+    } catch (err) {
+      dispatch(tawkActions.hasError(err.message));
+    }
+  };
+
+export const getEventbriteOrganisations =
+  (privateToken) => async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/users/me/organizations/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+      dispatch(
+        eventbriteActions.UpdateOrganisationList({
+          organizations: result.organizations,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const getEventbriteEventsByOrganisation =
+  (privateToken, orgId) => async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/organizations/${orgId}/events/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        eventbriteActions.UpdateEventsList({
+          events: result.events,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const createEventbriteWebhookForEventRegistrations =
+  (privateToken, orgId, eventId, bluemeetEventId) =>
+  async (dispatch, getState) => {
+    dispatch(eventbriteActions.startLoading());
+
+    try {
+      const res = await fetch(
+        `https://www.eventbriteapi.com/v3/organizations/${orgId}/webhooks/`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            endpoint_url: `https://www.evenz.co.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
+            actions: "order.placed",
+            event_id: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${privateToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      await fetch(`${BaseURL}events/saveEventbriteConf/${bluemeetEventId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          eventbriteOrganisation: orgId,
+          eventbriteEvent: eventId,
+          eventbriteWebhookData: result,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const SaveResult = await res.json();
+      console.log(SaveResult);
+
+      console.log("Successfully configured eventbrite integration.");
+
+      console.log(result);
+
+      dispatch(
+        eventbriteActions.UpdateWebhook({
+          webhookData: result,
+        })
+      );
+    } catch (error) {
+      dispatch(eventbriteActions.hasError(error.message));
+    }
+  };
+
+export const saveEventbriteConfigurationForEvent =
+  (bluemeetEventId, orgId, eventId, webhookData) =>
+  async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}event/saveEventbriteConf/${bluemeetEventId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({
+            eventbriteOrganisation: orgId,
+            eventbriteEvent: eventId,
+            eventbriteWebhookData: webhookData,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      console.log("Successfully configured eventbrite integration.");
+    } catch (error) {
+      console.log("error saving eventbrite configuration to database");
+    }
+  };
+
+export const generateAPICredentials =
+  (communityId, userId, label) => async (dispatch, getState) => {
+    dispatch(apiKeyActions.startLoading());
+    try {
+      // Submit a request to generate new set of API Key and secret
+      const res = await fetch(
+        `${BaseURL}community/generateApiKey/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            userId: userId,
+            label: label,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        apiKeyActions.CreateApiKey({
+          apiKey: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(apiKeyActions.hasError(error.message));
+    }
+  };
+
+export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
+  dispatch(apiKeyActions.startLoading());
+
+  try {
+    const res = await fetch(`${BaseURL}community/getApiKeys/${communityId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      apiKeyActions.FetchApiKeys({
+        apiKeys: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(apiKeyActions.hasError(error.message));
+  }
+};
+
+export const getStripeConnectAccountStatus =
+  (userId, communityId, accountId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}stripe/getStripeConnectStatus/${accountId}/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      if (result.charges_enabled && result.details_submitted) {
+        window.location.href = `/onboarded-successfully/user/${userId}/community/${communityId}/account/${accountId}`;
+      }
+      if (!result.charges_enabled && !result.details_submitted) {
+        window.location.href = `/not-onboarded-yet/user/${userId}/community/${communityId}/account/${accountId}`;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// export const CreateEventCheckoutSession =
+//   (userId, communityId, accountId) => async (dispatch, getState) => {
+//     console.log(getState());
+    
+//   };

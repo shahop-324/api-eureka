@@ -1,6 +1,5 @@
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
-
 import TimelineRoundedIcon from "@material-ui/icons/TimelineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -13,13 +12,6 @@ import LiveTvIcon from "@material-ui/icons/LiveTv";
 import MovieIcon from "@material-ui/icons/Movie";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import VideoLabelIcon from "@material-ui/icons/VideoLabel";
-
-import IconButton from "@material-ui/core/IconButton";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { Avatar } from "@material-ui/core";
 
 const SideNavLean = ({
   activeIndex,
@@ -36,16 +28,8 @@ const SideNavLean = ({
   handleLiveStreamingClick,
   handleMailCampaignClick,
 }) => {
-  const userDetails = useSelector((state) => state.user.userDetails);
-  const params = useParams();
-
   console.log(activeIndex);
-  const dispatch = useDispatch();
 
-  // EVENT_ID, COMMUNITY_ID AND USER_ID
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-  const userId = params.userId;
   return (
     <>
       {/* className="" */}

@@ -13,13 +13,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { errorTrackerForEditNetworking, fetchNetworking } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import Loader from "../../Loader";
 
 const Networking = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { networkingSettings, isLoading, error } = useSelector(
+  const { error } = useSelector(
     (state) => state.networking
   );
 

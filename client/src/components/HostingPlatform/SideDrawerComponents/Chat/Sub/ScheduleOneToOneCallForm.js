@@ -178,8 +178,8 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
             </div>
 
             <form className="">
-              <div class="mb-4 overlay-form-input-row">
-                <label for="eventName" class="form-label form-label-customized">
+              <div className="mb-4 overlay-form-input-row">
+                <label for="eventName" className="form-label form-label-customized">
                   Meet Title
                 </label>
                 <Field
@@ -192,10 +192,10 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
                 />
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   for="shortDescription"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Short description
                 </label>
@@ -209,11 +209,11 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
                 />
               </div>
 
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Date
                   </label>
@@ -229,7 +229,7 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
                 <div>
                   <label
                     Forhtml="eventStartTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Time
                   </label>
@@ -244,10 +244,10 @@ const ScheduleOneToOneCallForm = ({ handleCloseDrawer, openDrawer }) => {
                 </div>
               </div>
 
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   Forhtml="selectTimeZone"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Select timezone
                 </label>

@@ -122,8 +122,8 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
 
   if (isLoading) {
     return (
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+      <div className="spinner-border" role="status">
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }
@@ -391,7 +391,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
               className="referral-link-and-copy-to-clipboard"
               style={{ textAlign: "center" }}
             >
-              <div class="ui action input" style={{ minWidth: "400px" }}>
+              <div className="ui action input" style={{ minWidth: "400px" }}>
                 <input
                   type="text"
                   value={referralLink}
@@ -399,13 +399,13 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                   placeholder="Search..."
                 />
                 <button
-                  class="ui icon button"
+                  className="ui icon button"
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     alert("copied to clipboard!");
                   }}
                 >
-                  <i class="copy outline icon"></i>
+                  <i className="copy outline icon"></i>
                 </button>
               </div>
             </div>

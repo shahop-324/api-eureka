@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
@@ -29,10 +30,6 @@ const GoogleSlides = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const classes = useStyles();
 
   return (
@@ -58,7 +55,7 @@ const GoogleSlides = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3">Upgrade</button>
+          <button type="button" className="btn btn-primary btn-outline-text me-3">Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();

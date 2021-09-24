@@ -1,11 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, IconButton } from "@material-ui/core";
-import React, { useState } from "react";
+import { Avatar } from "@material-ui/core";
+import React from "react";
 import "./../Styles/sessionStreaming.scss";
-// import ReactDOM from "react-dom";
-// import MicIcon from "@material-ui/icons/Mic";
-// import MicOffIcon from "@material-ui/icons/MicOff";
-import PushPin from "./../../../assets/images/push-pin.png";
 import { useSelector } from "react-redux";
 
 const RemotePlayer = ({
@@ -18,7 +14,6 @@ const RemotePlayer = ({
   userDesignation,
   swapMainAndMiniView,
 }) => {
-  const [opacity, setOpacity] = useState(0);
   const {id} = useSelector((state) => state.eventAccessToken);
 
 const roleSuffix = id === uid ? "(You)" : "";

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import "./Signin.scss";
 import LogoLight from "./../../assets/Logo/Logo_light.svg";
-import bar_chart_circle from "./../../assets/Icons/bar_chart_circle.svg";
-import bulb from "./../../assets/Icons/bulb.svg";
-import command from "./../../assets/Icons/command.svg";
 import BubbleChartIcon from "@material-ui/icons/BubbleChart";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 import RemoveRedEyeRoundedIcon from "@material-ui/icons/RemoveRedEyeRounded";
@@ -221,7 +218,7 @@ const SignInNew = ({ handleSubmit }) => {
                 className="ui form error mb-5"
               >
                 <div className="mb-4">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="emailAddress"
                       className="form-label  ui-form-label"
@@ -241,7 +238,7 @@ const SignInNew = ({ handleSubmit }) => {
                 </div>
 
                 <div className="mb-5">
-                  <div class="form-group">
+                  <div className="form-group">
                     <label
                       for="UserPassword"
                       className="form-label  ui-form-label"

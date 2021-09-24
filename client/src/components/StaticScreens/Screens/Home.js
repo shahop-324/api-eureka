@@ -48,7 +48,7 @@ TxtType.prototype.tick = function () {
     this.txt = fullTxt.substring(0, this.txt.length + 1);
   }
 
-  this.el.innerHTML = '<span class="wrap">' + this.txt + "</span>";
+  this.el.innerHTML = '<span className="wrap">' + this.txt + "</span>";
 
   var that = this;
   var delta = 100 - Math.random() * 100;
@@ -125,7 +125,7 @@ const Home = () => {
                   <div className="hero-heading mb-5">
                     One stop solution <br /> for all{" "}
                     <div
-                      class="typewrite"
+                      className="typewrite"
                       data-period="1000"
                       data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
                       style={{ color: "#ffffff", display: "inline-block" }}
@@ -242,7 +242,7 @@ const Home = () => {
                 >
                   An amazing{" "}
                   <div
-                    class="typewrite"
+                    className="typewrite"
                     data-period="1000"
                     data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
                     style={{ color: "#538BF7", display: "inline-block" }}
@@ -650,17 +650,17 @@ const Home = () => {
             
 
             <div
-              class="comparision"
+              className="comparision"
               data-aos="slide-up"
               data-aos-easing="ease-in-sine"
               data-aos-duration="500"
               data-aos-delay="100"
             >
-              <div class="prod one">
+              <div className="prod one">
                 <div>
                   <label>Evenz</label>
                 </div>
-                <div class="features">
+                <div className="features">
                   <h4>Affordable</h4>
                   <ul>
                     <li>1% Ticketing Fees</li>
@@ -669,11 +669,11 @@ const Home = () => {
                   </ul>
                 </div>
               </div>
-              <div class="prod two">
+              <div className="prod two">
                 <div>
                   <label>Other Platforms</label>
                 </div>
-                <div class="features">
+                <div className="features">
                   <h4>Too Costly</h4>
                   <ul>
                     <li>4% or higher Fees</li>

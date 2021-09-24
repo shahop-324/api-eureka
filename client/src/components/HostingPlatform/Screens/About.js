@@ -15,8 +15,6 @@ import LanguageIcon from "@mui/icons-material/Language";
 // import { IconButton } from "@material-ui/core";
 
 import {
-  BtnDanger,
-  StageControl,
   IconButton,
 } from "./../../SessionStage/Elements";
 
@@ -166,8 +164,6 @@ const TransparentSponsorCard = styled.div`
     object-fit: contain;
   }
 `;
-
-const SponsorImg = styled.img``;
 
 const About = () => {
   return (

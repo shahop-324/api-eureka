@@ -247,10 +247,10 @@ const AddNewSession = (props) => {
                 </IconButton>
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Session Name
               </label>
@@ -263,10 +263,10 @@ const AddNewSession = (props) => {
                 component={renderInput}
               />
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Short Description
               </label>
@@ -279,11 +279,11 @@ const AddNewSession = (props) => {
                 component={renderTextArea}
               />
             </div>
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Start Date
                 </label>
@@ -298,7 +298,7 @@ const AddNewSession = (props) => {
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Start Time
                 </label>
@@ -310,11 +310,11 @@ const AddNewSession = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   End Date
                 </label>
@@ -328,7 +328,7 @@ const AddNewSession = (props) => {
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   End Time
                 </label>
@@ -340,10 +340,10 @@ const AddNewSession = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-4 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Speakers
               </label>

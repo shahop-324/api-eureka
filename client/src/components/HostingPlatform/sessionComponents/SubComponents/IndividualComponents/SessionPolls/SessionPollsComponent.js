@@ -1,11 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import { IconButton } from "@material-ui/core";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
 import "./../../../../Styles/root.scss";
-// import CreateNewPollForm from "./../../helper/CreateNewPollForm";
-import CreateNewPollForm from "../../../../SideDrawerComponents/Polls/helper/CreateNewPollForm";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {

@@ -15,6 +15,12 @@ const router = express.Router();
 
 // DONE Creating a new Event from a Community
 
+router.get("/validate", authController.authenticateCommunity);
+
+router.post("/generateApiKey/:communityId", authController.protectCommunity, communityController.generateApiKey);
+
+router.get("/getApiKeys/:communityId", authController.protectCommunity, communityController.getApiKeys);
+
 router.get(
   "/events",
   authController.protectCommunity,

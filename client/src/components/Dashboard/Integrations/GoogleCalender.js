@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,10 +27,6 @@ const GooglCalender = () => {
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const classes = useStyles();
@@ -58,7 +54,7 @@ const GooglCalender = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();

@@ -388,6 +388,15 @@ const eventSchema = new mongoose.Schema(
         ref: "EventPoll",
       },
     ],
+    eventbriteOrganisation: {
+      type: String,
+    },
+    eventbriteEvent: {
+      type: String,
+    },
+    eventbriteWebhookData: {
+      type: Map,
+    },
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

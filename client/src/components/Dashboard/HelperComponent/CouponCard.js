@@ -76,7 +76,7 @@ const CouponCard = ({
         <div className="mb-3">
           <button
             type="button"
-            class="btn btn-outline-secondary disabled-text"
+            className="btn btn-outline-secondary disabled-text"
             style={{ minWidth: "210px" }}
             disabled
           >
@@ -86,7 +86,7 @@ const CouponCard = ({
         <div className="mb-3">
           <button
             type="button"
-            class="btn btn-primary disabled-text"
+            className="btn btn-primary disabled-text"
             style={{ minWidth: "210px" }}
             disabled
           >

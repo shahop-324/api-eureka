@@ -134,10 +134,6 @@ const AddNewSponsor = (props) => {
   const { error, isLoading } = useSelector((state) => state.sponsor);
   const params = useParams();
   const id = params.id;
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
@@ -231,7 +227,7 @@ const AddNewSponsor = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityHeadline"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Logo
               </label>
@@ -245,11 +241,11 @@ const AddNewSponsor = (props) => {
               />
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Organisation Name
                 </label>
@@ -264,10 +260,10 @@ const AddNewSponsor = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row">
+            <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Select Category
               </label>
@@ -285,11 +281,11 @@ const AddNewSponsor = (props) => {
             <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Website
               </label>
-              <div class="form-group">
+              <div className="form-group">
                 <Field
                   name="website"
                   type="text"

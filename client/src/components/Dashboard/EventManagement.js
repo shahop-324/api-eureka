@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
@@ -97,7 +98,6 @@ const EventManagement = () => {
   const query = Object.fromEntries(urlSearchParams.entries());
   const totalResults = useSelector((state) => state.event.length);
   const limitOfPage = query.limit;
-  const pageNumber = query.page;
   const numberOfPages = Math.ceil(((totalResults * 1) / limitOfPage) * 1);
 
   const [term, setTerm] = React.useState("");

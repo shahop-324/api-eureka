@@ -51,7 +51,7 @@ const CurrentPlanCard = () => {
             </div>
             <div
               className="d-flex flex-row align-items-center event-field-label field-label-value"
-              style={{ color: "#75BF72" }}
+              style={{ color: "#75BF72", fontFamily: "Ubuntu" }}
             >
               <Ripple /> Active{" "}
             </div>

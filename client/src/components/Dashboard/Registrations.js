@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect } from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
@@ -6,8 +7,6 @@ import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Registrations.scss";
 import Divider from "@material-ui/core/Divider";
-// import CustomPagination from "./HelperComponent/Pagination";
-import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
@@ -24,36 +23,6 @@ import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import NoRegistartions from "./../../assets/images/registrations.png";
 import GetAppIcon from "@material-ui/icons/GetApp";
-
-const options = [
-  { value: "All", label: "All Events" },
-  // { value: "Eureka Road to Enterprise", label: "Eureka Road to Enterprise" },
-  // { value: "Startup conference", label: "Startup conference" },
-  // { value: "Design Meetup", label: "Design Meetup" },
-];
-
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -307,6 +276,12 @@ const Registrations = () => {
       </div>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}

@@ -1,26 +1,15 @@
 import React from "react";
 import "./../Styles/root.scss";
-
-// import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
-
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
 import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded';
-import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 
 import WeekendIcon from "@mui/icons-material/Weekend";
-
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { signOut } from "../../../actions";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
 import styled from "styled-components";
-
-import { styled as MUIStyled } from "@mui/material/styles";
 
 const SideNavBody = styled.div`
   background-color: #233e44 !important;
@@ -38,15 +27,6 @@ const SideNav = ({
   handleSessionsClick,
   // handleSocialSpaceClick,
 }) => {
-  const userDetails = useSelector((state) => state.user.userDetails);
-  const userId = userDetails._id;
-
-  const params = useParams();
-
-  const eventId = params.eventId;
-
-  console.log(activeIndex);
-  const dispatch = useDispatch();
   return (
     <>
       <SideNavBody className="h-side-nav">

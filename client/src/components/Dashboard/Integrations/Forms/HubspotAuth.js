@@ -62,6 +62,12 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -91,7 +97,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
               <div className="mb-3">
                 <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Hubspot Webhook URL
                   </label>
@@ -99,7 +105,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
               className="referral-link-and-copy-to-clipboard"
               
             >
-              <div class="ui action input" style={{ minWidth: "400px", width: "100%" }}>
+              <div className="ui action input" style={{ minWidth: "400px", width: "100%" }}>
                 <input
                   type="text"
                   value={"Web hook url"}
@@ -107,13 +113,13 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                   placeholder="Search..."
                 />
                 <button
-                  class="ui icon button"
+                  className="ui icon button"
                   onClick={() => {
                     navigator.clipboard.writeText("web hook url");
                     alert("copied to clipboard!");
                   }}
                 >
-                  <i class="copy outline icon"></i>
+                  <i className="copy outline icon"></i>
                 </button>
               </div>
             </div>
@@ -122,7 +128,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                 <div className="mb-3">
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Hubspot Api key
                   </label>

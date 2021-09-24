@@ -106,39 +106,6 @@ const ButtonFilledDark = styled.div`
   }
 `;
 
-const ButtonOutlinedDark = styled.div`
-  padding: 6px 10px;
-  text-align: center;
-
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: #ffffff;
-  font-family: "Ubuntu";
-
-  color: #152d35;
-  background-color: transparent;
-
-  border: 1px solid #152d35;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #152d35;
-
-    color: #ffffff;
-
-    cursor: pointer;
-  }
-`;
-
-const NoMeetingsFoundMsg = styled.div`
-  text-align: center;
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.9rem;
-
-  color: #152d35;
-`;
-
 const MyMeetings = () => {
   const [open, setOpen] = useState(false);
 

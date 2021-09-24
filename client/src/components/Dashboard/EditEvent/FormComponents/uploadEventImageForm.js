@@ -97,7 +97,7 @@ const UploadEventImageForm = (props) => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="event-image-form-wrapper px-4 py-4">
-          <label for="eventName" class="form-label form-label-customized">
+          <label for="eventName" className="form-label form-label-customized">
             Event image
           </label>
           <div className="my-2">

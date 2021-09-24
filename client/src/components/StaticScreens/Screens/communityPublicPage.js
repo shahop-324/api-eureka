@@ -11,13 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import StarOutlineRoundedIcon from '@material-ui/icons/StarOutlineRounded';
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
-import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
-import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
-import PropTypes from "prop-types";
 
 
 
@@ -101,44 +97,44 @@ const CommunityPublicPage = () => {
       <CssBaseline />
       <div>
         <div className="row nav-section">
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container-fluid">
               <Link
                 to="/home"
-                class="navbar-brand"
+                className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
                 Evenz
               </Link>
               <button
-                class="navbar-toggler"
+                className="navbar-toggler"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
               >
-                <span class="navbar-toggler-icon"></span>
+                <span className="navbar-toggler-icon"></span>
               </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <form
                   onSubmit={onSubmitTextSearch}
-                  class="d-flex special"
+                  className="d-flex special"
                   style={{ marginLeft: "2%", alignSelf: "center" }}
                 >
                   <input
-                    class="form-control me-2"
+                    className="form-control me-2"
                     type="search"
                     placeholder="Search events"
                     aria-label="Search"
                     value={text}
                     onChange={onChangeSearchEvents}
                   />
-                  <button class="btn btn-outline-primary" type="submit">
+                  <button className="btn btn-outline-primary" type="submit">
                     <i className="fa fa-search"></i>
                   </button>
                 </form>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
                     <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
                       <AvatarMenu />
@@ -146,18 +142,18 @@ const CommunityPublicPage = () => {
                   ) : (
                     <div className="d-flex flex-row align-items-center justify-content-center">
                       {" "}
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                          class="btn btn-outline-primary btn-outline-text me-3"
+                          className="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
                         </Link>
                       </li>
-                      <li class="nav-item" style={{ alignSelf: "center" }}>
+                      <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                          class="btn btn-primary btn-outline-text"
+                          className="btn btn-primary btn-outline-text"
                         >
                           Get Started
                         </Link>

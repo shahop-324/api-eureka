@@ -46,17 +46,17 @@ const AddNewMember = (props) => {
               </IconButton>
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row team-form-row-3-in-1">
+          <div className="mb-4 overlay-form-input-row team-form-row-3-in-1">
             <div>
               <label
                 for="communityName"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Email
               </label>
               <input
                 type="email"
-                class="form-control"
+                className="form-control"
                 id="communityName"
                 aria-describedby="communityName"
                 placeholder="Enter Email"
@@ -65,7 +65,7 @@ const AddNewMember = (props) => {
             <div>
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Select Role
               </label>

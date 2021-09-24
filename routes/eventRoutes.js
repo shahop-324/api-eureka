@@ -7,6 +7,8 @@ const sessionController = require("../controllers/sessionController");
 const ticketController = require("../controllers/ticketController");
 const router = express.Router();
 
+router.patch("/saveEventbriteConf/:eventId", eventController.saveEventbriteConf);
+
 router.patch(
   "/:id/update",
   authController.protectCommunity,

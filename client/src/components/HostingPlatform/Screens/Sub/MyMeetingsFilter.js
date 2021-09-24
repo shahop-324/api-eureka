@@ -87,14 +87,9 @@ const WidgetHeadlineWithClose = styled.div`
 
 const MyMeetingsFilter = ({ open, handleClose }) => {
   const [statusAlignment, setStatusAlignment] = React.useState("all");
-  const [priorityAlignment, setPriorityAlignment] = React.useState("all");
 
   const handleChangeStatus = (event, newAlignment) => {
     setStatusAlignment(newAlignment);
-  };
-
-  const handleChangePriority = (event, newAlignment) => {
-    setPriorityAlignment(newAlignment);
   };
 
   const theme = useTheme();

@@ -30,9 +30,6 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
 import Select from "react-select";
-
-// import { Divider } from "@material-ui/core";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import PhoneInput from "react-phone-input-2";
 import { IconButton } from "@material-ui/core";

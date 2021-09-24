@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import "./../index.css";
-import Faker from "faker";
 import AvatarMenu from "./AvatarMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCommunity, fetchEvent, fetchSpeaker, generateEventAccessToken, signInForSpeaker } from "../actions";
@@ -12,7 +12,7 @@ const AcceptSpeakerInvite = () => {
 
   const dispatch = useDispatch();
 
-  const { speakerDetails, isLoading, error } = useSelector(
+  const { speakerDetails } = useSelector(
     (state) => state.speaker
   );
   
@@ -88,8 +88,8 @@ const AcceptSpeakerInvite = () => {
             style={{ padding: "0" }}
           >
             {isEventLoading ? (
-              <div class="spinner-grow" role="status">
-                <span class="sr-only">Loading...</span>
+              <div className="spinner-grow" role="status">
+                <span className="sr-only">Loading...</span>
               </div>
             ) : (
               <img
@@ -103,8 +103,8 @@ const AcceptSpeakerInvite = () => {
           </div>
 
           {isCommunityLoading ? (
-            <div class="spinner-grow" role="status">
-              <span class="sr-only">Loading...</span>
+            <div className="spinner-grow" role="status">
+              <span className="sr-only">Loading...</span>
             </div>
           ) : (
             <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
@@ -129,8 +129,8 @@ const AcceptSpeakerInvite = () => {
           )}
 
           {isEventLoading ? (
-            <div class="spinner-grow" role="status">
-              <span class="sr-only">Loading...</span>
+            <div className="spinner-grow" role="status">
+              <span className="sr-only">Loading...</span>
             </div>
           ) : (
             <div

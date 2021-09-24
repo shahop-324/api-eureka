@@ -20,36 +20,6 @@ import InterestedPeopleDetailsCard from "../Data/InterestedPeopleDetailsCard";
 import NoContentFound from "../../../NoContent";
 import NoRegistartions from "./../../../../assets/images/working.png";
 
-const options = [
-  { value: "All Tickets", label: "All Tickets" },
-  { value: "Early Bird", label: "Early Bird" },
-  { value: "All Access Pass", label: "All Access Pass" },
-  { value: "VIP Ticket", label: "VIP Ticket" },
-];
-
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

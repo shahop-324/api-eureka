@@ -18,7 +18,7 @@ const Footer = (props) => {
       <footer>
         <div className="container footer-container py-3">
           <div className="brand-logo-and-copyright px-3 py-3">
-            <span class="navbar-brand nav-brand-name-home">Evenz</span>
+            <span className="navbar-brand nav-brand-name-home">Evenz</span>
             <div
               className="copy-right-symbol mb-4"
               style={{ color: "#ffffff", fontSize: "22px" }}
@@ -189,7 +189,7 @@ const Footer = (props) => {
 
             <div className="footer-section-headline my-3 ">Newsletter</div>
 
-            <div class="ui action input">
+            <div className="ui action input">
               <input
                 type="text"
                 value={email}
@@ -200,12 +200,12 @@ const Footer = (props) => {
               />
               <button
                 type="button"
-                class="ui blue icon button"
+                className="ui blue icon button"
                 onClick={() => {
                   email && dispatch(signupForEmailNewsletter(email));
                 }}
               >
-                <i class="send icon"></i>
+                <i className="send icon"></i>
               </button>
             </div>
           </div>

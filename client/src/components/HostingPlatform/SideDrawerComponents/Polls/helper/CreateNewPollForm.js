@@ -7,7 +7,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { Divider } from "@material-ui/core";
 import socket from "./../../../service/socket";
@@ -62,8 +62,6 @@ const CreateNewPoll = (props) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const dispatch = useDispatch();
 
   const onSubmit = async (formValues) => {
     console.log(formValues);
@@ -129,11 +127,11 @@ const CreateNewPoll = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="eventStartDate"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Question
                 </label>
@@ -154,12 +152,12 @@ const CreateNewPoll = (props) => {
 
             <label
               Forhtml="eventStartDate"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Answer
             </label>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_1"
@@ -171,7 +169,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_2"
@@ -183,7 +181,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_3"
@@ -195,7 +193,7 @@ const CreateNewPoll = (props) => {
                 />
               </div>
             </div>
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <Field
                   name="answer_4"
@@ -208,11 +206,11 @@ const CreateNewPoll = (props) => {
               </div>
             </div>
 
-            <div class="mb-3 overlay-form-input-row ">
+            <div className="mb-3 overlay-form-input-row ">
               <div>
                 <label
                   Forhtml="pollExpiryTime"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Time Limit{" "}
                   <div

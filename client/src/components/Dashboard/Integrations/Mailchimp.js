@@ -5,8 +5,6 @@ import MailchimpConnect from "./Forms/Mailchimp";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useParams } from "react-router";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -60,7 +58,7 @@ const Mailchimp = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" class="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();

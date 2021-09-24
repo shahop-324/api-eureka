@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./../Styles/UpdateEventProfile.scss";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -7,7 +8,6 @@ import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import { connect, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Select from "react-select";
-import PeopleProfile from "../SideDrawerComponents/People/helper/PeopleProfile";
 import ScheduleOneToOneCallForm from "../SideDrawerComponents/Chat/Sub/ScheduleOneToOneCallForm";
 import Ripple from "../../ActiveStatusRipple";
 
@@ -15,11 +15,7 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
-import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 import { Divider } from "@material-ui/core";
-
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { withStyles } from "@material-ui/styles";
 import LanguageIcon from '@material-ui/icons/Language';
 
@@ -179,10 +175,6 @@ const UpdateEventProfile = ({
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -226,6 +218,12 @@ const UpdateEventProfile = ({
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -259,7 +257,7 @@ const UpdateEventProfile = ({
                     </div>
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Avatar
                     </label>
@@ -280,10 +278,10 @@ const UpdateEventProfile = ({
                       gridGap: "16px",
                     }}
                   >
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         First name
                       </label>
@@ -299,10 +297,10 @@ const UpdateEventProfile = ({
                       />
                     </div>
 
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         Last name
                       </label>
@@ -319,10 +317,10 @@ const UpdateEventProfile = ({
                   </div>
 
                   <div className="row edit-profile-form-row mb-3">
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         Headline
                       </label>
@@ -346,10 +344,10 @@ const UpdateEventProfile = ({
                       gridGap: "16px",
                     }}
                   >
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         City
                       </label>
@@ -365,10 +363,10 @@ const UpdateEventProfile = ({
                       />
                     </div>
 
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         Country
                       </label>
@@ -392,10 +390,10 @@ const UpdateEventProfile = ({
                       gridGap: "16px",
                     }}
                   >
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         Organisation
                       </label>
@@ -411,10 +409,10 @@ const UpdateEventProfile = ({
                       />
                     </div>
 
-                    <div class="form-group">
+                    <div className="form-group">
                       <label
                         for="communityHeadline"
-                        class="form-label ui-form-label"
+                        className="form-label ui-form-label"
                       >
                         Designation
                       </label>
@@ -433,7 +431,7 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Interests
                     </label>
@@ -447,11 +445,11 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Facebook
                     </label>
-                    <div class="form-group">
+                    <div className="form-group">
                       <Field
                         name="facebook"
                         type="text"
@@ -466,11 +464,11 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       LinkedIn
                     </label>
-                    <div class="form-group">
+                    <div className="form-group">
                       <Field
                         name="facebook"
                         type="text"
@@ -485,11 +483,11 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Twitter
                     </label>
-                    <div class="form-group">
+                    <div className="form-group">
                       <Field
                         name="twitter"
                         type="text"
@@ -504,11 +502,11 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Instagram
                     </label>
-                    <div class="form-group">
+                    <div className="form-group">
                       <Field
                         name="instagram"
                         type="text"
@@ -523,11 +521,11 @@ const UpdateEventProfile = ({
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
-                      class="form-label ui-form-label"
+                      className="form-label ui-form-label"
                     >
                       Website
                     </label>
-                    <div class="form-group">
+                    <div className="form-group">
                       <Field
                         name="website"
                         type="text"

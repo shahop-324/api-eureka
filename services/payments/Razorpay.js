@@ -30,6 +30,7 @@ const razorpay = new Razorpay({
 });
 
 const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
+  console.log("Entered in hubspot integration function.")
   var options = {
     method: "POST",
     url: "https://api.hubapi.com/contacts/v1/contact/",
@@ -255,7 +256,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         // console.log(res.data, "i am countin on you salesforce refresh token");
 
         const res = await fetch(
-          `https://akatsuki5-dev-ed.my.salesforce.com/services/apexrest/CreateContact/`,
+          `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
           {
             method: "POST",
 
@@ -277,15 +278,72 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
           }
         );
 
-        console.log(
-          res,
-          "i am counting on you res razorpay for error  detection"
-        );
-        console.log(res.status, "1 i am counting on you response status 400");
         if (!res.ok) {
-          if (res.status == "400") {
-            throw new Error("unauthorizied access token is expired");
+          if (res.status === 401) {
+            console.log("unauthorizied access token is expired");
+
+            try {
+              const res = await axios.post(
+                `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
+              );
+
+              
+              const access_token = res.data.access_token;
+              const instance_url = res.data.instance_url;
+
+
+              // Update salesforce access token
+              let SalesforceDoc;
+
+              try {
+                SalesforceDoc = await SalesForce.findOneAndUpdate(
+                  { communityId: paymentEntity.notes.communityId },
+                  { accessToken: access_token },
+                  { new: true, validateModifiedOnly: true }
+                );
+
+                try {
+                  console.log(instance_url);
+                  const res = await fetch(
+                    `${res.data.instance_url}/services/apexrest/CreateContact/`,
+                    {
+                      method: "POST",
+
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${access_token}`,
+                      },
+
+                      body: JSON.stringify({
+                        FirstName: user.firstName,
+                        LastName: user.lastName,
+                        Email: paymentEntity.email,
+                        Description: `Event name: ${
+                          event.eventName
+                        } , Ticket name: ${ticket.name} ,Price:${
+                          paymentEntity.amount
+                        },Date and time of booking:${Date.now()} `,
+                      }),
+                    }
+                  );
+
+                  if (!res.ok) {
+                    throw new Error("Something went wrong");
+                  }
+
+                  const parsedRes = await res.json();
+                  console.log(parsedRes, "This is new salesforce record");
+                } catch (error) {
+                  console.log(error);
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            } catch (error) {
+              console.log(error);
+            }
           } else {
+            console.log(res);
             throw new Error(res.message);
           }
         }

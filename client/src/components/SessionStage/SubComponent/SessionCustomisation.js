@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
+
 
 import Ice from "./../Images/ice.jpeg";
 import Winter from "./../Images/winter.jpeg";
@@ -22,35 +21,16 @@ import Finance from "./../Images/finance.jpeg";
 
 import { TwitterPicker } from "react-color";
 
+import { Divider } from "@material-ui/core";
 
-
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
-import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-import { IconButton, Divider } from "@material-ui/core";
-
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import { withStyles } from "@material-ui/core/styles";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+
 
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
 
-const RoyalBlueRadio = withStyles({
-  root: {
-    color: "#538BF7",
-    "&$checked": {
-      color: "#3274F6",
-    },
-  },
-  checked: {},
-})((props) => <Radio color="default" {...props} />);
+
 
 const RoyalBlueSwitch = withStyles({
   switchBase: {
@@ -148,8 +128,7 @@ const VibeCard = styled.div`
 const SessionCustomisation = () => {
   const [selectedTab, setSelectedTab] = useState("color");
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   const [background, setBackground] = useState("#538BF7");
 

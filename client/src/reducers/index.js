@@ -36,6 +36,9 @@ import eventPollSlice from "./eventPollSlice";
 import AvailableForNetworkingSlice from "./availableForNetworking";
 import StreamSlice from "./streamSlice";
 import paypalSlice from "./paypalSlice";
+import tawkSlice from "./tawkSlice";
+import eventbriteSlice from "./eventbriteSlice";
+import apiKeySlice from "./apiKeySlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -74,4 +77,7 @@ export default combineReducers({
   availableForNetworking: AvailableForNetworkingSlice.reducer,
   streams: StreamSlice.reducer,
   paypal: paypalSlice.reducer,
+  tawk: tawkSlice.reducer,
+  eventbrite: eventbriteSlice.reducer,
+  apikey: apiKeySlice.reducer,
 });

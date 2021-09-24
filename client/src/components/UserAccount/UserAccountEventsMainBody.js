@@ -8,7 +8,7 @@ import Loader from "../Loader";
 import { useSnackbar } from "notistack";
 
 const UserAccountEventsMainBody = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(madeJustForYou());
@@ -47,6 +47,9 @@ const UserAccountEventsMainBody = () => {
             startTime={startTime}
             endTime={endTime}
             rating={(event.communityRating * 1).toFixed(1)}
+            communityId={
+              typeof event.createdBy === String ? event.createdBy : event.createdBy.id
+            }
           />
         );
       });

@@ -132,10 +132,7 @@ text-decoration: none !important;
 border: 1px solid #152d35;
 `
 
-const ThemedText = styled.div`
-color: #152d35 !important;
-font-family: "Ubuntu";
-`
+
 
 const Schedule = () => {
   const classes = useStyles();

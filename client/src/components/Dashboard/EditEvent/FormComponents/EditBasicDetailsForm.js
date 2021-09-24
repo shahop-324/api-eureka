@@ -265,8 +265,8 @@ const EditBasicDetailsForm = (props) => {
           >
             Let's create an all new event for your community.
           </h5>
-          <div class="mb-4 overlay-form-input-row">
-            <label for="eventName" class="form-label form-label-customized">
+          <div className="mb-4 overlay-form-input-row">
+            <label for="eventName" className="form-label form-label-customized">
               Event Name
             </label>
             <Field
@@ -279,10 +279,10 @@ const EditBasicDetailsForm = (props) => {
             />
           </div>
 
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               for="shortDescription"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Short description
             </label>
@@ -295,11 +295,11 @@ const EditBasicDetailsForm = (props) => {
               component={renderTextArea}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
               <label
                 Forhtml="eventStartDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Start Date
               </label>
@@ -314,7 +314,7 @@ const EditBasicDetailsForm = (props) => {
             <div>
               <label
                 Forhtml="eventStartTime"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 Start Time
               </label>
@@ -327,11 +327,11 @@ const EditBasicDetailsForm = (props) => {
               />
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
               <label
                 Forhtml="eventEndDate"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 End Date
               </label>
@@ -346,7 +346,7 @@ const EditBasicDetailsForm = (props) => {
             <div>
               <label
                 Forhtml="eventEndTime"
-                class="form-label form-label-customized"
+                className="form-label form-label-customized"
               >
                 End Time
               </label>
@@ -359,10 +359,10 @@ const EditBasicDetailsForm = (props) => {
               />
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectTimeZone"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Select timezone
             </label>
@@ -376,10 +376,10 @@ const EditBasicDetailsForm = (props) => {
               component={renderReactSelectTimeZone}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <label
               Forhtml="selectCategories"
-              class="form-label form-label-customized"
+              className="form-label form-label-customized"
             >
               Select categories
             </label>
@@ -393,12 +393,12 @@ const EditBasicDetailsForm = (props) => {
               component={renderReactSelect}
             />
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <p>Which service would you like to use ?</p>
-            <div class="form-check mb-2">
+            <div className="form-check mb-2">
               <Field
                 name="service"
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 // name="flexRadioDefault"
                 id="flexRadioDefault1"
@@ -406,13 +406,13 @@ const EditBasicDetailsForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault1">
+              <label className="form-check-label" for="flexRadioDefault1">
                 Hosting & Management
               </label>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="service"
                 id="flexRadioDefault2"
@@ -421,17 +421,17 @@ const EditBasicDetailsForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault2">
+              <label className="form-check-label" for="flexRadioDefault2">
                 Ticketing Only
               </label>
             </div>
           </div>
-          <div class="mb-4 overlay-form-input-row">
+          <div className="mb-4 overlay-form-input-row">
             <p>Event Visibility</p>
-            <div class="form-check mb-2">
+            <div className="form-check mb-2">
               <Field
                 name="visibility"
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 // name="flexRadioDefault"
                 id="flexRadioDefault1"
@@ -439,20 +439,20 @@ const EditBasicDetailsForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault1">
+              <label className="form-check-label" for="flexRadioDefault1">
                 Public
               </label>
               <div
                 id="emailHelp"
-                class="form-text"
+                className="form-text"
                 style={{ fontSize: "13px" }}
               >
                 Upgrade to a paid plan to create public events.
               </div>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <Field
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="visibility"
                 id="flexRadioDefault2"
@@ -461,7 +461,7 @@ const EditBasicDetailsForm = (props) => {
                 // component={renderInput}
                 component="input"
               />
-              <label class="form-check-label" for="flexRadioDefault2">
+              <label className="form-check-label" for="flexRadioDefault2">
                 Private
               </label>
             </div>

@@ -4,7 +4,6 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
 import MailchimpGeneral from "../Sub/MailchimpGeneral";
 import MailchimpFormFields from "../Sub/MailchimpFormFields";
-import { useSelector } from "react-redux";
 
 const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
   const [selectedTab, setSelectedTab] = useState("general");
@@ -13,6 +12,12 @@ const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
+        onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}

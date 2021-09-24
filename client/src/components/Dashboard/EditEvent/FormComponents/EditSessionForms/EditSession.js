@@ -3,7 +3,6 @@ import dateFormat from "dateformat";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import { useEffect } from "react";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { connect, useSelector } from "react-redux";
@@ -16,7 +15,6 @@ import { useDispatch } from "react-redux";
 import {
   editSession,
   errorTrackerForEditSession,
-  fetchParticularSessionOfEvent,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
@@ -149,14 +147,6 @@ const EditSession = (props) => {
   );
   const dispatch = useDispatch();
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
-  // useEffect(() => {
-  //   dispatch(fetchParticularSessionOfEvent(props.id));
-  // }, [props.id, dispatch]);
   const speakers = useSelector((state) => state.speaker.speakers);
 
   const speakerOptions = speakers.map((speaker) => {
@@ -249,10 +239,10 @@ const EditSession = (props) => {
                   </IconButton>
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   Forhtml="sessionName"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Session Name
                 </label>
@@ -266,10 +256,10 @@ const EditSession = (props) => {
                   component={renderInput}
                 />
               </div>
-              <div class="mb-4 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row">
                 <label
                   Forhtml="description"
-                  class="form-label form-label-customized"
+                  className="form-label form-label-customized"
                 >
                   Short Description
                 </label>
@@ -282,11 +272,11 @@ const EditSession = (props) => {
                   component={renderTextArea}
                 />
               </div>
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <label
                     Forhtml="eventStartDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Date
                   </label>
@@ -301,7 +291,7 @@ const EditSession = (props) => {
                 <div>
                   <label
                     Forhtml="eventStartTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     Start Time
                   </label>
@@ -314,11 +304,11 @@ const EditSession = (props) => {
                   />
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
                   <label
                     Forhtml="eventEndDate"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     End Date
                   </label>
@@ -333,7 +323,7 @@ const EditSession = (props) => {
                 <div>
                   <label
                     Forhtml="eventEndTime"
-                    class="form-label form-label-customized"
+                    className="form-label form-label-customized"
                   >
                     End Time
                   </label>
@@ -346,8 +336,8 @@ const EditSession = (props) => {
                   />
                 </div>
               </div>
-              <div class="mb-4 overlay-form-input-row">
-                <label for="speakers" class="form-label form-label-customized">
+              <div className="mb-4 overlay-form-input-row">
+                <label for="speakers" className="form-label form-label-customized">
                   Speakers
                 </label>
                 <Field

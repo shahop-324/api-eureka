@@ -3,8 +3,7 @@ import styled from "styled-components";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { Dialog, IconButton } from "@material-ui/core";
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import { Dialog } from "@material-ui/core";
 
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded";
