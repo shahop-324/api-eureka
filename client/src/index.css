@@ -16,7 +16,6 @@
   color: #212121 !important;
   font-family: "Ubuntu" !important;
   text-transform: capitalize !important;
-  
 }
 
 .email-list-group:hover {
@@ -363,4 +362,112 @@ code {
   font-size: 0.83rem;
   font-weight: 600;
   font-family: "Inter";
+}
+
+.loader-bluemeet {
+  border: 3px solid #5f85e6; /* Light grey */
+  border-top: 3px solid #f3f3f3; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.static-loader-img {
+  transform: rotate(0deg) !important;
+}
+
+.ripple {
+  text-decoration: none;
+  color: #fff;
+  width: 100px;
+  height: 100px;
+  background-color: #00e7ff;
+  margin: 0 auto;
+  border-radius: 50px;
+  -webkit-animation: ripple 2s linear infinite;
+  animation: ripple 2s linear infinite;
+}
+
+.ripple-1{
+  text-decoration: none;
+  color: #fff;
+  width: 180px;
+  height: 180px;
+  background-color: #07b8cc;
+  margin: 0 auto;
+  border-radius: 50px;
+  -webkit-animation: ripple 2s linear infinite;
+  animation: ripple 2s linear infinite;
+  animation-delay: 0.3s;
+}
+
+@-webkit-keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 231, 255, 0.3),
+      0 0 0 10px rgba(0, 231, 255, 0.3), 0 0 0 30px rgba(0, 231, 255, 0.3),
+      0 0 0 60px rgba(0, 231, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(0, 231, 255, 0.3),
+      0 0 0 30px rgba(0, 231, 255, 0.3), 0 0 0 60px rgba(0, 231, 255, 0.3),
+      0 0 0 90px rgba(0, 231, 255, 0);
+  }
+}
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 231, 255, 0.3),
+      0 0 0 10px rgba(0, 231, 255, 0.3), 0 0 0 30px rgba(0, 231, 255, 0.3),
+      0 0 0 60px rgba(0, 231, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(0, 231, 255, 0.3),
+      0 0 0 30px rgba(0, 231, 255, 0.3), 0 0 0 60px rgba(0, 231, 255, 0.3),
+      0 0 0 90px rgba(0, 231, 255, 0);
+  }
+}
+
+.ripple-loader {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: -4%;
+  left: -4%;
+}
+
+.ripple-loader div {
+  position: absolute;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  animation: ripple-loader 1s ease-out infinite;
+}
+
+.ripple-loader div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+
+@keyframes ripple-loader {
+  0% {
+    top: 32px;
+    left: 32px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+  }
 }

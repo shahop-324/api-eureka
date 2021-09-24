@@ -2350,7 +2350,7 @@ export const madeJustForYou = () => async (dispatch) => {
   dispatch(eventActions.startLoading());
   try {
     const res = await eureka.get("eureka/v1/exploreEvents/madeJustForYou");
-    console.log(res.data);
+    console.log(res.data, "This is made just for you");
 
     dispatch(
       eventActions.FetchEvents({
@@ -3430,62 +3430,53 @@ export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledError());
 };
 
-// export const connectToStripe = (return_url) => async (dispatch, getState) => {
-//   console.log("I entered connect to stripe action");
-//   try {
-//     let res = await fetch(`${BaseURL}stripe/createStripeAccount`, {
-//       method: "POST",
+export const getStripeConnectLink =
+  (userId, communityId) => async (dispatch, getState) => {
+    console.log("I entered connect to stripe action");
+    try {
+      let res = await fetch(`${BaseURL}stripe/getConnectFlowLink`, {
+        method: "POST",
 
-//       body: JSON.stringify({
-//         return_url: return_url,
-//       }),
+        body: JSON.stringify({
+          return_url: `https://6031-182-70-236-184.ngrok.io/check-stripe-status/user/${userId}/community/${communityId}/account/`,
+          refresh_url: `https://6031-182-70-236-184.ngrok.io/not-onboarded-yet/user/${userId}/community/${communityId}/account/`,
+        }),
 
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${getState().communityAuth.token}`,
-//       },
-//     });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
-//     res = await res.json();
-//     console.log(res);
-//     window.location.href = res.data.url;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+      res = await res.json();
+      console.log(res);
+      window.location.href = res.links.url;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 export const getEventRegistrationCheckoutSession =
   (formValues) => async (dispatch, getState) => {
+    console.log(formValues);
     try {
-      const checkoutSession = await fetch(
-        `${BaseURL}stripe/getEventRegistrationCheckoutSession`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-          }),
+      const res = await fetch(`${BaseURL}stripe/createCheckoutSession`, {
+        method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      );
-      if (!checkoutSession.ok) {
-        if (!checkoutSession.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(checkoutSession.message);
-        }
-      }
+        body: JSON.stringify(formValues),
 
-      const res = await checkoutSession.json();
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
 
-      console.log(res);
+      const result = await res.json();
+      console.log(result);
 
-      window.location.href = res.data.url;
-    } catch (err) {
-      console.log(err);
+      window.location.href = result.session.url;
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -4742,9 +4733,7 @@ export const generatePayoutLink =
       },
     };
 
-    const authToken = btoa(
-      "rzp_live_bDVAURs4oXxSGi:TFitnOVh9eOIFK3qdZsfCLfQ"
-    );
+    const authToken = btoa("rzp_live_bDVAURs4oXxSGi:TFitnOVh9eOIFK3qdZsfCLfQ");
 
     try {
       let res = await fetch(`https://api.razorpay.com/v1/payout-links`, {
@@ -5299,22 +5288,19 @@ export const createEventbriteWebhookForEventRegistrations =
 
       const result = await res.json();
 
-      await fetch(
-        `${BaseURL}events/saveEventbriteConf/${bluemeetEventId}`,
-        {
-          method: "PATCH",
+      await fetch(`${BaseURL}events/saveEventbriteConf/${bluemeetEventId}`, {
+        method: "PATCH",
 
-          body: JSON.stringify({
-            eventbriteOrganisation: orgId,
-            eventbriteEvent: eventId,
-            eventbriteWebhookData: result,
-          }),
+        body: JSON.stringify({
+          eventbriteOrganisation: orgId,
+          eventbriteEvent: eventId,
+          eventbriteWebhookData: result,
+        }),
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         if (!res.message) {
@@ -5457,3 +5443,42 @@ export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
     dispatch(apiKeyActions.hasError(error.message));
   }
 };
+
+export const getStripeConnectAccountStatus =
+  (userId, communityId, accountId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}stripe/getStripeConnectStatus/${accountId}/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      if (result.charges_enabled && result.details_submitted) {
+        window.location.href = `/onboarded-successfully/user/${userId}/community/${communityId}/account/${accountId}`;
+      }
+      if (!result.charges_enabled && !result.details_submitted) {
+        window.location.href = `/not-onboarded-yet/user/${userId}/community/${communityId}/account/${accountId}`;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// export const CreateEventCheckoutSession =
+//   (userId, communityId, accountId) => async (dispatch, getState) => {
+//     console.log(getState());
+    
+//   };

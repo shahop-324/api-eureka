@@ -91,6 +91,7 @@ app.use(
       "https://evenz.co.in",
       "https://zapier.com",
       "https://www.zapier.com",
+      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
@@ -100,7 +101,37 @@ app.use(
 );
 
 app.use(cookieParser());
+// app.use(bodyParser.json());
+// app.use(bodyParser.raw({ type: "application/json" }));
+// app.use(bodyParser.json({
+//   verify: function (req, res, buf) {
+//     var url = req.originalUrl;
+//     if (url.startsWith('/stripe')) {
+//        req.rawBody = buf.toString();
+//     }
+//   }
+// }));
+
+// Use JSON parser for all non-webhook routes
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      const url = req.originalUrl;
+      if (
+        url.startsWith("/api-eureka/eureka/v1/stripe/eventTicketPurchased") ||
+        url.startsWith("/api-eureka/eureka/v1/stripe/eventPurchaseFailed")
+      ) {
+        req.rawBody = buf.toString();
+      }
+    },
+  })
+);
+
+// Setup express response and body parser configurations
+app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -169,7 +200,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
       axios
         .get(urlToGetUserProfile, config)
         .then((response) => {
-
           userProfile.firstName = response.data["localizedFirstName"];
           userProfile.lastName = response.data["localizedLastName"];
           userProfile.image =
@@ -270,14 +300,10 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
           },
         })
         .then((metadataResponse) => {
-          
           Community.findOne({ email: metadataResponse.data.login.email })
             .then((community) => {
-             
-
               MailChimp.findOne({ communityId: community._id })
                 .then((mailChimpCommunityAccount) => {
-                  
                   if (!mailChimpCommunityAccount) {
                     MailChimp.create({
                       communityId: community._id,
@@ -287,7 +313,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                       apiEndPoint: metadataResponse.data.api_endpoint,
                     })
                       .then(async () => {
-                        
                         community.isMailChimpConnected = true;
                         // const [a] = community;
                         await community.save({
@@ -296,7 +321,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                           validateModifiedOnly: true,
                         });
 
-                       
                         res.status(200).json({
                           status: "SUCCESS",
                         });
@@ -320,16 +344,15 @@ app.get(
   "/api-eureka/eureka/v1/fetchMailChimpAudiences",
   async (req, res, next) => {
     // 1. find by community id by event id
-   
+
     const eventData = await Event.findById(req.query.eventId);
 
     //2. find the mailchimp account with community id
 
     const communityId = eventData.createdBy;
-   
 
     const mailChimpData = await MailChimp.findOne({ communityId });
-  
+
     //3. dynamically form request for fetching list
 
     //  fetch(`https://${mailChimpData.server}.api.mailchimp.com/3.0/lists`)
@@ -344,7 +367,7 @@ app.get(
         } else {
           res.json(result.body.lists);
         }
-    });
+      });
   }
 );
 
@@ -365,8 +388,6 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
-
-
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -398,11 +419,8 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
       // console.log(conn.refreshToken, "i am counting on you refresh token");
       Community.findOne({ email: res.username })
         .then((community) => {
-         
-
           SalesForce.findOne({ communityId: community._id })
             .then((salesForceCommunityAccount) => {
-             
               if (!salesForceCommunityAccount) {
                 SalesForce.create({
                   communityId: community._id,
@@ -411,7 +429,6 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                   refreshToken: conn.refreshToken,
                 })
                   .then(async () => {
-                    
                     community.isSalesForceConnected = true;
                     // const [a] = community;
                     await community.save({

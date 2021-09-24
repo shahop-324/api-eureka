@@ -2,7 +2,27 @@ const express = require("express");
 
 const authController = require("../controllers/authController");
 const stripeService = require("../services/payments/stripeConnect");
+const stripe = require("./../services/Stripe/Connect");
 const router = express.Router();
+const bodyParser = require("body-parser");
+
+router.post("/createCheckoutSession", stripe.createCheckoutSession);
+
+router.post(
+  "/getStripeConnectStatus/:accountId/:communityId",
+  stripe.getStripeConnectStatus
+);
+
+router.post("/eventTicketPurchased", stripe.eventTicketPurchased);
+
+router.post("/eventPurchaseFailed", stripe.eventPurchaseFailed);
+
+router.post(
+  "/getConnectFlowLink",
+  authController.protectCommunity,
+  stripe.initiateConnectedAccount,
+  stripe.getConnectLink
+);
 
 router.post(
   "/createStripeAccount",
@@ -22,9 +42,6 @@ router.post(
   stripeService.getEventRegistrationCheckoutSession
 );
 
-router.post(
-  "/connect/listen",
-  stripeService.ListenForEvents
-);
+router.post("/connect/listen", stripeService.ListenForEvents);
 
 module.exports = router;

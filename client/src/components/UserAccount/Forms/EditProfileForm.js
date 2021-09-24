@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
@@ -204,7 +205,7 @@ let EditProfileForm = (props) => {
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
-  const [ setEditProfileClicked] = useState(false);
+  const [ editProfileClicked, setEditProfileClicked] = useState(false);
 
   useEffect(() => {
     dispatch(resetUserError());

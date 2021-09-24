@@ -71,7 +71,7 @@ const renderInputName = ({
         id={id}
         required
       />
-      <label className={labelClass} for={labelFor}>
+      <label class={labelClass} for={labelFor}>
         {label}
       </label>
       {touched &&
@@ -117,7 +117,7 @@ const renderInput = ({
         placeholder={placeholder}
         id={id}
       />
-      <label className={labelClass} for={labelFor}>
+      <label class={labelClass} for={labelFor}>
         {label}
       </label>
       {touched &&
@@ -166,7 +166,7 @@ const renderInputCheckbox = ({
         id={id}
         // required
       />
-      <label className={labelClass} for={labelFor}>
+      <label class={labelClass} for={labelFor}>
         {label}
       </label>
       {!error && !warning
@@ -315,7 +315,7 @@ const CreateNewCommunityForm = (props) => {
               Let's take the first step in our jouney of hosting and managing
               events.
             </h5>
-            <div className="mb-4 overlay-form-input-row d-flex flex-column">
+            <div class="mb-4 overlay-form-input-row d-flex flex-column">
               <div className="d-flex flex-column align-items-center">
                 <div className="mb-3">
                   <Avatar
@@ -328,7 +328,7 @@ const CreateNewCommunityForm = (props) => {
               </div>
               <label
                 for="communityHeadline"
-                className="form-label form-label-customized"
+                class="form-label form-label-customized"
               >
                 Avatar
               </label>
@@ -340,10 +340,10 @@ const CreateNewCommunityForm = (props) => {
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-4 overlay-form-input-row">
+            <div class="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
-                className="form-label form-label-customized"
+                class="form-label form-label-customized"
               >
                 Community Name
               </label>
@@ -357,10 +357,10 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            <div className="mb-4 overlay-form-input-row">
+            <div class="mb-4 overlay-form-input-row">
               <label
                 for="communityEmail"
-                className="form-label form-label-customized"
+                class="form-label form-label-customized"
               >
                 Community Email
               </label>
@@ -374,10 +374,10 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            <div className="mb-4 overlay-form-input-row">
+            <div class="mb-4 overlay-form-input-row">
               <label
                 for="communityHeadline"
-                className="form-label form-label-customized"
+                class="form-label form-label-customized"
               >
                 Headline
               </label>
@@ -392,7 +392,7 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            <div className="mb-4 form-check overlay-form-input-row">
+            <div class="mb-4 form-check overlay-form-input-row">
               <Field
                 name="policySigned"
                 type="checkbox"
@@ -407,7 +407,7 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            <div className="mb-4 form-check overlay-form-input-row">
+            <div class="mb-4 form-check overlay-form-input-row">
               <Field
                 name="subscribedToCommunityMailList"
                 type="checkbox"
@@ -421,10 +421,10 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
 
-            <div className="mb-4 overlay-form-input-row d-flex flex-column">
+            <div class="mb-4 overlay-form-input-row d-flex flex-column">
               <button
                 type="submit"
-                className="btn btn-outline-primary btn-outline-text form-control"
+                class="btn btn-outline-primary btn-outline-text form-control"
                 disabled={
                   // createCommunityClicked &&
                   // formIsvalidated &&
@@ -437,10 +437,10 @@ const CreateNewCommunityForm = (props) => {
                 Create New Community
                 {createCommunityClicked && formIsvalidated && !error ? (
                   <div
-                    className="spinner-border text-primary spinner-border-sm ms-3"
+                    class="spinner-border text-primary spinner-border-sm ms-3"
                     role="status"
                   >
-                    <span className="sr-only">Loading...</span>
+                    <span class="sr-only">Loading...</span>
                   </div>
                 ) : (
                   <div></div>

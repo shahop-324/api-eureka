@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Radio from "@material-ui/core/Radio";
@@ -6,6 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import { Link } from "react-router-dom";
+import { getEventRegistrationCheckoutSession } from "../../../actions";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -15,10 +17,6 @@ const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
-
-// const convertFromJSONToHTML = (text) => {
-//   return stateToHTML(convertFromRaw(JSON.parse(text)));
-// };
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -181,8 +179,6 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
         email: userDetails.email,
       },
       notes: {
-        // We can add some notes here
-
         eventId: eventId,
         ticketId: selectedTicket,
         communityId: event.createdBy._id,
@@ -224,75 +220,6 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       document.body.appendChild(script);
     });
   };
-
-  const loadPaypal = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src =
-        "https://www.paypal.com/sdk/js?client-id=AWulL9SIFX_aLmdGojavSIAgf9O3_ZgTyUETSYQkDjEX65WwtWddKF6D95w7nzwpnXFWFnhyRzsG9yfi&currency=USD";
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
-
-  const displayPayPal = async () => {
-    const res = await loadPaypal();
-
-    if (!res) {
-      alert("Paypal SDK failed to load. Are you online?");
-      return;
-    }
-
-    window.paypal
-      .Buttons({
-        // Sets up the transaction when a payment button is clicked
-        createOrder: function (data, actions) {
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  value: "77.44", // Can reference variables or functions. Example: `value: document.getElementById('...').value`
-                },
-              },
-            ],
-          });
-        },
-
-        // Finalize the transaction after payer approval
-        onApprove: function (data, actions) {
-          return actions.order.capture().then(function (orderData) {
-            // Successful capture! For dev/demo purposes:
-            console.log(
-              "Capture result",
-              orderData,
-              JSON.stringify(orderData, null, 2)
-            );
-            var transaction = orderData.purchase_units[0].payments.captures[0];
-            alert(
-              "Transaction " +
-                transaction.status +
-                ": " +
-                transaction.id +
-                "\n\nSee console for all available details"
-            );
-
-            // When ready to go live, remove the alert and show a success message within this page. For example:
-            // var element = document.getElementById('paypal-button-container');
-            // element.innerHTML = '';
-            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-            // Or go to another URL:  actions.redirect('thank_you.html');
-          });
-        },
-      })
-      .render("#paypal-button-container");
-  };
-
-  displayPayPal();
 
   const renderTicketsList = (tickets) => {
     return tickets.map((ticket) => {
@@ -380,7 +307,19 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
           <button
             // disabled={!isSignedIn}
             className="btn btn-primary btn-outline-text mb-3"
-            onClick={displayRazorpay}
+            onClick={getEventRegistrationCheckoutSession({
+              eventId: eventId,
+              ticketId: selectedTicket,
+              communityId: event.createdBy._id,
+              transaction_type: "event_registration",
+              userId: user._id,
+              couponId:
+                couponToBeApplied && couponToBeApplied[0]
+                  ? couponToBeApplied[0].id
+                  : null,
+            })}
+
+            // onClick={displayRazorpay}
             // onClick={ community.paymentGateway === "Paypal" ? handleRegistrationUsingPaypal : displayRazorpay}
           >
             Reserve Your Spot

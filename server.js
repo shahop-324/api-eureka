@@ -23,6 +23,7 @@ const io = require("socket.io")(server, {
       "https://evenz.in",
       "https://zapier.com",
       "https://www.zapier.com",
+      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],

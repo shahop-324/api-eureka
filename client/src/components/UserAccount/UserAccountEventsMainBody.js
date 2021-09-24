@@ -47,6 +47,9 @@ const UserAccountEventsMainBody = () => {
             startTime={startTime}
             endTime={endTime}
             rating={(event.communityRating * 1).toFixed(1)}
+            communityId={
+              typeof event.createdBy === String ? event.createdBy : event.createdBy.id
+            }
           />
         );
       });

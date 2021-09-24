@@ -78,7 +78,7 @@
     "sendgrid": "^5.2.3",
     "slugify": "^1.5.0",
     "socket.io": "^4.2.0",
-    "stripe": "^8.163.0",
+    "stripe": "^8.176.0",
     "styled-components": "^5.3.1",
     "superagent": "^3.8.1",
     "twilio": "^3.67.0",

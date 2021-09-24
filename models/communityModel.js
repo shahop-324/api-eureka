@@ -444,8 +444,18 @@ const communitySchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "CommunityCredentials",
-      }
-    ]
+      },
+    ],
+    connectedStripeAccountId: {
+      type: String,
+    },
+    isStripeEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedStripeAccountId: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },
