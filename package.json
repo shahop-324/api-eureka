@@ -28,6 +28,7 @@
     "@mui/lab": "^5.0.0-alpha.47",
     "@mui/material": "^5.0.0",
     "@sendgrid/mail": "^7.4.5",
+    "@workos-inc/node": "^1.4.0",
     "agora-access-token": "^2.0.4",
     "aws-sdk": "^2.942.0",
     "axios": "^0.21.1",

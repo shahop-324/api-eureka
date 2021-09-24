@@ -7,7 +7,7 @@ const helmet = require("helmet");
 const mongosanitize = require("express-mongo-sanitize");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
-
+const WorkOS = require("@workos-inc/node");
 const jsforce = require("jsforce");
 const passport = require("passport");
 const xss = require("xss-clean");
@@ -166,7 +166,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
       axios
         .get(urlToGetUserProfile, config)
         .then((response) => {
-
           userProfile.firstName = response.data["localizedFirstName"];
           userProfile.lastName = response.data["localizedLastName"];
           userProfile.image =
@@ -266,14 +265,10 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
           },
         })
         .then((metadataResponse) => {
-          
           Community.findOne({ email: metadataResponse.data.login.email })
             .then((community) => {
-             
-
               MailChimp.findOne({ communityId: community._id })
                 .then((mailChimpCommunityAccount) => {
-                  
                   if (!mailChimpCommunityAccount) {
                     MailChimp.create({
                       communityId: community._id,
@@ -283,7 +278,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                       apiEndPoint: metadataResponse.data.api_endpoint,
                     })
                       .then(async () => {
-                        
                         community.isMailChimpConnected = true;
                         // const [a] = community;
                         await community.save({
@@ -292,7 +286,6 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                           validateModifiedOnly: true,
                         });
 
-                       
                         res.status(200).json({
                           status: "SUCCESS",
                         });
@@ -316,16 +309,15 @@ app.get(
   "/api-eureka/eureka/v1/fetchMailChimpAudiences",
   async (req, res, next) => {
     // 1. find by community id by event id
-   
+
     const eventData = await Event.findById(req.query.eventId);
 
     //2. find the mailchimp account with community id
 
     const communityId = eventData.createdBy;
-   
 
     const mailChimpData = await MailChimp.findOne({ communityId });
-  
+
     //3. dynamically form request for fetching list
 
     //  fetch(`https://${mailChimpData.server}.api.mailchimp.com/3.0/lists`)
@@ -338,7 +330,6 @@ app.get(
         if (err) {
           res.status(500).json(err);
         } else {
-          
           res.json(result.body.lists);
         }
       });
@@ -362,8 +353,6 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
-
-
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -395,11 +384,8 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
       // console.log(conn.refreshToken, "i am counting on you refresh token");
       Community.findOne({ email: res.username })
         .then((community) => {
-         
-
           SalesForce.findOne({ communityId: community._id })
             .then((salesForceCommunityAccount) => {
-             
               if (!salesForceCommunityAccount) {
                 SalesForce.create({
                   communityId: community._id,
@@ -408,7 +394,6 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                   refreshToken: conn.refreshToken,
                 })
                   .then(async () => {
-                    
                     community.isSalesForceConnected = true;
                     // const [a] = community;
                     await community.save({
@@ -434,4 +419,21 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
     });
   });
 });
+
+// const workos = new WorkOS(process.env.WORKOS_API_KEY);
+// const ssoClientId = process.env.WORKOS_CLIENT_ID;
+
+// app.get("/api-eureka/eureka/v1/auth/sso", (req, res) => {
+//   const domain = req.body.domain;
+//   const redirectURI = process.env.SS0_REDIRECT_URI;
+
+//   const authorizationURL = workos.sso.getAuthorizationURL({
+//     domain,
+//     redirectURI,
+//     ssoClientId,
+//   });
+
+//   res.redirect(authorizationURL);
+// });
+
 module.exports = app;
