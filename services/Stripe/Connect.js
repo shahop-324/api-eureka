@@ -360,32 +360,33 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const connectedAccountId = event.account;
+    // const connectedAccountId = event.account;
 
     // console.log(session, "Ticket purchase succeded");
 
-    const sessionId = session.id; // This is the session Id which will be used to send invoices and issue refund (application fees will also be refunded)
-    const connectedAccountId = session.account; // This is the account Id of connected account
-    const createdAt = session.created; // This is the time stamp of this purchase
+    const webhookEventId = event.id; // This is the webhook event Id which can be used to fetch transaction data anytime.
+    const sessionId = session.id; // This is the session Id which will be used to send invoices and issue refund (application fees will also be refunded) (cs_live........)
+    const connectedAccountId = event.account; // This is the account Id of connected account
+    const createdAt = event.created; // This is the time stamp of this purchase
     const amountSubtotal = session.amount_subtotal; // This is the sub total amount of this purchase (before including taxes, shipping charge and excluding discount)
     const amountTotal = session.amount_total; // This is the purchase total (after including taxes, shipping charge and excluding discount)
-    const clientReferenceId = session.client_reference_id; // This is the reference Id of this purchase which will refer to total things purchased (like ticket, add-ons)
-    const currency = session.currency; // Currency in which this transaction happened
-    const customerId = session.customer; // Customer Id of this user for our platform in Stripe database
-    const email = session.customer_details.email; // email of this customer
-    const userId = session.metadata.userId; // user Id of this customer in bluemeet database
-    const ticketId = session.metadata.ticketId; // ticket Id in bluemeet database
-    const eventId = session.metadata.eventId; // event Id in bluemeet database
-    const couponId = session.metadata.couponId; // coupon Id in bluemeet database
-    const communityId = session.metadata.communityId; // community Id in bluemeet database
-    const registrationType = session.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
-    const paymentIntentId = session.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
-    const paymentStatus = session.payment.payment_status; // Payment status
-    const shipping = session.shipping; // Shipping address 
-    const subscription = session.subscription; // Subscription details
-    const amountDiscount = session.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
-    const amountShipping = session.total_details.amount_shipping; // Shipping charge that is included in amount_total
-    const amount_tax = session.total_details.amount_tax; // Tax amount that has been collected included in amount_total
+    const clientReferenceId = event.data.client_reference_id; // This is the reference Id of this purchase which will refer to total things purchased (like ticket, add-ons)
+    const currency = event.data.currency; // Currency in which this transaction happened
+    const customerId = event.data.customer; // Customer Id of this user for our platform in Stripe database
+    const email = event.data.customer_details.email; // email of this customer
+    const userId = event.metadata.userId; // user Id of this customer in bluemeet database
+    const ticketId = event.metadata.ticketId; // ticket Id in bluemeet database
+    const eventId = event.metadata.eventId; // event Id in bluemeet database
+    const couponId = event.metadata.couponId; // coupon Id in bluemeet database
+    const communityId = event.metadata.communityId; // community Id in bluemeet database
+    const registrationType = event.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
+    const paymentIntentId = event.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
+    const paymentStatus = event.payment.payment_status; // Payment status
+    const shipping = event.shipping; // Shipping address 
+    const subscription = event.subscription; // Subscription details
+    const amountDiscount = event.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
+    const amountShipping = event.total_details.amount_shipping; // Shipping charge that is included in amount_total
+    const amount_tax = event.total_details.amount_tax; // Tax amount that has been collected included in amount_total
 
     console.log(
       sessionId,
