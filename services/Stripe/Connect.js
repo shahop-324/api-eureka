@@ -10,7 +10,13 @@ const stripe = require("stripe")(
   "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"
 );
 
-const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
+const hubspotRegistrationCapture = (
+  hapikey,
+  firstName,
+  lastName,
+  email,
+  company
+) => {
   console.log("Entered in hubspot integration function.");
   var options = {
     method: "POST",
@@ -37,7 +43,108 @@ const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
     if (error) return new appError(error, 401);
   });
 };
-const salesForceIntegration = () => {};
+const salesForceRegistrationCapture = async (
+  salesForceAccount,
+  user,
+  event,
+  ticket
+) => {
+  try {
+    const res = await fetch(
+      `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${salesForceAccount.accessToken}`,
+        },
+
+        body: JSON.stringify({
+          FirstName: user.firstName,
+          LastName: user.lastName,
+          Email: user.email,
+          Description: `Event name: ${event.eventName} , Ticket name: ${
+            ticket.name
+          } ,Price:${paymentEntity.amount},Date and time of booking:${new Date(
+            Date.now()
+          )} `,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        console.log("unauthorizied access token is expired");
+
+        try {
+          const res = await axios.post(
+            `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
+          );
+
+          const access_token = res.data.access_token;
+          const instance_url = res.data.instance_url;
+
+          // Update salesforce access token
+          let SalesforceDoc;
+
+          try {
+            SalesforceDoc = await SalesForce.findOneAndUpdate(
+              { communityId: paymentEntity.notes.communityId },
+              { accessToken: access_token },
+              { new: true, validateModifiedOnly: true }
+            );
+
+            try {
+              console.log(instance_url);
+              const res = await fetch(
+                `${res.data.instance_url}/services/apexrest/CreateContact/`,
+                {
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${access_token}`,
+                  },
+
+                  body: JSON.stringify({
+                    FirstName: user.firstName,
+                    LastName: user.lastName,
+                    Email: paymentEntity.email,
+                    Description: `Event name: ${
+                      event.eventName
+                    } , Ticket name: ${ticket.name} ,Price:${
+                      paymentEntity.amount
+                    },Date and time of booking:${Date.now()} `,
+                  }),
+                }
+              );
+
+              if (!res.ok) {
+                throw new Error("Something went wrong");
+              }
+
+              const parsedRes = await res.json();
+              console.log(parsedRes, "This is new salesforce record");
+            } catch (error) {
+              console.log(error);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log(res);
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
@@ -235,13 +342,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-<<<<<<< HEAD
-    //const connectedAccountId = event.account;
-=======
-    // const connectedAccountId = event.account;
->>>>>>> 0dc771533e408c01c8820d8f0bf04107d7035e0f
-
-    // console.log(session, "Ticket purchase succeded");
 
     const webhookEventId = event.id; // This is the webhook event Id which can be used to fetch transaction data anytime.
     const sessionId = session.id; // This is the session Id which will be used to send invoices and issue refund (application fees will also be refunded) (cs_live........)
@@ -249,25 +349,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const createdAt = event.created; // This is the time stamp of this purchase
     const amountSubtotal = session.amount_subtotal; // This is the sub total amount of this purchase (before including taxes, shipping charge and excluding discount)
     const amountTotal = session.amount_total; // This is the purchase total (after including taxes, shipping charge and excluding discount)
-<<<<<<< HEAD
-    const clientReferenceId = session.client_reference_id; // This is the reference Id of this purchase which will refer to total things purchased (like ticket, add-ons)
-    const currency = session.currency; // Currency in which this transaction happened
-    const customerId = session.customer; // Customer Id of this user for our platform in Stripe database
-    const email = session.customer_details.email; // email of this customer
-    const userId = session.metadata.userId; // user Id of this customer in bluemeet database
-    const ticketId = session.metadata.ticketId; // ticket Id in bluemeet database
-    const eventId = session.metadata.eventId; // event Id in bluemeet database
-    const couponId = session.metadata.couponId; // coupon Id in bluemeet database
-    const communityId = session.metadata.communityId; // community Id in bluemeet database
-    const registrationType = session.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
-    const paymentIntentId = session.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
-    const paymentStatus = session.payment.payment_status; // Payment status
-    const shipping = session.shipping; // Shipping address
-    const subscription = session.subscription; // Subscription details
-    const amountDiscount = session.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
-    const amountShipping = session.total_details.amount_shipping; // Shipping charge that is included in amount_total
-    const amount_tax = session.total_details.amount_tax; // Tax amount that has been collected included in amount_total
-=======
     const clientReferenceId = event.data.client_reference_id; // This is the reference Id of this purchase which will refer to total things purchased (like ticket, add-ons)
     const currency = event.data.currency; // Currency in which this transaction happened
     const customerId = event.data.customer; // Customer Id of this user for our platform in Stripe database
@@ -280,12 +361,11 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const registrationType = event.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
     const paymentIntentId = event.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
     const paymentStatus = event.payment.payment_status; // Payment status
-    const shipping = event.shipping; // Shipping address 
+    const shipping = event.shipping; // Shipping address
     const subscription = event.subscription; // Subscription details
     const amountDiscount = event.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
     const amountShipping = event.total_details.amount_shipping; // Shipping charge that is included in amount_total
     const amount_tax = event.total_details.amount_tax; // Tax amount that has been collected included in amount_total
->>>>>>> 0dc771533e408c01c8820d8f0bf04107d7035e0f
 
     console.log(
       sessionId,
@@ -327,7 +407,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (hapikey) {
-      hubspotIntegration(
+      hubspotRegistrationCapture(
         hapikey,
         user.firstName,
         user.lastName,
@@ -336,108 +416,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
       );
     }
     if (salesForceAccount) {
-      salesForceIntegration();
-    }
-
-    try {
-      // const res = await axios.post(
-      //   `https://login.salesforce.com/services/oauth2/token?refresh_token=${refreshTokenSalesforce}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${SALESFORCE_REDIRECT_URI}`
-      // );
-      // console.log(res.data, "i am countin on you salesforce refresh token");
-
-      const res = await fetch(
-        `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${salesForceAccount.accessToken}`,
-          },
-
-          body: JSON.stringify({
-            FirstName: user.firstName,
-            LastName: user.lastName,
-            Email: paymentEntity.email,
-            Description: `Event name: ${event.eventName} , Ticket name: ${
-              ticket.name
-            } ,Price:${
-              paymentEntity.amount
-            },Date and time of booking:${Date.now()} `,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          console.log("unauthorizied access token is expired");
-
-          try {
-            const res = await axios.post(
-              `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
-            );
-
-            const access_token = res.data.access_token;
-            const instance_url = res.data.instance_url;
-
-            // Update salesforce access token
-            let SalesforceDoc;
-
-            try {
-              SalesforceDoc = await SalesForce.findOneAndUpdate(
-                { communityId: paymentEntity.notes.communityId },
-                { accessToken: access_token },
-                { new: true, validateModifiedOnly: true }
-              );
-
-              try {
-                console.log(instance_url);
-                const res = await fetch(
-                  `${res.data.instance_url}/services/apexrest/CreateContact/`,
-                  {
-                    method: "POST",
-
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${access_token}`,
-                    },
-
-                    body: JSON.stringify({
-                      FirstName: user.firstName,
-                      LastName: user.lastName,
-                      Email: paymentEntity.email,
-                      Description: `Event name: ${
-                        event.eventName
-                      } , Ticket name: ${ticket.name} ,Price:${
-                        paymentEntity.amount
-                      },Date and time of booking:${Date.now()} `,
-                    }),
-                  }
-                );
-
-                if (!res.ok) {
-                  throw new Error("Something went wrong");
-                }
-
-                const parsedRes = await res.json();
-                console.log(parsedRes, "This is new salesforce record");
-              } catch (error) {
-                console.log(error);
-              }
-            } catch (error) {
-              console.log(error);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          console.log(res);
-          throw new Error(res.message);
-        }
-      }
-      const result = await res.json();
-    } catch (err) {
-      console.log(err);
+      salesForceRegistrationCapture(salesForceAccount, user, event, ticket);
     }
 
     ////////////////////////////////
