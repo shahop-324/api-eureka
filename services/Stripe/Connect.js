@@ -37,6 +37,7 @@ const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
     if (error) return new appError(error, 401);
   });
 };
+const salesForceIntegration = () => {};
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
@@ -221,132 +222,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
-  ////////////////////////////////////
-
-  // const community = await Community.findById(paymentEntity.notes.communityId);
-  // const hapikey = community.hubspotApiKey;
-
-  // const salesForceAccount = await SalesForce.findOne({
-  //   communityId: paymentEntity.notes.communityId,
-  // });
-
-  // const event = await Event.findById(paymentEntity.notes.eventId);
-  // const ticket = await Ticket.findById(paymentEntity.notes.ticketId);
-
-  // const user = await User.findById(paymentEntity.notes.userId);
-
-  // if (hapikey) {
-  //   hubspotIntegration(
-  //     hapikey,
-  //     user.firstName,
-  //     user.lastName,
-  //     user.email,
-  //     event.eventName
-  //   );
-  // }
-
-  // try {
-  //   // const res = await axios.post(
-  //   //   `https://login.salesforce.com/services/oauth2/token?refresh_token=${refreshTokenSalesforce}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${SALESFORCE_REDIRECT_URI}`
-  //   // );
-  //   // console.log(res.data, "i am countin on you salesforce refresh token");
-
-  //   const res = await fetch(
-  //     `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
-  //     {
-  //       method: "POST",
-
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${salesForceAccount.accessToken}`,
-  //       },
-
-  //       body: JSON.stringify({
-  //         FirstName: user.firstName,
-  //         LastName: user.lastName,
-  //         Email: paymentEntity.email,
-  //         Description: `Event name: ${event.eventName} , Ticket name: ${
-  //           ticket.name
-  //         } ,Price:${
-  //           paymentEntity.amount
-  //         },Date and time of booking:${Date.now()} `,
-  //       }),
-  //     }
-  //   );
-
-  //   if (!res.ok) {
-  //     if (res.status === 401) {
-  //       console.log("unauthorizied access token is expired");
-
-  //       try {
-  //         const res = await axios.post(
-  //           `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
-  //         );
-
-  //         const access_token = res.data.access_token;
-  //         const instance_url = res.data.instance_url;
-
-  //         // Update salesforce access token
-  //         let SalesforceDoc;
-
-  //         try {
-  //           SalesforceDoc = await SalesForce.findOneAndUpdate(
-  //             { communityId: paymentEntity.notes.communityId },
-  //             { accessToken: access_token },
-  //             { new: true, validateModifiedOnly: true }
-  //           );
-
-  //           try {
-  //             console.log(instance_url);
-  //             const res = await fetch(
-  //               `${res.data.instance_url}/services/apexrest/CreateContact/`,
-  //               {
-  //                 method: "POST",
-
-  //                 headers: {
-  //                   "Content-Type": "application/json",
-  //                   Authorization: `Bearer ${access_token}`,
-  //                 },
-
-  //                 body: JSON.stringify({
-  //                   FirstName: user.firstName,
-  //                   LastName: user.lastName,
-  //                   Email: paymentEntity.email,
-  //                   Description: `Event name: ${
-  //                     event.eventName
-  //                   } , Ticket name: ${ticket.name} ,Price:${
-  //                     paymentEntity.amount
-  //                   },Date and time of booking:${Date.now()} `,
-  //                 }),
-  //               }
-  //             );
-
-  //             if (!res.ok) {
-  //               throw new Error("Something went wrong");
-  //             }
-
-  //             const parsedRes = await res.json();
-  //             console.log(parsedRes, "This is new salesforce record");
-  //           } catch (error) {
-  //             console.log(error);
-  //           }
-  //         } catch (error) {
-  //           console.log(error);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     } else {
-  //       console.log(res);
-  //       throw new Error(res.message);
-  //     }
-  //   }
-  //   const result = await res.json();
-  // } catch (err) {
-  //   console.log(err);
-  // }
-
-  ////////////////////////////////
 
   // Verify webhook signature and extract the event.
   // See https://stripe.com/docs/webhooks/signatures for more information.
@@ -360,7 +235,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const connectedAccountId = event.account;
+    //const connectedAccountId = event.account;
 
     // console.log(session, "Ticket purchase succeded");
 
@@ -381,7 +256,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const registrationType = session.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
     const paymentIntentId = session.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
     const paymentStatus = session.payment.payment_status; // Payment status
-    const shipping = session.shipping; // Shipping address 
+    const shipping = session.shipping; // Shipping address
     const subscription = session.subscription; // Subscription details
     const amountDiscount = session.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
     const amountShipping = session.total_details.amount_shipping; // Shipping charge that is included in amount_total
@@ -412,6 +287,135 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
       amount_tax
     );
 
+    ////////////////////////////////////
+
+    const community = await Community.findById(communityId);
+    const hapikey = community.hubspotApiKey;
+
+    const salesForceAccount = await SalesForce.findOne({
+      communityId: communityId,
+    });
+
+    const event = await Event.findById(eventId);
+    const ticket = await Ticket.findById(ticketId);
+
+    const user = await User.findById(userId);
+
+    if (hapikey) {
+      hubspotIntegration(
+        hapikey,
+        user.firstName,
+        user.lastName,
+        user.email,
+        event.eventName
+      );
+    }
+    if (salesForceAccount) {
+      salesForceIntegration();
+    }
+
+    try {
+      // const res = await axios.post(
+      //   `https://login.salesforce.com/services/oauth2/token?refresh_token=${refreshTokenSalesforce}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${SALESFORCE_REDIRECT_URI}`
+      // );
+      // console.log(res.data, "i am countin on you salesforce refresh token");
+
+      const res = await fetch(
+        `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${salesForceAccount.accessToken}`,
+          },
+
+          body: JSON.stringify({
+            FirstName: user.firstName,
+            LastName: user.lastName,
+            Email: paymentEntity.email,
+            Description: `Event name: ${event.eventName} , Ticket name: ${
+              ticket.name
+            } ,Price:${
+              paymentEntity.amount
+            },Date and time of booking:${Date.now()} `,
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          console.log("unauthorizied access token is expired");
+
+          try {
+            const res = await axios.post(
+              `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
+            );
+
+            const access_token = res.data.access_token;
+            const instance_url = res.data.instance_url;
+
+            // Update salesforce access token
+            let SalesforceDoc;
+
+            try {
+              SalesforceDoc = await SalesForce.findOneAndUpdate(
+                { communityId: paymentEntity.notes.communityId },
+                { accessToken: access_token },
+                { new: true, validateModifiedOnly: true }
+              );
+
+              try {
+                console.log(instance_url);
+                const res = await fetch(
+                  `${res.data.instance_url}/services/apexrest/CreateContact/`,
+                  {
+                    method: "POST",
+
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${access_token}`,
+                    },
+
+                    body: JSON.stringify({
+                      FirstName: user.firstName,
+                      LastName: user.lastName,
+                      Email: paymentEntity.email,
+                      Description: `Event name: ${
+                        event.eventName
+                      } , Ticket name: ${ticket.name} ,Price:${
+                        paymentEntity.amount
+                      },Date and time of booking:${Date.now()} `,
+                    }),
+                  }
+                );
+
+                if (!res.ok) {
+                  throw new Error("Something went wrong");
+                }
+
+                const parsedRes = await res.json();
+                console.log(parsedRes, "This is new salesforce record");
+              } catch (error) {
+                console.log(error);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          console.log(res);
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
+
+    ////////////////////////////////
     // Fullfill the purchase
   } else {
     console.log("It's not what we are looking for, we will just let it pass.");
