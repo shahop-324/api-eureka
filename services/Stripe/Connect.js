@@ -4,6 +4,10 @@ const Event = require("./../../models/eventModel");
 const Ticket = require("./../../models/ticketModel");
 const Coupon = require("./../../models/couponModel");
 const User = require("./../../models/userModel");
+const SalesForce = require("../../models/salesForceModel");
+const MailChimp = require("../../models/mailChimpModel");
+
+const hash = require("hash-converter");
 const { v4: uuidv4 } = require("uuid");
 
 const stripe = require("stripe")(
@@ -148,6 +152,36 @@ const salesForceRegistrationCapture = async (
     console.log(err);
   }
 };
+
+const mailChimpRegistrationCapture = catchAsync(
+  async (mailChimpAccount, event, mailChimpFormValues) => {
+    // https://us5.api.mailchimp.com/3.0/lists/1e96addd9e/members/e0894719c49cc9d0abfa09b90ca62960
+
+    const md5 = hash.MD5(mailChimpFormValues.email);
+    const res = await fetch(
+      `${mailChimpAccount.apiEndPoint}/3.0/lists/${event.mailChimpAudienceListIdForRegistrants}/members/${md5}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${mailChimpAccount.accessToken}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("something went wrong");
+    }
+
+    const result = await res.json();
+
+    console.log(result);
+  }
+);
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
@@ -430,6 +464,34 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
       );
     }
 
+    if (mailChimpAccount) {
+      const mailChimpFormValues = {};
+
+      // {
+
+      //   "email_address":"op.shah@bluemeet.in",
+      //   "merge_fields":{ "FNAME":"dinesh",
+      //       "LNAME":"shah",
+      //         "ADDRESS": "EE 738",
+      //           "PHONE": "8103032829"},
+
+      //   "status":"subscribed",
+      //   "tags":["Zapier test"]
+
+      //   }
+      mailChimpFormValues.email_address = user.email;
+      mailChimpFormValues.merge_fields = {
+        FNAME: user.firstName,
+        LNAME: user.lastName,
+      };
+      mailChimpFormValues.status = "Subscribed";
+      mailChimpFormValues.tags = event.eventName;
+      mailChimpRegistrationCapture(
+        mailChimpAccount,
+        event,
+        mailChimpFormValues
+      );
+    }
     ////////////////////////////////
     // Fullfill the purchase
   } else {

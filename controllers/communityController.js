@@ -365,6 +365,7 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
     "eventbritePrivateToken",
+
     "tawkLink",
     "paymentGateway",
     "paypalOnboardingData",

@@ -1735,6 +1735,14 @@
   "resolved" "https://registry.npmjs.org/double-ended-queue/-/double-ended-queue-2.1.0-0.tgz"
   "version" "2.1.0-0"
 
+"drip-nodejs@^3.1.1":
+  "integrity" "sha512-DIjHmRrjfCrloxIk3kB5s/d0FgWb9pthePyTpPbRO6LhiDFPpa9YShMSxjPHhcAFBOzlkjwGHhdFyw7oPyPTEg=="
+  "resolved" "https://registry.npmjs.org/drip-nodejs/-/drip-nodejs-3.1.1.tgz"
+  "version" "3.1.1"
+  dependencies:
+    "request" "^2.88.0"
+    "request-promise" "^4.2.5"
+
 "ecc-jsbn@~0.1.1":
   "integrity" "sha1-OoOpBOVDUyh4dMVkt1SThoSamMk="
   "resolved" "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz"
@@ -2507,6 +2515,11 @@
   "version" "1.0.3"
   dependencies:
     "function-bind" "^1.1.1"
+
+"hash-converter@^1.0.2":
+  "integrity" "sha512-0v/o4P/gFnPZZKyZepFcxSYM3m/02Y7A7KAAQTzJ0s/0t/DO9GVna/dEZdktjleJDt4YBqbEB/JbimMBoi+FNg=="
+  "resolved" "https://registry.npmjs.org/hash-converter/-/hash-converter-1.0.2.tgz"
+  "version" "1.0.2"
 
 "helmet@^4.5.0":
   "integrity" "sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg=="
@@ -4282,7 +4295,7 @@
   dependencies:
     "lodash" "^4.17.19"
 
-"request-promise@^4.2.2":
+"request-promise@^4.2.2", "request-promise@^4.2.5":
   "integrity" "sha512-HCHI3DJJUakkOr8fNoCc73E5nU5bqITjOYFMDrKHYOXWXrgD/SBaC7LjwuPymUprRyuF06UK7hd/lMHkmUXglQ=="
   "resolved" "https://registry.npmjs.org/request-promise/-/request-promise-4.2.6.tgz"
   "version" "4.2.6"
@@ -4753,10 +4766,10 @@
   "resolved" "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
   "version" "3.1.1"
 
-"stripe@^8.163.0":
-  "integrity" "sha512-hbKZdiPWVLhE0tgo6OMub7zpQpyAGLV9YaYcFOYgiryYw40HXiQtBcZLYtxpp5VdhovOLZrPGARrWovPDbewfQ=="
-  "resolved" "https://registry.npmjs.org/stripe/-/stripe-8.163.0.tgz"
-  "version" "8.163.0"
+"stripe@^8.176.0":
+  "integrity" "sha512-0KCDo8TWFgeNWU7cPaqdjO2u2OSth0cmWYZmA7xsuxRCk7/lgWbJ/UbeSphx74cCIjFCmGuzDoNuNxqon9lEbg=="
+  "resolved" "https://registry.npmjs.org/stripe/-/stripe-8.176.0.tgz"
+  "version" "8.176.0"
   dependencies:
     "@types/node" ">=8.1.0"
     "qs" "^6.6.0"

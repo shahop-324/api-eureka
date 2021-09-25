@@ -13,7 +13,7 @@ const EventTransaction = require("../../models/eventTransactionModel");
 
 var request = require("request");
 const Community = require("../../models/communityModel");
-const SalesForce = require("../../models/salesForceModel");
+
 const User = require("../../models/userModel");
 const EventTransactionIdsCommunityWise = require("../../models/eventTransactionIdsCommunityWise");
 const Registration = require("../../models/registrationsModel");
@@ -195,7 +195,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
             }
           );
         }
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     } else if (paymentEntity.notes.transaction_type === "event_registration") {
       let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
 
