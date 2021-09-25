@@ -10,6 +10,33 @@ const stripe = require("stripe")(
   "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"
 );
 
+const hubspotIntegration = (hapikey, firstName, lastName, email, company) => {
+  console.log("Entered in hubspot integration function.");
+  var options = {
+    method: "POST",
+    url: "https://api.hubapi.com/contacts/v1/contact/",
+    qs: { hapikey: hapikey },
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: {
+      properties: [
+        { property: "email", value: email },
+        { property: "firstname", value: firstName },
+        { property: "lastname", value: lastName },
+
+        { property: "company", value: company },
+        // { property: "hs_lead_status", value: "Connected" },
+        { property: "lifecyclestage", value: "subscriber" },
+      ],
+    },
+    json: true,
+  };
+
+  request(options, function (error, response, body) {
+    if (error) return new appError(error, 401);
+  });
+};
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
 
@@ -194,6 +221,132 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
+  ////////////////////////////////////
+
+  // const community = await Community.findById(paymentEntity.notes.communityId);
+  // const hapikey = community.hubspotApiKey;
+
+  // const salesForceAccount = await SalesForce.findOne({
+  //   communityId: paymentEntity.notes.communityId,
+  // });
+
+  // const event = await Event.findById(paymentEntity.notes.eventId);
+  // const ticket = await Ticket.findById(paymentEntity.notes.ticketId);
+
+  // const user = await User.findById(paymentEntity.notes.userId);
+
+  // if (hapikey) {
+  //   hubspotIntegration(
+  //     hapikey,
+  //     user.firstName,
+  //     user.lastName,
+  //     user.email,
+  //     event.eventName
+  //   );
+  // }
+
+  // try {
+  //   // const res = await axios.post(
+  //   //   `https://login.salesforce.com/services/oauth2/token?refresh_token=${refreshTokenSalesforce}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${SALESFORCE_REDIRECT_URI}`
+  //   // );
+  //   // console.log(res.data, "i am countin on you salesforce refresh token");
+
+  //   const res = await fetch(
+  //     `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
+  //     {
+  //       method: "POST",
+
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${salesForceAccount.accessToken}`,
+  //       },
+
+  //       body: JSON.stringify({
+  //         FirstName: user.firstName,
+  //         LastName: user.lastName,
+  //         Email: paymentEntity.email,
+  //         Description: `Event name: ${event.eventName} , Ticket name: ${
+  //           ticket.name
+  //         } ,Price:${
+  //           paymentEntity.amount
+  //         },Date and time of booking:${Date.now()} `,
+  //       }),
+  //     }
+  //   );
+
+  //   if (!res.ok) {
+  //     if (res.status === 401) {
+  //       console.log("unauthorizied access token is expired");
+
+  //       try {
+  //         const res = await axios.post(
+  //           `https://login.salesforce.com/services/oauth2/token?refresh_token=${salesForceAccount.refreshToken}&grant_type=refresh_token&client_id=${process.env.SALESFORCE_CLIENT_ID}&client_secret=${process.env.SALESFORCE_CLIENT_SECRET_ID}&redirect_uri=${process.env.SALESFORCE_REDIRECT_URI}`
+  //         );
+
+  //         const access_token = res.data.access_token;
+  //         const instance_url = res.data.instance_url;
+
+  //         // Update salesforce access token
+  //         let SalesforceDoc;
+
+  //         try {
+  //           SalesforceDoc = await SalesForce.findOneAndUpdate(
+  //             { communityId: paymentEntity.notes.communityId },
+  //             { accessToken: access_token },
+  //             { new: true, validateModifiedOnly: true }
+  //           );
+
+  //           try {
+  //             console.log(instance_url);
+  //             const res = await fetch(
+  //               `${res.data.instance_url}/services/apexrest/CreateContact/`,
+  //               {
+  //                 method: "POST",
+
+  //                 headers: {
+  //                   "Content-Type": "application/json",
+  //                   Authorization: `Bearer ${access_token}`,
+  //                 },
+
+  //                 body: JSON.stringify({
+  //                   FirstName: user.firstName,
+  //                   LastName: user.lastName,
+  //                   Email: paymentEntity.email,
+  //                   Description: `Event name: ${
+  //                     event.eventName
+  //                   } , Ticket name: ${ticket.name} ,Price:${
+  //                     paymentEntity.amount
+  //                   },Date and time of booking:${Date.now()} `,
+  //                 }),
+  //               }
+  //             );
+
+  //             if (!res.ok) {
+  //               throw new Error("Something went wrong");
+  //             }
+
+  //             const parsedRes = await res.json();
+  //             console.log(parsedRes, "This is new salesforce record");
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         } catch (error) {
+  //           console.log(error);
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     } else {
+  //       console.log(res);
+  //       throw new Error(res.message);
+  //     }
+  //   }
+  //   const result = await res.json();
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
+  ////////////////////////////////
 
   // Verify webhook signature and extract the event.
   // See https://stripe.com/docs/webhooks/signatures for more information.
