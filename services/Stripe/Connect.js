@@ -228,8 +228,8 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const registrationType = session.metadata.registrationType; // Registration type [enum] => ["Live event", "VOD one time", "VOD Subscription"]
     const paymentIntentId = session.payment_intent; // Payment intent Id which can be used to fetch deep details of payment and issue refund
     const paymentStatus = session.payment.payment_status; // Payment status
-    const shipping = session.shipping;
-    const subscription = session.subscription;
+    const shipping = session.shipping; // Shipping address 
+    const subscription = session.subscription; // Subscription details
     const amountDiscount = session.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
     const amountShipping = session.total_details.amount_shipping; // Shipping charge that is included in amount_total
     const amount_tax = session.total_details.amount_tax; // Tax amount that has been collected included in amount_total
