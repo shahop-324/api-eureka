@@ -15,8 +15,6 @@ router.post(
 
 router.post("/eventTicketPurchased", stripe.eventTicketPurchased);
 
-router.post("/eventPurchaseFailed", stripe.eventPurchaseFailed);
-
 router.post(
   "/getConnectFlowLink",
   authController.protectCommunity,
