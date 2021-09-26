@@ -197,8 +197,8 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
           onClick={handleToggle}
           disableElevation={true}
         >
-          <div className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2">
-            <Avatar variant="rounded" alt={userName} src={imgURL} />
+          <div className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2" style={{borderRadius: "35px"}}>
+            <Avatar alt={userName} src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>
         </Button>
@@ -294,22 +294,8 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                       </div>
                     </MenuItem>
 
-                    {communities.length === 0 ? (
-                      <></>
-                    ) : (
-                      <div>
-                        <hr />
-                        <div className="avatar-menu-group-heading px-3 pb-2">
-                          Switch to A Community ({communities.length})
-                        </div>
-                      </div>
-                    )}
-                    <div
-                      className="communities-list-error"
-                      style={{ maxHeight: "200px", overflow: "scroll" }}
-                    >
-                      {renderCommunities(communities, handleClose)}
-                    </div>
+                    
+                    
 
                     <hr className="px-2" />
                     <button

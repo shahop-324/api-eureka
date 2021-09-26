@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React, { useState } from "react";
 import "./../../assets/css/hiddenScroll.css";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, IconButton } from "@material-ui/core";
 import "./../../assets/css/UserAccountStyle.css";
 import CenteredTabs from "./UserAccountCenteredTabBar";
 import UserAccountSideNav from "./UserAccountSideNav";
@@ -21,6 +21,113 @@ import styled from "styled-components";
 
 import AvatarMenu from "../AvatarMenu";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+import Badge from "@mui/material/Badge";
+import Avatar from "@material-ui/core/Avatar";
+import Faker from "faker";
+
+import { Dropdown, Icon } from "semantic-ui-react";
+
+import {
+  NotificationPaper,
+  NotificationBody,
+  NotificationHeadline,
+  TimeAgoText,
+} from "./Elements";
+import HelpSideDrawer from "../HelpSideDrawer";
+import WhatsNew from "../WhatsNew";
+
+const trigger = (
+  <span>
+    <Avatar />
+  </span>
+);
+
+const WelcomeNotification = () => {
+  return (
+    <>
+      <NotificationPaper>
+        <Avatar src={Faker.image.avatar()} variant="rounded" />
+        <div>
+          <NotificationHeadline className="mb-2">
+            Welcome to bluemeet!
+          </NotificationHeadline>
+          <NotificationBody style={{ wordWrap: "break-word", width: "130px" }}>
+            Discover ways to use BlueMeet 
+          </NotificationBody>
+        </div>
+      </NotificationPaper>
+    </>
+  );
+};
+
+const options = [
+  {
+    key: "user",
+    text: (
+      <span>
+        Signed in as <strong>Bob Smith</strong>
+      </span>
+    ),
+    disabled: true,
+  },
+  { key: "profile", text: "Your Profile" },
+  { key: "stars", text: "Your Stars" },
+  { key: "explore", text: "Explore" },
+  { key: "integrations", text: "Integrations" },
+  { key: "help", text: "Help" },
+  { key: "settings", text: "Settings" },
+  { key: "sign-out", text: "Sign Out" },
+];
+
+const DropdownTriggerExample = () => (
+  <div className="mx-3">
+    <Dropdown
+      icon={null}
+      trigger={trigger}
+      options={options}
+      direction="left"
+    />
+  </div>
+);
+
+const notificationOptions = [
+  {
+    key: "welcome",
+    text: <WelcomeNotification />,
+  },
+  {
+    key: "welcome",
+    text: <WelcomeNotification />,
+  },
+  {
+    key: "welcome",
+    text: <WelcomeNotification />,
+  },
+  
+];
+
+const notificationTrigger = (
+  <IconButton className="me-2">
+    <Badge badgeContent={4} color="primary">
+      <NotificationsNoneRoundedIcon />
+    </Badge>
+  </IconButton>
+);
+
+const NotificationsTrigger = () => {
+  return (
+    <>
+      <Dropdown
+        icon={null}
+        trigger={notificationTrigger}
+        options={notificationOptions}
+        direction="left"
+      />
+    </>
+  );
+};
 
 const BtnOutlinedWithIcon = styled.div`
   border: 1px solid #152d35;
@@ -41,6 +148,18 @@ const BtnOutlinedWithIcon = styled.div`
 
 const UserAccountHome = () => {
   const { isLoading } = useSelector((state) => state.user);
+
+  const [openHelp, setOpenHelp] = useState(false);
+
+  const [openWhatsNew, setOpenWhatsNew] = useState(false);
+
+  const handleCloseWhatsNew = () => {
+    setOpenWhatsNew(false);
+  }
+
+  const handleCloseHelp = () => {
+    setOpenHelp(false);
+  }
 
   const dispatch = useDispatch();
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -127,14 +246,26 @@ const UserAccountHome = () => {
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
               <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
-            <BtnOutlinedWithIcon>
-              <ExploreRoundedIcon className="me-3" />
-              Explore Events
-            </BtnOutlinedWithIcon>
-            <div className="ms-3">
-              <AvatarMenu />
-            </div>
-          </div>
+                <IconButton onClick={() => {
+                  setOpenHelp(true)
+                }} className="me-2">
+                  <HelpOutlineRoundedIcon />
+                </IconButton>
+                <NotificationsTrigger />
+
+                <BtnOutlinedWithIcon onClick={() => {
+                  setOpenWhatsNew(true);
+                }}>
+                  {/* <ExploreRoundedIcon className="me-3" /> */}
+                  What's new
+                </BtnOutlinedWithIcon>
+
+                <DropdownTriggerExample />
+
+                {/* <div className="ms-3">
+                  <AvatarMenu />
+                </div> */}
+              </div>
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs
                   activeIndex={currentIndex}
@@ -164,6 +295,8 @@ const UserAccountHome = () => {
           </div>
         </div>
       )}
+      <HelpSideDrawer openHelp={openHelp} handleCloseHelp={handleCloseHelp}/>
+      <WhatsNew openWhatsNew={openWhatsNew} handleCloseWhatsNew={handleCloseWhatsNew} />
     </>
   );
 };

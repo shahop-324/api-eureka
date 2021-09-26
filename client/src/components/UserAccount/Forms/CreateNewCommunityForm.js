@@ -15,12 +15,40 @@ import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
 // import { useDispatch } from "react-redux";
 
-import { createCommunity, errorTrackerForCreateCommunity, resetCommunityError } from "../../../actions";
+import {
+  createCommunity,
+  errorTrackerForCreateCommunity,
+  resetCommunityError,
+} from "../../../actions";
 import { IconButton } from "@material-ui/core";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { useSnackbar } from "notistack";
+import styled from "styled-components";
+
+import {
+  FormLabel,
+  ConsentText,
+  Input,
+  FormValidationFailed,
+  FormValidationWarning,
+} from "./../Elements";
+
+const FormHeading = styled.div`
+  text-align: center !important;
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #152d35;
+  font-size: 1.1rem;
+`;
+
+const FormSubheading = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+  color: #212121;
+`;
 
 let formIsvalidated = false;
 
@@ -38,15 +66,7 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(9),
   },
 }));
-// const renderError = ({ error, touched }) => {
-//   if (touched && error) {
-//     return (
-//       <div className="ui error message">
-//         <div className="header">{error}</div>
-//       </div>
-//     );
-//   }
-// };
+
 const renderInputName = ({
   input,
   labelClass,
@@ -62,7 +82,7 @@ const renderInputName = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <Input
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -76,17 +96,12 @@ const renderInputName = ({
       </label>
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
+          <FormValidationFailed className="my-1">{error}</FormValidationFailed>
         )) ||
           (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
+            <FormValidationWarning className="my-1">
               {warning}
-            </div>
+            </FormValidationWarning>
           )))}
       {!error && !warning
         ? (formIsvalidated = true)
@@ -109,7 +124,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <Input
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -117,22 +132,19 @@ const renderInput = ({
         placeholder={placeholder}
         id={id}
       />
-      <label class={labelClass} for={labelFor}>
+      <ConsentText class={labelClass} for={labelFor}>
         {label}
-      </label>
+      </ConsentText>
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormValidationFailed className="my-1">
             {error}
-          </div>
+          </FormValidationFailed>
         )) ||
           (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
+            <FormValidationWarning className="my-1">
               {warning}
-            </div>
+            </FormValidationWarning>
           )))}
       {!error && !warning
         ? (formIsvalidated = true)
@@ -145,7 +157,6 @@ const renderInputCheckbox = ({
   input,
   labelClass,
   labelFor,
-
   type,
   ariadescribedby,
   classes,
@@ -166,9 +177,9 @@ const renderInputCheckbox = ({
         id={id}
         // required
       />
-      <label class={labelClass} for={labelFor}>
+      <ConsentText class={labelClass} for={labelFor}>
         {label}
-      </label>
+      </ConsentText>
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -187,7 +198,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <Input
         rows="3"
         type={type}
         {...input}
@@ -198,29 +209,21 @@ const renderTextArea = ({
 
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
+          <FormValidationFailed className="my-1">{error}</FormValidationFailed>
         )) ||
           (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
+            <FormValidationWarning className="my-1">
               {warning}
-            </div>
+            </FormValidationWarning>
           )))}
 
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
-
-      {/* {renderError(meta)} */}
     </div>
   );
 };
 const CreateNewCommunityForm = (props) => {
-
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { error } = useSelector((state) => state.community);
@@ -245,9 +248,7 @@ const CreateNewCommunityForm = (props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth, setMaxWidth] = React.useState("md");
 
-  //   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
     window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
   };
 
@@ -260,10 +261,6 @@ const CreateNewCommunityForm = (props) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-
-  console.log(file);
-  console.log(fileToPreview);
-  // const dispatch=useDispatch();
 
   if (error) {
     enqueueSnackbar(error, {
@@ -278,43 +275,30 @@ const CreateNewCommunityForm = (props) => {
         maxWidth={maxWidth}
         fullScreen={fullScreen}
         open={props.open}
-        // onClose={props.closeHandler}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="ui form error" style={{maxWidth: "668px"}}>
-          <div
-            className="px-4 pt-4 pb-2 d-flex flex-column align-items-center"
-            // style={{ minHeight: "100vh" }}
-          >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="ui form error"
+          style={{ maxWidth: "668px" }}
+        >
+          <div className="px-4 pt-4 pb-2 d-flex flex-column align-items-center">
             <div
               className="form-heading-and-close-button "
               style={{ width: "100%" }}
             >
               <div></div>
-              <h2
-                className="overlay-form-heading"
-                style={{ fontFamily: "Inter" }}
-              >
-                New Community
-              </h2>
+              <FormHeading>Create new Community</FormHeading>
               <div
                 className="overlay-form-close-button"
                 onClick={props.closeHandler}
               >
-                {/* <div> */}
-                <IconButton  aria-label="delete" onClick={reset}>
+                <IconButton aria-label="delete" onClick={reset}>
                   <CancelRoundedIcon />
                 </IconButton>
-                {/* </div> */}
               </div>
             </div>
-            <h5
-              className="overlay-sub-form-heading mb-5"
-              style={{ fontFamily: "Inter" }}
-            >
-              Let's take the first step in our jouney of hosting and managing
-              events.
-            </h5>
+
             <div class="mb-4 overlay-form-input-row d-flex flex-column">
               <div className="d-flex flex-column align-items-center">
                 <div className="mb-3">
@@ -326,13 +310,8 @@ const CreateNewCommunityForm = (props) => {
                   />
                 </div>
               </div>
-              <label
-                for="communityHeadline"
-                class="form-label form-label-customized"
-              >
-                Avatar
-              </label>
-              <input
+              <FormLabel for="communityHeadline">Avatar</FormLabel>
+              <Input
                 className="form-control"
                 name="imgUpload"
                 type="file"
@@ -341,12 +320,12 @@ const CreateNewCommunityForm = (props) => {
               />
             </div>
             <div class="mb-4 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 class="form-label form-label-customized"
               >
                 Community Name
-              </label>
+              </FormLabel>
               <Field
                 name="name"
                 type="text"
@@ -358,12 +337,12 @@ const CreateNewCommunityForm = (props) => {
             </div>
 
             <div class="mb-4 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityEmail"
                 class="form-label form-label-customized"
               >
                 Community Email
-              </label>
+              </FormLabel>
               <Field
                 name="email"
                 type="email"
@@ -375,12 +354,12 @@ const CreateNewCommunityForm = (props) => {
             </div>
 
             <div class="mb-4 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityHeadline"
                 class="form-label form-label-customized"
               >
                 Headline
-              </label>
+              </FormLabel>
               <Field
                 name="headline"
                 type="text"

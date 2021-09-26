@@ -5,6 +5,9 @@ import { editUserPassword, errorTrackerForEditUser } from "../../../actions";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
+import {DashboardSectionHeading, FormLabel, Input,FormValidationFailed,
+  FormValidationWarning,} from "./../Elements";
+
 
 const renderInputOldPass = ({
   type,
@@ -17,7 +20,7 @@ const renderInputOldPass = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <Input
         type={type}
         placeholder={placeholder}
         {...input}
@@ -26,17 +29,16 @@ const renderInputOldPass = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
+          <FormValidationFailed className="my-1">
             {error}
-          </div>
+          </FormValidationFailed>
         )) ||
           (warning && (
-            <div
+            <FormValidationWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "400" }}
             >
               {warning}
-            </div>
+            </FormValidationWarning>
           )))}
     </div>
   );
@@ -52,7 +54,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <Input
         type={type}
         placeholder={placeholder}
         {...input}
@@ -60,17 +62,17 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
+          <FormValidationFailed style={{ color: "red", fontWeight: "400" }} className="my-1">
             {error}
-          </div>
+          </FormValidationFailed>
         )) ||
           (warning && (
-            <div
+            <FormValidationWarning
               className="my-1"
               style={{ color: "#8B780D", fontWeight: "400" }}
             >
               {warning}
-            </div>
+            </FormValidationWarning>
           )))}
     </div>
   );
@@ -89,7 +91,6 @@ const ResetPasswordAndDeactivation = (props) => {
     dispatch(editUserPassword(formValues));
   };
 
-
   if (error) {
     enqueueSnackbar(error, {
       variant: "error",
@@ -102,7 +103,7 @@ const ResetPasswordAndDeactivation = (props) => {
       <div className="user-account-edit-profile px-2 py-2">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div className="mb-5">
-            <h3 className="booked-ticket-sub-heading mb-3">Change Password</h3>
+            <DashboardSectionHeading className=" mb-3">Change Password</DashboardSectionHeading>
             <div className="form-group mb-4">
               <Field
                 name="oldPass"

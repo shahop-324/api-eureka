@@ -19,6 +19,8 @@ import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
 import { useSnackbar } from "notistack";
 
+import {FormLabel, Input} from "./../Elements";
+
 const options = [
   { value: "Technology", label: "Technology" },
   { value: "Education", label: "Education" },
@@ -92,7 +94,7 @@ const renderInput = ({
   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <Input
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -114,7 +116,7 @@ const renderTextArea = ({
   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <Input
         rows="3"
         type={type}
         {...input}
@@ -197,7 +199,7 @@ let EditProfileForm = (props) => {
 
   if (imgKey) {
     if (imgKey && !imgKey.startsWith("https://")) {
-      imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+      imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
     } else {
       imgUrl = imgKey;
     }
@@ -280,13 +282,13 @@ let EditProfileForm = (props) => {
                 className={classes.large}
               />
             </div>
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Avatar
-            </label>
-            <input
+            </FormLabel>
+            <Input
               name="imgUpload"
               type="file"
               accept="image/*"
@@ -303,12 +305,12 @@ let EditProfileForm = (props) => {
             }}
           >
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
+               
               >
                 First name
-              </label>
+              </FormLabel>
 
               <Field
                 name="firstName"
@@ -322,12 +324,12 @@ let EditProfileForm = (props) => {
             </div>
 
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
+                
               >
                 Last name
-              </label>
+              </FormLabel>
               <Field
                 name="lastName"
                 type="text"
@@ -342,12 +344,12 @@ let EditProfileForm = (props) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
+               
               >
                 Headline
-              </label>
+              </FormLabel>
               <Field
                 name="headline"
                 type="text"
@@ -362,12 +364,11 @@ let EditProfileForm = (props) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
               >
                 E-mail
-              </label>
+              </FormLabel>
               <Field
                 name="email"
                 type="email"
@@ -384,12 +385,12 @@ let EditProfileForm = (props) => {
             className="row edit-profile-form-row mb-3"
             style={{ width: "100%" }}
           >
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               contact Number
-            </label>
+            </FormLabel>
             <Field
               name="phoneNumber"
               component={renderPhoneInput}
@@ -397,12 +398,12 @@ let EditProfileForm = (props) => {
             />
           </div>
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Event Preferences
-            </label>
+            </FormLabel>
             <Field
               name="interests"
               component={renderEventPreferences}
@@ -410,12 +411,12 @@ let EditProfileForm = (props) => {
             />
           </div>
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               LinkedIn
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="linkedin"
@@ -430,12 +431,12 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Facebook
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="facebook"
@@ -450,12 +451,12 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Twitter
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="twitter"
@@ -470,12 +471,12 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-5">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Website
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="website"
@@ -519,7 +520,7 @@ const mapStateToProps = (state) => ({
   // console.log(state.user.userDetails);
   initialValues: {
     imgUrl: state.user.userDetails.image
-      ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.user.userDetails.image}`
+      ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.user.userDetails.image}`
       : " #",
     firstName: state.user.userDetails.firstName
       ? state.user.userDetails.firstName

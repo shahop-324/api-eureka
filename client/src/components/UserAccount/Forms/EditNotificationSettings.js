@@ -11,6 +11,8 @@ import { connect } from "react-redux";
 // import { MailChimpAuth } from "../../../actions";
 import { useSnackbar } from "notistack";
 
+import { DashboardSectionHeading } from "../Elements";
+
 const RoyalBlueCheckBox = withStyles({
   root: {
     color: "#538BF7",
@@ -54,13 +56,12 @@ const RenderCustomCheckboxLabels = ({ input, label, value }) => {
 };
 
 const EditNotificationSettings = (props) => {
-
   const { error } = useSelector((state) => state.user);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const { handleSubmit, pristine, submitting } = props;
-  
+
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
     // console.log(formValues);
@@ -104,6 +105,9 @@ const EditNotificationSettings = (props) => {
             value="Receive Suggested List of events based on my preference."
             
           /> */}
+          <DashboardSectionHeading className=" mb-3">
+            Manage notifications
+          </DashboardSectionHeading>
 
           <Field
             name="notificationsForRegisteredEvents"

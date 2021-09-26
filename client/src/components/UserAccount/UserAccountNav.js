@@ -47,8 +47,8 @@ class UserAccountNav extends React.Component {
 
           <div className="d-flex flex-row align-items-center">
             <BtnOutlinedWithIcon>
-              <ExploreRoundedIcon className="me-3" />
-              Explore Events
+              {/* <ExploreRoundedIcon className="me-3" /> */}
+              What's new
             </BtnOutlinedWithIcon>
             <div className="ms-3">
               <AvatarMenu />

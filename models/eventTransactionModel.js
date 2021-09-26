@@ -14,7 +14,6 @@ const eventTransactionSchema = new mongoose.Schema(
     status: {
         type: String,
     },
-    
     order_id: {
         type: String,
     },

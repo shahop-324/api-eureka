@@ -7,10 +7,7 @@ import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import {
-  communitySignIn,
-  errorTrackerForCommunitySignIn,
-} from "../../actions";
+import { communitySignIn, errorTrackerForCommunitySignIn } from "../../actions";
 import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
 import maleMascot from "./../../assets/images/winkingPerson.png";
@@ -18,7 +15,7 @@ import { useSnackbar } from "notistack";
 
 const SideNavPaper = styled.div`
   width: 100%;
-  background-color: #ffffff;
+  background-color: #f5f5f596;
 `;
 
 const BtnOutlinedWithIcon = styled.div`
@@ -40,7 +37,7 @@ const BtnOutlinedWithIcon = styled.div`
 
 const ProfileTabPaper = styled.div`
   background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 #152d353f;
+  box-shadow: 0 0px 3px 0 #152d353f;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   border-radius: 10px;
@@ -57,6 +54,7 @@ const CommunitiesHeading = styled.div`
 const CommunityTabPaper = styled.div`
   background-color: transparent;
   border-radius: 10px;
+  border: 1px solid transparent;
 
   color: #152d35 !important;
   font-family: "Ubuntu";
@@ -73,7 +71,7 @@ const CommunityTabPaper = styled.div`
     cursor: pointer;
 
     background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 #152d353f;
+    box-shadow: 0 0px 6px 0 #152d353f;
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 10px;
@@ -208,7 +206,7 @@ const UserAccountSideNav = () => {
             // TODO ALLOW COMMUNITY TO UPLOAD AND EDIT ITS LOGO
             communityId={community.id}
             key={community.id}
-            communityImage={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`}
+            communityImage={`https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`}
           />
         );
       });
@@ -221,7 +219,7 @@ const UserAccountSideNav = () => {
     if (image.startsWith("https://")) {
       userImageURL = image;
     } else {
-      userImageURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+      userImageURL = `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`;
     }
   }
 
@@ -271,6 +269,8 @@ const UserAccountSideNav = () => {
             <BtnOutlinedWithIcon className="py-2" onClick={handleClickOpen}>
               Create New Community
             </BtnOutlinedWithIcon>
+
+            
             <CreateNewCommunityForm closeHandler={handleClose} open={open} />
           </div>
         </div>

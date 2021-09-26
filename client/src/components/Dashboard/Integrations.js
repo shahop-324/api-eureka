@@ -18,6 +18,8 @@ import IntegrationsSub from "./IntegrationSubComponents.js/IntegrationsSub";
 import ApiKeysSub from "./IntegrationSubComponents.js/ApiKeysSub";
 import GenerateApiKey from "./IntegrationSubComponents.js/Forms/GenerateApiKey";
 
+import StreamDestination from "./IntegrationSubComponents.js/StreamDestinations/StreamDestination";
+
 const options = [
   { value: "All", label: "All Integrations" },
   { value: "Collaboration", label: "Collaboration" },
@@ -236,7 +238,12 @@ const Integrations = () => {
               return <IntegrationsSub />;
 
             case "streamdestination":
-              return <div>We will have stream destination setup ui here.</div>;
+              return (<>
+              
+              <StreamDestination />
+
+              </>
+              );
 
             case "apikeys":
               return <ApiKeysSub />;

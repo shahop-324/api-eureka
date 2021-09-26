@@ -468,6 +468,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
+  
   const filteredBody = filterObj(
     req.body,
     "eventName",

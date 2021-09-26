@@ -361,6 +361,7 @@ exports.redeemCustomPlan = catchAsync(async (req, res, next) => {
 
 exports.updateCommunity = catchAsync(async (req, res, next) => {
   const communityId = req.community.id;
+  console.log(req.body);
 
   const filteredBody = filterObj(
     req.body,

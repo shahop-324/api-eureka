@@ -471,3 +471,97 @@ code {
     opacity: 0;
   }
 }
+
+@supports(-webkit-appearance: none) or (-moz-appearance: none) {
+  input[type='checkbox'],
+  input[type='radio'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+}
+
+.switch {
+  width: 38px;
+  border-radius: 11px;
+}
+
+/* The toggle knob */
+.switch::after {
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  background: var(--ab, var(--border));
+  transform: translateX(var(--x, 0));
+}
+
+/* Change color and position when checked */
+.switch:checked {
+  --ab: var(--active-inner);
+  --x: 17px;
+}
+
+/* Drop the opacity of the toggle knob when the input is disabled */
+.switch:disabled:not(:checked)::after {
+  opacity: .6;
+}
+
+@supports(-webkit-appearance: none) or (-moz-appearance: none) {
+  input[type='checkbox'],
+  input[type='radio'] {
+    --active: #275EFE;
+    --active-inner: #fff;
+    --focus: 2px rgba(39, 94, 254, .25);
+    --border: #BBC1E1;
+    --border-hover: #275EFE;
+    --background: #fff;
+    --disabled: #F6F8FF;
+    --disabled-inner: #E1E6F9;
+  }
+}
+
+/* Default */
+input[type='checkbox'],
+input[type='radio'] {
+  --active: #275EFE;
+  --border: #BBC1E1;
+  border: 1px solid var(--bc, var(--border));
+}
+
+/* Override defaults */
+input[type='checkbox']:checked,
+input[type='radio']:checked {
+  --b: var(--active);
+  --bc: var(--active);
+}
+  
+/* Apply another border color on hover if not checked & not disabled */
+input[type='checkbox']:not(:checked):not(:disabled):hover,
+input[type='radio']:not(:checked):not(:disabled):hover {
+  --bc: var(--border-hover);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  --focus: 2px rgba(39, 94, 254, .25);
+  outline: none;
+  transition: box-shadow .2s;
+}
+
+input[type='checkbox']:focus,
+input[type='radio']:focus {
+  box-shadow: 0 0 0 var(--focus);
+}
+
+input[type='checkbox'] + label,
+input[type='radio'] + label {
+  display: inline-block;
+  vertical-align: top;
+  /* Additional styling */
+}
+
+input[type='checkbox']:disabled + label,
+input[type='radio']:disabled + label {
+    cursor: not-allowed;
+}

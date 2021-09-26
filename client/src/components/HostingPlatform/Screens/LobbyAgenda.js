@@ -7,19 +7,19 @@ import { useParams } from "react-router-dom";
 import Schedule from "./Schedule";
 import MyMeetings from "./MyMeetings";
 import Reminders from "./Reminders";
-import About from './About';
-import styled from 'styled-components';
+import About from "./About";
+import styled from "styled-components";
 import Speakers from "./Sub/Speakers";
 import Hosts from "./Sub/Hosts";
 
 // const LobbyLinkBtn = styled.div`
 // color: ${props =>  props.active ? "#152d35" : "#dcc7be"}
 
-
 const LobbyLinkBtn = styled.div`
   /* Color the border and text with theme.main */
-  color: ${props => props.active ? "#152d35" : "#FFFFFF"};
-  border-bottom: ${props => props.active ? " 2px solid #152d35" : "2px solid #FFFFFF00"};
+  color: ${(props) => (props.active ? "#152d35" : "#FFFFFF")};
+  border-bottom: ${(props) =>
+    props.active ? " 2px solid #152d35" : "2px solid #FFFFFF00"};
 
   &:hover {
     color: #152d35;
@@ -28,14 +28,14 @@ const LobbyLinkBtn = styled.div`
 `;
 
 const ThemedBackgroundButton = styled.div`
-background-color: #152d35;
-text-decoration: none !important;
-`
+  background-color: #152d35;
+  text-decoration: none !important;
+`;
 
 const ThemedText = styled.div`
-color: #152d35 !important;
-font-family: "Ubuntu";
-`
+  color: #152d35 !important;
+  font-family: "Ubuntu";
+`;
 
 const CustomHorizontalTabWarpper = styled.div`
   min-width: 500px;
@@ -66,7 +66,7 @@ const CustomTabButton = styled.div`
 
   &:hover {
     /* border: 1px solid #fff; */
-    background-color: #A0A0A057;
+    background-color: #a0a0a057;
     cursor: pointer;
   }
 `;
@@ -104,7 +104,7 @@ const LobbyAgenda = () => {
         createdBy={createdBy}
       />
 
-<CustomHorizontalTabWarpper className="px-3 mb-4">
+      <CustomHorizontalTabWarpper className="px-3 mb-4">
         <CustomTabButton
           active={selectedTab === "about" ? true : false}
           onClick={() => {
@@ -137,7 +137,6 @@ const LobbyAgenda = () => {
         >
           Hosts
         </CustomTabButton>
-        
       </CustomHorizontalTabWarpper>
 
       {/* <div className="lobby-navigation-wrapper d-flex flex-row mb-4">
@@ -188,9 +187,9 @@ const LobbyAgenda = () => {
       </div> */}
       {(() => {
         switch (selectedTab) {
-          case "about": 
-          return <About />;
-         
+          case "about":
+            return <About />;
+
           case "myMeetings":
             return <MyMeetings />;
           case "speakers":

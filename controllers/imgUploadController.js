@@ -4,7 +4,7 @@ const UUID = require('uuid/v1');
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
-  region: 'ap-south-1',
+  region: 'us-west-1',
   accessKeyId: process.env.S3_ACCESS_KEY,
   secretAccessKey: process.env.S3_SECRET_KEY,
 });
@@ -15,7 +15,7 @@ exports.uploadImg = catchAsync((req, res, next) => {
   s3.getSignedUrl(
     'putObject',
     {
-      Bucket: 'evenz-img-234',
+      Bucket: 'bluemeet',
       Key: key,
       ContentType: 'image/jpeg',
     },
