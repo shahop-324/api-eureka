@@ -22,7 +22,7 @@ const ReviewTextStyled = styled.div`
   font-size: 0.78rem !important;
 `;
 
-const ReviewCard = () => {
+const ReviewCard = ({handleOpenReview}) => {
   return (
     <div
       className="review-card-wrapper px-4 py-3 mb-3"
@@ -42,6 +42,7 @@ const ReviewCard = () => {
 
         <div className="d-flex flex-row align-items-center">
           <Chip
+          onClick={handleOpenReview}
             icon={<ModeEditOutlineRoundedIcon style={{ fontSize: "17px" }} />}
             label="edit"
             variant="outlined"

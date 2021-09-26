@@ -19,11 +19,10 @@ const io = require("socket.io")(server, {
     origin: [
       "http://127.0.0.1:3001",
       "http://localhost:3001",
-      "https://www.evenz.in",
-      "https://evenz.in",
+      "https://www.bluemeet.in",
+      "https://bluemeet.in",
       "https://zapier.com",
       "https://www.zapier.com",
-      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],

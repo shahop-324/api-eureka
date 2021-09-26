@@ -5266,7 +5266,7 @@ export const createEventbriteWebhookForEventRegistrations =
           method: "POST",
 
           body: JSON.stringify({
-            endpoint_url: `https://www.evenz.co.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
+            endpoint_url: `https://api.bluemeet.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
             actions: "order.placed",
             event_id: eventId,
           }),

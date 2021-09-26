@@ -192,6 +192,25 @@ padding: 8px 12px;
 }
 `
 
+const ButtonOutlined = styled.div`
+border-radius: 5px;
+
+
+font-weight: 500;
+font-family: "Ubuntu";
+font-size: 0.8rem;
+color: #152d35;
+background-color: #FFFFFF;
+border: 1px solid #152d35;
+padding: 8px 12px;
+
+&:hover {
+  background-color: #152d35;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+`
+
 export {
   FormLabel,
   ConsentText,
@@ -213,4 +232,5 @@ export {
   TimeAgoText,
   SideDrawerHeading,
   ButtonFilled,
+  ButtonOutlined
 };

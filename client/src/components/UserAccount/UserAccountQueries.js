@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import { Link } from "react-router-dom";
 
 import Select from "react-select";
@@ -11,6 +11,7 @@ import Divider from "@material-ui/core/Divider";
 
 import ScratchingHead from "./../../assets/images/scratching-head.png";
 import QueryCard from "./GridComponents/Queries/QueryCard";
+import EditQuery from "./Forms/EditQuery";
 
 const options = [{ value: "All", label: "All events" }];
 
@@ -92,8 +93,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserAccountQueries = () => {
+
+  const [openEditQuery, setOpenEditQuery] = useState(false);
+
+  const handleOpenEditQuery = () => {
+    setOpenEditQuery(true);
+  }
+
+  const handleCloseEditQuery = () => {
+    setOpenEditQuery(false);
+  }
+
   const classes = useStyles();
   return (
+    <>
     <div className="user-account-main-body-home-content">
       <div className="user-account-main-body-home-content-left ps-2">
         <div className="d-flex flex -row align-items-center justify-content-between pb-4 px-4">
@@ -138,13 +151,15 @@ const UserAccountQueries = () => {
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          <QueryCard />
-          <QueryCard />
-          <QueryCard />
+          <QueryCard handleOpenEditQuery={handleOpenEditQuery}/>
+          <QueryCard handleOpenEditQuery={handleOpenEditQuery}/>
+          <QueryCard handleOpenEditQuery={handleOpenEditQuery}/>
           {/* <NoContentFound msgText="Your event recording will appear here." img={Downloading}/> */}
         </div>
       </div>
     </div>
+    <EditQuery open={openEditQuery} handleClose={handleCloseEditQuery} />
+    </>
   );
 };
 

@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.c5d5a251.chunk.css",
-    "main.js": "/static/js/main.2530fdcb.chunk.js",
-    "main.js.map": "/static/js/main.2530fdcb.chunk.js.map",
+    "main.css": "/static/css/main.4f9b5d00.chunk.css",
+    "main.js": "/static/js/main.7b960eba.chunk.js",
+    "main.js.map": "/static/js/main.7b960eba.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.64e22f50.js",
     "runtime-main.js.map": "/static/js/runtime-main.64e22f50.js.map",
     "static/css/2.e9b99c6d.chunk.css": "/static/css/2.e9b99c6d.chunk.css",
-    "static/js/2.ca3acb91.chunk.js": "/static/js/2.ca3acb91.chunk.js",
-    "static/js/2.ca3acb91.chunk.js.map": "/static/js/2.ca3acb91.chunk.js.map",
+    "static/js/2.e5b047b8.chunk.js": "/static/js/2.e5b047b8.chunk.js",
+    "static/js/2.e5b047b8.chunk.js.map": "/static/js/2.e5b047b8.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.e9b99c6d.chunk.css.map": "/static/css/2.e9b99c6d.chunk.css.map",
-    "static/css/main.c5d5a251.chunk.css.map": "/static/css/main.c5d5a251.chunk.css.map",
-    "static/js/2.ca3acb91.chunk.js.LICENSE.txt": "/static/js/2.ca3acb91.chunk.js.LICENSE.txt",
+    "static/css/main.4f9b5d00.chunk.css.map": "/static/css/main.4f9b5d00.chunk.css.map",
+    "static/js/2.e5b047b8.chunk.js.LICENSE.txt": "/static/js/2.e5b047b8.chunk.js.LICENSE.txt",
     "static/media/0620_zendesk-logo.db04b59e.png": "/static/media/0620_zendesk-logo.db04b59e.png",
     "static/media/580b57fcd9996e24bc43c51f.d7548f55.png": "/static/media/580b57fcd9996e24bc43c51f.d7548f55.png",
     "static/media/AmazingEvent.4f614632.png": "/static/media/AmazingEvent.4f614632.png",
@@ -74,11 +74,12 @@
     "static/media/int-7.24859b14.png": "/static/media/int-7.24859b14.png",
     "static/media/int-8.61f6cc37.png": "/static/media/int-8.61f6cc37.png",
     "static/media/int-9.50246085.png": "/static/media/int-9.50246085.png",
+    "static/media/light-logo-only.c51527a7.svg": "/static/media/light-logo-only.c51527a7.svg",
+    "static/media/light.5b7fd879.svg": "/static/media/light.5b7fd879.svg",
     "static/media/linkedin.dd7c054c.svg": "/static/media/linkedin.dd7c054c.svg",
     "static/media/new_year.84b31472.jpeg": "/static/media/new_year.84b31472.jpeg",
     "static/media/noEvent.9bd8790d.png": "/static/media/noEvent.9bd8790d.png",
     "static/media/ocean.0776e5d9.jpeg": "/static/media/ocean.0776e5d9.jpeg",
-    "static/media/paypal-logo.e7bf2de6.png": "/static/media/paypal-logo.e7bf2de6.png",
     "static/media/queriesNotFound.63e6e24b.png": "/static/media/queriesNotFound.63e6e24b.png",
     "static/media/razorpay.1b86150e.png": "/static/media/razorpay.1b86150e.png",
     "static/media/registrations.4c3483d5.png": "/static/media/registrations.4c3483d5.png",
@@ -113,8 +114,8 @@
   "entrypoints": [
     "static/js/runtime-main.64e22f50.js",
     "static/css/2.e9b99c6d.chunk.css",
-    "static/js/2.ca3acb91.chunk.js",
-    "static/css/main.c5d5a251.chunk.css",
-    "static/js/main.2530fdcb.chunk.js"
+    "static/js/2.e5b047b8.chunk.js",
+    "static/css/main.4f9b5d00.chunk.css",
+    "static/js/main.7b960eba.chunk.js"
   ]
 }

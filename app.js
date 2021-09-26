@@ -78,7 +78,7 @@ const MAILCHIMP_CLIENT_SECRET =
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:3000"
-    : "https://www.evenz.co.in";
+    : "https://api.bluemeet.in";
 
 const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/eureka/v1/oauth/mailchimp/callback`;
 
@@ -88,11 +88,9 @@ app.use(
       "http://127.0.0.1:3001",
       "http://localhost:3001",
       "https://www.bluemeet.in",
-      "https://www.evenz.co.in",
-      "https://evenz.co.in",
+      "https://bluemeet.in",
       "https://zapier.com",
       "https://www.zapier.com",
-      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],
@@ -185,9 +183,9 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
   const parameters = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: process.env.REDIRECT_URI,
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
+    redirect_uri: process.env.NODE_ENV === "development" ? "http://localhost:3001/signin" : "https://bluemeet.in/signin" ,
+    client_id: process.env.LINKEDIN_CLIENT_ID,
+    client_secret: process.env.LINKEDIN_CLIENT_SECRET,
   };
   axios
     .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
