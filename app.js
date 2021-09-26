@@ -183,9 +183,9 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
   const parameters = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: process.env.REDIRECT_URI,
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
+    redirect_uri: process.env.NODE_ENV === "development" ? "http://localhost:3001/signin" : "https://bluemeet.in/signin" ,
+    client_id: process.env.LINKEDIN_CLIENT_ID,
+    client_secret: process.env.LINKEDIN_CLIENT_SECRET,
   };
   axios
     .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
