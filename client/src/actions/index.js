@@ -42,7 +42,7 @@ import { apiKeyActions } from "../reducers/apiKeySlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
-  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
@@ -5480,5 +5480,5 @@ export const getStripeConnectAccountStatus =
 // export const CreateEventCheckoutSession =
 //   (userId, communityId, accountId) => async (dispatch, getState) => {
 //     console.log(getState());
-    
+
 //   };
