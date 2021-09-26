@@ -471,4 +471,14 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
 //   res.redirect(authorizationURL);
 // });
 
+app.get(
+  "/api-eureka/eureka/v1/auth/facebook/login",
+  catchAsync(async (req, res) => {
+    res.redirect(`https://www.facebook.com/v12.0/dialog/oauth?
+      client_id=${process.env.FACEBOOK_CLIENT_ID}
+      &redirect_uri=${process.env.FACEBOOK_REDIRECT_URI}
+      &state={"{st=state123abc,ds=123456789}"}`);
+  })
+);
+
 module.exports = app;
