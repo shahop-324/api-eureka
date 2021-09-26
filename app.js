@@ -78,7 +78,7 @@ const MAILCHIMP_CLIENT_SECRET =
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:3000"
-    : "https://www.evenz.co.in";
+    : "https://api.bluemeet.in";
 
 const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/eureka/v1/oauth/mailchimp/callback`;
 
@@ -88,11 +88,9 @@ app.use(
       "http://127.0.0.1:3001",
       "http://localhost:3001",
       "https://www.bluemeet.in",
-      "https://www.evenz.co.in",
-      "https://evenz.co.in",
+      "https://bluemeet.in",
       "https://zapier.com",
       "https://www.zapier.com",
-      "https://6031-182-70-236-184.ngrok.io",
     ],
 
     methods: ["GET", "PATCH", "POST", "DELETE", "PUT"],

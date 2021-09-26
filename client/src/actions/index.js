@@ -42,7 +42,7 @@ import { apiKeyActions } from "../reducers/apiKeySlice";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
-  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
@@ -5266,7 +5266,7 @@ export const createEventbriteWebhookForEventRegistrations =
           method: "POST",
 
           body: JSON.stringify({
-            endpoint_url: `https://www.evenz.co.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
+            endpoint_url: `https://api.bluemeet.in/api-eureka/api/eureka/v1/eventbrite_registration/${orgId}/${eventId}/${bluemeetEventId}`,
             actions: "order.placed",
             event_id: eventId,
           }),
