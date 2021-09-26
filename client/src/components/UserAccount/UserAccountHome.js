@@ -40,7 +40,7 @@ import WhatsNew from "../WhatsNew";
 
 const trigger = (
   <span>
-    <Avatar />
+    <Avatar src={Faker.image.avatar()} />
   </span>
 );
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import { Link } from "react-router-dom";
 import DiscussingPNG from "./../../assets/images/discussing.png";
 
@@ -10,6 +10,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import { DashboardSectionHeading, ButtonFilled } from "./Elements";
 import Divider from "@material-ui/core/Divider";
 import ReviewCard from "./GridComponents/Reviews/ReviewCard";
+import EditReview from "./Forms/EditReview";
+
+
 
 const options = [{ value: "All", label: "All Events" }];
 
@@ -84,8 +87,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserAccountReviews = () => {
+
+  const [openReview, setOpenReview] = useState(false);
+
+  const handleCloseReview = () => {
+    setOpenReview(false);
+  }
+
+  const handleOpenReview = () => {
+    setOpenReview(true);
+  }
+
   const classes = useStyles();
   return (
+    <>
     <div className="user-account-main-body-home-content">
       <div className="user-account-main-body-home-content-left ps-2">
         <div className="d-flex flex -row align-items-center justify-content-between pb-4 px-4">
@@ -123,13 +138,15 @@ const UserAccountReviews = () => {
         </div>
 
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
+          <ReviewCard handleOpenReview={handleOpenReview}/>
+          <ReviewCard handleOpenReview={handleOpenReview}/>
+          <ReviewCard handleOpenReview={handleOpenReview}/>
           {/* <NoContentFound msgText="Your event recording will appear here." img={Downloading}/> */}
         </div>
       </div>
     </div>
+    <EditReview open={openReview} handleClose={handleCloseReview} />
+    </>
   );
 };
 

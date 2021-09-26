@@ -37,6 +37,7 @@ const QueryCard = ({
   userIs,
   questionText,
   answer,
+  handleOpenEditQuery
 }) => {
   const dispatch = useDispatch();
 
@@ -76,6 +77,7 @@ const QueryCard = ({
 
         <div className="d-flex flex-row align-items-center">
         <Chip
+        onClick={handleOpenEditQuery}
             icon={<ModeEditOutlineRoundedIcon style={{ fontSize: "17px" }} />}
             label="edit"
             variant="outlined"
