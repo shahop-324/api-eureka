@@ -147,7 +147,7 @@ const UserAccountQueries = () => {
                 defaultValue={statusOptions[0]}
               />
             </div>
-            <ButtonFilled>Raise a query</ButtonFilled>
+            {/* <ButtonFilled>Raise a query</ButtonFilled> */}
           </div>
         </div>
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
