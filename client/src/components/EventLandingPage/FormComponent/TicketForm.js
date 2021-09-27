@@ -28,7 +28,7 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({ eventId, tickets, coupon }) => {
+const TicketForm = ({ eventId, tickets, coupon,  }) => {
   console.log(tickets);
   console.log(eventId);
 

@@ -156,7 +156,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
 
   return (
     <div
-      style={{ zIndex: "1000000000000000000" }}
+      // style={{ zIndex: "10000" }}
       className={`${classes.root}`}
     >
       <div>

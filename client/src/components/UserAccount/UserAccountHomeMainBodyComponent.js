@@ -1,18 +1,8 @@
 import React, { useEffect } from "react";
-import VerticalTabs from "./UserAccountVerticalTabs";
+import EventCardNew from "../EventCardNew";
 
-import {
-  DashboardSectionHeading,
-  EventCardsGrid,
-  EventCardWrapper,
-  EventCardImg,
-  EventCardEventName,
-  EventCardEventTimeLine,
-  EventCardEventPriceRange,
-} from "./Elements";
+import { DashboardSectionHeading, EventCardsGrid } from "./Elements";
 
-import Fab from "@material-ui/core/Fab";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useDispatch, useSelector } from "react-redux";
 import {
   errorTrackerForRegisteredEvents,
@@ -22,63 +12,6 @@ import { useSnackbar } from "notistack";
 import Loader from "./../Loader";
 import dateFormat from "dateformat";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
-// import { useSnackbar } from "notistack";
-
-const EventCard = ({
-  image,
-  eventName,
-  minPrice,
-  maxPrice,
-  id,
-  communityId,
-  startDate,
-  endDate,
-}) => {
-  return (
-    <>
-      <EventCardWrapper>
-        <div className="favourite-icon">
-          <Fab
-            aria-label="like"
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "90px",
-              zIndex: "90",
-            }}
-            size="small"
-          >
-            <FavoriteIcon className="favourite-icon" />
-          </Fab>
-        </div>
-        <div className="favourite-icon">
-          <Fab
-            aria-label="like"
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "90px",
-              zIndex: "90",
-            }}
-            size="small"
-          >
-            <FavoriteIcon className="favourite-icon" />
-          </Fab>
-        </div>
-        <EventCardImg src={image}></EventCardImg>
-        <div className="px-3 py-3">
-          <EventCardEventName className="mb-4">{eventName}</EventCardEventName>
-          <EventCardEventTimeLine className="mb-4">
-            {startDate} - {endDate}
-          </EventCardEventTimeLine>
-          <EventCardEventPriceRange>
-            ${minPrice} to ${maxPrice}
-          </EventCardEventPriceRange>
-        </div>
-      </EventCardWrapper>
-    </>
-  );
-};
 
 const renderRegisteredEvents = (events) => {
   return events.map((event) => {
@@ -86,7 +19,7 @@ const renderRegisteredEvents = (events) => {
     const endDate = dateFormat(event.endDate, "mmm dS, h:MM TT");
 
     return (
-      <EventCard
+      <EventCardNew
         image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
         key={event.id}
         eventName={event.eventName}
@@ -153,10 +86,13 @@ const UserAccountHomeMainBody = () => {
         {typeof events !== "undefined" && events.length > 0 ? (
           <EventCardsGrid>{renderRegisteredEvents(events)}</EventCardsGrid>
         ) : (
-          <div style={{width: "100%", height: "70vh"}} className="d-flex flex-row align-items-center justify-content-center">
-          <YouHaveNoEventComing
-            msgText={"You have not yet registered in any events yet."}
-          />
+          <div
+            style={{ width: "100%", height: "70vh" }}
+            className="d-flex flex-row align-items-center justify-content-center"
+          >
+            <YouHaveNoEventComing
+              msgText={"You have not yet registered in any events yet."}
+            />
           </div>
         )}
       </div>

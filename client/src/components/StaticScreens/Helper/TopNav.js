@@ -21,6 +21,10 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import MenuIcon from "@material-ui/icons/Menu";
 import AvatarMenu from "../../AvatarMenu";
 import { useSelector } from "react-redux";
+import ProductDrawer from "../Navigation/ProductDrawer";
+import UseCasesDrawer from "../Navigation/UseCasesDrawer";
+import CompanyDrawer from "../Navigation/CompanyDrawer";
+import ResourcesDrawer from "../Navigation/ResourcesDrawer";
 
 const TopNav = () => {
 
@@ -472,6 +476,10 @@ const TopNav = () => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
+      <ProductDrawer openDrawer={false} />
+      <UseCasesDrawer openDrawer={false} />
+      <CompanyDrawer openDrawer={false} />
+      <ResourcesDrawer openDrawer={true} />
     </>
   );
 };

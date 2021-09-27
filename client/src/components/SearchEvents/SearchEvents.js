@@ -3,7 +3,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-// import Pagination from "@material-ui/lab/Pagination";
 import EventCard from "../EventCard";
 import { useState } from "react";
 import PaidPriceSelector from "../PaidPriceSelector";
@@ -12,10 +11,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { errorTrackerForFetchEvents, fetchEvents } from "../../actions/index";
-// you will need the css that comes with bootstrap@3. if you are using
-// a tool like webpack, you can do the following:
 import "bootstrap/dist/css/bootstrap.css";
-// you will also need the css that comes with bootstrap-daterangepicker
 import "bootstrap-daterangepicker/daterangepicker.css";
 import dateFormat from "dateformat";
 import { useLocation } from "react-router";
@@ -42,8 +38,7 @@ const categories = [
 ];
 
 const SearchEvents = () => {
-
-  const { enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
 
@@ -217,8 +212,8 @@ const SearchEvents = () => {
 
       const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
 
-      const startTime=dateFormat(event.startTime, "ddd mmm dS, h:MM TT")
-      const endTime=dateFormat(event.endTime, "ddd mmm dS, h:MM TT")
+      const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
+      const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
 
       return (
         <EventCard
@@ -233,7 +228,7 @@ const SearchEvents = () => {
           rating={(event.communityRating * 1.0).toFixed(1)}
           startTime={startTime}
           endTime={endTime}
-          communityId={event.createdBy.id}
+          communityId={event.createdBy}
         />
       );
     });
@@ -310,8 +305,7 @@ const SearchEvents = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-   return dispatch(errorTrackerForFetchEvents());
-    
+    return dispatch(errorTrackerForFetchEvents());
   }
 
   return (
@@ -326,11 +320,10 @@ const SearchEvents = () => {
                 className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
-            Bluemeet
+                Bluemeet
               </Link>
               <button
                 className="navbar-toggler"
-               
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
@@ -339,7 +332,10 @@ const SearchEvents = () => {
               >
                 <span className="navbar-toggler-icon"></span>
               </button>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div
+                className="collapse navbar-collapse"
+                id="navbarSupportedContent"
+              >
                 <form
                   onSubmit={onSubmitTextSearch}
                   className="d-flex special"
@@ -359,7 +355,7 @@ const SearchEvents = () => {
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
-                    <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center" >
+                    <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
                       <AvatarMenu />
                     </div>
                   ) : (
@@ -368,7 +364,6 @@ const SearchEvents = () => {
                       <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signin"
-                         
                           className="btn btn-outline-primary btn-outline-text me-3"
                         >
                           Login
@@ -377,7 +372,6 @@ const SearchEvents = () => {
                       <li className="nav-item" style={{ alignSelf: "center" }}>
                         <Link
                           to="/signup"
-                         
                           className="btn btn-primary btn-outline-text"
                         >
                           Get Started
