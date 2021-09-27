@@ -126,10 +126,12 @@ const Speakers = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
+
+  const communityId = params.communityId;
+
   const { isLoading, error, speakers } = useSelector((state) => {
     return state.speaker;
   });
-  // const communityId = params.communityId;
 
   useEffect(() => {
     dispatch(fetchSessions(id));
@@ -164,7 +166,7 @@ const Speakers = () => {
           let imgUrl = " #";
           const imgKey = image;
           if (imgKey) {
-            imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+            imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
           }
           return (
             <SpeakersDetailsCard
@@ -232,7 +234,7 @@ const Speakers = () => {
               onClick={() => dispatch(fetchEvent(id))}
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

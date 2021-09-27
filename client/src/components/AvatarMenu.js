@@ -318,7 +318,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
             </div>
 
             <div className="refer-and-earn-banner px-3 py-2 mt-3">
-              Refer your network to Evenz — give $5, get $5.
+              Refer your network to Bluemeet — give $5, get $5.
             </div>
 
             {/* Number cards indication credit, signups, and upgrades */}

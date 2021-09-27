@@ -39,6 +39,8 @@ const About = (props) => {
   const params = useParams();
   const id = params.id;
 
+  const communityId = params.communityId;
+
   const onSubmit = () => {
     const JSONData = {
       editingComment: convertToRaw(editorState.getCurrentContent()),
@@ -79,7 +81,7 @@ const About = (props) => {
             <Link
         
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

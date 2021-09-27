@@ -47,7 +47,7 @@ const CommunityPublicPage = () => {
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
-  let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
+  let fullLocation = `https://www.bluemeet.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
   let search_params = url.searchParams;
 

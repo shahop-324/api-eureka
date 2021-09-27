@@ -94,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Booths = () => {
 
+  const params = useParams();
+
+  const communityId = params.communityId;
+
   const { enqueueSnackbar } = useSnackbar();
 
   let options = [{ value: "all", label: "All tags" }];
@@ -115,7 +119,6 @@ const Booths = () => {
   const [term, setTerm] = React.useState("");
   const [tagText, setTagText] = React.useState("");
 
-  const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
 
@@ -144,7 +147,7 @@ const Booths = () => {
       .map((booth) => {
         return (
           <BoothDetailsCard
-            url={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${booth.image}`}
+            url={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
             key={booth._id}
             id={booth._id}
             name={booth.name}
@@ -204,7 +207,7 @@ const Booths = () => {
             <Link
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

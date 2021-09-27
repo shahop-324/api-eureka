@@ -407,7 +407,7 @@ const RequestDemo = ({
                       style={{ color: "grey", fontSize: "13px" }}
                     >
                       By registering, I agree to recieve product updates and
-                      marketing communications from Evenz.
+                      marketing communications from Bluemeet.
                     </label>
                   </div>
                 </div>

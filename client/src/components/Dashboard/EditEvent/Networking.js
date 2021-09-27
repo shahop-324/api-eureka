@@ -24,6 +24,9 @@ const Networking = () => {
 
   const params = useParams();
   const id = params.id;
+
+  const communityId = params.communityId;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const Networking = () => {
             <Link
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}${communityId}`}
               target="_blank"
             >
               Preview Landing Page

@@ -308,7 +308,7 @@ const TicketingPricing = () => {
               <p>
                 Yes, we have special offers for NGOs and Not for profit
                 organisations. For More details please contact contact us at
-                <a href="mailto:contact@evenz.in"> {" "} Contact@evenz.in</a>
+                <a href="mailto:contact@bluemeet.in"> {" "} Contact@bluemeet.in</a>
               </p>{" "}
               {/*  */}
             </details>
@@ -325,16 +325,16 @@ const TicketingPricing = () => {
             <details>
               <summary>
                 What all is needed to get started with posting and selling
-                tickets on evenz platform ?
+                tickets on bluemeet platform ?
               </summary>
               <p>
-                All you need is a free evenz account and you can start posting
+                All you need is a free bluemeet account and you can start posting
                 and selling your tickets to the whole world in few clicks.
               </p>
             </details>
             <details>
               <summary>
-                How much service charge evenz takes on each booking and is this
+                How much service charge bluemeet takes on each booking and is this
                 same for any type of tickets ?
               </summary>
               <p>
@@ -350,7 +350,7 @@ const TicketingPricing = () => {
               </summary>
               <p>
                 You can recieve your payouts simply by adding a payout request
-                from your evenz community dashboard. You will be able track
+                from your Bluemeet community dashboard. You will be able track
                 status of payment and payment is generally processed within 6-18
                 hrs of posting request. We recieve domestic and international
                 payments using Debit cards, credit cards, UPI, Digital Wallets
@@ -362,7 +362,7 @@ const TicketingPricing = () => {
                 I still have some queries ?
               </summary>
               <p>
-                Please reach out to us at <a href="mailto:support@evenz.in"> {" "} support@evenz.in</a>
+                Please reach out to us at <a href="mailto:support@Bluemeet.in"> {" "} support@Bluemeet.in</a>
               </p>
             </details>
           </div>

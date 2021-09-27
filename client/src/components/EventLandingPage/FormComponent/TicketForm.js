@@ -16,7 +16,7 @@ function Alert(props) {
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
-  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -164,10 +164,10 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       key: "rzp_live_bDVAURs4oXxSGi",
       amount: order.data.amount,
       currency: "INR",
-      name: "Evenz",
+      name: "Bluemeet",
       description: `This is a event ticket booking for eventId ${eventId} which is made by user ${userDetails._id} and ticket Id is ${selectedTicket}.`,
       image:
-        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/evenz_logo.png",
+        "https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png",
       order_id: order.data.id,
       handler: function (response) {
         alert(

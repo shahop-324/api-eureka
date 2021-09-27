@@ -463,7 +463,7 @@ export const fetchEvents = (query) => async (dispatch) => {
     // console.log(res.data.data.events);
     dispatch(
       eventActions.FetchEvents({
-        events: res.data.data.events,
+        events: res.data,
       })
     );
   } catch (e) {

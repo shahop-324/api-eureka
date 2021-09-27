@@ -46,13 +46,13 @@ const TopNav = () => {
       >
         <nav className="navbar navbar-expand-xxl navbar-light pt-3">
           <div className="container">
-            {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
+            {/* // TODO LINK Blumeet LOGO EVERYWHERE TO HOME PAGE */}
             <span className="navbar-brand nav-brand-name-home">
               <a
-                href="https://www.evenz.in/home"
+                href="https://www.bluemeet.in/home"
                 style={{ textDecoration: "none", color: "#ffffff" }}
               >
-                Evenz
+                Bluemeet
               </a>
             </span>
 

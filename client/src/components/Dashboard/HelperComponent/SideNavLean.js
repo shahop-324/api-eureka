@@ -1,16 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
-import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
-import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
-import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
-import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
-
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 
@@ -23,19 +17,15 @@ const SideNavLean = ({
   handleIntegrationsClick,
   handleBillingClick,
 }) => {
-  console.log(activeIndex);
 
   return (
     <>
-    
-      {/* className="" */}
       <div
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
         style={{ backgroundColor: "#ffffff" }}
       >
         <div className="main-icon-btn-container py-4">
-        {/* <a data-tip="Overview" className="ms-3"> */}
-        <div
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
               handleGettingStartedClick();
@@ -53,8 +43,6 @@ const SideNavLean = ({
                   (activeIndex === "0" ? "icon-btn-active-h" : "")
                 }
               />
-
-              {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
             </div>
             <div
               className={
@@ -66,9 +54,7 @@ const SideNavLean = ({
               Get started
             </div>
           </div>
-              {/* </a> */}
 
-            {/* <a data-tip="Event Management" className="">   */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -98,7 +84,7 @@ const SideNavLean = ({
               Events
             </div>
           </div>
-  
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -128,11 +114,7 @@ const SideNavLean = ({
               Team
             </div>
           </div>
-          {/* </a> */}
 
-         
-
-          {/* <a data-tip="Queries" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -162,7 +144,6 @@ const SideNavLean = ({
               Video library
             </div>
           </div>
-          
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
@@ -190,10 +171,10 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-             Integrations
+              Integrations
             </div>
           </div>
-         
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -223,13 +204,8 @@ const SideNavLean = ({
               Billing
             </div>
           </div>
-          
-
-    
         </div>
       </div>
-
-      
     </>
   );
 };

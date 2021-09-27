@@ -380,8 +380,8 @@ const CreateNewCommunityForm = (props) => {
                 component={renderInputCheckbox}
                 labelclass="form-check-label form-check-label-consent"
                 labelfor="communityTermsAndConditionsOfUse"
-                label=" I agree to follow Evenz Terms & Conditions and agree that I am
-                authorized to agree to Evenz Terms & Condtions on behalf of my
+                label=" I agree to follow Bluemeet Terms & Conditions and agree that I am
+                authorized to agree to Bluemeet Terms & Condtions on behalf of my
                 organistion"
               />
             </div>
@@ -396,7 +396,7 @@ const CreateNewCommunityForm = (props) => {
                 labelclass="form-check-label form-check-label-consent"
                 labelfor="communityEmailListInclusionConsent"
                 label="I would like to recieve product updates and marketing
-                communications from Evenz."
+                communications from Bluemeet."
               />
             </div>
 

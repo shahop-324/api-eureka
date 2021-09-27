@@ -318,7 +318,7 @@ const EventLandingPage = (props) => {
           bio={`${speaker.designation} at ${speaker.organisation}`}
           speakerSocialHandles={speaker.socialMediaHandles}
           id={speaker.id}
-          imgURL={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+          imgURL={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
         />
       );
     });
@@ -337,7 +337,7 @@ const EventLandingPage = (props) => {
         return (
           <DiamondSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -353,7 +353,7 @@ const EventLandingPage = (props) => {
         return (
           <PlatinumSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -369,7 +369,7 @@ const EventLandingPage = (props) => {
         return (
           <GoldSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -385,7 +385,7 @@ const EventLandingPage = (props) => {
       return (
         <BoothCard
           name={booth.name}
-          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${booth.image}`}
+          image={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
           description={booth.description}
           id={booth.id}
         />
@@ -558,7 +558,7 @@ const EventLandingPage = (props) => {
             <div className="event-landing-main-content">
               <img
                 className="event-landing-poster mb-5"
-                src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
+                src={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
                 alt="event-landing-hero"
               />
               <div className="event-start-end-date mb-4">
@@ -572,7 +572,7 @@ const EventLandingPage = (props) => {
 
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
                   <Avatar
-                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${
+                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${
                       event.createdBy.image ? event.createdBy.image : "#"
                     }`}
                     className="hosted-by-community-logo"
@@ -907,7 +907,7 @@ const EventLandingPage = (props) => {
               <div className="event-info-card-2 px-4 py-4 mb-5">
                 <div className="hosted-by-community-grid  mb-4">
                   <Avatar
-                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
+                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.createdBy.image}`}
                     // className="hosted-by-community-logo"
                     style={{ height: "4rem", width: "4rem" }}
                     alt={event.createdBy.name}

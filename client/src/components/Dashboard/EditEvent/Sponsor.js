@@ -112,6 +112,8 @@ const Sponsors = () => {
   const dispatch = useDispatch();
   const id = params.id;
 
+  const communityId = params.communityId;
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       dispatch(fetchSponsors(id, term, sponsorStatus));
@@ -141,7 +143,7 @@ const Sponsors = () => {
       .map((sponsor) => {
         return (
           <SponsorDetailsCard
-            url={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            url={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
             key={sponsor._id}
             id={sponsor._id}
             organisationName={sponsor.organisationName}
@@ -200,7 +202,7 @@ const Sponsors = () => {
             <Link
        
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

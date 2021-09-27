@@ -18,7 +18,7 @@ const Footer = (props) => {
       <footer>
         <div className="container footer-container py-3">
           <div className="brand-logo-and-copyright px-3 py-3">
-            <span className="navbar-brand nav-brand-name-home">Evenz</span>
+            <span className="navbar-brand nav-brand-name-home">Bluemeet</span>
             <div
               className="copy-right-symbol mb-4"
               style={{ color: "#ffffff", fontSize: "22px" }}
@@ -158,7 +158,7 @@ const Footer = (props) => {
               </div>
               <div className="shareon-icon p-3 me-3">
                 <a
-                  href="https://www.linkedin.com/company/evenz-in"
+                  href="https://www.linkedin.com/company/bluemeet-in"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -168,7 +168,7 @@ const Footer = (props) => {
 
               <div className="shareon-icon p-3 me-3">
                 <a
-                  href="https://twitter.com/EvenzOfficial"
+                  href="https://twitter.com/BluemeetOfficial"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -178,7 +178,7 @@ const Footer = (props) => {
 
               <div className="shareon-icon p-3 me-3">
                 <a
-                  href="https://www.instagram.com/evenzofficial/"
+                  href="https://www.instagram.com/bluemeetofficial/"
                   target="_blank"
                   rel="noreferrer"
                 >

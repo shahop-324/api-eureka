@@ -96,6 +96,8 @@ const Sessions = () => {
   const dispatch = useDispatch();
   const id = params.id;
 
+  const communityId = params.communityId;
+
   // const communityId = params.communityId;
   // useEffect(() => {
   //   dispatch(fetchParticularEventOfCommunity(communityId));
@@ -195,7 +197,7 @@ const Sessions = () => {
             <Link
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

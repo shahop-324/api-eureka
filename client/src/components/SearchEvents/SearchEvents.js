@@ -64,7 +64,7 @@ const SearchEvents = () => {
   const [text, setText] = useState("");
   const [priceFilter, setPriceFilter] = useState("Free");
 
-  let fullLocation = `https://www.evenz.in/${location.pathname}${location.search}`;
+  let fullLocation = `https://www.bluemeet.in/${location.pathname}${location.search}`;
   let url = new URL(fullLocation);
   let search_params = url.searchParams;
 
@@ -222,7 +222,7 @@ const SearchEvents = () => {
 
       return (
         <EventCard
-          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
+          image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
           date={formatedDate}
           endDate={formatedEndDate}
           id={event.id}
@@ -326,7 +326,7 @@ const SearchEvents = () => {
                 className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
-                Evenz
+            Bluemeet
               </Link>
               <button
                 className="navbar-toggler"

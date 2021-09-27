@@ -33,11 +33,11 @@ const TermsOfService = () => {
                 1. Acceptance of terms
               </div>
               <div className="term-description">
-                These Evenz Terms of Service (“Terms”) are an agreement between
+                These Bluemeet Terms of Service (“Terms”) are an agreement between
                 you, whether personally or on behalf of an entity (“user,” “you”
-                or “your”) and Gather Wholesale, Inc. d/b/a Evenz (“Company,”
+                or “your”) and Gather Wholesale, Inc. d/b/a Bluemeet (“Company,”
                 “we,” “us” or “our”), concerning your access to and use of the
-                website located at https://www.evenz.in, the Evenz virtual
+                website located at https://www.Bluemeet.in, the Bluemeet virtual
                 meeting platform and any other products or services provided on
                 or through our web (collectively, the “Services”). Please read
                 these Terms carefully before you start to use the Services. The
@@ -204,7 +204,7 @@ const TermsOfService = () => {
                 addresses, personal information, and any contents of the
                 Services where it is legally compelled to do so. Please read the
                 Company Privacy Policy, available at
-                https://www.evenz.in/privacy-policy relating to our collection,
+                https://www.Bluemeet.in/privacy-policy relating to our collection,
                 use, storage and disclosure of your personal information.
               </div>
             </div>
