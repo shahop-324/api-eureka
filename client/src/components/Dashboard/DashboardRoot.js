@@ -65,66 +65,37 @@ const DashboardRoot = () => {
     };
   }, [dispatch]);
 
-  const handleOverviewClick = () => {
+  const handleGettingStartedClick = () => {
     dispatch(navigationIndexForCommunityDash(0));
-    history.push(`/user/${userId}/community/overview/${id}`);
+    history.push(`/user/${userId}/community/getting-started/${id}`);
   };
 
-  const handleEventManagementClick = () => {
+  const handleEventsClick = () => {
+    console.log("handle event was clicked")
     dispatch(navigationIndexForCommunityDash(1));
     history.push(
       `/user/${userId}/community/event-management/${id}/?limit=5&page=1`
     );
   };
 
-  const handleReviewsClick = () => {
+  const handleTeamClick = () => {
     dispatch(navigationIndexForCommunityDash(2));
-    history.push(`/user/${userId}/community/reviews/${id}`);
+    history.push(`/user/${userId}/community/team/${id}`);
   };
 
-  const handleQueriesClick = () => {
+  const handleVideoLibraryClick = () => {
     dispatch(navigationIndexForCommunityDash(3));
-    history.push(`/user/${userId}/community/queries/${id}`);
-  };
-
-  const handleRegistrationsClick = () => {
-    dispatch(navigationIndexForCommunityDash(4));
-    history.push(`/user/${userId}/community/registrations/${id}`);
-  };
-
-  const handleCouponsClick = () => {
-    dispatch(navigationIndexForCommunityDash(5));
-    history.push(`/user/${userId}/community/coupons/${id}`);
-  };
-
-  const handleRecordingsClick = () => {
-    dispatch(navigationIndexForCommunityDash(6));
-    history.push(`/user/${userId}/community/recordings/${id}`);
+    history.push(`/user/${userId}/community/video-library/${id}`);
   };
 
   const handleIntegrationsClick = () => {
-    dispatch(navigationIndexForCommunityDash(7));
-    history.push(`/user/${userId}/community/integrations/${id}`);
-  };
-
-  const handleSchedulerClick = () => {
-    dispatch(navigationIndexForCommunityDash(8));
+    dispatch(navigationIndexForCommunityDash(4));
     history.push(`/user/${userId}/community/integrations/${id}`);
   };
 
   const handleBillingClick = () => {
-    dispatch(navigationIndexForCommunityDash(9));
+    dispatch(navigationIndexForCommunityDash(5));
     history.push(`/user/${userId}/community/billing/${id}`);
-  };
-
-  const handleTeamManagementClick = () => {
-    dispatch(navigationIndexForCommunityDash(10));
-    history.push(`/user/${userId}/community/team-management/${id}`);
-  };
-
-  const handleRevenueManagementClick = () => {
-    dispatch(navigationIndexForCommunityDash(11));
-    history.push(`/user/${userId}/community/revenue-management/${id}`);
   };
 
   let currentIndex = useSelector(
@@ -132,63 +103,30 @@ const DashboardRoot = () => {
   );
   currentIndex = currentIndex.toString();
 
-  console.log(currentIndex);
-
-  // if (error) {
-  //   dispatch(errorTrackerForFetchCommunity());
-  //   throw new Error(error);
-  // }
-
   return (
     <>
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
-        <Topnav
-          activeIndex={currentIndex}
-          handleOverviewClick={handleOverviewClick}
-          handleEventManagementClick={handleEventManagementClick}
-          handleReviewsClick={handleReviewsClick}
-          handleQueriesClick={handleQueriesClick}
-          handleRegistrationsClick={handleRegistrationsClick}
-          handleCouponsClick={handleCouponsClick}
-          handleRecordingsClick={handleRecordingsClick}
-          handleIntegrationsClick={handleIntegrationsClick}
-          handleSchedulerClick={handleSchedulerClick}
-          handleBillingClick={handleBillingClick}
-          handleTeamManagementClick={handleTeamManagementClick}
-          handleRevenueManagementClick={handleRevenueManagementClick}
-        />
+        <Topnav />
         <div className="dashboard-body">
           {/* <div className="side-nav-container"> */}
           <SideNav
             activeIndex={currentIndex}
-            handleOverviewClick={handleOverviewClick}
-            handleEventManagementClick={handleEventManagementClick}
-            handleReviewsClick={handleReviewsClick}
-            handleQueriesClick={handleQueriesClick}
-            handleRegistrationsClick={handleRegistrationsClick}
-            handleCouponsClick={handleCouponsClick}
-            handleRecordingsClick={handleRecordingsClick}
+            handleGettingStartedClick={handleGettingStartedClick}
+            handleEventsClick={handleEventsClick}
+            handleTeamClick={handleTeamClick}
+            handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
-            handleSchedulerClick={handleSchedulerClick}
             handleBillingClick={handleBillingClick}
-            handleTeamManagementClick={handleTeamManagementClick}
-            handleRevenueManagementClick={handleRevenueManagementClick}
           />
           <SideNavLean
             activeIndex={currentIndex}
-            handleOverviewClick={handleOverviewClick}
-            handleEventManagementClick={handleEventManagementClick}
-            handleReviewsClick={handleReviewsClick}
-            handleQueriesClick={handleQueriesClick}
-            handleRegistrationsClick={handleRegistrationsClick}
-            handleCouponsClick={handleCouponsClick}
-            handleRecordingsClick={handleRecordingsClick}
+            handleGettingStartedClick={handleGettingStartedClick}
+            handleEventsClick={handleEventsClick}
+            handleTeamClick={handleTeamClick}
+            handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
-            handleSchedulerClick={handleSchedulerClick}
             handleBillingClick={handleBillingClick}
-            handleTeamManagementClick={handleTeamManagementClick}
-            handleRevenueManagementClick={handleRevenueManagementClick}
           />
 
           <div className="main-content-wrapper" style={{ minHeight: "90vh" }}>
@@ -211,74 +149,35 @@ const DashboardRoot = () => {
                 case "2":
                   return (
                     <ErrorBoundriesReviews>
-                      <Reviews />
+                      <TeamManagement />
                     </ErrorBoundriesReviews>
                   );
 
                 case "3":
                   return (
                     <ErrorBoundriesQueries>
-                      <Queries />
+                      <div>This is video library</div>
+                      {/* <VideoLibrary /> */}
                     </ErrorBoundriesQueries>
                   );
 
                 case "4":
                   return (
                     <ErrorBoundriesRegistrations>
-                      <Registrations />
+                      <Integrations />
                     </ErrorBoundriesRegistrations>
                   );
 
                 case "5":
                   return (
                     <ErrorBoundriesCoupons>
-                      <Coupons />
+                      <Billing />
                     </ErrorBoundriesCoupons>
                   );
 
-                case "6":
-                  return (
-                    <ErrorBoundriesRecordings>
-                      <Recordings />
-                    </ErrorBoundriesRecordings>
-                  );
-
-                case "7":
-                  return (
-                    <ErrorBoundriesRecordings>
-                      <Integrations />
-                    </ErrorBoundriesRecordings>
-                  );
-                case "8":
-                  return (
-                    <ErrorBoundriesRecordings>
-                      <Scheduler />
-                    </ErrorBoundriesRecordings>
-                  );
-
-                case "9":
-                  return (
-                    <ErrorBoundriesBilling>
-                      <Billing />
-                    </ErrorBoundriesBilling>
-                  );
-
-                case "10":
-                  return (
-                    <ErrorBoundriesTeamManagement>
-                      <TeamManagement />
-                    </ErrorBoundriesTeamManagement>
-                  );
-
-                case "11":
-                  return (
-                    <ErrorBoundriesRevenueManagement>
-                      <RevenueManagement />
-                    </ErrorBoundriesRevenueManagement>
-                  );
-
+                
                 default:
-                  return <div>You are a community.</div>;
+                  return <div>This is community management dashboard.</div>;
               }
             })()}
           </div>

@@ -437,7 +437,7 @@ export const communitySignIn = (id, userId) => async (dispatch, getState) => {
       })
     );
 
-    window.location.href = `/user/${userId}/community/overview/${res.communityDoc.id}`;
+    window.location.href = `/user/${userId}/community/getting-started/${res.communityDoc.id}`;
   } catch (e) {
     dispatch(communityActions.hasError(e.message));
   }

@@ -174,42 +174,59 @@ const SideDrawerHeading = styled.div`
 `;
 
 const ButtonFilled = styled.div`
-border-radius: 5px;
+  border-radius: 5px;
 
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #ffffff;
+  background-color: #152d35;
+  border: 1px solid #152d35;
+  padding: 8px 12px;
 
-font-weight: 500;
-font-family: "Ubuntu";
-font-size: 0.8rem;
-color: #ffffff;
-background-color: #152d35;
-border: 1px solid #152d35;
-padding: 8px 12px;
-
-&:hover {
-  background-color: #FFFFFF;
-  color: #152d35;
-  cursor: pointer;
-}
-`
+  &:hover {
+    background-color: #ffffff;
+    color: #152d35;
+    cursor: pointer;
+  }
+`;
 
 const ButtonOutlined = styled.div`
-border-radius: 5px;
+  border-radius: 5px;
 
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #152d35;
+  background-color: #ffffff;
+  border: 1px solid #152d35;
+  padding: 8px 12px;
 
-font-weight: 500;
-font-family: "Ubuntu";
-font-size: 0.8rem;
-color: #152d35;
-background-color: #FFFFFF;
-border: 1px solid #152d35;
-padding: 8px 12px;
+  &:hover {
+    background-color: #152d35;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`;
 
-&:hover {
-  background-color: #152d35;
-  color: #FFFFFF;
-  cursor: pointer;
-}
-`
+const AvatarMenuListItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #212121;
+
+  border: 10px;
+
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: "Ubuntu";
+
+  &:hover {
+    /* background-color: #212121; */
+    cursor: pointer;
+    color: #152d35;
+  }
+`;
 
 export {
   FormLabel,
@@ -232,5 +249,6 @@ export {
   TimeAgoText,
   SideDrawerHeading,
   ButtonFilled,
-  ButtonOutlined
+  ButtonOutlined,
+  AvatarMenuListItem,
 };

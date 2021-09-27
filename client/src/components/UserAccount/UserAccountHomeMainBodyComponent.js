@@ -33,6 +33,20 @@ const EventCard = () => {
             <FavoriteIcon className="favourite-icon" />
           </Fab>
         </div>
+        <div className="favourite-icon">
+          <Fab
+            aria-label="like"
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "90px",
+              zIndex: "90",
+            }}
+            size="small"
+          >
+            <FavoriteIcon className="favourite-icon" />
+          </Fab>
+        </div>
         <EventCardImg
           src={
             "https://images.unsplash.com/photo-1511578314322-379afb476865?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8ZXZlbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"

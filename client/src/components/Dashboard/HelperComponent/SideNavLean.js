@@ -11,18 +11,17 @@ import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRoun
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
 
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+
 const SideNavLean = ({
-    activeIndex, 
-    handleCloseDrawer,
-    handleOverviewClick,
-    handleEventManagementClick,
-    handleReviewsClick,
-    handleQueriesClick,
-    handleRegistrationsClick,
-    handleCouponsClick,
-    handleIntegrationsClick,
-    handleBillingClick,
-    handleTeamManagementClick,
+  activeIndex,
+  handleGettingStartedClick,
+  handleEventsClick,
+  handleTeamClick,
+  handleVideoLibraryClick,
+  handleIntegrationsClick,
+  handleBillingClick,
 }) => {
   console.log(activeIndex);
 
@@ -39,7 +38,7 @@ const SideNavLean = ({
         <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleOverviewClick();
+              handleGettingStartedClick();
             }}
           >
             <div
@@ -64,7 +63,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Dashboard
+              Get started
             </div>
           </div>
               {/* </a> */}
@@ -73,7 +72,7 @@ const SideNavLean = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleEventManagementClick();
+              handleEventsClick();
             }}
           >
             <div
@@ -96,17 +95,14 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Event Management
+              Events
             </div>
           </div>
-          {/* </a> */}
-
-          
-          {/* <a data-tip="Reviews" className=""> */}
+  
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleReviewsClick();
+              handleTeamClick();
             }}
           >
             <div
@@ -115,7 +111,7 @@ const SideNavLean = ({
                 (activeIndex === "2" ? "active-wrapper-h" : "")
               }
             >
-              <RateReviewOutlinedIcon
+              <PeopleOutlineIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "2" ? "icon-btn-active-h" : "")
@@ -129,7 +125,7 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Reviews
+              Team
             </div>
           </div>
           {/* </a> */}
@@ -140,7 +136,7 @@ const SideNavLean = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleQueriesClick();
+              handleVideoLibraryClick();
             }}
           >
             <div
@@ -149,7 +145,7 @@ const SideNavLean = ({
                 (activeIndex === "3" ? "active-wrapper-h" : "")
               }
             >
-              <AssignmentIndIcon
+              <VideocamOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "3" ? "icon-btn-active-h" : "")
@@ -163,21 +159,15 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Queries
+              Video library
             </div>
           </div>
-          {/* </a> */}
-
-
           
-
-
-          {/* <a data-tip="Registrations" className=""> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleRegistrationsClick();
+              handleIntegrationsClick();
             }}
           >
             <div
@@ -186,7 +176,7 @@ const SideNavLean = ({
                 (activeIndex === "4" ? "active-wrapper-h" : "")
               }
             >
-              <HowToRegOutlinedIcon
+              <SettingsEthernetRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "4" ? "icon-btn-active-h" : "")
@@ -200,21 +190,14 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Registrations
+             Integrations
             </div>
           </div>
-          {/* </a> */}
-
-
-          
-
-
-          
-          {/* <a data-tip="Coupons" className=""> */}
+         
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-                handleCouponsClick();
+              handleBillingClick();
             }}
           >
             <div
@@ -223,7 +206,7 @@ const SideNavLean = ({
                 (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
-              <LocalOfferOutlinedIcon
+              <PaymentOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -237,225 +220,16 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Coupons
-            </div>
-          </div>
-          {/* </a> */}
-
-          
-
-          {/* 
-          // <a data-tip="Recordings" className="">
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={() => {
-                handleRecordingsClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "6" ? "active-wrapper-h" : "")
-              }
-            >
-              <VideocamOutlinedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "6" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "6" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Recordings
-            </div>
-          </div>
-          // </a>
-          */}
-
-
-
-
-{/* <a data-tip="Integrations" className=""> */}
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={() => {
-                handleIntegrationsClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "7" ? "active-wrapper-h" : "")
-              }
-            >
-              <SettingsEthernetRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "7" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "7" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Integrations
-            </div>
-          </div>
-{/* </a> */}
-
-
-
-
-
-
-
-          {/* 
-          <a data-tip="Scheduler" className="">
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={() => {
-                handleSchedulerClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "8" ? "active-wrapper-h" : "")
-              }
-            >
-              <ScheduleRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "8" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "8" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Scheduler
-            </div>
-          </div> 
-          </a>
-          */}
-
-{/* <a data-tip="Billing" className=""> */}
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={() => {
-                handleBillingClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "9" ? "active-wrapper-h" : "")
-              }
-            >
-              <PaymentOutlinedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "9" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "9" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
               Billing
             </div>
           </div>
+          
 
-          {/* </a> */}
-
-          {/* <a data-tip="Team Management" className=""> */}
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-5"
-            onClick={() => {
-                handleTeamManagementClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "10" ? "active-wrapper-h" : "")
-              }
-            >
-              <PeopleOutlinedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "10" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "10" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Team Management
-            </div>
-          </div>
-          {/* </a> */}
-
-
-          {/*
-          <a data-tip="Payouts" className="">
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-4"
-            onClick={() => {
-                handleRevenueManagementClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "11" ? "active-wrapper-h" : "")
-              }
-            >
-              <AttachMoneyRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "11" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Payouts
-            </div>
-          </div>
-          </a>
-          */}
+    
         </div>
       </div>
 
-      {/* <ReactTooltip place="right" type="info" effect="solid" backgroundColor="#538BF7"/> */}
+      
     </>
   );
 };

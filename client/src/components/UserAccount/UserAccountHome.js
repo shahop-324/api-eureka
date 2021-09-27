@@ -33,14 +33,20 @@ import {
   NotificationPaper,
   NotificationBody,
   NotificationHeadline,
+  AvatarMenuListItem,
   TimeAgoText,
 } from "./Elements";
+
 import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
 
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
+
 const trigger = (
   <span>
-    <Avatar src={Faker.image.avatar()} />
+    <Avatar src={Faker.image.avatar()} className="mb-3" />
   </span>
 );
 
@@ -54,7 +60,7 @@ const WelcomeNotification = () => {
             Welcome to bluemeet!
           </NotificationHeadline>
           <NotificationBody style={{ wordWrap: "break-word", width: "130px" }}>
-            Discover ways to use BlueMeet 
+            Discover ways to use BlueMeet
           </NotificationBody>
         </div>
       </NotificationPaper>
@@ -62,23 +68,63 @@ const WelcomeNotification = () => {
   );
 };
 
+const AvatarMenuItem = ({ text, icon }) => {
+  return (
+    <>
+      <AvatarMenuListItem>
+        {icon}
+        <span>{text}</span>
+      </AvatarMenuListItem>
+    </>
+  );
+};
+
 const options = [
   {
-    key: "user",
+    key: "profile",
     text: (
-      <span>
-        Signed in as <strong>Bob Smith</strong>
-      </span>
+      <AvatarMenuItem
+        text={"Your Profile"}
+        icon={<HomeRoundedIcon className="me-3" />}
+      />
     ),
-    disabled: true,
   },
-  { key: "profile", text: "Your Profile" },
-  { key: "stars", text: "Your Stars" },
-  { key: "explore", text: "Explore" },
-  { key: "integrations", text: "Integrations" },
-  { key: "help", text: "Help" },
-  { key: "settings", text: "Settings" },
-  { key: "sign-out", text: "Sign Out" },
+  {
+    key: "explore",
+    text: (
+      <AvatarMenuItem
+        text={"Explore"}
+        icon={<ExploreRoundedIcon className="me-3" />}
+      />
+    ),
+  },
+  {
+    key: "referral",
+    text: (
+      <AvatarMenuItem
+        text={"Referral & Credit"}
+        icon={<AttachMoneyRoundedIcon className="me-3" />}
+      />
+    ),
+  },
+  {
+    key: "help",
+    text: (
+      <AvatarMenuItem
+        text={"Help"}
+        icon={<HelpOutlineRoundedIcon className="me-3" />}
+      />
+    ),
+  },
+  {
+    key: "sign-out",
+    text: (
+      <AvatarMenuItem
+        text={"Sign out"}
+        icon={<ExitToAppRoundedIcon className="me-3" />}
+      />
+    ),
+  },
 ];
 
 const DropdownTriggerExample = () => (
@@ -105,7 +151,6 @@ const notificationOptions = [
     key: "welcome",
     text: <WelcomeNotification />,
   },
-  
 ];
 
 const notificationTrigger = (
@@ -155,11 +200,11 @@ const UserAccountHome = () => {
 
   const handleCloseWhatsNew = () => {
     setOpenWhatsNew(false);
-  }
+  };
 
   const handleCloseHelp = () => {
     setOpenHelp(false);
-  }
+  };
 
   const dispatch = useDispatch();
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -246,16 +291,21 @@ const UserAccountHome = () => {
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
               <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
-                <IconButton onClick={() => {
-                  setOpenHelp(true)
-                }} className="me-2">
+                <IconButton
+                  onClick={() => {
+                    setOpenHelp(true);
+                  }}
+                  className="me-2"
+                >
                   <HelpOutlineRoundedIcon />
                 </IconButton>
                 <NotificationsTrigger />
 
-                <BtnOutlinedWithIcon onClick={() => {
-                  setOpenWhatsNew(true);
-                }}>
+                <BtnOutlinedWithIcon
+                  onClick={() => {
+                    setOpenWhatsNew(true);
+                  }}
+                >
                   {/* <ExploreRoundedIcon className="me-3" /> */}
                   What's new
                 </BtnOutlinedWithIcon>
@@ -295,8 +345,11 @@ const UserAccountHome = () => {
           </div>
         </div>
       )}
-      <HelpSideDrawer openHelp={openHelp} handleCloseHelp={handleCloseHelp}/>
-      <WhatsNew openWhatsNew={openWhatsNew} handleCloseWhatsNew={handleCloseWhatsNew} />
+      <HelpSideDrawer openHelp={openHelp} handleCloseHelp={handleCloseHelp} />
+      <WhatsNew
+        openWhatsNew={openWhatsNew}
+        handleCloseWhatsNew={handleCloseWhatsNew}
+      />
     </>
   );
 };

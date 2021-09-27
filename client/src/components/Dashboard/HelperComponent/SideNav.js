@@ -13,40 +13,33 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
-import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
-import QuestionAnswerOutlinedIcon from "@material-ui/icons/QuestionAnswerOutlined";
-import HowToRegOutlinedIcon from "@material-ui/icons/HowToRegOutlined";
-import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
+
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
-import PeopleOutlinedIcon from "@material-ui/icons/PeopleOutlined";
 import { useDispatch } from "react-redux";
 import { createCommunityFeedback } from "./../../../actions";
 
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const SideNav = ({
-  activeIndex, 
-  handleCloseDrawer,
-  handleOverviewClick,
-  handleEventManagementClick,
-  handleReviewsClick,
-  handleQueriesClick,
-  handleRegistrationsClick,
-  handleCouponsClick,
+  activeIndex,
+  handleGettingStartedClick,
+  handleEventsClick,
+  handleTeamClick,
+  handleVideoLibraryClick,
   handleIntegrationsClick,
   handleBillingClick,
-  handleTeamManagementClick,
-
 }) => {
   const dispatch = useDispatch();
-  
 
   const [feedbackText, setFeedbackText] = React.useState(null);
 
@@ -76,8 +69,7 @@ const SideNav = ({
       <div className="side-nav-wrapper py-4">
         <div
           onClick={() => {
-            handleOverviewClick();
-            handleCloseDrawer && handleCloseDrawer();
+            handleGettingStartedClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -98,7 +90,7 @@ const SideNav = ({
               (activeIndex === "0" ? "btn-text-active-d" : " ")
             }
           >
-            Dashboard
+            Get started
           </div>
         </div>
 
@@ -106,8 +98,7 @@ const SideNav = ({
 
         <div
           onClick={() => {
-            handleEventManagementClick();
-            handleCloseDrawer && handleCloseDrawer();
+            handleEventsClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -128,14 +119,13 @@ const SideNav = ({
               (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
-            Event Management
+            Events
           </div>
         </div>
 
         <div
           onClick={() => {
-            handleReviewsClick();
-            handleCloseDrawer && handleCloseDrawer();
+            handleTeamClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -148,7 +138,7 @@ const SideNav = ({
               (activeIndex === "2" ? "btn-icon-active-d" : " ")
             }
           >
-            <RateReviewOutlinedIcon style={{ fontSize: 26 }} />
+            <PeopleOutlineIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -156,14 +146,13 @@ const SideNav = ({
               (activeIndex === "2" ? "btn-text-active-d" : " ")
             }
           >
-            Reviews
+            Team
           </div>
         </div>
 
         <div
           onClick={() => {
-            handleQueriesClick();
-            handleCloseDrawer && handleCloseDrawer();
+            handleVideoLibraryClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -176,7 +165,7 @@ const SideNav = ({
               (activeIndex === "3" ? "btn-icon-active-d" : " ")
             }
           >
-            <QuestionAnswerOutlinedIcon style={{ fontSize: 26 }} />
+            <VideocamOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -184,15 +173,13 @@ const SideNav = ({
               (activeIndex === "3" ? "btn-text-active-d" : " ")
             }
           >
-            Queries
+            Video library
           </div>
         </div>
 
         <div
           onClick={() => {
-            handleRegistrationsClick();
-
-            handleCloseDrawer && handleCloseDrawer();
+            handleIntegrationsClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -205,7 +192,7 @@ const SideNav = ({
               (activeIndex === "4" ? "btn-icon-active-d" : " ")
             }
           >
-            <HowToRegOutlinedIcon style={{ fontSize: 26 }} />
+            <SettingsEthernetRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -213,15 +200,13 @@ const SideNav = ({
               (activeIndex === "4" ? "btn-text-active-d" : " ")
             }
           >
-            Registrations
+            Integrations
           </div>
         </div>
 
         <div
           onClick={() => {
-            handleCouponsClick();
-
-            handleCloseDrawer && handleCloseDrawer();
+            handleBillingClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -234,7 +219,7 @@ const SideNav = ({
               (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
-            <LocalOfferOutlinedIcon style={{ fontSize: 26 }} />
+            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -242,179 +227,11 @@ const SideNav = ({
               (activeIndex === "5" ? "btn-text-active-d" : " ")
             }
           >
-            Coupons
-          </div>
-        </div>
-
-        {/* <div
-          onClick={() => {
-            handleRecordingsClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "6" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "6" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <VideocamOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "6" ? "btn-text-active-d" : " ")
-            }
-          >
-            Recordings
-          </div>
-        </div> */}
-        <div
-          onClick={() => {
-            handleIntegrationsClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "7" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "7" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <SettingsEthernetRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "7" ? "btn-text-active-d" : " ")
-            }
-          >
-            Integrations
-          </div>
-        </div>
-        {/* <div
-          onClick={() => {
-            handleSchedulerClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "8" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "8" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <ScheduleRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "8" ? "btn-text-active-d" : " ")
-            }
-          >
-            Scheduler
-          </div>
-        </div> */}
-
-        <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
-
-        <div
-          onClick={() => {
-            handleBillingClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "9" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "9" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "9" ? "btn-text-active-d" : " ")
-            }
-          >
             Billing
           </div>
         </div>
 
-        <div
-          onClick={() => {
-            handleTeamManagementClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "10" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "10" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <PeopleOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "10" ? "btn-text-active-d" : " ")
-            }
-          >
-            Team Management
-          </div>
-        </div>
-
-        {/* // ! We don't need to fall in administrative position managing payments for every community. */}
-
-        {/* <div
-          onClick={() => {
-            handleRevenueManagementClick();
-            handleCloseDrawer && handleCloseDrawer();
-          }}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "11" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "11" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <AttachMoneyRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "11" ? "btn-text-active-d" : " ")
-            }
-          >
-            Payouts
-          </div>
-        </div> */}
+        <div className="sidenav-group-headline ps-4 pe-4 my-4">Others</div>
 
         <div
           onClick={() => {
@@ -470,7 +287,6 @@ const SideNav = ({
           <Button
             onClick={() => {
               handleClose();
-              handleCloseDrawer && handleCloseDrawer();
             }}
             color="primary"
           >
@@ -489,7 +305,6 @@ const SideNav = ({
                 });
               }
               handleClose();
-              handleCloseDrawer && handleCloseDrawer();
             }}
             color="primary"
           >
@@ -497,7 +312,6 @@ const SideNav = ({
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}

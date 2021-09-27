@@ -113,9 +113,21 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId" exact component={CheckConnectedStatus} />
-              <Route path="/onboarded-successfully/user/:userId/community/:communityId/account/:accountId" exact component={SuccessfullyConnected} />
-              <Route path="/not-onboarded-yet/user/:userId/community/:communityId/account/:accountId" exact component={NotConnected} />
+              <Route
+                path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={CheckConnectedStatus}
+              />
+              <Route
+                path="/onboarded-successfully/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={SuccessfullyConnected}
+              />
+              <Route
+                path="/not-onboarded-yet/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={NotConnected}
+              />
               <Route path="/home" exact component={Home} />
               <Route path="/" exact component={Home} />
               <Route path="/signup" exact component={Signup} />
@@ -380,51 +392,33 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/overview/:id"
+                  path="/user/:userId/community/getting-started/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/event-management/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/reviews/:id"
+                  // /user/${userId}/community/events/${id}/?limit=5&page=1
                   exact
                   component={DashboardRoot}
                 />
               )}
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/queries/:id"
+                  path="/user/:userId/community/team/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/registrations/:id"
+                  path="/user/:userId/community/video-library/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/recordings/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/integrations/:id"
@@ -432,34 +426,9 @@ class App extends React.Component {
                   component={DashboardRoot}
                 />
               )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/coupons/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/billing/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/team-management/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/revenue-management/:id"
                   exact
                   component={DashboardRoot}
                 />
