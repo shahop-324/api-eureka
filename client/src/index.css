@@ -273,6 +273,14 @@ code {
   }
 }
 
+/* @keyframes navLink {
+  0%{
+    border-bottom: 2px solid #ffffff;
+  }
+
+
+} */
+
 .menulist-community-tab:hover {
   cursor: pointer;
 }

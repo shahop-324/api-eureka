@@ -9,6 +9,11 @@ import EditSpeaker from "./FormComponents/EditSpeakersForms/EditSpeaker";
 import DeleteSpeaker from "./FormComponents/EditSpeakersForms/DeleteSpeaker";
 import { fetchParticularSpeakerOfEvent } from "../../../actions";
 import { useDispatch } from "react-redux";
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import MailIcon from '@mui/icons-material/Mail';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import SpeakerPreview from "./FormComponents/EditSpeakersForms/SpeakerPerview";
 // import { useDispatch } from "react-redux";
 // import { fetchParticularSpeakerOfEvent } from "../../../actions";
 
@@ -20,11 +25,17 @@ const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
 
+  const [openPreview, setOpenPreview] = React.useState(false);
+
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   // const dispatch = useDispatch();
   const handleDeleteSpeaker = () => {
     setOpenDeleteDialog(true);
   };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
+  }
 
   const handleCloseDeleteSpeaker = () => {
     setOpenDeleteDialog(false);
@@ -45,7 +56,7 @@ const dispatch = useDispatch();
   
   return (
     <>
-      <div className="session-field-value-container">
+      <div className="session-field-value-container" style={{gridTemplateColumns: "2fr 2.5fr 3fr 2.5fr 2.5fr "}}>
         <div
           className="event-card-field "
           style={{
@@ -66,7 +77,7 @@ const dispatch = useDispatch();
             The Craft Workshop
           </div> */}
         </div>
-        <div
+        {/* <div
           className="event-visibility-field"
           style={{
             width: "100%",
@@ -76,10 +87,10 @@ const dispatch = useDispatch();
             className="event-field-label registrations-field-label"
             style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500" }}
           >
-            {/* {headline} */}
+           
             {truncateText(headline, 25)}
           </div>
-        </div>
+        </div> */}
         <div
           className="event-status-field"
           style={{
@@ -119,6 +130,20 @@ const dispatch = useDispatch();
               })}
             </div>
           </div>
+          
+        </div>
+        <div
+          className="event-visibility-field"
+          style={{
+            width: "100%",
+          }}
+        >
+          <div
+            className="event-field-label registrations-field-label"
+            style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500" }}
+          >
+            {"Sent"}
+          </div>
         </div>
         <div className="event-registrations-field">
           <div
@@ -135,6 +160,27 @@ const dispatch = useDispatch();
                 <DeleteRoundedIcon />
               </IconButton>
             </div>
+            <div onClick={() => {
+              setOpenPreview(true)
+            }}>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+                <VisibilityIcon style={{color: "#A4C513"}} />
+              </IconButton>
+            </div>
+            <div onClick={() => {
+              alert("Email invitation sent!")
+            }}>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+                <MailIcon style={{color: "#1351C5"}} />
+              </IconButton>
+            </div>
+            <div onClick={() => {
+              alert("Invitation Link copied to clipboard!")
+            }}>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+                <ContentCopyIcon style={{color: "#A113C5"}} />
+              </IconButton>
+            </div>
           </div>
         </div>
       </div>
@@ -148,6 +194,7 @@ const dispatch = useDispatch();
         handleCloseDeleteSpeaker={handleCloseDeleteSpeaker}
         id={id}
       />
+      <SpeakerPreview open={openPreview} handleClose={handleClosePreview} />
     </>
   );
 };

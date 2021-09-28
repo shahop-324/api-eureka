@@ -99,7 +99,7 @@ const Topnav = ({
 
   let imgUrl;
   if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   } else {
     imgUrl = imgKey;
   }
@@ -148,10 +148,10 @@ const Topnav = ({
               />
             </div> */}
             <a
-              href="https://www.evenz.in/home"
+              href="https://www.bluemeet.in/home"
               style={{ textDecoration: "none", color: "#538BF7" }}
             >
-              Evenz
+              Bluemeet
             </a>
           </div>
         </div>

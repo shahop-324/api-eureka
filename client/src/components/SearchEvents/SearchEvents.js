@@ -10,7 +10,11 @@ import history from "../../history";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import { errorTrackerForFetchEvents, fetchEvents } from "../../actions/index";
+import {
+  errorTrackerForFetchEvents,
+  fetchEvents,
+  fetchMyFavouriteEvents,
+} from "../../actions/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import dateFormat from "dateformat";
@@ -50,6 +54,10 @@ const SearchEvents = () => {
 
   useEffect(() => {
     dispatch(fetchEvents(location.search));
+
+    if (isSignedIn) {
+      dispatch(fetchMyFavouriteEvents());
+    }
   }, [location.search, dispatch]);
 
   useEffect(() => {
@@ -68,6 +76,9 @@ const SearchEvents = () => {
   };
 
   const eventsList = useSelector((state) => state.event.events);
+
+  const userFavourites = useSelector((state) => state.event.favouriteEvents);
+
   console.log(eventsList);
   const onPriceFilterChange = (e) => {
     const price = e.target.value;
@@ -203,17 +214,32 @@ const SearchEvents = () => {
     }
   };
 
-  const renderedList = (eventsList) => {
+  const renderedList = (eventsList, userFavourites) => {
     return eventsList.map((event) => {
       const now = new Date(event.startDate);
       const end = new Date(event.endDate);
       const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
-      // console.log(x);
-
       const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
 
       const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
       const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
+
+      //  Check if its a favourite event or not
+
+      let isFavourite = false;
+
+      let favouriteEvent;
+      if (userFavourites) {
+        favouriteEvent = userFavourites.filter((el) => el.id === event.id);
+      }
+
+      console.log(favouriteEvent, "opppppppppp");
+
+      if (typeof favouriteEvent !== "undefined" && favouriteEvent.length > 0) {
+        isFavourite = true;
+      } else {
+        isFavourite = false;
+      }
 
       return (
         <EventCard
@@ -229,6 +255,7 @@ const SearchEvents = () => {
           startTime={startTime}
           endTime={endTime}
           communityId={event.createdBy}
+          isFavourite={isFavourite}
         />
       );
     });
@@ -639,7 +666,7 @@ const SearchEvents = () => {
                     <Loader />{" "}
                   </div>
                 ) : (
-                  renderedList(eventsList)
+                  renderedList(eventsList, userFavourites)
                 )}
               </div>
             ) : (

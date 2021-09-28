@@ -134,7 +134,8 @@ class App extends React.Component {
               <Route path="/login" exact component={SignInNew} />
               <Route path="/signup-new" exact component={SignupNew} />
 
-              {!isSignedIn && <Route path="/signin" exact component={Signin} />}
+              {/* {!isSignedIn && <Route path="/signin" exact component={Signin} />} */}
+              <Route path="/signin" exact component={Signin} />
 
               <Route
                 path="/signin/:eventId"
@@ -328,15 +329,7 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/community/:communityId/edit-event/:id/basics"
-                  exact
-                  component={EditEventRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/community/:communityId/edit-event/:id/about-event"
+                  path="/community/:communityId/edit-event/:id/event-overview"
                   exact
                   component={EditEventRoot}
                 />
@@ -384,7 +377,93 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/community/:communityId/edit-event/:id/networking"
+                  path="/community/:communityId/edit-event/:id/event-entry-and-participants"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/reception-settings"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/videos"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/stage-vibes"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/recording"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/analytics"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/live-stream"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/integrations"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/coupons"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/mailing"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/affiliates"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/reviews"
                   exact
                   component={EditEventRoot}
                 />

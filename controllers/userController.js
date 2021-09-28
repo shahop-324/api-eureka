@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const AppError = require("../utils/appError");
 const Community = require("../models/communityModel");
 const CommunityMailList = require("../models/communityMailListModel");
@@ -81,11 +82,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
 // .populate({path: 'spells', options: { sort: [['damages', 'asc']] }})
 // Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
-  
-
-  const response = await Event.findById(req.params.id, (err, data) => {
-   
-  })
+  const response = await Event.findById(req.params.id, (err, data) => {})
     .populate({
       path: "tickets",
       options: {
@@ -111,7 +108,6 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
         match: { status: "Active" },
       },
     });
-
 
   await Event.findByIdAndUpdate(
     req.params.id,
@@ -141,7 +137,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-         
+
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
@@ -236,7 +232,7 @@ exports.updateCommunity = catchAsync(async (req, res) => {
   //   runValidators: true,
   // });
   const communityGettingUpdate = await Community.findById(communityId);
- 
+
   //i am going to create one function which takes obj and  updatedUser and we get  from req.body.socialMediaHandles and pass into function
 
   //create function let say fillSocialMediaHandler
@@ -312,14 +308,12 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
- 
-
   // create a new registration for that event and update corresponding user, event and community document
 
   // Update corresponding ticket that its amount avaliable is reduced by 1 and also update if ticket is sold out
 
   const communityId = eventGettingRegistration.createdBy;
- 
+
   const numberOfRegistrationsReceived = await Event.findOneAndUpdate(
     { _id: req.params.eventId },
     {
@@ -332,7 +326,6 @@ exports.registerInAnEvent = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-
 
   const x = await Community.findOneAndUpdate(
     { _id: communityId },
@@ -629,7 +622,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 // TODO
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-
   // 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
@@ -668,9 +660,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
           message: "Token sent to email!",
         });
       })
-      .catch((error) => {
-    
-      });
+      .catch((error) => {});
   } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
@@ -685,7 +675,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 // TODO
 exports.createNewCommunity = catchAsync(async (req, res, next) => {
-
   const userId = req.user.id;
   const userCreatingCommunity = await User.findById(userId);
   const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
@@ -768,5 +757,64 @@ exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
     data: {
       registeredInEventsList,
     },
+  });
+});
+
+exports.getFavouriteEvents = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+
+  const favouriteEvents = await User.findById(userId)
+    .select("favouriteEvents")
+    .populate("favouriteEvents");
+
+  res.status(200).json({
+    status: "success",
+    data: favouriteEvents,
+  });
+});
+
+exports.addToFavouriteEvents = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const eventId = req.params.eventId;
+
+  const userDoc = await User.findById(userId);
+
+  const event = await Event.findById(eventId);
+
+  userDoc.favouriteEvents.push(eventId);
+
+  await userDoc.save({ new: true, validateModifiedOnly: true });
+
+  res.status(200).json({
+    status: "success",
+    message: "Successfully added to my favourite events",
+    data: event,
+  });
+});
+
+exports.removeFromFavouriteEvents = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const eventId = req.params.eventId;
+
+  const userDoc = await User.findById(userId);
+
+  const event = await Event.findById(eventId);
+
+  const remainingEvents = userDoc.favouriteEvents.filter((id) => {
+    console.log(id);
+    console.log(eventId, "This is event Id");
+    return id !== eventId;
+  });
+
+  console.log(remainingEvents);
+
+  userDoc.favouriteEvents = remainingEvents;
+
+  await userDoc.save({ new: true, validateModifiedOnly: true });
+
+  res.status(200).json({
+    status: "success",
+    message: "Successfully removed from my favourite events",
+    data: event,
   });
 });

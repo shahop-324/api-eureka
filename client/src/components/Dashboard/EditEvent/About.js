@@ -16,7 +16,6 @@ import { editEventDescription, errorTrackerForEditEventDiscription, errorTracker
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
-// import draftToHtml from "draftjs-to-html";
 
 const About = (props) => {
   const { handleSubmit, pristine, submitting } = props;

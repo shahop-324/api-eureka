@@ -9,6 +9,13 @@ import MarkEmailUnreadRoundedIcon from "@mui/icons-material/MarkEmailUnreadRound
 import GamepadRoundedIcon from "@mui/icons-material/GamepadRounded";
 import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRounded";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
+import BluemeetLogo from "./../../../assets/Logo/Bluemeet_LOGO_official.svg";
+
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
+
+import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
+import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
 
 const Paper = styled.div`
   width: 100%;
@@ -102,7 +109,88 @@ const ProductCatchLine = styled.div`
   color: #2c2c2c;
 `;
 
-const ProductDrawer = ({ openDrawer, handleCloseDrawer }) => {
+const NavContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1.5fr 4.5fr 1.5fr;
+  grid-gap: 16px;
+  align-items: center;
+
+  height: 50px;
+`;
+
+const NavLinkDropdown = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #2f2f2f;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    border-bottom: 2px solid #ffffff;
+    cursor: pointer;
+  }
+`;
+
+const DarkTopNav = ({setOpenProduct, setOpenUseCase, setOpenCompany, setOpenResources}) => {
+  return (
+    <NavContainer className="container py-3 ">
+      {/* Logo */}
+      <img src={BluemeetLogo} alt="Bluemeet Logo" />
+
+      {/* Links */}
+      <div className="d-flex flex-row align-items-center justify-content-evenly">
+        <NavLinkDropdown className="d-flex flex-row me-3"  onMouseOver={() => {
+              setOpenProduct(true)
+          }}>
+          <span className="me-1"> Product</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOverCapture={() => {
+            setOpenProduct(false);
+            setOpenUseCase(true);
+        }}>
+          <span className="me-1"> Use cases</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3">
+          Pricing
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3">
+          Explore Events
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOverCapture={() => {
+            setOpenProduct(false);
+            setOpenResources(true);
+        }}>
+          <span className="me-1">Resources</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" 
+        onMouseOverCapture={() => {
+            setOpenProduct(false);
+            setOpenCompany(true);
+        }}>
+          <span className="me-1"> Company</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+      </div>
+      <div className="d-flex flex-row align-items-center justify-content-end">
+        <NavLinkDropdown className="me-3">
+          <span className="me-1">Your account</span>
+          <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <button className="btn btn-outline-dark btn-outline-text">
+          Request demo
+        </button>
+      </div>
+      {/* Signin and demo request button */}
+    </NavContainer>
+  );
+};
+
+const ProductDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpenUseCase, setOpenCompany, setOpenResources }) => {
+  console.log(openDrawer);
   return (
     <>
       <React.Fragment key="top">
@@ -118,7 +206,14 @@ const ProductDrawer = ({ openDrawer, handleCloseDrawer }) => {
           disableBackdropTransition={true}
         >
           {/* <TopNav /> */}
-          <Paper className="px-4 py-3 container">
+
+          <div style={{ height: "80px" }}>
+            <DarkTopNav setOpenProduct={setOpenProduct} setOpenUseCase={setOpenUseCase} setOpenCompany={setOpenCompany} setOpenResources={setOpenResources}/>
+          </div>
+
+          <Paper className="px-4 py-3 container" onMouseLeave={() => {
+              setOpenProduct(false);
+          }}>
             <WhatsNew className="px-3 py-3">
               <NavSectionHeading className="mb-3">What's new</NavSectionHeading>
               <WhatsNewCard className="mb-3 p-3">

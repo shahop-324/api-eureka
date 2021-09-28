@@ -146,10 +146,6 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
     }
   }
 
-  
-
-  
-
   const referralLink = REACT_APP_MY_ENV
     ? `http://localhost:3001/?ref=${referralCode}`
     : `https://www.bluemeet.in/?ref=${referralCode}`;
@@ -221,7 +217,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                     </MenuItem>
                     <MenuItem
                       onClick={(event) => {
-                        dispatch(navigationIndex(3));
+                        dispatch(navigationIndex(2));
                         history.push("/user/profile");
                         handleClose(event);
                       }}

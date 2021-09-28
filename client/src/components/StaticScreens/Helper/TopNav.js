@@ -479,7 +479,7 @@ const TopNav = () => {
       <ProductDrawer openDrawer={false} />
       <UseCasesDrawer openDrawer={false} />
       <CompanyDrawer openDrawer={false} />
-      <ResourcesDrawer openDrawer={true} />
+      <ResourcesDrawer openDrawer={false} />
     </>
   );
 };

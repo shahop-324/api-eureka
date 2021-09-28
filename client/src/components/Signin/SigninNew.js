@@ -134,8 +134,8 @@ const SignInNew = ({ handleSubmit }) => {
 
   return (
     <>
-      <div className="auth-container">
-        <div className="auth-left">
+      <div className="auth-container" >
+        <div className="auth-left" style={{backgroundColor: "#152d35"}}>
           <img
             src={abstract_1}
             alt="abstract"

@@ -163,6 +163,12 @@ const userSchema = new mongoose.Schema(
         ref: "Registration",
       },
     ],
+    favouriteEvents: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Event",
+      },
+    ],
     reviews: [
       {
         type: mongoose.Schema.ObjectId,

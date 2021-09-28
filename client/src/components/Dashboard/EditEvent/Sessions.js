@@ -30,6 +30,15 @@ import NoContentFound from "../../NoContent";
 import NoSessionsPNG from "./../../../assets/images/confident.png";
 import { useSnackbar } from "notistack";
 
+import styled from 'styled-components';
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -174,7 +183,7 @@ const Sessions = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Sessions</div>
+          <SectionHeading className="">All Sessions</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search} me-3`}
@@ -194,14 +203,14 @@ const Sessions = () => {
               />
             </div>
 
-            <Link
+            {/* <Link
       
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page
-            </Link>
+            </Link> */}
 
             <button
               className="btn btn-primary btn-outline-text"

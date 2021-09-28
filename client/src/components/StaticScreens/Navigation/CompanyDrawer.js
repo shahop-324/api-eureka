@@ -8,6 +8,14 @@ import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import WorkRoundedIcon from "@mui/icons-material/WorkRounded";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 
+import BluemeetLogo from "./../../../assets/Logo/Bluemeet_LOGO_official.svg";
+
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
+
+import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
+import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+
 const Paper = styled.div`
   width: 100%;
   height: auto;
@@ -100,7 +108,91 @@ const WhatsNewParagraph = styled.p`
   color: #333333;
 `;
 
-const CompanyDrawer = ({ openDrawer, handleCloseDrawer }) => {
+
+const NavContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1.5fr 4.5fr 1.5fr;
+  grid-gap: 16px;
+  align-items: center;
+
+  height: 50px;
+`;
+
+const NavLinkDropdown = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #2f2f2f;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    border-bottom: 2px solid #ffffff;
+    cursor: pointer;
+  }
+`;
+
+const DarkTopNav = ({ setOpenProduct, setOpenUseCase, setOpenResources,  setOpenCompany}) => {
+  return (
+    <NavContainer className="container py-3 ">
+      {/* Logo */}
+      <img src={BluemeetLogo} alt="Bluemeet Logo" />
+
+      {/* Links */}
+      <div className="d-flex flex-row align-items-center justify-content-evenly">
+        <NavLinkDropdown className="d-flex flex-row me-3"  onMouseOver={() => {
+            setOpenCompany(false);
+            setOpenProduct(true);
+        }}>
+          <span className="me-1"> Product</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOver={() => {
+            setOpenCompany(false);
+            setOpenUseCase(true);
+        }}>
+          <span className="me-1"> Use cases</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3">
+          Pricing
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3">
+          Explore Events
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOver={() => {
+            setOpenCompany(false);
+            setOpenResources(true);
+        }}>
+          <span className="me-1">Resources</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <NavLinkDropdown className="d-flex flex-row me-3" 
+        
+        onMouseOver={() => {
+          setOpenCompany(true)
+      }}
+        >
+          <span className="me-1"> Company</span>
+          <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+      </div>
+      <div className="d-flex flex-row align-items-center justify-content-end">
+        <NavLinkDropdown className="me-3" >
+          <span className="me-1">Your account</span>
+          <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
+        </NavLinkDropdown>
+        <button className="btn btn-outline-dark btn-outline-text">
+          Request demo
+        </button>
+      </div>
+      {/* Signin and demo request button */}
+    </NavContainer>
+  );
+};
+
+
+const CompanyDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpenUseCase, setOpenResources,  setOpenCompany }) => {
   return (
     <>
       <React.Fragment key="top">
@@ -115,7 +207,12 @@ const CompanyDrawer = ({ openDrawer, handleCloseDrawer }) => {
           open={openDrawer}
           disableBackdropTransition={true}
         >
-          <Paper className="px-4 py-4 container">
+          <div style={{ height: "80px" }}>
+            <DarkTopNav setOpenProduct={setOpenProduct} setOpenUseCase={setOpenUseCase} setOpenResources={setOpenResources}  setOpenCompany={setOpenCompany} />
+          </div>
+          <Paper className="px-4 py-4 container" onMouseLeave={() => {
+              setOpenCompany(false);
+          }}>
             <WhatsNew className="px-3 py-3">
               <NavSectionHeading className="mb-3">What's new</NavSectionHeading>
               <WhatsNewCard className="mb-3 p-3">

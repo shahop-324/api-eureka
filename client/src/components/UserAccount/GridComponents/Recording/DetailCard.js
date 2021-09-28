@@ -13,7 +13,7 @@ import FourK from "@material-ui/icons/FourK";
 
 const ListFieldsStyled = styled.div`
   font-weight: 500;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-family: "Ubuntu";
   color: #152d35;
 `;
@@ -43,16 +43,7 @@ const RecordingsDetailsCard = ({ handleOpenVideo }) => {
             <FourKIcon style={{ fill: "#152d35", fontSize: "32" }} />
           </ListFieldsStyled>
         </div>
-        <div className="registrations-ticket-type-field">
-          <ListFieldsStyled className="">
-            <PlayCircleOutlineRoundedIcon
-              onClick={() => {
-                handleOpenVideo();
-              }}
-              style={{ fill: "#E73737", fontSize: "32" }}
-            />
-          </ListFieldsStyled>
-        </div>
+        
         <div className="registrations-invoice-field">
           <ListFieldsStyled className="">
             <CloudDownloadIcon style={{ fill: "#152d35", fontSize: "32" }} />

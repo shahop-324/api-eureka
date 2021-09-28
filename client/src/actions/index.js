@@ -338,7 +338,7 @@ export const createCommunity =
           );
 
           history.push(
-            `/user/${userId}/community/overview/${res.communityDoc.id}`
+            `/user/${userId}/community/getting-started/${res.communityDoc.id}`
           );
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
@@ -576,6 +576,139 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
 export const errorTrackerForRegisteredEvents =
   () => async (dispatch, getState) => {
     dispatch(eventActions.disabledError());
+  };
+
+export const fetchMyFavouriteEvents = () => async (dispatch, getState) => {
+  dispatch(eventActions.startLoading());
+
+  const fetchData = async () => {
+    let res = await fetch(
+      `${BaseURL}users/myFavouriteEvents`,
+
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+    console.log(res);
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("fetching user favourite events failed");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    return res;
+  };
+
+  try {
+    const res = await fetchData();
+    console.log(res);
+
+    dispatch(
+      eventActions.FetchFavouriteEvents({
+        events: res.data.favouriteEvents,
+      })
+    );
+  } catch (error) {
+    dispatch(eventActions.hasError(error.message));
+  }
+};
+
+export const addToFavouriteEvents = (eventId) => async (dispatch, getState) => {
+  dispatch(eventActions.startLoading());
+
+  const addTofavourites = async () => {
+    let res = await fetch(
+      `${BaseURL}users/addToFavouriteEvents/${eventId}`,
+
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+    console.log(res);
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("adding to user favourite events list failed");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    return res;
+  };
+
+  try {
+    const res = await addTofavourites();
+    console.log(res);
+
+    dispatch(
+      eventActions.AddToFavouriteEvents({
+        event: res.data,
+      })
+    );
+  } catch (error) {
+    dispatch(eventActions.hasError(error.message));
+  }
+};
+
+export const removeFromFavouriteEvents =
+  (eventId) => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
+
+    const removeFromFavourites = async () => {
+      let res = await fetch(
+        `${BaseURL}users/removeFromFavouriteEvents/${eventId}`,
+
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      console.log(res);
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("removing from favourite events list failed");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+
+    try {
+      const res = await removeFromFavourites();
+      console.log(res);
+
+      dispatch(
+        eventActions.RemoveFromFavouriteEvents({
+          event: res.data,
+        })
+      );
+    } catch (error) {
+      dispatch(eventActions.hasError(error.message));
+    }
   };
 
 export const fetchEvent = (id) => async (dispatch, getState) => {
@@ -2345,7 +2478,7 @@ export const navigationIndexForHostingPlatform =
     );
   };
 
-//alice routes
+//alias routes
 export const madeJustForYou = () => async (dispatch) => {
   dispatch(eventActions.startLoading());
   try {
@@ -2354,7 +2487,7 @@ export const madeJustForYou = () => async (dispatch) => {
 
     dispatch(
       eventActions.FetchEvents({
-        events: res.data.data.events,
+        events: res.data,
       })
     );
   } catch (err) {
@@ -2366,6 +2499,7 @@ export const errorTrackerForMadeJustForYou =
   () => async (dispatch, getState) => {
     dispatch(eventActions.disabledError());
   };
+
 //user actions
 
 // export const createUser = (formValues, id) => async (dispatch, getState) => {

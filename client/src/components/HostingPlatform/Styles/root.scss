@@ -8,7 +8,7 @@ $Side-Nav-bg-color: '#ffffff';
 $Shadow-inset-color: '#00000029';
 
 .lean-nav-wrapper {
-  height: 93vh !important;
+  height: 83vh !important;
   overflow: auto !important;
 }
 
@@ -64,7 +64,8 @@ $Shadow-inset-color: '#00000029';
 }
 
 .icon-btn-h {
-  color: #d4d4d4;
+  
+  color: #696969;
 }
 
 .icon-btn-active-h {
@@ -74,13 +75,14 @@ $Shadow-inset-color: '#00000029';
 .icon-btn-text {
   font: normal normal 500 0.78rem/0.813rem Ubuntu;
   letter-spacing: 0px;
-  color: #d4d4d4;
+  
+  color: #696969;
   opacity: 1;
 }
 
-// .icon-btn-text-active-h {
-//   color: #538bf7;
-// }
+.icon-btn-text-active-h {
+  color: #538bf7;
+}
 
 .mid-top-nav {
   height: auto;
@@ -172,7 +174,7 @@ $Shadow-inset-color: '#00000029';
 }
 
 .event-banner-card {
-  background-image: url("https://blog.hootsuite.com/wp-content/uploads/2019/09/youtube-channel-art-940x470.jpg");
+  background-image: url('https://blog.hootsuite.com/wp-content/uploads/2019/09/youtube-channel-art-940x470.jpg');
   width: 100%;
   min-height: 300px;
 
@@ -564,7 +566,6 @@ $Shadow-inset-color: '#00000029';
 .raised-hands-container {
   height: 70vh;
 }
-
 
 @media only screen and (min-width: 1560px) {
   .chat-msg-container {

@@ -5,18 +5,21 @@ import './../../../assets/Sass/DataGrid.scss';
 const SpeakersListFields = () => {
   return (
       <>
-    <div className="session-list-fields-container">
+    <div className="session-list-fields-container" style={{gridTemplateColumns: "2fr 2.5fr 3fr 2.5fr 2.5fr "}}>
       <div className="event-card-field">
         <div className="event-field-label" style={{width: '100%'}}>Name</div>
       </div>
-      <div className="event-visibility-field">
+      {/* <div className="event-visibility-field">
         <div className="event-field-label" style={{width: '100%'}}>Headline</div>
-      </div>
+      </div> */}
       <div className="event-status-field">
         <div className="event-field-label" style={{width: '100%'}}>Email</div>
       </div>
       <div className="event-views-field">
         <div className="event-field-label" style={{width: '100%'}}>Sessions Allocated</div>
+      </div>
+      <div className="event-visibility-field">
+        <div className="event-field-label" style={{width: '100%'}}>Invitation status</div>
       </div>
       <div className="event-registrations-field">
         <div className="event-field-label" style={{width: '100%'}}>Actions</div>

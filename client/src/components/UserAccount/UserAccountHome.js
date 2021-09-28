@@ -18,8 +18,6 @@ import Loader from "../Loader";
 import UserAccountReviews from "./UserAccountReviews";
 import UserAccountQueries from "./UserAccountQueries";
 import styled from "styled-components";
-
-import AvatarMenu from "../AvatarMenu";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
@@ -27,7 +25,8 @@ import Badge from "@mui/material/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import Faker from "faker";
 
-import { Dropdown, Icon } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+import AvatarMenu from "./../AvatarMenu";
 
 import {
   NotificationPaper,
@@ -46,133 +45,9 @@ import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 
 const trigger = (
   <span>
-    <Avatar src={Faker.image.avatar()} className="mb-3" />
+    <Avatar src={Faker.image.avatar()} className="mb-3" variant="rounded" />
   </span>
 );
-
-const WelcomeNotification = () => {
-  return (
-    <>
-      <NotificationPaper>
-        <Avatar src={Faker.image.avatar()} variant="rounded" />
-        <div>
-          <NotificationHeadline className="mb-2">
-            Welcome to bluemeet!
-          </NotificationHeadline>
-          <NotificationBody style={{ wordWrap: "break-word", width: "130px" }}>
-            Discover ways to use BlueMeet
-          </NotificationBody>
-        </div>
-      </NotificationPaper>
-    </>
-  );
-};
-
-const AvatarMenuItem = ({ text, icon }) => {
-  return (
-    <>
-      <AvatarMenuListItem>
-        {icon}
-        <span>{text}</span>
-      </AvatarMenuListItem>
-    </>
-  );
-};
-
-const options = [
-  {
-    key: "profile",
-    text: (
-      <AvatarMenuItem
-        text={"Your Profile"}
-        icon={<HomeRoundedIcon className="me-3" />}
-      />
-    ),
-  },
-  {
-    key: "explore",
-    text: (
-      <AvatarMenuItem
-        text={"Explore"}
-        icon={<ExploreRoundedIcon className="me-3" />}
-      />
-    ),
-  },
-  {
-    key: "referral",
-    text: (
-      <AvatarMenuItem
-        text={"Referral & Credit"}
-        icon={<AttachMoneyRoundedIcon className="me-3" />}
-      />
-    ),
-  },
-  {
-    key: "help",
-    text: (
-      <AvatarMenuItem
-        text={"Help"}
-        icon={<HelpOutlineRoundedIcon className="me-3" />}
-      />
-    ),
-  },
-  {
-    key: "sign-out",
-    text: (
-      <AvatarMenuItem
-        text={"Sign out"}
-        icon={<ExitToAppRoundedIcon className="me-3" />}
-      />
-    ),
-  },
-];
-
-const DropdownTriggerExample = () => (
-  <div className="mx-3">
-    <Dropdown
-      icon={null}
-      trigger={trigger}
-      options={options}
-      direction="left"
-    />
-  </div>
-);
-
-const notificationOptions = [
-  {
-    key: "welcome",
-    text: <WelcomeNotification />,
-  },
-  {
-    key: "welcome",
-    text: <WelcomeNotification />,
-  },
-  {
-    key: "welcome",
-    text: <WelcomeNotification />,
-  },
-];
-
-const notificationTrigger = (
-  <IconButton className="me-2">
-    <Badge badgeContent={4} color="primary">
-      <NotificationsNoneRoundedIcon />
-    </Badge>
-  </IconButton>
-);
-
-const NotificationsTrigger = () => {
-  return (
-    <>
-      <Dropdown
-        icon={null}
-        trigger={notificationTrigger}
-        options={notificationOptions}
-        direction="left"
-      />
-    </>
-  );
-};
 
 const BtnOutlinedWithIcon = styled.div`
   border: 1px solid #152d35;
@@ -291,30 +166,9 @@ const UserAccountHome = () => {
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
               <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
-                <IconButton
-                  onClick={() => {
-                    setOpenHelp(true);
-                  }}
-                  className="me-2"
-                >
-                  <HelpOutlineRoundedIcon />
-                </IconButton>
-                <NotificationsTrigger />
-
-                <BtnOutlinedWithIcon
-                  onClick={() => {
-                    setOpenWhatsNew(true);
-                  }}
-                >
-                  {/* <ExploreRoundedIcon className="me-3" /> */}
-                  What's new
-                </BtnOutlinedWithIcon>
-
-                <DropdownTriggerExample />
-
-                {/* <div className="ms-3">
+                <div className="ms-3">
                   <AvatarMenu />
-                </div> */}
+                </div>
               </div>
               <div className="user-account-centered-tab-navigation mb-4">
                 <CenteredTabs
@@ -329,14 +183,8 @@ const UserAccountHome = () => {
                   case 1:
                     return <UserAccountEventsMainBody />;
                   case 2:
-                    return <UserAccountRecordings />;
-                  case 3:
                     return <UserAccountProfileMainBody />;
-                  case 4:
-                    return <UserAccountReviews />;
-                  case 5:
-                    return <UserAccountQueries />;
-
+                  
                   default:
                     return <div>You are a User.</div>;
                 }

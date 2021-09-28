@@ -18,6 +18,8 @@ import {
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+
 const renderInput = ({
   input,
 
@@ -209,11 +211,13 @@ const EditSession = (props) => {
   }
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+       <React.Fragment key="right">
+        <SwipeableDrawer anchor="right" open={props.open} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
         {isLoadingDetail ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -382,7 +386,8 @@ const EditSession = (props) => {
             </div>
           </form>
         )}
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
       <div>
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
