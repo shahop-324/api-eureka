@@ -2,6 +2,7 @@
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
+import {SwipeableDrawer} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 
@@ -17,6 +18,7 @@ import {
   errorTrackerForCreateTicket,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
+
 
 const styles = {
   control: (base) => ({
@@ -145,8 +147,7 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-const AddNewTicket = (props) => {
-  const { handleSubmit, pristine, submitting } = props;
+const AddNewTicket = ({open, handleClose, handleSubmit, pristine, submitting}) => {
   const { error, isLoading } = useSelector((state) => state.ticket);
   const params = useParams();
   const id = params.id;
@@ -199,7 +200,7 @@ const AddNewTicket = (props) => {
     dispatch(createTicket(ModifiedFormValues, id));
 
     // showResults(formValues);
-    props.handleClose();
+    handleClose();
   };
 
   if (isLoading) {
@@ -222,11 +223,18 @@ const AddNewTicket = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+      <React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
@@ -234,7 +242,7 @@ const AddNewTicket = (props) => {
               <div className="coupon-overlay-form-headline">Add New Ticket</div>
               <div
                 className="overlay-form-close-button"
-                onClick={props.handleClose}
+                onClick={handleClose}
               >
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
@@ -314,7 +322,72 @@ const AddNewTicket = (props) => {
               </div>
             </div>
 
-            {/* <div className="mb-3 overlay-form-input-row">
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div>
+              <label
+                Forhtml="eventStartDate"
+                className="form-label form-label-customized"
+              >
+               Sales Start Date
+              </label>
+              <Field
+                name="startDate"
+                type="date"
+                classes="form-control"
+                id="eventStartDate"
+                component={renderInput}
+              />
+            </div>
+            <div>
+              <label
+                Forhtml="eventStartTime"
+                className="form-label form-label-customized"
+              >
+               Sales Start Time
+              </label>
+              <Field
+                name="startTime"
+                type="time"
+                classes="form-control"
+                id="eventStartTime"
+                component={renderInput}
+              />
+            </div>
+          </div>
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div>
+              <label
+                Forhtml="eventEndDate"
+                className="form-label form-label-customized"
+              >
+               Sales End Date
+              </label>
+              <Field
+                name="endDate"
+                type="date"
+                classes="form-control"
+                id="eventEndDate"
+                component={renderInput}
+              />
+            </div>
+            <div>
+              <label
+                Forhtml="eventEndTime"
+                className="form-label form-label-customized"
+              >
+               Sales End Time
+              </label>
+              <Field
+                name="endTime"
+                type="time"
+                classes="form-control"
+                id="eventEndTime"
+                component={renderInput}
+              />
+            </div>
+          </div>
+
+            <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
                 className="form-label form-label-customized"
@@ -332,7 +405,7 @@ const AddNewTicket = (props) => {
                 // defaultValue={eventOptions[0]}
                 component={renderReactSelect}
               />
-            </div> */}
+            </div>
 
             <div className="mb-3 overlay-form-input-row">
               <label
@@ -353,21 +426,26 @@ const AddNewTicket = (props) => {
               </div>
             </div>
 
-            {/* <div className="form-check d-flex flex-row mb-3">
-              <Field
-                name="shareRecording"
-                type="checkbox"
-                classes="form-check-input me-3 pb-1"
-                component={renderInput}
-              />
+            <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
                 className="form-label form-label-customized"
-                style={{ marginBottom: "0", alignSelf: "center" }}
               >
-                Share Recordings
+                Message for attendees
               </label>
-            </div> */}
+              <div className="form-group">
+                <Field
+                  name="messageForAttendee"
+                  
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="Say thank you. This message will be sent along with the ticket."
+                  component={renderTextArea}
+                />
+              </div>
+            </div>
+
+            
 
             <div style={{ width: "100%" }}>
               <button
@@ -381,7 +459,8 @@ const AddNewTicket = (props) => {
             </div>
           </div>
         </form>
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
     </>
   );
 };

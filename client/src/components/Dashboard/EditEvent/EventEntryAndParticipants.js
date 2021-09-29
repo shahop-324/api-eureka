@@ -10,7 +10,7 @@ import WhoCanEnterEvent from "./HelperComponents/WhoCanEnterEvent";
 import PreviewRegistrationForm from "./HelperComponents/PreviewRegisterationForm";
 import EditRegistraionForm from "./HelperComponents/EditRegistrationForm";
 // import Registrations from "./Reg";
-
+import Participants from "./HelperComponents/Participants";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -116,130 +116,112 @@ const EventEntryAndParticipants = () => {
         </div>
 
         <TextSmall className="mb-4">
-          Define how participants will enter event and how will they register
+          {activeTab === "entryRules"
+            ? "Define how participants will enter event and how will they register"
+            : `Manage your event participants and invited attendees. You can also import attendees or download all the registration details of your participants.`}
         </TextSmall>
 
-        {(()=> {
-            switch (activeTab) {
-                case "entryRules":
-                    return (
-                        <div>
-<TextProminent className="mb-4">
-          Who can enter this event?
-        </TextProminent>
+        {(() => {
+          switch (activeTab) {
+            case "entryRules":
+              return (
+                <div>
+                  <TextProminent className="mb-4">
+                    Who can enter this event?
+                  </TextProminent>
 
+                  <div className="d-flex flex-row align-items-center mb-5">
+                    <TextMedium style={{ marginRight: "200px" }}>
+                      {" "}
+                      <SecurityRoundedIcon className="me-3" />{" "}
+                      <span>Anyone can enter after sign in</span>{" "}
+                    </TextMedium>
 
-        <div className="d-flex flex-row align-items-center mb-5">
-          <TextMedium style={{ marginRight: "200px" }}>
-            {" "}
-            <SecurityRoundedIcon className="me-3" />{" "}
-            <span>Anyone can enter after sign in</span>{" "}
-          </TextMedium>
+                    <button
+                      onClick={() => {
+                        setOpenEntryRules(true);
+                      }}
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                      style={{ justifySelf: "end" }}
+                    >
+                      {" "}
+                      <EditRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "18px" }}
+                      />{" "}
+                      edit
+                    </button>
+                  </div>
 
-          <button
-            onClick={() => {
-              setOpenEntryRules(true);
-            }}
-            className="btn btn-outline-primary btn-outline-text me-3"
-            style={{ justifySelf: "end" }}
-          >
-            {" "}
-            <EditRoundedIcon
-              className="me-2"
-              style={{ fontSize: "18px" }}
-            />{" "}
-            edit
-          </button>
-        </div>
+                  <TextProminent className="mb-4">
+                    Details required for registration
+                  </TextProminent>
 
+                  <div className="d-flex flex-row align-items-center mb-5">
+                    <TextMedium style={{ marginRight: "200px" }}>
+                      {" "}
+                      <span>Default registration form</span>{" "}
+                    </TextMedium>
 
-        <TextProminent className="mb-4">
-          Details required for registration
-        </TextProminent>
+                    <button
+                      onClick={() => {
+                        setOpenEditForm(true);
+                      }}
+                      className="btn btn-outline-primary btn-outline-text me-4"
+                      style={{ justifySelf: "end" }}
+                    >
+                      {" "}
+                      <EditRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "18px" }}
+                      />{" "}
+                      edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        setOpenFormPreview(true);
+                      }}
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                      style={{ justifySelf: "end" }}
+                    >
+                      {" "}
+                      <RemoveRedEyeRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "18px" }}
+                      />{" "}
+                      Preview
+                    </button>
+                  </div>
 
+                  <TextProminent className="mb-4">
+                    <span className="me-4">
+                      {" "}
+                      Dynamic form for registration{" "}
+                    </span>
+                    <Chip
+                      label="Coming soon"
+                      variant="outlined"
+                      style={{ color: "#ffffff", backgroundColor: "#212121" }}
+                    />
+                  </TextProminent>
 
+                  <TextSmall className="mb-4">
+                    Available for AppSumo customer, growth and enterprise only
+                  </TextSmall>
 
-        <div className="d-flex flex-row align-items-center mb-5">
-          <TextMedium style={{ marginRight: "200px" }}>
-            {" "}
-            <span>Default registration form</span>{" "}
-          </TextMedium>
+                  <CommingSoonIllustration
+                    src={ComingSoon}
+                    alt={"coming soon"}
+                  ></CommingSoonIllustration>
+                </div>
+              );
 
-          <button
-            onClick={() => {
-              setOpenEditForm(true);
-            }}
-            className="btn btn-outline-primary btn-outline-text me-4"
-            style={{ justifySelf: "end" }}
-          >
-            {" "}
-            <EditRoundedIcon
-              className="me-2"
-              style={{ fontSize: "18px" }}
-            />{" "}
-            edit
-          </button>
-          <button
-            onClick={() => {
-              setOpenFormPreview(true);
-            }}
-            className="btn btn-outline-primary btn-outline-text me-3"
-            style={{ justifySelf: "end" }}
-          >
-            {" "}
-            <RemoveRedEyeRoundedIcon
-              className="me-2"
-              style={{ fontSize: "18px" }}
-            />{" "}
-            Preview
-          </button>
-        </div>
-
-        <TextProminent className="mb-4">
-          <span className="me-4"> Dynamic form for registration </span>
-          <Chip
-            label="Coming soon"
-            variant="outlined"
-            style={{ color: "#ffffff", backgroundColor: "#212121" }}
-          />
-        </TextProminent>
-
-        <TextSmall className="mb-4">
-          Available for AppSumo customer, growth and enterprise only
-        </TextSmall>
-
-        <CommingSoonIllustration
-          src={ComingSoon}
-          alt={"coming soon"}
-        ></CommingSoonIllustration>
-
-
-
-</div>
-
-                    )
-                    
-                case "participants":
-                //    return <Registrations />;
-                break;
-                    
-                   
-            
-                default:
-                    break;
-            }
+            case "participants":
+                 return <Participants  className="mt-3"/>;
+            default:
+              break;
+          }
         })()}
-
-
-        
-
-       
-
-       
-
-       
-
-       
       </div>
       <WhoCanEnterEvent
         handleClose={handleCloseEntryRules}

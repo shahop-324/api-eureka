@@ -13,6 +13,17 @@ import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
 import { fetchSponsor } from "../../../actions";
 import { useDispatch } from "react-redux";
 
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import styled from "styled-components";
+import Draggable from "react-draggable"; // Draggable and Draggable core
+
+const OrderNumber = styled.span`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -61,100 +72,116 @@ const SponsorDetailsCard = (props) => {
 
   return (
     <>
-      <div className="sponsors-list-fields-container">
-        <div
-          className="event-card-field "
-          style={{
-            width: "100%",
-          }}
-        >
-          <div className="registrations-name-field">
-            <div className="registrations-field-label d-flex flex-row justify-content-start">
-              {/* attendee avatar and name */}
-              <Avatar
-                alt={props.name}
-                src={props.url}
-                variant="rounded"
-                className={classes.large}
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          className="event-visibility-field"
-          style={{
-            width: "100%",
-          }}
-        >
+      <Draggable axis="y">
+        <div>
           <div
-            className="event-field-label registrations-field-label"
-            style={{ width: "100%", fontFamily: "Inter" }}
+            className="sponsors-list-fields-container"
+            style={{ gridTemplateColumns: "0.5fr 1fr 1.6fr 1.3fr 1fr 0.5fr", alignItems: "center" }}
           >
-            {/* {props.organisationName} */}
-            {truncateText(props.organisationName, 30)}
-          </div>
-        </div>
-        <div
-          className="event-status-field"
-          style={{
-            width: "100%",
-          }}
-        >
-          <a
-            href={`https://${props.website}`}
-            target="_blank"
-            rel="noreferrer"
-            className="event-field-label registrations-field-label d-flex flex-column align-items-start"
-            style={{ width: "100%", fontFamily: "Inter", color: "#538BF7" }}
-          >
-            {/* {props.website} */}
-            {truncateText(props.website, 25)}
-          </a>
-        </div>
-        <div
-          className="event-views-field"
-          style={{
-            width: "100%",
-          }}
-        >
-          <div className="event-field-label registrations-field-label">
-            <div
-              className="speaker-card-session-grid"
-              style={{ fontFamily: "Inter" }}
-            >
-              {props.status}
-              {/* No need to limit characters here as this can only be Platinum, Diamond and Gold */}
-              {/* {truncateText(props.status, 25)} */}
+            <div>
+              <DragIndicatorIcon className="me-3 drag" />
+              <OrderNumber>1</OrderNumber>
             </div>
-          </div>
-        </div>
 
-        <div className="event-registrations-field">
-          <div
-            className="event-field-label registrations-field-label"
-            style={{ width: "100%" }}
-          >
             <div
-              onClick={() => {
-                handleEditSponsor();
+              className="event-card-field "
+              style={{
+                width: "100%",
               }}
             >
-              <IconButton color="primary" aria-label="add to shopping cart">
-                <EditRoundedIcon />
-              </IconButton>
+              <div className="registrations-name-field">
+                <div className="registrations-field-label d-flex flex-row justify-content-start">
+                  {/* attendee avatar and name */}
+                  <Avatar
+                    alt={props.name}
+                    src={props.url}
+                    variant="rounded"
+                    className={classes.large}
+                  />
+                </div>
+              </div>
             </div>
-            <div onClick={handleDeleteSponsor}>
-              <IconButton color="secondary" aria-label="add to shopping cart">
-                <DeleteRoundedIcon />
-              </IconButton>
+            <div
+              className="event-visibility-field"
+              style={{
+                width: "100%",
+              }}
+            >
+              <div
+                className="event-field-label registrations-field-label"
+                style={{ width: "100%", fontFamily: "Inter" }}
+              >
+                {/* {props.organisationName} */}
+                {truncateText(props.organisationName, 30)}
+              </div>
+            </div>
+            <div
+              className="event-status-field"
+              style={{
+                width: "100%",
+              }}
+            >
+              <a
+                href={`https://${props.website}`}
+                target="_blank"
+                rel="noreferrer"
+                className="event-field-label registrations-field-label d-flex flex-column align-items-start"
+                style={{ width: "100%", fontFamily: "Inter", color: "#538BF7" }}
+              >
+                {/* {props.website} */}
+                {truncateText(props.website, 25)}
+              </a>
+            </div>
+            <div
+              className="event-views-field"
+              style={{
+                width: "100%",
+              }}
+            >
+              <div className="event-field-label registrations-field-label">
+                <div
+                  className="speaker-card-session-grid"
+                  style={{ fontFamily: "Inter" }}
+                >
+                  {props.status}
+                  {/* No need to limit characters here as this can only be Platinum, Diamond and Gold */}
+                  {/* {truncateText(props.status, 25)} */}
+                </div>
+              </div>
+            </div>
+
+            <div className="event-registrations-field">
+              <div
+                className="event-field-label registrations-field-label"
+                style={{ width: "100%" }}
+              >
+                <div
+                  onClick={() => {
+                    handleEditSponsor();
+                  }}
+                >
+                  <IconButton color="primary" aria-label="add to shopping cart">
+                    <EditRoundedIcon />
+                  </IconButton>
+                </div>
+                <div onClick={handleDeleteSponsor}>
+                  <IconButton
+                    color="secondary"
+                    aria-label="add to shopping cart"
+                  >
+                    <DeleteRoundedIcon />
+                  </IconButton>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
+        </div>
+      </Draggable>
+
+     
       <EditSponsor open={open} handleClose={handleClose} id={props.id} />
       <DeleteSponsor
         openDeleteDialog={openDeleteDialog}

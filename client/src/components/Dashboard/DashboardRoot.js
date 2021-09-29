@@ -71,7 +71,7 @@ const DashboardRoot = () => {
   };
 
   const handleEventsClick = () => {
-    console.log("handle event was clicked")
+    console.log("handle event was clicked");
     dispatch(navigationIndexForCommunityDash(1));
     history.push(
       `/user/${userId}/community/event-management/${id}/?limit=5&page=1`
@@ -93,8 +93,17 @@ const DashboardRoot = () => {
     history.push(`/user/${userId}/community/integrations/${id}`);
   };
 
-  const handleBillingClick = () => {
+  const handleSnapClick = () => {
     dispatch(navigationIndexForCommunityDash(5));
+    history.push(`/user/${userId}/community/snap/${id}`);
+  };
+  const handleTrackingClick = () => {
+    dispatch(navigationIndexForCommunityDash(6));
+    history.push(`/user/${userId}/community/tracking/${id}`);
+  };
+
+  const handleBillingClick = () => {
+    dispatch(navigationIndexForCommunityDash(7));
     history.push(`/user/${userId}/community/billing/${id}`);
   };
 
@@ -118,6 +127,8 @@ const DashboardRoot = () => {
             handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
             handleBillingClick={handleBillingClick}
+            handleSnapClick={handleSnapClick}
+            handleTrackingClick={handleTrackingClick}
           />
           <SideNavLean
             activeIndex={currentIndex}
@@ -127,6 +138,8 @@ const DashboardRoot = () => {
             handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
             handleBillingClick={handleBillingClick}
+            handleSnapClick={handleSnapClick}
+            handleTrackingClick={handleTrackingClick}
           />
 
           <div className="main-content-wrapper" style={{ minHeight: "90vh" }}>
@@ -156,7 +169,8 @@ const DashboardRoot = () => {
                 case "3":
                   return (
                     <ErrorBoundriesQueries>
-                      <div>This is video library</div>
+                      {/* <div>This is video library</div> */}
+                      <Registrations />
                       {/* <VideoLibrary /> */}
                     </ErrorBoundriesQueries>
                   );
@@ -171,11 +185,23 @@ const DashboardRoot = () => {
                 case "5":
                   return (
                     <ErrorBoundriesCoupons>
+                      <div>Snap</div>
+                    </ErrorBoundriesCoupons>
+                  );
+                case "6":
+                  return (
+                    <ErrorBoundriesCoupons>
+                      <div>Tracking</div>
+                    </ErrorBoundriesCoupons>
+                  );
+
+                case "7":
+                  return (
+                    <ErrorBoundriesCoupons>
                       <Billing />
                     </ErrorBoundriesCoupons>
                   );
 
-                
                 default:
                   return <div>This is community management dashboard.</div>;
               }

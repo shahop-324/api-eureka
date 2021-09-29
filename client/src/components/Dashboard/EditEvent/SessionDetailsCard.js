@@ -1,5 +1,5 @@
 import React from "react";
-// import Faker from "faker";
+import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -15,6 +15,8 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import { Popup } from "semantic-ui-react";
 import SessionMoreInfo from "./FormComponents/EditSessionForms/SessionMoreInfo";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 var dateFormat = require("dateformat");
 //var now = new Date();
@@ -105,16 +107,7 @@ const SessionDetailCard = ({
           >
             {/* {name} */}
             {truncateText(name, 35)}
-            <IconButton
-              onClick={() => {
-                setOpenMoreInfo(true);
-              }}
-              className="ms-1"
-            >
-              <InfoOutlinedIcon
-                style={{ fontSize: "20px", color: "#585858" }}
-              />
-            </IconButton>
+           
           </div>
         </div>
         <div
@@ -190,15 +183,26 @@ const SessionDetailCard = ({
                 {renderSessionSpeakersList(speaker)}
               </div>
             ) : (
-              <div
-                style={{
-                  color: "#C92121",
-                  fontWeight: "500",
-                  fontSize: "0.85rem",
-                }}
-              >
-                No speaker assigned
-              </div>
+              // <div
+              //   style={{
+              //     color: "#C92121",
+              //     fontWeight: "500",
+              //     fontSize: "0.85rem",
+              //   }}
+              // >
+              //   No speaker assigned
+              // </div>
+              <AvatarGroup max={4}>
+                <Avatar alt="Remy Sharp" src={Faker.image.avatar()} />
+                <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
+                <Avatar alt="Cindy Baker" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+              </AvatarGroup>
             )}
           </div>
         </div>
@@ -215,6 +219,15 @@ const SessionDetailCard = ({
             <div onClick={handleDeleteSession}>
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
+              </IconButton>
+            </div>
+            <div onClick={() => {
+                setOpenMoreInfo(true);
+              }}>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+              <RemoveRedEyeIcon
+                style={{ color: "#C317EE" }}
+              />
               </IconButton>
             </div>
           </div>

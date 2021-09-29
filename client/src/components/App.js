@@ -61,6 +61,7 @@ import CheckConnectedStatus from "./PaymentHandlingComponents/CheckConnectedStat
 import SuccessfullyConnected from "./PaymentHandlingComponents/SuccessfullyConnected";
 import NotConnected from "./PaymentHandlingComponents/NotConnected";
 
+
 AOS.init();
 
 class App extends React.Component {
@@ -335,6 +336,22 @@ class App extends React.Component {
                 />
               )}
 
+{isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/event-entry-and-participants"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+{isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/schedule"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/sessions"
@@ -375,13 +392,7 @@ class App extends React.Component {
                 />
               )}
 
-              {isSignedIn && (
-                <Route
-                  path="/community/:communityId/edit-event/:id/event-entry-and-participants"
-                  exact
-                  component={EditEventRoot}
-                />
-              )}
+              
 
               {isSignedIn && (
                 <Route
@@ -471,6 +482,14 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
+                  path="/community/:communityId/edit-event/:id/tracking"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
                   path="/user/:userId/community/getting-started/:id"
                   exact
                   component={DashboardRoot}
@@ -494,6 +513,20 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/video-library/:id"
+                  exact
+                  component={DashboardRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/snap/:id"
+                  exact
+                  component={DashboardRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/tracking/:id"
                   exact
                   component={DashboardRoot}
                 />

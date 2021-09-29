@@ -1,7 +1,7 @@
 import React from "react";
-import "./../../../assets/Sass/DataGrid.scss";
+import "./../../../../../assets/Sass/DataGrid.scss";
 
-const RegistrationsListFields = () => {
+const ParticipantsListFields = () => {
   return (
     <div className="registrations-list-fields-container">
      
@@ -28,4 +28,4 @@ const RegistrationsListFields = () => {
   );
 };
 
-export default RegistrationsListFields;
+export default ParticipantsListFields;

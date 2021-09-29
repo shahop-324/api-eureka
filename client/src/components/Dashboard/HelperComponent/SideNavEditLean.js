@@ -9,7 +9,7 @@ import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
-import AdjustRoundedIcon from '@mui/icons-material/AdjustRounded';
+import AdjustRoundedIcon from "@mui/icons-material/AdjustRounded";
 
 import FormatAlignCenterRoundedIcon from "@mui/icons-material/FormatAlignCenterRounded"; // Event entry
 import CalendarViewDayRoundedIcon from "@mui/icons-material/CalendarViewDayRounded"; // reception settings
@@ -22,12 +22,16 @@ import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRou
 import LoyaltyRoundedIcon from "@mui/icons-material/LoyaltyRounded"; // Coupons
 import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
-import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded'; // Sponsor
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
+import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
+
+import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
 
 const SideNavEditLean = ({
   activeIndex,
   handleEventOverviewClick,
   handleEventEntryAndParticipantsClick,
+  handleScheduleClick,
   handleSessionsClick,
   handleSpeakersClick,
   handleBoothsClick,
@@ -44,8 +48,8 @@ const SideNavEditLean = ({
   handleAffliateClick,
   handleMailingClick,
   handleReviewsClick,
+  handleTrackingClick,
 }) => {
-
   console.log(activeIndex);
 
   return (
@@ -121,11 +125,10 @@ const SideNavEditLean = ({
               Event entry & participants
             </div>
           </div>
-        
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSessionsClick();
+              handleScheduleClick();
             }}
           >
             <div
@@ -134,7 +137,7 @@ const SideNavEditLean = ({
                 (activeIndex === "2" ? "active-wrapper-h" : "")
               }
             >
-              <TrackChangesIcon
+              <EventRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "2" ? "icon-btn-active-h" : "")
@@ -148,14 +151,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Sessions
+              Schedule
             </div>
           </div>
-         
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSpeakersClick();
+              handleSessionsClick();
             }}
           >
             <div
@@ -164,7 +167,7 @@ const SideNavEditLean = ({
                 (activeIndex === "3" ? "active-wrapper-h" : "")
               }
             >
-              <RecordVoiceOverIcon
+              <TrackChangesIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "3" ? "icon-btn-active-h" : "")
@@ -178,15 +181,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Speakers
+              Agenda
             </div>
           </div>
-          
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleBoothsClick();
+              handleSpeakersClick();
             }}
           >
             <div
@@ -195,7 +197,7 @@ const SideNavEditLean = ({
                 (activeIndex === "4" ? "active-wrapper-h" : "")
               }
             >
-              <StorefrontOutlinedIcon
+              <RecordVoiceOverIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "4" ? "icon-btn-active-h" : "")
@@ -209,14 +211,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Booths
+              Speakers
             </div>
           </div>
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSponsorsClick();
+              handleBoothsClick();
             }}
           >
             <div
@@ -225,7 +227,7 @@ const SideNavEditLean = ({
                 (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
-              <AttachMoneyRoundedIcon
+              <StorefrontOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -239,14 +241,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Sponsors
+              Booths
             </div>
           </div>
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleTicketingClick();
+              handleSponsorsClick();
             }}
           >
             <div
@@ -255,7 +257,7 @@ const SideNavEditLean = ({
                 (activeIndex === "6" ? "active-wrapper-h" : "")
               }
             >
-              <ConfirmationNumberOutlinedIcon
+              <AttachMoneyRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "6" ? "icon-btn-active-h" : "")
@@ -269,14 +271,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Ticketing
+              Sponsors
             </div>
           </div>
-          
+
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleReceptionSettingsClick();
+              handleTicketingClick();
             }}
           >
             <div
@@ -285,7 +287,7 @@ const SideNavEditLean = ({
                 (activeIndex === "7" ? "active-wrapper-h" : "")
               }
             >
-              <CalendarViewDayRoundedIcon
+              <ConfirmationNumberOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "7" ? "icon-btn-active-h" : "")
@@ -299,13 +301,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Reception settings
+              Ticketing
             </div>
           </div>
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleVideosClick();
+              handleReceptionSettingsClick();
             }}
           >
             <div
@@ -314,7 +317,7 @@ const SideNavEditLean = ({
                 (activeIndex === "8" ? "active-wrapper-h" : "")
               }
             >
-              <OndemandVideoRoundedIcon
+              <CalendarViewDayRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "8" ? "icon-btn-active-h" : "")
@@ -328,13 +331,13 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Videos
+              Reception settings
             </div>
           </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleStageVibesClick();
+              handleVideosClick();
             }}
           >
             <div
@@ -343,7 +346,7 @@ const SideNavEditLean = ({
                 (activeIndex === "9" ? "active-wrapper-h" : "")
               }
             >
-              <WallpaperRoundedIcon
+              <OndemandVideoRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "9" ? "icon-btn-active-h" : "")
@@ -357,7 +360,36 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Stage vibes
+              Videos
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleStageVibesClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "10" ? "active-wrapper-h" : "")
+              }
+            >
+              <WallpaperRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "10" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "10" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Stage vibes
             </div>
           </div>
           <div
@@ -369,20 +401,20 @@ const SideNavEditLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "10" ? "active-wrapper-h" : "")
+                (activeIndex === "11" ? "active-wrapper-h" : "")
               }
             >
               <VideocamRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "10" ? "icon-btn-active-h" : "")
+                  (activeIndex === "11" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "10" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
@@ -398,39 +430,10 @@ const SideNavEditLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "11" ? "active-wrapper-h" : "")
-              }
-            >
-              <AssessmentRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "11" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-               Analytics
-            </div>
-          </div>
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
-            onClick={() => {
-              handleLiveStreamingClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
                 (activeIndex === "12" ? "active-wrapper-h" : "")
               }
             >
-              <LiveTvRoundedIcon
+              <AssessmentRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "12" ? "icon-btn-active-h" : "")
@@ -444,13 +447,13 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Live stream
+              Analytics
             </div>
           </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleIntegrationsClick();
+              handleLiveStreamingClick();
             }}
           >
             <div
@@ -459,7 +462,7 @@ const SideNavEditLean = ({
                 (activeIndex === "13" ? "active-wrapper-h" : "")
               }
             >
-              <SettingsEthernetRoundedIcon
+              <LiveTvRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "13" ? "icon-btn-active-h" : "")
@@ -473,13 +476,13 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Integrations
+              Live stream
             </div>
           </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleCouponsClick();
+              handleIntegrationsClick();
             }}
           >
             <div
@@ -488,7 +491,7 @@ const SideNavEditLean = ({
                 (activeIndex === "14" ? "active-wrapper-h" : "")
               }
             >
-              <LoyaltyRoundedIcon
+              <SettingsEthernetRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "14" ? "icon-btn-active-h" : "")
@@ -502,7 +505,36 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-               Coupons
+              Integrations
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleCouponsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "15" ? "active-wrapper-h" : "")
+              }
+            >
+              <LoyaltyRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "15" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "15" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Coupons
             </div>
           </div>
           <div
@@ -514,20 +546,20 @@ const SideNavEditLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "15" ? "active-wrapper-h" : "")
+                (activeIndex === "16" ? "active-wrapper-h" : "")
               }
             >
               <MailRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "15" ? "icon-btn-active-h" : "")
+                  (activeIndex === "16" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "15" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "16" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
@@ -543,20 +575,20 @@ const SideNavEditLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "16" ? "active-wrapper-h" : "")
+                (activeIndex === "17" ? "active-wrapper-h" : "")
               }
             >
               <PersonOutlinedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "16" ? "icon-btn-active-h" : "")
+                  (activeIndex === "17" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "16" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "17" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
@@ -572,31 +604,57 @@ const SideNavEditLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "17" ? "active-wrapper-h" : "")
+                (activeIndex === "18" ? "active-wrapper-h" : "")
               }
             >
               <RateReviewRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "17" ? "icon-btn-active-h" : "")
+                  (activeIndex === "18" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "17" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "18" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
-               Reviews
+              Reviews
             </div>
           </div>
-         
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleTrackingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "19" ? "active-wrapper-h" : "")
+              }
+            >
+              <AccountTreeRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "19" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "19" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Tracking
+            </div>
+          </div>
         </div>
       </div>
-
-     
     </>
   );
 };

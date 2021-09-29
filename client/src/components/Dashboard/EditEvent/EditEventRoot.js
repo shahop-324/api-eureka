@@ -48,6 +48,8 @@ import Integrations from "./../SpecificEvent/Pages/Integrations";
 import Affiliates from "./../SpecificEvent/Pages/Affiliate";
 import Reviews from "./../Reviews";
 import Coupons from "./../Coupons";
+import Tracking from "./Tracking";
+import EventSchedule from "./EventSchedule";
 
 const EditEventRoot = () => {
   const params = useParams();
@@ -86,77 +88,87 @@ const EditEventRoot = () => {
       `/community/${communityId}/edit-event/${id}/event-entry-and-participants`
     );
   };
+  const handleScheduleClick = () => {
+    dispatch(navigationIndexForEditEvent(2));
+    history.push(
+      `/community/${communityId}/edit-event/${id}/schedule`
+    );
+  };
 
   const handleSessionsClick = () => {
-    dispatch(navigationIndexForEditEvent(2));
+    dispatch(navigationIndexForEditEvent(3));
     history.push(`/community/${communityId}/edit-event/${id}/sessions`);
   };
 
   const handleSpeakersClick = () => {
-    dispatch(navigationIndexForEditEvent(3));
+    dispatch(navigationIndexForEditEvent(4));
     history.push(`/community/${communityId}/edit-event/${id}/speakers`);
   };
 
   const handleBoothsClick = () => {
-    dispatch(navigationIndexForEditEvent(4));
+    dispatch(navigationIndexForEditEvent(5));
     history.push(`/community/${communityId}/edit-event/${id}/booths`);
   };
 
   const handleSponsorsClick = () => {
-    dispatch(navigationIndexForEditEvent(5));
+    dispatch(navigationIndexForEditEvent(6));
     history.push(`/community/${communityId}/edit-event/${id}/sponsors`);
   };
 
   const handleTicketingClick = () => {
-    dispatch(navigationIndexForEditEvent(6));
+    dispatch(navigationIndexForEditEvent(7));
     history.push(`/community/${communityId}/edit-event/${id}/ticketing`);
   };
 
   const handleReceptionSettingsClick = () => {
-    dispatch(navigationIndexForEditEvent(7));
+    dispatch(navigationIndexForEditEvent(8));
     history.push(
       `/community/${communityId}/edit-event/${id}/reception-settings`
     );
   };
   const handleVideosClick = () => {
-    dispatch(navigationIndexForEditEvent(8));
+    dispatch(navigationIndexForEditEvent(9));
     history.push(`/community/${communityId}/edit-event/${id}/videos`);
   };
   const handleStageVibesClick = () => {
-    dispatch(navigationIndexForEditEvent(9));
+    dispatch(navigationIndexForEditEvent(10));
     history.push(`/community/${communityId}/edit-event/${id}/stage-vibes`);
   };
   const handleRecordingClick = () => {
-    dispatch(navigationIndexForEditEvent(10));
+    dispatch(navigationIndexForEditEvent(11));
     history.push(`/community/${communityId}/edit-event/${id}/recording`);
   };
   const handleAnalyticsClick = () => {
-    dispatch(navigationIndexForEditEvent(11));
+    dispatch(navigationIndexForEditEvent(12));
     history.push(`/community/${communityId}/edit-event/${id}/analytics`);
   };
   const handleLiveStreamingClick = () => {
-    dispatch(navigationIndexForEditEvent(12));
+    dispatch(navigationIndexForEditEvent(13));
     history.push(`/community/${communityId}/edit-event/${id}/live-stream`);
   };
   const handleIntegrationsClick = () => {
-    dispatch(navigationIndexForEditEvent(13));
+    dispatch(navigationIndexForEditEvent(14));
     history.push(`/community/${communityId}/edit-event/${id}/integrations`);
   };
   const handleCouponsClick = () => {
-    dispatch(navigationIndexForEditEvent(14));
+    dispatch(navigationIndexForEditEvent(15));
     history.push(`/community/${communityId}/edit-event/${id}/coupons`);
   };
   const handleMailingClick = () => {
-    dispatch(navigationIndexForEditEvent(15));
+    dispatch(navigationIndexForEditEvent(16));
     history.push(`/community/${communityId}/edit-event/${id}/mailing`);
   };
   const handleAffliateClick = () => {
-    dispatch(navigationIndexForEditEvent(16));
+    dispatch(navigationIndexForEditEvent(17));
     history.push(`/community/${communityId}/edit-event/${id}/affiliates`);
   };
   const handleReviewsClick = () => {
-    dispatch(navigationIndexForEditEvent(17));
+    dispatch(navigationIndexForEditEvent(18));
     history.push(`/community/${communityId}/edit-event/${id}/reviews`);
+  };
+  const handleTrackingClick = () => {
+    dispatch(navigationIndexForEditEvent(19));
+    history.push(`/community/${communityId}/edit-event/${id}/tracking`);
   };
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForEditEvent
@@ -236,6 +248,7 @@ const EditEventRoot = () => {
             handleEventEntryAndParticipantsClick={
               handleEventEntryAndParticipantsClick
             }
+            handleScheduleClick={handleScheduleClick}
             handleSessionsClick={handleSessionsClick}
             handleSpeakersClick={handleSpeakersClick}
             handleBoothsClick={handleBoothsClick}
@@ -252,6 +265,7 @@ const EditEventRoot = () => {
             handleAffliateClick={handleAffliateClick}
             handleMailingClick={handleMailingClick}
             handleReviewsClick={handleReviewsClick}
+            handleTrackingClick={handleTrackingClick}
           />
           <SideNavEditLean
             activeIndex={currentIndex}
@@ -259,6 +273,7 @@ const EditEventRoot = () => {
             handleEventEntryAndParticipantsClick={
               handleEventEntryAndParticipantsClick
             }
+            handleScheduleClick={handleScheduleClick}
             handleSessionsClick={handleSessionsClick}
             handleSpeakersClick={handleSpeakersClick}
             handleBoothsClick={handleBoothsClick}
@@ -275,6 +290,7 @@ const EditEventRoot = () => {
             handleAffliateClick={handleAffliateClick}
             handleMailingClick={handleMailingClick}
             handleReviewsClick={handleReviewsClick}
+            handleTrackingClick={handleTrackingClick}
           />
 
           <div className="main-content-wrapper" style={{ height: "83vh" }}>
@@ -287,60 +303,65 @@ const EditEventRoot = () => {
                   return <EventEntryAndParticipants />;
 
                 case "2":
+                  return <EventSchedule />;
+
+                case "3":
                   return (
                     <ErrorBoundriesEditEventSession>
                       <Sessions />
                     </ErrorBoundriesEditEventSession>
                   );
 
-                case "3":
+                case "4":
                   return (
                     <ErrorBoundriesEditEventSpeakers>
                       <Speakers />
                     </ErrorBoundriesEditEventSpeakers>
                   );
 
-                case "4":
+                case "5":
                   return (
                     <ErrorBoundriesEditEventBooths>
                       <Booths />
                     </ErrorBoundriesEditEventBooths>
                   );
-                case "5":
+                case "6":
                   return (
                     <ErrorBoundriesEditEventSponsors>
                       <Sponsors />
                     </ErrorBoundriesEditEventSponsors>
                   );
-                case "6":
+                case "7":
                   return (
                     <ErrorBoundriesEditEventTickets>
                       <Ticketing />
                     </ErrorBoundriesEditEventTickets>
                   );
 
-                case "7":
-                  return <div>This is for reception settings</div>;
                 case "8":
-                  return <div>Videos</div>;
+                  return <div>This is for reception settings</div>;
                 case "9":
-                  return <div>Stage vibes</div>;
+                  return <div>Videos</div>;
                 case "10":
-                  return <Recordings />;
+                  return <div>Stage vibes</div>;
                 case "11":
-                  return <div>Analytics</div>;
+                  return <Recordings />;
                 case "12":
-                  return <div>Live stream</div>;
+                  return <div>Analytics</div>;
                 case "13":
-                  return <Integrations />;
+                  return <div>Live stream</div>;
                 case "14":
-                  return <Coupons />;
+                  return <Integrations />;
                 case "15":
-                  return <div>Mailing</div>;
+                  return <Coupons />;
                 case "16":
-                  return <Affiliates />;
+                  return <div>Mailing</div>;
                 case "17":
+                  return <Affiliates />;
+                case "18":
                   return <Reviews />;
+                case "19":
+                  return <Tracking />;
 
                 default:
                   return <div>You are a community Editing an event.</div>;

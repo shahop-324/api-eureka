@@ -26,6 +26,9 @@ import Snackbar from "@material-ui/core/Snackbar";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 
+import CameraEnhanceRoundedIcon from '@mui/icons-material/CameraEnhanceRounded'; // Snap
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -37,6 +40,8 @@ const SideNav = ({
   handleTeamClick,
   handleVideoLibraryClick,
   handleIntegrationsClick,
+  handleSnapClick,
+  handleTrackingClick,
   handleBillingClick,
 }) => {
   const dispatch = useDispatch();
@@ -206,7 +211,7 @@ const SideNav = ({
 
         <div
           onClick={() => {
-            handleBillingClick();
+            handleSnapClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -219,12 +224,65 @@ const SideNav = ({
               (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
-            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
+            <CameraEnhanceRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
               `mx-3 button-text-dashboard-sidenav ` +
               (activeIndex === "5" ? "btn-text-active-d" : " ")
+            }
+          >
+            Snap
+          </div>
+        </div>
+
+        <div
+          onClick={() => {
+            handleTrackingClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "6" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "6" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <AccountTreeRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "6" ? "btn-text-active-d" : " ")
+            }
+          >
+           Tracking
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            handleBillingClick();
+          }}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "7" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "7" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <PaymentOutlinedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "7" ? "btn-text-active-d" : " ")
             }
           >
             Billing

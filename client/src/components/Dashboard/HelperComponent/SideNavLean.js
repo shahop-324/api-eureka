@@ -8,6 +8,9 @@ import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 
+import CameraEnhanceRoundedIcon from '@mui/icons-material/CameraEnhanceRounded'; // Snap
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
+
 const SideNavLean = ({
   activeIndex,
   handleGettingStartedClick,
@@ -15,6 +18,8 @@ const SideNavLean = ({
   handleTeamClick,
   handleVideoLibraryClick,
   handleIntegrationsClick,
+  handleSnapClick,
+  handleTrackingClick,
   handleBillingClick,
 }) => {
 
@@ -175,6 +180,64 @@ const SideNavLean = ({
             </div>
           </div>
 
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={() => {
+              handleSnapClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "5" ? "active-wrapper-h" : "")
+              }
+            >
+              <CameraEnhanceRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "5" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Snap
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={() => {
+              handleBillingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "6" ? "active-wrapper-h" : "")
+              }
+            >
+              <AccountTreeRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "6" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "6" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Tracking
+            </div>
+          </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {

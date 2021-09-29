@@ -1,6 +1,7 @@
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
+import {SwipeableDrawer} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 
@@ -143,8 +144,7 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-const EditTicket = (props) => {
-  const { handleSubmit, pristine, submitting, reset } = props;
+const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, reset, id}) => {
   const { detailError, isLoadingDetail } = useSelector((state) => state.ticket);
 
   const currencyOptions = [
@@ -155,13 +155,13 @@ const EditTicket = (props) => {
     // { value: "CAD", label: "Canadian Dollar" },
   ];
 
-  // const venueAreaOptions = [
-  //   { value: "Sessions", label: "Sessions" },
-  //   { value: "Speed Networking", label: "Speed Networking" },
-  //   { value: "Group Based Networking", label: "Group Based Networking" },
-  //   { value: "Social Lounge", label: "Social Lounge" },
-  //   { value: "Booths", label: "Booths" },
-  // ];
+  const venueAreaOptions = [
+    { value: "Sessions", label: "Sessions" },
+    { value: "Speed Networking", label: "Speed Networking" },
+    { value: "Group Based Networking", label: "Group Based Networking" },
+    { value: "Social Lounge", label: "Social Lounge" },
+    { value: "Booths", label: "Booths" },
+  ];
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -188,10 +188,10 @@ const EditTicket = (props) => {
 
     // console.log(ModifiedFormValues);
 
-    dispatch(editTicket(ModifiedFormValues, props.id));
+    dispatch(editTicket(ModifiedFormValues, id));
 
     // showResults(ModifiedFormValues);
-    props.handleClose();
+    handleClose();
   };
 
   // if (isLoading) {
@@ -214,11 +214,17 @@ const EditTicket = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+      <React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
         {isLoadingDetail ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -237,7 +243,7 @@ const EditTicket = (props) => {
                 </div>
                 <div
                   className="overlay-form-close-button"
-                  onClick={props.handleClose}
+                  onClick={handleClose}
                 >
                   <IconButton aria-label="delete">
                     <CancelRoundedIcon />
@@ -317,7 +323,73 @@ const EditTicket = (props) => {
                 </div>
               </div>
 
-              {/* <div className="mb-3 overlay-form-input-row">
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div>
+              <label
+                Forhtml="eventStartDate"
+                className="form-label form-label-customized"
+              >
+               Sales Start Date
+              </label>
+              <Field
+                name="startDate"
+                type="date"
+                classes="form-control"
+                id="eventStartDate"
+                component={renderInput}
+              />
+            </div>
+            <div>
+              <label
+                Forhtml="eventStartTime"
+                className="form-label form-label-customized"
+              >
+               Sales Start Time
+              </label>
+              <Field
+                name="startTime"
+                type="time"
+                classes="form-control"
+                id="eventStartTime"
+                component={renderInput}
+              />
+            </div>
+          </div>
+
+          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+            <div>
+              <label
+                Forhtml="eventEndDate"
+                className="form-label form-label-customized"
+              >
+               Sales End Date
+              </label>
+              <Field
+                name="endDate"
+                type="date"
+                classes="form-control"
+                id="eventEndDate"
+                component={renderInput}
+              />
+            </div>
+            <div>
+              <label
+                Forhtml="eventEndTime"
+                className="form-label form-label-customized"
+              >
+               Sales End Time
+              </label>
+              <Field
+                name="endTime"
+                type="time"
+                classes="form-control"
+                id="eventEndTime"
+                component={renderInput}
+              />
+            </div>
+          </div>
+
+              <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
                 className="form-label form-label-customized"
@@ -334,7 +406,9 @@ const EditTicket = (props) => {
                 // defaultValue={eventOptions[0]}
                 component={renderReactSelect}
               />
-            </div> */}
+            </div>
+
+            
 
               <div className="mb-3 overlay-form-input-row">
                 <label
@@ -355,21 +429,28 @@ const EditTicket = (props) => {
                 </div>
               </div>
 
-              {/* <div className="form-check d-flex flex-row mb-3">
-              <Field
-                name="shareRecording"
-                type="checkbox"
-                classes="form-check-input me-3 pb-1"
-                component={renderInput}
-              />
+              
+
+
+
+            <div className="mb-3 overlay-form-input-row">
               <label
                 for="communityName"
                 className="form-label form-label-customized"
-                style={{ marginBottom: "0", alignSelf: "center" }}
               >
-                Share Recordings
+                Message for attendees
               </label>
-            </div> */}
+              <div className="form-group">
+                <Field
+                  name="messageForAttendee"
+                  
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="Say thank you. This message will be sent along with the ticket."
+                  component={renderTextArea}
+                />
+              </div>
+            </div>
 
               <div
                 style={{ width: "100%" }}
@@ -388,7 +469,7 @@ const EditTicket = (props) => {
                   // disabled={pristine || submitting}
                   className="btn btn-primary btn-outline-text"
                   onClick={() => {
-                    props.handleClose();
+                    handleClose();
                   }}
                 >
                   Save Changes
@@ -397,7 +478,8 @@ const EditTicket = (props) => {
             </div>
           </form>
         )}
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
     </>
   );
 };

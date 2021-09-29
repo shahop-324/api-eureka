@@ -194,7 +194,7 @@ const EditSpeakerForm = (props) => {
   //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
 
   const [state, setState] = React.useState({
@@ -580,7 +580,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.speaker.speakerDetails && state.speaker.speakerDetails.image
-        ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.speaker.speakerDetails.image}`
+        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.speaker.speakerDetails.image}`
         : " #",
     firstName:
       state.speaker.speakerDetails && state.speaker.speakerDetails.firstName

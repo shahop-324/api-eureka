@@ -19,6 +19,8 @@ import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
 import Loader from "../../../../Loader";
 
+import { SwipeableDrawer } from "@material-ui/core";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -160,8 +162,8 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
   );
 };
 
-const EditBooth = (props) => {
-  const { handleSubmit, reset } = props;
+const EditBooth = ({open, handleClose, handleSubmit, reset, id}) => {
+  
   const { detailError, isLoadingDetail } = useSelector((state) => state.booth);
 
   const classes = useStyles();
@@ -176,7 +178,7 @@ const EditBooth = (props) => {
 
   const booth = useSelector((state) => {
     return state.booth.booths.find((booth) => {
-      return booth._id === props.id;
+      return booth._id === id;
     });
   });
 
@@ -186,7 +188,7 @@ const EditBooth = (props) => {
 
   let imgUrl = "#";
   if (imgKey) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
   const dispatch = useDispatch();
 
@@ -214,9 +216,9 @@ const EditBooth = (props) => {
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
 
-    dispatch(editBooth(ModifiedFormValues, file, props.id));
+    dispatch(editBooth(ModifiedFormValues, file, id));
 
-    props.handleClose();
+   handleClose();
   };
 
   if (detailError) {
@@ -227,11 +229,18 @@ const EditBooth = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+<React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+
         {isLoadingDetail ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -250,7 +259,7 @@ const EditBooth = (props) => {
                 </div>
                 <div
                   className="overlay-form-close-button"
-                  onClick={props.handleClose}
+                  onClick={handleClose}
                 >
                   <IconButton aria-label="delete">
                     <CancelRoundedIcon />
@@ -481,7 +490,7 @@ const EditBooth = (props) => {
                   type="submit"
                   className="btn btn-primary btn-outline-text"
                   onClick={() => {
-                    props.handleClose();
+                    handleClose();
                   }}
                 >
                   Save Changes
@@ -490,7 +499,9 @@ const EditBooth = (props) => {
             </div>
           </form>
         )}
-      </Dialog>
+        </SwipeableDrawer>
+        </React.Fragment>
+      
     </>
   );
 };
@@ -499,7 +510,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.booth.boothDetails && state.booth.boothDetails.image
-        ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.booth.boothDetails.image}`
+        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.booth.boothDetails.image}`
         : " #",
     name:
       state.booth.boothDetails && state.booth.boothDetails.name

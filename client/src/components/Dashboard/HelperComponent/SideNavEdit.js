@@ -33,6 +33,9 @@ import LoyaltyRoundedIcon from "@mui/icons-material/LoyaltyRounded"; // Coupons
 import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded'; // Sponsor
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
+
+import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
 
 import Chip from "@mui/material/Chip";
 
@@ -40,6 +43,7 @@ const SideNavEdit = ({
   activeIndex,
   handleEventOverviewClick,
   handleEventEntryAndParticipantsClick,
+  handleScheduleClick,
   handleSessionsClick,
   handleSpeakersClick,
   handleBoothsClick,
@@ -56,6 +60,7 @@ const SideNavEdit = ({
   handleAffliateClick,
   handleMailingClick,
   handleReviewsClick,
+  handleTrackingClick,
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -166,9 +171,8 @@ const SideNavEdit = ({
             Event entry & Registrations
           </div>
         </div>
-
         <div
-          onClick={handleSessionsClick}
+          onClick={handleScheduleClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "2" ? "btn-active-d" : " ")
@@ -180,7 +184,7 @@ const SideNavEdit = ({
               (activeIndex === "2" ? "btn-icon-active-d" : " ")
             }
           >
-            <TrackChangesIcon style={{ fontSize: 26 }} />
+            <EventRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -188,12 +192,12 @@ const SideNavEdit = ({
               (activeIndex === "2" ? "btn-text-active-d" : " ")
             }
           >
-            Sessions
+            Schedule
           </div>
         </div>
 
         <div
-          onClick={handleSpeakersClick}
+          onClick={handleSessionsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "3" ? "btn-active-d" : " ")
@@ -205,7 +209,7 @@ const SideNavEdit = ({
               (activeIndex === "3" ? "btn-icon-active-d" : " ")
             }
           >
-            <RecordVoiceOverIcon style={{ fontSize: 26 }} />
+            <TrackChangesIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -213,12 +217,12 @@ const SideNavEdit = ({
               (activeIndex === "3" ? "btn-text-active-d" : " ")
             }
           >
-            Speakers
+            Agenda
           </div>
         </div>
 
         <div
-          onClick={handleBoothsClick}
+          onClick={handleSpeakersClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "4" ? "btn-active-d" : " ")
@@ -230,7 +234,7 @@ const SideNavEdit = ({
               (activeIndex === "4" ? "btn-icon-active-d" : " ")
             }
           >
-            <StorefrontOutlinedIcon style={{ fontSize: 26 }} />
+            <RecordVoiceOverIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -238,12 +242,12 @@ const SideNavEdit = ({
               (activeIndex === "4" ? "btn-text-active-d" : " ")
             }
           >
-            Booths
+            Speakers
           </div>
         </div>
 
         <div
-          onClick={handleSponsorsClick}
+          onClick={handleBoothsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "5" ? "btn-active-d" : " ")
@@ -255,7 +259,7 @@ const SideNavEdit = ({
               (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
-            <AttachMoneyRoundedIcon style={{ fontSize: 26 }} />
+            <StorefrontOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -263,12 +267,12 @@ const SideNavEdit = ({
               (activeIndex === "5" ? "btn-text-active-d" : " ")
             }
           >
-            Sponsors
+            Booths
           </div>
         </div>
 
         <div
-          onClick={handleTicketingClick}
+          onClick={handleSponsorsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "6" ? "btn-active-d" : " ")
@@ -280,7 +284,7 @@ const SideNavEdit = ({
               (activeIndex === "6" ? "btn-icon-active-d" : " ")
             }
           >
-            <ConfirmationNumberOutlinedIcon style={{ fontSize: 26 }} />
+            <AttachMoneyRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -288,12 +292,12 @@ const SideNavEdit = ({
               (activeIndex === "6" ? "btn-text-active-d" : " ")
             }
           >
-            Ticketing
+            Sponsors
           </div>
         </div>
 
         <div
-          onClick={handleReceptionSettingsClick}
+          onClick={handleTicketingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "7" ? "btn-active-d" : " ")
@@ -305,7 +309,7 @@ const SideNavEdit = ({
               (activeIndex === "7" ? "btn-icon-active-d" : " ")
             }
           >
-            <CalendarViewDayRoundedIcon style={{ fontSize: 26 }} />
+            <ConfirmationNumberOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -313,11 +317,12 @@ const SideNavEdit = ({
               (activeIndex === "7" ? "btn-text-active-d" : " ")
             }
           >
-            Reception settings
+            Ticketing
           </div>
         </div>
+
         <div
-          onClick={handleVideosClick}
+          onClick={handleReceptionSettingsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "8" ? "btn-active-d" : " ")
@@ -329,7 +334,7 @@ const SideNavEdit = ({
               (activeIndex === "8" ? "btn-icon-active-d" : " ")
             }
           >
-            <OndemandVideoRoundedIcon style={{ fontSize: 26 }} />
+            <CalendarViewDayRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -337,11 +342,11 @@ const SideNavEdit = ({
               (activeIndex === "8" ? "btn-text-active-d" : " ")
             }
           >
-            Videos
+            Reception settings
           </div>
         </div>
         <div
-          onClick={handleStageVibesClick}
+          onClick={handleVideosClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "9" ? "btn-active-d" : " ")
@@ -353,7 +358,7 @@ const SideNavEdit = ({
               (activeIndex === "9" ? "btn-icon-active-d" : " ")
             }
           >
-            <WallpaperRoundedIcon style={{ fontSize: 26 }} />
+            <OndemandVideoRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -361,12 +366,11 @@ const SideNavEdit = ({
               (activeIndex === "9" ? "btn-text-active-d" : " ")
             }
           >
-            Stage vibes
+            Videos
           </div>
         </div>
-
         <div
-          onClick={handleRecordingClick}
+          onClick={handleStageVibesClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "10" ? "btn-active-d" : " ")
@@ -378,7 +382,7 @@ const SideNavEdit = ({
               (activeIndex === "10" ? "btn-icon-active-d" : " ")
             }
           >
-            <VideocamRoundedIcon style={{ fontSize: 26 }} />
+            <WallpaperRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -386,11 +390,12 @@ const SideNavEdit = ({
               (activeIndex === "10" ? "btn-text-active-d" : " ")
             }
           >
-            Recording
+            Stage vibes
           </div>
         </div>
+
         <div
-          onClick={handleAnalyticsClick}
+          onClick={handleRecordingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "11" ? "btn-active-d" : " ")
@@ -402,7 +407,7 @@ const SideNavEdit = ({
               (activeIndex === "11" ? "btn-icon-active-d" : " ")
             }
           >
-            <AssessmentRoundedIcon style={{ fontSize: 26 }} />
+            <VideocamRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -410,11 +415,11 @@ const SideNavEdit = ({
               (activeIndex === "11" ? "btn-text-active-d" : " ")
             }
           >
-            Analytics
+            Recording
           </div>
         </div>
         <div
-          onClick={handleLiveStreamingClick}
+          onClick={handleAnalyticsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "12" ? "btn-active-d" : " ")
@@ -426,6 +431,30 @@ const SideNavEdit = ({
               (activeIndex === "12" ? "btn-icon-active-d" : " ")
             }
           >
+            <AssessmentRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "12" ? "btn-text-active-d" : " ")
+            }
+          >
+            Analytics
+          </div>
+        </div>
+        <div
+          onClick={handleLiveStreamingClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "13" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "13" ? "btn-icon-active-d" : " ")
+            }
+          >
             <LiveTvRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div className="d-flex flex-row align-items-center justify-content-between">
@@ -434,7 +463,7 @@ const SideNavEdit = ({
           <div
             className={
               `mx-3 button-text-dashboard-sidenav me-5 ` +
-              (activeIndex === "12" ? "btn-text-active-d" : " ")
+              (activeIndex === "13" ? "btn-text-active-d" : " ")
             }
           >
             Live stream
@@ -452,30 +481,6 @@ const SideNavEdit = ({
           onClick={handleIntegrationsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "13" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "13" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <SettingsEthernetRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "13" ? "btn-text-active-d" : " ")
-            }
-          >
-            Integrations
-          </div>
-        </div>
-        <div
-          onClick={handleCouponsClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "14" ? "btn-active-d" : " ")
           }
         >
@@ -485,7 +490,7 @@ const SideNavEdit = ({
               (activeIndex === "14" ? "btn-icon-active-d" : " ")
             }
           >
-            <LoyaltyRoundedIcon style={{ fontSize: 26 }} />
+            <SettingsEthernetRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -493,11 +498,11 @@ const SideNavEdit = ({
               (activeIndex === "14" ? "btn-text-active-d" : " ")
             }
           >
-            Coupons
+            Integrations
           </div>
         </div>
         <div
-          onClick={handleMailingClick}
+          onClick={handleCouponsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "15" ? "btn-active-d" : " ")
@@ -509,7 +514,7 @@ const SideNavEdit = ({
               (activeIndex === "15" ? "btn-icon-active-d" : " ")
             }
           >
-            <MailRoundedIcon style={{ fontSize: 26 }} />
+            <LoyaltyRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -517,11 +522,11 @@ const SideNavEdit = ({
               (activeIndex === "15" ? "btn-text-active-d" : " ")
             }
           >
-            Mailing
+            Coupons
           </div>
         </div>
         <div
-          onClick={handleAffliateClick}
+          onClick={handleMailingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "16" ? "btn-active-d" : " ")
@@ -533,7 +538,7 @@ const SideNavEdit = ({
               (activeIndex === "16" ? "btn-icon-active-d" : " ")
             }
           >
-            <PersonOutlinedIcon style={{ fontSize: 26 }} />
+            <MailRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -541,11 +546,11 @@ const SideNavEdit = ({
               (activeIndex === "16" ? "btn-text-active-d" : " ")
             }
           >
-            Affiliate
+            Mailing
           </div>
         </div>
         <div
-          onClick={handleReviewsClick}
+          onClick={handleAffliateClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
             (activeIndex === "17" ? "btn-active-d" : " ")
@@ -557,7 +562,7 @@ const SideNavEdit = ({
               (activeIndex === "17" ? "btn-icon-active-d" : " ")
             }
           >
-            <RateReviewRoundedIcon style={{ fontSize: 26 }} />
+            <PersonOutlinedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -565,7 +570,55 @@ const SideNavEdit = ({
               (activeIndex === "17" ? "btn-text-active-d" : " ")
             }
           >
+            Affiliate
+          </div>
+        </div>
+        <div
+          onClick={handleReviewsClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "18" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "18" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <RateReviewRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "18" ? "btn-text-active-d" : " ")
+            }
+          >
             Reviews
+          </div>
+        </div>
+        <div
+          onClick={handleTrackingClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "19" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "19" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <AccountTreeRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "19" ? "btn-text-active-d" : " ")
+            }
+          >
+            Tracking
           </div>
         </div>
       </div>

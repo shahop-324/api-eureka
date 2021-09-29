@@ -16,12 +16,48 @@ import SponsorsListFields from "./SponsorListFields";
 import SponsorDetailsCard from "./SponsorDetailsCard";
 import AddNewSponsor from "./FormComponents/EditSponsorsForms/AddNewSponsor";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForCreateTicket, errorTrackerForFetchTickets, fetchSponsors } from "../../../actions";
+import {
+  errorTrackerForCreateTicket,
+  errorTrackerForFetchTickets,
+  fetchSponsors,
+} from "../../../actions";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import NoSponsor from "./../../../assets/images/working.png";
 import { useSnackbar } from "notistack";
+import styled from "styled-components";
+
+import ManageTiers from "./HelperComponents/ManageSponsorTiers";
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
+const TierIndicatorTab = styled.div`
+background-color: #F6F5F5;
+border-radius: 5px;
+
+font-size: 0.85rem;
+font-weight: 500;
+font-family: "Ubuntu";
+color: #3F3F3F;
+`
+
+const NoSponsorInTierTab = styled.div`
+text-align: center;
+background-color: #F1F1F1;
+border-radius: 5px;
+
+font-size: 0.85rem;
+font-weight: 500;
+font-family: "Ubuntu";
+color: #3F3F3F;
+
+`
 
 const options = [
   { value: "all", label: "All Sponsors" },
@@ -87,7 +123,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -101,8 +136,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sponsors = () => {
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const [openManageTiers, setOpenManageTiers] = React.useState(false);
+
+  const handleCloseManageTiers = () => {
+    setOpenManageTiers(false);
+  };
 
   const [open, setOpen] = React.useState(false);
   const [term, setTerm] = React.useState("");
@@ -160,17 +200,16 @@ const Sponsors = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    
+
     dispatch(errorTrackerForFetchTickets());
     return dispatch(errorTrackerForCreateTicket());
-    // throw new Error(error);
   }
 
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Sponsors</div>
+          <SectionHeading className="">All Sponsors</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search}`}
@@ -199,14 +238,14 @@ const Sponsors = () => {
               />
             </div>
 
-            <Link
-       
+            <button
+              onClick={() => {
+                setOpenManageTiers(true);
+              }}
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}/${communityId}`}
-              target="_blank"
             >
-              Preview Landing Page
-            </Link>
+              Manage tiers
+            </button>
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSponsor}
@@ -218,6 +257,7 @@ const Sponsors = () => {
         <div className="session-content-grid px-3 mb-4">
           <div className="basic-form-left-white px-4 py-4">
             <SponsorsListFields />
+            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 1: Platinum</TierIndicatorTab>
             {isLoading ? (
               <div
                 className="d-flex flex-row align-items-center justify-content-center"
@@ -225,15 +265,28 @@ const Sponsors = () => {
               >
                 <Loader />
               </div>
+            ) : typeof sponsors !== "undefined" && sponsors.length > 0 ? (
+              renderSponsorList(sponsors)
             ) : (
-              typeof sponsors !== "undefined" &&
-            sponsors.length > 0 ?
-              renderSponsorList(sponsors) : <NoContentFound msgText="This events sponsors will appear here." img={NoSponsor} />
+              <NoContentFound
+                msgText="This events sponsors will appear here."
+                img={NoSponsor}
+              />
             )}
+            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 2: Diamond</TierIndicatorTab>
+            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Diamond tier</NoSponsorInTierTab>
+            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 3: Gold</TierIndicatorTab>
+            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Gold tier</NoSponsorInTierTab>
+            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 4: Bronze</TierIndicatorTab>
+            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Bronze tier</NoSponsorInTierTab>
           </div>
         </div>
       </div>
       <AddNewSponsor open={open} handleClose={handleClose} />
+      <ManageTiers
+        open={openManageTiers}
+        handleClose={handleCloseManageTiers}
+      />
     </>
   );
 };

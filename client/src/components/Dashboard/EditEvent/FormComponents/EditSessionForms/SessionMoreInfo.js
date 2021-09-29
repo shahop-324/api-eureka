@@ -9,6 +9,9 @@ import Chip from "@mui/material/Chip";
 import Faker from "faker";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import WhoCanJoinSession from "./WhoCanJoinSession";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+
+import Draggable, { DraggableCore } from "react-draggable"; // Draggable and Draggable core
 
 const SessionMoreInfoPaper = styled.div`
   width: 480px;
@@ -36,13 +39,64 @@ const SubHeading = styled.div`
   color: #212121;
 `;
 
+const DraggableSpeakerPaper = styled.div`
+  background-color: #bebebe48;
+  height: auto;
+  border-radius: 5px;
+
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 3fr;
+  grid-gap: 10px;
+  align-items: center;
+`;
+
+const SpeakerName = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #212121;
+  font-size: 0.87rem;
+`;
+
+const DraggableSpeaker = () => {
+  return (
+    <>
+      <Draggable axis="y">
+        <div className="drag">
+          <DraggableSpeakerPaper className="py-3 px-2 mb-3">
+            <DragIndicatorIcon />
+
+            <Avatar src={Faker.image.avatar()} variant="rounded" />
+            <SpeakerName>{Faker.name.findName()}</SpeakerName>
+          </DraggableSpeakerPaper>
+        </div>
+      </Draggable>
+    </>
+  );
+};
+
 const SessionMoreInfo = (props) => {
+  const [openControl, setOpenControl] = useState(false);
 
-    const [openControl, setOpenControl] = useState(false);
+  const handleCloseControl = () => {
+    setOpenControl(false);
+  };
 
-    const handleCloseControl = () => {
-        setOpenControl(false);
-    }
+  const eventLogger = (e, data) => {
+    console.log("Event: ", e);
+    console.log("Data: ", data);
+  };
+
+  const handleStart = () => {
+    console.log("started dragging");
+  };
+
+  const handleDrag = () => {
+    console.log("Started dragging");
+  };
+
+  const handleStop = () => {
+    console.log("Stop dragging");
+  };
 
   return (
     <>
@@ -116,6 +170,38 @@ const SessionMoreInfo = (props) => {
 
             <hr />
 
+            <SubHeading className="mb-3">Speakers</SubHeading>
+
+            {/* <Draggable
+            >
+              <SubHeading className="mb-3">Speakers</SubHeading>   
+            </Draggable> */}
+
+            <DraggableSpeaker></DraggableSpeaker>
+            <DraggableSpeaker></DraggableSpeaker>
+            <DraggableSpeaker></DraggableSpeaker>
+
+            {/* <Chip
+              avatar={<Avatar alt="Natacha" src={Faker.image.avatar()} />}
+              label={Faker.name.findName()}
+              variant="outlined"
+              className="me-3 mb-3"
+            /> */}
+            {/* <Chip
+              avatar={<Avatar alt="Natacha" src={Faker.image.avatar()} />}
+              label={Faker.name.findName()}
+              variant="outlined"
+              className="me-3 mb-3"
+            />
+            <Chip
+              avatar={<Avatar alt="Natacha" src={Faker.image.avatar()} />}
+              label={Faker.name.findName()}
+              variant="outlined"
+              className="me-3 mb-3"
+            /> */}
+
+            <hr />
+
             <div className="d-flex flex-row align-items-center justify-content-between">
               <div>
                 <SubHeading className="mb-3">
@@ -126,9 +212,9 @@ const SessionMoreInfo = (props) => {
                 </TextSmall>
               </div>
               <button
-              onClick={() => {
+                onClick={() => {
                   setOpenControl(true);
-              }}
+                }}
                 className="btn btn-outline-primary btn-outline-text"
                 style={{ maxWidth: "100px", justifySelf: "end" }}
               >

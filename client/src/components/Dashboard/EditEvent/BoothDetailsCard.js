@@ -10,6 +10,20 @@ import EditBooth from "./FormComponents/EditBoothsForms/EditBooth";
 import DeleteBooth from "./FormComponents/EditBoothsForms/DeleteBooth";
 import { useDispatch } from "react-redux";
 import { fetchBooth } from "../../../actions";
+import MailIcon from "@mui/icons-material/Mail";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import styled from "styled-components";
+import Draggable from "react-draggable"; // Draggable and Draggable core
+
+const OrderNumber = styled.span`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,13 +78,20 @@ const BoothDetailsCard = (props) => {
 
   return (
     <>
-      <div className="session-field-value-container">
+    <Draggable axis="y">
+      <div>
+      <div className="session-field-value-container" style={{gridTemplateColumns: "1fr 4fr 3.5fr 2.5fr 3fr", alignItems: "center"}}>
+      <div>
+              <DragIndicatorIcon className="me-3 drag" />
+              <OrderNumber>1</OrderNumber>
+            </div>
         <div
           className="event-card-field "
           style={{
             width: "100%",
           }}
         >
+          
           <div className="registrations-name-field">
             <div className="registrations-field-label d-flex flex-row justify-content-start">
               {/* attendee avatar and name */}
@@ -90,7 +111,7 @@ const BoothDetailsCard = (props) => {
             The Craft Workshop
           </div> */}
         </div>
-        <div
+        {/* <div
           className="event-visibility-field"
           style={{
             width: "100%",
@@ -100,10 +121,10 @@ const BoothDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%", fontFamily: "Inter" }}
           >
-            {/* {props.tagline} */}
+            
             {truncateText(props.tagline, 35)}
           </div>
-        </div>
+        </div> */}
         <div
           className="event-status-field"
           style={{
@@ -164,6 +185,30 @@ const BoothDetailsCard = (props) => {
                 <DeleteRoundedIcon />
               </IconButton>
             </div>
+            <div
+                  onClick={() => {
+                    alert("Email invitation sent!");
+                  }}
+                >
+                  <IconButton
+                    color="secondary"
+                    aria-label="add to shopping cart"
+                  >
+                    <MailIcon style={{ color: "#1351C5" }} />
+                  </IconButton>
+                </div>
+                <div
+                  onClick={() => {
+                    alert("Invitation Link copied to clipboard!");
+                  }}
+                >
+                  <IconButton
+                    color="secondary"
+                    aria-label="add to shopping cart"
+                  >
+                    <ContentCopyIcon style={{ color: "#A113C5" }} />
+                  </IconButton>
+                </div>
           </div>
         </div>
       </div>
@@ -171,6 +216,8 @@ const BoothDetailsCard = (props) => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
+      </div>
+      </Draggable>
 
       <EditBooth open={open} handleClose={handleClose} id={props.id}  />
       <DeleteBooth
