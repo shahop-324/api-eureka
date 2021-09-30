@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import Avatar from "@material-ui/core/Avatar";
+import {Avatar, SwipeableDrawer} from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -237,12 +237,17 @@ const AddNewSpeaker = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        scroll="paper"
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+       <React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={props.open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div
             className="create-new-coupon-form px-4 py-4"
@@ -487,7 +492,8 @@ const AddNewSpeaker = (props) => {
             </div>
           </div>
         </form>
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
     </>
   );
 };

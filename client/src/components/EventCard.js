@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.scss";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEvent } from "../actions";
+import {
+  addToFavouriteEvents,
+  fetchEvent,
+  removeFromFavouriteEvents,
+} from "../actions";
 import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
 import Fab from "@material-ui/core/Fab";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -27,6 +31,7 @@ const EventCard = ({
   rating,
   startTime,
   endTime,
+  isFavourite,
 }) => {
   console.log(communityId);
   const dispatch = useDispatch();
@@ -34,6 +39,10 @@ const EventCard = ({
   const userDetails = useSelector((state) =>
     state.user.userDetails ? state.user.userDetails : null
   );
+
+  const showLiked = isFavourite;
+
+  const color = showLiked ? "#DD3B3B" : "#212121";
 
   console.log(showBtn);
   const displayJoinBtn = showBtn ? "block" : "none";
@@ -49,15 +58,22 @@ const EventCard = ({
         >
           <img src={image} className="poster-img" alt="event-poster" />
         </Link>
-        <div className="favourite-icon">
+        {/* <div className="favourite-icon">
           <Fab
+            onClick={() => {
+              if (isFavourite) {
+                dispatch(removeFromFavouriteEvents(id));
+              } else {
+                dispatch(addToFavouriteEvents(id));
+              }
+            }}
             aria-label="like"
             style={{ position: "absolute", right: "10px", bottom: "-10px" }}
             size="small"
           >
-            <FavoriteIcon className="favourite-icon" />
+            <FavoriteIcon className="favourite-icon" style={{ color: color }} />
           </Fab>
-        </div>
+        </div> */}
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="event-card-name-main mb-3">

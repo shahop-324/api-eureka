@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import Avatar from "@material-ui/core/Avatar";
+import {Avatar, SwipeableDrawer} from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -194,7 +194,7 @@ const EditSpeakerForm = (props) => {
   //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
 
   const [state, setState] = React.useState({
@@ -274,12 +274,17 @@ const EditSpeakerForm = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        scroll="paper"
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+      <React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={props.open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
         {isLoadingDetail ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -552,7 +557,8 @@ const EditSpeakerForm = (props) => {
             </div>
           </form>
         )}
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
       <div>
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
@@ -574,7 +580,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.speaker.speakerDetails && state.speaker.speakerDetails.image
-        ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.speaker.speakerDetails.image}`
+        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.speaker.speakerDetails.image}`
         : " #",
     firstName:
       state.speaker.speakerDetails && state.speaker.speakerDetails.firstName

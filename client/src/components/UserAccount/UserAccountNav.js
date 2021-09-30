@@ -36,11 +36,11 @@ class UserAccountNav extends React.Component {
       <UserAccountNavPaper className="row px-3 py-1">
         <div className="custom-nav-bar d-flex flex-row align-items-center justify-content-between px-3 py-2">
           {/* <a
-            href="https://www.evenz.in/home"
+            href="https://www.bluemeet.in/home"
             className="navbar-brand"
             style={{ textDecoration: "none", color: "#dcc7be" }}
           >
-            Evenz
+            Bluemeet
           </a> */}
 
           <img src={BluemeetLOGO} alt="bluemeet logo" style={{width: "120px"}}/>

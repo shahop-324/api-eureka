@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import VerticalTabsProfile from "./UserAccountVerticalTabsProfile";
 import {
   CustomHorizontalTabWarpper,
@@ -21,45 +22,68 @@ import Fab from "@material-ui/core/Fab";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 // import { useSnackbar } from "notistack";
 
-const EventCard = () => {
-  return (
-    <>
-      <EventCardWrapper>
-        <div className="favourite-icon">
-          <Fab
-            aria-label="like"
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "90px",
-              zIndex: "90",
-            }}
-            size="small"
-          >
-            <FavoriteIcon className="favourite-icon" />
-          </Fab>
-        </div>
-        <EventCardImg
-          src={
-            "https://images.unsplash.com/photo-1511578314322-379afb476865?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8ZXZlbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"
-          }
-        ></EventCardImg>
-        <div className="px-3 py-3">
-          <EventCardEventName className="mb-4">
-            Secure sites using ssl
-          </EventCardEventName>
-          <EventCardEventTimeLine className="mb-4">
-            10 Feb 2021 - 12 Mar 2022
-          </EventCardEventTimeLine>
-          <EventCardEventPriceRange>$10.0 to $100.00</EventCardEventPriceRange>
-        </div>
-      </EventCardWrapper>
-    </>
-  );
+import { fetchMyFavouriteEvents } from "./../../actions";
+
+import EventCard from "./../EventCard";
+import { useDispatch, useSelector } from "react-redux";
+import dateFormat from "dateformat";
+
+import Loader from "./../Loader";
+
+const renderFavouriteEvents = (events) => {
+  return events.map((event) => {
+    const now = new Date(event.startDate);
+    const end = new Date(event.endDate);
+    const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
+    // console.log(x);
+
+    const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
+
+    const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
+    const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
+    return (
+      <EventCard
+        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
+        date={formatedDate}
+        endDate={formatedEndDate}
+        id={event.id}
+        eventName={event.eventName}
+        minPrice={event.minTicketPrice}
+        maxPrice={event.maxTicketPrice}
+        key={event.id}
+        rating={(event.communityRating * 1.0).toFixed(1)}
+        startTime={startTime}
+        endTime={endTime}
+        communityId={event.createdBy}
+      />
+    );
+  });
 };
 
 const UserAccountProfileMainBody = () => {
   const [selectedTab, setSelectedTab] = useState("myprofile");
+
+  const { favouriteEvents, isLoading, error } = useSelector(
+    (state) => state.event
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMyFavouriteEvents());
+  }, []);
+
+  if (isLoading) {
+    <div
+      className="d-flex flex-row align-items-center justify-content-center"
+      style={{ height: "72vh", width: "100%" }}
+    >
+      <Loader />
+    </div>;
+  }
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <>
@@ -70,7 +94,7 @@ const UserAccountProfileMainBody = () => {
         {/* <VerticalTabsProfile /> */}
         <CustomHorizontalTabWarpper
           className=" mb-4"
-          style={{ maxWidth: "500px" }}
+          style={{ maxWidth: "500px", gridTemplateColumns: "1fr 1fr" }}
         >
           <CustomTabButton
             active={selectedTab === "myprofile" ? true : false}
@@ -88,14 +112,14 @@ const UserAccountProfileMainBody = () => {
           >
             Settings
           </CustomTabButton>
-          <CustomTabButton
+          {/* <CustomTabButton
             active={selectedTab === "favourites" ? true : false}
             onClick={() => {
               setSelectedTab("favourites");
             }}
           >
             Favourites
-          </CustomTabButton>
+          </CustomTabButton> */}
         </CustomHorizontalTabWarpper>
 
         <div className="my-3 pt-3">
@@ -124,22 +148,15 @@ const UserAccountProfileMainBody = () => {
                     </div>
                   </>
                 );
-               
+
               case "favourites":
                 return (
                   <>
-
-<EventCardsGrid>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard> <EventCard></EventCard>{" "}
-          <EventCard></EventCard> <EventCard></EventCard>
-        </EventCardsGrid>
-
+                    <EventCardsGrid>
+                      {renderFavouriteEvents(favouriteEvents)}
+                    </EventCardsGrid>
                   </>
-                )
-                break;
+                );
 
               default:
                 break;

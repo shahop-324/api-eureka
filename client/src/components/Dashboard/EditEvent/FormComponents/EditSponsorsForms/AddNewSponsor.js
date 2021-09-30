@@ -20,6 +20,8 @@ import {
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
+import { SwipeableDrawer } from "@material-ui/core";
+
 const styles = {
   control: (base) => ({
     ...base,
@@ -129,8 +131,7 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-const AddNewSponsor = (props) => {
-  const { handleSubmit } = props;
+const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
   const { error, isLoading } = useSelector((state) => state.sponsor);
   const params = useParams();
   const id = params.id;
@@ -169,7 +170,7 @@ const AddNewSponsor = (props) => {
     dispatch(createSponsor(ModifiedFormValues, file, id));
 
     // showResults(ModifiedFormValues);
-    props.handleClose();
+   handleClose();
   };
 
   if (isLoading) {
@@ -192,11 +193,20 @@ const AddNewSponsor = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+     
+
+<React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
@@ -206,7 +216,7 @@ const AddNewSponsor = (props) => {
               </div>
               <div
                 className="overlay-form-close-button"
-                onClick={props.handleClose}
+                onClick={handleClose}
               >
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
@@ -309,7 +319,9 @@ const AddNewSponsor = (props) => {
             </div>
           </div>
         </form>
-      </Dialog>
+        </SwipeableDrawer>
+        </React.Fragment>
+      
     </>
   );
 };

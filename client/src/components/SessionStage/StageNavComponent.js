@@ -26,7 +26,7 @@ const StageNavComponent = () => {
   const img = userDetails.image
     ? userDetails.image.startsWith("https://")
       ? userDetails.image
-      : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${userDetails.image}`
+      : `https://bluemeet.s3.us-west-1.amazonaws.com/${userDetails.image}`
     : "#";
 
   return (

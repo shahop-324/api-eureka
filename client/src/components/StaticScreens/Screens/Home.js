@@ -1,6 +1,7 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 import { fetchReferralCode } from "../../../actions";
@@ -16,6 +17,9 @@ import PollsChatsAndQnA from "./../../../assets/images/section-7-home.png";
 import EndlessUseCases from "./../../../assets/images/section-8-home.png";
 import BoostYourEvents from "./../../../assets/images/section-9-home.png";
 
+
+import styled from "styled-components";
+
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 
 import { Link } from "react-router-dom";
@@ -25,8 +29,87 @@ import { useDispatch } from "react-redux";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import TopNav from "../Helper/TopNav";
+import TopNavNew from "../Helper/TopNavNew.js";
 import RequestDemo from "../FormComponents/RequestDemo";
+import LiveStage from "./../../../assets/Static/Live-stage.svg";
+import Rooms from "./../../../assets/Static/Rooms.svg";
+import PhotoCollage from "./../../../assets/Static/Photo-collage.svg";
+import ChatsAndPolls from "./../../../assets/Static/Chats-and-polls.svg";
+import Vibes from "./../../../assets/Static/Vibes.svg";
+import Video from "./../../../assets/Static/Video.svg";
+
+
+import Integrations from "./../../../assets/Static/integration-showcase.svg";
+import StaticBanner from "./StaticBanner";
+
+const CatchPhrase = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+`;
+
+const PlatformShowcaseBody = styled.div`
+  background-color: #0e202e;
+
+  height: 110vh;
+  width: 100%;
+`;
+
+const PlatformShowcaseHeading = styled.div`
+  font-weight: 500;
+  font-size: 2rem;
+  font-family: "Ubuntu";
+  color: #538BF7;
+  text-align: center;
+`;
+
+const PlatformShocaseSubHeading = styled.div`
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-family: "Ubuntu";
+  color: #ececec;
+  text-align: center;
+`;
+
+const SlideTabGroup = styled.div`
+  height: auto;
+  border-radius: 10px;
+  background-color: #152d3f;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+`;
+
+const SlideTab = styled.div`
+  height: auto;
+  border-radius: 10px;
+  padding: 12px;
+
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-family: "Ubuntu";
+  color: ${(props) => props && props.active ? "#152d3f" : "#ffffff" } ;
+  text-align: center;
+
+  background-color:  ${(props) => props && props.active ? "#ffffff" : "#152d3f" } ;
+  text-align: center;
+
+  &:hover {
+    background-color: #EBEBEB70;
+    cursor: pointer;
+  }
+`;
+
+const SlideView = styled.img`
+border: 2px solid #528BF7;
+padding: 6px;
+border-radius: 12px;
+height: 70vh;
+object-fit: contain;
+`
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -88,6 +171,32 @@ window.onload = function () {
 };
 
 const Home = () => {
+
+  const [selectedTab, setSelectedTab] = useState("liveStage");
+
+  let Image = LiveStage;
+
+  {(() => {
+    switch (selectedTab) {
+      case "liveStage":
+       return Image = LiveStage;
+      case "rooms":
+       return Image = Rooms;
+      case "photoCollage":
+       return Image = PhotoCollage;
+      case "chatsAndPolls":
+       return Image = ChatsAndPolls;
+      case "vibes":
+       return Image = Vibes;
+      case "videos":
+       return Image = Video;
+       
+    
+      default:
+        break;
+    }
+  })()}
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -114,10 +223,12 @@ const Home = () => {
 
   return (
     <>
+    <StaticBanner />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here goes Top Nav */}
-          <TopNav />
+          {/* <TopNav /> */}
+          <TopNavNew />
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
@@ -133,6 +244,10 @@ const Home = () => {
                       {/* Virtual Events */}
                     </div>
                   </div>
+                  <CatchPhrase className="mb-4">
+                    Create immersive gamified experience for your audienece, no
+                    matter <br /> how much or where they are
+                  </CatchPhrase>
 
                   <div className="landing-action-btn-row d-flex flex-row align-items-center">
                     <button
@@ -145,7 +260,7 @@ const Home = () => {
                     </button>
                     <Link
                       to="/signup"
-                      className="btn btn-dark btn-outline-text px-3 py-2"
+                      className="btn btn-outline-light btn-outline-text px-3 py-2"
                     >
                       Get started
                     </Link>
@@ -229,356 +344,77 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="home-section-3 p-4 " id="home-section-3">
-          <div className="mt-3">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary mb-4"
-                  style={{ color: "#222222" }}
-                >
-                  An amazing{" "}
-                  <div
-                    className="typewrite"
-                    data-period="1000"
-                    data-type='[ "Virtual Events", "Webinars", "Conferences", "Trade shows", "Meetups", "Workshops" ]'
-                    style={{ color: "#538BF7", display: "inline-block" }}
-                  ></div>{" "}
-                  <br />
-                  event begins with us.
-                </div>
+        {/* Virtual platform showcase */}
 
-                <div
-                  className="home-text-description my-5"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                  style={{ color: "#4D4D4D" }}
-                >
-                  Evenz is designed to smoothly create, manage and Host
-                  memorable and most interactive event, no matter whatever Scale
-                  it is.
-                </div>
+        <PlatformShowcaseBody className="d-flex flex-column align-items-center p-4">
+          <PlatformShowcaseHeading className="mt-5 mb-4">
+            All in one platform to <br /> help you build in public
+          </PlatformShowcaseHeading>
 
-                <div className="action-btn-home py-3">
-                  <button
-                    onClick={() => {
-                      setOpenDemoForm(true);
-                    }}
-                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
+          <PlatformShocaseSubHeading className="mb-4">
+            All features requried to host amazing virtual <br /> experiences for
+            your company via Reach.Live
+          </PlatformShocaseSubHeading>
 
-              <div
-                className="grid-2-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={AmazingEvent}
-                  alt="amazing event"
-                  data-aos="zoom-in"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  className="zoom-in"
-                  style={{
-                    alignSelf: "center",
-                    maxHeight: "100%",
-                    maxWidth: "100%",
-                  }}
-                />
-              </div>
+          <div className="container">
+            <SlideTabGroup className="mb-5">
+              <SlideTab active={selectedTab === "liveStage" ? true : false} onClick={() => {
+                setSelectedTab("liveStage")
+              }}>Live Stage</SlideTab>
+              <SlideTab active={selectedTab === "rooms" ? true : false} onClick={() => {
+                setSelectedTab("rooms")
+              }}>Rooms</SlideTab>
+              <SlideTab active={selectedTab === "photoCollage" ? true : false} onClick={() => {
+                setSelectedTab("photoCollage")
+              }}>Photo Collage</SlideTab>
+              <SlideTab active={selectedTab === "chatsAndPolls" ? true : false} onClick={() => {
+                setSelectedTab("chatsAndPolls")
+              }}>Chat & Polls</SlideTab>
+              <SlideTab active={selectedTab === "vibes" ? true : false} onClick={() => {
+                setSelectedTab("vibes")
+              }}>Vibes</SlideTab>
+              <SlideTab active={selectedTab === "videos" ? true : false} onClick={() => {
+                setSelectedTab("videos")
+              }}>Videos</SlideTab>
+            </SlideTabGroup>
+
+            <div style={{width: "100%"}} className="d-flex flex-row align-items-center">
+
+            <SlideView src={Image} style={{marginLeft: "auto", marginRight: "auto"}}>
+            </SlideView>
             </div>
           </div>
-        </div>
+        </PlatformShowcaseBody>
 
-        <div className="home-section-4 p-4">
-          <div className="mt-3">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div
-                className="grid-1-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={FirstEvent}
-                  alt="amazing event"
-                  className="zoom-in"
-                  data-aos="zoom-in"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  style={{
-                    alignSelf: "center",
-                    maxHeight: "100%",
-                    maxWidth: "100%",
-                  }}
-                />
-              </div>
-              <div className="grid-2-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  style={{ color: "#000000" }}
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                >
-                  Your First Event is just <br />
-                  few clicks away.
-                </div>
+        {/* Integrations showcase */}
 
-                <div
-                  className="home-text-description my-5"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                >
-                  It’s that simple. With Evenz you can setup your virtual event
-                  with just one click and start getting registrations as soon as
-                  you publish your event.
-                </div>
+        <PlatformShowcaseBody className="d-flex flex-column align-items-center p-4" style={{backgroundColor: "#E4E4E4"}}>
+          <PlatformShowcaseHeading className="mt-5 mb-4" style={{fontWeight: "700", color: "#212121"}}>
+            Integrate apps for a  <br /> smoother workflow
+          </PlatformShowcaseHeading>
 
-                <div className="plan-features-offered-list">
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    // data-aos="slide-up"
-                    // data-aos-easing="ease-in-sine"
-                    // data-aos-duration="500"
-                    // data-aos-delay="100"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      SEO-optimized event registration pages{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    // data-aos="slide-up"
-                    // data-aos-easing="ease-in-sine"
-                    // data-aos-duration="500"
-                    // data-aos-delay="100"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Ticketing and payment processing{" "}
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    // data-aos="slide-up"
-                    // data-aos-easing="ease-in-sine"
-                    // data-aos-duration="500"
-                    // data-aos-delay="100"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">
-                      Event Analytics Dashboard
-                    </div>
-                  </div>
-                  <div
-                    className="d-flex flex-row align-items-center mb-2"
-                    // data-aos="slide-up"
-                    // data-aos-easing="ease-in-sine"
-                    // data-aos-duration="500"
-                    // data-aos-delay="100"
-                  >
-                    <div className="me-3">
-                      <CheckRoundedIcon
-                        style={{ fontSize: "22", fill: "#212121" }}
-                      />
-                    </div>
-                    <div className="home-feature-text">Unlimited Events</div>
-                  </div>
-                </div>
+          <PlatformShocaseSubHeading className="mb-5" style={{color: "#8A8A8A"}}>
+          Use our integrations to push data from your live events into <br/> 3rd-party apps and get real insights into all of your events.
+          </PlatformShocaseSubHeading>
 
-                <div className="action-btn-home py-3">
-                  <button
-                    onClick={() => {
-                      setOpenDemoForm(true);
-                    }}
-                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
+          <div className="container pt-3">
+            
+
+            <div style={{width: "100%"}} className="d-flex flex-row align-items-center">
+
+            <SlideView src={Integrations} style={{marginLeft: "auto", marginRight: "auto", border: "none"}}>
+            </SlideView>
             </div>
           </div>
-        </div>
+        </PlatformShowcaseBody>
 
-        <div className="home-section-5 p-4">
-          <div className="mt-3">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                  style={{ color: "#000000" }}
-                >
-                  Rooms for open discussions
-                </div>
 
-                <div
-                  className="home-text-description my-5"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                  style={{ color: "#4D4D4D" }}
-                >
-                  Everyone in your event can join a room and start discussing
-                  what they always wanted to. These are fully customisable and
-                  you have power to control them as you wish to.
-                </div>
-
-                <div className="action-btn-home py-3">
-                  <button
-                    onClick={() => {
-                      setOpenDemoForm(true);
-                    }}
-                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
-
-              <div
-                className="grid-2-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={RoomsFeatures}
-                  alt="amazing event"
-                  data-aos="zoom-in"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  className="zoom-in"
-                  style={{
-                    alignSelf: "center",
-                    maxHeight: "100%",
-                    maxWidth: "100%",
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="home-section-6 p-4">
-          <div className="mt-3">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div
-                className="grid-1-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={ConnectionThatLasts}
-                  alt="amazing event"
-                  className="zoom-in"
-                  data-aos="zoom-in"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  style={{
-                    alignSelf: "center",
-                    maxHeight: "100%",
-                    maxWidth: "100%",
-                  }}
-                />
-              </div>
-              <div className="grid-2-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  style={{ color: "#000000" }}
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                >
-                  Meet, greet and make <br />
-                  connections that lasts.
-                </div>
-
-                <div
-                  className="home-text-description my-5"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                >
-                  Speed networking and group based networking provides
-                  opportunity to interact with others in event one-on-one and
-                  discuss maybe projects or get insights on what you are working
-                  on.
-                </div>
-
-                <div className="action-btn-home py-3">
-                  <button
-                    onClick={() => {
-                      setOpenDemoForm(true);
-                    }}
-                    className="btn btn-dark btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #00000029, 0px 0px 10px #4C4E52",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+       
+        
+       
 
         <div className="home-section-7 p-4">
-          <div className="mt-3">
+          <div className=" container mt-3">
             <div
               className="grid-of-2"
               style={{ height: "auto", alignItems: "center" }}
@@ -589,25 +425,17 @@ const Home = () => {
               >
                 <div
                   className="section-heading-primary pb-2"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
+                  style={{fontSize: "2rem", fontWeight: "900"}}
                 >
                   Engage your audience.
                 </div>
 
                 <div
                   className="home-text-description my-5"
-                  style={{ color: "#ffffff" }}
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
+                  style={{ color: "#ffffff", fontWeight: "400 !important", fontSize: "0.95rem", lineHeight: "36px"  }}
+                  
                 >
-                  We have especially designed and developed various features to
-                  boost engagement in your virtual events using live Q &As,
-                  Polls and one-to-one connections.
+                  Enjoy a clutter free and full of engagement virtual event that increases your ROI and build geniune connections that lasts
                 </div>
 
                 <div className="action-btn-home py-3">
@@ -617,8 +445,7 @@ const Home = () => {
                     }}
                     className="btn btn-light btn-outline-text px-5 py-3 me-3"
                     style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #525252, 0px 0px 10px #538BF7",
+                      
                       borderRadius: "15px",
                     }}
                   >
@@ -644,187 +471,8 @@ const Home = () => {
           </div>
         </div>
 
-        {/* <div className="home-section-9">
-          <div className="container py-5 mt-3">
-            <div className="centered-heading-primary">Why Evenz ?</div>
-            
+       
 
-            <div
-              className="comparision"
-              data-aos="slide-up"
-              data-aos-easing="ease-in-sine"
-              data-aos-duration="500"
-              data-aos-delay="100"
-            >
-              <div className="prod one">
-                <div>
-                  <label>Evenz</label>
-                </div>
-                <div className="features">
-                  <h4>Affordable</h4>
-                  <ul>
-                    <li>1% Ticketing Fees</li>
-                    <li>Complete Management Suite</li>
-                    <li>Unlimited events</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="prod two">
-                <div>
-                  <label>Other Platforms</label>
-                </div>
-                <div className="features">
-                  <h4>Too Costly</h4>
-                  <ul>
-                    <li>4% or higher Fees</li>
-                    <li>No or minimal Management</li>
-                    <li>Limited events</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="" style={{ textAlign: "center" }}>
-              <a
-                href="/signup"
-                className="btn btn-primary btn-outline-text btn-attention-home px-5 py-3"
-                style={{ borderRadius: "20px" }}
-              >
-                Get started for free
-              </a>
-            </div>
-          </div>
-        </div> */}
-
-        <div className="home-section-8 p-4">
-          <div className="pt-5">
-            <div
-              className="grid-of-2"
-              style={{ height: "auto", alignItems: "center" }}
-            >
-              <div className="grid-1-of-2 px-4" style={{ alignSelf: "center" }}>
-                <div
-                  className="section-heading-primary pb-2"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                  style={{ color: "#000000" }}
-                >
-                  Endless Use Cases
-                </div>
-
-                <div
-                  className="home-text-description my-5"
-                  // data-aos="slide-up"
-                  // data-aos-easing="ease-in-sine"
-                  // data-aos-duration="500"
-                  // data-aos-delay="100"
-                >
-                  You can host almost any event you can think of, using Evenz.
-                  Here are some of them:
-                </div>
-
-                <div className="mb-5">
-                  <div className="plan-features-offered-list">
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      // data-aos="slide-up"
-                      // data-aos-easing="ease-in-sine"
-                      // data-aos-duration="500"
-                      // data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        SEO-optimized event registration pages{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      // data-aos="slide-up"
-                      // data-aos-easing="ease-in-sine"
-                      // data-aos-duration="500"
-                      // data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Ticketing and payment processing{" "}
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      // data-aos="slide-up"
-                      // data-aos-easing="ease-in-sine"
-                      // data-aos-duration="500"
-                      // data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">
-                        Event Analytics Dashboard
-                      </div>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-center mb-2"
-                      // data-aos="slide-up"
-                      // data-aos-easing="ease-in-sine"
-                      // data-aos-duration="500"
-                      // data-aos-delay="100"
-                    >
-                      <div className="me-3">
-                        <CheckRoundedIcon
-                          style={{ fontSize: "22", fill: "#212121" }}
-                        />
-                      </div>
-                      <div className="home-feature-text">Unlimited Events</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="action-btn-home py-3">
-                  <button
-                    onClick={() => {
-                      setOpenDemoForm(true);
-                    }}
-                    className="btn btn-primary btn-outline-text px-5 py-3 me-3"
-                    style={{
-                      boxShadow:
-                        "inset 0px 3px 19px #538bf7, 0px 0px 10px #505050",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Host a free event
-                  </button>
-                </div>
-              </div>
-
-              <div
-                className="grid-2-of-2 d-flex flex-row align-items-center"
-                style={{ alignSelf: "center" }}
-              >
-                <img
-                  src={EndlessUseCases}
-                  className="slide-in"
-                  data-aos="slide-left"
-                  data-aos-easing="ease-in-sine"
-                  data-aos-delay="100"
-                  alt="amazing event"
-                  style={{ maxHeight: "100%", maxWidth: "100%" }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="home-section-9">
           <div className="container py-5 mt-3">

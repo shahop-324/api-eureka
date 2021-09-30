@@ -21,7 +21,7 @@ const SessionCard = ({
             <Avatar
               variant="rounded"
               alt={speaker.firstName}
-              src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+              src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
             />
           </Tooltip>
         );

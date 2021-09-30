@@ -11,8 +11,6 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 
-// import { useDispatch } from "react-redux";
-// import { fetchParticularEventOfCommunity } from "../../../actions";
 const EventDetailCard = ({
   id,
   imgUrl,
@@ -40,7 +38,7 @@ const EventDetailCard = ({
         <div className="event-edit-field me-2">
           <Link
             className="event-field-label event-edit-icon "
-            to={`/community/${communityId}/edit-event/${id}/basics`}
+            to={`/community/${communityId}/edit-event/${id}/event-overview`}
           >
             <IconButton>
               <EditRoundedIcon />

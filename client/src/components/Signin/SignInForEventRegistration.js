@@ -181,12 +181,12 @@ const Signin = (props) => {
             <div className="col illustration-card">
               <div className="row">
                 <a
-                  href="https://www.evenz.in/home"
+                  href="https://www.bluemeet.in/home"
                   className="companyName"
                   style={{ textDecoration: "none", color: "#538BF7" }}
                 >
                   {" "}
-                  <div>Evenz</div>
+                  <div>Bluemeet</div>
                 </a>
                 <div className="welcome-message">Hi, Welcome Back</div>
                 <div className="login-illustration">
@@ -198,7 +198,7 @@ const Signin = (props) => {
           <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
             <div className="col signin-form">
               <div className="container">
-                <div className="row sign-in-heading px-2">Sign in to Evenz</div>
+                <div className="row sign-in-heading px-2">Sign in to Bluemeet</div>
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>

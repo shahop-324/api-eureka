@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "60e1c15b557681e9fc6af91e/pexels-johannes-plenio-1103970.jpg",
+      default: "pexels-photo-2693212.png.jpeg",
     },
     service: {
       type: String,

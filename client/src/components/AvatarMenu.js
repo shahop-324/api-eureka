@@ -33,9 +33,7 @@ import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import { useSnackbar } from "notistack";
 const { REACT_APP_MY_ENV } = process.env;
-// const BaseURL = REACT_APP_MY_ENV
-//   ? "http://localhost:3000/api-eureka/eureka/v1/"
-//   : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -144,47 +142,17 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
     if (image.startsWith("https://")) {
       imgURL = image;
     } else {
-      imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+      imgURL = `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`;
     }
   }
 
-  
-
-  const renderCommunities = (communities, handleClose) => {
-    return communities.map((community) => {
-      return (
-        <div
-          className="px-3 me-2 menulist-community-tab"
-          style={{ width: "100%" }}
-          onClick={() => {
-            dispatch(communitySignIn(community._id, user.userDetails._id));
-          }}
-        >
-          <div
-            className="avatar-menu-community-tab d-flex flex-row align-items-center"
-            style={{ maxWidth: "160px" }}
-          >
-            <Avatar
-              className={`me-4`}
-              variant="rounded"
-              alt={community.name}
-              src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`}
-            />
-            <div className="avatar-menu-community-name">{community.name}</div>
-          </div>
-        </div>
-      );
-    });
-  };
-
   const referralLink = REACT_APP_MY_ENV
     ? `http://localhost:3001/?ref=${referralCode}`
-    : `https://www.evenz.in/?ref=${referralCode}`;
-  // const referralLink = `https://www.evenz.in/?ref=${referralCode}`;
+    : `https://www.bluemeet.in/?ref=${referralCode}`;
 
   return (
     <div
-      style={{ zIndex: "1000000000000000000" }}
+      // style={{ zIndex: "10000" }}
       className={`${classes.root}`}
     >
       <div>
@@ -249,7 +217,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                     </MenuItem>
                     <MenuItem
                       onClick={(event) => {
-                        dispatch(navigationIndex(3));
+                        dispatch(navigationIndex(2));
                         history.push("/user/profile");
                         handleClose(event);
                       }}
@@ -346,7 +314,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
             </div>
 
             <div className="refer-and-earn-banner px-3 py-2 mt-3">
-              Refer your network to Evenz — give $5, get $5.
+              Refer your network to Bluemeet — give $5, get $5.
             </div>
 
             {/* Number cards indication credit, signups, and upgrades */}

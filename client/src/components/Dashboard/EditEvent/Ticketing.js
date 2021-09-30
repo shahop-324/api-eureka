@@ -21,6 +21,14 @@ import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicket
 import Loader from "../../Loader";
 import { useSnackbar } from "notistack";
 import { errorTrackerForFetchTickets } from "../../../actions";
+import styled from 'styled-components';
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,6 +93,9 @@ const Ticketing = () => {
 
   const params = useParams();
   const id = params.id;
+
+  const communityId = params.communityId;
+
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -152,7 +163,7 @@ const Ticketing = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pb-4 pt-4">
-          <div className="sec-heading-text">All Tickets</div>
+          <SectionHeading className="">All Tickets</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search} me-3`}
@@ -171,15 +182,6 @@ const Ticketing = () => {
                 onChange={(e) => setTerm(e.target.value)}
               />
             </div>
-
-            <Link
-      
-              className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
-              target="_blank"
-            >
-              Preview Landing Page
-            </Link>
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewTicket}

@@ -9,19 +9,47 @@ import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
+import AdjustRoundedIcon from "@mui/icons-material/AdjustRounded";
+
+import FormatAlignCenterRoundedIcon from "@mui/icons-material/FormatAlignCenterRounded"; // Event entry
+import CalendarViewDayRoundedIcon from "@mui/icons-material/CalendarViewDayRounded"; // reception settings
+import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded"; // Videos
+import WallpaperRoundedIcon from "@mui/icons-material/WallpaperRounded"; // stage vibes
+import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded"; // Recordings
+import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded"; // Analytics
+import LiveTvRoundedIcon from "@mui/icons-material/LiveTvRounded"; // Live streaming
+import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRounded"; // Integrations
+import LoyaltyRoundedIcon from "@mui/icons-material/LoyaltyRounded"; // Coupons
+import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
+import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
+import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
+
+import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
 
 const SideNavEditLean = ({
   activeIndex,
-  handleAboutClick,
-  handleBasicsClick,
-  handleBoothsClick,
-  handleNetworkingClick,
+  handleEventOverviewClick,
+  handleEventEntryAndParticipantsClick,
+  handleScheduleClick,
   handleSessionsClick,
   handleSpeakersClick,
+  handleBoothsClick,
   handleSponsorsClick,
   handleTicketingClick,
+  handleReceptionSettingsClick,
+  handleVideosClick,
+  handleStageVibesClick,
+  handleLiveStreamingClick,
+  handleRecordingClick,
+  handleAnalyticsClick,
+  handleIntegrationsClick,
+  handleCouponsClick,
+  handleAffliateClick,
+  handleMailingClick,
+  handleReviewsClick,
+  handleTrackingClick,
 }) => {
-
   console.log(activeIndex);
 
   return (
@@ -31,7 +59,7 @@ const SideNavEditLean = ({
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
         style={{
           backgroundColor: "#ffffff",
-          height: "82.5vh !important",
+          height: "76vh !important",
           overflow: "auto !important",
         }}
       >
@@ -40,7 +68,7 @@ const SideNavEditLean = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleBasicsClick();
+              handleEventOverviewClick();
             }}
           >
             <div
@@ -49,7 +77,7 @@ const SideNavEditLean = ({
                 (activeIndex === "0" ? "active-wrapper-h" : "")
               }
             >
-              <CategoryIcon
+              <AdjustRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "0" ? "icon-btn-active-h" : "")
@@ -64,16 +92,13 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Basics
+              Overview
             </div>
           </div>
-          {/* </a> */}
-
-          {/* <a data-tip="Event Management" className="">   */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleAboutClick();
+              handleEventEntryAndParticipantsClick();
             }}
           >
             <div
@@ -82,12 +107,13 @@ const SideNavEditLean = ({
                 (activeIndex === "1" ? "active-wrapper-h" : "")
               }
             >
-              <InfoRoundedIcon
+              <FormatAlignCenterRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "1" ? "icon-btn-active-h" : "")
                 }
               />
+              {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
             </div>
             <div
               className={
@@ -96,16 +122,13 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              About Event
+              Event entry & participants
             </div>
           </div>
-          {/* </a> */}
-
-          {/* <a data-tip="Reviews" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSessionsClick();
+              handleScheduleClick();
             }}
           >
             <div
@@ -114,7 +137,7 @@ const SideNavEditLean = ({
                 (activeIndex === "2" ? "active-wrapper-h" : "")
               }
             >
-              <TrackChangesIcon
+              <EventRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "2" ? "icon-btn-active-h" : "")
@@ -128,16 +151,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Sessions
+              Schedule
             </div>
           </div>
-          {/* </a> */}
 
-          {/* <a data-tip="Queries" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSpeakersClick();
+              handleSessionsClick();
             }}
           >
             <div
@@ -146,7 +167,7 @@ const SideNavEditLean = ({
                 (activeIndex === "3" ? "active-wrapper-h" : "")
               }
             >
-              <RecordVoiceOverIcon
+              <TrackChangesIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "3" ? "icon-btn-active-h" : "")
@@ -160,17 +181,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Speakers
+              Agenda
             </div>
           </div>
-          {/* </a> */}
-
-          {/* <a data-tip="Registrations" className=""> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleBoothsClick();
+              handleSpeakersClick();
             }}
           >
             <div
@@ -179,7 +197,7 @@ const SideNavEditLean = ({
                 (activeIndex === "4" ? "active-wrapper-h" : "")
               }
             >
-              <StorefrontOutlinedIcon
+              <RecordVoiceOverIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "4" ? "icon-btn-active-h" : "")
@@ -193,16 +211,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Booths
+              Speakers
             </div>
           </div>
-          {/* </a> */}
 
-          {/* <a data-tip="Coupons" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSponsorsClick();
+              handleBoothsClick();
             }}
           >
             <div
@@ -211,7 +227,7 @@ const SideNavEditLean = ({
                 (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
-              <PersonOutlinedIcon
+              <StorefrontOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -225,16 +241,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Sponsors
+              Booths
             </div>
           </div>
-          {/* </a> */}
 
-          {/* <a data-tip="Recordings" className=""> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleTicketingClick();
+              handleSponsorsClick();
             }}
           >
             <div
@@ -243,7 +257,7 @@ const SideNavEditLean = ({
                 (activeIndex === "6" ? "active-wrapper-h" : "")
               }
             >
-              <ConfirmationNumberOutlinedIcon
+              <AttachMoneyRoundedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "6" ? "icon-btn-active-h" : "")
@@ -257,16 +271,14 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Ticketing
+              Sponsors
             </div>
           </div>
-          {/* </a> */}
 
-          {/* <a data-tip="Integrations" className=""> */}
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleNetworkingClick();
+              handleTicketingClick();
             }}
           >
             <div
@@ -275,7 +287,7 @@ const SideNavEditLean = ({
                 (activeIndex === "7" ? "active-wrapper-h" : "")
               }
             >
-              <PeopleOutlineIcon
+              <ConfirmationNumberOutlinedIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "7" ? "icon-btn-active-h" : "")
@@ -289,14 +301,360 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Networking
+              Ticketing
             </div>
           </div>
-          {/* </a> */}
+
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleReceptionSettingsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "8" ? "active-wrapper-h" : "")
+              }
+            >
+              <CalendarViewDayRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "8" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "8" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Reception settings
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleVideosClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "9" ? "active-wrapper-h" : "")
+              }
+            >
+              <OndemandVideoRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "9" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "9" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Videos
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleStageVibesClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "10" ? "active-wrapper-h" : "")
+              }
+            >
+              <WallpaperRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "10" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "10" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Stage vibes
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleRecordingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "11" ? "active-wrapper-h" : "")
+              }
+            >
+              <VideocamRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "11" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Recording
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleAnalyticsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "12" ? "active-wrapper-h" : "")
+              }
+            >
+              <AssessmentRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "12" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "12" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Analytics
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleLiveStreamingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "13" ? "active-wrapper-h" : "")
+              }
+            >
+              <LiveTvRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "13" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "13" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Live stream
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleIntegrationsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "14" ? "active-wrapper-h" : "")
+              }
+            >
+              <SettingsEthernetRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "14" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "14" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Integrations
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleCouponsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "15" ? "active-wrapper-h" : "")
+              }
+            >
+              <LoyaltyRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "15" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "15" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Coupons
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleMailingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "16" ? "active-wrapper-h" : "")
+              }
+            >
+              <MailRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "16" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "16" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Mailing
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleAffliateClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "17" ? "active-wrapper-h" : "")
+              }
+            >
+              <PersonOutlinedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "17" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "17" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Affiliate
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleReviewsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "18" ? "active-wrapper-h" : "")
+              }
+            >
+              <RateReviewRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "18" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "18" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Reviews
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleTrackingClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "19" ? "active-wrapper-h" : "")
+              }
+            >
+              <AccountTreeRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "19" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "19" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Tracking
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* <ReactTooltip place="right" type="info" effect="solid" backgroundColor="#538BF7"/> */}
     </>
   );
 };

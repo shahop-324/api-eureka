@@ -84,14 +84,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Registrations = () => {
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  // const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const classes = useStyles();
 
   const dispatch = useDispatch();
 
   const params = useParams();
-  const communityId = params.id;
+  const communityId = params.communityId;
 
   const communityRegistrations = useSelector(
     (state) => state.registration.registrations
@@ -107,9 +107,9 @@ const Registrations = () => {
     (state) => state.registration
   );
 
-  const handleSeeMoreDetails = () => {
-    setOpenDrawer(true);
-  };
+  // const handleSeeMoreDetails = () => {
+  //   setOpenDrawer(true);
+  // };
 
   const processRegistrationData = () => {
     const processedArray = [];
@@ -140,8 +140,8 @@ const Registrations = () => {
   };
 
   const CreateAndDownloadCSV = (data) => {
-    
-    var csv = "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
+    var csv =
+      "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
     data.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
@@ -160,10 +160,10 @@ const Registrations = () => {
       .slice(0)
       .reverse()
       .map((registration) => {
-        console.log(registration)
+        console.log(registration);
         return (
           <RegistrationDetailsCard
-            handleSeeMoreDetails={handleSeeMoreDetails}
+           
             id={registration._id}
             key={registration._id}
             userImgURL={
@@ -274,204 +274,7 @@ const Registrations = () => {
         {/* Here I have to use pagination */}
         {/* <CustomPagination /> */}
       </div>
-      <React.Fragment key="right">
-        <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
-          anchor="right"
-          open={openDrawer}
-          disableBackdropTransition={true}
-        >
-          <div className="registration-more-details-right-drawer px-4 py-4">
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Registration Details</div>
-              <div
-                onClick={() => {
-                  setOpenDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <div className="side-drawer-more-details-content-section">
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">Avatar</div>
-                <div className="ms-5 ps-5">
-                  <Avatar
-                    alt={
-                      registrationDetails ? registrationDetails.userName : ""
-                    }
-                    src={
-                      registrationDetails
-                        ? registrationDetails.userImage && registrationDetails.userImage.startsWith("https://")
-                          ? registrationDetails.userImage
-                          : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${registrationDetails.userImage}`
-                        : ""
-                    }
-                    className={classes.large}
-                    variant="rounded"
-                  />
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">Name</div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails ? registrationDetails.userName : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">Email</div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails ? registrationDetails.userEmail : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">Contact</div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails
-                    ? registrationDetails.created_by_contact
-                    : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Ticket Type
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails ? registrationDetails.ticketType : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Event Name
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails ? registrationDetails.eventName : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Registration Date
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails
-                    ? dateFormat(
-                        registrationDetails.createdAt,
-                        "dddd, mmmm dS, yyyy, h:MM:ss TT"
-                      )
-                    : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">Amount</div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {`${
-                    registrationDetails ? registrationDetails.currency : ""
-                  } ${
-                    registrationDetails
-                      ? (registrationDetails.totalAmountPaid * 1) / 100
-                      : ""
-                  }`}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Platform Fees
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {`${
-                    registrationDetails ? registrationDetails.currency : ""
-                  } ---`}
-                  {/* Platform fees and community credits are yet to be calculated */}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Payment Gateway Fee
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {`${
-                    registrationDetails ? registrationDetails.currency : ""
-                  } ${
-                    registrationDetails
-                      ? (registrationDetails.paymentProcesserFee * 1) / 100
-                      : ""
-                  }`}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">GST</div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {`${
-                    registrationDetails ? registrationDetails.currency : ""
-                  } ${
-                    registrationDetails
-                      ? (registrationDetails.paymentTax * 1) / 100
-                      : ""
-                  }`}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Community Credit
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  INR ---
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Transaction ID
-                </div>
-                <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrationDetails ? registrationDetails.razorpayPayId : ""}
-                </div>
-              </div>
-
-              <div className="side-drawer-content-row mb-4">
-                <div className="content-heading btn-outline-text">
-                  Refund Status
-                </div>
-                <div>
-                  <div className="side-drawer-main-content-text ms-5 ps-5 mb-3">
-                    No refund created yet
-                  </div>
-                  <div className="ms-5 ps-5">
-                    {/* */}
-                    {/* <button className="btn btn-outline-primary btn-outline-text">
-                      Issue Refund
-                    </button> */}
-                    {/* Refund functionality is yet to be implemented */}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+      
     </>
   );
 };

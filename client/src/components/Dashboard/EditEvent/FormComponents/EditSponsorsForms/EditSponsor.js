@@ -22,6 +22,8 @@ import {
 import { connect } from "react-redux";
 import Loader from "../../../../Loader";
 
+import { SwipeableDrawer } from "@material-ui/core";
+
 const styles = {
   control: (base) => ({
     ...base,
@@ -130,8 +132,8 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-const EditSponosor = (props) => {
-  const { handleSubmit, pristine, submitting, reset } = props;
+const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, reset, id}) => {
+
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.sponsor
   );
@@ -157,7 +159,7 @@ const EditSponosor = (props) => {
 
   const sponsor = useSelector((state) => {
     return state.sponsor.sponsors.find((sponsor) => {
-      return sponsor._id === props.id;
+      return sponsor._id === id;
     });
   });
 
@@ -169,7 +171,7 @@ const EditSponosor = (props) => {
 
   let imgUrl = " #";
   if (imgKey) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
   const dispatch = useDispatch();
 
@@ -185,10 +187,10 @@ const EditSponosor = (props) => {
     ModifiedFormValues.website = formValues.website;
     ModifiedFormValues.status = formValues.status.value;
 
-    dispatch(editSponsor(ModifiedFormValues, file, props.id));
+    dispatch(editSponsor(ModifiedFormValues, file, id));
 
     // showResults(ModifiedFormValues);
-    props.handleClose();
+    handleClose();
   };
 
   if (detailError) {
@@ -199,11 +201,21 @@ const EditSponosor = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+     
+
+<React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+
+
         {isLoadingDetail ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -220,7 +232,7 @@ const EditSponosor = (props) => {
                 <div className="coupon-overlay-form-headline">Edit sponsor</div>
                 <div
                   className="overlay-form-close-button"
-                  onClick={props.handleClose}
+                  onClick={handleClose}
                 >
                   <IconButton aria-label="delete">
                     <CancelRoundedIcon />
@@ -326,7 +338,7 @@ const EditSponosor = (props) => {
                   type="submit"
                   className="btn btn-primary btn-outline-text"
                   onClick={() => {
-                    props.handleClose();
+                    handleClose();
                   }}
                 >
                   Save Changes
@@ -335,7 +347,8 @@ const EditSponosor = (props) => {
             </div>
           </form>
         )}
-      </Dialog>
+      </SwipeableDrawer>
+      </React.Fragment>
     </>
   );
 };
@@ -344,7 +357,8 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.sponsor.sponsorDetails && state.sponsor.sponsorDetails.image
-        ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.sponsor.sponsorDetails.image}`
+        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.sponsor.sponsorDetails.image}`
+        // https://bluemeet.s3.us-west-1.amazonaws.com/613dcf0b0aa9a6185d637d70/9b91e240-1e0d-11ec-a349-85b661c91667.jpeg
         : " #",
     organisationName:
       state.sponsor.sponsorDetails &&

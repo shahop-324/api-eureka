@@ -61,6 +61,7 @@ import CheckConnectedStatus from "./PaymentHandlingComponents/CheckConnectedStat
 import SuccessfullyConnected from "./PaymentHandlingComponents/SuccessfullyConnected";
 import NotConnected from "./PaymentHandlingComponents/NotConnected";
 
+
 AOS.init();
 
 class App extends React.Component {
@@ -113,16 +114,29 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId" exact component={CheckConnectedStatus} />
-              <Route path="/onboarded-successfully/user/:userId/community/:communityId/account/:accountId" exact component={SuccessfullyConnected} />
-              <Route path="/not-onboarded-yet/user/:userId/community/:communityId/account/:accountId" exact component={NotConnected} />
+              <Route
+                path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={CheckConnectedStatus}
+              />
+              <Route
+                path="/onboarded-successfully/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={SuccessfullyConnected}
+              />
+              <Route
+                path="/not-onboarded-yet/user/:userId/community/:communityId/account/:accountId"
+                exact
+                component={NotConnected}
+              />
               <Route path="/home" exact component={Home} />
               <Route path="/" exact component={Home} />
               <Route path="/signup" exact component={Signup} />
               <Route path="/login" exact component={SignInNew} />
               <Route path="/signup-new" exact component={SignupNew} />
 
-              {!isSignedIn && <Route path="/signin" exact component={Signin} />}
+              {/* {!isSignedIn && <Route path="/signin" exact component={Signin} />} */}
+              <Route path="/signin" exact component={Signin} />
 
               <Route
                 path="/signin/:eventId"
@@ -316,15 +330,23 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/community/:communityId/edit-event/:id/basics"
+                  path="/community/:communityId/edit-event/:id/event-overview"
                   exact
                   component={EditEventRoot}
                 />
               )}
 
-              {isSignedIn && (
+{isSignedIn && (
                 <Route
-                  path="/community/:communityId/edit-event/:id/about-event"
+                  path="/community/:communityId/edit-event/:id/event-entry-and-participants"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+{isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/schedule"
                   exact
                   component={EditEventRoot}
                 />
@@ -370,9 +392,11 @@ class App extends React.Component {
                 />
               )}
 
+              
+
               {isSignedIn && (
                 <Route
-                  path="/community/:communityId/edit-event/:id/networking"
+                  path="/community/:communityId/edit-event/:id/reception-settings"
                   exact
                   component={EditEventRoot}
                 />
@@ -380,51 +404,133 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/overview/:id"
+                  path="/community/:communityId/edit-event/:id/videos"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/stage-vibes"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/recording"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/analytics"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/live-stream"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/integrations"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/coupons"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/mailing"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/affiliates"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/reviews"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/tracking"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/getting-started/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/event-management/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/reviews/:id"
+                  // /user/${userId}/community/events/${id}/?limit=5&page=1
                   exact
                   component={DashboardRoot}
                 />
               )}
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/queries/:id"
+                  path="/user/:userId/community/team/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/registrations/:id"
+                  path="/user/:userId/community/video-library/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/recordings/:id"
+                  path="/user/:userId/community/snap/:id"
                   exact
                   component={DashboardRoot}
                 />
               )}
-
+              {isSignedIn && (
+                <Route
+                  path="/user/:userId/community/tracking/:id"
+                  exact
+                  component={DashboardRoot}
+                />
+              )}
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/integrations/:id"
@@ -432,34 +538,9 @@ class App extends React.Component {
                   component={DashboardRoot}
                 />
               )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/coupons/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
               {isSignedIn && (
                 <Route
                   path="/user/:userId/community/billing/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/team-management/:id"
-                  exact
-                  component={DashboardRoot}
-                />
-              )}
-
-              {isSignedIn && (
-                <Route
-                  path="/user/:userId/community/revenue-management/:id"
                   exact
                   component={DashboardRoot}
                 />

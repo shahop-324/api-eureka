@@ -16,14 +16,14 @@ const QueryRaisingPersonName = styled.div`
   font-weight: 500 !important;
   font-family: "Ubuntu" !important;
   color: #212121 !important;
-  font-size: 0.82rem !important;
+  font-size: 0.85rem !important;
 `;
 
 const QueryTextStyled = styled.div`
   font-weight: 500 !important;
   font-family: "Ubuntu" !important;
   color: #2f2f2f !important;
-  font-size: 0.8rem !important;
+  font-size: 0.88rem !important;
 `;
 
 

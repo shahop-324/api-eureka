@@ -318,7 +318,7 @@ const EventLandingPage = (props) => {
           bio={`${speaker.designation} at ${speaker.organisation}`}
           speakerSocialHandles={speaker.socialMediaHandles}
           id={speaker.id}
-          imgURL={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+          imgURL={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
         />
       );
     });
@@ -337,7 +337,7 @@ const EventLandingPage = (props) => {
         return (
           <DiamondSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -353,7 +353,7 @@ const EventLandingPage = (props) => {
         return (
           <PlatinumSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -369,7 +369,7 @@ const EventLandingPage = (props) => {
         return (
           <GoldSponsorCard
             id={sponsor.id}
-            image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${sponsor.image}`}
+            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
         );
       } else {
@@ -385,7 +385,7 @@ const EventLandingPage = (props) => {
       return (
         <BoothCard
           name={booth.name}
-          image={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${booth.image}`}
+          image={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
           description={booth.description}
           id={booth.id}
         />
@@ -558,7 +558,7 @@ const EventLandingPage = (props) => {
             <div className="event-landing-main-content">
               <img
                 className="event-landing-poster mb-5"
-                src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.image}`}
+                src={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
                 alt="event-landing-hero"
               />
               <div className="event-start-end-date mb-4">
@@ -572,7 +572,7 @@ const EventLandingPage = (props) => {
 
                 <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
                   <Avatar
-                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${
+                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${
                       event.createdBy.image ? event.createdBy.image : "#"
                     }`}
                     className="hosted-by-community-logo"
@@ -907,7 +907,7 @@ const EventLandingPage = (props) => {
               <div className="event-info-card-2 px-4 py-4 mb-5">
                 <div className="hosted-by-community-grid  mb-4">
                   <Avatar
-                    src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${event.createdBy.image}`}
+                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.createdBy.image}`}
                     // className="hosted-by-community-logo"
                     style={{ height: "4rem", width: "4rem" }}
                     alt={event.createdBy.name}
@@ -958,128 +958,7 @@ const EventLandingPage = (props) => {
                 />
               </div>
 
-              <div className="event-queries-section px-4 py-4 mb-5">
-                <div
-                  className="got-a-coupon-code mb-3"
-                  style={{ fontWeight: "500", fontFamily: "Inter" }}
-                >
-                  Some question you might have?
-                </div>
-                <div className={`${classes.root} d-flex flex-column`}>
-                  <Accordion
-                    square
-                    expanded={expanded === "panel1"}
-                    onChange={handleChange("panel1")}
-                  >
-                    <AccordionSummary
-                      aria-controls="panel1d-content"
-                      id="panel1d-header"
-                    >
-                      <Typography>
-                        Can I get to interact with other attendees in this
-                        event?
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>
-                        Yes, you can use networking zones and rooms to interact
-                        with other participants in this event.
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                  <Accordion
-                    square
-                    expanded={expanded === "panel2"}
-                    onChange={handleChange("panel2")}
-                  >
-                    <AccordionSummary
-                      aria-controls="panel2d-content"
-                      id="panel2d-header"
-                    >
-                      <Typography>
-                        Can I get session replays if i miss any session?
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>
-                        Yes, session recording will automatically display in
-                        your user dashboard once this event is concluded.
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                  <Accordion
-                    square
-                    expanded={expanded === "panel3"}
-                    onChange={handleChange("panel3")}
-                  >
-                    <AccordionSummary
-                      aria-controls="panel3d-content"
-                      id="panel3d-header"
-                    >
-                      <Typography>
-                        Will I get to participate in booths in this event?
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>
-                        Yes, you can choose to participate in any of the booths
-                        and interact with other attendees.
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                </div>
-
-                <div className="mb-4">
-                  <div
-                    className="got-a-coupon-code mb-3 mt-3"
-                    style={{ fontWeight: "500", fontFamily: "Inter" }}
-                  >
-                    Still have any queries before making call?
-                  </div>
-                  <form
-                    // className="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
-                    style={{ width: "100%" }}
-                  >
-                    <div
-                      className="d-flex flex-column align-items-center justify-content-center"
-                      style={{ width: "100%" }}
-                    >
-                      <div
-                        className="d-flex flex-row mb-3"
-                        style={{ width: "82%" }}
-                      >
-                        <input
-                          className="form-control mr-sm-2"
-                          type="search"
-                          value={queryText}
-                          placeholder="Your question"
-                          aria-label="Search"
-                          onChange={handleQueryText}
-                        />
-                        <button
-                          disabled={!isSignedIn}
-                          className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-                          onClick={handleAskQuery}
-                        >
-                          Ask
-                        </button>
-                      </div>
-                      <div>
-                        <Link to={`/signin/${id}/?intent=eventRegistration`}>
-                          {" "}
-                          {isSignedIn ? (
-                            <div></div>
-                          ) : (
-                            <span style={{ color: "#11A1FD" }}>
-                              Login to ask query for this event.
-                            </span>
-                          )}
-                        </Link>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>

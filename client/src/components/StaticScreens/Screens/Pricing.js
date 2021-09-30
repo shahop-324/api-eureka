@@ -42,7 +42,7 @@ import RequestDemo from "../FormComponents/RequestDemo";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
-  : "https://www.evenz.co.in/api-eureka/eureka/v1/";
+  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 const basicPlan = {
   name: "Basic",
@@ -332,10 +332,11 @@ const Pricing = (props) => {
       key: "rzp_live_bDVAURs4oXxSGi",
       amount: order.data.amount,
       currency: "USD",
-      name: "Evenz",
+      name: "Bluemeet",
       description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
       image:
-        "https://evenz-img-234.s3.ap-south-1.amazonaws.com/60e1c15b557681e9fc6af91e/evenz_logo.png",
+        "https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png",
+
       order_id: order.data.id,
       handler: function (response) {
         alert("Congratulations, Your plan purchase was successful!");
@@ -392,8 +393,8 @@ const Pricing = (props) => {
   const renderCommunitiesList = (communities) => {
     return communities.map((community) => {
       const name = community.name;
-      const image = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${community.image}`;
-
+      const image = `https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`;
+// https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png
       return (
         <div
           className="ticket-card mb-2 px-3 py-4"
@@ -868,7 +869,7 @@ const Pricing = (props) => {
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
                       <p className="card__list-description">
-                        Unlock all features from evenz
+                        Unlock all features from Bluemeet
                       </p>
                     </li>
                   </ul>
@@ -895,7 +896,7 @@ const Pricing = (props) => {
               <p>
                 Yes, we have special offers for NGOs and Not for profit
                 organisations. For More details please contact contact us at
-                <a href="mailto:support@evenz.in"> support@evenz.in</a>
+                <a href="mailto:support@bluemeet.in"> support@bluemeet.in</a>
               </p>{" "}
               {/*  */}
             </details>
@@ -912,16 +913,16 @@ const Pricing = (props) => {
             <details>
               <summary>
                 What all is needed to get started with posting and selling
-                tickets on evenz platform ?
+                tickets on bluemeet platform ?
               </summary>
               <p>
-                All you need is a free evenz account and you can start posting
+                All you need is a free bluemeet account and you can start posting
                 and selling your tickets to the whole world in few clicks.
               </p>
             </details>
             <details>
               <summary>
-                How much service charge evenz takes on each booking and is this
+                How much service charge bluemeet takes on each booking and is this
                 same for any type of tickets ?
               </summary>
               <p>
@@ -937,7 +938,7 @@ const Pricing = (props) => {
               </summary>
               <p>
                 You can recieve your payouts simply by adding a payout request
-                from your evenz community dashboard. You will be able track
+                from your bluemeet community dashboard. You will be able track
                 status of payment and payment is generally processed within 6-18
                 hrs of posting request. We recieve domestic and international
                 payments using Debit cards, credit cards, UPI, Digital Wallets
@@ -948,7 +949,7 @@ const Pricing = (props) => {
               <summary>I still have some queries ?</summary>
               <p>
                 Please reach out to us at{" "}
-                <a href="mailto:support@evenz.in"> support@evenz.in</a>
+                <a href="mailto:support@bluemeet.in"> support@bluemeet.in</a>
               </p>
             </details>
           </div>
@@ -1076,7 +1077,7 @@ const Pricing = (props) => {
                 Your plan will start immediately after this checkout and will
                 end on {expirationDate}. <br />{" "}
                 <div className="my-1">
-                  By continuing, you agree to follow Evenz{" "}
+                  By continuing, you agree to follow Bluemeet{" "}
                   <Link to="/terms-of-service">Terms & Conditions</Link>
                   for communities.
                 </div>{" "}

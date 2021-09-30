@@ -20,6 +20,9 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import MuiAlert from "@material-ui/lab/Alert";
 import Loader from "../../../../Loader";
+import MultiTagInput from "../../../MultiTagInput";
+
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -28,16 +31,39 @@ function Alert(props) {
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
+};
+
+const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <MultiTagInput input={input} value={input.value} />
+      {touched &&
+        ((error && (
+          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+            {error}
+          </div>
+        )) ||
+          (warning && (
+            <div
+              className="my-1"
+              style={{ color: "#8B780D", fontWeight: "500" }}
+            >
+              {warning}
+            </div>
+          )))}
+    </div>
+  );
 };
 
 const renderInput = ({
@@ -226,11 +252,15 @@ const AddNewSession = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+      
+
+        <React.Fragment key="right">
+        <SwipeableDrawer anchor="right" open={props.open} onOpen={() => {
+          console.log("Side nav was opended")
+        }}
+        onClose={() => {
+          console.log("Side nav was closed")
+        }}>
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
@@ -357,6 +387,49 @@ const AddNewSession = (props) => {
                 component={renderReactSelect}
               />
             </div>
+            <div className="mb-4 overlay-form-input-row">
+              <label
+                for="communityName"
+                className="form-label form-label-customized"
+              >
+                Host
+              </label>
+              <Field
+                name="host"
+                placeholder="Select host"
+                styles={styles}
+                menuPlacement="top"
+                options={speakerOptions}
+                // defaultValue={eventOptions[0]}
+                component={renderReactSelect}
+              />
+            </div>
+            <div className="mb-4 overlay-form-input-row">
+              <label
+                for="communityName"
+                className="form-label form-label-customized"
+              >
+               Co-host
+              </label>
+              <Field
+                name="cohost"
+                placeholder="Select co-host"
+                styles={styles}
+                menuPlacement="top"
+                options={speakerOptions}
+                // defaultValue={eventOptions[0]}
+                component={renderReactSelect}
+              />
+            </div>
+            
+            <div className="mb-3 overlay-form-input-row">
+              <label for="tags" className="form-label form-label-customized">
+                Tags
+              </label>
+              <div className="form-group">
+                <Field name="multiTags" component={renderMultiTags} />
+              </div>
+            </div>
 
             <div style={{ width: "100%" }}>
               <button
@@ -370,7 +443,8 @@ const AddNewSession = (props) => {
             </div>
           </div>
         </form>
-      </Dialog>
+        </SwipeableDrawer>
+        </React.Fragment>
       <div>
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}

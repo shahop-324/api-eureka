@@ -505,6 +505,11 @@ const CreateNewEventForm = (props) => {
               </label>
             </div>
           </div>
+
+
+
+
+          
           <div
             className={props.showInlineButton === "false" ? "hide" : ""}
           ></div>

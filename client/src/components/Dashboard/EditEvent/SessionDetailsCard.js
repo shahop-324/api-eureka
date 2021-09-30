@@ -1,5 +1,5 @@
 import React from "react";
-// import Faker from "faker";
+import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -11,6 +11,12 @@ import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
 import { Tooltip } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { fetchParticularSessionOfEvent } from "../../../actions";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+
+import { Popup } from "semantic-ui-react";
+import SessionMoreInfo from "./FormComponents/EditSessionForms/SessionMoreInfo";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 var dateFormat = require("dateformat");
 //var now = new Date();
@@ -30,6 +36,7 @@ const SessionDetailCard = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const [openMoreInfo, setOpenMoreInfo] = React.useState(false);
 
   //  const formatDateAndTime =(date)=>{
   //   var now = new Date();
@@ -37,6 +44,10 @@ const SessionDetailCard = ({
   //  }
 
   const dispatch = useDispatch();
+
+  const handleCloseMoreInfo = () => {
+    setOpenMoreInfo(false);
+  };
 
   const handleDeleteSession = () => {
     setOpenDeleteDialog(true);
@@ -55,8 +66,6 @@ const SessionDetailCard = ({
     setOpen(false);
   };
 
- 
-
   const renderSessionSpeakersList = (sessionSpeakers) => {
     return sessionSpeakers.map((speaker) => {
       return (
@@ -64,7 +73,7 @@ const SessionDetailCard = ({
           <Avatar
             variant="rounded"
             alt={speaker.name}
-            src={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`}
+            src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
           />
         </Tooltip>
       );
@@ -89,11 +98,16 @@ const SessionDetailCard = ({
         >
           <div
             className="event-name-d"
-            style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem" }}
+            style={{
+              width: "100%",
+              fontFamily: "Inter",
+              fontSize: "0.85rem",
+              display: "inline-block",
+            }}
           >
             {/* {name} */}
             {truncateText(name, 35)}
-            
+           
           </div>
         </div>
         <div
@@ -106,14 +120,27 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="me-3" style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
+            <div
+              className="me-3"
+              style={{
+                fontFamily: "Inter",
+                fontWeight: "500",
+                fontSize: "0.85rem",
+              }}
+            >
               {/* dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
               // Saturday, June 9th, 2007, 5:46:21 PM */}
               {dateFormat(startTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>
             {/* <div className="me-3">12/07/2021 9:00 AM</div> */}
             <div className="me-3">-</div>
-            <div style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
+            <div
+              style={{
+                fontFamily: "Inter",
+                fontWeight: "500",
+                fontSize: "0.85rem",
+              }}
+            >
               {/* {dateFormat(endDate, "mm/d/yyyy")}{" "} */}
               {dateFormat(endTime, "ddd, mmm dS, yyyy, h:MM:ss TT")}
             </div>{" "}
@@ -129,7 +156,14 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div className="chip-text" style={{ fontFamily: "Inter", fontWeight: "500", fontSize: "0.85rem" }}>
+            <div
+              className="chip-text"
+              style={{
+                fontFamily: "Inter",
+                fontWeight: "500",
+                fontSize: "0.85rem",
+              }}
+            >
               {/* Cracking PM Interviews by Microsoft Product Leader */}
               {truncateText(description, 50)}
               {/* {description} */}
@@ -143,10 +177,33 @@ const SessionDetailCard = ({
           }}
         >
           <div className="event-field-label registrations-field-label">
-            {typeof speaker !== 'undefined' && speaker.length > 0 ? <div className="session-card-speaker-grid">
-              {/* Session speaker List */}
-              {renderSessionSpeakersList(speaker)}
-            </div> : <div style={{color: "#C92121", fontWeight: "500", fontSize: "0.85rem"}}>No speaker assigned</div> }
+            {typeof speaker !== "undefined" && speaker.length > 0 ? (
+              <div className="session-card-speaker-grid">
+                {/* Session speaker List */}
+                {renderSessionSpeakersList(speaker)}
+              </div>
+            ) : (
+              // <div
+              //   style={{
+              //     color: "#C92121",
+              //     fontWeight: "500",
+              //     fontSize: "0.85rem",
+              //   }}
+              // >
+              //   No speaker assigned
+              // </div>
+              <AvatarGroup max={4}>
+                <Avatar alt="Remy Sharp" src={Faker.image.avatar()} />
+                <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
+                <Avatar alt="Cindy Baker" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+              </AvatarGroup>
+            )}
           </div>
         </div>
         <div className="event-registrations-field">
@@ -164,6 +221,15 @@ const SessionDetailCard = ({
                 <DeleteRoundedIcon />
               </IconButton>
             </div>
+            <div onClick={() => {
+                setOpenMoreInfo(true);
+              }}>
+              <IconButton color="secondary" aria-label="add to shopping cart">
+              <RemoveRedEyeIcon
+                style={{ color: "#C317EE" }}
+              />
+              </IconButton>
+            </div>
           </div>
         </div>
       </div>
@@ -177,6 +243,7 @@ const SessionDetailCard = ({
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         id={id}
       />
+      <SessionMoreInfo open={openMoreInfo} handleClose={handleCloseMoreInfo} />
     </>
   );
 };

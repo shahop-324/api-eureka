@@ -1,67 +1,77 @@
-import React from "react";
-import VerticalTabs from "./UserAccountVerticalTabs";
+import React, { useEffect } from "react";
+import EventCardNew from "../EventCardNew";
 
+import { DashboardSectionHeading, EventCardsGrid } from "./Elements";
+
+import { useDispatch, useSelector } from "react-redux";
 import {
-  DashboardSectionHeading,
-  EventCardsGrid,
-  EventCardWrapper,
-  EventCardImg,
-  EventCardEventName,
-  EventCardEventTimeLine,
-  EventCardEventPriceRange,
-} from "./Elements";
+  errorTrackerForRegisteredEvents,
+  fetchUserRegisteredEvents,
+} from "../../actions";
+import { useSnackbar } from "notistack";
+import Loader from "./../Loader";
+import dateFormat from "dateformat";
+import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 
-import Fab from "@material-ui/core/Fab";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-// import { useSnackbar } from "notistack";
+const renderRegisteredEvents = (events) => {
+  return events.map((event) => {
+    const startDate = dateFormat(event.startDate, "mmm dS, h:MM TT");
+    const endDate = dateFormat(event.endDate, "mmm dS, h:MM TT");
 
-const EventCard = () => {
-  return (
-    <>
-      <EventCardWrapper>
-        <div className="favourite-icon">
-          <Fab
-            aria-label="like"
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "90px",
-              zIndex: "90",
-            }}
-            size="small"
-          >
-            <FavoriteIcon className="favourite-icon" />
-          </Fab>
-        </div>
-        <EventCardImg
-          src={
-            "https://images.unsplash.com/photo-1511578314322-379afb476865?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8ZXZlbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"
-          }
-        ></EventCardImg>
-        <div className="px-3 py-3">
-          <EventCardEventName className="mb-4">
-            Secure sites using ssl
-          </EventCardEventName>
-          <EventCardEventTimeLine className="mb-4">
-            10 Feb 2021 - 12 Mar 2022
-          </EventCardEventTimeLine>
-          <EventCardEventPriceRange>$10.0 to $100.00</EventCardEventPriceRange>
-        </div>
-      </EventCardWrapper>
-    </>
-  );
+    return (
+      <EventCardNew
+        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
+        key={event.id}
+        eventName={event.eventName}
+        minPrice={event.minTicketPrice}
+        maxPrice={event.maxTicketPrice}
+        id={event.id}
+        communityId={
+          typeof event.createdBy === String
+            ? event.createdBy
+            : event.createdBy.id
+        }
+        startDate={startDate}
+        endDate={endDate}
+      />
+    );
+  });
 };
 
 const UserAccountHomeMainBody = () => {
-  //   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  //   const { signInSucceded } = useSelector((state) => state.auth);
+  const { events, isLoading, error } = useSelector((state) => state.event);
 
-  //   if (signInSucceded) {
-  //     enqueueSnackbar("Signed in successfully 🥳 !", {
-  //       variant: "success",
-  //     });
-  //   }
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserRegisteredEvents());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ height: "80vh", width: "100%" }}
+      >
+        <Loader />
+      </div>
+    );
+  } else if (error) {
+    enqueueSnackbar(error, {
+      variant: "error",
+    });
+
+    return dispatch(errorTrackerForRegisteredEvents());
+  } else if (Array.isArray(events) && events.length) {
+    <div
+      className="d-flex flex-row align-items-center justify-content-center"
+      style={{ height: "80vh", width: "100%" }}
+    >
+      <Loader />
+    </div>;
+  }
 
   return (
     <div className="user-account-main-body-home-content">
@@ -72,15 +82,19 @@ const UserAccountHomeMainBody = () => {
         <DashboardSectionHeading className="pb-4 ps-4">
           Your Upcoming Events
         </DashboardSectionHeading>
-        {/* <VerticalTabs /> */}
 
-        <EventCardsGrid>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard> <EventCard></EventCard>{" "}
-          <EventCard></EventCard> <EventCard></EventCard>
-        </EventCardsGrid>
+        {typeof events !== "undefined" && events.length > 0 ? (
+          <EventCardsGrid>{renderRegisteredEvents(events)}</EventCardsGrid>
+        ) : (
+          <div
+            style={{ width: "100%", height: "70vh" }}
+            className="d-flex flex-row align-items-center justify-content-center"
+          >
+            <YouHaveNoEventComing
+              msgText={"You have not yet registered in any events yet."}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

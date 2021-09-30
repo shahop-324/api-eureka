@@ -16,6 +16,8 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 
+import { SwipeableDrawer } from "@material-ui/core";
+
 import {
   createBooth,
   errorTrackerForCreateBooth,
@@ -162,8 +164,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
   );
 };
 
-const AddNewBooth = (props) => {
-  const { handleSubmit, pristine, submitting } = props;
+const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) => {
   const { error, isLoading } = useSelector((state) => state.booth);
   const params = useParams();
   const id = params.id;
@@ -219,7 +220,7 @@ const AddNewBooth = (props) => {
     dispatch(fetchParticularEventOfCommunity(id));
 
     // showResults(ModifiedFormValues);
-    props.handleClose();
+    handleClose();
   };
 
   if (isLoading) {
@@ -242,11 +243,21 @@ const AddNewBooth = (props) => {
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={props.open}
-        aria-labelledby="responsive-dialog-title"
-      >
+     
+<React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+
+       
+
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-coupon-form px-4 py-4">
             <div className="form-heading-and-close-button mb-4">
@@ -254,7 +265,7 @@ const AddNewBooth = (props) => {
               <div className="coupon-overlay-form-headline">Add New Booth</div>
               <div
                 className="overlay-form-close-button"
-                onClick={props.handleClose}
+                onClick={handleClose}
               >
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
@@ -285,7 +296,7 @@ const AddNewBooth = (props) => {
                 accept="image/*"
                 onChange={onFileChange}
                 className="form-control"
-                required
+                
               />
             </div>
 
@@ -473,7 +484,9 @@ const AddNewBooth = (props) => {
             </div>
           </div>
         </form>
-      </Dialog>
+        </SwipeableDrawer>
+        </React.Fragment>
+      
     </>
   );
 };

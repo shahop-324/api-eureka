@@ -29,21 +29,21 @@ const PrivacyPolicy = () => {
             >
               <div className="terms-condition-heading mb-3">Privacy Policy</div>
               <div className="term-description">
-                Gather Wholesale, Inc. d/b/a Evenz (“Evenz,” “we,” “our,” “us,”)
+                Gather Wholesale, Inc. d/b/a Bluemeet (“Bluemeet,” “we,” “our,” “us,”)
                 respects your privacy. This Privacy Policy describes our
                 practices with respect to Personal Information that we collect
                 from you or that you provide to us when you visit our website,
                 https://www.experiencewelcome.com/ (the “Website”), register for
-                an account to attend virtual events on the Evenz virtual meeting
-                platform (the “Evenz Platform”), or sign up to use the Evenz
+                an account to attend virtual events on the Bluemeet virtual meeting
+                platform (the “Bluemeet Platform”), or sign up to use the Bluemeet
                 Platform as a producer to host virtual events. As used in this
                 Privacy Policy, “Personal Information” means information that
                 identifies or that could be used to identify you, and “Services”
-                means, collectively, the Website and the Evenz Platform. This
+                means, collectively, the Website and the Bluemeet Platform. This
                 Privacy Policy does not apply to information that our customers
-                who produce virtual events through the Evenz Platform (“Event
-                Producers”) collect, create, or provide to Evenz when they use
-                the Evenz Platform to host virtual events, which we refer to as
+                who produce virtual events through the Bluemeet Platform (“Event
+                Producers”) collect, create, or provide to Bluemeet when they use
+                the Bluemeet Platform to host virtual events, which we refer to as
                 “Customer Data.” Customer Data, which may include Personal
                 Information contained in text, images, photos, audio clips, chat
                 logs, and audio and video recordings that are created or shared
@@ -51,16 +51,16 @@ const PrivacyPolicy = () => {
                 controlled by the Event Producer. Our use and disclosure of
                 Customer Data is governed by our agreements with Event
                 Producers. If you have questions about the information practices
-                of an Event Producer that uses the Evenz Platform to host
+                of an Event Producer that uses the Bluemeet Platform to host
                 virtual events, please review the Event Producer’s privacy
                 policy or contact the Event Producer directly. In addition, we
                 do not control the actions of anyone with whom you may choose to
                 share information during or in connection with virtual events
-                hosted on the Evenz Platform, and we cannot and do not guarantee
+                hosted on the Bluemeet Platform, and we cannot and do not guarantee
                 that any information you share will not be viewed by
                 unauthorized persons. You should therefore be cautious about the
                 information you choose to share when attending or participating
-                in virtual events hosted through the Evenz Platform.
+                in virtual events hosted through the Bluemeet Platform.
               </div>
             </div>
             <div
@@ -100,17 +100,17 @@ const PrivacyPolicy = () => {
                 We collect Personal Information that you choose to share with us
                 when you use the Services, which may include the categories
                 described below. Website Visitor and Event Producer Data. If you
-                visit our Website or sign up to use the Evenz Platform to
+                visit our Website or sign up to use the Bluemeet Platform to
                 produce and host virtual events, we will collect Personal
                 Information that you choose to share with us, including through
-                forms on the Website and within the Evenz Platform. This
+                forms on the Website and within the Bluemeet Platform. This
                 Personal Information may include: Name; Company name and job
                 title/position; Email address, phone number, mailing address and
                 other contact details; Payment and billing information; Platform
                 user account details, including username and password; and Other
                 information that you choose to share in connection with your
                 request or inquiry Event Registrant Data. To attend virtual
-                events that are produced and hosted through the Evenz Platform,
+                events that are produced and hosted through the Bluemeet Platform,
                 we ask that you register for an account with us. To set up your
                 account, we may ask you to provide the following Personal
                 Information: Name; Company name and job title/position; and
@@ -171,7 +171,7 @@ const PrivacyPolicy = () => {
               <div className="term-description">
                 In some cases, we receive Personal Information from third
                 parties. For instance, if you have been invited to attend a
-                virtual event on the Evenz Platform by an Event Producer, we may
+                virtual event on the Bluemeet Platform by an Event Producer, we may
                 receive your name and email address from the Event Producer to
                 facilitate your registration and attendance. We may also receive
                 Personal Information from other third-party sources, including:
@@ -211,7 +211,7 @@ const PrivacyPolicy = () => {
                 your inquiries and requests and communicate with you about the
                 Services; To operate and provide support for your use of the
                 Services, including to facilitate your registration for and
-                attendance at virtual events hosted on the Evenz Platform; To
+                attendance at virtual events hosted on the Bluemeet Platform; To
                 store information about your preferences and customize your
                 experience on the Services; To analyze usage trends and patterns
                 and measure the effectiveness of the Services; To perform our
@@ -253,9 +253,9 @@ const PrivacyPolicy = () => {
                 To accomplish the purposes set out above, we may share your
                 Personal Information with other parties that may include the
                 following: Event Producers that produce and host virtual events
-                through the Evenz Platform, when you register to attend their
+                through the Bluemeet Platform, when you register to attend their
                 events; Speakers and other event attendees, when you attend
-                virtual events that are hosted through the Evenz Platform;
+                virtual events that are hosted through the Bluemeet Platform;
                 Service providers that perform services on our behalf and under
                 our direction; Other third parties as necessary to (a) protect
                 or defend our interests and the legal rights or property; (b)
@@ -352,7 +352,7 @@ const PrivacyPolicy = () => {
               <div className="term-description">
                 The Services may contain links to other third-party websites and
                 services. These websites and services are not subject to this
-                Privacy Policy. They are not controlled by Evenz and Evenz is
+                Privacy Policy. They are not controlled by Bluemeet and Bluemeet is
                 not responsible for their content or their privacy policies,
                 which may differ from ours. We have not reviewed and make no
                 representations about the accuracy of information on third-party

@@ -12,14 +12,14 @@ const RegistrationsListFields = () => {
         <div className="registrations-field-label">Email</div>
       </div>
       <div className="registrations-phone-field">
-        <div className="registrations-field-label">Phone Number</div>
+        <div className="registrations-field-label">Ticket type</div>
       </div>
       
       <div className="registrations-amount-field">
-        <div className="registrations-field-label">Amount</div>
+        <div className="registrations-field-label">Added via</div>
       </div>
       <div className="registrations-ticket-type-field">
-        <div className="registrations-field-label">Ticket Type</div>
+        <div className="registrations-field-label">Actions</div>
       </div>
       <div className="registrations-invoice-field">
         <div className="registrations-field-label">Invoice</div>

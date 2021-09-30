@@ -16,7 +16,6 @@ import { editEventDescription, errorTrackerForEditEventDiscription, errorTracker
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
-// import draftToHtml from "draftjs-to-html";
 
 const About = (props) => {
   const { handleSubmit, pristine, submitting } = props;
@@ -38,6 +37,8 @@ const About = (props) => {
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
+
+  const communityId = params.communityId;
 
   const onSubmit = () => {
     const JSONData = {
@@ -79,7 +80,7 @@ const About = (props) => {
             <Link
         
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page

@@ -165,7 +165,7 @@ const ContactUs = (props) => {
                     >
                       {" "}
                       <div className="contact-item-detail contact-email">
-                        contact@evenz.in
+                        contact@bluemeet.in
                       </div>{" "}
                     </a>
                   </div>

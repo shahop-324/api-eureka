@@ -170,7 +170,8 @@ const EventManagement = () => {
         let imgUrl = " #";
         const imgKey = communityEvent.image;
         if (imgKey) {
-          imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+          imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+          // https://bluemeet.s3.us-west-1.amazonaws.com/pexels-photo-2693212.png.jpeg
         }
         return (
           <EventDetailCard

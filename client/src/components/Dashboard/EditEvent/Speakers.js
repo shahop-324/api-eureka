@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -30,6 +30,16 @@ import Loader from "../../Loader";
 import NoSpeakers from './../../../assets/images/scratching-head.png';
 import NoContentFound from "../../NoContent";
 import { useSnackbar } from "notistack";
+import styled from 'styled-components';
+
+import SendInvites from "./../EditEvent/FormComponents/EditSpeakersForms/SendInvites";
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
 
 const styles = {
   control: (base) => ({
@@ -103,6 +113,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Speakers = () => {
 
+  const [openInvites, setOpenInvites] = useState(false);
+
+  const handleCloseInvites = () => {
+    setOpenInvites(false);
+  }
+
   const { enqueueSnackbar } = useSnackbar();
 
   let options = [{ value: "all", label: "All Sessions" }];
@@ -126,10 +142,12 @@ const Speakers = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
+
+  const communityId = params.communityId;
+
   const { isLoading, error, speakers } = useSelector((state) => {
     return state.speaker;
   });
-  // const communityId = params.communityId;
 
   useEffect(() => {
     dispatch(fetchSessions(id));
@@ -164,7 +182,7 @@ const Speakers = () => {
           let imgUrl = " #";
           const imgKey = image;
           if (imgKey) {
-            imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+            imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
           }
           return (
             <SpeakersDetailsCard
@@ -198,7 +216,7 @@ const Speakers = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Speakers</div>
+          <SectionHeading >All Speakers</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search}`}
@@ -228,15 +246,15 @@ const Speakers = () => {
                 onChange={(value) => setSessionId(value.value)}
               />
             </div>
-            <Link
-              onClick={() => dispatch(fetchEvent(id))}
+            <button
+              onClick={() =>{setOpenInvites(true)}}
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
-              target="_blank"
+             
+              
             >
-              Preview Landing Page
-            </Link>
+              Send invites
+            </button>
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSpeaker}
@@ -264,6 +282,7 @@ const Speakers = () => {
         </div>
       </div>
       <AddNewSpeaker open={open} handleClose={handleClose} />
+      <SendInvites open={openInvites} handleClose={handleCloseInvites} />
     </>
   );
 };

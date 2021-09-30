@@ -12,21 +12,12 @@ import {
 } from "./Elements";
 import Divider from "@material-ui/core/Divider";
 
-import RecordingsListFields from "../Dashboard/HelperComponent/RecordingsListFields";
-import RecordingsDetailsCard from "../Dashboard/HelperComponent/RecordingsDetailsCard";
+
 import ListFields from "./GridComponents/Recording/ListFields";
 import DetailCard from "./GridComponents/Recording/DetailCard";
 import RecordingVideoPlayer from "./RecordingVideoPlayer";
 
 const options = [{ value: "All", label: "All Events" }];
-
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
 
 const styles = {
   control: (base) => ({

@@ -136,11 +136,11 @@ const Signup = (props) => {
             <div className="col illustration-card">
               <div className="row">
                 <a
-                  href="https://www.evenz.in/home"
+                  href="https://www.bluemeet.in/home"
                   className="companyName"
                   style={{ textDecoration: "none", color: "#538BF7" }}
                 >
-                  Evenz
+                Bluemeet
                 </a>
                 <div className="welcome-message mb-5">
                   Let's create your account.
@@ -304,7 +304,7 @@ const Signup = (props) => {
                             fontSize: "0.87rem",
                           }}
                         >
-                          By registering, I agree to Evenz{" "}
+                          By registering, I agree to Bluemeet{" "}
                           <span
                             className="text-link"
                             style={{

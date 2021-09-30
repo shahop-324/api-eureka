@@ -37,10 +37,10 @@ const UseCases = () => {
 
           <div className="pricing-section  py-4">
             <div className="pricing-heading-primary mt-5 mb-4">
-              How people use <span color="#ffffff">Evenz</span>
+              How people use <span color="#ffffff">Bluemeet</span>
             </div>
             <div className="pricing-heading-secondary mb-4 px-4">
-              See how you and your community can get most out of Evenz.
+              See how you and your community can get most out of Bluemeet.
             </div>
             <div
               className=" py-5"
@@ -76,7 +76,7 @@ const UseCases = () => {
                 </div>
 
                 <div className="home-text-description my-4">
-                  Evenz is designed to smoothly create, manage and Host
+                  Bluemeet is designed to smoothly create, manage and Host
                   memorable and most interactive event, no matter whatever Scale
                   it is.
                 </div>
@@ -198,7 +198,7 @@ const UseCases = () => {
                 </div>
 
                 <div className="home-text-description">
-                  Evenz is designed to smoothly create, manage and Host
+                  Bluemeet is designed to smoothly create, manage and Host
                   memorable and most interactive event, no matter whatever Scale
                   it is.
                 </div>
@@ -323,7 +323,7 @@ const UseCases = () => {
                 </div>
 
                 <div className="home-text-description">
-                  Evenz is designed to smoothly create, manage and Host
+                 Bluemeet is designed to smoothly create, manage and Host
                   memorable and most interactive event, no matter whatever Scale
                   it is.
                 </div>

@@ -69,10 +69,19 @@ router.get("/Me", userController.getMe);
 
 router.delete("/Me", userController.deleteMe);
 
-// forgot Password (now use email to reset password)
-// TODO This route is not getting hits, I have to check and fix it.
-
 // reset Password
 router.patch("/updatePassword", authController.updatePassword);
+
+router.get("/myFavouriteEvents", userController.getFavouriteEvents);
+
+router.post(
+  "/addToFavouriteEvents/:eventId",
+  userController.addToFavouriteEvents
+);
+
+router.post(
+  "/removeFromFavouriteEvents/:eventId",
+  userController.removeFromFavouriteEvents
+);
 
 module.exports = router;

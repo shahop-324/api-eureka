@@ -5,6 +5,7 @@ const eventSlice = createSlice({
 
   initialState: {
     events: [],
+    favouriteEvents: [],
     eventDetails: null,
 
     isLoading: true,
@@ -33,6 +34,26 @@ const eventSlice = createSlice({
       state.events = action.payload.events;
       state.length = action.payload.length;
       state.isLoading = false;
+    },
+    FetchFavouriteEvents(state, action) {
+      state.favouriteEvents = action.payload.events;
+      state.length = action.payload.length;
+      state.isLoading = false;
+      state.error = false;
+    },
+    AddToFavouriteEvents(state, action) {
+      const newFavouriteEvent = action.payload.event;
+
+      state.favouriteEvents.push(newFavouriteEvent);
+      state.isLoading = false;
+      state.error = false;
+    },
+    RemoveFromFavouriteEvents(state, action) {
+      state.favouriteEvents = state.favouriteEvents.filter(
+        (event) => event.id !== action.payload.event.id
+      );
+      state.isLoading = false;
+      state.error = false;
     },
     FetchEvent(state, action) {
       console.log("opoo", 28);

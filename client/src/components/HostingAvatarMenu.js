@@ -87,7 +87,7 @@ const HostingAvatarMenu = () => {
     if (image.startsWith("https://")) {
       imgURL = image;
     } else {
-      imgURL = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}`;
+      imgURL = `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`;
     }
   }
 

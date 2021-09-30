@@ -21,6 +21,10 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import MenuIcon from "@material-ui/icons/Menu";
 import AvatarMenu from "../../AvatarMenu";
 import { useSelector } from "react-redux";
+import ProductDrawer from "../Navigation/ProductDrawer";
+import UseCasesDrawer from "../Navigation/UseCasesDrawer";
+import CompanyDrawer from "../Navigation/CompanyDrawer";
+import ResourcesDrawer from "../Navigation/ResourcesDrawer";
 
 const TopNav = () => {
 
@@ -46,13 +50,13 @@ const TopNav = () => {
       >
         <nav className="navbar navbar-expand-xxl navbar-light pt-3">
           <div className="container">
-            {/* // TODO LINK EVENZ LOGO EVERYWHERE TO HOME PAGE */}
+            {/* // TODO LINK Blumeet LOGO EVERYWHERE TO HOME PAGE */}
             <span className="navbar-brand nav-brand-name-home">
               <a
-                href="https://www.evenz.in/home"
+                href="https://www.bluemeet.in/home"
                 style={{ textDecoration: "none", color: "#ffffff" }}
               >
-                Evenz
+                Bluemeet
               </a>
             </span>
 
@@ -472,6 +476,10 @@ const TopNav = () => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
+      <ProductDrawer openDrawer={false} />
+      <UseCasesDrawer openDrawer={false} />
+      <CompanyDrawer openDrawer={false} />
+      <ResourcesDrawer openDrawer={false} />
     </>
   );
 };

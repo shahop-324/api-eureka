@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const ListFieldsStyled = styled.div`
   font-weight: 500;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-family: "Ubuntu";
   color: #152d35;
 `;
@@ -25,9 +25,7 @@ const RecordingsListFields = () => {
       <div className="registrations-amount-field">
         <ListFieldsStyled className="">Quality</ListFieldsStyled>
       </div>
-      <div className="registrations-ticket-type-field">
-        <ListFieldsStyled className="">Play</ListFieldsStyled>
-      </div>
+      
       <div className="registrations-invoice-field">
         <ListFieldsStyled className="">Download</ListFieldsStyled>
       </div>

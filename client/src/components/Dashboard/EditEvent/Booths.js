@@ -16,11 +16,59 @@ import BoothDetailsCard from "./BoothDetailsCard";
 import AddNewBooth from "./FormComponents/EditBoothsForms/AddNewBooth";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { errorTrackerForCreateBooth, errorTrackerForFetchBooths, fetchBooths } from "../../../actions";
+import {
+  errorTrackerForCreateBooth,
+  errorTrackerForFetchBooths,
+  fetchBooths,
+} from "../../../actions";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
-import BoothPNG from './../../../assets/images/fogg-come-back-later-2.png';
+import BoothPNG from "./../../../assets/images/fogg-come-back-later-2.png";
 import { useSnackbar } from "notistack";
+import styled from "styled-components";
+
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded"; // Icon
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded"; // Description
+import ViewCarouselRoundedIcon from "@mui/icons-material/ViewCarouselRounded"; // Banner
+import CameraEnhanceRoundedIcon from "@mui/icons-material/CameraEnhanceRounded"; // Photo booth
+import EventSeatRoundedIcon from "@mui/icons-material/EventSeatRounded"; // Table
+import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded"; // Video
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded"; // Link
+import FilePresentRoundedIcon from "@mui/icons-material/FilePresentRounded"; // Resources
+import CardGiftcardRoundedIcon from "@mui/icons-material/CardGiftcardRounded"; // Special offers
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 7.5fr 2.5fr;
+`;
+
+const BoothCustomizationPaper = styled.div`
+  background-color: #e4e4e4b6;
+  border-radius: 10px;
+  height: fit-content;
+`;
+
+const Heading = styled.div`
+  text-align: center;
+  font-family: "Ubuntu";
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #353535;
+`;
+
+const PropertyName = styled.div`
+  font-family: "Ubuntu";
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #4d4d4d;
+`;
 
 const styles = {
   control: (base) => ({
@@ -93,6 +141,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Booths = () => {
+  const params = useParams();
+
+  const communityId = params.communityId;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -115,7 +166,6 @@ const Booths = () => {
   const [term, setTerm] = React.useState("");
   const [tagText, setTagText] = React.useState("");
 
-  const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
 
@@ -133,6 +183,10 @@ const Booths = () => {
     setOpen(false);
   };
 
+  const handleNewBooth = () => {
+    setOpen(true);
+  };
+
   const { booths, isLoading, error } = useSelector((state) => {
     return state.booth;
   });
@@ -144,7 +198,7 @@ const Booths = () => {
       .map((booth) => {
         return (
           <BoothDetailsCard
-            url={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${booth.image}`}
+            url={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
             key={booth._id}
             id={booth._id}
             name={booth.name}
@@ -162,18 +216,17 @@ const Booths = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    
+
     dispatch(errorTrackerForFetchBooths());
     return dispatch(errorTrackerForCreateBooth());
     // throw new Error(error);
   }
-  
 
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Booths</div>
+          <SectionHeading className="">All Booths</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search}`}
@@ -201,41 +254,101 @@ const Booths = () => {
                 onChange={(value) => setTagText(value.value)}
               />
             </div>
-            <Link
+            {/* <Link
       
               className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}`}
+              to={`/event-landing-page/${id}/${communityId}`}
               target="_blank"
             >
               Preview Landing Page
-            </Link>
-            <div onClick={() => {
-              // handleNewBooth()
-              alert("Please switch to professional plan to add booths in your event.")
-              }}>
+            </Link> */}
+            <div
+              onClick={() => {
+                handleNewBooth();
+                // alert("Please switch to professional plan to add booths in your event.")
+              }}
+            >
               <button className="btn btn-primary btn-outline-text">
                 Add New Booth
               </button>
             </div>
           </div>
         </div>
-        <div className="session-content-grid px-3 mb-4">
-          <div className="basic-form-left-white px-4 py-4">
-            <BoothsListFields />
-            {isLoading ? (
-              <div
-                className="d-flex flex-row align-items-center justify-content-center"
-                style={{ height: "65vh" }}
-              >
-                <Loader />
-              </div>
-            ) : (
-              typeof booths !== "undefined" &&
-            booths.length > 0 ?
-              renderBoothList(booths) : <NoContentFound msgText="This Events booths will appear here" img={BoothPNG}/>
-            )}
+        <Grid>
+          <div className="session-content-grid px-3 mb-4">
+            <div className="basic-form-left-white px-4 py-4">
+              <BoothsListFields />
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center"
+                  style={{ height: "65vh" }}
+                >
+                  <Loader />
+                </div>
+              ) : typeof booths !== "undefined" && booths.length > 0 ? (
+                renderBoothList(booths)
+              ) : (
+                <NoContentFound
+                  msgText="This Events booths will appear here"
+                  img={BoothPNG}
+                />
+              )}
+            </div>
           </div>
-        </div>
+
+          <BoothCustomizationPaper className="p-3">
+            <Heading className="mb-3">Customize booths</Heading>
+            <PropertyName className="mb-3">
+              {" "}
+              <FacebookRoundedIcon /> <span className="ms-3">Logo</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <DescriptionRoundedIcon />{" "}
+              <span className="ms-3">Exhibit description</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <ViewCarouselRoundedIcon />{" "}
+              <span className="ms-3">Exhibit banner</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <CameraEnhanceRoundedIcon />{" "}
+              <span className="ms-3">Photo booth</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <EventSeatRoundedIcon />{" "}
+              <span className="ms-3">Discussion rooms</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <VideoLibraryRoundedIcon /> <span className="ms-3">Videos</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <InsertLinkRoundedIcon />{" "}
+              <span className="ms-3">External links</span>
+            </PropertyName>
+            <PropertyName className="mb-3">
+              {" "}
+              <FilePresentRoundedIcon /> <span className="ms-3">Resources</span>
+            </PropertyName>
+            <PropertyName className="mb-4">
+              {" "}
+              <CardGiftcardRoundedIcon />{" "}
+              <span className="ms-3">Special offers</span>
+            </PropertyName>
+
+            <button
+              className="btn btn-outline-dark btn-outline-text"
+              style={{ width: "100%" }}
+            >
+              Customize now!
+            </button>
+          </BoothCustomizationPaper>
+        </Grid>
       </div>
       <AddNewBooth open={open} handleClose={handleClose} />
     </>
