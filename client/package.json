@@ -71,11 +71,8 @@
     "react-date-range": "^1.2.0",
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
-<<<<<<< HEAD
     "react-facebook-login": "^4.1.1",
-=======
     "react-draggable": "^4.4.4",
->>>>>>> af401ad76f7967cafb471f18614fa00d3b3b3171
     "react-floaterjs": "^1.0.6",
     "react-fusioncharts": "^3.1.2",
     "react-multi-email": "^0.5.3",
