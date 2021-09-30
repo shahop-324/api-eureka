@@ -14,7 +14,7 @@ import {
 } from "../../actions/index";
 // import TiSocialFacebookCircular from "react-icons/lib/ti/social-facebook-circular";
 import LinkedinAuth from "../LinkedinAuth";
-import FacebookLogin from "react-facebook-login";
+// import FacebookLogin from "react-facebook-login";
 import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
@@ -222,14 +222,14 @@ const Signin = (props) => {
                 {/* <div className="mb-3">
                  
                 </div> */}
-                <FacebookLogin
+                {/* <FacebookLogin
                   appId="878344546151410"
                   autoLoad={true}
                   fields="name,email,picture"
                   callback={responseFacebook}
                   cssClass="my-facebook-button-class"
                   icon="fa-facebook"
-                />
+                /> */}
                 {/* <FacebookLogin
                   appId="878344546151410"
                   autoLoad={true}
