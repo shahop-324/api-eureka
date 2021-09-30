@@ -12,7 +12,9 @@ import {
   resetAuthError,
   MailChimpAuth,
 } from "../../actions/index";
+// import TiSocialFacebookCircular from "react-icons/lib/ti/social-facebook-circular";
 import LinkedinAuth from "../LinkedinAuth";
+import FacebookLogin from "react-facebook-login";
 import GoogleAuth from "../GoogleAuth";
 import { signIn } from "../../actions/index";
 import { reduxForm, Field } from "redux-form";
@@ -106,6 +108,20 @@ const Signin = (props) => {
     });
     //dispatch(signIn(formValues));
   };
+  const responseFacebook = (response) => {
+    console.log(response);
+  };
+
+  // render() {
+  //   return (
+  //     <FacebookLogin
+  //       appId="1088597931155576"
+  //       autoLoad={true}
+  //       fields="name,email,picture"
+  //       callback={this.responseFacebook}
+  //     />
+  //   )
+  // }
 
   if (isSending) {
     return (
@@ -203,6 +219,25 @@ const Signin = (props) => {
                 <div className="mb-3">
                   <LinkedinAuth />
                 </div>
+                {/* <div className="mb-3">
+                 
+                </div> */}
+                <FacebookLogin
+                  appId="878344546151410"
+                  autoLoad={true}
+                  fields="name,email,picture"
+                  callback={responseFacebook}
+                  cssClass="my-facebook-button-class"
+                  icon="fa-facebook"
+                />
+                {/* <FacebookLogin
+                  appId="878344546151410"
+                  autoLoad={true}
+                  fields="name,email,picture"
+                  callback={responseFacebook}
+                  cssClass="my-facebook-button-class"
+                  icon={<TiSocialFacebookCircular />}
+                /> */}
 
                 <div
                   className="row d-flex"
