@@ -3,10 +3,10 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 
 const MultiTagInput = (props) => {
-  const [tags, setTags] = React.useState(["Example Tag"]);
+  const [tags, setTags] = React.useState([]);
 
   useEffect(() => {
-    setTags(props.value ? props.value : ["Example Tag"]);
+    setTags(props.value ? props.value : []);
   }, [props.value]);
   const input = props.input;
   return (

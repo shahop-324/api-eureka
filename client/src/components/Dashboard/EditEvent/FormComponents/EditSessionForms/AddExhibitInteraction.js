@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 import Snackbar from "@material-ui/core/Snackbar";
 
@@ -23,6 +21,14 @@ import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import styled from "styled-components";
+
+const WhoCanJoinThis = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -168,7 +174,7 @@ const renderReactSelect = ({
   </div>
 );
 
-const AddNewSession = (props) => {
+const AddExhibitInteraction = (props) => {
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
   const [state, setState] = React.useState({
@@ -224,7 +230,7 @@ const AddNewSession = (props) => {
 
     // console.log(ModifiedFormValues);
     // showResults(ModifiedFormValues);
-    dispatch(createSession(ModifiedFormValues, id));
+    // dispatch(createSession(ModifiedFormValues, id)); // TODO Dispatch this action to make a request to our api.
     props.handleClose();
     setState({ open: true, vertical: "top", horizontal: "center" });
   };
@@ -252,199 +258,189 @@ const AddNewSession = (props) => {
 
   return (
     <>
-      
+      <React.Fragment key="right">
+        <SwipeableDrawer
+          anchor="right"
+          open={props.open}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
+          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+            <div className="create-new-coupon-form px-4 py-4">
+              <div className="form-heading-and-close-button mb-4">
+                <div></div>
+                <div className="coupon-overlay-form-headline">
+                  Add Exhibit
+                </div>
+                <div
+                  className="overlay-form-close-button"
+                  onClick={props.handleClose}
+                >
+                  <IconButton aria-label="delete">
+                    <CancelRoundedIcon />
+                  </IconButton>
+                </div>
+              </div>
+              <div className="mb-4 overlay-form-input-row">
+                <label
+                  Forhtml="eventEndDate"
+                  className="form-label form-label-customized"
+                >
+                  Name
+                </label>
+                <Field
+                  name="name"
+                  type="text"
+                  classes="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="Structuring Your Bussiness for success"
+                  component={renderInput}
+                />
+              </div>
+              <div className="mb-4 overlay-form-input-row">
+                <label
+                  Forhtml="eventEndDate"
+                  className="form-label form-label-customized"
+                >
+                  Description
+                </label>
+                <Field
+                  name="description"
+                  type="textarea"
+                  classes="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="Structuring Your Bussiness for success"
+                  component={renderTextArea}
+                />
+              </div>
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    className="form-label form-label-customized"
+                  >
+                    Start Date
+                  </label>
+                  <Field
+                    name="startDate"
+                    type="date"
+                    value="2021-07-21"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    className="form-label form-label-customized"
+                  >
+                    Start Time
+                  </label>
+                  <Field
+                    name="startTime"
+                    type="time"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    className="form-label form-label-customized"
+                  >
+                    End Date
+                  </label>
+                  <Field
+                    name="endDate"
+                    type="date"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <label
+                    Forhtml="eventStartDate"
+                    className="form-label form-label-customized"
+                  >
+                    End Time
+                  </label>
+                  <Field
+                    name="endTime"
+                    type="time"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+              
+              <div className="mb-4 overlay-form-input-row">
+                <div className="d-flex flex-row align-items-center justify-content-between">
+                  <label
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Who can join this
+                  </label>
+                  <button
+                    className="btn btn-primary btn-outline-text form-control"
+                    style={{ width: "100px", display: "block" }}
+                  >
+                    Control
+                  </button>
+                </div>
 
-        <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={props.open} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
-              <div></div>
-              <div className="coupon-overlay-form-headline">
-                Add New Session
+                <WhoCanJoinThis className="mb-2">
+                  Everyone in this event can join by default.
+                </WhoCanJoinThis>
               </div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
-                <IconButton aria-label="delete">
-                  <CancelRoundedIcon />
-                </IconButton>
-              </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-                Session Name
-              </label>
-              <Field
-                name="name"
-                type="text"
-                classes="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Structuring Your Bussiness for success"
-                component={renderInput}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-                Short Description
-              </label>
-              <Field
-                name="description"
-                type="textarea"
-                classes="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Structuring Your Bussiness for success"
-                component={renderTextArea}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Start Date
-                </label>
-                <Field
-                  name="startDate"
-                  type="date"
-                  value="2021-07-21"
-                  classes="form-control"
-                  component={renderInput}
-                />
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Start Time
-                </label>
-                <Field
-                  name="startTime"
-                  type="time"
-                  classes="form-control"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  End Date
-                </label>
-                <Field
-                  name="endDate"
-                  type="date"
-                  classes="form-control"
-                  component={renderInput}
-                />
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  End Time
-                </label>
-                <Field
-                  name="endTime"
-                  type="time"
-                  classes="form-control"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Speakers
-              </label>
-              <Field
-                name="speaker"
-                placeholder="Select speakers"
-                styles={styles}
-                menuPlacement="top"
-                options={speakerOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Host
-              </label>
-              <Field
-                name="host"
-                placeholder="Select host"
-                styles={styles}
-                menuPlacement="top"
-                options={speakerOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-               Co-host
-              </label>
-              <Field
-                name="cohost"
-                placeholder="Select co-host"
-                styles={styles}
-                menuPlacement="top"
-                options={speakerOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
-            
-            <div className="mb-3 overlay-form-input-row">
-              <label for="tags" className="form-label form-label-customized">
-                Tags
-              </label>
-              <div className="form-group">
-                <Field name="multiTags" component={renderMultiTags} />
-              </div>
-            </div>
 
-            <div style={{ width: "100%" }}>
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline-text"
-                style={{ width: "100%" }}
-                // disabled={pristine || submitting}
-              >
-                Add New Session
-              </button>
+              <div className="mb-4 overlay-form-input-row">
+                <label
+                  for="communityName"
+                  className="form-label form-label-customized"
+                >
+                  Moderators
+                </label>
+                <Field
+                  name="cohost"
+                  placeholder="Select co-host"
+                  styles={styles}
+                  menuPlacement="top"
+                  options={speakerOptions}
+                  // defaultValue={eventOptions[0]}
+                  component={renderReactSelect}
+                />
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <label for="tags" className="form-label form-label-customized">
+                  Tags
+                </label>
+                <div className="form-group">
+                  <Field name="multiTags" component={renderMultiTags} />
+                </div>
+              </div>
+
+              <div style={{ width: "100%" }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline-text"
+                  style={{ width: "100%" }}
+                  // disabled={pristine || submitting}
+                >
+                  Add Exhibit 
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
         </SwipeableDrawer>
-        </React.Fragment>
+      </React.Fragment>
       <div>
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
@@ -488,6 +484,6 @@ const validate = (formValues) => {
 };
 
 export default reduxForm({
-  form: "newSessionForm",
+  form: "newExhibitInteractionForm",
   validate,
-})(AddNewSession);
+})(AddExhibitInteraction);

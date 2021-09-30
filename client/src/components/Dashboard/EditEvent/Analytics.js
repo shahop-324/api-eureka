@@ -1,0 +1,692 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+
+// Report Icons
+import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded'; // Attendee report No. 2
+import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded'; // Schedule Report No. 3
+import PollRoundedIcon from '@mui/icons-material/PollRounded'; // poll Report No. 4
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded'; // Question and answer Report No. 5
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'; // Connections Report No. 6
+import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubbleRounded'; // Event Chat Report No. 7
+import AppRegistrationRoundedIcon from '@mui/icons-material/AppRegistrationRounded'; // Registered user Report No. 8
+import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded'; // Referral Report No. 9
+import AllOutRoundedIcon from '@mui/icons-material/AllOutRounded'; // All reports bundle Report No. 10
+import CallMergeRoundedIcon from '@mui/icons-material/CallMergeRounded'; // Attendee activity Report No. 11
+import PreviewRoundedIcon from '@mui/icons-material/PreviewRounded'; // Viewership counts Report No. 12
+import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded'; // Attendee score Report No. 13
+import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded'; // Post Event Survey Report No. 14
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded'; // Scheduled meetings Report No. 15
+import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'; // Networking Meetings Report No. 16
+import AvTimerRoundedIcon from '@mui/icons-material/AvTimerRounded'; // Participation Report No. 17
+
+
+
+import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded'; // Leaderboard Report No. 25
+
+
+
+import VideoCameraBackRoundedIcon from "@mui/icons-material/VideoCameraBackRounded";
+
+const CustomHorizontalTabWarpper = styled.div`
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  border: 1px solid #538bf7;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+`;
+
+const CustomTabButton = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.84rem;
+  color: ${(props) => (props.active && props.active ? "#FFFFFF" : "#292929")};
+  align-self: center;
+
+  text-align: center;
+  padding: 6px 12px;
+  background-color: ${(props) =>
+    props.active && props.active ? "#3877F3" : "#FFFFFF00"};
+  border-radius: 20px;
+  border: 1px solid transparent;
+
+  padding-top: 8px;
+  padding-bottom: 8px;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.active && props.active ? "#538BF7" : "#a0a0a057"};
+    cursor: pointer;
+  }
+`;
+
+const SwitchTab = styled.div`
+  font-weight: 500;
+  font-size: 0.95rem;
+  font-family: "Ubuntu";
+  color: ${(props) => (props && props.active ? "#272727" : "#575757")};
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  border-bottom: ${(props) =>
+    props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
+  width: fit-content;
+
+  &:hover {
+    color: #272727;
+    cursor: pointer;
+  }
+`;
+
+const TextBrief = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #212121;
+`;
+
+const EventReportGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 24px;
+`;
+
+const EventReportCard = styled.div`
+  border: 1px solid #b3b3b3;
+  border-radius: 10px;
+  padding: 24px;
+  background-color: #ffffff;
+
+  button {
+    visibility: hidden;
+  }
+
+  &:hover {
+    border: 1px solid #a1a9ee;
+    button {
+      visibility: visible !important;
+    }
+  }
+`;
+
+const EventReportTitle = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #212121;
+`;
+
+const EventReportBrief = styled.div`
+  font-family: "Ubuntu";
+  font-weight: 400;
+  font-size: 0.785rem;
+  letter-spacing: 0.3px;
+  color: #535353;
+`;
+
+const EventReportIconBox = styled.div`
+  padding: 10px;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#538BF7"};
+  color: #ffffff;
+`;
+
+const Analytics = () => {
+  const [selectedTab, setSelectedTab] = useState("reports");
+
+  const [activeTab, setActiveTab] = useState("reports");
+
+  return (
+    <>
+      <div className="p-4">
+        <CustomHorizontalTabWarpper className=" mb-5">
+          <CustomTabButton
+            active={selectedTab === "reports" ? true : false}
+            onClick={() => {
+              setSelectedTab("reports");
+            }}
+          >
+            Reports
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "registrations" ? true : false}
+            onClick={() => {
+              setSelectedTab("registrations");
+            }}
+          >
+            Registrations
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "connections" ? true : false}
+            onClick={() => {
+              setSelectedTab("connections");
+            }}
+          >
+            Connections
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "polls" ? true : false}
+            onClick={() => {
+              setSelectedTab("polls");
+            }}
+          >
+            Polls
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "sessions" ? true : false}
+            onClick={() => {
+              setSelectedTab("sessions");
+            }}
+          >
+            Sessions
+          </CustomTabButton>
+
+          <CustomTabButton
+            active={selectedTab === "networking" ? true : false}
+            onClick={() => {
+              setSelectedTab("networking");
+            }}
+          >
+            Networking
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "rooms" ? true : false}
+            onClick={() => {
+              setSelectedTab("rooms");
+            }}
+          >
+            Rooms
+          </CustomTabButton>
+          <CustomTabButton
+            active={selectedTab === "booths" ? true : false}
+            onClick={() => {
+              setSelectedTab("booths");
+            }}
+          >
+            Booths
+          </CustomTabButton>
+        </CustomHorizontalTabWarpper>
+
+        <div
+          className="d-flex flex-row align-items-center mb-4"
+          style={{ borderBottom: "1px solid #D1D1D1" }}
+        >
+          <SwitchTab
+            active={activeTab === "reports" ? true : false}
+            className=" me-5"
+            onClick={() => {
+              setActiveTab("reports");
+            }}
+          >
+            Reports
+          </SwitchTab>
+          <SwitchTab
+            active={activeTab === "downloadshistory" ? true : false}
+            onClick={() => {
+              setActiveTab("downloadshistory");
+            }}
+          >
+            Downloads History
+          </SwitchTab>
+        </div>
+
+        <TextBrief className="mb-4">
+          Here you can query various reports from your event, view them and
+          share directly with others.
+        </TextBrief>
+
+        <EventReportGrid>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#2E70F3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Event Summary Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              High-level summary metrics about your event, including attendee
+              information, ticket sales and survey scores. Options include a
+              general event summary, or a summary report of a particular area of
+              your event like a stage, session or expo booth.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#16D860"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Attendees Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Details of all the attendees at your event, including name, email,
+              ticket type and participation record.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#ACB80C"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Schedule Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Details of your event’s schedule, including item names and
+              descriptions, start and end times and details of speakers.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F3762E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Poll Results Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Answers to poll questions provided by attendees at your event.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F32E2E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Questions and Answers Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all questions asked during your event using the Q&A
+              feature, including their responses, number of upvotes and who
+              asked and answered each question.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#C52EF3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Connections Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all attendees at your event and their participation in
+              networking, including how many connection requests they sent and
+              received and how many connections they made.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#0CB164"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Event chat Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Detailed logs of every message sent in your event’s chat areas.
+              This can be from the general event chat or for specific areas of
+              your event, like a stage, session or expo booth.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#D88D14"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Registered users Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Details of all the attendees at your event, including name, email,
+              ticket type and participation record. Also includes payment and
+              promotion information.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#15B6D3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Refferal Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Details of all the attendees at your event who joined via a
+              referral code.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#2E70F3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              All Reports Bundle
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              A ZIP file containing all the reports listed on this page as
+              individual CSV files.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#13D66E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Attendee Activities Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Detailed logs of the movements of attendees at your event,
+              including each area they visited and how long they visited for.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F32E2E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Viewership counts Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Counts of the number of attendees in each area of your event,
+              sampled at intervals throughout the event’s duration.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F3972E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Attendee scores Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Scores given to your event by your attendees.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#B0B310"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Post Event Survey Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Scores and post-event feedback from attendees at your event.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#792EF3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Scheduled meetings Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all scheduled meetings during your event, including who
+              participated and how long the meeting lasted.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#0FB32A"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Networking Meetings Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all networking meetings during your event, including which
+              attendees were matched and whether or not they decided to connect.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F32EC2"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Participation Duration Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all attendees at your event and how long they spent in
+              various areas. Can be limited to networking or a particular stage,
+              session or expo booth.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F3C52E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Booth Engagement Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all attendees who visited a particular expo booth.
+              Includes engagement metrics such as time spent, CTA clicks, and
+              comments made.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F3662E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Booth interactions Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all attendees who interacted with a particular expo booth
+              by clicking a link or registering their interest.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#2E70F3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <VideoCameraBackRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Participation report by Schedule
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all attendees at your event and how long they spent in
+              various areas. Can be limited to a particular schedule.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+        </EventReportGrid>
+      </div>
+    </>
+  );
+};
+
+export default Analytics;

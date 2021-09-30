@@ -50,6 +50,8 @@ import Reviews from "./../Reviews";
 import Coupons from "./../Coupons";
 import Tracking from "./Tracking";
 import EventSchedule from "./EventSchedule";
+import ReceptionSettings from "./SubComponent/ReceptionSetting";
+import Analytics from "./Analytics";
 
 const EditEventRoot = () => {
   const params = useParams();
@@ -339,7 +341,7 @@ const EditEventRoot = () => {
                   );
 
                 case "8":
-                  return <div>This is for reception settings</div>;
+                  return <ReceptionSettings />;
                 case "9":
                   return <div>Videos</div>;
                 case "10":
@@ -347,7 +349,7 @@ const EditEventRoot = () => {
                 case "11":
                   return <Recordings />;
                 case "12":
-                  return <div>Analytics</div>;
+                  return <Analytics />;
                 case "13":
                   return <div>Live stream</div>;
                 case "14":

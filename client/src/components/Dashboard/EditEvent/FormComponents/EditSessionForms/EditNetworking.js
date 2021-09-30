@@ -20,6 +20,21 @@ import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import styled from "styled-components";
+
+const MatchingRule = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
+
+const WhoCanJoinThis = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
 
 const renderInput = ({
   input,
@@ -154,19 +169,19 @@ function Alert(props) {
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
 
-const EditSession = (props) => {
+const EditNetworking = (props) => {
   const { handleSubmit, pristine, submitting, reset } = props;
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.session
@@ -222,8 +237,6 @@ const EditSession = (props) => {
       });
     }
 
-    // console.log(ModifiedFormValues);
-    // showResults(ModifiedFormValues);
     dispatch(editSession(ModifiedFormValues, props.id));
   };
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -256,7 +269,7 @@ const EditSession = (props) => {
               <div className="form-heading-and-close-button mb-4">
                 <div></div>
                 <div className="coupon-overlay-form-headline">
-                  Edit this Session
+                  Edit networking
                 </div>
                 <div
                   className="overlay-form-close-button"
@@ -272,7 +285,7 @@ const EditSession = (props) => {
                   Forhtml="sessionName"
                   className="form-label form-label-customized"
                 >
-                  Session Name
+                  Name
                 </label>
                 <Field
                   name="name"
@@ -289,7 +302,7 @@ const EditSession = (props) => {
                   Forhtml="description"
                   className="form-label form-label-customized"
                 >
-                  Short Description
+                  Description
                 </label>
                 <Field
                   name="description"
@@ -364,44 +377,56 @@ const EditSession = (props) => {
                   />
                 </div>
               </div>
-              <div className="mb-4 overlay-form-input-row">
-                <label for="speakers" className="form-label form-label-customized">
-                  Speakers
-                </label>
-                <Field
-                  name="speaker"
-                  styles={styles}
-                  menuPlacement="top"
-                  options={speakerOptions}
-                  // defaultValue={options[0]}
-                  id="speakers"
-                  component={renderReactSelect}
-                />
-              </div>
 
               <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Host
-              </label>
-              <Field
-                name="host"
-                placeholder="Select host"
-                styles={styles}
-                menuPlacement="top"
-                options={speakerOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
+                <div className="d-flex flex-row align-items-center justify-content-between">
+                  <label
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Rules of matching
+                  </label>
+                  <button
+                    className="btn btn-primary btn-outline-text form-control"
+                    style={{ width: "100px", display: "block" }}
+                  >
+                    <span> Modify </span>
+                  </button>
+                </div>
+                <MatchingRule>
+                  Anyone can be matched with anyone by default.
+                </MatchingRule>
+              </div>
+             
+
+              <div className="mb-4 overlay-form-input-row">
+                <div className="d-flex flex-row align-items-center justify-content-between">
+                  <label
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Who can join this
+                  </label>
+                  <button
+                    className="btn btn-primary btn-outline-text form-control"
+                    style={{ width: "100px", display: "block" }}
+                  >
+                    Control
+                  </button>
+                </div>
+
+                <WhoCanJoinThis className="mb-2">
+                  Everyone in this event can join by default.
+                </WhoCanJoinThis>
+              </div>
+
+              
             <div className="mb-4 overlay-form-input-row">
               <label
                 for="communityName"
                 className="form-label form-label-customized"
               >
-               Co-host
+               Moderators
               </label>
               <Field
                 name="cohost"
@@ -547,9 +572,9 @@ const validate = (formValues) => {
 
 export default connect(mapStateToProps)(
   reduxForm({
-    form: "EditSessionDetails",
+    form: "EditNetworkingDetails",
     validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
-  })(EditSession)
+  })(EditNetworking)
 );

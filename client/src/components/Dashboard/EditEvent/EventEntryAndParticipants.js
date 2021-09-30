@@ -24,6 +24,8 @@ const SwitchTab = styled.div`
   font-size: 0.95rem;
   font-family: "Ubuntu";
   color: ${(props) => (props && props.active ? "#272727" : "#575757")};
+  padding-left: 10px;
+  padding-right: 10px;
   padding-bottom: 5px;
   border-bottom: ${(props) =>
     props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
@@ -61,6 +63,8 @@ const CommingSoonIllustration = styled.img`
   height: 250px;
   width: auto;
 `;
+
+
 
 const EventEntryAndParticipants = () => {
   const [activeTab, setActiveTab] = useState("entryRules");
