@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 // Report Icons
+import VideoCameraBackRoundedIcon from "@mui/icons-material/VideoCameraBackRounded"; // Event Summary Report No. 1
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded'; // Attendee report No. 2
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded'; // Schedule Report No. 3
 import PollRoundedIcon from '@mui/icons-material/PollRounded'; // poll Report No. 4
@@ -17,15 +18,27 @@ import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded'; // At
 import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded'; // Post Event Survey Report No. 14
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded'; // Scheduled meetings Report No. 15
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'; // Networking Meetings Report No. 16
-import AvTimerRoundedIcon from '@mui/icons-material/AvTimerRounded'; // Participation Report No. 17
+import AvTimerRoundedIcon from '@mui/icons-material/AvTimerRounded'; // Participation Duration Report No. 17
+import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded'; // Booth Engagement Report No. 18
+import TagFacesRoundedIcon from '@mui/icons-material/TagFacesRounded'; // Booth Interaction Report No. 19
+import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded'; // Participation by Schedule Report No. 20
+import PhotoCameraRoundedIcon from '@mui/icons-material/PhotoCameraRounded'; // Photo Booth Report No. 21
+import AddAlertRoundedIcon from '@mui/icons-material/AddAlertRounded'; // Event Alerts Report No. 22
+import MailRoundedIcon from '@mui/icons-material/MailRounded'; // Mail campaign Report No. 23
+import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded'; // Sponsor shoutouts Report No. 24
+import FlagRoundedIcon from '@mui/icons-material/FlagRounded'; // Moderation Audit Report No. 25 
+import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded'; // Leaderboard Report No. 26
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded'; // Demographic Report No. 27
+import TopicRoundedIcon from '@mui/icons-material/TopicRounded'; // Interests Report No. 28
+import StorageRoundedIcon from '@mui/icons-material/StorageRounded'; // Registration form data report No. 29
+
+// import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded'; // Moderation Audit Report No. ---
 
 
 
-import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded'; // Leaderboard Report No. 25
 
 
 
-import VideoCameraBackRoundedIcon from "@mui/icons-material/VideoCameraBackRounded";
 
 const CustomHorizontalTabWarpper = styled.div`
   width: 100%;
@@ -268,7 +281,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <PersonOutlineRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -290,7 +303,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <ScheduleRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -312,7 +325,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <PollRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -333,7 +346,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <HelpRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -356,7 +369,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <GroupsRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -379,7 +392,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <ChatBubbleRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -402,7 +415,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <AppRegistrationRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -425,7 +438,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <ConnectWithoutContactRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -447,7 +460,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <AllOutRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -469,7 +482,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <CallMergeRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -491,7 +504,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <PreviewRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -513,7 +526,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <RateReviewRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -534,7 +547,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <ContentPasteRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -555,7 +568,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <EventNoteRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -577,7 +590,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <CategoryRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -599,7 +612,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <AvTimerRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -622,7 +635,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <StoreMallDirectoryRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -645,7 +658,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <TagFacesRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -667,7 +680,7 @@ const Analytics = () => {
               className="mb-3"
               style={{ width: "fit-content" }}
             >
-              <VideoCameraBackRoundedIcon />
+              <CalendarTodayRoundedIcon />
             </EventReportIconBox>
 
             <EventReportTitle className="mb-4">
@@ -677,6 +690,195 @@ const Analytics = () => {
             <EventReportBrief className="mb-4">
               List of all attendees at your event and how long they spent in
               various areas. Can be limited to a particular schedule.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#374646"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <PhotoCameraRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Photo Booth Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all activities that happened in various segments at photo booth along with a direct access link to photos.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#4E8D07"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <AddAlertRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Event alerts Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Logs of all alerts that were published during event. It can be requested based on schedule or complete.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#2E70F3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <MailRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Mailing campaign Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+             List of all mail camapigns that were published during the lifecycle of event.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F32E8A"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <CampaignRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Sponsors shoutout Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all sponsor shoutouts that were given during event in various sessions and how attendees reacted to that.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#C2A60A"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <FlagRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+             Moderation Report 
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of all reported activities during the event lifecycle and actions taken by team moderators on them.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#F32E2E"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <EmojiEventsRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Leaderboard Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Logs of how attendees competed to get up on leaderboard list along with their scores and activities based on which they were awareded points.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#832EF3"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <PublicRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Demographic report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of attendees, exhibits, speakers based on thier demographics to provide an insight on division of audience globally.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#072A70"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <TopicRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+              Interests Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              List of attendees, exhibitors and speakers classified based on thier interests.
+            </EventReportBrief>
+
+            <button className="btn btn-outline-text btn-primary mb-2">
+              Generate
+            </button>
+          </EventReportCard>
+          <EventReportCard>
+            <EventReportIconBox
+              color={"#0BC26D"}
+              className="mb-3"
+              style={{ width: "fit-content" }}
+            >
+              <StorageRoundedIcon />
+            </EventReportIconBox>
+
+            <EventReportTitle className="mb-4">
+             Registration Data Report
+            </EventReportTitle>
+
+            <EventReportBrief className="mb-4">
+              Registration data that was collected during the registration process in CSV format.
             </EventReportBrief>
 
             <button className="btn btn-outline-text btn-primary mb-2">
