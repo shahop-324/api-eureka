@@ -9,13 +9,25 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded"; // Upda
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded"; // Dot indicator
 import PieChartRoundedIcon from "@mui/icons-material/PieChartRounded"; // Analytics Icon
 
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded'; // Attendee
+
+import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined'; // Mail icon
+
+import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded'; // Edit mode
+
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'; // Preview
+
+import SendRoundedIcon from '@mui/icons-material/SendRounded'; // Send
+
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'; // Delete
+
 import dateFormat from "dateformat";
 
 import Faker from "faker";
 
 const ListFieldText = styled.div`
   font-family: "Ubuntu";
-  font-size: 0.8rem;
+  font-size: 0.83rem;
   font-weight: 500;
   color: #535353;
 `;
@@ -30,23 +42,23 @@ const EventReportIconBox = styled.div`
 
 const now = Date.now();
 
-const ReportsDownloadHistoryDetailsCard = () => {
+const EmailDetailsCard = () => {
   return (
     <>
       <div
         className="session-list-fields-container"
         style={{
-          gridTemplateColumns: "2.5fr 2fr 1fr 1fr 1fr 1fr 1fr",
-          gridGap: "16px",
-          alignItems: "center",
-        }}
+            gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr",
+            gridGap: "16px",
+            alignItems: "center",
+          }}
       >
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             {/* Title */}
             <div className="d-flex flex-row align-items-center">
               <EventReportIconBox className="me-3">
-                <PieChartRoundedIcon />
+                <MailOutlineOutlinedIcon />
               </EventReportIconBox>
               Event Chat Report
             </div>
@@ -54,50 +66,62 @@ const ReportsDownloadHistoryDetailsCard = () => {
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            Summary report
+            New Speakers Line up
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            {/* Time stamp */}
-            {dateFormat(now)}
-          </ListFieldText>
-        </div>
-        <div className="">
-          <ListFieldText className="" style={{ width: "100%" }}>
-            {/* Last updated */}
-            {dateFormat(now)}
-          </ListFieldText>
-        </div>
-        <div className="">
-          <ListFieldText className="" style={{ width: "100%" }}>
-            {/* Status */}
+            {/* Recipient */}
             <div className="d-flex flex-row align-items-center">
-              <CircleRoundedIcon
-                style={{ fontSize: "10px", color: "#21C760" }}
+              <PersonRoundedIcon
+                style={{ fontSize: "20px", color: "#213FC7" }}
                 className="me-2"
               />
-              <span>Completed</span>
+              <span>Attendee</span>
             </div>
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            {Faker.name.findName()}
+            {/* Email status */}
+            <div className="d-flex flex-row align-items-center">
+              <CircleRoundedIcon
+                style={{ fontSize: "10px", color: "#21C760" }}
+                className="me-2"
+              />
+              <span>Sent</span>
+            </div>
           </ListFieldText>
         </div>
+        <div className="">
+          <ListFieldText className="" style={{ width: "100%" }}>
+            {/* Last update */}
+            {dateFormat(now)}
+          </ListFieldText>
+        </div>
+        
 
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             <div className="d-flex flex-row align-items-center">
-              <IconButton className="me-3">
-                <CloudDownloadRoundedIcon
-                  style={{ fontSize: "24px", color: "#538BF7" }}
+              <IconButton className="">
+                <ModeEditOutlineRoundedIcon
+                  style={{ fontSize: "21px", color: "#538BF7" }}
                 />
               </IconButton>
               <IconButton className="">
-                <AutorenewRoundedIcon
-                  style={{ fontSize: "24px", color: "#2ACA38" }}
+                <VisibilityRoundedIcon
+                  style={{ fontSize: "21px", color: "#A9C317" }}
+                />
+              </IconButton>
+              <IconButton className="">
+                <SendRoundedIcon
+                  style={{ fontSize: "21px", color: "#9217C3" }}
+                />
+              </IconButton>
+              <IconButton className="">
+                <DeleteRoundedIcon
+                  style={{ fontSize: "21px", color: "#C31717" }}
                 />
               </IconButton>
             </div>
@@ -111,4 +135,4 @@ const ReportsDownloadHistoryDetailsCard = () => {
   );
 };
 
-export default ReportsDownloadHistoryDetailsCard;
+export default EmailDetailsCard;

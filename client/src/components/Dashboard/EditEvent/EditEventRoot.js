@@ -52,6 +52,7 @@ import Tracking from "./Tracking";
 import EventSchedule from "./EventSchedule";
 import ReceptionSettings from "./SubComponent/ReceptionSetting";
 import Analytics from "./Analytics";
+import Email from "./Email";
 
 const EditEventRoot = () => {
   const params = useParams();
@@ -357,7 +358,7 @@ const EditEventRoot = () => {
                 case "15":
                   return <Coupons />;
                 case "16":
-                  return <div>Mailing</div>;
+                  return <Email />;
                 case "17":
                   return <Affiliates />;
                 case "18":

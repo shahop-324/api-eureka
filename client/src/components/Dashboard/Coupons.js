@@ -24,7 +24,7 @@ const renderCouponList = (coupons) => {
         <CouponCard
           id={coupon._id}
           key={coupon._id}
-          url={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${coupon.discountForEventId.image}`}
+          url={`https://bluemeet.s3.us-west-1.amazonaws.com/${coupon.discountForEventId.image}`}
           percentage={coupon.discountPercentage}
           onEvent={coupon.discountForEventId.eventName}
           validTillDate={coupon.validTillDate}

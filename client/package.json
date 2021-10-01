@@ -71,8 +71,8 @@
     "react-date-range": "^1.2.0",
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
-    "react-facebook-login": "^4.1.1",
     "react-draggable": "^4.4.4",
+    "react-facebook-login": "^4.1.1",
     "react-floaterjs": "^1.0.6",
     "react-fusioncharts": "^3.1.2",
     "react-multi-email": "^0.5.3",
@@ -101,6 +101,8 @@
     "util": "^0.12.4",
     "uuid": "^8.3.2",
     "validator": "^13.6.0",
+    "victory": "^36.0.1",
+    "victory-chart": "^36.0.0",
     "web-vitals": "^1.0.1",
     "webfontloader": "^1.6.28"
   },

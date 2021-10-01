@@ -37,20 +37,8 @@ html {
   opacity: 1;
 }
 
-::-webkit-scrollbar {
-  width: 10px; /* Remove scrollbar space */
-  background: #ffffff; 
-  /* Optional: just make scrollbar invisible */
-}
-/* Optional: show position indicator in red */
-::-webkit-scrollbar-thumb {
-  /* background: #538bf7; */
-  border-radius: 10px;
-  background-color: #538BF7;
-background-image: linear-gradient(160deg, #538BF7 0%, #8088d0 100%);
 
 
-}
 
 .page-body {
   height: auto;

@@ -7,3 +7,12 @@
 ::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
+/* ::-webkit-scrollbar-thumb {
+  background: #538af741 !important;
+  height: 30px;
+}
+
+::-webkit-scrollbar {
+  background: #f6f7fb !important;
+} */

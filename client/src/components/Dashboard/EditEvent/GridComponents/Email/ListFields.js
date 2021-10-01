@@ -10,34 +10,29 @@ const ListFieldText = styled.div`
   color: #313131;
 `;
 
-const ReportsDownloadHistoryListFields = () => {
+const EmailListFields = () => {
   return (
     <>
       <div
         className="session-list-fields-container"
         style={{
-          gridTemplateColumns: "2.5fr 2fr 1fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr",
           gridGap: "16px",
         }}
       >
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            Title
+            Template Name
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            Type
+            Subject
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            Time stamp
-          </ListFieldText>
-        </div>
-        <div className="">
-          <ListFieldText className="" style={{ width: "100%" }}>
-            Last updated
+            Recipient
           </ListFieldText>
         </div>
         <div className="">
@@ -47,7 +42,7 @@ const ReportsDownloadHistoryListFields = () => {
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            Queried by
+            Timestamp
           </ListFieldText>
         </div>
         <div className="">
@@ -63,4 +58,4 @@ const ReportsDownloadHistoryListFields = () => {
   );
 };
 
-export default ReportsDownloadHistoryListFields;
+export default EmailListFields;
