@@ -71,7 +71,7 @@ const SideNav = ({
   };
   return (
     <>
-      <div className="side-nav-wrapper py-4">
+      <div className="side-nav-wrapper py-4" style={{height: "93vh !important", overflow: "auto", backgroundColor: "#ffffff"}}>
         <div
           onClick={() => {
             handleGettingStartedClick();
@@ -209,7 +209,7 @@ const SideNav = ({
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={() => {
             handleSnapClick();
           }}
@@ -234,7 +234,7 @@ const SideNav = ({
           >
             Snap
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={() => {

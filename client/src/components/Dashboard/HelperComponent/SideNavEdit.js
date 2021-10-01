@@ -119,7 +119,7 @@ const SideNavEdit = ({
 
   return (
     <>
-      <div className="side-nav-wrapper py-4 pt-4">
+      <div className="side-nav-wrapper py-4 pt-4" style={{height: "86vh !important", overflow: "auto"}}>
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
@@ -442,7 +442,9 @@ const SideNavEdit = ({
             Analytics
           </div>
         </div>
-        <div
+
+
+        {/* <div
           onClick={handleLiveStreamingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -476,7 +478,9 @@ const SideNavEdit = ({
 
           </div>
           
-        </div>
+        </div> */}
+
+
         <div
           onClick={handleIntegrationsClick}
           className={

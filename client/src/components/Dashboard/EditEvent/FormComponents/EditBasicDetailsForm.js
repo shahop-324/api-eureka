@@ -179,14 +179,14 @@ const timeZoneOptions = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };

@@ -2,6 +2,7 @@ import React from "react";
 import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
+import Chip from '@mui/material/Chip';
 
 import "./../../../assets/Sass/TeamManagement.scss";
 import "./../../../assets/Sass/DataGrid.scss";
@@ -26,6 +27,18 @@ import Select from 'react-select';
 import { Field } from "redux-form";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import LabelRoundedIcon from '@mui/icons-material/LabelRounded';
+import styled from 'styled-components';
+import { AvatarGroup } from "@mui/material";
+import dateFormat from "dateformat";
+
+const EventReportIconBox = styled.div`
+  padding: 5px;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props && props.color ? props.color : "#538BF7"};
+  color: #ffffff;
+`;
 
 const options = [
   { value: "MP000", label: "Assign all permissons" },
@@ -140,7 +153,9 @@ const onSubmit = (formValues) => {
   alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-const TeamManagementDetailsCard = (props) => {
+const now = Date.now();
+
+const RolesDetailsCard = (props) => {
 
   const { handleSubmit, pristine,  submitting } = props;
 
@@ -170,44 +185,54 @@ const TeamManagementDetailsCard = (props) => {
     setOpenDeleteDialog(false);
   };
 
-
-  
-
   return (
     <>
-      <div className="team-members-field-value-container">
-        <div className="registrations-name-field">
-          <div className="registrations-field-label mx-5 d-flex flex-row ">
-            {/* attendee avatar and name */}
-            <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-            <div className="ms-3 px-2 registration-name-styled">
-              {Faker.name.findName()}
+      <div className="team-members-field-value-container" style={{gridTemplateColumns: "1.8fr 2fr 1fr 1fr 1fr"}}>
+        <div className="mx-5">
+        <div className="d-flex flex-row ">
+              <EventReportIconBox className="me-3">
+                <LabelRoundedIcon />
+              </EventReportIconBox>
+              Events manager
             </div>
-          </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {Faker.internet.email()}
-            {/* attendee email */}
+          <AvatarGroup max={4}>
+                <Avatar alt="Remy Sharp" src={Faker.image.avatar()} />
+                <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
+                <Avatar alt="Cindy Baker" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
+                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
+              </AvatarGroup>
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
             {/* phone number */}
-            <div className="ms-3 px-3 py-2 pending-status-text-chip">
-              Pending
-            </div>
+            
+            {dateFormat(now)}
+            
+          </div>
+        </div>
+        <div className="registrations-phone-field">
+          <div className="registrations-field-label registrations-field-value-modified">
+            {/* phone number */}
+            
+            <Chip
+        avatar={<Avatar alt={Faker.name.findName()} src={Faker.image.avatar()} />}
+        label={"Shreyansh"}
+        variant="outlined"
+      />
+           
           </div>
         </div>
 
-        {/* <div className="registrations-invoice-field">
-          <div className="registrations-field-label registrations-field-value-modified px-3">
-            <button className="btn btn-outline-primary btn-outline-text" onClick={handleRemoveUser}>
-              Remove
-            </button>
-            
-          </div>
-        </div> */}
+        
 
         <div className="event-registrations-field">
           <div
@@ -346,4 +371,4 @@ const TeamManagementDetailsCard = (props) => {
 
 export default reduxForm({
   form: "editTeamMemberPermissions",
-})(TeamManagementDetailsCard);
+})(RolesDetailsCard);

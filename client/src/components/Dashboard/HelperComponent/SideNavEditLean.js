@@ -1,30 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./../../HostingPlatform/Styles/root.scss";
-import CategoryIcon from "@material-ui/icons/Category";
-import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 import TrackChangesIcon from "@material-ui/icons/TrackChanges";
 import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
-import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import AdjustRoundedIcon from "@mui/icons-material/AdjustRounded";
-
 import FormatAlignCenterRoundedIcon from "@mui/icons-material/FormatAlignCenterRounded"; // Event entry
 import CalendarViewDayRoundedIcon from "@mui/icons-material/CalendarViewDayRounded"; // reception settings
 import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded"; // Videos
 import WallpaperRoundedIcon from "@mui/icons-material/WallpaperRounded"; // stage vibes
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded"; // Recordings
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded"; // Analytics
-import LiveTvRoundedIcon from "@mui/icons-material/LiveTvRounded"; // Live streaming
 import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRounded"; // Integrations
 import LoyaltyRoundedIcon from "@mui/icons-material/LoyaltyRounded"; // Coupons
 import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
 import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
-
 import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
 
 const SideNavEditLean = ({
@@ -450,7 +444,7 @@ const SideNavEditLean = ({
               Analytics
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleLiveStreamingClick();
@@ -478,7 +472,7 @@ const SideNavEditLean = ({
             >
               Live stream
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {

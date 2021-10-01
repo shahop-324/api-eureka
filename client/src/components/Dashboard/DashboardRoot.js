@@ -43,6 +43,7 @@ import ErrorBoundary from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
 import Integrations from "./Integrations";
 import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
+import VideoLibrary from "./VideoLibrary";
 
 const DashboardRoot = () => {
   console.log(window.paypal);
@@ -117,7 +118,7 @@ const DashboardRoot = () => {
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
         <Topnav />
-        <div className="dashboard-body">
+        <div className="dashboard-body" style={{height: "93vh !important"}}>
           {/* <div className="side-nav-container"> */}
           <SideNav
             activeIndex={currentIndex}
@@ -169,9 +170,7 @@ const DashboardRoot = () => {
                 case "3":
                   return (
                     <ErrorBoundriesQueries>
-                      {/* <div>This is video library</div> */}
-                      <Registrations />
-                      {/* <VideoLibrary /> */}
+                      <VideoLibrary />
                     </ErrorBoundriesQueries>
                   );
 

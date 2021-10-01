@@ -27,7 +27,7 @@ const SideNavLean = ({
     <>
       <div
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
-        style={{ backgroundColor: "#ffffff" }}
+        style={{ backgroundColor: "#ffffff", height: "93vh !important" }}
       >
         <div className="main-icon-btn-container py-4">
           <div
@@ -180,7 +180,7 @@ const SideNavLean = ({
             </div>
           </div>
 
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
               handleSnapClick();
@@ -208,7 +208,7 @@ const SideNavLean = ({
             >
               Snap
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {

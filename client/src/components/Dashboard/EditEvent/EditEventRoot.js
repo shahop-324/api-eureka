@@ -53,6 +53,8 @@ import EventSchedule from "./EventSchedule";
 import ReceptionSettings from "./SubComponent/ReceptionSetting";
 import Analytics from "./Analytics";
 import Email from "./Email";
+import VideoLibrary from "./../VideoLibrary";
+import StageVibesLibrary from "./StageVibesLibrary";
 
 const EditEventRoot = () => {
   const params = useParams();
@@ -340,13 +342,12 @@ const EditEventRoot = () => {
                       <Ticketing />
                     </ErrorBoundriesEditEventTickets>
                   );
-
                 case "8":
                   return <ReceptionSettings />;
                 case "9":
-                  return <div>Videos</div>;
+                  return <VideoLibrary />;
                 case "10":
-                  return <div>Stage vibes</div>;
+                  return <StageVibesLibrary />;
                 case "11":
                   return <Recordings />;
                 case "12":
