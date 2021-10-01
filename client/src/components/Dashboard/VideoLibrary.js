@@ -140,12 +140,13 @@ const VideoLibrary = () => {
             </div>
 
             <div className="d-flex flex-row align-items-center">
-              <button
+              { eventId && communityId ? <button
                 className="btn btn-outline-primary btn-outline-text mx-3"
                 onClick={handleOpenLinkVideoFromLibrary}
               >
                 Link Video from Library
-              </button>
+              </button> : <div className="ms-3"></div> }
+              
               <button
                 className="btn btn-primary btn-outline-text"
                 onClick={handleOpenUploadVideo}
