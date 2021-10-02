@@ -22,7 +22,10 @@ import RoleDetailsCard from "./HelperComponent/RoleDetailsCard";
 import CreateNewRole from "./FormComponents/CreateNewRole";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRoles } from "./../../actions";
+import {
+  fetchPendingInvitations,
+  fetchCommunityManagers,
+} from "./../../actions";
 import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
 
@@ -130,17 +133,57 @@ const renderTeamRoles = (roles) => {
   });
 };
 
+const renderInvitedPeople = (persons) => {
+  return persons.map((person) => {
+    return (
+      <TeamMembersDetailsCard
+        id={person.id}
+        email={person.invitedUserEmail}
+        status={"Pending"}
+        position={"Community Manager"}
+        name={person.existingUserName}
+        image={person.existingUserImage}
+      />
+    );
+  });
+};
+
+const renderCommunityManagers = (persons) => {
+  return persons.map((person) => {
+    return (
+      <TeamMembersDetailsCard
+        id={person.id}
+        name={person.firstName + " " + person.lastName}
+        status={"Accepted"}
+        position={"Community Manager"}
+        email={person.email}
+        image={person.image}
+      />
+    );
+  });
+};
+
 const TeamManagement = (props) => {
   const params = useParams();
 
-  const { roles } = useSelector((state) => state.role);
+  const { invitations, communityManagers } = useSelector(
+    (state) => state.community
+  );
+
+  const { superAdminName, superAdminEmail, superAdminImage } = useSelector(
+    (state) => state.community.communityDetails
+  );
 
   const communityId = params.id;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchRoles(communityId));
+    // Fetch invited members of this community who have status pending
+    dispatch(fetchPendingInvitations(communityId));
+
+    // Fetch People who have accepted invitation
+    dispatch(fetchCommunityManagers(communityId));
   }, []);
 
   const [activeTab, setActiveTab] = useState("members");
@@ -173,22 +216,7 @@ const TeamManagement = (props) => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <SectionHeading className="">Team Management</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
-            <div
-              className={`${classes.search}`}
-              style={{ backgroundColor: "#ffffff" }}
-            >
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
+            
 
             {(() => {
               switch (activeTab) {
@@ -218,8 +246,6 @@ const TeamManagement = (props) => {
           </div>
         </div>
 
-        
-
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
           {(() => {
             switch (activeTab) {
@@ -233,15 +259,20 @@ const TeamManagement = (props) => {
                     >
                       <Divider />
                     </div>
-                    <TeamMembersDetailsCard />
-                    <TeamMembersDetailsCard />
-                    <TeamMembersDetailsCard />
-                    <TeamMembersDetailsCard />
-                    <HowManyMembersCanBeAddedMsg />
+                    <TeamMembersDetailsCard
+                      image={superAdminImage}
+                      name={superAdminName}
+                      position={"Super admin"}
+                      email={superAdminEmail}
+                      status={"----"}
+                    />
+
+                    {renderCommunityManagers(communityManagers)}
+
+                    {renderInvitedPeople(invitations)}
                   </>
                 );
 
-              
               default:
                 break;
             }
@@ -257,7 +288,6 @@ const TeamManagement = (props) => {
         open={openCreateNewRole}
         handleClose={handleCloseCreateNewRole}
       />
-      
     </>
   );
 };

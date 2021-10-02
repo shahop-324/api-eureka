@@ -6,8 +6,7 @@ import Avatar from "@material-ui/core/Avatar";
 import "./../../../assets/Sass/TeamManagement.scss";
 import "./../../../assets/Sass/DataGrid.scss";
 
-import Chip from '@mui/material/Chip';
-
+import Chip from "@mui/material/Chip";
 
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -19,15 +18,17 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
-
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import { reduxForm } from "redux-form";
-import Select from 'react-select';
+import Select from "react-select";
 import { Field } from "redux-form";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import {removeFromTeam} from "./../../../actions";
 
 const options = [
   { value: "MP000", label: "Assign all permissons" },
@@ -68,10 +69,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-
-
-
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -142,18 +139,29 @@ const onSubmit = (formValues) => {
   alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-const TeamManagementDetailsCard = (props) => {
+const TeamManagementDetailsCard = ({
+  image,
+  name,
+  position,
+  email,
+  status,
+  handleSubmit,
+  pristine,
+  submitting,
+}) => {
 
-  const { handleSubmit, pristine,  submitting } = props;
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const communityId = params.id;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
-
 
   const handleOpenDrawer = () => {
     setOpenDrawer(true);
@@ -172,35 +180,38 @@ const TeamManagementDetailsCard = (props) => {
     setOpenDeleteDialog(false);
   };
 
-
-  
-
   return (
     <>
-      <div className="team-members-field-value-container" style={{gridTemplateColumns: "2fr 2fr 2fr 1fr 1fr"}}>
+      <div
+        className="team-members-field-value-container"
+        style={{ gridTemplateColumns: "2fr 2fr 2fr 1fr 1fr" }}
+      >
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5 d-flex flex-row ">
             {/* attendee avatar and name */}
-            <Avatar alt="Travis Howard" src={Faker.image.avatar()} variant="rounded" />
-            <div className="ms-3 px-2 registration-name-styled">
-              {Faker.name.findName()}
-            </div>
+            <Avatar alt={name} src={image} variant="rounded" />
+            <div className="ms-3 px-2 registration-name-styled">{name}</div>
           </div>
         </div>
         <div className="registrations-name-field">
           <div className="registrations-field-label  ">
-          <Chip label="Super admin" variant="outlined" />
+            <Chip label={position} variant="outlined" />
           </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {Faker.internet.email()}
+            {email}
             {/* attendee email */}
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-          <Chip label="Pending" variant="outlined" />
+            {position === "Super admin" ? (
+              "-----"
+            ) : (
+              status === "Pending" ? <Chip label={status}  color="primary" /> : <Chip label={status}  color="success" /> 
+              
+            )}
           </div>
         </div>
         <div className="event-registrations-field">
@@ -208,11 +219,16 @@ const TeamManagementDetailsCard = (props) => {
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            
-            <div onClick={handleDeleteSession}>
-              <IconButton color="secondary" aria-label="add to shopping cart">
-                <DeleteRoundedIcon />
-              </IconButton>
+            <div>
+              {position === "Super admin" ? (
+                <></>
+              ) : (
+                <IconButton onClick={() => {
+                  dispatch(removeFromTeam(email, communityId, status))
+                }} color="secondary" aria-label="add to shopping cart">
+                  <DeleteRoundedIcon />
+                </IconButton>
+              )}
             </div>
           </div>
         </div>
@@ -252,12 +268,16 @@ const TeamManagementDetailsCard = (props) => {
       </Dialog>
 
       <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
+        <SwipeableDrawer
+          anchor="right"
+          open={openDrawer}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Edit member Permissions</div>
@@ -319,7 +339,7 @@ const TeamManagementDetailsCard = (props) => {
                   style={{ width: "100%" }}
                   disabled={pristine || submitting}
                 >
-                 Update permissions
+                  Update permissions
                 </button>
               </div>
             </form>
@@ -329,7 +349,6 @@ const TeamManagementDetailsCard = (props) => {
     </>
   );
 };
-
 
 export default reduxForm({
   form: "editTeamMemberPermissions",

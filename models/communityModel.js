@@ -422,16 +422,10 @@ const communitySchema = new mongoose.Schema(
     superAdminImage: {
       type: String,
     },
-    teamMembers: [
+    eventManagers: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "User",
-      },
-    ],
-    roles: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "CommunityRoles",
       },
     ],
     notYetAcceptedInvitations: [

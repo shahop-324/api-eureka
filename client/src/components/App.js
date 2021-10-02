@@ -65,6 +65,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { closeSnackbar } from "../actions/index";
+import InvitationAccepted from "./Supplement/InvitationAccepted";
 
 const vertical = "top";
 const horizontal = "center";
@@ -129,6 +130,11 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
+              <Route
+                path="/accept-invite/:inviteId"
+                exact
+                component={InvitationAccepted}
+              />
               <Route
                 path="/check-stripe-status/user/:userId/community/:communityId/account/:accountId"
                 exact

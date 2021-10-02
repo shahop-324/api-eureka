@@ -6,7 +6,7 @@ import { Field, reduxForm } from "redux-form";
 
 import Select from "react-select";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createNewInvitation } from "../../../actions";
 
@@ -64,23 +64,41 @@ const AddNewMember = ({
   const communityId = params.id;
   const userId = params.userId;
 
+  const { invitations, communityManagers } = useSelector(
+    (state) => state.community
+  );
+
+  const { superAdminEmail } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
   const dispatch = useDispatch();
 
   const onSubmit = (formValues) => {
-    // formValues.email;
+    const newArray = invitations
+      .map((el) => el.invitedUserEmail)
+      .concat(communityManagers.map((el) => el.email));
 
-    // dispatch(inviteMember(communityId, formValues.email));
-    dispatch(createNewInvitation({ userId: userId, email: formValues.email }));
-
-    //   const inviteeId = req.body.userId;
-    // const communityId = req.community.id;
-    // const email = req.body.email;
+    if (
+      formValues.email === superAdminEmail ||
+      newArray.includes(formValues.email)
+    ) {
+      alert("already in this community!");
+      handleClose();
+    } else {
+      dispatch(
+        createNewInvitation({ userId: userId, email: formValues.email })
+      );
+      handleClose();
+    window.location.reload();
+    }
+    
+    
   };
 
   return (
     <>
       <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer
           anchor="right"
           open={open}

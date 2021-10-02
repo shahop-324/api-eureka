@@ -25,10 +25,9 @@ module.exports = (url, community, invitee) => {
             letter-spacing: 0px;
             color: #343434;
             opacity: 1;">
-              You have been invited to join ${community.name} by ${invitee.firstName} on evenz platform. We welcome you to our Evenz family.  
+              You have been invited to join ${community.name} by ${invitee.firstName} on Bluemeet platform. We welcome you to our Bluemeet family.  
               Here's your link to join this community. 
             </div>
-
             <div className="email-action-btn-wrapper d-flex flex-row justify-content-center mb-5">
               <a href="${url}" className="btn btn-primary mail-action-btn-main px-4 py-3" style="padding-left: 25px; padding-right: 25px; padding-top: 15px; padding-bottom: 15px;  background: #538bf7 0% 0% no-repeat padding-box;
               box-shadow: inset 0px -11px 8px #00000029, 0px 3px 15px #00000029;
@@ -59,7 +58,7 @@ module.exports = (url, community, invitee) => {
             font: normal normal 700 0.95rem/1.53rem Helvetica Neue;
             letter-spacing: 0px;
             color: #535353;">
-            the evenz team
+            Bluemeet Inc.
             </div>
           </div>
            </div>

@@ -4058,7 +4058,13 @@ export const createNewInvitation =
 
       res = await res.json();
       console.log(res);
-      
+
+      dispatch(
+        communityActions.SendTeamInvitation({
+          invitation: res.newlyCreatedInvitation,
+        })
+      )
+
     } catch (err) {
       console.log(err);
     }
@@ -5818,9 +5824,107 @@ export const uploadVideoForCommunity =
     }
   };
 
-  export const inviteMember = (communityId, email) => async(dispatch, getState) => {
-    try{
+export const acceptInvitation =
+  (invitationId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}team-invites/accept-invitation/${invitationId}/`,
+        {
+          method: "GET",
 
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchPendingInvitations =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}team-invites/fetchPendingInvitations/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        communityActions.FetchInvitations({
+          invitations: result.pendingInvitations,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchCommunityManagers =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}team-invites/fetchCommunityManagers/`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        communityActions.FetchCommunityManagers({
+          communityManagers: result.communityManagers.eventManagers,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  export const removeFromTeam = (email, communityId, status) => async(dispatch, getState) => {
+    try{
+      const res = await fetch(
+        `${BaseURL}team-invites/removeFromTeam/${email}/${status}`,
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        communityActions.RemoveCommunityManager({
+          email: email,
+          status: status,
+        })
+      );
     }
     catch(error) {
       console.log(error);

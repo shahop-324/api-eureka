@@ -9,4 +9,15 @@ router.post(
   teamInviteController.createNewInvitation
 );
 
+router.get(
+  "/accept-invitation/:invitationId",
+  teamInviteController.acceptInvitation
+)
+
+router.get("/fetchPendingInvitations", authController.protectCommunity, teamInviteController.fetchPendingInvitations);
+
+router.get("/fetchCommunityManagers", authController.protectCommunity, teamInviteController.fetchCommunityManagers);
+
+router.delete("/removeFromTeam/:email/:status", authController.protectCommunity, teamInviteController.removeFromTeam);
+
 module.exports = router;

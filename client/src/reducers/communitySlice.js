@@ -10,6 +10,8 @@ const communitySlice = createSlice({
     error: false,
     isLoading: true,
     mailChimpAudiences: [],
+    invitations: [],
+    communityManagers: [],
   },
   reducers: {
     ResetError(state, action) {
@@ -29,6 +31,18 @@ const communitySlice = createSlice({
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
+    },
+
+    FetchInvitations(state, action) {
+      state.invitations = action.payload.invitations;
+    },
+
+    FetchCommunityManagers(state, action) {
+      state.communityManagers = action.payload.communityManagers;
+    },
+
+    SendTeamInvitation(state, action) {
+      state.invitations.push(action.payload.invitation);
     },
 
     CreateCommunity(state, action) {
@@ -69,6 +83,18 @@ const communitySlice = createSlice({
     DeleteCommunity(state, action) {
       state.community = null;
       state.isLoading = false;
+    },
+    RemoveCommunityManager(state, action) {
+      if (action.payload.status === "Pending") {
+        state.invitations = state.invitations.filter(
+          (el) => el.invitedUserEmail !== action.payload.email
+        );
+      }
+      if (action.payload.status === "Accepted") {
+        state.communityManagers = state.communityManagers.filter(
+          (el) => el.email !== action.payload.email
+        );
+      }
     },
   },
 });

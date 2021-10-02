@@ -156,6 +156,12 @@ const userSchema = new mongoose.Schema(
         ref: "Community",
       },
     ],
+    invitedCommunities: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Community",
+      },
+    ],
     registeredInEvents: [{ type: mongoose.Schema.ObjectId, ref: "Event" }],
     registrations: [
       {
