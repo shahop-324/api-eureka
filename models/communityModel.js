@@ -428,6 +428,12 @@ const communitySchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    roles: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "CommunityRoles",
+      },
+    ],
     notYetAcceptedInvitations: [
       {
         type: mongoose.Schema.ObjectId,

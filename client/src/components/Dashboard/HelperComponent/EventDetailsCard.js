@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import styled from "styled-components";
 
 const EventDetailCard = ({
   id,
@@ -57,25 +59,19 @@ const EventDetailCard = ({
               style={{ width: "41%", height: "110px", borderRadius: "3px" }}
             />
             <div className="event-name-and-description-wrapper">
-              <Link
-                to={`/user/${userId}/community/${communityId}/event/${eventId}/analytics`}
-                style={{ width: "100%", textDecoration: "none" }}
-              >
+              <div style={{ width: "100%", textDecoration: "none" }}>
                 <div className="event-name-d" style={{ fontFamily: "Inter" }}>
                   {eventName}
                 </div>
-              </Link>
-              <Link
-                to={`/user/${userId}/community/${communityId}/event/${eventId}/pre-analytics`}
-                style={{ width: "100%", textDecoration: "none" }}
-              >
+              </div>
+              <div style={{ width: "100%", textDecoration: "none" }}>
                 <div
                   className="event-short-description-d"
                   style={{ fontFamily: "Inter" }}
                 >
                   {shortDescription}
                 </div>
-              </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -157,10 +153,13 @@ const EventDetailCard = ({
                       )
                     );
                   }}
-                  className="btn btn-primary event-field-label py-2"
-                  style={{ color: "#ffffff" }}
+                  className="btn btn-outline-dark btn-outline-text event-field-label py-2"
                 >
-                  Visit
+                  <VisibilityIcon
+                    className="me-2"
+                    style={{ fontSize: "18px" }}
+                  />
+                  Preview
                 </button>
               </Link>
             </div>

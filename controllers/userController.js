@@ -728,6 +728,29 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
       email: req.body.email,
     });
   }
+
+  // Send mail for this new community
+
+  const msg = {
+    to: req.user.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: `Welcome to ${req.body.name}`,
+    text: `Hi ${req.user.firstName} ${req.user.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
+    // html: ForgotPasswordTemplate(user, resetURL),
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      res.status(200).json({
+        status: "success",
+        message: "New community creation email sent to user!",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   createSendTokenForCommunityLogin(
     userId,
     createdCommunity.id,

@@ -17,7 +17,9 @@ import Divider from "@material-ui/core/Divider";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { createNewRole } from "./../../../actions";
+import { editRoleCapabilities } from "./../../../actions";
+import { useSelector } from "react-redux";
+
 
 const Heading = styled.div`
   font-weight: 500;
@@ -43,55 +45,76 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateNewRole = ({ open, handleClose }) => {
+const EditRole = ({ open, handleClose }) => {
   const params = useParams();
+
+  const { roleDetails, isLoading, error } = useSelector((state) => state.role);
 
   const dispatch = useDispatch();
 
   const userId = params.userId;
   const communityId = params.id;
 
-  const [roleTitle, setRoleTitle] = useState(null);
+  const [roleTitle, setRoleTitle] = useState(roleDetails.title);
 
-  const [p_1, setP_1] = useState(false);
-  const [p_2, setP_2] = useState(false);
-  const [p_3, setP_3] = useState(false);
-  const [p_4, setP_4] = useState(false);
-  const [p_5, setP_5] = useState(false);
-  const [p_6, setP_6] = useState(false);
-  const [p_7, setP_7] = useState(false);
-  const [p_8, setP_8] = useState(false);
-  const [p_9, setP_9] = useState(false);
-  const [p_10, setP_10] = useState(false);
-  const [p_11, setP_11] = useState(false);
-  const [p_12, setP_12] = useState(false);
-  const [p_13, setP_13] = useState(false);
-  const [p_14, setP_14] = useState(false);
-  const [p_15, setP_15] = useState(false);
-  const [p_16, setP_16] = useState(false);
-  const [p_17, setP_17] = useState(false);
-  const [p_18, setP_18] = useState(false);
-  const [p_19, setP_19] = useState(false);
-  const [p_20, setP_20] = useState(false);
-  const [p_21, setP_21] = useState(false);
-  const [p_22, setP_22] = useState(false);
-  const [p_23, setP_23] = useState(false);
-  const [p_24, setP_24] = useState(false);
-  const [p_25, setP_25] = useState(false);
-  const [p_26, setP_26] = useState(false);
-  const [p_27, setP_27] = useState(false);
-  const [p_28, setP_28] = useState(false);
-  const [p_29, setP_29] = useState(false);
-  const [p_30, setP_30] = useState(false);
-  const [p_31, setP_31] = useState(false);
-  const [p_32, setP_32] = useState(false);
-  const [p_33, setP_33] = useState(false);
-  const [p_34, setP_34] = useState(false);
-  const [p_35, setP_35] = useState(false);
-  const [p_36, setP_36] = useState(false);
-  const [p_37, setP_37] = useState(false);
-  const [p_38, setP_38] = useState(false);
-  const [p_39, setP_39] = useState(false);
+  const [p_1, setP_1] = useState(roleDetails.create_new_event);
+  const [p_2, setP_2] = useState(roleDetails.add_new_members);
+  const [p_3, setP_3] = useState(roleDetails.remove_members);
+  const [p_4, setP_4] = useState(roleDetails.edit_event_basic_details);
+  const [p_5, setP_5] = useState(roleDetails.edit_event_description);
+  const [p_6, setP_6] = useState(roleDetails.start_event);
+  const [p_7, setP_7] = useState(roleDetails.end_event);
+  const [p_8, setP_8] = useState(roleDetails.publish_event);
+  const [p_9, setP_9] = useState(roleDetails.add_and_edit_agenda);
+  const [p_10, setP_10] = useState(roleDetails.add_and_edit_speakers);
+  const [p_11, setP_11] = useState(roleDetails.add_and_edit_booths);
+  const [p_12, setP_12] = useState(roleDetails.add_and_edit_sponsors);
+  const [p_13, setP_13] = useState(roleDetails.add_and_edit_tickets);
+  const [p_14, setP_14] = useState(roleDetails.add_and_edit_coupons);
+  const [p_15, setP_15] = useState(roleDetails.add_and_edit_affiliates);
+  const [p_16, setP_16] = useState(
+    roleDetails.manage_google_analytics_and_facebook_pixel
+  );
+  const [p_17, setP_17] = useState(
+    roleDetails.add_attendees_via_csv_or_manually
+  );
+  const [p_18, setP_18] = useState(roleDetails.setup_event_entry_rule);
+  const [p_19, setP_19] = useState(roleDetails.setup_registration_form);
+  const [p_20, setP_20] = useState(roleDetails.setup_reception);
+  const [p_21, setP_21] = useState(roleDetails.manage_venue_customisation);
+  const [p_22, setP_22] = useState(roleDetails.manage_stage_vibes);
+  const [p_23, setP_23] = useState(roleDetails.edit_community_profile);
+  const [p_24, setP_24] = useState(
+    roleDetails.manage_access_to_agenda_activities
+  );
+  const [p_25, setP_25] = useState(roleDetails.manage_stripe);
+  const [p_26, setP_26] = useState(roleDetails.manage_billing);
+  const [p_27, setP_27] = useState(roleDetails.add_videos_to_library);
+  const [p_28, setP_28] = useState(
+    roleDetails.view_and_download_various_reports
+  );
+  const [p_29, setP_29] = useState(roleDetails.setup_integrations);
+  const [p_30, setP_30] = useState(roleDetails.manage_session_recordings);
+  const [p_31, setP_31] = useState(roleDetails.send_mail_to_attendees);
+  const [p_32, setP_32] = useState(roleDetails.send_mail_to_speakers);
+  const [p_33, setP_33] = useState(roleDetails.send_mail_to_exhibitors);
+  const [p_34, setP_34] = useState(roleDetails.customize_tables);
+  const [p_35, setP_35] = useState(roleDetails.customize_booths);
+  const [p_36, setP_36] = useState(roleDetails.setup_live_stream);
+  const [p_37, setP_37] = useState(roleDetails.createNewRole);
+  const [p_38, setP_38] = useState(roleDetails.change_other_members_role);
+  const [p_39, setP_39] = useState(
+    roleDetails.change_community_billing_plans_or_add_addons
+  );
+
+  if(isLoading) {
+    return <>
+
+    </>
+}
+if(error) {
+    return <div>Something went wrong</div>
+}
 
   const formValues = {
     create_new_event: p_1,
@@ -162,12 +185,17 @@ const CreateNewRole = ({ open, handleClose }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   dispatch(
-                    createNewRole(formValues, communityId, userId, roleTitle)
+                    editRoleCapabilities(
+                      formValues,
+                      roleDetails.id,
+                      communityId,
+                      userId
+                    )
                   );
                 }}
                 className="btn btn-light btn-outline-text me-3"
               >
-                <span> Create role </span>
+                <span> Edit role </span>
               </button>
             </Toolbar>
           </AppBar>
@@ -669,4 +697,4 @@ const CreateNewRole = ({ open, handleClose }) => {
   );
 };
 
-export default CreateNewRole;
+export default EditRole;

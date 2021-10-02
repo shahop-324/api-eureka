@@ -51,6 +51,7 @@ const affiliateRoutes = require("./routes/affiliateRoutes");
 const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const paypalRoutes = require("./routes/payPalRoutes");
 const zapierRoutes = require("./routes/zapierRoutes");
+const roleRoutes = require("./routes/roleRoutes");
 
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
@@ -183,7 +184,10 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
   const parameters = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: process.env.NODE_ENV === "development" ? "http://localhost:3001/signin" : "https://bluemeet.in/signin" ,
+    redirect_uri:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3001/signin"
+        : "https://bluemeet.in/signin",
     client_id: process.env.LINKEDIN_CLIENT_ID,
     client_secret: process.env.LINKEDIN_CLIENT_SECRET,
   };
@@ -251,6 +255,7 @@ app.use("/api-eureka/eureka/v1/affiliate", affiliateRoutes);
 app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 app.use("/api-eureka/eureka/v1/paypal", paypalRoutes);
 app.use("/api-eureka/eureka/v1/zapier", zapierRoutes);
+app.use("/api-eureka/eureka/v1/role", roleRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

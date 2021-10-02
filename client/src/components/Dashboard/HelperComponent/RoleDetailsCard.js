@@ -2,11 +2,10 @@ import React from "react";
 import Faker from "faker";
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
 
 import "./../../../assets/Sass/TeamManagement.scss";
 import "./../../../assets/Sass/DataGrid.scss";
-
 
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -18,19 +17,19 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
-
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import { reduxForm } from "redux-form";
-import Select from 'react-select';
+import Select from "react-select";
 import { Field } from "redux-form";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import LabelRoundedIcon from '@mui/icons-material/LabelRounded';
-import styled from 'styled-components';
+import LabelRoundedIcon from "@mui/icons-material/LabelRounded";
+import styled from "styled-components";
 import { AvatarGroup } from "@mui/material";
 import dateFormat from "dateformat";
+import EditRole from "./../FormComponents/EditRole";
 
 const EventReportIconBox = styled.div`
   padding: 5px;
@@ -79,10 +78,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-
-
-
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -153,29 +148,46 @@ const onSubmit = (formValues) => {
   alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
-const now = Date.now();
+const renderAssignedToGroupAvatar = (members) => {
+  return members.map((member) => {
+    return (
+      <Avatar
+        alt={member.firstName + " " + member.lastName}
+        src={
+          member.image.startsWith("https://")
+            ? member.image
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${member.image}`
+        }
+      />
+    );
+  });
+};
 
-const RolesDetailsCard = (props) => {
-
-  const { handleSubmit, pristine,  submitting } = props;
-
+const RolesDetailsCard = ({
+  id,
+  assignedTo,
+  title,
+  lastUpdatedByName,
+  lastUpdatedByImage,
+  lastUpdatedAt,
+  handleSubmit,
+  pristine,
+  submitting,
+}) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-
+  const [openEdit, setOpenEdit] = React.useState(false);
 
   const handleOpenDrawer = () => {
-    setOpenDrawer(true);
+    setOpenEdit(true);
   };
 
-  //  const formatDateAndTime =(date)=>{
-  //   var now = new Date();
-  //   dateFormat(startDate, "mm/d/yyyy");
-  //  }
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  }
 
   const handleDeleteSession = () => {
     setOpenDeleteDialog(true);
@@ -187,52 +199,49 @@ const RolesDetailsCard = (props) => {
 
   return (
     <>
-      <div className="team-members-field-value-container" style={{gridTemplateColumns: "1.8fr 2fr 1fr 1fr 1fr"}}>
+      <div
+        className="team-members-field-value-container"
+        style={{ gridTemplateColumns: "1.8fr 2fr 1fr 1fr 1fr" }}
+      >
         <div className="mx-5">
-        <div className="d-flex flex-row ">
-              <EventReportIconBox className="me-3">
-                <LabelRoundedIcon />
-              </EventReportIconBox>
-              Events manager
-            </div>
+          <div className="d-flex flex-row  align-items-center">
+            <EventReportIconBox className="me-3">
+              <LabelRoundedIcon />
+            </EventReportIconBox>
+            {title}
+          </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label registrations-field-value-modified">
-          <AvatarGroup max={4}>
-                <Avatar alt="Remy Sharp" src={Faker.image.avatar()} />
-                <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-                <Avatar alt="Cindy Baker" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-              </AvatarGroup>
+            <AvatarGroup max={4}>
+              {typeof assignedTo !== "undefined" && assignedTo.length > 0 ? (
+                renderAssignedToGroupAvatar(assignedTo)
+              ) : (
+                <Chip
+                  label="Not assigned to anyone"
+                  variant="outlined"
+                  color="error"
+                />
+              )}
+            </AvatarGroup>
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* phone number */}
-            
-            {dateFormat(now)}
-            
+            {dateFormat(lastUpdatedAt)}
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* phone number */}
-            
             <Chip
-        avatar={<Avatar alt={Faker.name.findName()} src={Faker.image.avatar()} />}
-        label={"Shreyansh"}
-        variant="outlined"
-      />
-           
+              avatar={
+                <Avatar src={lastUpdatedByImage} alt={lastUpdatedByName} />
+              }
+              label={lastUpdatedByName}
+              variant="outlined"
+            />
           </div>
         </div>
-
-        
 
         <div className="event-registrations-field">
           <div
@@ -286,88 +295,12 @@ const RolesDetailsCard = (props) => {
         </DialogActions>
       </Dialog>
 
+     
 
-
-      <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
-          <div className="registration-more-details-right-drawer px-4 py-4">
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Edit member Permissions</div>
-              <div
-                onClick={() => {
-                  setOpenDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
-              <div className="side-drawer-more-details-content-section">
-                <div className="row edit-profile-form-row mb-3">
-                  <div className="form-group">
-                    <label
-                      for="communityHeadline"
-                      className="form-label form-label-customized"
-                    >
-                      E-mail
-                    </label>
-                    <Field
-                      name="email"
-                      type="email"
-                      classes="form-control"
-                      component={renderInput}
-                      ariadescribedby="emailHelp"
-                      placeholder="johndoe@gmail.com"
-                      label="Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <label
-                    for="communityHeadline"
-                    className="form-label form-label-customized"
-                  >
-                    Set Permissions
-                  </label>
-                  <Field
-                    name="interests"
-                    component={renderEventPreferences}
-                    label="Event Preferences"
-                  />
-                </div>
-              </div>
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  disabled={pristine || submitting}
-                >
-                 Update permissions
-                </button>
-              </div>
-            </form>
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+      <EditRole open={openEdit} handleClose={handleCloseEdit} />
     </>
   );
 };
-
 
 export default reduxForm({
   form: "editTeamMemberPermissions",

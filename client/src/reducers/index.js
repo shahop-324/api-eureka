@@ -39,6 +39,8 @@ import paypalSlice from "./paypalSlice";
 import tawkSlice from "./tawkSlice";
 import eventbriteSlice from "./eventbriteSlice";
 import apiKeySlice from "./apiKeySlice";
+import SnackbarSlice from "./snackbarSlice";
+import roleSlice from "./roleSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -80,4 +82,6 @@ export default combineReducers({
   tawk: tawkSlice.reducer,
   eventbrite: eventbriteSlice.reducer,
   apikey: apiKeySlice.reducer,
+  snackbar: SnackbarSlice.reducer,
+  role: roleSlice.reducer,
 });

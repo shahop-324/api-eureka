@@ -3,6 +3,36 @@ import React, { useState } from "react";
 import { connect, useSelector } from "react-redux";
 
 import { Field, reduxForm } from "redux-form";
+import styled from 'styled-components';
+
+const FormSubHeading = styled.div`
+font-size: 0.87rem;
+font-family: "Ubuntu";
+font-weight: 500;
+color: #424242;
+`
+
+const FormError = styled.div`
+font-family: "Ubuntu";
+color: red;
+font-weight: 400;
+font-size: 0.8rem;
+`
+
+const FormWarning = styled.div`
+font-family: "Ubuntu";
+color: orange;
+font-weight: 400;
+font-size: 0.8rem;
+`
+const FormLabel = styled.label`
+font-family: "Ubuntu" !important;
+font-size: 0.82rem !important;
+font-weight: 500 !important;
+color: #727272 !important;
+
+margin-bottom: 5px !important;
+`
 
 const useStyles = makeStyles((theme) => ({
   large: {
@@ -148,7 +178,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
   return (
     <>
       <div className="user-account-edit-profile px-4 py-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
+        <form onSubmit={handleSubmit(onSubmit)} className="ui form error px-3">
           <div className="row edit-profile-form-row d-flex align-items-center justify-content-center mb-4">
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
@@ -159,12 +189,11 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
             >
               Avatar
-            </label>
+            </FormLabel>
             <input
               name="imgUpload"
               type="file"
@@ -176,12 +205,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityName"
-                className="form-label form-label-customized"
+                
               >
                 Community Name
-              </label>
+              </FormLabel>
               <Field
                 name="communityName"
                 type="text"
@@ -195,12 +224,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
+              
               >
                 Headline
-              </label>
+              </FormLabel>
               <Field
                 name="communityHeadline"
                 type="text"
@@ -213,12 +242,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <label
+              <FormLabel
                 for="communityEmail"
-                className="form-label form-label-customized"
+                
               >
                 E-mail
-              </label>
+              </FormLabel>
               <Field
                 name="communityEmail"
                 type="email"
@@ -230,12 +259,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityLinkedin"
-              className="form-label form-label-customized"
+              
             >
               LinkedIn
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="communityLinkedin"
@@ -249,12 +278,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Facebook
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="facebook"
@@ -268,12 +297,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Twitter
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="twitter"
@@ -287,12 +316,12 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-5">
-            <label
+            <FormLabel
               for="communityHeadline"
-              className="form-label form-label-customized"
+              
             >
               Website
-            </label>
+            </FormLabel>
             <div className="form-group">
               <Field
                 name="website"

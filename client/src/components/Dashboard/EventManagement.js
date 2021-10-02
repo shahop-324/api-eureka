@@ -25,6 +25,17 @@ import NoContentFound from "../NoContent";
 import NoEvent from "./../../assets/images/noEvent.png";
 import history from "./../../history";
 
+import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
+
+import styled from 'styled-components';
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -67,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -129,7 +139,6 @@ const EventManagement = () => {
     history.push(
       `/user/${userId}/community/event-management/${communityId}/?limit=${limit}&page=${page}`
     );
-
     return () => {
       clearTimeout(timeoutId);
     };
@@ -171,7 +180,6 @@ const EventManagement = () => {
         const imgKey = communityEvent.image;
         if (imgKey) {
           imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
-          // https://bluemeet.s3.us-west-1.amazonaws.com/pexels-photo-2693212.png.jpeg
         }
         return (
           <EventDetailCard
@@ -199,7 +207,7 @@ const EventManagement = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Events</div>
+          <SectionHeading>All Events</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search} me-3`}
@@ -222,13 +230,14 @@ const EventManagement = () => {
               className="btn btn-primary btn-outline-text"
               onClick={handleClickOpen}
             >
+              <span>
               Create New event
+              </span>
             </button>
           </div>
         </div>
         <div
           className="event-management-content-grid px-3 mx-3 mb-4 py-4"
-          // key={open}
         >
           <EventListFields />
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
@@ -252,7 +261,6 @@ const EventManagement = () => {
             />
           )}
         </div>
-        {/* Here I have to use pagination */}
         <CustomPagination
         page={page}
           numOfPages={numberOfPages}
@@ -267,7 +275,6 @@ const EventManagement = () => {
       <Dialog
         fullScreen={fullScreen}
         open={open}
-        // onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
         <CreateNewEventForm

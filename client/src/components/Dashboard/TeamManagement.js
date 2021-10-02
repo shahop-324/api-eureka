@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -20,6 +20,13 @@ import AddNewRole from "./FormComponents/AddNewRole";
 import RolesListFields from "./HelperComponent/RolesListFields";
 import RoleDetailsCard from "./HelperComponent/RoleDetailsCard";
 import CreateNewRole from "./FormComponents/CreateNewRole";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRoles } from "./../../actions";
+import { useParams } from "react-router-dom";
+import NoContentFound from "../NoContent";
+
+import NoRoles from "./../../assets/images/NoRoles.png";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -101,7 +108,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderTeamRoles = (roles) => {
+  return roles.map((role) => {
+    return (
+      <RoleDetailsCard
+        key={role.id}
+        id={role.id}
+        assignedTo={role.assignedTo}
+        title={role.title}
+        lastUpdatedByName={
+          role.lastUpdatedBy.firstName + " " + role.lastUpdatedBy.lastName
+        }
+        lastUpdatedByImage={
+          role.lastUpdatedBy.image.startsWith("https://")
+            ? role.lastUpdatedBy.image
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${role.lastUpdatedBy.image}`
+        }
+        lastUpdatedAt={role.lastUpdatedAt}
+      />
+    );
+  });
+};
+
 const TeamManagement = (props) => {
+  const params = useParams();
+
+  const { roles } = useSelector((state) => state.role);
+
+  const communityId = params.id;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRoles(communityId));
+  }, []);
+
   const [activeTab, setActiveTab] = useState("members");
 
   const [openAddNewMember, setOpenAddNewMember] = React.useState(false);
@@ -177,66 +218,34 @@ const TeamManagement = (props) => {
           </div>
         </div>
 
-        <div
-          className="d-flex flex-row align-items-center mb-4 mx-4"
-          style={{ borderBottom: "1px solid #D1D1D1" }}
-        >
-          <SwitchTab
-            active={activeTab === "members" ? true : false}
-            className=" me-5"
-            onClick={() => {
-              setActiveTab("members");
-            }}
-          >
-            <PersonRoundedIcon className="me-1" style={{ fontSize: "20px" }} />
-            Members (4)
-          </SwitchTab>
-          <SwitchTab
-            active={activeTab === "roles" ? true : false}
-            onClick={() => {
-              setActiveTab("roles");
-            }}
-          >
-            <LabelRoundedIcon className="me-1" style={{ fontSize: "20px" }} />
-            Roles
-          </SwitchTab>
-        </div>
+        
 
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-        {(() => {
-          switch (activeTab) {
-            case "members":
-              return (
-                <>
-                  <TeamMembersListFields />
-                  <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-                    <Divider />
-                  </div>
-                  <TeamMembersDetailsCard />
-                  <TeamMembersDetailsCard />
-                  <TeamMembersDetailsCard />
-                  <TeamMembersDetailsCard />
-                  <HowManyMembersCanBeAddedMsg />
-                </>
-              );
+          {(() => {
+            switch (activeTab) {
+              case "members":
+                return (
+                  <>
+                    <TeamMembersListFields />
+                    <div
+                      className="divider-wrapper"
+                      style={{ margin: "1.2% 0" }}
+                    >
+                      <Divider />
+                    </div>
+                    <TeamMembersDetailsCard />
+                    <TeamMembersDetailsCard />
+                    <TeamMembersDetailsCard />
+                    <TeamMembersDetailsCard />
+                    <HowManyMembersCanBeAddedMsg />
+                  </>
+                );
 
-            case "roles":
-              return (
-                <>
-<RolesListFields />
-<div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-                    <Divider />
-                  </div>
-                  <RoleDetailsCard />
-                  <RoleDetailsCard />
-                  <RoleDetailsCard />
-
-                </>
-              )
-            default:
-              break;
-          }
-        })()}
+              
+              default:
+                break;
+            }
+          })()}
         </div>
       </div>
 
@@ -248,6 +257,7 @@ const TeamManagement = (props) => {
         open={openCreateNewRole}
         handleClose={handleCloseCreateNewRole}
       />
+      
     </>
   );
 };

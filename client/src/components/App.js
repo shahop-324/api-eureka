@@ -61,10 +61,25 @@ import CheckConnectedStatus from "./PaymentHandlingComponents/CheckConnectedStat
 import SuccessfullyConnected from "./PaymentHandlingComponents/SuccessfullyConnected";
 import NotConnected from "./PaymentHandlingComponents/NotConnected";
 
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { closeSnackbar } from "../actions/index";
+
+const vertical = "top";
+const horizontal = "center";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 AOS.init();
 
 class App extends React.Component {
+  handleClose = () => {
+    console.log("Close snackbar was pressed!");
+  };
+
   componentDidMount = () => {
     socket.on("logOutUser", ({ userId, message }) => {
       console.log("hey,hitting logOutUser");
@@ -100,7 +115,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { isSignedIn } = this.props;
+    const { isSignedIn, open, message, severity } = this.props;
 
     // (() => {
     //   console.log("i run ");
@@ -336,7 +351,7 @@ class App extends React.Component {
                 />
               )}
 
-{isSignedIn && (
+              {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/event-entry-and-participants"
                   exact
@@ -344,7 +359,7 @@ class App extends React.Component {
                 />
               )}
 
-{isSignedIn && (
+              {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/schedule"
                   exact
@@ -391,8 +406,6 @@ class App extends React.Component {
                   component={EditEventRoot}
                 />
               )}
-
-              
 
               {isSignedIn && (
                 <Route
@@ -689,12 +702,41 @@ class App extends React.Component {
             </Switch>
           </div>
         </Router>
+
+        {console.log(this.props, "This is props object in app")}
+
+        {this.props && this.props.message && this.props.open ? (
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={this.props.open}
+            autoHideDuration={4000}
+            key={vertical + horizontal}
+            onClose={() => {
+              this.props.closeSnackbar();
+            }}
+          >
+            <Alert
+              onClose={() => {
+                this.props.closeSnackbar();
+              }}
+              severity={this.props.severity}
+              sx={{ width: "100%" }}
+            >
+              {this.props.message}
+            </Alert>
+          </Snackbar>
+        ) : (
+          <></>
+        )}
       </>
     );
   }
 }
 const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
+  open: state.snackbar.open,
+  severity: state.snackbar.severity,
+  message: state.snackbar.message,
   signinForBuyingPlanIntent: state.auth.signinForBuyingPlanIntent,
   signinForEventRegistrationEventId:
     state.auth.signinForEventRegistrationEventId,
@@ -702,6 +744,7 @@ const mapStateToProps = (state, props) => ({
 
 export default connect(mapStateToProps, {
   DuplicateUserSignOut,
+  closeSnackbar,
   signIn,
   googleSignIn,
   newLinkedinLogin,

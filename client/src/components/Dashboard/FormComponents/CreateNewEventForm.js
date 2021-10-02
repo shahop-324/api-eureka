@@ -8,6 +8,53 @@ import { createEvent } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+font-weight: 500;
+font-family: "Ubuntu";
+font-size: 0.8rem;
+color: #4E4E4E;
+`
+
+const FormLabel = styled.label`
+font-family: "Ubuntu" !important;
+font-size: 0.82rem !important;
+font-weight: 500 !important;
+color: #727272 !important;
+`
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+font-size: 1.2rem;
+font-family: "Ubuntu";
+font-weight: 600;
+color: #212121;
+`
+
+const FormSubHeading = styled.div`
+font-size: 0.87rem;
+font-family: "Ubuntu";
+font-weight: 500;
+color: #424242;
+`
+
+const FormError = styled.div`
+font-family: "Ubuntu";
+color: red;
+font-weight: 400;
+font-size: 0.8rem;
+`
+
+const FormWarning = styled.div`
+font-family: "Ubuntu";
+color: orange;
+font-weight: 400;
+font-size: 0.8rem;
+`
+
 const renderInput = ({
   input,
   meta: { touched, error, warning },
@@ -19,7 +66,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -29,17 +76,17 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
+              
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -68,17 +115,17 @@ const renderTextArea = ({
 
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
+              
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -109,8 +156,8 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -138,8 +185,8 @@ const renderReactSelectTimeZone = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -177,14 +224,16 @@ const timeZoneOptions = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.8rem",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.8rem",
     color: "#757575",
   }),
 };
@@ -213,39 +262,30 @@ const CreateNewEventForm = (props) => {
     ModifiedFormValues.Timezone = formValues.selectTimeZone.value;
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
-
-    // console.log(ModifiedFormValues);
-    // showResults(ModifiedFormValues);
     dispatch(createEvent(ModifiedFormValues));
-
     props.handleClose();
   };
   return (
     <>
       <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-        <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
+      <HeaderFooter className="px-4 pt-3 pb-4">
           <div
-            className="form-heading-and-close-button "
+            className="form-heading-and-close-button"
             style={{ width: "100%" }}
           >
             <div></div>
-            <h2
+            <FormHeading
               className="overlay-form-heading"
-              style={{ fontFamily: "Inter" }}
+              style={{ fontFamily: "Ubuntu" }}
             >
               New Event
-            </h2>
+            </FormHeading>
             <div
               className="overlay-form-close-button"
               onClick={props.closeHandler}
-              // onClick={(props)=>{
-              //   props.closeHandler,
-              //   dispatch(reset(form:"newCreatedCommunity")),
-
-              // }
-              // }
+              
             >
-              {/* <div> */}
+             
               <IconButton
                 type="button"
                 aria-label="delete"
@@ -253,22 +293,25 @@ const CreateNewEventForm = (props) => {
               >
                 <CancelRoundedIcon />
               </IconButton>
-              {/* </div> */}
+              
             </div>
           </div>
-          <h5
+          <FormSubHeading
             className={
-              `overlay-sub-form-heading mb-5 ` +
+              `overlay-sub-form-heading` +
               (props.hideFormHeading === "1" ? "hide" : "")
             }
-            style={{ fontFamily: "Inter" }}
+            style={{ fontFamily: "Ubuntu", textAlign: "center" }}
           >
             Let's create an all new event for your community.
-          </h5>
+          </FormSubHeading>
+          </HeaderFooter>
+        <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
+          
           <div className="mb-4 overlay-form-input-row">
-            <label for="eventName" className="form-label form-label-customized">
+            <FormLabel for="eventName" className="form-label form-label-customized">
               Event Name
-            </label>
+            </FormLabel>
             <Field
               name="eventName"
               type="text"
@@ -280,12 +323,12 @@ const CreateNewEventForm = (props) => {
           </div>
 
           <div className="mb-4 overlay-form-input-row">
-            <label
+            <FormLabel
               for="shortDescription"
               className="form-label form-label-customized"
             >
               Short description
-            </label>
+            </FormLabel>
             <Field
               name="shortDescription"
               type="text"
@@ -297,12 +340,12 @@ const CreateNewEventForm = (props) => {
           </div>
           <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
-              <label
+              <FormLabel
                 Forhtml="eventStartDate"
                 className="form-label form-label-customized"
               >
                 Start Date
-              </label>
+              </FormLabel>
               <Field
                 name="startDate"
                 type="date"
@@ -313,12 +356,12 @@ const CreateNewEventForm = (props) => {
               />
             </div>
             <div>
-              <label
+              <FormLabel
                 Forhtml="eventStartTime"
                 className="form-label form-label-customized"
               >
                 Start Time
-              </label>
+              </FormLabel>
               <Field
                 name="startTime"
                 type="time"
@@ -331,12 +374,12 @@ const CreateNewEventForm = (props) => {
           </div>
           <div className="mb-4 overlay-form-input-row form-row-2-in-1">
             <div>
-              <label
+              <FormLabel
                 Forhtml="eventEndDate"
                 className="form-label form-label-customized"
               >
                 End Date
-              </label>
+              </FormLabel>
               <Field
                 name="endDate"
                 type="date"
@@ -347,12 +390,12 @@ const CreateNewEventForm = (props) => {
               />
             </div>
             <div>
-              <label
+              <FormLabel
                 Forhtml="eventEndDate"
                 className="form-label form-label-customized"
               >
                 End Time
-              </label>
+              </FormLabel>
               <Field
                 name="endTime"
                 type="time"
@@ -364,12 +407,12 @@ const CreateNewEventForm = (props) => {
             </div>
           </div>
           <div className="mb-4 overlay-form-input-row">
-            <label
+            <FormLabel
               Forhtml="selectTimeZone"
               className="form-label form-label-customized"
             >
               Select timezone
-            </label>
+            </FormLabel>
             <Field
               name="selectTimeZone"
               styles={styles}
@@ -381,12 +424,12 @@ const CreateNewEventForm = (props) => {
             />
           </div>
           <div className="mb-4 overlay-form-input-row">
-            <label
+            <FormLabel
               Forhtml="selectCategories"
               className="form-label form-label-customized"
             >
               Select categories
-            </label>
+            </FormLabel>
             <Field
               name="selectCategories"
               isMulti="true"
@@ -397,60 +440,9 @@ const CreateNewEventForm = (props) => {
               component={renderReactSelect}
             />
           </div>
-          <div className="mb-4 overlay-form-input-row">
-            <p className="form-label form-label-customized">
-              Which service would you like to use ?
-            </p>
-            <div className="form-check mb-2">
-              <Field
-                name="service"
-                className="form-check-input"
-                type="radio"
-                // name="flexRadioDefault"
-                id="flexRadioDefault1"
-                value="Hosting & Management"
-                // component={renderInput}
-                component="input"
-              />
-              <label
-                className="form-check-label"
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  fontSize: "0.9rem",
-                }}
-                for="flexRadioDefault1"
-              >
-                Hosting & Management
-              </label>
-            </div>
-            <div className="form-check">
-              <Field
-                className="form-check-input"
-                type="radio"
-                name="service"
-                id="flexRadioDefault2"
-                // checked="true"
-                value="Ticketing"
-                // component={renderInput}
-                component="input"
-              />
-              <label
-                className="form-check-label"
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  fontSize: "0.9rem",
-                }}
-                for="flexRadioDefault2"
-              >
-                Ticketing Only
-              </label>
-            </div>
-          </div>
 
           <div className="mb-4 overlay-form-input-row">
-            <p className="form-label form-label-customized">Event Visibility</p>
+            <FormLabel className="form-label form-label-customized">Event Visibility</FormLabel>
             <div className="form-check mb-2">
               <Field
                 name="visibility"
@@ -481,15 +473,15 @@ const CreateNewEventForm = (props) => {
                 Upgrade to a paid plan to create public events.
               </div>
             </div>
-            <div className="form-check">
+            <div className="form-check mb-2">
               <Field
                 className="form-check-input"
                 type="radio"
                 name="visibility"
                 id="flexRadioDefault2"
-                // checked="true"
+                
                 value="Private"
-                // component={renderInput}
+                
                 component="input"
               />
               <label
@@ -504,12 +496,29 @@ const CreateNewEventForm = (props) => {
                 Private
               </label>
             </div>
+            <div className="form-check">
+              <Field
+                className="form-check-input"
+                type="radio"
+                name="visibility"
+                id="flexRadioDefault2"
+                value="Hidden"
+                component="input"
+              />
+              <label
+                className="form-check-label"
+                style={{
+                  fontFamily: "Inter",
+                  fontWeight: "500",
+                  fontSize: "0.9rem",
+                }}
+                for="flexRadioDefault2"
+              >
+                Hidden
+              </label>
+            </div>
           </div>
 
-
-
-
-          
           <div
             className={props.showInlineButton === "false" ? "hide" : ""}
           ></div>
@@ -543,7 +552,6 @@ const CreateNewEventForm = (props) => {
           >
             <button
               type="submit"
-              // disabled={pristine || submitting}
               className={
                 `btn btn-primary btn-outline-text ` +
                 (props.showBlockButton === "false" ? "hide" : "")
@@ -609,6 +617,6 @@ const validate = (formValues) => {
 };
 
 export default reduxForm({
-  form: " createNewEventForm",
+  form: "createNewEventForm",
   validate,
 })(CreateNewEventForm);

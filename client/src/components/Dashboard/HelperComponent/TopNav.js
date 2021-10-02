@@ -8,6 +8,8 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AvatarMenu from "./../../AvatarMenu";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
+import Chip from "@mui/material/Chip";
+import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import {
   Avatar,
   Dialog,
@@ -22,8 +24,39 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import { Field, reduxForm } from "redux-form";
 import { connect, useSelector } from "react-redux";
 import SettingsVerticalTabs from "../SubComponents/SettingsVerticalTabs";
+
+import SwitchCommunity from "./SwitchCommunity";
+import CommunityProfileTab from "../SubComponents/CommunityProfileTab";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
+import styled from "styled-components";
+
 // import Avatar from '@material-ui/core/Avatar';
 // import Faker from 'faker';
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -71,6 +104,12 @@ const Topnav = ({
   submitting,
 }) => {
   const [openSettings, setOpenSettings] = React.useState(false);
+
+  const [openSwitchCommunity, setOpenSwitchCommunity] = React.useState(false);
+
+  const handleCloseSwitchCommunity = () => {
+    setOpenSwitchCommunity(false);
+  };
 
   const handleClickOpenSettings = () => {
     setOpenSettings(true);
@@ -157,24 +196,17 @@ const Topnav = ({
         </div>
         <div className="col-6 right">
           <div className="icon-and-avatar-menu-wrapper d-flex flex-row align-items-center">
-            {/* <div className={`${classes.root} mx-2 whats-new-btn`}>
-              <div
-                className="btn-outline-text px-2 py-2 whats-new-button"
-                style={{
-                  backgroundColor: "#C7C7C72D",
-                  borderRadius: "5px",
-                  fontSize: "13px",
-                }}
-              >
-                What's New
-              </div>
-            </div> */}
-            {/* <div className={`${classes.root} mx-2 dash-notification`}>
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsNoneIcon />
-              </Badge>
-            </div> */}
-
+            <Chip
+              onClick={() => {
+                setOpenSwitchCommunity(true);
+              }}
+              clickable
+              icon={<AutorenewRoundedIcon style={{ color: "#538BF7" }} />}
+              label="Switch community"
+              variant="outlined"
+              className="me-2"
+              style={{ border: "1px solid #538BF7", color: "#538BF7" }}
+            />
             <div
               onClick={handleClickOpenSettings}
               className={`${classes.root} mx-2 dash-settings`}
@@ -196,12 +228,16 @@ const Topnav = ({
 
       <React.Fragment key="left">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="left" open={openDrawer} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
+        <SwipeableDrawer
+          anchor="left"
+          open={openDrawer}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
           <div
             className="registration-more-details-right-drawer py-4"
             style={{ minWidth: "18.18vw" }}
@@ -248,20 +284,37 @@ const Topnav = ({
         open={openSettings}
         aria-labelledby="responsive-dialog-title"
       >
-        <div className="d-flex flex-row align-items-center justify-content-between p-3 px-5" style={{borderBottom: "1px solid #B6B6B6"}}>
-            <div style={{fontWeight: "500", color: "#212121", fontFamily: "Inter"}}>Settings</div>
-            <div style={{ justifySelf: "end" }}>
-                <IconButton
-                  onClick={handleCloseSettings}
-                  style={{ width: "fit-content" }}
-                  aria-label="delete"
-                >
-                  <HighlightOffRoundedIcon />
-                </IconButton>
-              </div>
-        </div>
-        <SettingsVerticalTabs />
+        <HeaderFooter className="px-4 pt-3 ">
+          <div
+            className="form-heading-and-close-button"
+            style={{ width: "100%" }}
+          >
+            <div></div>
+            <FormHeading
+              className="overlay-form-heading"
+              style={{ fontFamily: "Ubuntu" }}
+            >
+              Edit community profile
+            </FormHeading>
+            <div className="overlay-form-close-button">
+              <IconButton
+                type="button"
+                aria-label="delete"
+                onClick={() => {
+                  setOpenSettings(false);
+                }}
+              >
+                <CancelRoundedIcon />
+              </IconButton>
+            </div>
+          </div>
+        </HeaderFooter>
+        <CommunityProfileTab />
       </Dialog>
+      <SwitchCommunity
+        open={openSwitchCommunity}
+        handleClose={handleCloseSwitchCommunity}
+      />
     </>
   );
 };

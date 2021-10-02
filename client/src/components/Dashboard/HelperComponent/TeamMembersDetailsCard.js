@@ -6,6 +6,8 @@ import Avatar from "@material-ui/core/Avatar";
 import "./../../../assets/Sass/TeamManagement.scss";
 import "./../../../assets/Sass/DataGrid.scss";
 
+import Chip from '@mui/material/Chip';
+
 
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -175,14 +177,19 @@ const TeamManagementDetailsCard = (props) => {
 
   return (
     <>
-      <div className="team-members-field-value-container">
+      <div className="team-members-field-value-container" style={{gridTemplateColumns: "2fr 2fr 2fr 1fr 1fr"}}>
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5 d-flex flex-row ">
             {/* attendee avatar and name */}
-            <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
+            <Avatar alt="Travis Howard" src={Faker.image.avatar()} variant="rounded" />
             <div className="ms-3 px-2 registration-name-styled">
               {Faker.name.findName()}
             </div>
+          </div>
+        </div>
+        <div className="registrations-name-field">
+          <div className="registrations-field-label  ">
+          <Chip label="Super admin" variant="outlined" />
           </div>
         </div>
         <div className="registrations-email-field">
@@ -193,32 +200,15 @@ const TeamManagementDetailsCard = (props) => {
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* phone number */}
-            <div className="ms-3 px-3 py-2 pending-status-text-chip">
-              Pending
-            </div>
+          <Chip label="Pending" variant="outlined" />
           </div>
         </div>
-
-        {/* <div className="registrations-invoice-field">
-          <div className="registrations-field-label registrations-field-value-modified px-3">
-            <button className="btn btn-outline-primary btn-outline-text" onClick={handleRemoveUser}>
-              Remove
-            </button>
-            
-          </div>
-        </div> */}
-
         <div className="event-registrations-field">
           <div
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div onClick={handleOpenDrawer}>
-              <IconButton color="primary" aria-label="add to shopping cart">
-                <EditRoundedIcon />
-              </IconButton>
-            </div>
+            
             <div onClick={handleDeleteSession}>
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
@@ -261,10 +251,7 @@ const TeamManagementDetailsCard = (props) => {
         </DialogActions>
       </Dialog>
 
-
-
       <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
           console.log("Side nav was opended")
         }}

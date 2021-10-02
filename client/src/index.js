@@ -51,7 +51,6 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <SnackbarProvider
-      
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",

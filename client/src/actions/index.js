@@ -1,3 +1,4 @@
+import React from "react";
 import eureka from "../apis/eureka";
 import { authActions } from "../reducers/authSlice";
 import { eventActions } from "../reducers/eventSlice";
@@ -39,10 +40,17 @@ import { paypalActions } from "../reducers/paypalSlice";
 import { tawkActions } from "../reducers/tawkSlice";
 import { eventbriteActions } from "../reducers/eventbriteSlice";
 import { apiKeyActions } from "../reducers/apiKeySlice";
+import { snackbarActions } from "../reducers/snackbarSlice";
+import { roleActions } from "../reducers/roleSlice";
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://api.bluemeet.in/api-eureka/eureka/v1/";
+
+export const closeSnackbar = () => async (dispatch, getState) => {
+  dispatch(snackbarActions.closeSnackBar());
+};
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
@@ -855,6 +863,7 @@ export const errorTrackerForFetchEventsOfParticularCommunity =
 
 export const createEvent = (formValues) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
+
   const creatingEvent = async () => {
     console.log(formValues);
 
@@ -894,8 +903,28 @@ export const createEvent = (formValues) => async (dispatch, getState) => {
         event: res.data.event,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "New event created successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
   } catch (err) {
     console.log(err);
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to created new event.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
     dispatch(eventActions.hasError(err.message));
   }
 };
@@ -5611,8 +5640,122 @@ export const getStripeConnectAccountStatus =
     }
   };
 
-// export const CreateEventCheckoutSession =
-//   (userId, communityId, accountId) => async (dispatch, getState) => {
-//     console.log(getState());
+export const createNewRole =
+  (formValues, communityId, userId, roleTitle) =>
+  async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}role/createNewRole/${communityId}/${userId}`,
+        {
+          method: "POST",
 
-//   };
+          body: JSON.stringify({
+            communityId: communityId,
+            userId: userId,
+            roleTitle: roleTitle,
+            capabilities: { ...formValues },
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      //  Dispatch in roles slice in redux store
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const editRoleCapabilities =
+  (formValues, roleId, communityId, userId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}role/editRoleCapabilities/${communityId}/${userId}/${roleId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            roleId: roleId,
+            userId: userId,
+            capabilities: { ...formValues },
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      //  Dispatch in roles slice in redux store
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const deleteRole =
+  (roleId, communityId, userId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}role/deleteRole/${communityId}/${userId}/${roleId}`,
+        {
+          method: "DELETE",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            roleId: roleId,
+            userId: userId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      //  Dispatch in roles slice in redux store
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchRoles = (communityId) => async (dispatch, getState) => {
+  console.log("I reached in fetch roles");
+  try {
+    const res = await fetch(`${BaseURL}role/getRoles/${communityId}/`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      roleActions.FetchRoles({
+        roles: result.roles,
+      })
+    );
+
+    //  Dispatch in roles slice in redux store
+  } catch (error) {
+    console.log(error);
+  }
+};
