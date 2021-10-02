@@ -44,6 +44,7 @@ import Integrations from "./Integrations";
 import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
 import VideoLibrary from "./VideoLibrary";
+import Tracking from "./EditEvent/Tracking";
 
 const DashboardRoot = () => {
   console.log(window.paypal);
@@ -181,16 +182,11 @@ const DashboardRoot = () => {
                     </ErrorBoundriesRegistrations>
                   );
 
-                case "5":
-                  return (
-                    <ErrorBoundriesCoupons>
-                      <div>Snap</div>
-                    </ErrorBoundriesCoupons>
-                  );
+               
                 case "6":
                   return (
                     <ErrorBoundriesCoupons>
-                      <div>Tracking</div>
+                      <Tracking />
                     </ErrorBoundriesCoupons>
                   );
 

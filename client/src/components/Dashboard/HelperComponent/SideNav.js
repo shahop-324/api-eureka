@@ -71,7 +71,7 @@ const SideNav = ({
   };
   return (
     <>
-      <div className="side-nav-wrapper py-4" style={{height: "93vh !important", overflow: "auto", backgroundColor: "#ffffff"}}>
+      <div className="side-nav-wrapper py-4" style={{height: "93vh", overflow: "auto", backgroundColor: "#ffffff"}}>
         <div
           onClick={() => {
             handleGettingStartedClick();

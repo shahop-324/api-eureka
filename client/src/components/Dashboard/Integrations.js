@@ -5,7 +5,6 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Registrations.scss";
-// import CustomPagination from "./HelperComponent/Pagination";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
@@ -17,7 +16,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import IntegrationsSub from "./IntegrationSubComponents.js/IntegrationsSub";
 import ApiKeysSub from "./IntegrationSubComponents.js/ApiKeysSub";
 import GenerateApiKey from "./IntegrationSubComponents.js/Forms/GenerateApiKey";
-
 import StreamDestination from "./IntegrationSubComponents.js/StreamDestinations/StreamDestination";
 
 const options = [
@@ -134,14 +132,12 @@ const Integrations = () => {
                     <div className="sec-heading-text">Integrations</div>
                   );
 
-                case "streamdestination":
-                  return <div className="sec-heading-text">Stream destination</div>
+                
 
                 case "apikeys":
                   return <div className="sec-heading-text">Api keys</div>
 
-                  case "webhooks":
-                  return <div className="sec-heading-text">Webhooks</div>
+                  
 
                 default:
                   break;
@@ -224,11 +220,9 @@ const Integrations = () => {
             onChange={handleChange}
           >
             <ToggleButton value="integrations">Integrations</ToggleButton>
-            <ToggleButton value="streamdestination">
-              Stream destination
-            </ToggleButton>
+             
             <ToggleButton value="apikeys">API Keys</ToggleButton>
-            <ToggleButton value="webhooks">Webhooks</ToggleButton>
+         
           </ToggleButtonGroup>
         </div>
 
