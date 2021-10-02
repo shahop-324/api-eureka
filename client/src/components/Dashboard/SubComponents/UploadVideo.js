@@ -9,6 +9,10 @@ import VideoPNG from "./../../../assets/images/UploadVideo.svg";
 
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 
+import { useDispatch } from "react-redux";
+import { uploadVideoForCommunity } from "../../../actions";
+import { useParams } from "react-router-dom";
+
 const Heading = styled.div`
   font-weight: 600;
   font-family: "Ubuntu";
@@ -60,6 +64,12 @@ const VideoContainer = styled.video`
 `;
 
 const UploadVideo = ({ open, handleClose }) => {
+  const params = useParams();
+
+  const communityId = params.id;
+
+  const dispatch = useDispatch();
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -71,6 +81,10 @@ const UploadVideo = ({ open, handleClose }) => {
     console.log(event.target.files[0]);
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const uploadVideo = () => {
+    dispatch(uploadVideoForCommunity(communityId, file));
   };
 
   return (
@@ -112,6 +126,11 @@ const UploadVideo = ({ open, handleClose }) => {
           ></input>
 
           <button
+            onClick={() => {
+              uploadVideo();
+              handleClose();
+            }}
+            
             className="btn btn-primary btn-outline-text"
             style={{ width: "100%" }}
           >

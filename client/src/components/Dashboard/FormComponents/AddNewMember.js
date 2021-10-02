@@ -7,46 +7,12 @@ import { Field, reduxForm } from "redux-form";
 import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { createNewInvitation } from "../../../actions";
 
-const options = [
-  { value: "MP000", label: "Assign all permissons" },
-  { value: "MP001", label: "Add another member" },
-  { value: "MP002", label: "View Transactions" },
-  { value: "MP003", label: "Create Payout Link" },
-  { value: "MP004", label: "Add Speakers" },
-  { value: "MP005", label: "Add Booths" },
-  { value: "MP006", label: "Add Sessions" },
-  { value: "MP007", label: "Add New Ticket" },
-  { value: "MP008", label: "View attendees details" },
-  { value: "MP009", label: "Setup RTMP & Live Streaming" },
-  { value: "MP0010", label: "View analytics data" },
-  { value: "MP0011", label: "Export analytics data" },
-  { value: "MP0012", label: "Customize and send attendee emails" },
-  { value: "MP0013", label: "Customize and send booth emails" },
-  { value: "MP0014", label: "Customize and send speaker emails" },
-  { value: "MP0015", label: "change networking settings" },
-  { value: "MP0016", label: "Setup Integrations" },
-  { value: "MP0017", label: "add sponsors" },
-  { value: "MP0018", label: "Publish events" },
-  { value: "MP0019", label: "Create new event" },
-  { value: "MP0020", label: "Change Billing Plan" },
-  { value: "MP0021", label: "Reply to users queries" },
-];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
-    color: "#757575",
-  }),
-};
+const Paper = styled.div`
+  width: 420px !important;
+`;
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -81,31 +47,6 @@ const renderInput = ({
   );
 };
 
-const renderEventPreferences = ({
-  input,
-  meta: { touched, error, warning },
-  name,
-}) => (
-  <div>
-    <div>
-      <Select
-        isMulti
-        styles={styles}
-        className="basic-multi-select"
-        classNamePrefix="select"
-        name={name}
-        options={options}
-        value={input.value}
-        onChange={(value) => input.onChange(value)}
-        onBlur={() => input.onBlur()}
-      />
-      {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
-
 const showResults = (formValues) => {
   // await sleep(500); // simulate server latency
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -118,20 +59,22 @@ const AddNewMember = ({
   pristine,
   submitting,
 }) => {
+  const params = useParams();
+
+  const communityId = params.id;
+  const userId = params.userId;
+
   const dispatch = useDispatch();
 
   const onSubmit = (formValues) => {
-    console.log(formValues);
-    const ModifiedformValues = {};
+    // formValues.email;
 
-    ModifiedformValues.email = formValues.email;
+    // dispatch(inviteMember(communityId, formValues.email));
+    dispatch(createNewInvitation({ userId: userId, email: formValues.email }));
 
-    ModifiedformValues.permissions = formValues.permissions.map((object) => {
-      return object.value;
-    });
-
-    // dispatch(createNewInvitation(ModifiedformValues));
-    showResults(ModifiedformValues);
+    //   const inviteeId = req.body.userId;
+    // const communityId = req.community.id;
+    // const email = req.body.email;
   };
 
   return (
@@ -148,7 +91,7 @@ const AddNewMember = ({
             console.log("Side nav was closed");
           }}
         >
-          <div className="registration-more-details-right-drawer px-4 py-4">
+          <Paper className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Add New Member</div>
               <div
@@ -168,8 +111,8 @@ const AddNewMember = ({
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
               <div className="side-drawer-more-details-content-section">
-                <div className="row edit-profile-form-row mb-3">
-                  <div className="form-group">
+                <div className="row  mb-3">
+                  <div className="">
                     <label
                       for="communityHeadline"
                       className="form-label form-label-customized"
@@ -187,20 +130,6 @@ const AddNewMember = ({
                     />
                   </div>
                 </div>
-
-                <div className="row edit-profile-form-row mb-3">
-                  <label
-                    for="communityHeadline"
-                    className="form-label form-label-customized"
-                  >
-                    Set Permissions
-                  </label>
-                  <Field
-                    name="permissions"
-                    component={renderEventPreferences}
-                    // label="Event Preferences"
-                  />
-                </div>
               </div>
               <div style={{ width: "100%" }}>
                 <button
@@ -213,7 +142,7 @@ const AddNewMember = ({
                 </button>
               </div>
             </form>
-          </div>
+          </Paper>
         </SwipeableDrawer>
       </React.Fragment>
     </>

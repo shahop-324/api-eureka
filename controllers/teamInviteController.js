@@ -9,10 +9,10 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.createNewInvitation = catchAsync(async (req, res, next) => {
-  const inviteeId = req.user.id;
+  const inviteeId = req.body.userId;
   const communityId = req.community.id;
   const email = req.body.email;
-  const permissions = req.body.permissions;
+
   let urlToBeSent;
   let name;
   let image;
@@ -37,7 +37,7 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
     inviteeId: inviteeId,
     inviteeName: `${userDoc.firstName} ${userDoc.lastName}`,
     invitedUserEmail: email,
-    permissionsAlloted: permissions,
+    // permissionsAlloted: permissions,
     userAlreadyOnPlatform: bool,
     existingUserName: name,
     existingUserImage: image,

@@ -43,6 +43,16 @@ import { apiKeyActions } from "../reducers/apiKeySlice";
 import { snackbarActions } from "../reducers/snackbarSlice";
 import { roleActions } from "../reducers/roleSlice";
 
+const AWS = require("aws-sdk");
+const UUID = require("uuid/v1");
+
+const s3 = new AWS.S3({
+  signatureVersion: "v4",
+  region: "us-west-1",
+  accessKeyId: "AKIA476PXBEVI6FHBGWC",
+  secretAccessKey: "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",
+});
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
@@ -4048,12 +4058,7 @@ export const createNewInvitation =
 
       res = await res.json();
       console.log(res);
-
-      // dispatch(
-      //   registrationActions.FetchRegistration({
-      //     registration: res.data,
-      //   })
-      // );
+      
     } catch (err) {
       console.log(err);
     }
@@ -5753,9 +5758,71 @@ export const fetchRoles = (communityId) => async (dispatch, getState) => {
         roles: result.roles,
       })
     );
-
-    //  Dispatch in roles slice in redux store
   } catch (error) {
     console.log(error);
   }
 };
+
+export const uploadVideoForCommunity =
+  (communityId, file) => async (dispatch, getState) => {
+    try {
+      const key = `${communityId}/${UUID()}.mp4`;
+
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet",
+          Key: key,
+          ContentType: "video/mp4",
+        },
+        async (err, presignedURL) => {
+          const awsRes = await fetch(presignedURL, {
+            method: "PUT",
+
+            body: file,
+
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
+
+          console.log(awsRes);
+
+          if (awsRes.status === 200) {
+            dispatch(
+              snackbarActions.openSnackBar({
+                message:
+                  "Video file uploaded successfully! Make sure to link it to an event.",
+                severity: "success",
+              })
+            );
+
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 6000);
+          } else {
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Failed to upload video file. Please try again",
+                severity: "error",
+              })
+            );
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 4000);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  export const inviteMember = (communityId, email) => async(dispatch, getState) => {
+    try{
+
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }

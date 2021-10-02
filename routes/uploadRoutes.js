@@ -8,6 +8,7 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.get('/user/img', authController.protect, imgUploadController.uploadImg);
+router.get('/user/video', authController.protect, imgUploadController.uploadImg);
 
 
 module.exports = router;
