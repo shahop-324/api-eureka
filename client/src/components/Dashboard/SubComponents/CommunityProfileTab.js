@@ -1,38 +1,40 @@
 import { Avatar, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
+import validator from "validator";
 
 import { Field, reduxForm } from "redux-form";
-import styled from 'styled-components';
+import styled from "styled-components";
+import { updateCommunity } from "../../../actions";
 
 const FormSubHeading = styled.div`
-font-size: 0.87rem;
-font-family: "Ubuntu";
-font-weight: 500;
-color: #424242;
-`
+  font-size: 0.87rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #424242;
+`;
 
 const FormError = styled.div`
-font-family: "Ubuntu";
-color: red;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const FormWarning = styled.div`
-font-family: "Ubuntu";
-color: orange;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 const FormLabel = styled.label`
-font-family: "Ubuntu" !important;
-font-size: 0.82rem !important;
-font-weight: 500 !important;
-color: #727272 !important;
+  font-family: "Ubuntu" !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
 
-margin-bottom: 5px !important;
-`
+  margin-bottom: 5px !important;
+`;
 
 const useStyles = makeStyles((theme) => ({
   large: {
@@ -134,6 +136,8 @@ const renderTextArea = ({
 const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
   const { communityDetails } = useSelector((state) => state.community);
   let imgKey;
   if (communityDetails) {
@@ -142,7 +146,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
   let imgUrl;
   if (imgKey && !imgKey.startsWith("https")) {
-    imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   } else {
     imgUrl = imgKey;
   }
@@ -170,9 +174,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
       website: formValues.communityWebsite,
     };
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
-    console.log(file);
-    console.log(ModifiedFormValues);
-    // dispatch(editUser(ModifiedFormValues, file));
+    dispatch(updateCommunity(communityDetails._id, ModifiedFormValues, file));
   };
 
   return (
@@ -189,11 +191,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <FormLabel
-              for="communityHeadline"
-            >
-              Avatar
-            </FormLabel>
+            <FormLabel for="communityHeadline">Avatar</FormLabel>
             <input
               name="imgUpload"
               type="file"
@@ -205,12 +203,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <FormLabel
-                for="communityName"
-                
-              >
-                Community Name
-              </FormLabel>
+              <FormLabel for="communityName">Community Name</FormLabel>
               <Field
                 name="communityName"
                 type="text"
@@ -224,12 +217,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <FormLabel
-                for="communityHeadline"
-              
-              >
-                Headline
-              </FormLabel>
+              <FormLabel for="communityHeadline">Headline</FormLabel>
               <Field
                 name="communityHeadline"
                 type="text"
@@ -242,12 +230,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <FormLabel
-                for="communityEmail"
-                
-              >
-                E-mail
-              </FormLabel>
+              <FormLabel for="communityEmail">E-mail</FormLabel>
               <Field
                 name="communityEmail"
                 type="email"
@@ -259,12 +242,7 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityLinkedin"
-              
-            >
-              LinkedIn
-            </FormLabel>
+            <FormLabel for="communityLinkedin">LinkedIn</FormLabel>
             <div className="form-group">
               <Field
                 name="communityLinkedin"
@@ -278,15 +256,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Facebook
-            </FormLabel>
+            <FormLabel for="communityHeadline">Facebook</FormLabel>
             <div className="form-group">
               <Field
-                name="facebook"
+                name="communityFacebook"
                 type="text"
                 classes="form-control"
                 component={renderInput}
@@ -297,15 +270,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Twitter
-            </FormLabel>
+            <FormLabel for="communityHeadline">Twitter</FormLabel>
             <div className="form-group">
               <Field
-                name="twitter"
+                name="communityTwitter"
                 type="text"
                 classes="form-control"
                 component={renderInput}
@@ -316,15 +284,10 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           </div>
 
           <div className="row edit-profile-form-row mb-5">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Website
-            </FormLabel>
+            <FormLabel for="communityHeadline">Website</FormLabel>
             <div className="form-group">
               <Field
-                name="website"
+                name="communityWebsite"
                 type="text"
                 classes="form-control"
                 component={renderInput}
@@ -337,8 +300,6 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
           <div className="row edit-profile-form-row mb-3 d-flex flex-row justify-content-end">
             <button
               type="submit"
-              // disabled={editProfileClicked && !error}
-              // disabled={pristine}
               className="col-3 btn btn-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}
             >
@@ -346,7 +307,6 @@ const CommunityProfileTab = ({ handleSubmit, pristine, reset, submitting }) => {
             </button>
             <button
               type="button"
-              // disabled={pristine || submitting}
               onClick={reset}
               className="col-3 btn btn-outline-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}
@@ -406,6 +366,12 @@ const validate = (formValues) => {
   }
   if (!formValues.communityEmail) {
     errors.communityEmail = "Email is required";
+  }
+  if (
+    formValues.communityEmail &&
+    !validator.isEmail(formValues.communityEmail)
+  ) {
+    errors.communityEmail = "Please enter a valid email address.";
   }
   return errors;
 };

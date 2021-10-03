@@ -69,7 +69,7 @@ const communitySlice = createSlice({
       );
 
       if (!existingCommunity) {
-        state.community.push(action.payload.community);
+        state.communities.push(action.payload.community);
       }
 
       state.communityDetails = action.payload.community;
@@ -77,11 +77,18 @@ const communitySlice = createSlice({
     },
 
     EditCommunity(state, action) {
-      state.community = action.payload.community;
+      state.communityDetails = action.payload.community;
+
+      const editedCommunity = action.payload.community;
+
+      state.communities = state.communities.map((community) =>
+        community.id === editedCommunity._id ? editedCommunity : community
+      );
+
       state.isLoading = false;
     },
     DeleteCommunity(state, action) {
-      state.community = null;
+      state.communityDetails = null;
       state.isLoading = false;
     },
     RemoveCommunityManager(state, action) {

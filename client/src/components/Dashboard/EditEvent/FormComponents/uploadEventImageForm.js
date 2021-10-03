@@ -35,7 +35,7 @@ const UploadEventImageForm = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading } = useSelector((state) => state.event);
+  const { error, isLoading, eventDetails } = useSelector((state) => state.event);
 
   const classes = useStyles();
 
@@ -78,7 +78,7 @@ const UploadEventImageForm = (props) => {
     return (
       <div
         className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "80vh" }}
+        style={{ width: "100%", height: "100%" }}
       >
         {" "}
         <Loader />{" "}
@@ -98,7 +98,7 @@ const UploadEventImageForm = (props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="event-image-form-wrapper px-4 py-4">
           <label for="eventName" className="form-label form-label-customized">
-            Event image
+            Promo image
           </label>
           <div className="my-2">
             <Avatar
@@ -117,7 +117,7 @@ const UploadEventImageForm = (props) => {
               color: "#5C5C5C",
             }}
           >
-            <small>Optimal aspect ratio 4:3 (320/240px)</small>
+            <small>Optimal ratio (400/240px)</small>
           </div>
           <input
             name="imgUpload"
@@ -129,6 +129,7 @@ const UploadEventImageForm = (props) => {
             required
           />
           <button
+          disabled={eventDetails.status === "Ended" ? true : false}
             type="submit"
             className="btn btn-outline-primary btn-outline-text"
             style={{ width: "100%" }}

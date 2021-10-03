@@ -23,32 +23,26 @@ const speakerSchema = new mongoose.Schema(
     email: {
       type: String,
       lowercase: true,
-      validate: [validator.isEmail, "Please provide a valid email"],
     },
     image: {
       type: String,
     },
     organisation: {
       type: String,
-      default: "Facebook Inc.", // TODO This needs to fixed
     },
     designation: {
       type: String,
-      default: "Product Manager", // TODO This needs to fixed
     },
     city: {
       type: String,
-      default: "Mountain View, CA", // TODO This needs to fixed
     },
     country: {
       type: String,
-      default: "USA", // TODO This needs to fixed
     },
-    headline: {
+    bio: {
       type: String,
       trim: true,
-      maxlength: 250,
-      // default:"Co-Founder & CMO, Digital Strategy, Marketing & Strategic Partnership, Meylah"
+      maxlength: 500,
     },
     sessions: [
       {
@@ -67,6 +61,20 @@ const speakerSchema = new mongoose.Schema(
     socialMediaHandles: {
       type: Map,
       of: String,
+    },
+    invitationStatus: {
+      type: String,
+      enum: ["Not sent", "Sent"],
+      default: "Not sent",
+    },
+    invitationLink: {
+      type: String,
+    },
+    dashboardLink: {
+      type: String,
+    },
+    order: {
+      type: Number,
     },
   },
   {

@@ -11,8 +11,6 @@ import UploadVideo from "./SubComponents/UploadVideo";
 import { useParams } from "react-router";
 import LinkVideoFromLibrary from "./SubComponents/LinkVideoFromLibrary";
 
-
-
 const SectionHeading = styled.div`
   font-size: 1.15rem;
   font-weight: 500;
@@ -84,8 +82,6 @@ const useStyles = makeStyles((theme) => ({
 
 const VideoLibrary = () => {
 
- 
-
   const params = useParams();
 
   let eventId = params.id;
@@ -128,22 +124,7 @@ const VideoLibrary = () => {
             Stream Pre-recorded videos
           </SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
-            <div
-              className={`${classes.search}`}
-              style={{ backgroundColor: "#ffffff" }}
-            >
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
+            
 
             <div className="d-flex flex-row align-items-center">
               { eventId && communityId ? <button

@@ -56,13 +56,32 @@ import Email from "./Email";
 import VideoLibrary from "./../VideoLibrary";
 import StageVibesLibrary from "./StageVibesLibrary";
 
+import EventMoreActions from "./SubComponent/EventMoreActions";
+import styled from 'styled-components';
+
+const Strip = styled.div`
+background-color: #F75353;
+
+font-size: 0.8rem;
+font-weight: 500;
+color: #ffffff;
+font-family: "Ubuntu";
+text-align: center;
+`
+
 const EditEventRoot = () => {
+  const [openMoreActions, setOpenMoreActions] = React.useState(false);
+
+  const handleCloseMoreActions = () => {
+    setOpenMoreActions(false);
+  };
+
   const params = useParams();
   const dispatch = useDispatch();
 
-  const id = params.id;
+  const { eventDetails } = useSelector((state) => state.event);
 
-  // const eventId = params.eventId;
+  const id = params.id;
 
   const communityId = params.communityId;
 
@@ -95,9 +114,7 @@ const EditEventRoot = () => {
   };
   const handleScheduleClick = () => {
     dispatch(navigationIndexForEditEvent(2));
-    history.push(
-      `/community/${communityId}/edit-event/${id}/schedule`
-    );
+    history.push(`/community/${communityId}/edit-event/${id}/schedule`);
   };
 
   const handleSessionsClick = () => {
@@ -192,6 +209,8 @@ const EditEventRoot = () => {
 
   return (
     <>
+    {eventDetails.status === "Ended" ? <Strip className="py-1">This event has already ended. Certain actions will be restricted. Please contact us to start it again.</Strip> : <></> }
+    
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
         <Topnav />
@@ -205,44 +224,98 @@ const EditEventRoot = () => {
                 <ArrowBackIosRoundedIcon style={{ fontSize: 18 }} />
               </IconButton>
             </Link>
-
-            {/* <button onClick={() => {
-             dispatch(editEvent({publishedStatus: "Published"}, id)) 
-            }} className="publish-btn-lg btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
-              Publish
-            </button> */}
           </div>
-
           <div className="d-flex flex-row align-items-center">
             <div className="event-name-head-text me-3">
-              Confulence Global Summit 2021
+              {eventDetails.eventName}
             </div>
-            <Chip
-              label="Upcoming"
-              variant="outlined"
-              style={{ color: "#538BF7", border: "1px solid #538BF7" }}
-            />
+            {(() => {
+              switch (eventDetails.status) {
+                case "Upcoming":
+                  return (
+                    <Chip
+                      label={"Upcoming"}
+                      variant="outlined"
+                      style={{
+                        color: "#538BF7",
+                        border: `1px solid ${"#538BF7"}`,
+                        fontWeight: 600,
+                      }}
+                    />
+                  );
+                case "Started":
+                  return (
+                    <Chip
+                      label={"Started"}
+                      variant="outlined"
+                      style={{
+                        color: "#6C53F7",
+                        border: `1px solid ${"#6C53F7"}`,
+                        fontWeight: 600,
+                      }}
+                    />
+                  );
+                case "Paused":
+                  return (
+                    <Chip
+                      label={"Paused"}
+                      variant="outlined"
+                      style={{
+                        color: "#F7D953",
+                        border: `1px solid ${"#F7D953"}`,
+                        fontWeight: 600,
+                      }}
+                    />
+                  );
+                case "Resumed":
+                  return (
+                    <Chip
+                      label={"Resumed"}
+                      variant="outlined"
+                      style={{
+                        color: "#F78753",
+                        border: `1px solid ${"#F78753"}`,
+                        fontWeight: 600,
+                      }}
+                    />
+                  );
+                case "Ended":
+                  return (
+                    <Chip
+                      label={"Ended"}
+                      variant="outlined"
+                      style={{
+                        color: "#F75353",
+                        border: `1px solid ${"#F75353"}`,
+                        fontWeight: 600,
+                      }}
+                    />
+                  );
+
+                default:
+                  break;
+              }
+            })()}
           </div>
           <div className="d-flex flex-row align-items-center justify-content-end me-3">
-            <button className="btn btn-outline-dark btn-outline-text me-3">
+            <button
+              onClick={() => {
+                setOpenMoreActions(true);
+              }}
+              className="btn btn-outline-dark btn-outline-text me-3"
+            >
               More actions
             </button>
-            <button className="btn btn-primary btn-outline-text">
+            <Link to={`/compatibility-test/community/${eventDetails.communityId}/event/${eventDetails._id}/`} target="_blank">
+            <button
+              disabled={eventDetails.status === "Ended" ? true : false}
+             
+              className="btn btn-primary btn-outline-text"
+            >
               View event
             </button>
-            {/* <button
-              onClick={() => {
-                dispatch(editEvent({ publishedStatus: "Published" }, id));
-              }}
-              className="publish-btn-sm btn btn-outline-primary btn-outline-text"
-              style={{
-                fontSize: "0.8rem",
-                maxWidth: "200px",
-                justifySelf: "end",
-              }}
-            >
-              Publish
-            </button> */}
+            </Link>
+            
           </div>
         </div>
         {/* Body section - left(side nav) & right(body content) */}
@@ -298,7 +371,7 @@ const EditEventRoot = () => {
             handleTrackingClick={handleTrackingClick}
           />
 
-          <div className="main-content-wrapper" style={{ height: "83vh" }}>
+          <div className="main-content-wrapper" style={{ height: "100vh" }}>
             {(() => {
               switch (currentIndex) {
                 case "0":
@@ -374,6 +447,11 @@ const EditEventRoot = () => {
           </div>
         </div>
       </div>
+
+      <EventMoreActions
+        open={openMoreActions}
+        handleClose={handleCloseMoreActions}
+      />
     </>
   );
 };

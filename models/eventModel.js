@@ -35,7 +35,6 @@ const eventSchema = new mongoose.Schema(
         ref: "EventReferral",
       },
     ],
-
     editingComment: {
       type: String,
       trim: true,
@@ -44,7 +43,6 @@ const eventSchema = new mongoose.Schema(
       type: Date,
       required: [true, "An event must have a start date."],
     },
-
     endDate: {
       type: Date,
       required: [true, "An event must have a start date."],
@@ -104,6 +102,15 @@ const eventSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.ObjectId,
       ref: "Community",
+    },
+    communityId: {
+      type: String,
+    },
+    communityName: {
+      type: String,
+    },
+    organisedBy: {
+      type: String,
     },
     RegistrationLimit: {
       type: Number,
@@ -257,7 +264,8 @@ const eventSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "active",
+      default: "Upcoming",
+      enum: ["Upcoming", "Started", "Ended", "Paused", "Resumed"],
     },
     communityLogo: {
       type: String,
@@ -382,6 +390,7 @@ const eventSchema = new mongoose.Schema(
         ref: "EventAlert",
       },
     ],
+
     polls: [
       {
         type: mongoose.Schema.ObjectId,
@@ -397,6 +406,24 @@ const eventSchema = new mongoose.Schema(
     eventbriteWebhookData: {
       type: Map,
     },
+
+    whoCanEnterEvent: {
+      type: String,
+      enum: [
+        "Anyone Registered without using 2FA",
+        "Invited only without using 2FA",
+        "Anyone Registered using 2FA",
+        "Invited only using 2FA",
+      ],
+      default: "Anyone Registered without using 2FA",
+    },
+
+    registrationFormId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "RegistrationForm"
+    },
+
+    
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

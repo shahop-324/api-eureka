@@ -752,49 +752,34 @@ export const fetchParticularEventOfCommunity =
   (id) => async (dispatch, getState) => {
     dispatch(eventActions.startLoading());
     try {
-      const existingEvent = getState().event.events.find((event) => {
-        console.log(id);
-        return event.id === id;
-      });
+      const res = await fetch(
+        `${BaseURL}community/events/${id}`,
 
-      if (!existingEvent) {
-        console.log(id, "I am passing from particularEvent action");
-
-        const res = await fetch(
-          `${BaseURL}community/events/${id}`,
-
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
-          }
-        );
-
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
         }
+      );
 
-        const result = await res.json();
-
-        console.log(result);
-
-        dispatch(
-          eventActions.FetchEvent({
-            event: result.data.event,
-          })
-        );
-      } else {
-        dispatch(
-          eventActions.FetchEvent({
-            event: existingEvent,
-          })
-        );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        eventActions.FetchEvent({
+          event: result.data.event,
+        })
+      );
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
       console.log(err);
@@ -982,10 +967,32 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
         event: res.updatedEvent,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Event updated successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   } catch (err) {
     console.log(err);
 
     dispatch(eventActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update event.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
@@ -994,68 +1001,81 @@ export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
 
 export const uploadEventImage = (file, id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
-  const uploadingImage = async () => {
-    console.log(file);
 
-    let uploadConfig = await fetch(
-      `${BaseURL}upload/user/img`,
+  const key = `${id}/${UUID()}.jpeg`;
 
-      {
-        headers: {
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+  s3.getSignedUrl(
+    "putObject",
+    {
+      Bucket: "bluemeet",
+      Key: key,
+      ContentType: "image/jpeg",
+    },
+    async (err, presignedURL) => {
+      const awsRes = await fetch(presignedURL, {
+        method: "PUT",
 
-    uploadConfig = await uploadConfig.json();
-    console.log(uploadConfig);
-
-    const awsRes = await fetch(uploadConfig.url, {
-      method: "PUT",
-
-      body: file,
-
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-
-    console.log(awsRes);
-
-    const res = await fetch(
-      `${BaseURL}events/${id}/update`,
-
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          image: uploadConfig.key,
-        }),
+        body: file,
 
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
+          "Content-Type": file.type,
         },
+      });
+
+      console.log(awsRes);
+
+      if (awsRes.status === 200) {
+        try {
+          // Save this image info in event document.
+          const res = await fetch(
+            `${BaseURL}events/${id}/updatePromoImage`,
+
+            {
+              method: "PATCH",
+              body: JSON.stringify({
+                image: key,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().communityAuth.token}`,
+              },
+            }
+          );
+          const result = await res.json();
+          dispatch(
+            eventActions.EditEvent({
+              event: result.updatedEvent,
+            })
+          );
+
+          dispatch(
+            snackbarActions.openSnackBar({
+              message: "Promo image updated!",
+              severity: "success",
+            })
+          );
+
+          setTimeout(function () {
+            dispatch(snackbarActions.closeSnackBar());
+          }, 6000);
+        } catch (error) {
+          eventActions.hasError(error.message);
+          console.log(error);
+
+          dispatch(
+            snackbarActions.openSnackBar({
+              message: "Failed to upload promo image.",
+              severity: "error",
+            })
+          );
+          setTimeout(function () {
+            dispatch(snackbarActions.closeSnackBar());
+          }, 4000);
+        }
       }
-    );
-
-    const result = await res.json();
-    return result;
-  };
-  try {
-    const result = await uploadingImage();
-
-    console.log(result);
-
-    dispatch(
-      eventActions.EditEvent({
-        event: result.updatedEvent,
-      })
-    );
-  } catch (err) {
-    eventActions.hasError(err.message);
-
-    console.log(err);
-  }
+    }
+  );
 };
 
 export const errorTrackerForUploadEventImage =
@@ -1121,78 +1141,92 @@ export const deleteEvent = () => (dispatch, getState) => {
 };
 
 //speaker actions
-
 export const createSpeaker =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(speakerActions.startLoadingDetail());
     try {
       if (file) {
-        console.log(formValues);
+        const key = `${id}/${UUID()}.jpeg`;
 
-        console.log(file);
-
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
-
+        s3.getSignedUrl(
+          "putObject",
           {
-            headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          }
-        );
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
-          }
-        }
-
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
-
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
-
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
           },
-        });
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-        console.log(awsRes);
+              body: file,
 
-        let res = await fetch(
-          `${BaseURL}events/${id}/addSpeaker`,
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
 
-          {
-            method: "POST",
-            body: JSON.stringify({
-              ...formValues,
-              image: uploadConfig.key,
-            }),
+            console.log(awsRes);
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
+            if (awsRes.status === 200) {
+              try {
+                let res = await fetch(
+                  `${BaseURL}events/${id}/addSpeaker`,
+
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      ...formValues,
+                      image: key,
+                    }),
+
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${getState().communityAuth.token}`,
+                    },
+                  }
+                );
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
+                }
+                res = await res.json();
+                console.log(res);
+
+                dispatch(
+                  speakerActions.CreateSpeaker({
+                    speaker: res.data,
+                  })
+                );
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Speaker added successfully!",
+                    severity: "success",
+                  })
+                );
+
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (error) {
+                console.log(error);
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to add speaker. Please try again",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
+              }
+            }
           }
-        );
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-        res = await res.json();
-        console.log(res);
-
-        dispatch(
-          speakerActions.CreateSpeaker({
-            speaker: res.data,
-          })
         );
       } else {
         console.log(id);
@@ -1214,13 +1248,7 @@ export const createSpeaker =
           }
         );
         console.log(res);
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
+       
         res = await res.json();
         console.log(res);
 
@@ -1229,9 +1257,29 @@ export const createSpeaker =
             speaker: res.data,
           })
         );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Speaker added successfully!",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
       }
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to add speaker. Please try again",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 export const errorTrackerForCreateSpeaker =
@@ -4063,8 +4111,7 @@ export const createNewInvitation =
         communityActions.SendTeamInvitation({
           invitation: res.newlyCreatedInvitation,
         })
-      )
-
+      );
     } catch (err) {
       console.log(err);
     }
@@ -5795,27 +5842,51 @@ export const uploadVideoForCommunity =
           console.log(awsRes);
 
           if (awsRes.status === 200) {
-            dispatch(
-              snackbarActions.openSnackBar({
-                message:
-                  "Video file uploaded successfully! Make sure to link it to an event.",
-                severity: "success",
-              })
-            );
+            try {
+              // Save this video info in community document.
 
-            setTimeout(function () {
-              dispatch(snackbarActions.closeSnackBar());
-            }, 6000);
+              const res = await fetch(`${BaseURL}community/uploadVideo/`, {
+                method: "POST",
+
+                body: JSON.stringify({
+                  fileName: file.name,
+                  key: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().communityAuth.token}`,
+                },
+              });
+
+              const result = await res.json();
+              console.log(result);
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message:
+                    "Video file uploaded successfully! Make sure to link it to an event.",
+                  severity: "success",
+                })
+              );
+
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 6000);
+            } catch (error) {
+              console.log(error);
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Failed to upload video file. Please try again",
+                  severity: "error",
+                })
+              );
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 4000);
+            }
           } else {
-            dispatch(
-              snackbarActions.openSnackBar({
-                message: "Failed to upload video file. Please try again",
-                severity: "error",
-              })
-            );
-            setTimeout(function () {
-              dispatch(snackbarActions.closeSnackBar());
-            }, 4000);
           }
         }
       );
@@ -5901,9 +5972,9 @@ export const fetchCommunityManagers =
     }
   };
 
-
-  export const removeFromTeam = (email, communityId, status) => async(dispatch, getState) => {
-    try{
+export const removeFromTeam =
+  (email, communityId, status) => async (dispatch, getState) => {
+    try {
       const res = await fetch(
         `${BaseURL}team-invites/removeFromTeam/${email}/${status}`,
         {
@@ -5925,8 +5996,213 @@ export const fetchCommunityManagers =
           status: status,
         })
       );
-    }
-    catch(error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+export const updateCommunity =
+  (id, formValues, file) => async (dispatch, getState) => {
+    const key = `${id}/${UUID()}.jpeg`;
+
+    if (file) {
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet",
+          Key: key,
+          ContentType: "image/jpeg",
+        },
+
+        async (err, presignedURL) => {
+          const awsRes = await fetch(presignedURL, {
+            method: "PUT",
+
+            body: file,
+
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
+
+          console.log(awsRes);
+
+          if (awsRes.status === 200) {
+            dispatch(communityActions.startLoading());
+
+            try {
+              const res = await fetch(
+                `${BaseURL}community/${id}/updateCommunity`,
+                {
+                  method: "PATCH",
+                  body: JSON.stringify({
+                    ...formValues,
+                    image: key,
+                  }),
+
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getState().communityAuth.token}`,
+                  },
+                }
+              );
+              if (!res.ok) {
+                if (!res.message) {
+                  throw new Error("Something went wrong");
+                } else {
+                  throw new Error(res.message);
+                }
+              }
+              const result = await res.json();
+
+              console.log(result);
+              dispatch(
+                communityActions.EditCommunity({
+                  community: result.data,
+                })
+              );
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Community details updated successfully",
+                  severity: "success",
+                })
+              );
+
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 6000);
+            } catch (err) {
+              dispatch(communityActions.hasError(err.message));
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Failed to update community.",
+                  severity: "error",
+                })
+              );
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 4000);
+            }
+          }
+        }
+      );
+    } else {
+      dispatch(communityActions.startLoading());
+      try {
+        const res = await fetch(`${BaseURL}community/${id}/updateCommunity`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        });
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
+        const result = await res.json();
+
+        console.log(result);
+        dispatch(
+          communityActions.EditCommunity({
+            community: result.data,
+          })
+        );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Community details updated successfully!",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
+      } catch (error) {
+        dispatch(communityActions.hasError(error.message));
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Failed to update community.",
+            severity: "error",
+          })
+        );
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 4000);
+      }
+    }
+  };
+
+export const editRegistrationForm =
+  (formValues, eventId) => async (dispatch, getState) => {
+    let res = await fetch(
+      `${BaseURL}events/${eventId}/updateRegistrationForm`,
+
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    try {
+      console.log(res, 6147);
+
+      dispatch(
+        eventActions.EditEvent({
+          event: res.data.updatedEvent,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Event updated successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (err) {
+      console.log(err);
+
+      dispatch(eventActions.hasError(err.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update event.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };

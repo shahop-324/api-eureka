@@ -12,6 +12,7 @@ const apiFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const mongoose = require("mongoose");
+const RegistrationForm = require("./../models/registrationFormModel");
 
 const uniqid = require("uniqid");
 const sgMail = require("@sendgrid/mail");
@@ -81,6 +82,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
   const document = await EventsIdsCommunityWise.findById(
     communityGettingEvent.eventsDocIdCommunityWise
   );
+
   // 1) Create a new event document with required fields
 
   const createdEvent = await Event.create({
@@ -96,17 +98,36 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     endTime: new Date(req.body.endTime),
     socialMediaHandles: communityGettingEvent.socialMediaHandles,
     Timezone: req.body.timezone,
-    service: req.body.service,
-    // host: req.community.superAdmin[0].id,
+    communityName: communityGettingEvent.name,
+    organisedBy: communityGettingEvent.name,
+    communityId: communityGettingEvent._id,
   });
+
+  // 0) Create a registration form document for this event and store its id in this event
+  const registrationForm = await RegistrationForm.create({
+    initialisedAt: Date.now(),
+    eventId: createdEvent._id,
+  });
+
+  createdEvent.registrationFormId = registrationForm._id;
+
+  const newEvent = await createdEvent.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
   // 2) Update that event into communities resource in events array
   document.eventsIds.push(createdEvent.id);
   await document.save({ validateModifiedOnly: true });
 
+  const event = await Event.findById(createdEvent.id).populate(
+    "registrationFormId"
+  );
+
   res.status(200).json({
     status: "success",
     data: {
-      event: createdEvent,
+      event: event,
     },
   });
 });
@@ -150,7 +171,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
 
 exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
-  const event = await Event.findById(eventId);
+  const event = await Event.findById(eventId).populate("registrationFormId");
 
   res.status(200).json({
     status: "success",
@@ -232,10 +253,6 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   const eventGettingSpeaker = await Event.findById(eventId);
   const allSessionsInThisEvent = eventGettingSpeaker.session;
 
-  // const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
-
-  // confirm if this session exist in this event
-
   let processedArray = [];
   const fxn = (allSessionsInThisEvent, sessionsMappedByCommunity) => {
     const processedSessions = [];
@@ -258,28 +275,50 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     lastName: req.body.lastName,
     email: req.body.email,
     sessions: processedArray,
-    headline: req.body.headline,
+    bio: req.body.bio,
     organisation: req.body.organisation,
     eventId: eventGettingSpeaker.id,
-    // socialMediaHandles: processedObj,
     image: req.body.image,
   });
 
-  speakerLink = `http://localhost:3001/join-as-speaker?role=speaker&id=${speaker._id}&community=${communityId}&event=${eventId}`;
+  const speakerInvitationLink = `http://localhost:3001/join-as-speaker?role=speaker&id=${speaker._id}&community=${communityId}&event=${eventId}`;
+  const speakerDashboardLink = `https://localhost:3001/speaker/dashboard/${speaker._id}`;
+
+  speaker.socialMediaHandles = req.body.socialMediaHandles;
+  speaker.invitationLink = speakerInvitationLink;
+  speaker.dashboardLink = speakerDashboardLink;
 
   // 2.) Send new Invitation via mail to speaker
   const msg = {
     to: req.body.email, // Change to your recipient
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Your Event Invitation Link",
-    text: `use this link to join this event as a speaker. ${speakerLink}  `,
+    text: `use this link to join this event as a speaker. ${speakerInvitationLink}`,
     // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
   };
 
-  sgMail
+  if(req.body.sendInvitation) {
+    sgMail
     .send(msg)
-    .then(async () => {})
-    .catch((error) => {});
+    .then(async () => { 
+      console.log("Invitation sent to speaker.") 
+      // Mark that invitation is sent
+      speaker.invitationStatus = "Sent";
+      await speaker.save({new: true, validateModifiedOnly: true});
+  })
+    .catch( async(error) => {
+      console.log("Failed to send invitation to speaker")
+    // Mark that invitation is not yet sent
+    speaker.invitationStatus = "Not sent";
+    await speaker.save({new: true, validateModifiedOnly: true});
+    });
+  }
+  else {
+    speaker.invitationStatus = "Not sent";
+    await speaker.save({new: true, validateModifiedOnly: true});
+  }
+
+  
 
   const document = await SpeakersIdsCommunityWise.findById(
     communityGettingSpeaker.speakersDocIdCommunityWise
@@ -288,6 +327,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   document.speakersIds.push(speaker._id);
   eventGettingSpeaker.speaker.push(speaker._id);
   await eventGettingSpeaker.save({ validateModifiedOnly: true });
+
+  await speaker.save({new: true, validateModifiedOnly: true});
 
   const populatedSpeaker = await Speaker.findById(speaker.id).populate(
     "sessions"
@@ -468,9 +509,9 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
-  
   const filteredBody = filterObj(
     req.body,
+    "whoCanEnterEvent",
     "eventName",
     "shortDescription",
     "startDate",
@@ -481,27 +522,104 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "selectCategories",
     "visibility",
     "editingComment",
-    "image",
+    "organisedBy",
     "publishedStatus",
     "mailChimpAudienceTag",
     "mailChimpAudienceListIdForRegistrants",
     "mailChimpAudienceListIdForLeads",
     "mailChimpAudienceListIdForInterestedPeople",
-    "addDirectAccessLinkToMailChimp"
+    "addDirectAccessLinkToMailChimp",
+    "status"
   );
 
-  const updatedEvent = await Event.findByIdAndUpdate(
-    req.params.id,
+  const eventDoc = await Event.findByIdAndUpdate(req.params.id, filteredBody, {
+    new: true,
+    validateModifiedOnly: true,
+  }).populate("registrationFormId");
+
+  try {
+    if (req.body.Timezone) {
+      eventDoc.Timezone = req.body.Timezone;
+    }
+    if (req.body.categories) {
+      eventDoc.categories = req.body.categories;
+    }
+
+    const updatedEvent = await eventDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      updatedEvent,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({
+      status: "error",
+      message: "something was gone wrong. Please try again later!",
+    });
+  }
+});
+
+exports.updateRegistrationForm = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(
+    req.body,
+    "prefix_enabled",
+    "prefix_required",
+    "home_phone_enabled",
+    "home_phone_required",
+    "cell_phone_enabled",
+    "cell_phone_required",
+    "work_phone_enabled",
+    "work_phone_required",
+    "home_address_enabled",
+    "home_address_required",
+    "shiiping_address_enabled",
+    "shiiping_address_required",
+    "work_address_enabled",
+    "work_address_required",
+    "gender_enabled",
+    "gender_required",
+    "website_enabled",
+    "website_required"
+  );
+
+  const eventDoc = await RegistrationForm.findOneAndUpdate(
+    { eventId: req.params.eventId },
     filteredBody,
     {
       new: true,
       validateModifiedOnly: true,
+    },
+    async (err, data) => {
+      const eventId = req.params.eventId;
+      const updatedEvent = await Event.findById(eventId).populate(
+        "registrationFormId"
+      );
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          updatedEvent,
+        },
+      });
     }
+  );
+});
+
+exports.updatePromoImage = catchAsync(async (req, res, next) => {
+  const updatedEvent = await Event.findByIdAndUpdate(
+    req.params.id,
+    { image: req.body.image },
+    { new: true, validateModifiedOnly: true }
   );
 
   res.status(200).json({
     status: "success",
-    updatedEvent,
+    updatedEvent: updatedEvent,
   });
 });
 

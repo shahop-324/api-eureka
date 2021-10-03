@@ -22,7 +22,6 @@ exports.getParticularSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSpeaker = catchAsync(async (req, res, next) => {
- 
   const filteredBody = filterObj(
     req.body,
     "status",
@@ -34,7 +33,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "headline",
     "sessions",
     "socialMediaHandles",
-    "image",
+    "image"
   );
 
   const updatedSpeaker = await Speaker.findByIdAndUpdate(
@@ -70,7 +69,6 @@ exports.DeleteSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllSpeakers = catchAsync(async (req, res, next) => {
-  
   const query = Speaker.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
     // sessionId: mongoose.Types.ObjectId(req.query.sessionId),

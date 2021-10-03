@@ -238,8 +238,8 @@ const styles = {
   }),
 };
 
-const CreateNewEventForm = (props) => {
-  const { handleSubmit } = props;
+const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showInlineButton, hideFormHeading }) => {
+  
 
   const dispatch = useDispatch();
 
@@ -263,7 +263,7 @@ const CreateNewEventForm = (props) => {
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
     dispatch(createEvent(ModifiedFormValues));
-    props.handleClose();
+    handleClose();
   };
   return (
     <>
@@ -282,14 +282,13 @@ const CreateNewEventForm = (props) => {
             </FormHeading>
             <div
               className="overlay-form-close-button"
-              onClick={props.closeHandler}
-              
+              onClick={handleClose}
             >
              
               <IconButton
                 type="button"
                 aria-label="delete"
-                onClick={props.handleClose}
+                onClick={handleClose}
               >
                 <CancelRoundedIcon />
               </IconButton>
@@ -299,7 +298,7 @@ const CreateNewEventForm = (props) => {
           <FormSubHeading
             className={
               `overlay-sub-form-heading` +
-              (props.hideFormHeading === "1" ? "hide" : "")
+              (hideFormHeading === "1" ? "hide" : "")
             }
             style={{ fontFamily: "Ubuntu", textAlign: "center" }}
           >
@@ -520,7 +519,7 @@ const CreateNewEventForm = (props) => {
           </div>
 
           <div
-            className={props.showInlineButton === "false" ? "hide" : ""}
+            className={showInlineButton === "false" ? "hide" : ""}
           ></div>
           <div
             className="d-flex flex-row justify-content-end"
@@ -529,7 +528,7 @@ const CreateNewEventForm = (props) => {
             <button
               className={
                 `btn btn-outline-primary btn-outline-text me-3 ` +
-                (props.showInlineButton === "false" ? "hide" : "")
+                (showInlineButton === "false" ? "hide" : "")
               }
               style={{ textAlign: "center" }}
             >
@@ -539,7 +538,7 @@ const CreateNewEventForm = (props) => {
               type="submit"
               className={
                 `btn btn-primary btn-outline-text ` +
-                (props.showInlineButton === "false" ? "hide" : "")
+                (showInlineButton === "false" ? "hide" : "")
               }
               style={{ textAlign: "center" }}
             >
@@ -547,14 +546,14 @@ const CreateNewEventForm = (props) => {
             </button>
           </div>
           <div
-            className={props.showBlockButton === "false" ? "hide" : ""}
+            className={showBlockButton === "false" ? "hide" : ""}
             style={{ width: "100%" }}
           >
             <button
               type="submit"
               className={
                 `btn btn-primary btn-outline-text ` +
-                (props.showBlockButton === "false" ? "hide" : "")
+                (showBlockButton === "false" ? "hide" : "")
               }
               style={{ width: "100%", textAlign: "center" }}
             >

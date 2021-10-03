@@ -73,8 +73,13 @@ const eventSlice = createSlice({
 
     EditEvent(state, action) {
       console.log(action.payload.event);
+
+      const id = action.payload.event && action.payload.event._id
+        ? action.payload.event._id
+        : action.payload.event.id;
+
       state.events = state.events.map((event) =>
-        event.id === action.payload.event.id ? action.payload.event : event
+        event.id === id ? action.payload.event : event
       );
       state.eventDetails = action.payload.event;
       state.isLoading = false;

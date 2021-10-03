@@ -2,59 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { SwipeableDrawer, IconButton, Divider } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
-
 import Switch from "@mui/material/Switch";
-
-import Select from "react-select";
-
-const EventRegInfoSelector = styled.div`
-  display: grid;
-  grid-template-columns: 0.7fr 1fr 5fr;
-  grid-gap: 16px;
-  align-items: center;
-
-  background-color: #f5f5f5;
-  width: fit-content;
-  border-radius: 10px;
-  padding: 7px 15px;
-`;
-
-const RuleHeading = styled.div`
-  font-weight: 500;
-  font-size: 0.95rem;
-  font-family: "Ubuntu";
-  color: #212121;
-`;
-
-const TicketTypeOptions = [];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-    fontSize: "0.9rem",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-    fontSize: "0.8rem",
-  }),
-};
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import {editRegistrationForm} from "./../../../../actions";
 
 const Paper = styled.div`
-  width: 768px;
+  width: 568px;
   background-color: #ffffff;
 `;
 
@@ -99,17 +53,38 @@ const EventRegistrationFormListFields = () => {
   );
 };
 
-const EventRegistrationFormFieldValues = ({ InputLabel }) => {
+const EventRegistrationFormFieldValues = ({
+  InputLabel,
+  isEnabled,
+  isRequired,
+  handleEnabled,
+  handleRequired,
+}) => {
   const label = { inputProps: { "aria-label": "Switch demo" } };
   return (
     <>
       <InfoTableGrid>
         <InfoLabel>{InputLabel}</InfoLabel>
         <Heading>
-          <Switch {...label} defaultChecked />
+          <Switch
+            {...label}
+            checked={isEnabled}
+            onChange={(event) => {
+              handleEnabled(event.target.checked);
+              if (!event.target.checked) {
+                handleRequired(event.target.checked);
+              }
+            }}
+          />
         </Heading>
         <Heading>
-          <Switch {...label} defaultChecked />
+          <Switch
+            {...label}
+            checked={isRequired}
+            onChange={(event) => {
+              handleRequired(event.target.checked);
+            }}
+          />
         </Heading>
       </InfoTableGrid>
 
@@ -119,6 +94,78 @@ const EventRegistrationFormFieldValues = ({ InputLabel }) => {
 };
 
 const EditRegistraionForm = ({ open, handleClose }) => {
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const eventId = params.id;
+
+  const { registrationFormId } = useSelector(
+    (state) => state.event.eventDetails
+  );
+
+  const [isPrefixEnabled, setIsPrefixEnabled] = React.useState(
+    registrationFormId.prefix_enabled
+  );
+  const [isPrefixRequired, setIsPrefixRequired] = React.useState(
+    registrationFormId.prefix_required
+  );
+
+  const [isHome_PhoneEnabled, setIsHome_PhoneEnabled] = React.useState(
+    registrationFormId.home_phone_enabled
+  );
+  const [isHome_PhoneRequired, setIsHome_PhoneRequired] = React.useState(
+    registrationFormId.home_phone_required
+  );
+
+  const [isCell_PhoneEnabled, setIsCell_PhoneEnabled] = React.useState(
+    registrationFormId.cell_phone_enabled
+  );
+  const [isCell_PhoneRequired, setIsCell_PhoneRequired] = React.useState(
+    registrationFormId.cell_phone_required
+  );
+
+  const [isHome_AddressEnabled, setIsHome_AddressEnabled] = React.useState(
+    registrationFormId.home_address_enabled
+  );
+  const [isHome_AddressRequired, setIsHome_AddressRequired] = React.useState(
+    registrationFormId.home_address_required
+  );
+
+  const [isWork_AddressEnabled, setIsWork_AddressEnabled] = React.useState(
+    registrationFormId.work_address_enabled
+  );
+  const [isWork_AddressRequired, setIsWork_AddressRequired] = React.useState(
+    registrationFormId.work_address_required
+  );
+
+  const [isShipping_AddressEnabled, setIsShipping_AddressEnabled] =
+    React.useState(registrationFormId.shipping_address_enabled);
+  const [isShipping_AddressRequired, setIsShipping_AddressRequired] =
+    React.useState(registrationFormId.shipping_address_required);
+
+  const [isWork_PhoneEnabled, setIsWork_PhoneEnabled] = React.useState(
+    registrationFormId.work_phone_enabled
+  );
+  const [isWork_PhoneRequired, setIsWork_PhoneRequired] = React.useState(
+    registrationFormId.work_phone_required
+  );
+
+  const [isWebsiteEnabled, setIsWebsiteEnabled] = React.useState(
+    registrationFormId.website_enabled
+  );
+  const [isWebsiteRequired, setIsWebsiteRequired] = React.useState(
+    registrationFormId.website_required
+  );
+
+  const [isGenderEnabled, setIsGenderEnabled] = React.useState(
+    registrationFormId.gender_enabled
+  );
+  const [isGenderRequired, setIsGenderRequired] = React.useState(
+    registrationFormId.gender_required
+  );
+
   return (
     <>
       <React.Fragment key="right">
@@ -152,76 +199,115 @@ const EditRegistraionForm = ({ open, handleClose }) => {
               </div>
             </div>
 
-            <Heading className="mb-3">Collect information from</Heading>
-
-            <FormControl component="fieldset" className="mb-3">
-              <RadioGroup
-                aria-label="gender"
-                defaultValue="using2FA"
-                name="radio-buttons-group"
-              >
-                <div className="d-flex flex-row align-items-center justify-content-between">
-                  <EventRegInfoSelector className="mb-4 me-3">
-                    <FormControlLabel
-                      value="everyone"
-                      control={<Radio />}
-                      label=""
-                    />
-                    <PeopleOutlineIcon />
-
-                    <div>
-                      <RuleHeading>From everyone</RuleHeading>
-                    </div>
-                  </EventRegInfoSelector>
-
-                  <EventRegInfoSelector className="mb-4">
-                    <FormControlLabel
-                      value="specificTicket"
-                      control={<Radio />}
-                      label=""
-                    />
-                    <ConfirmationNumberIcon />
-
-                    <div>
-                      <RuleHeading>Specific Ticket Types</RuleHeading>
-                    </div>
-                  </EventRegInfoSelector>
-                </div>
-              </RadioGroup>
-            </FormControl>
-
-            <Heading className="mb-2">Select ticket types</Heading>
-            <Select
-              className="mb-5"
-              isMulti
-              defaultValue={TicketTypeOptions[0]}
-              styles={styles}
-              menuPlacement={"bottom"}
-              options={TicketTypeOptions}
-            />
-
             <EventRegistrationFormListFields className="mb-5"></EventRegistrationFormListFields>
             <EventRegistrationFormFieldValues
+              isEnabled={isPrefixEnabled || isPrefixRequired}
+              isRequired={isPrefixRequired}
+              handleEnabled={setIsPrefixEnabled}
+              handleRequired={setIsPrefixRequired}
               InputLabel={"Prefix (Mr, Mrs, etc.,)"}
             />
-            <EventRegistrationFormFieldValues InputLabel={"First Name"} />
-            <EventRegistrationFormFieldValues InputLabel={"Last Name"} />
-            <EventRegistrationFormFieldValues InputLabel={"Suffix"} />
-            <EventRegistrationFormFieldValues InputLabel={"Email address"} />
-            <EventRegistrationFormFieldValues InputLabel={"Organisation"} />
-            <EventRegistrationFormFieldValues InputLabel={"Designation"} />
-            <EventRegistrationFormFieldValues InputLabel={"City"} />
-            <EventRegistrationFormFieldValues InputLabel={"Country"} />
-            <EventRegistrationFormFieldValues InputLabel={"Home Phone"} />
-            <EventRegistrationFormFieldValues InputLabel={"Cell Phone"} />
-            <EventRegistrationFormFieldValues InputLabel={"Home Address"} />
-            <EventRegistrationFormFieldValues InputLabel={"Shipping Address"} />
-            <EventRegistrationFormFieldValues InputLabel={"Job Title"} />
-            <EventRegistrationFormFieldValues InputLabel={"Work Address"} />
-            <EventRegistrationFormFieldValues InputLabel={"Work Phone"} />
-            <EventRegistrationFormFieldValues InputLabel={"Website"} />
-            <EventRegistrationFormFieldValues InputLabel={"Blog"} />
-            <EventRegistrationFormFieldValues InputLabel={"Gender"} />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Home Phone"}
+              isEnabled={isHome_PhoneEnabled || isHome_PhoneRequired}
+              isRequired={isHome_PhoneRequired}
+              handleEnabled={setIsHome_PhoneEnabled}
+              handleRequired={setIsHome_PhoneRequired}
+            />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Cell Phone"}
+              isEnabled={isCell_PhoneEnabled || isCell_PhoneRequired}
+              isRequired={isCell_PhoneRequired}
+              handleEnabled={setIsCell_PhoneEnabled}
+              handleRequired={setIsCell_PhoneRequired}
+            />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Work Phone"}
+              isEnabled={isWork_PhoneEnabled || isWork_PhoneRequired}
+              isRequired={isWork_PhoneRequired}
+              handleEnabled={setIsWork_PhoneEnabled}
+              handleRequired={setIsWork_PhoneRequired}
+            />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Home Address"}
+              isEnabled={isHome_AddressEnabled || isHome_AddressRequired}
+              isRequired={isHome_AddressRequired}
+              handleEnabled={setIsHome_AddressEnabled}
+              handleRequired={setIsHome_AddressRequired}
+            />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Shipping Address"}
+              isEnabled={
+                isShipping_AddressEnabled || isShipping_AddressRequired
+              }
+              isRequired={isShipping_AddressRequired}
+              handleEnabled={setIsShipping_AddressEnabled}
+              handleRequired={setIsShipping_AddressRequired}
+            />
+            <EventRegistrationFormFieldValues
+              InputLabel={"Work Address"}
+              isEnabled={isWork_AddressEnabled || isWork_AddressRequired}
+              isRequired={isWork_AddressRequired}
+              handleEnabled={setIsWork_AddressEnabled}
+              handleRequired={setIsWork_AddressRequired}
+            />
+
+            <EventRegistrationFormFieldValues
+              InputLabel={"Website"}
+              isEnabled={isWebsiteEnabled || isWebsiteRequired}
+              isRequired={isWebsiteRequired}
+              handleEnabled={setIsWebsiteEnabled}
+              handleRequired={setIsWebsiteRequired}
+            />
+
+            <EventRegistrationFormFieldValues
+              InputLabel={"Gender"}
+              isEnabled={isGenderEnabled || isGenderRequired}
+              isRequired={isGenderRequired}
+              handleEnabled={setIsGenderEnabled}
+              handleRequired={setIsGenderRequired}
+            />
+
+            <button
+              onClick={() => {
+
+                dispatch(editRegistrationForm({
+                  prefix_enabled: isPrefixEnabled,
+                  prefix_required: isPrefixRequired,
+
+                  home_phone_enabled: isHome_PhoneEnabled,
+                  home_phone_required: isHome_PhoneRequired,
+
+                  cell_phone_enabled: isCell_PhoneEnabled,
+                  cell_phone_required: isCell_PhoneRequired,
+
+                  woek_phone_enabled: isWork_PhoneEnabled,
+                  work_phone_required: isWork_PhoneRequired,
+
+                  work_address_enabled: isWork_AddressEnabled,
+                  work_address_required: isWork_AddressRequired,
+
+                  shipping_address_enabled: isShipping_AddressEnabled,
+                  shipping_address_required: isShipping_AddressRequired,
+
+                  home_address_enabled: isHome_AddressEnabled,
+                  home_address_required: isHome_AddressRequired,
+
+                  website_enabled: isWebsiteEnabled,
+                  website_required: isWebsiteRequired,
+
+                  gender_enabled: isGenderEnabled,
+                  gender_required: isGenderRequired,
+                }, eventId))
+
+
+               
+              }}
+              className="btn btn-primary btn-outline-text mt-5"
+              style={{ width: "100%" }}
+            >
+              Save
+            </button>
           </Paper>
         </SwipeableDrawer>
       </React.Fragment>

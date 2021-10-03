@@ -10,6 +10,60 @@ import { editEvent, errorTrackerForeditEvent } from "../../../../actions";
 import Loader from "../../../Loader";
 import { useSnackbar } from "notistack";
 
+import Dialog from "@material-ui/core/Dialog";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
+
+import { IconButton } from "@material-ui/core";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+font-weight: 500;
+font-family: "Ubuntu";
+font-size: 0.8rem;
+color: #4E4E4E;
+`
+
+const FormLabel = styled.label`
+font-family: "Ubuntu" !important;
+font-size: 0.82rem !important;
+font-weight: 500 !important;
+color: #727272 !important;
+`
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+font-size: 1.2rem;
+font-family: "Ubuntu";
+font-weight: 600;
+color: #212121;
+`
+
+const FormSubHeading = styled.div`
+font-size: 0.87rem;
+font-family: "Ubuntu";
+font-weight: 500;
+color: #424242;
+`
+
+const FormError = styled.div`
+font-family: "Ubuntu";
+color: red;
+font-weight: 400;
+font-size: 0.8rem;
+`
+
+const FormWarning = styled.div`
+font-family: "Ubuntu";
+color: orange;
+font-weight: 400;
+font-size: 0.8rem;
+`
+
 const renderInput = ({
   input,
   meta: { touched, error, warning },
@@ -17,6 +71,8 @@ const renderInput = ({
   ariadescribedby,
   classes,
   placeholder,
+  open,
+  handleClose,
 }) => {
   const className = `field ${error && touched ? "error" : ""}`;
   return (
@@ -191,10 +247,22 @@ const styles = {
   }),
 };
 
-const EditBasicDetailsForm = (props) => {
+const EditBasicDetailsForm = ({
+  handleSubmit,
+  pristine,
+  submitting,
+  reset,
+  hideFormHeading,
+  showBlockButton,
+  showInlineButton,
+  open,
+  handleClose,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { handleSubmit, pristine, submitting, reset } = props;
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const { error, isLoading } = useSelector((state) => state.event);
   const dispatch = useDispatch();
   const params = useParams();
@@ -222,8 +290,7 @@ const EditBasicDetailsForm = (props) => {
     ModifiedFormValues.visibility = formValues.visibility;
 
     dispatch(editEvent(ModifiedFormValues, id));
-
-    props.openSavedChangesSnack();
+    handleClose();
   };
 
   if (isLoading) {
@@ -247,273 +314,291 @@ const EditBasicDetailsForm = (props) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
-          <h2
-            className={
-              `overlay-form-heading ` +
-              (props.hideFormHeading === "1" ? "hide" : "")
-            }
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <HeaderFooter className="px-4 pt-3 pb-2">
+          <div
+            className="form-heading-and-close-button"
+            style={{ width: "100%" }}
           >
-            New Event
-          </h2>
-          <h5
-            className={
-              `overlay-sub-form-heading mb-5 ` +
-              (props.hideFormHeading === "1" ? "hide" : "")
-            }
-          >
-            Let's create an all new event for your community.
-          </h5>
-          <div className="mb-4 overlay-form-input-row">
-            <label for="eventName" className="form-label form-label-customized">
-              Event Name
-            </label>
-            <Field
-              name="eventName"
-              type="text"
-              classes="form-control"
-              id="eventName"
-              ariadescribedby="eventName"
-              component={renderInput}
-            />
+            <div></div>
+            <FormHeading
+              className="overlay-form-heading"
+              style={{ fontFamily: "Ubuntu" }}
+            >
+              Edit Event
+            </FormHeading>
+            <div
+              className="overlay-form-close-button"
+              onClick={handleClose}
+            >
+             
+              <IconButton
+                type="button"
+                aria-label="delete"
+                onClick={handleClose}
+              >
+                <CancelRoundedIcon />
+              </IconButton>
+              
+            </div>
           </div>
+          
+          </HeaderFooter>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
+            <FormLabel
+              className={
+                `overlay-form-heading ` +
+                (hideFormHeading === "1" ? "hide" : "")
+              }
+            >
+              New Event
+            </FormLabel>
+            <h5
+              className={
+                `overlay-sub-form-heading mb-5 ` +
+                (hideFormHeading === "1" ? "hide" : "")
+              }
+            >
+              Let's create an all new event for your community.
+            </h5>
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                for="eventName"
+                className="form-label form-label-customized"
+              >
+                Event Name
+              </FormLabel>
+              <Field
+                name="eventName"
+                type="text"
+                classes="form-control"
+                id="eventName"
+                ariadescribedby="eventName"
+                component={renderInput}
+              />
+            </div>
 
-          <div className="mb-4 overlay-form-input-row">
-            <label
-              for="shortDescription"
-              className="form-label form-label-customized"
-            >
-              Short description
-            </label>
-            <Field
-              name="shortDescription"
-              type="text"
-              classes="form-control"
-              id="shortDescription"
-              ariadescribedby="communityName"
-              component={renderTextArea}
-            />
-          </div>
-          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-            <div>
-              <label
-                Forhtml="eventStartDate"
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                for="shortDescription"
                 className="form-label form-label-customized"
               >
-                Start Date
-              </label>
+                Short description
+              </FormLabel>
               <Field
-                name="startDate"
-                type="date"
+                name="shortDescription"
+                type="text"
                 classes="form-control"
-                id="eventStartDate"
-                component={renderInput}
+                id="shortDescription"
+                ariadescribedby="communityName"
+                component={renderTextArea}
               />
             </div>
-            <div>
-              <label
-                Forhtml="eventStartTime"
-                className="form-label form-label-customized"
-              >
-                Start Time
-              </label>
-              <Field
-                name="startTime"
-                type="time"
-                classes="form-control"
-                id="eventStartTime"
-                component={renderInput}
-              />
-            </div>
-          </div>
-          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-            <div>
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-                End Date
-              </label>
-              <Field
-                name="endDate"
-                type="date"
-                classes="form-control"
-                id="eventEndDate"
-                component={renderInput}
-              />
-            </div>
-            <div>
-              <label
-                Forhtml="eventEndTime"
-                className="form-label form-label-customized"
-              >
-                End Time
-              </label>
-              <Field
-                name="endTime"
-                type="time"
-                classes="form-control"
-                id="eventEndTime"
-                component={renderInput}
-              />
-            </div>
-          </div>
-          <div className="mb-4 overlay-form-input-row">
-            <label
-              Forhtml="selectTimeZone"
-              className="form-label form-label-customized"
-            >
-              Select timezone
-            </label>
-            <Field
-              name="selectTimeZone"
-              styles={styles}
-              menuPlacement="auto"
-              options={timeZoneOptions}
-              defaultValue={timeZoneOptions[0]}
-              id="selectTimeZone"
-              component={renderReactSelectTimeZone}
-            />
-          </div>
-          <div className="mb-4 overlay-form-input-row">
-            <label
-              Forhtml="selectCategories"
-              className="form-label form-label-customized"
-            >
-              Select categories
-            </label>
-            <Field
-              name="selectCategories"
-              isMulti="true"
-              styles={styles}
-              menuPlacement="auto"
-              options={options}
-              defaultValue={options[0]}
-              component={renderReactSelect}
-            />
-          </div>
-          <div className="mb-4 overlay-form-input-row">
-            <p>Which service would you like to use ?</p>
-            <div className="form-check mb-2">
-              <Field
-                name="service"
-                className="form-check-input"
-                type="radio"
-                // name="flexRadioDefault"
-                id="flexRadioDefault1"
-                value="Hosting & Management"
-                // component={renderInput}
-                component="input"
-              />
-              <label className="form-check-label" for="flexRadioDefault1">
-                Hosting & Management
-              </label>
-            </div>
-            <div className="form-check">
-              <Field
-                className="form-check-input"
-                type="radio"
-                name="service"
-                id="flexRadioDefault2"
-                // checked="true"
-                value="Ticketing"
-                // component={renderInput}
-                component="input"
-              />
-              <label className="form-check-label" for="flexRadioDefault2">
-                Ticketing Only
-              </label>
-            </div>
-          </div>
-          <div className="mb-4 overlay-form-input-row">
-            <p>Event Visibility</p>
-            <div className="form-check mb-2">
-              <Field
-                name="visibility"
-                className="form-check-input"
-                type="radio"
-                // name="flexRadioDefault"
-                id="flexRadioDefault1"
-                value="Public"
-                // component={renderInput}
-                component="input"
-              />
-              <label className="form-check-label" for="flexRadioDefault1">
-                Public
-              </label>
-              <div
-                id="emailHelp"
-                className="form-text"
-                style={{ fontSize: "13px" }}
-              >
-                Upgrade to a paid plan to create public events.
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div>
+                <FormLabel
+                  Forhtml="eventStartDate"
+                  className="form-label form-label-customized"
+                >
+                  Start Date
+                </FormLabel>
+                <Field
+                  name="startDate"
+                  type="date"
+                  classes="form-control"
+                  id="eventStartDate"
+                  component={renderInput}
+                />
+              </div>
+              <div>
+                <FormLabel
+                  Forhtml="eventStartTime"
+                  className="form-label form-label-customized"
+                >
+                  Start Time
+                </FormLabel>
+                <Field
+                  name="startTime"
+                  type="time"
+                  classes="form-control"
+                  id="eventStartTime"
+                  component={renderInput}
+                />
               </div>
             </div>
-            <div className="form-check">
-              <Field
-                className="form-check-input"
-                type="radio"
-                name="visibility"
-                id="flexRadioDefault2"
-                // checked="true"
-                value="Private"
-                // component={renderInput}
-                component="input"
-              />
-              <label className="form-check-label" for="flexRadioDefault2">
-                Private
-              </label>
+            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+              <div>
+                <FormLabel
+                  Forhtml="eventEndDate"
+                  className="form-label form-label-customized"
+                >
+                  End Date
+                </FormLabel>
+                <Field
+                  name="endDate"
+                  type="date"
+                  classes="form-control"
+                  id="eventEndDate"
+                  component={renderInput}
+                />
+              </div>
+              <div>
+                <FormLabel
+                  Forhtml="eventEndTime"
+                  className="form-label form-label-customized"
+                >
+                  End Time
+                </FormLabel>
+                <Field
+                  name="endTime"
+                  type="time"
+                  classes="form-control"
+                  id="eventEndTime"
+                  component={renderInput}
+                />
+              </div>
             </div>
-          </div>
-          <div
-            className={props.showInlineButton === "false" ? "hide" : ""}
-          ></div>
-          <div
-            className="d-flex flex-row justify-content-end"
-            style={{ width: "100%" }}
-          >
-            <button
-              onClick={() => {
-                reset();
-                props.openDiscardChangesSnack();
-              }}
-              className={
-                `btn btn-outline-primary btn-outline-text me-3 ` +
-                (props.showInlineButton === "false" ? "hide" : "")
-              }
-              disabled={pristine || submitting}
-            >
-              Discard
-            </button>
-            <button
-              type="submit"
-              className={
-                `btn btn-primary btn-outline-text ` +
-                (props.showInlineButton === "false" ? "hide" : "")
-              }
-              disabled={pristine || submitting}
-            >
-              Save changes
-            </button>
-          </div>
-          <div
-            className={props.showBlockButton === "false" ? "hide" : ""}
-            style={{ width: "100%" }}
-          >
-            <button
-              disabled={pristine || submitting}
-              className={
-                `btn btn-primary btn-outline-text ` +
-                (props.showBlockButton === "false" ? "hide" : "")
-              }
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                Forhtml="selectTimeZone"
+                className="form-label form-label-customized"
+              >
+                Select timezone
+              </FormLabel>
+              <Field
+                name="selectTimeZone"
+                styles={styles}
+                menuPlacement="auto"
+                options={timeZoneOptions}
+                defaultValue={timeZoneOptions[0]}
+                id="selectTimeZone"
+                component={renderReactSelectTimeZone}
+              />
+            </div>
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                Forhtml="selectCategories"
+                className="form-label form-label-customized"
+              >
+                Select categories
+              </FormLabel>
+              <Field
+                name="selectCategories"
+                isMulti="true"
+                styles={styles}
+                menuPlacement="auto"
+                options={options}
+                defaultValue={options[0]}
+                component={renderReactSelect}
+              />
+            </div>
+           
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel>Event Visibility</FormLabel>
+              <div className="form-check mb-2">
+                <Field
+                  name="visibility"
+                  className="form-check-input"
+                  type="radio"
+                  // name="flexRadioDefault"
+                  id="flexRadioDefault1"
+                  value="Public"
+                  // component={renderInput}
+                  component="input"
+                />
+                <label className="form-check-label" for="flexRadioDefault1">
+                  Public
+                </label>
+                <div
+                  id="emailHelp"
+                  className="form-text"
+                  style={{ fontSize: "13px" }}
+                >
+                  Upgrade to a paid plan to create public events.
+                </div>
+              </div>
+              <div className="form-check mb-2">
+                <Field
+                  className="form-check-input"
+                  type="radio"
+                  name="visibility"
+                  id="flexRadioDefault2"
+                  // checked="true"
+                  value="Private"
+                  // component={renderInput}
+                  component="input"
+                />
+                <label className="form-check-label" for="flexRadioDefault2">
+                  Private
+                </label>
+              </div>
+              <div className="form-check">
+                <Field
+                  className="form-check-input"
+                  type="radio"
+                  name="visibility"
+                  id="flexRadioDefault2"
+                  // checked="true"
+                  value="Hidden"
+                  // component={renderInput}
+                  component="input"
+                />
+                <label className="form-check-label" for="flexRadioDefault2">
+                  Hidden
+                </label>
+              </div>
+            </div>
+            <div className={showInlineButton === "false" ? "hide" : ""}></div>
+            <div
+              className="d-flex flex-row justify-content-end"
               style={{ width: "100%" }}
             >
-              Create New Event
-            </button>
+              <button
+                onClick={() => {
+                  reset();
+                }}
+                className={
+                  `btn btn-outline-primary btn-outline-text me-3 ` +
+                  (showInlineButton === "false" ? "hide" : "")
+                }
+                disabled={pristine || submitting}
+              >
+                Discard
+              </button>
+              <button
+                type="submit"
+                className={
+                  `btn btn-primary btn-outline-text ` +
+                  (showInlineButton === "false" ? "hide" : "")
+                }
+                disabled={pristine || submitting}
+              >
+                Save changes
+              </button>
+            </div>
+            <div
+              className={showBlockButton === "false" ? "hide" : ""}
+              style={{ width: "100%" }}
+            >
+              <button
+                disabled={pristine || submitting}
+                className={
+                  `btn btn-primary btn-outline-text ` +
+                  (showBlockButton === "false" ? "hide" : "")
+                }
+                style={{ width: "100%" }}
+              >
+                Create New Event
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </Dialog>
     </>
   );
 };

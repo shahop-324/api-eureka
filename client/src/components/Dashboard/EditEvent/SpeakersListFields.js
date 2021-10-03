@@ -8,15 +8,11 @@ const SpeakersListFields = () => {
       <div
         className="session-list-fields-container"
         style={{
-          gridTemplateColumns: "1fr 2fr 2.5fr 3fr 1.5fr 2.5fr ",
+          gridTemplateColumns: "2fr 2.5fr 3fr 1.5fr 2.5fr ",
           justifyContent: "center",
         }}
       >
-        <div className="event-card-field">
-          <div className="event-field-label" style={{ width: "100%" }}>
-            Order
-          </div>
-        </div>
+        
         <div className="event-card-field">
           <div className="event-field-label" style={{ width: "100%" }}>
             Name

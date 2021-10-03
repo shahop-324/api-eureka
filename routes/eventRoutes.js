@@ -15,6 +15,11 @@ router.patch(
   eventController.updateEvent
 );
 
+router.patch("/:eventId/updateRegistrationForm", authController.protectCommunity, eventController.updateRegistrationForm)
+
+router.patch("/:id/updatePromoImage", authController.protectCommunity,
+eventController.updatePromoImage)
+
 router.patch(
   "/:id/updateEventDescription",
   authController.protectCommunity,

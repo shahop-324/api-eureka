@@ -52,7 +52,6 @@ const SideNavEdit = ({
   handleReceptionSettingsClick,
   handleVideosClick,
   handleStageVibesClick,
-  handleLiveStreamingClick,
   handleRecordingClick,
   handleAnalyticsClick,
   handleIntegrationsClick,

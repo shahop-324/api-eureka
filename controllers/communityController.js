@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { promisify } = require("util");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
+const Video = require("../models/videoModel");
 const { v4: uuidv4 } = require("uuid");
 
 const filterObj = (obj, ...allowedFields) => {
@@ -366,7 +367,11 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
     "eventbritePrivateToken",
-
+    "image",
+    "name",
+    "email",
+    "headline",
+    "socialMediaHandles",
     "tawkLink",
     "paymentGateway",
     "paypalOnboardingData",
@@ -424,5 +429,23 @@ exports.getApiKeys = catchAsync(async (req, res, next) => {
     status: "success",
     message: "successfully fetched all api keys",
     data: apiKeyDocs,
+  });
+});
+
+exports.uploadVideo = catchAsync(async (req, res, next) => {
+  const communityId = req.community._id;
+
+  const videoDoc = await Video.create({
+    date: Date.now(),
+    name: req.body.fileName,
+    communityId: communityId,
+    communityLevel: true,
+    sessionLevel: false,
+    key: req.body.key,
+  });
+
+  res.status(200).json({
+    status: "success",
+    video: videoDoc,
   });
 });

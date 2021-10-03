@@ -21,6 +21,8 @@ router.post("/generateApiKey/:communityId", authController.protectCommunity, com
 
 router.get("/getApiKeys/:communityId", authController.protectCommunity, communityController.getApiKeys);
 
+router.post("/uploadVideo", authController.protectCommunity, communityController.uploadVideo);
+
 router.get(
   "/events",
   authController.protectCommunity,

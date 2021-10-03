@@ -27,6 +27,64 @@ import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
 import Loader from "../../../../Loader";
 
+import styled from "styled-components";
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
+
+const FormSubHeading = styled.div`
+  font-size: 0.87rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #424242;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -56,7 +114,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -65,17 +123,16 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -92,7 +149,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <StyledTextArea
         rows="2"
         type={type}
         {...input}
@@ -102,17 +159,16 @@ const renderTextArea = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -125,17 +181,16 @@ const renderMultiEmail = ({ input, meta: { touched, error, warning } }) => {
       <MultiEmailInput input={input} value={input.value} />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -148,17 +203,16 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
       <MultiTagInput input={input} value={input.value} />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -168,10 +222,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
   const { error, isLoading } = useSelector((state) => state.booth);
   const params = useParams();
   const id = params.id;
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const classes = useStyles();
   const theme = useTheme();
@@ -182,9 +232,7 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -207,7 +255,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
       facebook: formValues.facebook,
       twitter: formValues.twitter,
       linkedIn: formValues.linkedIn,
-      instagram: formValues.instagram,
       website: formValues.website,
     };
 
@@ -215,11 +262,9 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
 
     dispatch(createBooth(ModifiedFormValues, file, id));
 
-    await sleep(1000);
+
 
     dispatch(fetchParticularEventOfCommunity(id));
-
-    // showResults(ModifiedFormValues);
     handleClose();
   };
 
@@ -243,7 +288,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
 
   return (
     <>
-     
 <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
@@ -256,11 +300,8 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
           }}
         >
 
-       
-
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
+          <>
+          <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 py-4">
               <div></div>
               <div className="coupon-overlay-form-headline">Add New Booth</div>
               <div
@@ -271,7 +312,10 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
                   <CancelRoundedIcon />
                 </IconButton>
               </div>
-            </div>
+            </HeaderFooter>
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+          <div className="create-new-coupon-form px-4 py-4">
+            
 
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
@@ -284,12 +328,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityHeadline"
                 className="form-label form-label-customized"
               >
-                Logo
-              </label>
+                Logo<span className="mandatory-field">*</span>
+              </FormLabel>
               <input
                 name="imgUpload"
                 type="file"
@@ -302,12 +346,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
 
             <div className="mb-3 overlay-form-input-row ">
               <div>
-                <label
+                <FormLabel
                   Forhtml="eventStartDate"
                   className="form-label form-label-customized"
                 >
-                  Name
-                </label>
+                  Name<span className="mandatory-field">*</span>
+                </FormLabel>
                 <Field
                   name="name"
                   type="text"
@@ -320,12 +364,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 Forhtml="eventStartDate"
                 className="form-label form-label-customized"
               >
-                Tagline
-              </label>
+                Tagline<span className="mandatory-field">*</span>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="tagline"
@@ -341,12 +385,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 Forhtml="eventStartDate"
                 className="form-label form-label-customized"
               >
-                Description
-              </label>
+                Description<span className="mandatory-field">*</span>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="description"
@@ -360,30 +404,30 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label for="emails" className="form-label form-label-customized">
-                Emails
-              </label>
+              <FormLabel for="emails" className="form-label form-label-customized">
+                Emails<span className="mandatory-field">*</span>
+              </FormLabel>
               <div className="form-group">
                 <Field name="multiEmail" component={renderMultiEmail} />
               </div>
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label for="tags" className="form-label form-label-customized">
+              <FormLabel for="tags" className="form-label form-label-customized">
                 Tags
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field name="multiTags" component={renderMultiTags} />
               </div>
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 className="form-label form-label-customized"
               >
                 LinkedIn
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="linkedIn"
@@ -397,12 +441,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 className="form-label form-label-customized"
               >
                 Twitter
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="twitter"
@@ -416,12 +460,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 className="form-label form-label-customized"
               >
                 Facebook
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="facebook"
@@ -435,31 +479,12 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Instagram
-              </label>
-              <div className="form-group">
-                <Field
-                  name="instagram"
-                  type="text"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="www.instagram.com/johnDoe or johnDoe"
-                  component={renderInput}
-                />
-              </div>
-            </div>
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 className="form-label form-label-customized"
               >
                 Website
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="website"
@@ -484,6 +509,7 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             </div>
           </div>
         </form>
+        </>
         </SwipeableDrawer>
         </React.Fragment>
       

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -27,10 +27,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../../Loader";
-import NoSpeakers from './../../../assets/images/scratching-head.png';
+import NoSpeakers from "./../../../assets/images/scratching-head.png";
 import NoContentFound from "../../NoContent";
 import { useSnackbar } from "notistack";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import SendInvites from "./../EditEvent/FormComponents/EditSpeakersForms/SendInvites";
 
@@ -112,12 +112,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Speakers = () => {
-
   const [openInvites, setOpenInvites] = useState(false);
 
   const handleCloseInvites = () => {
     setOpenInvites(false);
-  }
+  };
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -177,8 +176,18 @@ const Speakers = () => {
         .slice(0)
         .reverse()
         .map((speaker) => {
-          const { id, firstName, lastName, email, image, sessions, headline } =
-            speaker;
+          const {
+            id,
+            firstName,
+            lastName,
+            email,
+            image,
+            sessions,
+            headline,
+            invitationStatus,
+            invitationLink,
+            dashboardLink,
+          } = speaker;
           let imgUrl = " #";
           const imgKey = image;
           if (imgKey) {
@@ -193,6 +202,9 @@ const Speakers = () => {
               sessions={sessions}
               id={id}
               headline={headline}
+              invitationStatus={invitationStatus}
+              invitationLink={invitationLink}
+              dashboardLink={dashboardLink}
             />
           );
         });
@@ -206,7 +218,7 @@ const Speakers = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-    
+
     dispatch(errorTrackerForFetchSpeakers());
     return dispatch(errorTrackerForCreateSpeaker());
     // throw new Error(error);
@@ -216,7 +228,7 @@ const Speakers = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <SectionHeading >All Speakers</SectionHeading>
+          <SectionHeading>All Speakers</SectionHeading>
           <div className="drop-selector d-flex flex-row justify-content-end">
             <div
               className={`${classes.search}`}
@@ -247,11 +259,10 @@ const Speakers = () => {
               />
             </div>
             <button
-              onClick={() =>{setOpenInvites(true)}}
-      
+              onClick={() => {
+                setOpenInvites(true);
+              }}
               className="btn btn-outline-primary btn-outline-text me-3"
-             
-              
             >
               Send invites
             </button>
@@ -273,10 +284,13 @@ const Speakers = () => {
               >
                 <Loader />
               </div>
+            ) : typeof speakers !== "undefined" && speakers.length > 0 ? (
+              renderSpeakersList(speakers)
             ) : (
-              typeof speakers !== "undefined" &&
-            speakers.length > 0 ?
-              renderSpeakersList(speakers) : <NoContentFound msgText="This events speakers will appear here." img={NoSpeakers} />
+              <NoContentFound
+                msgText="This events speakers will appear here."
+                img={NoSpeakers}
+              />
             )}
           </div>
         </div>

@@ -13,6 +13,9 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import { useDispatch, useSelector } from "react-redux";
+import { editEvent } from "../../../../actions";
+import { useParams } from "react-router";
 
 const Paper = styled.div`
   width: 500px;
@@ -41,6 +44,18 @@ const RuleBrief = styled.div`
 `;
 
 const WhoCanEnterEvent = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
+
+  const {eventDetails} = useSelector((state) => state.event);
+
+  const params = useParams();
+
+  const eventId = params.id;
+
+  const [entryRule, setEntryRule] = React.useState( eventDetails && eventDetails.whoCanEnterEvent ? eventDetails.whoCanEnterEvent :
+    "Anyone Registered without using 2FA"
+  );
+
   return (
     <>
       <React.Fragment key="right">
@@ -70,13 +85,21 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
             <FormControl component="fieldset" className="mb-5">
               <RadioGroup
                 aria-label="gender"
-                defaultValue="using2FA"
+                defaultValue={entryRule}
                 name="radio-buttons-group"
               >
                 <EntryRuleGrid className="mb-4">
                   <FormControlLabel
                     value="without2FA"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                        value="Anyone Registered without using 2FA"
+                        onChange={(event) => {
+                          console.log(event.target.value);
+                          setEntryRule(event.target.value);
+                        }}
+                      />
+                    }
                     label=""
                   />
                   <MarkEmailReadIcon className="mt-2" />
@@ -102,14 +125,23 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                 <EntryRuleGrid className="mb-4">
                   <FormControlLabel
                     value="onlyInvited"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                        value="Invited only without using 2FA"
+                        onChange={(event) => {
+                          console.log(event.target.value);
+                          setEntryRule(event.target.value);
+                        }}
+                      />
+                    }
                     label=""
                   />
                   <LockIcon className="mt-2" />
 
                   <div>
                     <RuleHeading className="mb-2">
-                      Only invited participants can join
+                      Only invited participants can join without using 2 factor
+                      auth
                     </RuleHeading>
                     <RuleBrief>
                       <div className="mb-3">
@@ -128,7 +160,15 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                 <EntryRuleGrid className="mb-4">
                   <FormControlLabel
                     value="using2FA"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                        value="Anyone Registered using 2FA"
+                        onChange={(event) => {
+                          console.log(event.target.value);
+                          setEntryRule(event.target.value);
+                        }}
+                      />
+                    }
                     label=""
                   />
                   <VerifiedUserIcon className="mt-2" />
@@ -151,7 +191,15 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                 <EntryRuleGrid>
                   <FormControlLabel
                     value="invitedUsing2FA"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                        value="Invited only using 2FA"
+                        onChange={(event) => {
+                          console.log(event.target.value);
+                          setEntryRule(event.target.value);
+                        }}
+                      />
+                    }
                     label=""
                   />
                   <AdminPanelSettingsIcon className="mt-2" />
@@ -172,7 +220,15 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                 </EntryRuleGrid>
               </RadioGroup>
             </FormControl>
-            <button className="btn btn-primary btn-outline-text" style={{width: "100%"}}>Save</button>
+            <button
+              onClick={() => {
+                dispatch(editEvent({ whoCanEnterEvent: entryRule }, eventId));
+              }}
+              className="btn btn-primary btn-outline-text"
+              style={{ width: "100%" }}
+            >
+              Save
+            </button>
           </Paper>
         </SwipeableDrawer>
       </React.Fragment>

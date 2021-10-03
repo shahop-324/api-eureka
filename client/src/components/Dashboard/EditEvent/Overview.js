@@ -1,25 +1,118 @@
 //  This is event overview page
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { uploadEventImage } from "../../../actions";
+import { uploadEventImage, editEvent } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import Chip from "@mui/material/Chip";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
-import PublishRoundedIcon from '@mui/icons-material/PublishRounded';
+import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import { useParams } from "react-router";
 import { useSnackbar } from "notistack";
 
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
-import { editEventDescription, errorTrackerForEditEventDiscription, errorTrackerForFetchEvent } from "../../../actions";
+import EmbeddableWidget from "./SubComponent/EmbeddableWidget";
 
+import {
+  editEventDescription,
+  errorTrackerForEditEventDiscription,
+  errorTrackerForFetchEvent,
+} from "../../../actions";
+import dateFormat from "dateformat";
+import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
+import { Link } from "react-router-dom";
+
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
+import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
+import { IconButton } from "@material-ui/core";
+
+import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
+import PagesRoundedIcon from "@mui/icons-material/PagesRounded";
+import MainEventSetupCheckList from "../Checklist/Main";
+
+const CheckListSteps = styled.div`
+  background-color: #f5f7f8;
+  padding: 20px;
+  height: 100%;
+
+  border-radius: 10px;
+`;
+
+const FillerOuter = styled.div`
+  width: 100%;
+  height: 7px;
+  background-color: #cfcece;
+  border-radius: 20px;
+`;
+
+const StepSectionButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #212121;
+  font-size: 0.85rem;
+  background-color: transparent;
+
+  span {
+    font-weight: 500;
+    font-family: "Ubuntu";
+    color: #757575;
+    font-size: 0.78rem;
+  }
+
+  border-radius: 10px;
+  padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #dfebf8;
+  }
+`;
+
+const CheckListButton = styled.div`
+  background-color: ${(props) =>
+    props && props.active ? "#DFEBF8" : "transparent"};
+
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #363636;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #dfebf8;
+  }
+`;
+
+const FillerInner = styled.div`
+  width: 60%;
+  height: 7px;
+  background-color: #74c54f;
+  border-radius: 20px;
+`;
+
+const CheckListHeading = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #212121;
+`;
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -80,6 +173,7 @@ const TextSignificant = styled.div`
   font-size: 0.9rem;
   font-family: "Ubuntu";
   color: #212121;
+  width: fit-content;
 `;
 
 const EventLinkInput = styled.input`
@@ -90,12 +184,26 @@ const EventLinkInput = styled.input`
 `;
 
 const EventOverview = (props) => {
+  const [openBasicForm, setOpenBasicForm] = useState(false);
 
+  
 
-  const [tag, setTag] = useState("Confluence 2021");
+  const [openWidget, setOpenWidget] = useState(false);
+
+  const handleCloseWidget = () => {
+    setOpenWidget(false);
+  };
+
+  const handleCloseBasicForm = () => {
+    setOpenBasicForm(false);
+  };
+
+  const { eventDetails } = useSelector((state) => state.event);
+
+  const [tag, setTag] = useState(eventDetails.organisedBy);
   const [editMode, setEditMode] = useState(false);
 
-    const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -106,7 +214,9 @@ const EventOverview = (props) => {
   );
 
   const [editorState, setEditorState] = React.useState(
-   aboutText ? EditorState.createWithContent(convertFromRaw(JSON.parse(aboutText))) : EditorState.createEmpty()
+    aboutText
+      ? EditorState.createWithContent(convertFromRaw(JSON.parse(aboutText)))
+      : EditorState.createEmpty()
   );
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -139,18 +249,16 @@ const EventOverview = (props) => {
     );
   };
 
-  if(error) {
+  if (error) {
     enqueueSnackbar(error, {
       variant: "error",
     });
 
-    dispatch(errorTrackerForFetchEvent())
-   return dispatch(errorTrackerForEditEventDiscription());
+    dispatch(errorTrackerForFetchEvent());
+    return dispatch(errorTrackerForEditEventDiscription());
   }
 
-
-  const previousTag = "Confluence 2021";
-
+  const previousTag = eventDetails.organisedBy;
 
   const handleChangeTag = (e) => {
     setTag(e.target.value);
@@ -176,64 +284,88 @@ const EventOverview = (props) => {
         </div>
 
         <div className=" px-3 mb-4">
+          {/*  */}
+          <MainEventSetupCheckList />
           <EventOverviewGrid className="mb-5">
             <EventDetails className="px-4 py-3">
-              <EventDetailsHeading className="mb-4">
-                Event Details
+              <EventDetailsHeading className="mb-3">
+                Event Name
               </EventDetailsHeading>
 
               <EventDetailsGrid className="mb-5">
-                <EventName>Event name</EventName>
-                {/* <button onClick={() => {
-              //  dispatch(editEvent({publishedStatus: "Published"}, id)) 
-            }} className="publish-btn-sm btn btn-outline-primary btn-outline-text" style={{fontSize: "0.8rem", maxWidth: "200px", justifySelf: "end"}}>
-              Publish
-            </button> */}
-            <div className="d-flex flex-row align-items-center justify-content-end">
-                <button
-                  className="btn btn-outline-primary btn-outline-text me-3"
-                  style={{  justifySelf: "end" }}
-                >
-                  {" "}
-                  <EditRoundedIcon
-                    className="me-2"
-                    style={{ fontSize: "18px" }}
-                  />{" "}
-                  edit
-                </button>
-                <button
-                  className="btn btn-outline-primary btn-outline-text"
-                  style={{  justifySelf: "end" }}
-                >
-                  {" "}
-                  <PublishRoundedIcon
-                    className="me-2"
-                    style={{ fontSize: "18px" }}
-                  />{" "}
-                 Publish
-                </button>
+                <EventName>{eventDetails.eventName}</EventName>
+
+                <div className="d-flex flex-row align-items-center justify-content-end">
+                  <button
+                    disabled={eventDetails.status === "Ended" ? true : false}
+                    onClick={() => {
+                      setOpenBasicForm(true);
+                    }}
+                    className="btn btn-outline-primary btn-outline-text me-3"
+                    style={{ justifySelf: "end" }}
+                  >
+                    {" "}
+                    <EditRoundedIcon
+                      className="me-2"
+                      style={{ fontSize: "18px" }}
+                    />{" "}
+                    edit
+                  </button>
+
+                  {eventDetails.publishedStatus !== "Draft" ? (
+                    <Chip
+                      label="Published"
+                      color="success"
+                      style={{ fontWeight: 600, fontFamily: "Ubuntu" }}
+                    />
+                  ) : (
+                    <button
+                      disabled={eventDetails.status === "Ended" ? true : false}
+                      onClick={() => {
+                        dispatch(
+                          editEvent(
+                            { publishedStatus: "Published" },
+                            eventDetails._id
+                          )
+                        );
+                      }}
+                      className="btn btn-outline-primary btn-outline-text"
+                      style={{ justifySelf: "end" }}
+                    >
+                      {" "}
+                      <PublishRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "18px" }}
+                      />{" "}
+                      Publish
+                    </button>
+                  )}
                 </div>
                 <div className="d-flex flex-row align-items-center ">
                   <div className="me-5">
                     <TextSmall className="">Starting on</TextSmall>
                     <TextSignificant className="my-1">
-                      Saturday, 27 Sep 2021
+                      {dateFormat(eventDetails.startDate, "fullDate")}
                     </TextSignificant>
-                    <TextSmall>11:15 pm</TextSmall>
+                    <TextSmall>
+                      {dateFormat(eventDetails.startTime, "h:MM TT")}
+                    </TextSmall>
                   </div>
                   <div className="me-5">
                     <TextSmall className="">Ending on</TextSmall>
                     <TextSignificant className="my-1">
-                      Saturday, 02 Oct 2021
+                      {dateFormat(eventDetails.endDate, "fullDate")}
                     </TextSignificant>
-                    <TextSmall>11:15 pm</TextSmall>
+                    <TextSmall>
+                      {dateFormat(eventDetails.endTime, "h:MM TT")}
+                    </TextSmall>
                   </div>
                   <div>
                     <TextSmall className="">Timezone</TextSmall>
                     <TextSignificant className="my-1">
-                      UTC + 5:30
+                      {eventDetails.Timezone}
                     </TextSignificant>
-                    <TextSmall>IST</TextSmall>
+                    {/* <TextSmall>IST</TextSmall> */}
                   </div>
                 </div>
               </EventDetailsGrid>
@@ -245,125 +377,152 @@ const EventOverview = (props) => {
                   <EventLinkInput
                     className="event-sharable-link"
                     type="text"
-                    value={
-                      "https://wwww.bluemeet.in/event-landing-page/27882hsji8jsnju2/2y2k2i8jbnsn"
-                    }
+                    value={`https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`}
                     readOnly
                     placeholder="Search..."
                   />
                   <button
                     className="ui icon button"
                     onClick={() => {
-                      navigator.clipboard.writeText("referralLink");
+                      navigator.clipboard.writeText(
+                        `https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`
+                      );
                       alert("copied to clipboard!");
                     }}
                   >
                     <i className="copy outline icon"></i>
                   </button>
                 </div>
-                <buttton className="btn btn-primary btn-outline-text me-4">
+                <Link
+                  to={`/compatibility-test/community/${eventDetails.communityId}/event/${eventDetails._id}/`}
+                  target="_blank"
+                  disabled={eventDetails.status === "Ended" ? true : false}
+                  className="btn btn-primary btn-outline-text me-4"
+                >
                   Go to event
-                </buttton>
-                <buttton className="btn btn-outline-primary btn-outline-text">
-                 Embeddable widget
+                </Link>
+                <buttton
+                  onClick={() => {
+                    setOpenWidget(true);
+                  }}
+                  className="btn btn-outline-primary btn-outline-text"
+                >
+                  Embeddable widget
                 </buttton>
               </div>
               <EventDetailsHeading className="mb-4">
                 Event organised by
               </EventDetailsHeading>
               <div className="form-group">
-              <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
-                <EventLinkInput
-                  name="community name"
-                  type="text"
-                  readOnly={!editMode}
-                  className="mail-group-name-input px-4 py-3"
-                  style={{ width: "100%" }}
-                  onChange={(e) => {
-                    handleChangeTag(e);
-                  }}
-                  value={tag}
-                  id="tag"
-                  aria-describedby="community name"
-                  placeholder="Community name"
-                 
-                />
-                {!editMode ? (
-                  <EditRoundedIcon
-                    onClick={() => {
-                      turnOnEditMode();
+                <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
+                  <EventLinkInput
+                    name="community name"
+                    type="text"
+                    readOnly={!editMode}
+                    className="mail-group-name-input px-4 py-3"
+                    style={{ width: "100%" }}
+                    onChange={(e) => {
+                      handleChangeTag(e);
                     }}
-                    className="chat-msg-hover-icon"
-                    style={{ position: "absolute", right: "10px" }}
+                    value={tag}
+                    id="tag"
+                    aria-describedby="community name"
+                    placeholder="Community name"
                   />
-                ) : (
-                  <div className="d-flex flex-row align-items-center">
-                    <CheckRoundedIcon
+                  {!editMode ? (
+                    <EditRoundedIcon
+                      disabled={eventDetails.status === "Ended" ? true : false}
                       onClick={() => {
-                        turnOffEditMode();
+                        turnOnEditMode();
                       }}
-                      style={{ fill: "#188627" }}
-                      className="me-3"
+                      className="chat-msg-hover-icon"
+                      style={{ position: "absolute", right: "10px" }}
                     />
-                    <ClearRoundedIcon
-                      onClick={() => {
-                        resetTag();
-                        turnOffEditMode();
-                      }}
-                      style={{ fill: "#A51320" }}
-                      className=""
-                    />
-                  </div>
-                )}
+                  ) : (
+                    <div className="d-flex flex-row align-items-center">
+                      <CheckRoundedIcon
+                        onClick={() => {
+                          dispatch(
+                            editEvent({ organisedBy: tag }, eventDetails._id)
+                          );
+                          // turnOffEditMode();
+                        }}
+                        style={{ fill: "#188627" }}
+                        className="me-3"
+                      />
+                      <ClearRoundedIcon
+                        onClick={() => {
+                          resetTag();
+                          turnOffEditMode();
+                        }}
+                        style={{ fill: "#A51320" }}
+                        className=""
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-
             </EventDetails>
             <EventPromoImageContainer>
               <UploadEventImageForm />
             </EventPromoImageContainer>
           </EventOverviewGrid>
 
-          
-
           <form onSubmit={handleSubmit(onSubmit)} className="pt-5">
-              <TextSignificant className="mb-3" style={{fontSize: "1.15rem"}}>Event description</TextSignificant>
-          <TextSmall className="mb-4">
-               Make a great impression on your attendees by adding an eye-catching description.<br /> You can add paragraphs, images, links and more.
-              </TextSmall>
-            <div className=" pe-4 ">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
+              <TextSignificant className="" style={{ fontSize: "1.15rem" }}>
+                Description
+              </TextSignificant>
+
+              <div
+                className="d-flex flex-row justify-content-end"
+                style={{ width: "100%" }}
+              >
+                <button
+                  type="submit"
+                  className={`btn btn-primary btn-outline-text `}
+                  disabled={
+                    pristine || submitting || eventDetails.status === "Ended"
+                      ? true
+                      : false
+                  }
+                >
+                  Save description
+                </button>
+              </div>
+            </div>
+
+            <TextSmall className="mb-4">
+              Make a great impression on your attendees by adding an
+              eye-catching description.
+              <br /> You can add paragraphs, images, links and more.
+            </TextSmall>
+            <div className="mb-5 pb-5">
               <div
                 className="rich-text-editor-wrapper p-3"
                 style={{ minHeight: "500px", border: "1px solid #CACACA" }}
               >
                 <Field component={renderEditor} id={id} />
               </div>
-              <div
-                className="d-flex flex-row justify-content-end mt-3"
-                style={{ width: "100%" }}
-              >
-                
-                <button
-                  type="submit"
-                  className={`btn btn-primary btn-outline-text `}
-                  disabled={pristine || submitting}
-                >
-                  Save changes
-                </button>
-              </div>
             </div>
           </form>
-
         </div>
       </div>
+
+      <EditBasicDetailsForm
+        hideFormHeading="1"
+        showBlockButton="false"
+        id={id}
+        open={openBasicForm}
+        handleClose={handleCloseBasicForm}
+      />
+
+      <EmbeddableWidget open={openWidget} handleClose={handleCloseWidget} />
     </>
   );
 };
 
-// export default EventOverview;
-
 export default reduxForm({
-    form: "editorForm",
-    destroyOnUnmount: false,
-  })(EventOverview);
-  
+  form: "editorForm",
+  destroyOnUnmount: false,
+})(EventOverview);

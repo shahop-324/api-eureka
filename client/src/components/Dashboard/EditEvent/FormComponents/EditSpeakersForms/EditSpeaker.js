@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import {Avatar, SwipeableDrawer} from "@material-ui/core";
+import { Avatar, SwipeableDrawer } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -25,6 +25,64 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Loader from "../../../../Loader";
 
+import styled from "styled-components";
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
+
+const FormSubHeading = styled.div`
+  font-size: 0.87rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #424242;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -32,14 +90,14 @@ function Alert(props) {
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -72,7 +130,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -80,19 +138,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -108,7 +155,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <StyledTextArea
         rows="2"
         type={type}
         {...input}
@@ -118,19 +165,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -173,15 +209,6 @@ const EditSpeakerForm = (props) => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(fetchParticularSpeakerOfEvent(props.id));
-  // }, []);
-
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -191,7 +218,6 @@ const EditSpeakerForm = (props) => {
     });
   });
   const imgKey = speaker.image;
-  //const imgKey = useSelector((state) => state.speaker.speakerDetails.image);
   let imgUrl = " #";
   if (imgKey) {
     imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
@@ -248,23 +274,10 @@ const EditSpeakerForm = (props) => {
 
     console.log(ModifiedFormValues);
 
-    // showResults(ModifiedFormValues);
     setState({ vertical: "top", horizontal: "center", open: true });
     dispatch(editSpeaker(ModifiedFormValues, file, props.id));
     console.log(file);
   };
-
-  // if (isLoadingDetail) {
-  //   return (
-  //     <div
-  //       className="d-flex flex-row align-items-center justify-content-center"
-  //       style={{ width: "100%", height: "80vh" }}
-  //     >
-  //       {" "}
-  //       <Loader />{" "}
-  //     </div>
-  //   );
-  // }
 
   if (detailError) {
     dispatch(errorTrackerForEditSpeaker());
@@ -285,21 +298,17 @@ const EditSpeakerForm = (props) => {
             console.log("Side nav was closed");
           }}
         >
-        {isLoadingDetail ? (
-          <div
-            className="d-flex flex-row align-items-center justify-content-center"
-            style={{ width: "100%", height: "100%" }}
-          >
-            {" "}
-            <Loader />{" "}
-          </div>
-        ) : (
-          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+          {isLoadingDetail ? (
             <div
-              className="create-new-coupon-form px-4 py-4"
-              style={{ minHeight: "100vh" }}
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "100%", height: "100%" }}
             >
-              <div className="form-heading-and-close-button mb-4">
+              {" "}
+              <Loader />{" "}
+            </div>
+          ) : (
+            <>
+              <HeaderFooter className="form-heading-and-close-button mb-4 px-4 pt-3">
                 <div></div>
                 <div className="coupon-overlay-form-headline">Edit Speaker</div>
                 <div
@@ -310,254 +319,255 @@ const EditSpeakerForm = (props) => {
                     <CancelRoundedIcon />
                   </IconButton>
                 </div>
-              </div>
-
-              <div className="p-0 d-flex flex-row justify-content-center">
-                <Avatar
-                  children=""
-                  alt="Travis Howard"
-                  src={fileToPreview}
-                  variant="rounded"
-                  className={classes.large}
-                />
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityHeadline"
-                  className="form-label form-label-customized"
+              </HeaderFooter>
+              <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+                <div
+                  className="create-new-coupon-form px-4 py-4"
+                  style={{ minHeight: "100vh" }}
                 >
-                  Avatar
-                </label>
-                <input
-                  name="imgUpload"
-                  type="file"
-                  accept="image/*"
-                  onChange={onFileChange}
-                  className="form-control"
-                />
-              </div>
+                  <div className="p-0 d-flex flex-row justify-content-center">
+                    <Avatar
+                      children=""
+                      alt="Travis Howard"
+                      src={fileToPreview}
+                      variant="rounded"
+                      className={classes.large}
+                    />
+                  </div>
 
-              <div className="mb-3 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityHeadline"
+                      className="form-label form-label-customized"
+                    >
+                      Avatar
+                    </FormLabel>
+                    <input
+                      name="imgUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={onFileChange}
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        First Name
+                      </FormLabel>
+                      <Field
+                        name="firstName"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="John"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        Last Name
+                      </FormLabel>
+                      <Field
+                        name="lastName"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="Doe"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Organisation
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="organisation"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        // placeholder="CEO of App Brewery"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Bio
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="bio"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        // placeholder="Hi there! I am here"
+                        component={renderTextArea}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Email
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="email"
+                        type="email"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="johndoe@gmail.com"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Select Sessions
+                    </FormLabel>
+                    <Field
+                      name="sessions"
+                      isMulti
+                      placeholder="Select sessions"
+                      styles={styles}
+                      menuPlacement="top"
+                      component={renderReactSelect}
+                    />
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Linkedin
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="linkedin"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="www.linkedIn.com/in/JohnDoe/ or JohnDoe"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Facebook
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="facebook"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="www.facebook.com/in/JohnDoe/ or JohnDoe"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Twitter
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="twitter"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="www.twitter.com/in/JohnDoe/ or JohnDoe"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Website
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="website"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="www.myDomain.com"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{ width: "100%" }}
+                    className="d-flex flex-row justify-content-end"
                   >
-                    First Name
-                  </label>
-                  <Field
-                    name="firstName"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="John"
-                    component={renderInput}
-                  />
+                    <button
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                      onClick={reset}
+                    >
+                      Discard
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={pristine || submitting}
+                      className="btn btn-primary btn-outline-text"
+                      onClick={() => {
+                        props.handleClose();
+                        setState({
+                          open: true,
+                          vertical: "top",
+                          horizontal: "center",
+                        });
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Last Name
-                  </label>
-                  <Field
-                    name="lastName"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="Doe"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Organisation
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="organisation"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    // placeholder="CEO of App Brewery"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Headline
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="headline"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    // placeholder="Hi there! I am here"
-                    component={renderTextArea}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Email
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="email"
-                    type="email"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="johndoe@gmail.com"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Select Sessions
-                </label>
-                <Field
-                  name="sessions"
-                  isMulti
-                  placeholder="Select sessions"
-                  styles={styles}
-                  menuPlacement="top"
-                  //options={SessionOptions}
-                  // defaultValue={eventOptions[0]}
-                  component={renderReactSelect}
-                />
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Linkedin
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="linkedin"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="www.linkedIn.com/in/JohnDoe/ or JohnDoe"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Facebook
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="facebook"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="www.facebook.com/in/JohnDoe/ or JohnDoe"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Twitter
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="twitter"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="www.twitter.com/in/JohnDoe/ or JohnDoe"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Website
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="website"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="www.myDomain.com"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div
-                style={{ width: "100%" }}
-                className="d-flex flex-row justify-content-end"
-              >
-                <button
-                  className="btn btn-outline-primary btn-outline-text me-3"
-          
-                  // disabled={pristine || submitting}
-                  onClick={reset}
-                >
-                  Discard
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={pristine || submitting}
-                  className="btn btn-primary btn-outline-text"
-                  onClick={() => {
-                    props.handleClose();
-                    setState({
-                      open: true,
-                      vertical: "top",
-                      horizontal: "center",
-                    });
-                  }}
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-      </SwipeableDrawer>
+              </form>
+            </>
+          )}
+        </SwipeableDrawer>
       </React.Fragment>
       <div>
         <Snackbar
@@ -594,13 +604,37 @@ const mapStateToProps = (state) => ({
       state.speaker.speakerDetails && state.speaker.speakerDetails.email
         ? state.speaker.speakerDetails.email
         : "",
-    headline:
-      state.speaker.speakerDetails && state.speaker.speakerDetails.headline
-        ? state.speaker.speakerDetails.headline
+    bio:
+      state.speaker.speakerDetails && state.speaker.speakerDetails.bio
+        ? state.speaker.speakerDetails.bio
         : "",
     organisation:
       state.speaker.speakerDetails && state.speaker.speakerDetails.organisation
         ? state.speaker.speakerDetails.organisation
+        : "",
+    facebook:
+      state.speaker.speakerDetails &&
+      state.speaker.speakerDetails.socialMediaHandles &&
+      state.speaker.speakerDetails.socialMediaHandles.facebook
+        ? state.speaker.speakerDetails.socialMediaHandles.facebook
+        : "",
+    twitter:
+      state.speaker.speakerDetails &&
+      state.speaker.speakerDetails.socialMediaHandles &&
+      state.speaker.speakerDetails.socialMediaHandles.twitter
+        ? state.speaker.speakerDetails.socialMediaHandles.twitter
+        : "",
+    linkedin:
+      state.speaker.speakerDetails &&
+      state.speaker.speakerDetails.socialMediaHandles &&
+      state.speaker.speakerDetails.socialMediaHandles.linkedin
+        ? state.speaker.speakerDetails.socialMediaHandles.linkedin
+        : "",
+    website:
+      state.speaker.speakerDetails &&
+      state.speaker.speakerDetails.socialMediaHandles &&
+      state.speaker.speakerDetails.socialMediaHandles.website
+        ? state.speaker.speakerDetails.socialMediaHandles.website
         : "",
     sessions:
       state.speaker.speakerDetails &&

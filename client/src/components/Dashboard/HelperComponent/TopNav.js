@@ -30,7 +30,7 @@ import CommunityProfileTab from "../SubComponents/CommunityProfileTab";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import styled from "styled-components";
-
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 // import Avatar from '@material-ui/core/Avatar';
 // import Faker from 'faker';
 
@@ -212,7 +212,7 @@ const Topnav = ({
               className={`${classes.root} mx-2 dash-settings`}
             >
               <IconButton>
-                <SettingsIcon />
+                <EditRoundedIcon style={{color: "#212121"}} />
               </IconButton>
             </div>
             <div

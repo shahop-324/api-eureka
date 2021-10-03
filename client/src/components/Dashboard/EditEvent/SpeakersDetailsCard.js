@@ -17,6 +17,7 @@ import SpeakerPreview from "./FormComponents/EditSpeakersForms/SpeakerPerview";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import styled from "styled-components";
 import Draggable from "react-draggable"; // Draggable and Draggable core
+import Chip from "@mui/material/Chip";
 
 const OrderNumber = styled.span`
   font-weight: 500;
@@ -25,7 +26,28 @@ const OrderNumber = styled.span`
   color: #212121;
 `;
 
-const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
+// url={imgUrl}
+//               key={id}
+//               name={firstName + " " + lastName}
+//               email={email}
+//               sessions={sessions}
+//               id={id}
+//               bio={bio}
+//               invitationLink={invitationLink}
+//               dashboardLink={dashboardLink}
+//               invitationStatus={invitationStatus}
+
+const SpeakersDetailsCard = ({
+  name,
+  email,
+  sessions,
+  id,
+  bio,
+  url,
+  invitationLink,
+  dashboardLink,
+  invitationStatus,
+}) => {
   console.log(sessions);
   console.log(id);
 
@@ -64,45 +86,39 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
 
   return (
     <>
-      <Draggable axis="y">
-        <div>
+      <div>
+        <div
+          className="session-field-value-container"
+          style={{
+            gridTemplateColumns: "2fr 2.5fr 3fr 1.5fr 2.5fr ",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <div
-            className="session-field-value-container"
+            className="event-card-field "
             style={{
-              gridTemplateColumns: "1fr 2fr 2.5fr 3fr 1.5fr 2.5fr ",
-              alignItems: "center",
-              justifyContent: "center",
+              width: "100%",
             }}
           >
-            <div>
-              <DragIndicatorIcon className="me-3 drag" />
-              <OrderNumber>1</OrderNumber>
-            </div>
-
-            <div
-              className="event-card-field "
-              style={{
-                width: "100%",
-              }}
-            >
-              <div className="registrations-name-field">
-                <div className="registrations-field-label d-flex flex-row justify-content-start">
-                  {/* attendee avatar and name */}
-                  <Avatar alt={name} src={url} variant="rounded" />
-                  <div
-                    className="ms-3 px-2 registration-name-styled"
-                    style={{ fontFamily: "Inter", fontSize: "0.85rem" }}
-                  >
-                    {/* {name} */}
-                    {truncateText(name, 20)}
-                  </div>
+            <div className="registrations-name-field">
+              <div className="registrations-field-label d-flex flex-row justify-content-start">
+                {/* attendee avatar and name */}
+                <Avatar alt={name} src={url} variant="rounded" />
+                <div
+                  className="ms-3 px-2 registration-name-styled"
+                  style={{ fontFamily: "Inter", fontSize: "0.85rem" }}
+                >
+                  {/* {name} */}
+                  {truncateText(name, 20)}
                 </div>
               </div>
-              {/* <div className="event-name-d" style={{width: '100%'}}>
+            </div>
+            {/* <div className="event-name-d" style={{width: '100%'}}>
             The Craft Workshop
           </div> */}
-            </div>
-            {/* <div
+          </div>
+          {/* <div
           className="event-visibility-field"
           style={{
             width: "100%",
@@ -116,41 +132,42 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
             {truncateText(headline, 25)}
           </div>
         </div> */}
+          <div
+            className="event-status-field"
+            style={{
+              width: "100%",
+            }}
+          >
             <div
-              className="event-status-field"
-              style={{
-                width: "100%",
-              }}
+              className="event-field-label registrations-field-label"
+              style={{ width: "100%" }}
             >
               <div
-                className="event-field-label registrations-field-label"
-                style={{ width: "100%" }}
+                className="chip-text"
+                style={{
+                  fontFamily: "Inter",
+                  fontSize: "0.85rem",
+                  fontWeight: "500",
+                }}
               >
-                <div
-                  className="chip-text"
-                  style={{
-                    fontFamily: "Inter",
-                    fontSize: "0.85rem",
-                    fontWeight: "500",
-                  }}
-                >
-                  {/* {email} */}
-                  {truncateText(email, 20)}
-                </div>
+                {/* {email} */}
+                {truncateText(email, 20)}
               </div>
             </div>
-            <div
-              className="event-views-field"
-              style={{
-                width: "100%",
-              }}
-            >
-              <div className="event-field-label registrations-field-label">
-                <div
-                  className="speaker-card-session-grid"
-                  style={{ gridTemplateColumns: "1fr" }}
-                >
-                  {sessions.map((session) => {
+          </div>
+          <div
+            className="event-views-field"
+            style={{
+              width: "100%",
+            }}
+          >
+            <div className="event-field-label registrations-field-label">
+              <div
+                className="speaker-card-session-grid"
+                style={{ gridTemplateColumns: "1fr" }}
+              >
+                {typeof sessions !== "undefined" && sessions.length > 0 ? (
+                  sessions.map((session) => {
                     console.log(session);
                     return (
                       <div
@@ -167,91 +184,105 @@ const SpeakersDetailsCard = ({ name, email, sessions, id, headline, url }) => {
                         {truncateText(session.name, 35)}
                       </div>
                     );
-                  })}
-                </div>
+                  })
+                ) : (
+                  <Chip
+                    style={{ width: "fit-content" }}
+                    label="Not assigned any sessions yet"
+                    color="warning"
+                    variant="outlined"
+                  />
+                )}
               </div>
             </div>
+          </div>
+          <div
+            className="event-visibility-field"
+            style={{
+              width: "100%",
+            }}
+          >
             <div
-              className="event-visibility-field"
+              className="event-field-label registrations-field-label"
               style={{
                 width: "100%",
+                fontFamily: "Inter",
+                fontSize: "0.85rem",
+                fontWeight: "500",
               }}
             >
+              {(() => {
+                console.log(invitationStatus, 215555555);
+                switch (invitationStatus) {
+                  case "Sent":
+                    return (
+                      <Chip label="Sent" color="success" variant="outlined" />
+                    );
+
+                  case "Not sent":
+                    return (
+                      <Chip label="Not sent" color="error" variant="outlined" />
+                    );
+
+                  default:
+                    return (
+                      <Chip label="Not sent" color="error" variant="outlined" />
+                    );
+                    
+                }
+              })()}
+            </div>
+          </div>
+          <div className="event-registrations-field">
+            <div
+              className="event-field-label registrations-field-label"
+              style={{ width: "100%" }}
+            >
+              <div onClick={handleEditSpeaker}>
+                <IconButton color="primary" aria-label="add to shopping cart">
+                  <EditRoundedIcon />
+                </IconButton>
+              </div>
+              <div onClick={handleDeleteSpeaker}>
+                <IconButton color="secondary" aria-label="add to shopping cart">
+                  <DeleteRoundedIcon />
+                </IconButton>
+              </div>
               <div
-                className="event-field-label registrations-field-label"
-                style={{
-                  width: "100%",
-                  fontFamily: "Inter",
-                  fontSize: "0.85rem",
-                  fontWeight: "500",
+                onClick={() => {
+                  setOpenPreview(true);
                 }}
               >
-                {"Sent"}
+                <IconButton color="secondary" aria-label="add to shopping cart">
+                  <VisibilityIcon style={{ color: "#A4C513" }} />
+                </IconButton>
               </div>
-            </div>
-            <div className="event-registrations-field">
               <div
-                className="event-field-label registrations-field-label"
-                style={{ width: "100%" }}
+                onClick={() => {
+                  alert("Email invitation sent!");
+                }}
               >
-                <div onClick={handleEditSpeaker}>
-                  <IconButton color="primary" aria-label="add to shopping cart">
-                    <EditRoundedIcon />
-                  </IconButton>
-                </div>
-                <div onClick={handleDeleteSpeaker}>
-                  <IconButton
-                    color="secondary"
-                    aria-label="add to shopping cart"
-                  >
-                    <DeleteRoundedIcon />
-                  </IconButton>
-                </div>
-                <div
-                  onClick={() => {
-                    setOpenPreview(true);
-                  }}
-                >
-                  <IconButton
-                    color="secondary"
-                    aria-label="add to shopping cart"
-                  >
-                    <VisibilityIcon style={{ color: "#A4C513" }} />
-                  </IconButton>
-                </div>
-                <div
-                  onClick={() => {
-                    alert("Email invitation sent!");
-                  }}
-                >
-                  <IconButton
-                    color="secondary"
-                    aria-label="add to shopping cart"
-                  >
-                    <MailIcon style={{ color: "#1351C5" }} />
-                  </IconButton>
-                </div>
-                <div
-                  onClick={() => {
-                    alert("Invitation Link copied to clipboard!");
-                  }}
-                >
-                  <IconButton
-                    color="secondary"
-                    aria-label="add to shopping cart"
-                  >
-                    <ContentCopyIcon style={{ color: "#A113C5" }} />
-                  </IconButton>
-                </div>
+                <IconButton color="secondary" aria-label="add to shopping cart">
+                  <MailIcon style={{ color: "#1351C5" }} />
+                </IconButton>
+              </div>
+              <div
+                onClick={() => {
+                  alert("Invitation Link copied to clipboard!");
+                }}
+              >
+                <IconButton color="secondary" aria-label="add to shopping cart">
+                  <ContentCopyIcon style={{ color: "#A113C5" }} />
+                </IconButton>
               </div>
             </div>
-          </div>
-
-          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-            <Divider />
           </div>
         </div>
-      </Draggable>
+
+        <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+          <Divider />
+        </div>
+      </div>
 
       <EditSpeaker open={open} handleClose={handleClose} id={id} />
       <DeleteSpeaker

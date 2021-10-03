@@ -327,10 +327,8 @@ const ReceptionCustomization = ({ open, handleClose }) => {
                 </div>
               </div>
               <DragDropContext
-                onDragEnd={(a, b, c) => {
-                  console.log(a, "This is a");
-                  console.log(b, "This is b");
-                  console.log(c, "This is c");
+                onDragEnd={(event) => {
+                  console.log(event);
                 }}
               >
                 <Grid style={{ overflow: "auto" }}>
@@ -348,7 +346,6 @@ const ReceptionCustomization = ({ open, handleClose }) => {
                         Drag and drop elements to place on the Reception. You
                         can then format them to your needs and expectations.
                       </TextSmall>
-
                       <Droppable droppableId="droppable">
                         {(provided) => (
                           <List
