@@ -14,18 +14,17 @@ const AffiliateListFields = () => {
       <div className="registrations-phone-field">
         <div className="registrations-field-label">Commision value</div>
       </div>
-      
       <div className="registrations-amount-field">
         <div className="registrations-field-label">Total Attempts</div>
-      </div>
-      <div className="registrations-ticket-type-field">
-        <div className="registrations-field-label">Total Leads</div>
       </div>
       <div className="registrations-invoice-field">
         <div className="registrations-field-label">Total Confirmed Tickets</div>
       </div>
       <div className="registrations-invoice-field">
         <div className="registrations-field-label">Total commision earned</div>
+      </div>
+      <div className="registrations-ticket-type-field">
+        <div className="registrations-field-label">Actions</div>
       </div>
     </div>
   );

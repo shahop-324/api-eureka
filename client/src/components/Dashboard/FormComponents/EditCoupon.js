@@ -9,36 +9,84 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-
 import { reduxForm, Field } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { editCoupon, errorTrackerForEditCoupon } from "../../../actions";
 import Loader from "./../../Loader";
+import styled from "styled-components";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+const ticketOptions = [];
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+
+const RadioLabel = styled.span`
+  font-family: "Ubuntu" !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #585858 !important;
+`;
+
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 let eventOptions = [];
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
-
-
 
 const renderInput = ({
   input,
@@ -52,7 +100,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -61,19 +109,8 @@ const renderInput = ({
         required
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -85,13 +122,14 @@ const renderReactSelect = ({
   menuPlacement,
   options,
   defaultValue,
+  isDisabled,
 
   name,
 }) => (
   <div>
     <div>
       <Select
-      isDisabled={true}
+        isDisabled={isDisabled}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -102,13 +140,21 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
 
-const EditCoupon = (props) => {
+const EditCoupon = ({
+  open,
+  handleClose,
+  id,
+  handleSubmit,
+  pristine,
+  submitting,
+  reset,
+}) => {
   const events = useSelector((state) => state.event.events);
 
   if (events) {
@@ -120,27 +166,14 @@ const EditCoupon = (props) => {
     });
   }
 
-  const {detailError, isLoadingDetail} = useSelector((state) => state.coupon);
-  const { handleSubmit, pristine, submitting, reset } = props;
+  const { detailError, isLoadingDetail } = useSelector((state) => state.coupon);
   const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
-
   const onSubmit = (formValues) => {
     console.log(formValues);
-   
+
     const ModifiedFormValues = {};
     ModifiedFormValues.discountForEventId = formValues.eventName.value;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
@@ -149,13 +182,9 @@ const EditCoupon = (props) => {
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
-
-    
-    // showResults(ModifiedFormValues);
-    dispatch(editCoupon(ModifiedFormValues, props.id));
-    props.handleClose();
+    dispatch(editCoupon(ModifiedFormValues, id));
+    handleClose();
     window.location.reload();
-    
   };
 
   if (detailError) {
@@ -168,182 +197,228 @@ const EditCoupon = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.open}
+        open={open}
         aria-labelledby="responsive-dialog-title"
       >
-        {isLoadingDetail ? <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "100%" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div> :  <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
+        {isLoadingDetail ? (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ width: "100%", height: "100%" }}
+          >
+            {" "}
+            <Loader />{" "}
+          </div>
+        ) : (
+          <>
+            <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
               <div></div>
               <div className="coupon-overlay-form-headline">
                 Edit this coupon
               </div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
+              <div className="overlay-form-close-button" onClick={handleClose}>
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
                 </IconButton>
               </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-                Select Event
-              </label>
-              <Field
-                name="eventName"
-                placeholder="Select the event"
-                styles={styles}
-                menuPlacement="auto"
-                options={eventOptions}
-                component={renderReactSelect}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
+            </HeaderFooter>
+            <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+              <div className="create-new-coupon-form px-4 py-4">
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel
+                    Forhtml="eventEndDate"
+                    className="form-label form-label-customized"
+                  >
+                    Select Event
+                  </FormLabel>
+                  <Field
+                    isDisabled={true}
+                    name="eventName"
+                    placeholder="Select the event"
+                    styles={styles}
+                    menuPlacement="auto"
+                    options={eventOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <FormLabel Forhtml="eventStartDate">
+                  Applicable to all tickets
+                </FormLabel>
+                <RadioGroup
+                  aria-label="ticket-type"
+                  defaultValue="paid"
+                  name="radio-buttons-group"
                 >
-                  Expiry Date
-                </label>
-                <Field
-                  name="expiryDate"
-                  type="date"
-                  value="2021-07-21"
-                  classes="form-control"
-                  component={renderInput}
-                />
-                {/* <input type="date" className="form-control" /> */}
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
+                  <div className="mb-3 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormControlLabel
+                        value="paid"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Yes</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="free"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>No</RadioLabel>
+                    </div>
+                  </div>
+                </RadioGroup>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel Forhtml="eventEndDate">Select Tickets</FormLabel>
+                  <Field
+                    isDisabled={false}
+                    isMulti={true}
+                    name="eventTickets"
+                    placeholder="Select the event"
+                    styles={styles}
+                    menuPlacement="auto"
+                    options={ticketOptions}
+                    // create a list of all tickets in this event
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">
+                      Applicable from date
+                    </FormLabel>
+                    <Field
+                      name="statDate"
+                      type="date"
+                      value="2021-07-21"
+                      classes="form-control"
+                      component={renderInput}
+                    />
+                  </div>
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">
+                      Applicable from time
+                    </FormLabel>
+                    <Field
+                      name="startTime"
+                      type="time"
+                      classes="form-control"
+                      component={renderInput}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                  <div>
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Expiry Date
+                    </FormLabel>
+                    <Field
+                      name="expiryDate"
+                      type="date"
+                      value="2021-07-21"
+                      classes="form-control"
+                      component={renderInput}
+                    />
+                  </div>
+                  <div>
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Expiry Time
+                    </FormLabel>
+                    <Field
+                      name="expiryTime"
+                      type="time"
+                      classes="form-control"
+                      component={renderInput}
+                    />
+                  </div>
+                </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Discount Percentage
+                  </FormLabel>
+                  <Field
+                    name="discountPercentage"
+                    type="number"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="50"
+                    component={renderInput}
+                  />
+                </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Coupon code
+                  </FormLabel>
+
+                  <Field
+                    name="couponCode"
+                    type="text"
+                    classes="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="HAPPY50"
+                    component={renderInput}
+                  />
+                </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel
+                    for="communityName"
+                    className="form-label form-label-customized"
+                  >
+                    Number Of Discounts Available
+                  </FormLabel>
+                  <Field
+                    name="numberOfDiscountsAvailable"
+                    type="number"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    placeholder="100"
+                    component={renderInput}
+                  />
+                </div>
+                <div
+                  style={{ width: "100%" }}
+                  className="d-flex flex-row justify-content-end"
                 >
-                  Expiry Time
-                </label>
-                <Field
-                  name="expiryTime"
-                  type="time"
-                  classes="form-control"
-                  component={renderInput}
-                />
+                  <button
+                    className="btn btn-outline-primary btn-outline-text me-3"
+                    onClick={reset}
+                    disabled={pristine || submitting}
+                    style={{ textAlign: "center" }}
+                  >
+                    Discard
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-outline-text"
+                    style={{ textAlign: "center" }}
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    Save Changes
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Discount Percentage
-              </label>
-              <Field
-                name="discountPercentage"
-                type="number"
-                classes="form-control"
-                ariadescribedby="emailHelp"
-                placeholder="50"
-                component={renderInput}
-              />
-              {/* <input
-              type="number"
-              className="form-control"
-              id="communityName"
-              aria-describedby="communityName"
-            /> */}
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Coupon code
-              </label>
-
-              <Field
-                name="couponCode"
-                type="text"
-                classes="form-control"
-                id="exampleFormControlInput1"
-                placeholder="HAPPY50"
-                component={renderInput}
-              />
-            </div>
-
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Number Of Discounts Available
-              </label>
-              <Field
-                name="numberOfDiscountsAvailable"
-                type="number"
-                classes="form-control"
-                ariadescribedby="emailHelp"
-                placeholder="100"
-                component={renderInput}
-              />
-            </div>
-            <div
-              style={{ width: "100%" }}
-              className="d-flex flex-row justify-content-end"
-            >
-              <button
-                className="btn btn-outline-primary btn-outline-text me-3"
-                onClick={reset}
-                disabled={pristine || submitting}
-                style={{textAlign: "center"}}
-              >
-                Discard
-              </button>
-
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline-text"
-                style={{textAlign: "center"}}
-                onClick={() => {
-                  props.handleClose();
-                  setState({
-                    open: true,
-                    vertical: "top",
-                    horizontal: "center",
-                  });
-                }}
-                // disabled={pristine || submitting}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </form> }
-        
+            </form>
+          </>
+        )}
       </Dialog>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            Coupon updated successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };
@@ -359,13 +434,19 @@ const mapStateToProps = (state) => ({
             value: state.coupon.couponDetails.discountForEventId.eventName,
           }
         : "",
-        expiryDate:
+    expiryDate:
       state.coupon.couponDetails && state.coupon.couponDetails.validTillDate
-        ? dateFormat(new Date(state.coupon.couponDetails.validTillDate), "yyyy-mm-dd")
+        ? dateFormat(
+            new Date(state.coupon.couponDetails.validTillDate),
+            "yyyy-mm-dd"
+          )
         : "",
-        expiryTime:
+    expiryTime:
       state.coupon.couponDetails && state.coupon.couponDetails.validTillTime
-        ? dateFormat(new Date(state.coupon.couponDetails.validTillTime), "HH:MM")
+        ? dateFormat(
+            new Date(state.coupon.couponDetails.validTillTime),
+            "HH:MM"
+          )
         : "",
     discountPercentage:
       state.coupon.couponDetails &&
@@ -373,13 +454,12 @@ const mapStateToProps = (state) => ({
         ? state.coupon.couponDetails.discountPercentage
         : "",
 
-        couponCode:
-      state.coupon.couponDetails &&
-      state.coupon.couponDetails.discountCode
+    couponCode:
+      state.coupon.couponDetails && state.coupon.couponDetails.discountCode
         ? state.coupon.couponDetails.discountCode
         : "",
 
-        numberOfDiscountsAvailable:
+    numberOfDiscountsAvailable:
       state.coupon.couponDetails &&
       state.coupon.couponDetails.maxNumOfDiscountPermitted
         ? state.coupon.couponDetails.maxNumOfDiscountPermitted
@@ -389,7 +469,7 @@ const mapStateToProps = (state) => ({
 
 const validate = (formValues) => {
   const errors = {};
-  
+
   if (!formValues.eventName) {
     errors.eventName = "Event name is required";
   }
@@ -406,7 +486,8 @@ const validate = (formValues) => {
     errors.couponCode = "Coupon code is required";
   }
   if (!formValues.numberOfDiscountsAvailable) {
-    errors.numberOfDiscountsAvailable = "Number of discounts available is required";
+    errors.numberOfDiscountsAvailable =
+      "Number of discounts available is required";
   }
   return errors;
 };

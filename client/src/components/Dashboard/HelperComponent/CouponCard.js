@@ -51,7 +51,6 @@ const CouponCard = ({
           <div
             className="fit-content"
             onClick={() => {
-              // dispatch(fetchCoupon(id));
               handleEditCoupon();
             }}
           >
@@ -72,7 +71,7 @@ const CouponCard = ({
         style={{ height: "60%" }}
       >
         <div className="coupon-discount-percent mb-3">{percentage}% Off</div>
-        <div className="discount-on mb-3">On {onEvent}</div>
+        <div className="discount-on mb-3" style={{fontFamily: "Ubuntu"}}>On {onEvent}</div>
         <div className="mb-3">
           <button
             type="button"

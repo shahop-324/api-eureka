@@ -1,18 +1,88 @@
 import React from "react";
-
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { addNewAffiliate } from "./../../../../actions";
 import { useParams } from "react-router-dom";
 import validator from 'validator';
+import styled from 'styled-components';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+import Select from 'react-select';
+
+const couponOptions = [];
+
+const styles = {
+  control: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+  }),
+};
+
+const TextSmall = styled.div`
+font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.78rem;
+  color: #747474;
+`
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+
+const RadioLabel = styled.span`
+  font-family: "Ubuntu" !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #585858 !important;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInput = ({
   input,
@@ -26,7 +96,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -36,38 +106,60 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
 };
 
+const renderReactSelect = ({
+  input,
+  isMulti,
+  meta: { touched, error, warning },
+  styles,
+  menuPlacement,
+  options,
+  defaultValue,
+  name,
+}) => (
+  <div>
+    <div>
+      <Select
+        isMulti={isMulti}
+        defaultValue={defaultValue}
+        styles={styles}
+        menuPlacement={menuPlacement}
+        name={name}
+        options={options}
+        value={input.value}
+        onChange={(value) => input.onChange(value)}
+        onBlur={() => input.onBlur()}
+      />
+      {touched &&
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
+    </div>
+  </div>
+);
+
 const CreateNewAffiliate = (props) => {
   const theme = useTheme();
-
   const params = useParams();
 
   const eventId = params.eventId;
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
   const { handleSubmit } = props;
   const dispatch = useDispatch();
-
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -79,10 +171,7 @@ const CreateNewAffiliate = (props) => {
     ModifiedFormValues.email = formValues.email;
     ModifiedFormValues.commisionValue = formValues.commisionValue;
     ModifiedFormValues.eventId = eventId;
-
-    showResults(ModifiedFormValues);
     dispatch(addNewAffiliate(ModifiedFormValues));
-    // props.handleClose();
     window.location.reload();
   };
 
@@ -93,12 +182,12 @@ const CreateNewAffiliate = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div
-            className="create-new-coupon-form px-4 py-4"
-            style={{ minHeight: "auto" }}
-          >
-            <div className="form-heading-and-close-button mb-4">
+
+
+<>
+
+
+<HeaderFooter className="form-heading-and-close-button mb-4 px-4 pt-3">
               <div></div>
               <div className="coupon-overlay-form-headline">
                 Add new affiliate
@@ -111,31 +200,34 @@ const CreateNewAffiliate = (props) => {
                   <CancelRoundedIcon />
                 </IconButton>
               </div>
-            </div>
+            </HeaderFooter>
 
+
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+          <div
+            className="create-new-coupon-form px-4 py-4"
+            style={{ minHeight: "auto" }}
+          >
             <div className="mb-4 overlay-form-input-row form-row-2-in-1">
               <div>
-                <label
+                <FormLabel
                   Forhtml="affiliateFirstName"
-                  className="form-label form-label-customized"
                 >
                   First Name
-                </label>
+                </FormLabel>
                 <Field
                   name="firstName"
                   type="text"
                   classes="form-control"
                   component={renderInput}
                 />
-                {/* <input type="date" className="form-control" /> */}
               </div>
               <div>
-                <label
+                <FormLabel
                   Forhtml="affiliateLastName"
-                  className="form-label form-label-customized"
                 >
                   Last Name
-                </label>
+                </FormLabel>
                 <Field
                   name="lastName"
                   type="text"
@@ -145,12 +237,11 @@ const CreateNewAffiliate = (props) => {
               </div>
             </div>
             <div className="mb-4 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="affiliateEmail"
-                className="form-label form-label-customized"
               >
                 Email
-              </label>
+              </FormLabel>
               <Field
                 name="email"
                 type="email"
@@ -160,12 +251,14 @@ const CreateNewAffiliate = (props) => {
               />
             </div>
             <div className="mb-4 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="affliateCommisionValue"
-                className="form-label form-label-customized"
+                className="d-flex flex-row align-items-center"
               >
-                Commision Value
-              </label>
+                Commision Value  <TextSmall className="ms-2">
+                (This indicates total commision in percent)
+              </TextSmall>
+              </FormLabel>
 
               <Field
                 name="commisionValue"
@@ -174,23 +267,101 @@ const CreateNewAffiliate = (props) => {
                 id="exampleFormControlInput1"
                 component={renderInput}
               />
-              <small style={{ fontFamily: "Inter" }}>
-                This indicates total commision in percent
-              </small>
+             
             </div>
+
+            <FormLabel Forhtml="eventStartDate">
+                  Which coupons should be applicable ?
+                </FormLabel>
+                <RadioGroup
+                  aria-label="ticket-type"
+                  defaultValue="all"
+                  name="radio-buttons-group"
+                >
+                  <div className="mb-3 overlay-form-input-row form-row-3-in-1">
+                    <div>
+                      <FormControlLabel
+                        value="all"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>All</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="no_one"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>No one</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="select_coupons"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Select coupons</RadioLabel>
+                    </div>
+                  </div>
+                </RadioGroup>
+
+            <FormLabel Forhtml="eventStartDate">
+                  Share coupon codes with affiliate ?
+                </FormLabel>
+                <RadioGroup
+                  aria-label="ticket-type"
+                  defaultValue="yes"
+                  name="radio-buttons-group"
+                >
+                  <div className="mb-3 overlay-form-input-row form-row-2-in-1">
+                    
+                    <div>
+                      <FormControlLabel
+                        value="yes"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Yes</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="no"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>No</RadioLabel>
+                    </div>
+                  </div>
+                </RadioGroup>
+
+                <div className="mb-4 overlay-form-input-row">
+                <FormLabel Forhtml="eventEndDate">Select applicable coupons</FormLabel>
+                <Field
+                  name="coupons"
+                  placeholder="Select coupons"
+                  styles={styles}
+                  menuPlacement="auto"
+                  options={couponOptions}
+                  component={renderReactSelect}
+                />
+              </div>
 
             <div style={{ width: "100%" }}>
               <button
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%", textAlign: "center" }}
-                // disabled={pristine || submitting}
               >
                 Add new affiliate
               </button>
             </div>
           </div>
         </form>
+
+
+
+        </>
       </Dialog>
     </>
   );

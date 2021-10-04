@@ -203,11 +203,8 @@ const EditEventRoot = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-
     return dispatch(errorTrackerForFetchParticularEventOfCommunity());
   }
-
-  
   else {
     return (
       <>

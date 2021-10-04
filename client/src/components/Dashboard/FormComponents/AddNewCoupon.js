@@ -3,30 +3,76 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { createCoupon } from "./../../../actions";
+import styled from "styled-components";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+const ticketOptions = [];
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+
+const RadioLabel = styled.span`
+  font-family: "Ubuntu" !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #585858 !important;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 let eventOptions = [];
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -43,7 +89,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -52,36 +98,26 @@ const renderInput = ({
         required
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
 
 const renderReactSelect = ({
   input,
+  isMulti,
   meta: { touched, error, warning },
   styles,
   menuPlacement,
   options,
   defaultValue,
-
   name,
 }) => (
   <div>
     <div>
       <Select
+        isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -92,8 +128,8 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -126,9 +162,7 @@ const AddNewCoupon = (props) => {
     ModifiedFormValues.discountPercentage = formValues.discountPercentage;
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
-    formValues.numberOfDiscountsAvailable;
-
-    // showResults(ModifiedFormValues);
+      formValues.numberOfDiscountsAvailable;
     dispatch(createCoupon(ModifiedFormValues));
     props.handleClose();
     window.location.reload();
@@ -141,132 +175,166 @@ const AddNewCoupon = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
-              <div></div>
-              <div className="coupon-overlay-form-headline">
-                Create a coupon
-              </div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
-                <IconButton aria-label="delete">
-                  <CancelRoundedIcon />
-                </IconButton>
-              </div>
+        <>
+          <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
+            <div></div>
+            <div className="coupon-overlay-form-headline">Create a coupon</div>
+            <div
+              className="overlay-form-close-button"
+              onClick={props.handleClose}
+            >
+              <IconButton aria-label="delete">
+                <CancelRoundedIcon />
+              </IconButton>
             </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-                Select Event
-              </label>
-              <Field
-                name="eventName"
-                placeholder="Select the event"
-                styles={styles}
-                menuPlacement="auto"
-                options={eventOptions}
-                component={renderReactSelect}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Expiry Date
-                </label>
+          </HeaderFooter>
+
+          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+            <div className="create-new-coupon-form px-4 py-4">
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel Forhtml="eventEndDate">Select Event</FormLabel>
                 <Field
-                  name="expiryDate"
-                  type="date"
-                  value="2021-07-21"
-                  classes="form-control"
-                  component={renderInput}
-                />
-                {/* <input type="date" className="form-control" /> */}
-              </div>
-              <div>
-                <label
-                  Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
-                >
-                  Expiry Time
-                </label>
-                <Field
-                  name="expiryTime"
-                  type="time"
-                  classes="form-control"
-                  component={renderInput}
+                  name="eventName"
+                  placeholder="Select the event"
+                  styles={styles}
+                  menuPlacement="auto"
+                  options={eventOptions}
+                  component={renderReactSelect}
                 />
               </div>
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Discount Percentage
-              </label>
-              <Field
-                name="discountPercentage"
-                type="number"
-                classes="form-control"
-                ariadescribedby="emailHelp"
-                placeholder="50"
-                component={renderInput}
-              />
-            </div>
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Coupon code
-              </label>
 
-              <Field
-                name="couponCode"
-                type="text"
-                classes="form-control"
-                id="exampleFormControlInput1"
-                placeholder="HAPPY50"
-                component={renderInput}
-              />
-            </div>
+              <FormLabel Forhtml="eventStartDate">
+                Applicable to all tickets
+              </FormLabel>
+              <RadioGroup
+                aria-label="ticket-type"
+                defaultValue="paid"
+                name="radio-buttons-group"
+              >
+                <div className="mb-3 overlay-form-input-row form-row-2-in-1">
+                  <div>
+                    <FormControlLabel
+                      value="paid"
+                      control={<Radio />}
+                      label=""
+                    />
+                    <RadioLabel>Yes</RadioLabel>
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value="free"
+                      control={<Radio />}
+                      label=""
+                    />
+                    <RadioLabel>No</RadioLabel>
+                  </div>
+                </div>
+              </RadioGroup>
 
-            <div className="mb-4 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Number Of Discounts Available
-              </label>
-              <Field
-                name="numberOfDiscountsAvailable"
-                type="number"
-                classes="form-control"
-                ariadescribedby="emailHelp"
-                placeholder="100"
-                component={renderInput}
-              />
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel Forhtml="eventEndDate">Select Tickets</FormLabel>
+                <Field
+                  isMulti={true}
+                  name="eventTickets"
+                  placeholder="Select the event"
+                  styles={styles}
+                  menuPlacement="auto"
+                  options={ticketOptions}
+                  // create a list of all tickets in this event
+                  component={renderReactSelect}
+                />
+              </div>
+
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <FormLabel Forhtml="eventStartDate">Applicable from date</FormLabel>
+                  <Field
+                    name="statDate"
+                    type="date"
+                    value="2021-07-21"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <FormLabel Forhtml="eventStartDate">Applicable from time</FormLabel>
+                  <Field
+                    name="startTime"
+                    type="time"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                <div>
+                  <FormLabel Forhtml="eventStartDate">Expiry Date</FormLabel>
+                  <Field
+                    name="expiryDate"
+                    type="date"
+                    value="2021-07-21"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+                <div>
+                  <FormLabel Forhtml="eventStartDate">Expiry Time</FormLabel>
+                  <Field
+                    name="expiryTime"
+                    type="time"
+                    classes="form-control"
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel for="communityName">Discount Percentage</FormLabel>
+                <Field
+                  name="discountPercentage"
+                  type="number"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="50"
+                  component={renderInput}
+                />
+              </div>
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel for="communityName">Coupon code</FormLabel>
+                <Field
+                  name="couponCode"
+                  type="text"
+                  classes="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="HAPPY50"
+                  component={renderInput}
+                />
+              </div>
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel for="communityName">
+                  Number Of Discounts Available
+                </FormLabel>
+                <Field
+                  name="numberOfDiscountsAvailable"
+                  type="number"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="100"
+                  component={renderInput}
+                />
+              </div>
+              <div style={{ width: "100%" }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline-text"
+                  style={{ width: "100%", textAlign: "center" }}
+                >
+                  Create New Coupon
+                </button>
+              </div>
             </div>
-            <div style={{ width: "100%" }}>
-              <button
-                type="submit"
-                className="btn btn-primary btn-outline-text"
-                style={{ width: "100%", textAlign: "center" }}
-                // disabled={pristine || submitting}
-              >
-                Create New Coupon
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </>
       </Dialog>
     </>
   );

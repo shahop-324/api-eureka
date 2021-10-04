@@ -3,16 +3,25 @@ import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
 import { useDispatch } from "react-redux";
 import { deleteCoupon } from "../../../actions";
+import styled from "styled-components";
 
-const DeleteCoupon = (props) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+const DeleteCoupon = ({ id, openDeleteDialog, handleCloseDeleteDialog }) => {
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -21,12 +30,13 @@ const DeleteCoupon = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.openDeleteDialog}
+        open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Delete this Coupon."}
-        </DialogTitle>
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Delete this Coupon.</FormHeading>
+        </HeaderFooter>
+
         <DialogContent>
           <DialogContentText>
             You are about to delete this coupon. By doing so, this coupon code
@@ -35,19 +45,21 @@ const DeleteCoupon = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleCloseDeleteDialog}>
+          <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDeleteDialog}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteCoupon(props.id));
-              props.handleCloseDeleteDialog();
+              dispatch(deleteCoupon(id));
+              handleCloseDeleteDialog();
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
     </>
