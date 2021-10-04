@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 
 const boothSchema = new mongoose.Schema({
+  invitationStatus: {
+    type: String,
+    enum: ["Sent", "Not sent"],
+  },
+  linkIsValid: {
+    type: Boolean,
+    default: true,
+  },
+  invitationLink: {
+    type: String,
+  },
   eventId: {
     type: mongoose.Schema.ObjectId,
     ref: "Event",

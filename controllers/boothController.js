@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const apiFeatures = require("../utils/apiFeatures");
 const validator = require("validator");
 
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_KEY);
+
 const fillSocialMediaHandler = (object, updatedUser) => {
   for (let key in object) {
     const value = object[key];
@@ -19,7 +22,7 @@ const fillSocialMediaHandler = (object, updatedUser) => {
         case "facebook": {
           const regex = /(?<=com\/).+/;
           [newVal] = value.match(regex);
-         
+
           updatedUser.socialMediaHandles.set(key, newVal);
           break;
         }
@@ -70,15 +73,12 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
-
-
   const query = Booth.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   });
 
   const features = new apiFeatures(query, req.query).textFilter().tagFilter();
   const booths = await features.query;
-
 
   res.status(200).json({
     status: "SUCCESS",
@@ -91,8 +91,6 @@ exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
 
   const booth = await Booth.findById(boothId);
 
-
-
   res.status(200).json({
     status: "success",
     data: booth,
@@ -100,8 +98,30 @@ exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBooth = catchAsync(async (req, res, next) => {
-
   const boothId = req.params.id;
+
+  await Booth.findById(boothId, (err, doc) => {
+    for (let element of req.body.emails) {
+      if (!emails.includes(element)) {
+        const msg = {
+          to: element, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: "Your Event Invitation Link",
+          text: `Hi, use this link to join this event as a booth exhibitor. ${doc.invitationLink}.`,
+          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        };
+
+        sgMail
+          .send(msg)
+          .then(() => {
+            console.log("Sent mail to other booth participants.");
+          })
+          .catch(() => {
+            console.log("Failed to sent mail to other booth participants.");
+          });
+      }
+    }
+  });
 
   const updatedBooth = await Booth.findByIdAndUpdate(
     boothId,
@@ -123,7 +143,6 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     updatedBooth
   );
 
-
   if (req.body.image) {
     processedBoothObj.image = req.body.image;
   }
@@ -132,7 +151,6 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     new: true,
     validateModifiedOnly: true,
   });
-
 
   res.status(200).json({
     status: "success",
@@ -154,5 +172,39 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: id,
+  });
+});
+
+exports.sendBoothInvitation = catchAsync(async (req, res, next) => {
+  const boothId = req.params.boothId;
+
+  const boothDoc = await Booth.findById(boothId, (err, doc) => {
+    if (!err) {
+      // Send invitation mail to every one in doc.emails
+
+      for (let element of doc.emails) {
+        const msg = {
+          to: element, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: "Your Event Invitation Link",
+          text: `Hi, use this link to join this event as a booth exhibitor. ${doc.invitationLink}.`,
+          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        };
+
+        sgMail
+          .send(msg)
+          .then(() => {
+            console.log("Sent mail to booth participant.");
+          })
+          .catch(() => {
+            console.log("Failed to sent mail to booth participant.");
+          });
+      }
+    }
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Invitation sent to all booth exhibitors.",
   });
 });

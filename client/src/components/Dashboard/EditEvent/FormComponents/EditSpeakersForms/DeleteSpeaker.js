@@ -7,10 +7,8 @@ import { useTheme } from "@material-ui/core/styles";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSpeaker,
@@ -18,25 +16,23 @@ import {
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import styled from "styled-components";
 
-const DeleteSpeaker = (props) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+const DeleteSpeaker = ({ id, handleCloseDeleteSpeaker, openDeleteDialog }) => {
   const { error, isLoading } = useSelector((state) => state.speaker);
 
   const dispatch = useDispatch();
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -63,12 +59,13 @@ const DeleteSpeaker = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.openDeleteDialog}
+        open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Remove this Speaker."}
-        </DialogTitle>
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Remove this Speaker.</FormHeading>
+        </HeaderFooter>
+
         <DialogContent>
           <DialogContentText>
             By doing so, this speaker won't be able to join this event using
@@ -76,35 +73,24 @@ const DeleteSpeaker = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleCloseDeleteSpeaker}>
+          <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDeleteSpeaker}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteSpeaker(props.id));
-              props.handleCloseDeleteSpeaker();
-              setState({ open: true, vertical: "top", horizontal: "center" });
+              dispatch(deleteSpeaker(id));
+              handleCloseDeleteSpeaker();
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            Speaker removed successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

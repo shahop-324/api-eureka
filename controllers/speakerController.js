@@ -2,6 +2,9 @@ const catchAsync = require("../utils/catchAsync");
 const Speaker = require("../models/speakerModel");
 const apiFeatures = require("../utils/apiFeatures");
 const mongoose = require("mongoose");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_KEY);
+
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -30,7 +33,7 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "email",
     "image",
     "organisation",
-    "headline",
+    "bio",
     "sessions",
     "socialMediaHandles",
     "image"
@@ -85,4 +88,59 @@ exports.getAllSpeakers = catchAsync(async (req, res, next) => {
       speakers,
     },
   });
+});
+
+exports.sendInvitation = catchAsync(async (req, res, next) => {
+  const speakerId = req.params.speakerId;
+
+  const speakerName = req.body.name;
+  const speakerEmail = req.body.email;
+  const invitationLink = req.body.invitationLink;
+  const sessions = req.body.sessions;
+
+  // Send invitation and mark that invitation is sent to this speaker
+
+  const msg = {
+    to: speakerEmail, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: "Your Event Invitation Link",
+    text: `Hi, ${speakerName} use this link to join this event as a speaker. ${invitationLink}. You have been invited in these sessions ${sessions}`,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("Invitation sent to speaker.");
+      // Mark that invitation is sent
+      const updatedSpeaker = await Speaker.findByIdAndUpdate(
+        speakerId,
+        { invitationStatus: "Sent" },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      res.status(200).json({
+        status: "success",
+        message: "invitation sent to speaker.",
+        data: updatedSpeaker,
+      });
+    })
+    .catch(async (error) => {
+      console.log("Failed to send invitation to speaker");
+      // Mark that invitation is not yet sent
+      const updatedSpeaker = await Speaker.findByIdAndUpdate(
+        speakerId,
+        { invitationStatus: "Not sent" },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      res.status(400).json({
+        status: "failed",
+        message: "failed to send invitation to speaker.",
+        data: updatedSpeaker,
+      });
+    });
+
+
+  
 });

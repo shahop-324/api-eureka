@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/signin/:speakerId", authController.signInForSpeaker);
 
+router.post("/:speakerId/sendInvitation", authController.protectCommunity, speakerController.sendInvitation);
+
 router.get(
   "/:id",
   authController.protectCommunity,

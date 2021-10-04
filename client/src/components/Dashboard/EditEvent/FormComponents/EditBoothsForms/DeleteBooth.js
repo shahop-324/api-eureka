@@ -3,39 +3,33 @@ import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteBooth, errorTrackerForDeleteBooth } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import styled from "styled-components";
 
-const DeleteBooth = (props) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+const DeleteBooth = ({openDeleteDialog, handleCloseDeleteBooth, id}) => {
   const dispatch = useDispatch();
 
   const {error, isLoading} = useSelector((state) => state.booth);
 
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
-
+ 
+ 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -54,12 +48,16 @@ const DeleteBooth = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.openDeleteDialog}
+        open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Remove this Booth."}
-        </DialogTitle>
+      
+
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Remove this Booth.</FormHeading>
+        </HeaderFooter>
+
+
         <DialogContent>
           <DialogContentText>
             This booths owners won't be able to join event through earlier
@@ -67,35 +65,31 @@ const DeleteBooth = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleCloseDeleteBooth}>
+
+
+        <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDeleteBooth}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteBooth(props.id));
-              props.handleCloseDeleteBooth();
-              setState({ open: true, vertical: "top", horizontal: "center" });
+              dispatch(deleteBooth(id));
+              handleCloseDeleteBooth();
+             
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
+
+
+        
         </DialogActions>
       </Dialog>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            Booth removed successfully!
-          </Alert>
-        </Snackbar>
-      </div>
+      
     </>
   );
 };

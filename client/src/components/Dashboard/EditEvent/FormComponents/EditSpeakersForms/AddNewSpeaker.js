@@ -214,8 +214,7 @@ const AddNewSpeaker = ({
   });
 
   const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   const dispatch = useDispatch();
 

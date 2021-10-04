@@ -58,16 +58,15 @@ const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
-  export const closeSnackbar = () => async (dispatch, getState) => {
-    dispatch(snackbarActions.closeSnackBar());
-  };
+export const closeSnackbar = () => async (dispatch, getState) => {
+  dispatch(snackbarActions.closeSnackBar());
+};
 
-  export const showSnackbar = (severity, message) => async(dispatch, getState) => {
-   
+export const showSnackbar =
+  (severity, message) => async (dispatch, getState) => {
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-          message,
+        message: message,
         severity: severity,
       })
     );
@@ -75,9 +74,7 @@ const BaseURL = REACT_APP_MY_ENV
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-  }
-
-
+  };
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
@@ -1265,7 +1262,7 @@ export const createSpeaker =
           }
         );
         console.log(res);
-       
+
         res = await res.json();
         console.log(res);
 
@@ -1355,6 +1352,17 @@ export const fetchSpeakers =
     } catch (err) {
       dispatch(speakerActions.hasError(err.message));
       console.log(err);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Fetching speakers failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
     }
   };
 export const errorTrackerForFetchSpeakers =
@@ -1367,8 +1375,6 @@ export const fetchParticularSpeakerOfEvent =
     dispatch(speakerActions.startLoadingDetail());
 
     const fetchingSpeaker = async () => {
-      //console.log(id, "I am passing from particularEvent action");
-
       const res = await fetch(
         `${BaseURL}speakers/${id}`,
 
@@ -1403,6 +1409,17 @@ export const fetchParticularSpeakerOfEvent =
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
       console.log(err);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Fetching speaker failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
     }
   };
 
@@ -1456,6 +1473,17 @@ export const fetchSpeaker = (id) => async (dispatch, getState) => {
   } catch (err) {
     console.log(err);
 
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Fetching speaker failed. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
     dispatch(speakerActions.hasError(err.message));
   }
 };
@@ -1470,79 +1498,101 @@ export const editSpeaker =
 
     try {
       if (file) {
-        console.log(formValues);
+        const key = `${id}/${UUID()}.jpeg`;
 
-        console.log(file);
-
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
-
+        s3.getSignedUrl(
+          "putObject",
           {
-            headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          }
-        );
-
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
-          }
-        }
-
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
-
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
-
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
           },
-        });
 
-        console.log(awsRes);
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-        let res = await fetch(
-          `${BaseURL}speakers/${id}/update`,
+              body: file,
 
-          {
-            method: "PATCH",
-            body: JSON.stringify({
-              ...formValues,
-              image: uploadConfig.key,
-            }),
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
+            console.log(awsRes);
+
+            if (awsRes.status === 200) {
+              try {
+                let res = await fetch(
+                  `${BaseURL}speakers/${id}/update`,
+
+                  {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                      ...formValues,
+                      image: key,
+                    }),
+
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${getState().communityAuth.token}`,
+                    },
+                  }
+                );
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
+                }
+
+                res = await res.json();
+                console.log(res);
+
+                dispatch(
+                  speakerActions.EditSpeaker({
+                    speaker: res.data.updatedSpeaker,
+                  })
+                );
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Speaker updated successfully!",
+                    severity: "success",
+                  })
+                );
+
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (error) {
+                console.log(error);
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to update speaker. Please try again",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
+              }
+            } else {
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Failed to update speaker. Please try again",
+                  severity: "error",
+                })
+              );
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 4000);
+            }
           }
-        );
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-
-        res = await res.json();
-        console.log(res);
-
-        dispatch(
-          speakerActions.EditSpeaker({
-            speaker: res.data.updatedSpeaker,
-          })
         );
       } else {
-        console.log(id);
-        console.log(formValues);
-
         let res = await fetch(
           `${BaseURL}speakers/${id}/update`,
 
@@ -1575,9 +1625,28 @@ export const editSpeaker =
             speaker: res.data.updatedSpeaker,
           })
         );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Speaker updated successfully!",
+            severity: "success",
+          })
+        );
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 4000);
       }
     } catch (err) {
       dispatch(speakerActions.detailHasError(err.message));
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update speaker. Please try again",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 export const errorTrackerForEditSpeaker = () => async (dispatch, getState) => {
@@ -1615,9 +1684,29 @@ export const deleteSpeaker = (id) => async (dispatch, getState) => {
         id: res.id,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Speaker deleted successfully!",
+        severity: "success",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
   } catch (err) {
     console.log(err);
     dispatch(speakerActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to delte speaker. Please try again",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
   }
 };
 
@@ -1628,73 +1717,97 @@ export const errorTrackerForDeletingSpeaker =
 // booths  actions
 
 export const createBooth =
-  (formValues, file, id) => async (dispatch, getState) => {
+  (formValues, file, id, handleClose) => async (dispatch, getState) => {
     dispatch(boothActions.startLoading());
 
     try {
       if (file) {
-        console.log(formValues);
-        console.log(file);
+        const key = `${id}/${UUID()}.jpeg`;
 
-        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
-          headers: {
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        });
-
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
-          }
-        }
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
-
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
-
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-        // const amazoneFile = await awsRes.json();
-        // console.log(amazoneFile);
-        console.log(awsRes);
-
-        let res = await fetch(
-          `${BaseURL}booths/${id}/addBooth`,
-
+        s3.getSignedUrl(
+          "putObject",
           {
-            method: "POST",
-            body: JSON.stringify({
-              ...formValues,
-              image: uploadConfig.key,
-            }),
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
+          },
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().communityAuth.token}`,
-            },
-          }
-        );
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-        res = await res.json();
-        console.log(res);
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-        dispatch(
-          boothActions.CreateBooth({
-            booth: res.data,
-          })
+              body: file,
+
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
+
+            console.log(awsRes);
+
+            if (awsRes.status === 200) {
+              try {
+                let res = await fetch(
+                  `${BaseURL}booths/${id}/addBooth`,
+
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      ...formValues,
+                      image: key,
+                    }),
+
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${getState().communityAuth.token}`,
+                    },
+                  }
+                );
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
+                }
+                res = await res.json();
+                console.log(res);
+
+                handleClose();
+
+                dispatch(
+                  boothActions.CreateBooth({
+                    booth: res.data,
+                  })
+                );
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Added booth successfully!",
+                    severity: "success",
+                  })
+                );
+
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (error) {
+                eventActions.hasError(error.message);
+                console.log(error);
+                handleClose();
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to add booth. Please try again later!",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
+              }
+            }
+          }
         );
       } else {
         let res = await fetch(
@@ -1722,14 +1835,36 @@ export const createBooth =
         res = await res.json();
         console.log(res);
 
+        handleClose();
+
         dispatch(
           boothActions.CreateBooth({
             booth: res.data,
           })
         );
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Added booth successfully!",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
       }
     } catch (err) {
       dispatch(boothActions.hasError(err.message));
+      handleClose();
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to add booth. Please try again later!",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 export const errorTrackerForCreateBooth = () => async (dispatch, getState) => {
@@ -1789,6 +1924,16 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch booths. Please try again later!",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
   }
 };
 
@@ -1833,6 +1978,16 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch booth. Please try again later!",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
   }
 };
 export const errorTrackerForFetchBooth = () => async (dispatch, getState) => {
@@ -1843,65 +1998,85 @@ export const editBooth =
   (formValues, file, id) => async (dispatch, getState) => {
     try {
       if (file) {
-        console.log(formValues);
+        const key = `${id}/${UUID()}.jpeg`;
 
-        console.log(file);
-
-        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
-          headers: {
-            Authorization: `Bearer ${getState().auth.token}`,
+        s3.getSignedUrl(
+          "putObject",
+          {
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
           },
-        });
 
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
+
+              body: file,
+
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
+
+            console.log(awsRes);
+
+            if (awsRes.status === 200) {
+              try {
+                let res = await fetch(`${BaseURL}booths/${id}/updateBooth`, {
+                  method: "PATCH",
+                  body: JSON.stringify({
+                    ...formValues,
+                    image: key,
+                  }),
+
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getState().communityAuth.token}`,
+                  },
+                });
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
+                }
+                res = await res.json();
+                console.log(res);
+
+                dispatch(
+                  boothActions.EditBooth({
+                    booth: res.data,
+                  })
+                );
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Updated booth successfully!",
+                    severity: "success",
+                  })
+                );
+
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (error) {
+                eventActions.hasError(error.message);
+                console.log(error);
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to update booth. Please try again later.",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
+              }
+            }
           }
-        }
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
-
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
-
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-        // const amazoneFile = await awsRes.json();
-        // console.log(amazoneFile);
-        console.log(awsRes);
-
-        let res = await fetch(`${BaseURL}booths/${id}/updateBooth`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...formValues,
-            image: uploadConfig.key,
-          }),
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        });
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-        res = await res.json();
-        console.log(res);
-
-        dispatch(
-          boothActions.EditBooth({
-            booth: res.data,
-          })
         );
       } else {
         console.log(id);
@@ -1935,9 +2110,30 @@ export const editBooth =
             booth: res.data,
           })
         );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Updated booth successfully!",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
       }
     } catch (err) {
       boothActions.hasError(err.message);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update booth. Please try again later.",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 export const errorTrackerForEditBooth = () => async (dispatch, getState) => {
@@ -1971,15 +2167,35 @@ export const deleteBooth = (id) => async (dispatch, getState) => {
         id: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Deleted booth successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   } catch (err) {
     dispatch(boothActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to delete booth. Please try again later.",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForDeleteBooth = () => async (dispatch, getState) => {
   dispatch(boothActions.disabledError());
 };
-
-// sponsors actions
 
 export const createSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
@@ -3060,8 +3276,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "New session added successfully!",
+        message: "New session added successfully!",
         severity: "success",
       })
     );
@@ -3069,8 +3284,6 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-
-
   } catch (err) {
     console.log(err);
 
@@ -3078,8 +3291,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Adding session failed. Please try again later.",
+        message: "Adding session failed. Please try again later.",
         severity: "error",
       })
     );
@@ -3087,7 +3299,6 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-   
   }
 };
 export const errorTrackerForCreateSession =
@@ -3141,11 +3352,9 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
-
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Fetching sessions failed. Please try again later.",
+        message: "Fetching sessions failed. Please try again later.",
         severity: "error",
       })
     );
@@ -3211,12 +3420,11 @@ export const fetchSessionsForUser =
 
       dispatch(
         snackbarActions.openSnackBar({
-          message:
-          "Fetching sessions failed. Please try again later.",
+          message: "Fetching sessions failed. Please try again later.",
           severity: "error",
         })
       );
-  
+
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
@@ -3264,8 +3472,7 @@ export const fetchSession = (id) => async (dispatch, getState) => {
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Fetching sessions failed. Please try again later.",
+        message: "Fetching sessions failed. Please try again later.",
         severity: "error",
       })
     );
@@ -3301,16 +3508,13 @@ export const fetchSessionForSessionStage =
         })
       );
     } catch (err) {
-
-
       dispatch(
         snackbarActions.openSnackBar({
-          message:
-          "Fetching sessions failed. Please try again later.",
+          message: "Fetching sessions failed. Please try again later.",
           severity: "error",
         })
       );
-  
+
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
@@ -3369,19 +3573,17 @@ export const fetchParticularSessionOfEvent =
         );
       }
     } catch (err) {
-
       dispatch(
         snackbarActions.openSnackBar({
-          message:
-          "Fetching session details failed please try again later!",
+          message: "Fetching session details failed please try again later!",
           severity: "error",
         })
       );
-  
+
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
-    
+
       dispatch(sessionActions.detailHasError(err.message));
       console.log(err);
     }
@@ -3425,37 +3627,29 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
-
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Session updated successfully!",
-        severity:"success",
+        message: "Session updated successfully!",
+        severity: "success",
       })
     );
 
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-    
-
-
-   
   } catch (err) {
     dispatch(sessionActions.detailHasError(err.message));
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Failed to update session. Please try again later!",
-        severity:"error",
+        message: "Failed to update session. Please try again later!",
+        severity: "error",
       })
     );
 
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-
   }
 };
 export const errorTrackerForEditSession = () => async (dispatch, getState) => {
@@ -3494,32 +3688,28 @@ export const deleteSession = (id) => async (dispatch, getState) => {
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Session removed successfully!",
-        severity:"success",
+        message: "Session removed successfully!",
+        severity: "success",
       })
     );
 
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-
   } catch (err) {
     dispatch(sessionActions.hasError(err.message));
     console.log(err);
 
     dispatch(
       snackbarActions.openSnackBar({
-        message:
-        "Deleting session failed. Please try again later.",
-        severity:"error",
+        message: "Deleting session failed. Please try again later.",
+        severity: "error",
       })
     );
 
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-
   }
 };
 export const errorTrackerForDeleteSession =
@@ -6305,32 +6495,30 @@ export const updateCommunity =
 
 export const editRegistrationForm =
   (formValues, eventId) => async (dispatch, getState) => {
-    let res = await fetch(
-      `${BaseURL}events/${eventId}/updateRegistrationForm`,
-
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-        }),
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
-      }
-    }
-    res = await res.json();
-
     try {
-      console.log(res, 6147);
+      let res = await fetch(
+        `${BaseURL}events/${eventId}/updateRegistrationForm`,
+
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
 
       dispatch(
         eventActions.EditEvent({
@@ -6348,10 +6536,10 @@ export const editRegistrationForm =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
 
-      dispatch(eventActions.hasError(err.message));
+      dispatch(eventActions.hasError(error.message));
 
       dispatch(
         snackbarActions.openSnackBar({
@@ -6365,3 +6553,115 @@ export const editRegistrationForm =
       }, 6000);
     }
   };
+
+export const sendSpeakerInvitation =
+  (name, email, speakerId, invitationLink, sessions) =>
+  async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}speakers/${speakerId}/sendInvitation`,
+
+        {
+          method: "POST",
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            invitationLink: invitationLink,
+            sessions: sessions,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data, "op");
+
+      dispatch(
+        speakerActions.EditSpeaker({
+          speaker: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Invitation sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Sending invitation failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}booths/${boothId}/sendBoothInvitation`,
+
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Invitation sent successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+  } catch (error) {
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Sending invitation failed. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+  }
+};

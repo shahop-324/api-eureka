@@ -187,15 +187,14 @@ const Booths = () => {
     setOpen(true);
   };
 
-  const { booths, isLoading, error } = useSelector((state) => {
-    return state.booth;
-  });
+  const { booths, isLoading, error } = useSelector((state) => state.booth);
 
   const renderBoothList = (booths) => {
     return booths
       .slice(0)
       .reverse()
       .map((booth) => {
+        if (!booth) return <div></div>;
         return (
           <BoothDetailsCard
             url={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
@@ -204,6 +203,7 @@ const Booths = () => {
             name={booth.name}
             tagline={booth.tagline}
             emails={booth.emails}
+            invitationLink={booth.invitationLink}
             boothTags={booth.tags}
           />
         );
@@ -219,7 +219,6 @@ const Booths = () => {
 
     dispatch(errorTrackerForFetchBooths());
     return dispatch(errorTrackerForCreateBooth());
-    // throw new Error(error);
   }
 
   return (
@@ -254,18 +253,10 @@ const Booths = () => {
                 onChange={(value) => setTagText(value.value)}
               />
             </div>
-            {/* <Link
-      
-              className="btn btn-outline-primary btn-outline-text me-3"
-              to={`/event-landing-page/${id}/${communityId}`}
-              target="_blank"
-            >
-              Preview Landing Page
-            </Link> */}
+
             <div
               onClick={() => {
                 handleNewBooth();
-                // alert("Please switch to professional plan to add booths in your event.")
               }}
             >
               <button className="btn btn-primary btn-outline-text">

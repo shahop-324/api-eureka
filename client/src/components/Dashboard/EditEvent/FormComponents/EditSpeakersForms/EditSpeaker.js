@@ -1,15 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 import { Avatar, SwipeableDrawer } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
@@ -18,11 +15,8 @@ import { reduxForm, Field } from "redux-form";
 import {
   editSpeaker,
   errorTrackerForEditSpeaker,
-  fetchParticularSpeakerOfEvent,
 } from "../../../../../actions";
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import Loader from "../../../../Loader";
 
 import styled from "styled-components";
@@ -55,20 +49,6 @@ const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
-const FormHeading = styled.div`
-  font-size: 1.2rem;
-  font-family: "Ubuntu";
-  font-weight: 600;
-  color: #212121;
-`;
-
-const FormSubHeading = styled.div`
-  font-size: 0.87rem;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  color: #424242;
-`;
-
 const FormError = styled.div`
   font-family: "Ubuntu";
   color: red;
@@ -82,10 +62,6 @@ const FormWarning = styled.div`
   font-weight: 400;
   font-size: 0.8rem;
 `;
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const styles = {
   control: (base) => ({
@@ -197,24 +173,36 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-const EditSpeakerForm = (props) => {
-  const { handleSubmit, pristine, submitting, reset } = props;
-
+const EditSpeakerForm = ({
+  open,
+  handleClose,
+  handleSubmit,
+  pristine,
+  submitting,
+  reset,
+  id,
+}) => {
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.speaker
   );
 
-  const params = useParams();
-  const id = params.id;
+  const sessions = useSelector((state) => state.session.sessions);
 
+  const SessionOptions = sessions.map((session) => {
+    return {
+      label: session.name,
+      value: session.id,
+    };
+  });
+
+  const params = useParams();
   const dispatch = useDispatch();
 
   const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const speaker = useSelector((state) => {
     return state.speaker.speakers.find((speaker) => {
-      return speaker._id === props.id;
+      return speaker._id === id;
     });
   });
   const imgKey = speaker.image;
@@ -222,18 +210,6 @@ const EditSpeakerForm = (props) => {
   if (imgKey) {
     imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
-
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
@@ -251,7 +227,7 @@ const EditSpeakerForm = (props) => {
 
     ModifiedFormValues.firstName = formValues.firstName;
     ModifiedFormValues.lastName = formValues.lastName;
-    ModifiedFormValues.headline = formValues.headline;
+    ModifiedFormValues.bio = formValues.bio;
     ModifiedFormValues.phoneNumber = formValues.phoneNumber;
     ModifiedFormValues.email = formValues.email;
     ModifiedFormValues.organisation = formValues.organisation;
@@ -260,6 +236,7 @@ const EditSpeakerForm = (props) => {
       facebook: formValues.facebook,
       twitter: formValues.twitter,
       linkedin: formValues.linkedin,
+      website: formValues.website,
     };
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
@@ -272,11 +249,7 @@ const EditSpeakerForm = (props) => {
     }
     ModifiedFormValues.sessions = modifiedSessions;
 
-    console.log(ModifiedFormValues);
-
-    setState({ vertical: "top", horizontal: "center", open: true });
-    dispatch(editSpeaker(ModifiedFormValues, file, props.id));
-    console.log(file);
+    dispatch(editSpeaker(ModifiedFormValues, file, id));
   };
 
   if (detailError) {
@@ -290,7 +263,7 @@ const EditSpeakerForm = (props) => {
       <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
-          open={props.open}
+          open={open}
           onOpen={() => {
             console.log("Side nav was opended");
           }}
@@ -313,7 +286,7 @@ const EditSpeakerForm = (props) => {
                 <div className="coupon-overlay-form-headline">Edit Speaker</div>
                 <div
                   className="overlay-form-close-button"
-                  onClick={props.handleClose}
+                  onClick={handleClose}
                 >
                   <IconButton aria-label="delete">
                     <CancelRoundedIcon />
@@ -418,7 +391,6 @@ const EditSpeakerForm = (props) => {
                         type="text"
                         classes="form-control"
                         ariadescribedby="emailHelp"
-                        // placeholder="Hi there! I am here"
                         component={renderTextArea}
                       />
                     </div>
@@ -444,18 +416,13 @@ const EditSpeakerForm = (props) => {
                   </div>
 
                   <div className="mb-3 overlay-form-input-row">
-                    <FormLabel
-                      for="communityName"
-                      className="form-label form-label-customized"
-                    >
-                      Select Sessions
-                    </FormLabel>
+                    <FormLabel for="communityName">Select Sessions</FormLabel>
                     <Field
                       name="sessions"
-                      isMulti
                       placeholder="Select sessions"
                       styles={styles}
                       menuPlacement="top"
+                      options={SessionOptions}
                       component={renderReactSelect}
                     />
                   </div>
@@ -551,14 +518,6 @@ const EditSpeakerForm = (props) => {
                       type="submit"
                       disabled={pristine || submitting}
                       className="btn btn-primary btn-outline-text"
-                      onClick={() => {
-                        props.handleClose();
-                        setState({
-                          open: true,
-                          vertical: "top",
-                          horizontal: "center",
-                        });
-                      }}
                     >
                       Save Changes
                     </button>
@@ -569,19 +528,6 @@ const EditSpeakerForm = (props) => {
           )}
         </SwipeableDrawer>
       </React.Fragment>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            Speaker info updated successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

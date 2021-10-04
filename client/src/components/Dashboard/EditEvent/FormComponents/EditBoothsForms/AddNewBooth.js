@@ -2,14 +2,9 @@
 import React, { useState } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
-
 import Avatar from "@material-ui/core/Avatar";
 
 import { makeStyles } from "@material-ui/core/styles";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
@@ -55,20 +50,6 @@ const FormLabel = styled.label`
 `;
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
-`;
-
-const FormHeading = styled.div`
-  font-size: 1.2rem;
-  font-family: "Ubuntu";
-  font-weight: 600;
-  color: #212121;
-`;
-
-const FormSubHeading = styled.div`
-  font-size: 0.87rem;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  color: #424242;
 `;
 
 const FormError = styled.div`
@@ -224,15 +205,10 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
   const id = params.id;
 
   const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
-
-  
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -260,12 +236,8 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
 
-    dispatch(createBooth(ModifiedFormValues, file, id));
-
-
-
+    dispatch(createBooth(ModifiedFormValues, file, id, handleClose));
     dispatch(fetchParticularEventOfCommunity(id));
-    handleClose();
   };
 
   if (isLoading) {

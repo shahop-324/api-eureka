@@ -186,33 +186,61 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const eventId = req.params.id;
 
-  // fetch event for which I have to create a booth
   const eventGettingBooth = await Event.findById(eventId);
 
-  // Create a new booth document with recived
+  let createdBooth = await Booth.create(
+    {
+      name: req.body.name,
+      emails: req.body.emails,
+      tagline: req.body.tagline,
+      description: req.body.description,
+      image: req.body.image,
+      tags: req.body.tags,
+      eventId: eventGettingBooth.id,
+    },
+    async (err, doc) => {
+      console.log(err);
 
-  // Create a new booth document with recived req.body info
-  const processedObj = fillSocialMediaHandler(req.body.socialMediaHandles);
+      // save refrence of this booth in its event
+      try {
+        let invitationLink = `http://localhost:3001/booth-invitation/${doc._id}`;
+        eventGettingBooth.booths.push(doc._id);
+        for (let element of req.body.tags) {
+          if (!eventGettingBooth.boothTags.includes(element)) {
+            eventGettingBooth.boothTags.push(element);
+          }
+        }
 
-  const createdBooth = await Booth.create({
-    name: req.body.name,
-    emails: req.body.emails,
-    tagline: req.body.tagline,
-    description: req.body.description,
-    image: req.body.image,
-    socialMediaHandles: processedObj,
-    tags: req.body.tags,
-    eventId: eventGettingBooth.id,
-  });
+        for (let element of req.body.emails) {
+          const msg = {
+            to: element,
+            from: "shreyanshshah242@gmail.com",
+            subject: "Your Event Invitation Link (Booth exhibitor mail)",
+            text: `use this link to join this event as a booth exhibitor. ${invitationLink}`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
 
-  // save refrence of this booth in its event
-  eventGettingBooth.booths.push(createdBooth.id);
-  for (let element of req.body.tags) {
-    eventGettingBooth.boothTags.push(element);
-  }
-  await eventGettingBooth.save({ validateModifiedOnly: true });
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Invitation sent to booth exhibitor.");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send invitation to booth exhibitor");
+            });
+        }
 
-  // send newly created booth back to client
+        (doc.invitationStatus = "Sent"), (doc.invitationLink = invitationLink);
+        doc.socialMediaHandles = req.body.socialMediaHandles;
+        await doc.save({ new: true, validateModifiedOnly: true });
+
+        await eventGettingBooth.save({ validateModifiedOnly: true });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
+
   res.status(200).json({
     status: "success",
     data: createdBooth,
@@ -361,22 +389,20 @@ exports.addSession = catchAsync(async (req, res, next) => {
     );
   }
 
-  let session = await Session.create(
-    {
-      name: req.body.name,
-      startDate: req.body.startDate,
-      startTime: req.body.startTime,
-      description: req.body.description,
-      endDate: req.body.endDate,
-      endTime: req.body.endTime,
-      speaker: processedArray,
-      eventId: eventGettingSessions.id,
-    }
-  );
+  let session = await Session.create({
+    name: req.body.name,
+    startDate: req.body.startDate,
+    startTime: req.body.startTime,
+    description: req.body.description,
+    endDate: req.body.endDate,
+    endTime: req.body.endTime,
+    speaker: processedArray,
+    eventId: eventGettingSessions.id,
+  });
 
   session.tags = req.body.tags;
 
-  await session.save({new: true, validateModifiedOnly: true});
+  await session.save({ new: true, validateModifiedOnly: true });
 
   const populatedSession = await Session.findById(session.id).populate(
     "speaker"

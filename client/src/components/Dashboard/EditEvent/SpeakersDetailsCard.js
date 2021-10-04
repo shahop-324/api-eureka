@@ -8,15 +8,12 @@ import Avatar from "@material-ui/core/Avatar";
 import EditSpeaker from "./FormComponents/EditSpeakersForms/EditSpeaker";
 import DeleteSpeaker from "./FormComponents/EditSpeakersForms/DeleteSpeaker";
 import { fetchParticularSpeakerOfEvent } from "../../../actions";
-import { useDispatch } from "react-redux";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useDispatch, useSelector } from "react-redux";
 import MailIcon from "@mui/icons-material/Mail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SpeakerPreview from "./FormComponents/EditSpeakersForms/SpeakerPerview";
-
-import styled from "styled-components";
 import Chip from "@mui/material/Chip";
-
+import {sendSpeakerInvitation, showSnackbar} from "./../../../actions";
 
 
 const SpeakersDetailsCard = ({
@@ -33,6 +30,8 @@ const SpeakersDetailsCard = ({
   console.log(sessions);
   console.log(id);
 
+  const {isLoading, error} = useSelector((state) => state.speaker);
+
   const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
@@ -40,7 +39,7 @@ const SpeakersDetailsCard = ({
   const [openPreview, setOpenPreview] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  // const dispatch = useDispatch();
+
   const handleDeleteSpeaker = () => {
     setOpenDeleteDialog(true);
   };
@@ -63,8 +62,13 @@ const SpeakersDetailsCard = ({
   };
 
   const truncateText = (str, n) => {
+    if (!str) return;
     return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
+
+  if(isLoading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <>
@@ -91,29 +95,12 @@ const SpeakersDetailsCard = ({
                   className="ms-3 px-2 registration-name-styled"
                   style={{ fontFamily: "Inter", fontSize: "0.85rem" }}
                 >
-                  {/* {name} */}
                   {truncateText(name, 20)}
                 </div>
               </div>
             </div>
-            {/* <div className="event-name-d" style={{width: '100%'}}>
-            The Craft Workshop
-          </div> */}
           </div>
-          {/* <div
-          className="event-visibility-field"
-          style={{
-            width: "100%",
-          }}
-        >
-          <div
-            className="event-field-label registrations-field-label"
-            style={{ width: "100%", fontFamily: "Inter", fontSize: "0.85rem", fontWeight: "500" }}
-          >
-           
-            {truncateText(headline, 25)}
-          </div>
-        </div> */}
+
           <div
             className="event-status-field"
             style={{
@@ -132,7 +119,6 @@ const SpeakersDetailsCard = ({
                   fontWeight: "500",
                 }}
               >
-                {/* {email} */}
                 {truncateText(email, 20)}
               </div>
             </div>
@@ -152,19 +138,12 @@ const SpeakersDetailsCard = ({
                   sessions.map((session) => {
                     console.log(session);
                     return (
-                      <div
-                        key={session.id}
-                        className="me-3 px-3 py-2 event-name-chip-review"
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "Inter",
-                          fontSize: "0.85rem",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {/* {session.name} */}
-                        {truncateText(session.name, 35)}
-                      </div>
+                      <Chip
+                        style={{ width: "fit-content" }}
+                        label={truncateText(session.name, 35)}
+                        color="primary"
+                        variant="outlined"
+                      />
                     );
                   })
                 ) : (
@@ -210,7 +189,6 @@ const SpeakersDetailsCard = ({
                     return (
                       <Chip label="Not sent" color="error" variant="outlined" />
                     );
-                    
                 }
               })()}
             </div>
@@ -230,10 +208,10 @@ const SpeakersDetailsCard = ({
                   <DeleteRoundedIcon />
                 </IconButton>
               </div>
-            
+
               <div
                 onClick={() => {
-                  alert("Email invitation sent!");
+                  dispatch(sendSpeakerInvitation(name, email, id, invitationLink, sessions))
                 }}
               >
                 <IconButton color="secondary" aria-label="add to shopping cart">
@@ -242,7 +220,15 @@ const SpeakersDetailsCard = ({
               </div>
               <div
                 onClick={() => {
-                  alert("Invitation Link copied to clipboard!");
+                  navigator.clipboard.writeText(invitationLink).then(function() {
+                    console.log('Async: Copying to clipboard was successful!');
+                    dispatch(showSnackbar("success", "Copied to clipboard!"));
+                  }, function(err) {
+                    console.error('Async: Could not copy text: ', err);
+                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
+                  });
+
+                  
                 }}
               >
                 <IconButton color="secondary" aria-label="add to shopping cart">

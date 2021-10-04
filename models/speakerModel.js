@@ -8,6 +8,7 @@ const speakerSchema = new mongoose.Schema(
       enum: ["Active", "Inactive", "Deleted"],
       default: "Active",
     },
+    
     firstName: {
       type: String,
       trim: true,
@@ -73,9 +74,11 @@ const speakerSchema = new mongoose.Schema(
     dashboardLink: {
       type: String,
     },
-    order: {
-      type: Number,
+    linkIsValid: {
+      type: Boolean,
+      default: true,
     },
+   
   },
   {
     toJSON: { virtuals: true },
