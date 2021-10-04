@@ -119,7 +119,7 @@ const SideNavEditLean = ({
               Event entry & participants
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
               handleScheduleClick();
@@ -147,7 +147,7 @@ const SideNavEditLean = ({
             >
               Schedule
             </div>
-          </div>
+          </div> */}
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
@@ -299,7 +299,7 @@ const SideNavEditLean = ({
             </div>
           </div>
 
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleReceptionSettingsClick();
@@ -327,7 +327,7 @@ const SideNavEditLean = ({
             >
               Reception settings
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
@@ -357,7 +357,7 @@ const SideNavEditLean = ({
               Videos
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleStageVibesClick();
@@ -385,7 +385,7 @@ const SideNavEditLean = ({
             >
               Stage vibes
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
@@ -618,7 +618,7 @@ const SideNavEditLean = ({
               Reviews
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleTrackingClick();
@@ -646,7 +646,7 @@ const SideNavEditLean = ({
             >
               Tracking
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

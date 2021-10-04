@@ -216,8 +216,6 @@ const TeamManagement = (props) => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <SectionHeading className="">Team Management</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
-            
-
             {(() => {
               switch (activeTab) {
                 case "members":

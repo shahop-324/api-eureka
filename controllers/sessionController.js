@@ -24,7 +24,7 @@ exports.getParticularSession = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSession = catchAsync(async (req, res, next) => {
-
+console.log(req.body);
   const filteredBody = filterObj(
     req.body,
     "name",
@@ -33,7 +33,8 @@ exports.updateSession = catchAsync(async (req, res, next) => {
     "startTime",
     "endDate",
     "endTime",
-    "speaker"
+    "speaker",
+    "tags",
   );
 
   const updatedSession = await Session.findByIdAndUpdate(

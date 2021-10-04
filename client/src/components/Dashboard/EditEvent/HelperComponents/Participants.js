@@ -170,33 +170,9 @@ const Participants = () => {
           >
             Export
           </Button>
-          <button
-            className="btn btn-outline-text btn-outline-primary"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            <AddIcon style={{ fontSize: "20px" }} className="me-2" />
-            <span>Add participants</span>
-          </button>
+         
 
-          {/* <div className="ms-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="top"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
-
-            <div className="ms-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="top"
-                options={timelineOptions}
-                defaultValue={timelineOptions[0]}
-              />
-            </div> */}
+          
         </div>
       </div>
       <div className="event-management-content-grid px-4 mb-4 py-4">

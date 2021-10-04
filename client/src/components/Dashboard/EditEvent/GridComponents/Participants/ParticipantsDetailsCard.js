@@ -42,7 +42,7 @@ const handleClose = () => {
 }
   return (
     <>
-      <div className="registrations-field-value-container">
+      <div className="registrations-field-value-container" style={{gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr"}}>
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5 d-flex flex-row ">
             {/* attendee avatar and name */}
@@ -93,18 +93,7 @@ const handleClose = () => {
             </div>
           </div>
         </div>
-        <div className="registrations-invoice-field">
-          <div
-            className="registrations-field-label registrations-field-value-modified registration-more-details-icon px-3"
-            onClick={() => {
-            //   dispatch(fetchParticularRegistration(id))
-            //   handleSeeMoreDetails();
-            }}
-          >
-            <ReceiptOutlinedIcon />
-            {/* clickable invoice icon */}
-          </div>
-        </div>
+        
       </div>
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />

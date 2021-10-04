@@ -58,9 +58,26 @@ const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
-export const closeSnackbar = () => async (dispatch, getState) => {
-  dispatch(snackbarActions.closeSnackBar());
-};
+  export const closeSnackbar = () => async (dispatch, getState) => {
+    dispatch(snackbarActions.closeSnackBar());
+  };
+
+  export const showSnackbar = (severity, message) => async(dispatch, getState) => {
+   
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+          message,
+        severity: severity,
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+
+
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {
@@ -3040,10 +3057,37 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
         session: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "New session added successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
+
   } catch (err) {
     console.log(err);
 
     dispatch(sessionActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Adding session failed. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+   
   }
 };
 export const errorTrackerForCreateSession =
@@ -3097,6 +3141,19 @@ export const fetchSessions = (id, term) => async (dispatch, getState) => {
       })
     );
   } catch (err) {
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Fetching sessions failed. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
     dispatch(sessionActions.hasError(err.message));
     console.log(err);
   }
@@ -3151,6 +3208,18 @@ export const fetchSessionsForUser =
     } catch (err) {
       console.log(err);
       dispatch(sessionActions.hasError(err.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:
+          "Fetching sessions failed. Please try again later.",
+          severity: "error",
+        })
+      );
+  
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
     }
   };
 export const errorTrackerForFetchSessionsForUser =
@@ -3192,6 +3261,18 @@ export const fetchSession = (id) => async (dispatch, getState) => {
   } catch (err) {
     console.log(err);
     dispatch(sessionActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Fetching sessions failed. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   }
 };
 export const errorTrackerForFetchSession = () => async (dispatch, getState) => {
@@ -3220,8 +3301,19 @@ export const fetchSessionForSessionStage =
         })
       );
     } catch (err) {
-      console.log(err);
 
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:
+          "Fetching sessions failed. Please try again later.",
+          severity: "error",
+        })
+      );
+  
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
       dispatch(sessionActions.hasError(err.message));
     }
   };
@@ -3277,6 +3369,19 @@ export const fetchParticularSessionOfEvent =
         );
       }
     } catch (err) {
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:
+          "Fetching session details failed please try again later!",
+          severity: "error",
+        })
+      );
+  
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    
       dispatch(sessionActions.detailHasError(err.message));
       console.log(err);
     }
@@ -3294,7 +3399,6 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
 
     const res = await fetch(`${BaseURL}sessions/${id}/update`, {
       method: "POST",
-      // body: {...formValues},
       body: JSON.stringify({
         ...formValues,
       }),
@@ -3320,9 +3424,38 @@ export const editSession = (formValues, id) => async (dispatch, getState) => {
         session: result.data.updatedSession,
       })
     );
+
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Session updated successfully!",
+        severity:"success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+    
+
+
+   
   } catch (err) {
     dispatch(sessionActions.detailHasError(err.message));
-    console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Failed to update session. Please try again later!",
+        severity:"error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
   }
 };
 export const errorTrackerForEditSession = () => async (dispatch, getState) => {
@@ -3358,9 +3491,35 @@ export const deleteSession = (id) => async (dispatch, getState) => {
         id: res.data.id,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Session removed successfully!",
+        severity:"success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
   } catch (err) {
     dispatch(sessionActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message:
+        "Deleting session failed. Please try again later.",
+        severity:"error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
   }
 };
 export const errorTrackerForDeleteSession =

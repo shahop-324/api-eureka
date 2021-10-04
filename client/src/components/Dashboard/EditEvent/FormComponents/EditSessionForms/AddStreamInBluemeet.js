@@ -26,18 +26,56 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
-const MatchingRule = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #212121;
-`;
+let hostOptions;
+let coHostOptions;
 
 const WhoCanJoinThis = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.8rem;
   color: #212121;
+`;
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
 `;
 
 function Alert(props) {
@@ -65,19 +103,8 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
     <div className={className}>
       <MultiTagInput input={input} value={input.value} />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -93,7 +120,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -102,19 +129,8 @@ const renderInput = ({
         required
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -130,7 +146,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <StyledTextArea
         rows="2"
         type={type}
         {...input}
@@ -141,19 +157,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -184,22 +189,36 @@ const renderReactSelect = ({
   </div>
 );
 
-const AddStreamInBluemeet = (props) => {
+const AddStreamInBluemeet = ({
+  open,
+  handleClose,
+  handleSubmit,
+  pristine,
+  submitting,
+}) => {
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
+
+  const { invitations, communityManagers } = useSelector(
+    (state) => state.community
+  );
+
+  const { superAdminName, superAdminEmail, superAdminImage } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  hostOptions = communityManagers.map((el) => {
+    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})` };
   });
 
-  const { vertical, horizontal, open } = state;
+  hostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
 
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
+  coHostOptions = communityManagers.map((el) => {
+    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})`};
+  });
 
-  const { handleSubmit, pristine, submitting } = props;
+  coHostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
+
   const dispatch = useDispatch();
 
   const speakers = useSelector((state) => state.speaker.speakers);
@@ -215,10 +234,7 @@ const AddStreamInBluemeet = (props) => {
 
   const params = useParams();
   const id = params.id;
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+
   const onSubmit = (formValues) => {
     console.log(formValues);
     const speakersArray = [];
@@ -241,12 +257,8 @@ const AddStreamInBluemeet = (props) => {
     // console.log(ModifiedFormValues);
     // showResults(ModifiedFormValues);
     // dispatch(createSession(ModifiedFormValues, id)); // TODO Dispatch this action to make a request to our api.
-    props.handleClose();
-    setState({ open: true, vertical: "top", horizontal: "center" });
+    handleClose();
   };
-  const theme = useTheme();
-
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (isLoading) {
     return (
@@ -271,7 +283,7 @@ const AddStreamInBluemeet = (props) => {
       <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
-          open={props.open}
+          open={open}
           onOpen={() => {
             console.log("Side nav was opended");
           }}
@@ -279,315 +291,248 @@ const AddStreamInBluemeet = (props) => {
             console.log("Side nav was closed");
           }}
         >
-          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-            <div className="create-new-coupon-form px-4 py-4">
-              <div className="form-heading-and-close-button mb-4">
-                <div></div>
-                <div className="coupon-overlay-form-headline">Add Stream</div>
-                <div
-                  className="overlay-form-close-button"
-                  onClick={props.handleClose}
-                >
-                  <IconButton aria-label="delete">
-                    <CancelRoundedIcon />
-                  </IconButton>
-                </div>
+          <>
+            <HeaderFooter className="form-heading-and-close-button mb-4 py-3 px-4">
+              <div></div>
+              <div className="coupon-overlay-form-headline">Add Stream</div>
+              <div className="overlay-form-close-button" onClick={handleClose}>
+                <IconButton aria-label="delete">
+                  <CancelRoundedIcon />
+                </IconButton>
               </div>
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="eventEndDate"
-                  className="form-label form-label-customized"
-                >
-                  Name
-                </label>
-                <Field
-                  name="name"
-                  type="text"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Structuring Your Bussiness for success"
-                  component={renderInput}
-                />
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="eventEndDate"
-                  className="form-label form-label-customized"
-                >
-                  Description
-                </label>
-                <Field
-                  name="description"
-                  type="textarea"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Structuring Your Bussiness for success"
-                  component={renderTextArea}
-                />
-              </div>
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Start Date
-                  </label>
-                  <Field
-                    name="startDate"
-                    type="date"
-                    value="2021-07-21"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Start Time
-                  </label>
-                  <Field
-                    name="startTime"
-                    type="time"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    End Date
-                  </label>
-                  <Field
-                    name="endDate"
-                    type="date"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    End Time
-                  </label>
-                  <Field
-                    name="endTime"
-                    type="time"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
+            </HeaderFooter>
 
-              <div className="mb-4 overlay-form-input-row">
-                <p className="form-label form-label-customized">
-                  Stream settings
-                </p>
-                <div className="form-check mb-2">
+            <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+              <div className="create-new-coupon-form px-4 py-4">
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel Forhtml="eventEndDate">Name</FormLabel>
                   <Field
-                    name="streamsettings"
-                    className="form-check-input"
-                    type="radio"
-                    // name="flexRadioDefault"
-                    id="flexRadioDefault1"
-                    value="Use universal stream in key"
-                    // component={renderInput}
-                    component="input"
+                    name="name"
+                    type="text"
+                    classes="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="Structuring Your Bussiness for success"
+                    component={renderInput}
                   />
-                  <label
-                    className="form-check-label"
-                    style={{
-                      fontFamily: "Inter",
-                      fontWeight: "500",
-                      fontSize: "0.9rem",
-                    }}
-                    for="flexRadioDefault1"
-                  >
-                    Use universal stream in key
-                  </label>
                 </div>
-                <div className="form-check">
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel Forhtml="eventEndDate">Description</FormLabel>
                   <Field
-                    className="form-check-input"
-                    type="radio"
-                    name="streamsettings"
-                    id="flexRadioDefault2"
-                    // checked="true"
-                    value="Use private key"
-                    // component={renderInput}
-                    component="input"
+                    name="description"
+                    type="textarea"
+                    classes="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="Structuring Your Bussiness for success"
+                    component={renderTextArea}
                   />
-                  <label
-                    className="form-check-label"
-                    style={{
-                      fontFamily: "Ubuntu",
-                      fontWeight: "500",
-                      fontSize: "0.9rem",
-                    }}
-                    for="flexRadioDefault2"
-                  >
-                    Use private key
-                  </label>
                 </div>
-              </div>
-
-              <div className="mb-4 overlay-form-input-row">
-                <div className="d-flex flex-row align-items-center justify-content-between">
-                  <label
-                    for="communityName"
-                    className="form-label form-label-customized"
-                  >
-                    Stream Key & URL
-                  </label>
-                </div>
-
-                <div className="referral-link-and-copy-to-clipboard mb-3">
-                  <div
-                    className="ui action input"
-                    style={{ minWidth: "300px" }}
-                  >
-                    <input
-                      type="text"
-                      value={"stream key"}
-                      readOnly
-                      placeholder="Search..."
+                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">Start Date</FormLabel>
+                    <Field
+                      name="startDate"
+                      type="date"
+                      value="2021-07-21"
+                      classes="form-control"
+                      component={renderInput}
                     />
-                    <button
-                      className="ui icon button"
-                      onClick={() => {
-                        navigator.clipboard.writeText("stream key");
-                        alert("copied to clipboard!");
-                      }}
-                    >
-                      <i className="copy outline icon"></i>
-                    </button>
+                  </div>
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">Start Time</FormLabel>
+                    <Field
+                      name="startTime"
+                      type="time"
+                      classes="form-control"
+                      component={renderInput}
+                    />
                   </div>
                 </div>
-                <div className="referral-link-and-copy-to-clipboard">
-                  <div
-                    className="ui action input"
-                    style={{ minWidth: "300px" }}
-                  >
-                    <input
-                      type="text"
-                      value={"stream url"}
-                      readOnly
-                      placeholder="Search..."
+                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">End Date</FormLabel>
+                    <Field
+                      name="endDate"
+                      type="date"
+                      classes="form-control"
+                      component={renderInput}
                     />
-                    <button
-                      className="ui icon button"
-                      onClick={() => {
-                        navigator.clipboard.writeText("stream url");
-                        alert("copied to clipboard!");
-                      }}
-                    >
-                      <i className="copy outline icon"></i>
-                    </button>
+                  </div>
+                  <div>
+                    <FormLabel Forhtml="eventStartDate">End Time</FormLabel>
+                    <Field
+                      name="endTime"
+                      type="time"
+                      classes="form-control"
+                      component={renderInput}
+                    />
                   </div>
                 </div>
-              </div>
 
-              <div className="mb-4 overlay-form-input-row">
-                <div className="d-flex flex-row align-items-center justify-content-between">
-                  <label
-                    for="communityName"
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel>Stream settings</FormLabel>
+                  <div className="form-check mb-2">
+                    <Field
+                      name="streamsettings"
+                      className="form-check-input"
+                      type="radio"
+                      // name="flexRadioDefault"
+                      id="flexRadioDefault1"
+                      value="Use universal stream in key"
+                      // component={renderInput}
+                      component="input"
+                    />
+                    <FormLabel
+                      className="form-check-label"
+                      style={{
+                        fontFamily: "Inter",
+                        fontWeight: "500",
+                        fontSize: "0.9rem",
+                      }}
+                      for="flexRadioDefault1"
+                    >
+                      Use universal stream in key
+                    </FormLabel>
+                  </div>
+                  <div className="form-check">
+                    <Field
+                      className="form-check-input"
+                      type="radio"
+                      name="streamsettings"
+                      id="flexRadioDefault2"
+                      value="Use private key"
+                      component="input"
+                    />
+                    <FormLabel
+                      className="form-check-label"
+                      style={{
+                        fontFamily: "Ubuntu",
+                        fontWeight: "500",
+                        fontSize: "0.9rem",
+                      }}
+                      for="flexRadioDefault2"
+                    >
+                      Use private key
+                    </FormLabel>
+                  </div>
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <div className="d-flex flex-row align-items-center justify-content-between">
+                    <FormLabel for="communityName">Stream Key & URL</FormLabel>
+                  </div>
+
+                  <div className="referral-link-and-copy-to-clipboard mb-3">
+                    <div
+                      className="ui action input"
+                      style={{ minWidth: "300px" }}
+                    >
+                      <input
+                        type="text"
+                        value={"stream key"}
+                        readOnly
+                        placeholder="Search..."
+                      />
+                      <button
+                        className="ui icon button"
+                        onClick={() => {
+                          navigator.clipboard.writeText("stream key");
+                          alert("copied to clipboard!");
+                        }}
+                      >
+                        <i className="copy outline icon"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="referral-link-and-copy-to-clipboard">
+                    <div
+                      className="ui action input"
+                      style={{ minWidth: "300px" }}
+                    >
+                      <input
+                        type="text"
+                        value={"stream url"}
+                        readOnly
+                        placeholder="Search..."
+                      />
+                      <button
+                        className="ui icon button"
+                        onClick={() => {
+                          navigator.clipboard.writeText("stream url");
+                          alert("copied to clipboard!");
+                        }}
+                      >
+                        <i className="copy outline icon"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <div className="d-flex flex-row align-items-center justify-content-between">
+                    <FormLabel for="communityName">Who can join this</FormLabel>
+                    <button
+                      className="btn btn-primary btn-outline-text form-control"
+                      style={{ width: "100px", display: "block" }}
+                    >
+                      Control
+                    </button>
+                  </div>
+
+                  <WhoCanJoinThis className="mb-2">
+                    Everyone in this event can join by default.
+                  </WhoCanJoinThis>
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Host</FormLabel>
+                  <Field
+                    name="cohost"
+                    placeholder="Select co-host"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={hostOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Co-host</FormLabel>
+                  <Field
+                    name="cohost"
+                    placeholder="Select co-host"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={coHostOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-3 overlay-form-input-row">
+                  <FormLabel
+                    for="tags"
                     className="form-label form-label-customized"
                   >
-                    Who can join this
-                  </label>
+                    Tags
+                  </FormLabel>
+                  <div className="form-group">
+                    <Field name="multiTags" component={renderMultiTags} />
+                  </div>
+                </div>
+
+                <div style={{ width: "100%" }}>
                   <button
-                    className="btn btn-primary btn-outline-text form-control"
-                    style={{ width: "100px", display: "block" }}
+                    type="submit"
+                    className="btn btn-primary btn-outline-text"
+                    style={{ width: "100%" }}
                   >
-                    Control
+                    Add Stream
                   </button>
                 </div>
-
-                <WhoCanJoinThis className="mb-2">
-                  Everyone in this event can join by default.
-                </WhoCanJoinThis>
               </div>
-
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Host
-                </label>
-                <Field
-                  name="cohost"
-                  placeholder="Select co-host"
-                  styles={styles}
-                  menuPlacement="top"
-                  options={speakerOptions}
-                  // defaultValue={eventOptions[0]}
-                  component={renderReactSelect}
-                />
-              </div>
-
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Co-host
-                </label>
-                <Field
-                  name="cohost"
-                  placeholder="Select co-host"
-                  styles={styles}
-                  menuPlacement="top"
-                  options={speakerOptions}
-                  // defaultValue={eventOptions[0]}
-                  component={renderReactSelect}
-                />
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label for="tags" className="form-label form-label-customized">
-                  Tags
-                </label>
-                <div className="form-group">
-                  <Field name="multiTags" component={renderMultiTags} />
-                </div>
-              </div>
-
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  // disabled={pristine || submitting}
-                >
-                  Add Stream
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </>
         </SwipeableDrawer>
       </React.Fragment>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            New session added successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

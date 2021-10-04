@@ -3,7 +3,7 @@ import "./../../../../../assets/Sass/DataGrid.scss";
 
 const ParticipantsListFields = () => {
   return (
-    <div className="registrations-list-fields-container">
+    <div className="registrations-list-fields-container" style={{gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr"}}>
      
       <div className="registrations-name-field">
         <div className="registrations-field-label mx-5">Name</div>
@@ -21,9 +21,7 @@ const ParticipantsListFields = () => {
       <div className="registrations-ticket-type-field">
         <div className="registrations-field-label">Actions</div>
       </div>
-      <div className="registrations-invoice-field">
-        <div className="registrations-field-label">Invoice</div>
-      </div>
+     
     </div>
   );
 };

@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema(
   {
+    tags: [
+      {
+        type: String,
+      },
+    ],
     eventId: {
       type: mongoose.Schema.ObjectId,
       ref: "Event",

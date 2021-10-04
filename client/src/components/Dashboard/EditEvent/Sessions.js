@@ -23,7 +23,7 @@ import {
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+
 
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
@@ -31,40 +31,13 @@ import NoSessionsPNG from "./../../../assets/images/confident.png";
 import { useSnackbar } from "notistack";
 
 import styled from "styled-components";
-import NetworkingListFields from "./GridComponents/Agenda/Networking/ListFields";
-import NetworkingDetailCard from "./GridComponents/Agenda/Networking/DetailsCard";
-import AddNewNetworking from "./FormComponents/EditSessionForms/AddNewNetworking";
-import ExhibitDetailCard from "./GridComponents/Agenda/Exhibit/DetailsCard";
-import ExhibitListFields from "./GridComponents/Agenda/Exhibit/ListFields";
-import AddExhibitInteraction from "./FormComponents/EditSessionForms/AddExhibitInteraction";
-import StreamInBluemeetListFields from "./GridComponents/Agenda/StreamInBluemeet/ListFields";
-import StreamInBluemeetDetailCard from "./GridComponents/Agenda/StreamInBluemeet/DetailsCard";
-import AddStreamInBluemeet from "./FormComponents/EditSessionForms/AddStreamInBluemeet";
-import AddNewBreak from "./FormComponents/EditSessionForms/AddNewBreak";
-import BreakListFields from "./GridComponents/Agenda/Break/ListFields";
-import BreakDetailCard from "./GridComponents/Agenda/Break/DetailsCard";
+
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
   font-weight: 500;
   color: #212121;
   font-family: "Ubuntu";
-`;
-
-const SwitchTab = styled.div`
-  font-weight: 500;
-  font-size: 0.95rem;
-  font-family: "Ubuntu";
-  color: ${(props) => (props && props.active ? "#272727" : "#575757")};
-  padding-bottom: 5px;
-  border-bottom: ${(props) =>
-    props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
-  width: fit-content;
-
-  &:hover {
-    color: #272727;
-    cursor: pointer;
-  }
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -123,29 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sessions = () => {
-  const [activeTab, setActiveTab] = React.useState("sessions");
 
-  const [openNetworking, setOpenNetworking] = React.useState(false);
-  const [openExhibitInteraction, setOpenExhibitInteraction] =
-    React.useState(false);
-  const [openStreamInBluemeet, setOpenStreamInBluemeet] = React.useState(false);
-  const [openBreak, setOpenBreak] = React.useState(false);
-
-  const handleCloseNetworking = () => {
-    setOpenNetworking(false);
-  };
-
-  const handleCloseExhibit = () => {
-    setOpenExhibitInteraction(false);
-  };
-
-  const handleCloseStreamInBluemeet = () => {
-    setOpenStreamInBluemeet(false);
-  };
-
-  const handleCloseBreak = () => {
-    setOpenBreak(false);
-  };
 
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
@@ -155,12 +106,6 @@ const Sessions = () => {
   const dispatch = useDispatch();
   const id = params.id;
 
-  const communityId = params.communityId;
-
-  // const communityId = params.communityId;
-  // useEffect(() => {
-  //   dispatch(fetchParticularEventOfCommunity(communityId));
-  // }, []);
 
   useEffect(() => {
     dispatch(fetchSpeakers(id));
@@ -256,127 +201,25 @@ const Sessions = () => {
               />
             </div>
 
-            {(() => {
-              switch (activeTab) {
-                case "sessions":
-                  return (
-                    <button
+            <button
                       className="btn btn-primary btn-outline-text"
                       onClick={handleNewSession}
                     >
                       Add New Session
                     </button>
-                  );
 
-                case "networking":
-                  return (
-                    <button
-                      className="btn btn-primary btn-outline-text"
-                      onClick={() => {
-                        setOpenNetworking(true);
-                      }}
-                    >
-                      Add Networking
-                    </button>
-                  );
-                case "exhibit":
-                  return (
-                    <button
-                      className="btn btn-primary btn-outline-text"
-                      onClick={() => {
-                        setOpenExhibitInteraction(true);
-                      }}
-                    >
-                      Add Exhibit Round
-                    </button>
-                  );
-                case "streaminbluemeet":
-                  return (
-                    <button
-                      className="btn btn-primary btn-outline-text"
-                      onClick={() => {
-                        setOpenStreamInBluemeet(true);
-                      }}
-                    >
-                      Add Stream In Bluemeet
-                    </button>
-                  );
-                case "break":
-                  return (
-                    <button
-                      className="btn btn-primary btn-outline-text"
-                      onClick={() => {
-                        setOpenBreak(true)
-                      }}
-                    >
-                      Add Break
-                    </button>
-                  );
-                default:
-                  break;
-              }
-            })()}
+            
           </div>
         </div>
 
-        <div
-          className="d-flex flex-row align-items-center mb-4 mx-4"
-          style={{ borderBottom: "1px solid #D1D1D1" }}
-        >
-          <SwitchTab
-            active={activeTab === "sessions" ? true : false}
-            className=" me-5"
-            onClick={() => {
-              setActiveTab("sessions");
-            }}
-          >
-            Sessions
-          </SwitchTab>
-          <SwitchTab
-            active={activeTab === "networking" ? true : false}
-            className=" me-5"
-            onClick={() => {
-              setActiveTab("networking");
-            }}
-          >
-            Networking
-          </SwitchTab>
-          <SwitchTab
-            active={activeTab === "exhibit" ? true : false}
-            className=" me-5"
-            onClick={() => {
-              setActiveTab("exhibit");
-            }}
-          >
-            Exhibit Interaction
-          </SwitchTab>
-          <SwitchTab
-            className=" me-5"
-            active={activeTab === "streaminbluemeet" ? true : false}
-            onClick={() => {
-              setActiveTab("streaminbluemeet");
-            }}
-          >
-            Stream in Bluemeet
-          </SwitchTab>
-          <SwitchTab
-            className=" me-5"
-            active={activeTab === "break" ? true : false}
-            onClick={() => {
-              setActiveTab("break");
-            }}
-          >
-            Break
-          </SwitchTab>
-        </div>
+        
 
         <div className="session-content-grid px-3 mb-4">
           <div className="basic-form-left-white px-4 py-4">
-            {(() => {
-              switch (activeTab) {
-                case "sessions":
-                  return (
-                    <>
+
+
+
+          <>
                       <SessionListFields />
                       {isLoading ? (
                         <div
@@ -395,63 +238,14 @@ const Sessions = () => {
                         />
                       )}
                     </>
-                  );
 
-                case "networking":
-                  return (
-                    <>
-                      <NetworkingListFields />
 
-                      <NetworkingDetailCard />
-                    </>
-                  );
-
-                case "exhibit":
-                  return (
-                    <>
-                      <ExhibitListFields />
-
-                      <ExhibitDetailCard />
-                    </>
-                  );
-
-                case "streaminbluemeet":
-                  return (
-                    <>
-                      <StreamInBluemeetListFields />
-
-                      <StreamInBluemeetDetailCard />
-                    </>
-                  );
-                case "break":
-                  return (
-                    <>
-                      <BreakListFields />
-
-                      <BreakDetailCard />
-                    </>
-                  );
-                default:
-                  break;
-              }
-            })()}
+          
           </div>
         </div>
       </div>
       <AddNewSession open={open} handleClose={handleClose} />
-      <AddNewNetworking
-        open={openNetworking}
-        handleClose={handleCloseNetworking}
-      />
-      <AddExhibitInteraction
-        open={openExhibitInteraction}
-        handleClose={handleCloseExhibit}
-      />
-      <AddStreamInBluemeet
-        open={openStreamInBluemeet}
-        handleClose={handleCloseStreamInBluemeet}
-      />
-      <AddNewBreak open={openBreak} handleClose={handleCloseBreak} />
+      
     </>
   );
 };

@@ -14,28 +14,10 @@ import MailIcon from "@mui/icons-material/Mail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SpeakerPreview from "./FormComponents/EditSpeakersForms/SpeakerPerview";
 
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import styled from "styled-components";
-import Draggable from "react-draggable"; // Draggable and Draggable core
 import Chip from "@mui/material/Chip";
 
-const OrderNumber = styled.span`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #212121;
-`;
 
-// url={imgUrl}
-//               key={id}
-//               name={firstName + " " + lastName}
-//               email={email}
-//               sessions={sessions}
-//               id={id}
-//               bio={bio}
-//               invitationLink={invitationLink}
-//               dashboardLink={dashboardLink}
-//               invitationStatus={invitationStatus}
 
 const SpeakersDetailsCard = ({
   name,
@@ -248,15 +230,7 @@ const SpeakersDetailsCard = ({
                   <DeleteRoundedIcon />
                 </IconButton>
               </div>
-              <div
-                onClick={() => {
-                  setOpenPreview(true);
-                }}
-              >
-                <IconButton color="secondary" aria-label="add to shopping cart">
-                  <VisibilityIcon style={{ color: "#A4C513" }} />
-                </IconButton>
-              </div>
+            
               <div
                 onClick={() => {
                   alert("Email invitation sent!");

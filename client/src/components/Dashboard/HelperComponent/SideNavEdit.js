@@ -170,7 +170,7 @@ const SideNavEdit = ({
             Event entry & Registrations
           </div>
         </div>
-        <div
+        {/* <div
           onClick={handleScheduleClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -193,7 +193,7 @@ const SideNavEdit = ({
           >
             Schedule
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={handleSessionsClick}
@@ -320,7 +320,7 @@ const SideNavEdit = ({
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={handleReceptionSettingsClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -343,7 +343,7 @@ const SideNavEdit = ({
           >
             Reception settings
           </div>
-        </div>
+        </div> */}
         <div
           onClick={handleVideosClick}
           className={
@@ -368,7 +368,7 @@ const SideNavEdit = ({
             Videos
           </div>
         </div>
-        <div
+        {/* <div
           onClick={handleStageVibesClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -391,7 +391,7 @@ const SideNavEdit = ({
           >
             Stage vibes
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={handleRecordingClick}
@@ -600,7 +600,7 @@ const SideNavEdit = ({
             Reviews
           </div>
         </div>
-        <div
+        {/* <div
           onClick={handleTrackingClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -623,7 +623,7 @@ const SideNavEdit = ({
           >
             Tracking
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

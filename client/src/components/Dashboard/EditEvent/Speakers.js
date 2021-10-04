@@ -44,14 +44,14 @@ const SectionHeading = styled.div`
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -141,8 +141,6 @@ const Speakers = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
-
-  const communityId = params.communityId;
 
   const { isLoading, error, speakers } = useSelector((state) => {
     return state.speaker;
@@ -258,14 +256,7 @@ const Speakers = () => {
                 onChange={(value) => setSessionId(value.value)}
               />
             </div>
-            <button
-              onClick={() => {
-                setOpenInvites(true);
-              }}
-              className="btn btn-outline-primary btn-outline-text me-3"
-            >
-              Send invites
-            </button>
+            
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSpeaker}

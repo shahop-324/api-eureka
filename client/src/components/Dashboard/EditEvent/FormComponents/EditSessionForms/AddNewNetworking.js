@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
@@ -25,6 +24,62 @@ import MultiTagInput from "../../../MultiTagInput";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
+
+const FormSubHeading = styled.div`
+  font-size: 0.87rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #424242;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const MatchingRule = styled.div`
   font-weight: 500;
@@ -65,19 +120,8 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
     <div className={className}>
       <MultiTagInput input={input} value={input.value} />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -93,7 +137,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -102,19 +146,8 @@ const renderInput = ({
         required
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -130,7 +163,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <StyledTextArea
         rows="2"
         type={type}
         {...input}
@@ -141,19 +174,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -184,22 +206,16 @@ const renderReactSelect = ({
   </div>
 );
 
-const AddNewNetworking = (props) => {
+const AddNewNetworking = ({
+  open,
+  handleClose,
+  handleSubmit,
+  pristine,
+  submitting,
+}) => {
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
 
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
-
-  const { handleSubmit, pristine, submitting } = props;
   const dispatch = useDispatch();
 
   const speakers = useSelector((state) => state.speaker.speakers);
@@ -215,10 +231,7 @@ const AddNewNetworking = (props) => {
 
   const params = useParams();
   const id = params.id;
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+
   const onSubmit = (formValues) => {
     console.log(formValues);
     const speakersArray = [];
@@ -241,8 +254,7 @@ const AddNewNetworking = (props) => {
     // console.log(ModifiedFormValues);
     // showResults(ModifiedFormValues);
     // dispatch(createSession(ModifiedFormValues, id)); // TODO Dispatch this action to make a request to our api.
-    props.handleClose();
-    setState({ open: true, vertical: "top", horizontal: "center" });
+    handleClose();
   };
   const theme = useTheme();
 
@@ -271,7 +283,7 @@ const AddNewNetworking = (props) => {
       <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
-          open={props.open}
+          open={open}
           onOpen={() => {
             console.log("Side nav was opended");
           }}
@@ -279,209 +291,165 @@ const AddNewNetworking = (props) => {
             console.log("Side nav was closed");
           }}
         >
-          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-            <div className="create-new-coupon-form px-4 py-4">
-              <div className="form-heading-and-close-button mb-4">
+          <>
+            <div style={{ height: "100vh", backgroundColor: "#ffffff" }}>
+              <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
                 <div></div>
                 <div className="coupon-overlay-form-headline">
                   Add Networking
                 </div>
                 <div
                   className="overlay-form-close-button"
-                  onClick={props.handleClose}
+                  onClick={handleClose}
                 >
                   <IconButton aria-label="delete">
                     <CancelRoundedIcon />
                   </IconButton>
                 </div>
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="eventEndDate"
-                  className="form-label form-label-customized"
-                >
-                  Name
-                </label>
-                <Field
-                  name="name"
-                  type="text"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Structuring Your Bussiness for success"
-                  component={renderInput}
-                />
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="eventEndDate"
-                  className="form-label form-label-customized"
-                >
-                  Description
-                </label>
-                <Field
-                  name="description"
-                  type="textarea"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Structuring Your Bussiness for success"
-                  component={renderTextArea}
-                />
-              </div>
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Start Date
-                  </label>
-                  <Field
-                    name="startDate"
-                    type="date"
-                    value="2021-07-21"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Start Time
-                  </label>
-                  <Field
-                    name="startTime"
-                    type="time"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    End Date
-                  </label>
-                  <Field
-                    name="endDate"
-                    type="date"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    End Time
-                  </label>
-                  <Field
-                    name="endTime"
-                    type="time"
-                    classes="form-control"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <div className="d-flex flex-row align-items-center justify-content-between">
-                  <label
-                    for="communityName"
-                    className="form-label form-label-customized"
-                  >
-                    Rules of matching
-                  </label>
-                  <button
-                    className="btn btn-primary btn-outline-text form-control"
-                    style={{ width: "100px", display: "block" }}
-                  >
-                    <span> Modify </span>
-                  </button>
-                </div>
-                <MatchingRule>
-                  Anyone can be matched with anyone by default.
-                </MatchingRule>
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <div className="d-flex flex-row align-items-center justify-content-between">
-                  <label
-                    for="communityName"
-                    className="form-label form-label-customized"
-                  >
-                    Who can join this
-                  </label>
-                  <button
-                    className="btn btn-primary btn-outline-text form-control"
-                    style={{ width: "100px", display: "block" }}
-                  >
-                    Control
-                  </button>
-                </div>
+              </HeaderFooter>
+              <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+                <div className="create-new-coupon-form px-4 py-4">
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventEndDate"
+                      className="form-label form-label-customized"
+                    >
+                      Name
+                    </FormLabel>
+                    <Field
+                      name="name"
+                      type="text"
+                      classes="form-control"
+                      id="exampleFormControlInput1"
+                      placeholder="Structuring Your Bussiness for success"
+                      component={renderInput}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventEndDate"
+                      className="form-label form-label-customized"
+                    >
+                      Description
+                    </FormLabel>
+                    <Field
+                      name="description"
+                      type="textarea"
+                      classes="form-control"
+                      id="exampleFormControlInput1"
+                      placeholder="Structuring Your Bussiness for success"
+                      component={renderTextArea}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        Start Date
+                      </FormLabel>
+                      <Field
+                        name="startDate"
+                        type="date"
+                        value="2021-07-21"
+                        classes="form-control"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        Start Time
+                      </FormLabel>
+                      <Field
+                        name="startTime"
+                        type="time"
+                        classes="form-control"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        End Date
+                      </FormLabel>
+                      <Field
+                        name="endDate"
+                        type="date"
+                        classes="form-control"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        End Time
+                      </FormLabel>
+                      <Field
+                        name="endTime"
+                        type="time"
+                        classes="form-control"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <div className="d-flex flex-row align-items-center justify-content-between">
+                      <FormLabel
+                        for="communityName"
+                        className="form-label form-label-customized"
+                      >
+                        Who can join this
+                      </FormLabel>
+                      <button
+                        className="btn btn-primary btn-outline-text form-control"
+                        style={{ width: "100px", display: "block" }}
+                      >
+                        Control
+                      </button>
+                    </div>
 
-                <WhoCanJoinThis className="mb-2">
-                  Everyone in this event can join by default.
-                </WhoCanJoinThis>
-              </div>
+                    <WhoCanJoinThis className="mb-2">
+                      Everyone in this event can join by default.
+                    </WhoCanJoinThis>
+                  </div>
 
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Moderators
-                </label>
-                <Field
-                  name="cohost"
-                  placeholder="Select co-host"
-                  styles={styles}
-                  menuPlacement="top"
-                  options={speakerOptions}
-                  // defaultValue={eventOptions[0]}
-                  component={renderReactSelect}
-                />
-              </div>
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="tags"
+                      className="form-label form-label-customized"
+                    >
+                      Tags
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field name="multiTags" component={renderMultiTags} />
+                    </div>
+                  </div>
 
-              <div className="mb-3 overlay-form-input-row">
-                <label for="tags" className="form-label form-label-customized">
-                  Tags
-                </label>
-                <div className="form-group">
-                  <Field name="multiTags" component={renderMultiTags} />
+                  <div style={{ width: "100%" }}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-outline-text"
+                      style={{ width: "100%" }}
+                    >
+                      Add Networking
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              <div style={{ width: "100%" }}>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-outline-text"
-                  style={{ width: "100%" }}
-                  // disabled={pristine || submitting}
-                >
-                  Add Networking
-                </button>
-              </div>
+              </form>
             </div>
-          </form>
+          </>
         </SwipeableDrawer>
       </React.Fragment>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="success">
-            New session added successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

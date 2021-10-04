@@ -297,28 +297,25 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
   };
 
-  if(req.body.sendInvitation) {
+  if (req.body.sendInvitation) {
     sgMail
-    .send(msg)
-    .then(async () => { 
-      console.log("Invitation sent to speaker.") 
-      // Mark that invitation is sent
-      speaker.invitationStatus = "Sent";
-      await speaker.save({new: true, validateModifiedOnly: true});
-  })
-    .catch( async(error) => {
-      console.log("Failed to send invitation to speaker")
-    // Mark that invitation is not yet sent
+      .send(msg)
+      .then(async () => {
+        console.log("Invitation sent to speaker.");
+        // Mark that invitation is sent
+        speaker.invitationStatus = "Sent";
+        await speaker.save({ new: true, validateModifiedOnly: true });
+      })
+      .catch(async (error) => {
+        console.log("Failed to send invitation to speaker");
+        // Mark that invitation is not yet sent
+        speaker.invitationStatus = "Not sent";
+        await speaker.save({ new: true, validateModifiedOnly: true });
+      });
+  } else {
     speaker.invitationStatus = "Not sent";
-    await speaker.save({new: true, validateModifiedOnly: true});
-    });
+    await speaker.save({ new: true, validateModifiedOnly: true });
   }
-  else {
-    speaker.invitationStatus = "Not sent";
-    await speaker.save({new: true, validateModifiedOnly: true});
-  }
-
-  
 
   const document = await SpeakersIdsCommunityWise.findById(
     communityGettingSpeaker.speakersDocIdCommunityWise
@@ -328,7 +325,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
   eventGettingSpeaker.speaker.push(speaker._id);
   await eventGettingSpeaker.save({ validateModifiedOnly: true });
 
-  await speaker.save({new: true, validateModifiedOnly: true});
+  await speaker.save({ new: true, validateModifiedOnly: true });
 
   const populatedSpeaker = await Speaker.findById(speaker.id).populate(
     "sessions"
@@ -343,12 +340,9 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 // added Sessions
 exports.addSession = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
-  // const communityId = req.community._id;
   const speakersMappedByCommunityForSession = req.body.speakers;
   const eventGettingSessions = await Event.findById(eventId);
   const allSpeakersInThisEvent = eventGettingSessions.speaker;
-
-  // confirm if this session exist in this event
 
   let processedArray = [];
   const fxn = (allSpeakersInThisEvent, speakersMappedByCommunityForSession) => {
@@ -367,16 +361,22 @@ exports.addSession = catchAsync(async (req, res, next) => {
     );
   }
 
-  const session = await Session.create({
-    name: req.body.name,
-    startDate: req.body.startDate,
-    startTime: req.body.startTime,
-    description: req.body.description,
-    endDate: req.body.endDate,
-    endTime: req.body.endTime,
-    speaker: processedArray,
-    eventId: eventGettingSessions.id,
-  });
+  let session = await Session.create(
+    {
+      name: req.body.name,
+      startDate: req.body.startDate,
+      startTime: req.body.startTime,
+      description: req.body.description,
+      endDate: req.body.endDate,
+      endTime: req.body.endTime,
+      speaker: processedArray,
+      eventId: eventGettingSessions.id,
+    }
+  );
+
+  session.tags = req.body.tags;
+
+  await session.save({new: true, validateModifiedOnly: true});
 
   const populatedSession = await Session.findById(session.id).populate(
     "speaker"

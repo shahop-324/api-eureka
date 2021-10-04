@@ -238,14 +238,7 @@ const Sponsors = () => {
               />
             </div>
 
-            <button
-              onClick={() => {
-                setOpenManageTiers(true);
-              }}
-              className="btn btn-outline-primary btn-outline-text me-3"
-            >
-              Manage tiers
-            </button>
+            
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSponsor}
@@ -257,7 +250,7 @@ const Sponsors = () => {
         <div className="session-content-grid px-3 mb-4">
           <div className="basic-form-left-white px-4 py-4">
             <SponsorsListFields />
-            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 1: Platinum</TierIndicatorTab>
+           
             {isLoading ? (
               <div
                 className="d-flex flex-row align-items-center justify-content-center"
@@ -273,12 +266,7 @@ const Sponsors = () => {
                 img={NoSponsor}
               />
             )}
-            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 2: Diamond</TierIndicatorTab>
-            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Diamond tier</NoSponsorInTierTab>
-            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 3: Gold</TierIndicatorTab>
-            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Gold tier</NoSponsorInTierTab>
-            <TierIndicatorTab className="px-3 py-2 mb-3">Tier 4: Bronze</TierIndicatorTab>
-            <NoSponsorInTierTab className="px-3 py-2 mb-3">No sponsor in Bronze tier</NoSponsorInTierTab>
+            
           </div>
         </div>
       </div>

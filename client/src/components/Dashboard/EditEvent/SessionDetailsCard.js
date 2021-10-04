@@ -11,19 +11,14 @@ import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
 import { Tooltip } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { fetchParticularSessionOfEvent } from "../../../actions";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-import { Popup } from "semantic-ui-react";
 import SessionMoreInfo from "./FormComponents/EditSessionForms/SessionMoreInfo";
 import AvatarGroup from "@mui/material/AvatarGroup";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import Chip from '@mui/material/Chip';
 
 var dateFormat = require("dateformat");
-//var now = new Date();
 
-// Basic usage
-//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-// Saturday, June 9th, 2007, 5:46:21 PM
 const SessionDetailCard = ({
   endTime,
   startTime,
@@ -69,13 +64,12 @@ const SessionDetailCard = ({
   const renderSessionSpeakersList = (sessionSpeakers) => {
     return sessionSpeakers.map((speaker) => {
       return (
-        <Tooltip title={speaker.firstName} aria-label={speaker.firstName}>
+       
           <Avatar
-            variant="rounded"
             alt={speaker.name}
             src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
           />
-        </Tooltip>
+       
       );
     });
   };
@@ -107,7 +101,6 @@ const SessionDetailCard = ({
           >
             {/* {name} */}
             {truncateText(name, 35)}
-           
           </div>
         </div>
         <div
@@ -180,29 +173,13 @@ const SessionDetailCard = ({
             {typeof speaker !== "undefined" && speaker.length > 0 ? (
               <div className="session-card-speaker-grid">
                 {/* Session speaker List */}
-                {renderSessionSpeakersList(speaker)}
+                <AvatarGroup max={4}>
+                  {renderSessionSpeakersList(speaker)}
+                </AvatarGroup>
               </div>
             ) : (
-              // <div
-              //   style={{
-              //     color: "#C92121",
-              //     fontWeight: "500",
-              //     fontSize: "0.85rem",
-              //   }}
-              // >
-              //   No speaker assigned
-              // </div>
-              <AvatarGroup max={4}>
-                <Avatar alt="Remy Sharp" src={Faker.image.avatar()} />
-                <Avatar alt="Travis Howard" src={Faker.image.avatar()} />
-                <Avatar alt="Cindy Baker" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-                <Avatar alt="Agnes Walker" src={Faker.image.avatar()} />
-                <Avatar alt="Trevor Henderson" src={Faker.image.avatar()} />
-              </AvatarGroup>
+              <Chip label="No speaker Assigned" color="error" variant="outlined" />
+             
             )}
           </div>
         </div>
@@ -219,15 +196,6 @@ const SessionDetailCard = ({
             <div onClick={handleDeleteSession}>
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
-              </IconButton>
-            </div>
-            <div onClick={() => {
-                setOpenMoreInfo(true);
-              }}>
-              <IconButton color="secondary" aria-label="add to shopping cart">
-              <RemoveRedEyeIcon
-                style={{ color: "#C317EE" }}
-              />
               </IconButton>
             </div>
           </div>

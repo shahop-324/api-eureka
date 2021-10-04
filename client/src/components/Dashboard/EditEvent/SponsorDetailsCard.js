@@ -72,16 +72,13 @@ const SponsorDetailsCard = (props) => {
 
   return (
     <>
-      <Draggable axis="y">
+      
         <div>
           <div
             className="sponsors-list-fields-container"
-            style={{ gridTemplateColumns: "0.5fr 1fr 1.6fr 1.3fr 1fr 0.5fr", alignItems: "center" }}
+            style={{ gridTemplateColumns: " 1fr 1.6fr 1.3fr 1fr 0.5fr", alignItems: "center" }}
           >
-            <div>
-              <DragIndicatorIcon className="me-3 drag" />
-              <OrderNumber>1</OrderNumber>
-            </div>
+           
 
             <div
               className="event-card-field "
@@ -179,7 +176,7 @@ const SponsorDetailsCard = (props) => {
         <Divider />
       </div>
         </div>
-      </Draggable>
+     
 
      
       <EditSponsor open={open} handleClose={handleClose} id={props.id} />
