@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 import Avatar from "@material-ui/core/Avatar";
 
 import { makeStyles } from "@material-ui/core/styles";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -24,17 +18,55 @@ import Loader from "../../../../Loader";
 
 import { SwipeableDrawer } from "@material-ui/core";
 
+import styled from "styled-components";
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -67,7 +99,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -75,19 +107,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -116,28 +137,24 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   </div>
 );
-const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, reset, id}) => {
-
+const EditSponosor = ({
+  open,
+  handleClose,
+  handleSubmit,
+  pristine,
+  submitting,
+  reset,
+  id,
+}) => {
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.sponsor
   );
-  
+
   const sponsorCategoryOptions = [
     { value: "Diamond", label: "Diamond" },
     { value: "Platinum", label: "Platinum" },
@@ -146,16 +163,12 @@ const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, re
   ];
 
   const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
-
- 
 
   const sponsor = useSelector((state) => {
     return state.sponsor.sponsors.find((sponsor) => {
@@ -166,8 +179,6 @@ const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, re
   console.log(sponsor.image);
 
   const imgKey = sponsor.image;
-
- 
 
   let imgUrl = " #";
   if (imgKey) {
@@ -201,9 +212,7 @@ const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, re
 
   return (
     <>
-     
-
-<React.Fragment key="right">
+      <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
           open={open}
@@ -214,20 +223,17 @@ const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, re
             console.log("Side nav was closed");
           }}
         >
-
-
-        {isLoadingDetail ? (
-          <div
-            className="d-flex flex-row align-items-center justify-content-center"
-            style={{ width: "100%", height: "100%" }}
-          >
-            {" "}
-            <Loader />{" "}
-          </div>
-        ) : (
-          <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-            <div className="create-new-coupon-form px-4 py-4">
-              <div className="form-heading-and-close-button mb-4">
+          {isLoadingDetail ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "100%", height: "100%" }}
+            >
+              {" "}
+              <Loader />{" "}
+            </div>
+          ) : (
+            <>
+              <HeaderFooter className="form-heading-and-close-button mb-4 px-4 pt-3">
                 <div></div>
                 <div className="coupon-overlay-form-headline">Edit sponsor</div>
                 <div
@@ -238,116 +244,118 @@ const EditSponosor = ({open, handleClose, handleSubmit, pristine, submitting, re
                     <CancelRoundedIcon />
                   </IconButton>
                 </div>
-              </div>
+              </HeaderFooter>
 
-              <div className="p-0 d-flex flex-row justify-content-center">
-                <Avatar
-                  children=""
-                  alt="Travis Howard"
-                  src={fileToPreview}
-                  className={classes.large}
-                  variant="rounded"
-                />
-              </div>
+              <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+                <div className="create-new-coupon-form px-4 py-4">
+                  <div className="p-0 d-flex flex-row justify-content-center">
+                    <Avatar
+                      children=""
+                      alt="Travis Howard"
+                      src={fileToPreview}
+                      className={classes.large}
+                      variant="rounded"
+                    />
+                  </div>
 
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityHeadline"
-                  className="form-label form-label-customized"
-                >
-                  Logo
-                </label>
-                <input
-                  name="imgUpload"
-                  type="file"
-                  accept="image/*"
-                  onChange={onFileChange}
-                  className="form-control"
-                />
-              </div>
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityHeadline"
+                      className="form-label form-label-customized"
+                    >
+                      Logo
+                    </FormLabel>
+                    <input
+                      name="imgUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={onFileChange}
+                      className="form-control"
+                    />
+                  </div>
 
-              <div className="mb-3 overlay-form-input-row ">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
+                  <div className="mb-3 overlay-form-input-row ">
+                    <div>
+                      <FormLabel
+                        Forhtml="eventStartDate"
+                        className="form-label form-label-customized"
+                      >
+                        Organisation Name
+                      </FormLabel>
+                      <Field
+                        name="organisationName"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="Google Inc."
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Select Category
+                    </FormLabel>
+                    <Field
+                      name="status"
+                      placeholder="category"
+                      styles={styles}
+                      menuPlacement="top"
+                      options={sponsorCategoryOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Website
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="website"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="www.myDomain.com"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{ width: "100%" }}
+                    className="d-flex flex-row justify-content-end"
                   >
-                    Organisation Name
-                  </label>
-                  <Field
-                    name="organisationName"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="Google Inc."
-                    component={renderInput}
-                  />
+                    <button
+                      disabled={pristine || submitting}
+                      onClick={reset}
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                    >
+                      Discard
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-outline-text"
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Select Category
-                </label>
-                <Field
-                  name="status"
-                  placeholder="category"
-                  styles={styles}
-                  menuPlacement="top"
-                  options={sponsorCategoryOptions}
-                  // defaultValue={eventOptions[0]}
-                  component={renderReactSelect}
-                />
-              </div>
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Website
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="website"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="www.myDomain.com"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div
-                style={{ width: "100%" }}
-                className="d-flex flex-row justify-content-end"
-              >
-                <button
-                  disabled={pristine || submitting}
-                  onClick={reset}
-                  className="btn btn-outline-primary btn-outline-text me-3"
-                >
-                  Discard
-                </button>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-outline-text"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-      </SwipeableDrawer>
+              </form>
+            </>
+          )}
+        </SwipeableDrawer>
       </React.Fragment>
     </>
   );
@@ -358,7 +366,6 @@ const mapStateToProps = (state) => ({
     imgUrl:
       state.sponsor.sponsorDetails && state.sponsor.sponsorDetails.image
         ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.sponsor.sponsorDetails.image}`
-        // https://bluemeet.s3.us-west-1.amazonaws.com/613dcf0b0aa9a6185d637d70/9b91e240-1e0d-11ec-a349-85b661c91667.jpeg
         : " #",
     organisationName:
       state.sponsor.sponsorDetails &&

@@ -60,6 +60,7 @@ const SideNavEdit = ({
   handleMailingClick,
   handleReviewsClick,
   handleTrackingClick,
+  handleLiveStreamingClick
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -320,6 +321,31 @@ const SideNavEdit = ({
           </div>
         </div>
 
+        <div
+          onClick={handleCouponsClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "15" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "15" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <LoyaltyRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "15" ? "btn-text-active-d" : " ")
+            }
+          >
+            Coupons
+          </div>
+        </div>
+
         {/* <div
           onClick={handleReceptionSettingsClick}
           className={
@@ -344,6 +370,7 @@ const SideNavEdit = ({
             Reception settings
           </div>
         </div> */}
+
         <div
           onClick={handleVideosClick}
           className={
@@ -368,7 +395,10 @@ const SideNavEdit = ({
             Videos
           </div>
         </div>
-        {/* <div
+
+
+
+        <div
           onClick={handleStageVibesClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -391,7 +421,68 @@ const SideNavEdit = ({
           >
             Stage vibes
           </div>
-        </div> */}
+        </div>
+
+        <div
+          onClick={handleAffliateClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "17" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "17" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <PersonOutlinedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "17" ? "btn-text-active-d" : " ")
+            }
+          >
+            Affiliate
+          </div>
+        </div>
+
+        <div
+          onClick={handleLiveStreamingClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "13" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "13" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <LiveTvRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div className="d-flex flex-row align-items-center justify-content-between">
+
+
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav me-5 ` +
+              (activeIndex === "13" ? "btn-text-active-d" : " ")
+            }
+          >
+            Live stream
+          </div>
+          {/* <Chip
+            label="soon"
+            // variant="outlined"
+            style={{ color: "#538BF7", backgroundColor: "#E6E6E6", fontWeight: "500" }}
+          /> */}
+
+          </div>
+          
+        </div>
 
         <div
           onClick={handleRecordingClick}
@@ -417,6 +508,32 @@ const SideNavEdit = ({
             Recording
           </div>
         </div>
+
+        <div
+          onClick={handleMailingClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "16" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "16" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <MailRoundedIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "16" ? "btn-text-active-d" : " ")
+            }
+          >
+            Mailing
+          </div>
+        </div>
+
         <div
           onClick={handleAnalyticsClick}
           className={
@@ -443,41 +560,7 @@ const SideNavEdit = ({
         </div>
 
 
-        {/* <div
-          onClick={handleLiveStreamingClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "13" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "13" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <LiveTvRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div className="d-flex flex-row align-items-center justify-content-between">
-
-
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav me-5 ` +
-              (activeIndex === "13" ? "btn-text-active-d" : " ")
-            }
-          >
-            Live stream
-          </div>
-          <Chip
-            label="soon"
-            // variant="outlined"
-            style={{ color: "#538BF7", backgroundColor: "#E6E6E6", fontWeight: "500" }}
-          />
-
-          </div>
-          
-        </div> */}
+        
 
 
         <div
@@ -504,78 +587,9 @@ const SideNavEdit = ({
             Integrations
           </div>
         </div>
-        <div
-          onClick={handleCouponsClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "15" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "15" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <LoyaltyRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "15" ? "btn-text-active-d" : " ")
-            }
-          >
-            Coupons
-          </div>
-        </div>
-        <div
-          onClick={handleMailingClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "16" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "16" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <MailRoundedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "16" ? "btn-text-active-d" : " ")
-            }
-          >
-            Mailing
-          </div>
-        </div>
-        <div
-          onClick={handleAffliateClick}
-          className={
-            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
-            (activeIndex === "17" ? "btn-active-d" : " ")
-          }
-        >
-          <div
-            className={
-              "mx-3 sidenav-icon " +
-              (activeIndex === "17" ? "btn-icon-active-d" : " ")
-            }
-          >
-            <PersonOutlinedIcon style={{ fontSize: 26 }} />
-          </div>
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav ` +
-              (activeIndex === "17" ? "btn-text-active-d" : " ")
-            }
-          >
-            Affiliate
-          </div>
-        </div>
+        
+        
+        
         <div
           onClick={handleReviewsClick}
           className={

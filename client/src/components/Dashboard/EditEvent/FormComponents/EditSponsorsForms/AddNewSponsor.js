@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 import Avatar from "@material-ui/core/Avatar";
-
 import { makeStyles } from "@material-ui/core/styles";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,20 +12,58 @@ import {
   errorTrackerForCreateSponsor,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
-
 import { SwipeableDrawer } from "@material-ui/core";
+
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -65,7 +96,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -74,17 +105,16 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -116,17 +146,16 @@ const renderReactSelect = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   </div>
@@ -144,8 +173,6 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
   ];
 
   const classes = useStyles();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const dispatch = useDispatch();
 
@@ -170,7 +197,7 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
     dispatch(createSponsor(ModifiedFormValues, file, id));
 
     // showResults(ModifiedFormValues);
-   handleClose();
+  //  handleClose();
   };
 
   if (isLoading) {
@@ -207,9 +234,9 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
           }}
         >
 
-        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="create-new-coupon-form px-4 py-4">
-            <div className="form-heading-and-close-button mb-4">
+          <>
+
+          <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
               <div></div>
               <div className="coupon-overlay-form-headline">
                 Add New Sponsor
@@ -222,7 +249,11 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
                   <CancelRoundedIcon />
                 </IconButton>
               </div>
-            </div>
+            </HeaderFooter>
+
+        <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+          <div className="create-new-coupon-form px-4 py-4">
+            
 
             <div className="p-0 d-flex flex-row justify-content-center">
               <Avatar
@@ -235,12 +266,11 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityHeadline"
-                className="form-label form-label-customized"
               >
                 Logo
-              </label>
+              </FormLabel>
               <input
                 name="imgUpload"
                 type="file"
@@ -253,12 +283,12 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
 
             <div className="mb-3 overlay-form-input-row ">
               <div>
-                <label
+                <FormLabel
                   Forhtml="eventStartDate"
-                  className="form-label form-label-customized"
+                 
                 >
                   Organisation Name
-                </label>
+                </FormLabel>
                 <Field
                   name="organisationName"
                   type="text"
@@ -271,30 +301,29 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
-                className="form-label form-label-customized"
+                
               >
                 Select Category
-              </label>
+              </FormLabel>
               <Field
                 name="status"
                 placeholder="category"
                 styles={styles}
                 menuPlacement="top"
                 options={sponsorCategoryOptions}
-                // defaultValue={eventOptions[0]}
                 component={renderReactSelect}
               />
             </div>
 
             <div className="mb-3 overlay-form-input-row">
-              <label
+              <FormLabel
                 for="communityName"
                 className="form-label form-label-customized"
               >
                 Website
-              </label>
+              </FormLabel>
               <div className="form-group">
                 <Field
                   name="website"
@@ -312,13 +341,15 @@ const AddNewSponsor = ({open, handleClose, handleSubmit}) => {
                 type="submit"
                 className="btn btn-primary btn-outline-text"
                 style={{ width: "100%" }}
-                // disabled={pristine || submitting}
               >
                 Add New Sponsor
               </button>
             </div>
           </div>
         </form>
+
+
+        </>
         </SwipeableDrawer>
         </React.Fragment>
       

@@ -72,3 +72,11 @@ $font-family: "Inter";
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 20px;
 }
+
+.form-row-3-in-1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 20px;
+}
+
+

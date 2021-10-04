@@ -57,17 +57,17 @@ import VideoLibrary from "./../VideoLibrary";
 import StageVibesLibrary from "./StageVibesLibrary";
 
 import EventMoreActions from "./SubComponent/EventMoreActions";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Strip = styled.div`
-background-color: #F75353;
+  background-color: #f75353;
 
-font-size: 0.8rem;
-font-weight: 500;
-color: #ffffff;
-font-family: "Ubuntu";
-text-align: center;
-`
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #ffffff;
+  font-family: "Ubuntu";
+  text-align: center;
+`;
 
 const EditEventRoot = () => {
   const [openMoreActions, setOpenMoreActions] = React.useState(false);
@@ -207,253 +207,278 @@ const EditEventRoot = () => {
     return dispatch(errorTrackerForFetchParticularEventOfCommunity());
   }
 
-  return (
-    <>
-    {eventDetails.status === "Ended" ? <Strip className="py-1">This event has already ended. Certain actions will be restricted. Please contact us to start it again.</Strip> : <></> }
-    
-      <div className="dashboard-position-fixed-non-scrollable-container">
-        {/* TOP NAV */}
-        <Topnav />
-        <div className="dashboard-event-section-head py-2 pe-3">
-          <div className="d-flex flex-row align-items-center">
-            <Link
-              to={`/user/${userId}/community/event-management/${communityId}`}
-              className="me-3"
-            >
-              <IconButton aria-label="back" className="ms-4">
-                <ArrowBackIosRoundedIcon style={{ fontSize: 18 }} />
-              </IconButton>
-            </Link>
-          </div>
-          <div className="d-flex flex-row align-items-center">
-            <div className="event-name-head-text me-3">
-              {eventDetails.eventName}
+  
+  else {
+    return (
+      <>
+        {(() => {
+          if (eventDetails) {
+            if (eventDetails.status) {
+              if (eventDetails.status === "Ended") {
+                return (
+                  <Strip className="py-1">
+                    This event has already ended. Certain actions will be
+                    restricted. Please contact us to start it again.
+                  </Strip>
+                );
+              }
+            }
+          }
+        })()}
+  
+        <div className="dashboard-position-fixed-non-scrollable-container">
+          {/* TOP NAV */}
+          <Topnav />
+          <div className="dashboard-event-section-head py-2 pe-3">
+            <div className="d-flex flex-row align-items-center">
+              <Link
+                to={`/user/${userId}/community/event-management/${communityId}`}
+                className="me-3"
+              >
+                <IconButton aria-label="back" className="ms-4">
+                  <ArrowBackIosRoundedIcon style={{ fontSize: 18 }} />
+                </IconButton>
+              </Link>
             </div>
-            {(() => {
-              switch (eventDetails.status) {
-                case "Upcoming":
-                  return (
-                    <Chip
-                      label={"Upcoming"}
-                      variant="outlined"
-                      style={{
-                        color: "#538BF7",
-                        border: `1px solid ${"#538BF7"}`,
-                        fontWeight: 600,
-                      }}
-                    />
-                  );
-                case "Started":
-                  return (
-                    <Chip
-                      label={"Started"}
-                      variant="outlined"
-                      style={{
-                        color: "#6C53F7",
-                        border: `1px solid ${"#6C53F7"}`,
-                        fontWeight: 600,
-                      }}
-                    />
-                  );
-                case "Paused":
-                  return (
-                    <Chip
-                      label={"Paused"}
-                      variant="outlined"
-                      style={{
-                        color: "#F7D953",
-                        border: `1px solid ${"#F7D953"}`,
-                        fontWeight: 600,
-                      }}
-                    />
-                  );
-                case "Resumed":
-                  return (
-                    <Chip
-                      label={"Resumed"}
-                      variant="outlined"
-                      style={{
-                        color: "#F78753",
-                        border: `1px solid ${"#F78753"}`,
-                        fontWeight: 600,
-                      }}
-                    />
-                  );
-                case "Ended":
-                  return (
-                    <Chip
-                      label={"Ended"}
-                      variant="outlined"
-                      style={{
-                        color: "#F75353",
-                        border: `1px solid ${"#F75353"}`,
-                        fontWeight: 600,
-                      }}
-                    />
-                  );
+            <div className="d-flex flex-row align-items-center">
+              <div className="event-name-head-text me-3">
+                { eventDetails ?  eventDetails.eventName : <></>}
+              </div>
+              {(() => {
 
-                default:
-                  break;
-              }
-            })()}
+                if(eventDetails) {
+                  switch (eventDetails.status) {
+                    case "Upcoming":
+                      return (
+                        <Chip
+                          label={"Upcoming"}
+                          variant="outlined"
+                          style={{
+                            color: "#538BF7",
+                            border: `1px solid ${"#538BF7"}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      );
+                    case "Started":
+                      return (
+                        <Chip
+                          label={"Started"}
+                          variant="outlined"
+                          style={{
+                            color: "#6C53F7",
+                            border: `1px solid ${"#6C53F7"}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      );
+                    case "Paused":
+                      return (
+                        <Chip
+                          label={"Paused"}
+                          variant="outlined"
+                          style={{
+                            color: "#F7D953",
+                            border: `1px solid ${"#F7D953"}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      );
+                    case "Resumed":
+                      return (
+                        <Chip
+                          label={"Resumed"}
+                          variant="outlined"
+                          style={{
+                            color: "#F78753",
+                            border: `1px solid ${"#F78753"}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      );
+                    case "Ended":
+                      return (
+                        <Chip
+                          label={"Ended"}
+                          variant="outlined"
+                          style={{
+                            color: "#F75353",
+                            border: `1px solid ${"#F75353"}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      );
+    
+                    default:
+                      break;
+                  }
+                }
+
+                
+              })()}
+            </div>
+            <div className="d-flex flex-row align-items-center justify-content-end me-3">
+              <button
+                onClick={() => {
+                  setOpenMoreActions(true);
+                }}
+                className="btn btn-outline-dark btn-outline-text me-3"
+              >
+                More actions
+              </button>
+              <Link
+                to={`/compatibility-test/community/${ eventDetails ? eventDetails.communityId : null}/event/${eventDetails ?  eventDetails._id : null}/`}
+                target="_blank"
+              >
+                <button
+                  disabled={eventDetails && eventDetails.status === "Ended" ? true : false}
+                  className="btn btn-primary btn-outline-text"
+                >
+                  View event
+                </button>
+              </Link>
+            </div>
           </div>
-          <div className="d-flex flex-row align-items-center justify-content-end me-3">
-            <button
-              onClick={() => {
-                setOpenMoreActions(true);
-              }}
-              className="btn btn-outline-dark btn-outline-text me-3"
-            >
-              More actions
-            </button>
-            <Link to={`/compatibility-test/community/${eventDetails.communityId}/event/${eventDetails._id}/`} target="_blank">
-            <button
-              disabled={eventDetails.status === "Ended" ? true : false}
-             
-              className="btn btn-primary btn-outline-text"
-            >
-              View event
-            </button>
-            </Link>
-            
+          {/* Body section - left(side nav) & right(body content) */}
+          <div className="dashboard-body dashboard-body-edit">
+            <SideNavEdit
+              activeIndex={currentIndex}
+              handleEventOverviewClick={handleEventOverviewClick}
+              handleEventEntryAndParticipantsClick={
+                handleEventEntryAndParticipantsClick
+              }
+              handleScheduleClick={handleScheduleClick}
+              handleSessionsClick={handleSessionsClick}
+              handleSpeakersClick={handleSpeakersClick}
+              handleBoothsClick={handleBoothsClick}
+              handleSponsorsClick={handleSponsorsClick}
+              handleTicketingClick={handleTicketingClick}
+              handleReceptionSettingsClick={handleReceptionSettingsClick}
+              handleVideosClick={handleVideosClick}
+              handleStageVibesClick={handleStageVibesClick}
+              handleLiveStreamingClick={handleLiveStreamingClick}
+              handleRecordingClick={handleRecordingClick}
+              handleAnalyticsClick={handleAnalyticsClick}
+              handleIntegrationsClick={handleIntegrationsClick}
+              handleCouponsClick={handleCouponsClick}
+              handleAffliateClick={handleAffliateClick}
+              handleMailingClick={handleMailingClick}
+              handleReviewsClick={handleReviewsClick}
+              handleTrackingClick={handleTrackingClick}
+            />
+            <SideNavEditLean
+              activeIndex={currentIndex}
+              handleEventOverviewClick={handleEventOverviewClick}
+              handleEventEntryAndParticipantsClick={
+                handleEventEntryAndParticipantsClick
+              }
+              handleScheduleClick={handleScheduleClick}
+              handleSessionsClick={handleSessionsClick}
+              handleSpeakersClick={handleSpeakersClick}
+              handleBoothsClick={handleBoothsClick}
+              handleSponsorsClick={handleSponsorsClick}
+              handleTicketingClick={handleTicketingClick}
+              handleReceptionSettingsClick={handleReceptionSettingsClick}
+              handleVideosClick={handleVideosClick}
+              handleStageVibesClick={handleStageVibesClick}
+              handleLiveStreamingClick={handleLiveStreamingClick}
+              handleRecordingClick={handleRecordingClick}
+              handleAnalyticsClick={handleAnalyticsClick}
+              handleIntegrationsClick={handleIntegrationsClick}
+              handleCouponsClick={handleCouponsClick}
+              handleAffliateClick={handleAffliateClick}
+              handleMailingClick={handleMailingClick}
+              handleReviewsClick={handleReviewsClick}
+              handleTrackingClick={handleTrackingClick}
+            />
+  
+            <div className="main-content-wrapper" style={{ height: "100vh" }}>
+              {(() => {
+                switch (currentIndex) {
+                  case "0":
+                    return <EventOverview />;
+  
+                  case "1":
+                    return <EventEntryAndParticipants />;
+  
+                  case "2":
+                    return <EventSchedule />;
+  
+                  case "3":
+                    return (
+                      <ErrorBoundriesEditEventSession>
+                        <Sessions />
+                      </ErrorBoundriesEditEventSession>
+                    );
+  
+                  case "4":
+                    return (
+                      <ErrorBoundriesEditEventSpeakers>
+                        <Speakers />
+                      </ErrorBoundriesEditEventSpeakers>
+                    );
+  
+                  case "5":
+                    return (
+                      <ErrorBoundriesEditEventBooths>
+                        <Booths />
+                      </ErrorBoundriesEditEventBooths>
+                    );
+                  case "6":
+                    return (
+                      <ErrorBoundriesEditEventSponsors>
+                        <Sponsors />
+                      </ErrorBoundriesEditEventSponsors>
+                    );
+                  case "7":
+                    return (
+                      <ErrorBoundriesEditEventTickets>
+                        <Ticketing />
+                      </ErrorBoundriesEditEventTickets>
+                    );
+                  case "8":
+                    return <ReceptionSettings />;
+                  case "9":
+                    return <VideoLibrary />;
+                  case "10":
+                    return <StageVibesLibrary />;
+                  case "11":
+                    return <Recordings />;
+                  case "12":
+                    return <Analytics />;
+                  case "13":
+                    return <div>Live stream</div>;
+                  case "14":
+                    return <Integrations />;
+                  case "15":
+                    return <Coupons />;
+                  case "16":
+                    return <Email />;
+                  case "17":
+                    return <Affiliates />;
+                  case "18":
+                    return <Reviews />;
+                  case "19":
+                    return <Tracking />;
+  
+                  default:
+                    return <div>You are a community Editing an event.</div>;
+                }
+              })()}
+            </div>
           </div>
         </div>
-        {/* Body section - left(side nav) & right(body content) */}
-        <div className="dashboard-body dashboard-body-edit">
-          <SideNavEdit
-            activeIndex={currentIndex}
-            handleEventOverviewClick={handleEventOverviewClick}
-            handleEventEntryAndParticipantsClick={
-              handleEventEntryAndParticipantsClick
-            }
-            handleScheduleClick={handleScheduleClick}
-            handleSessionsClick={handleSessionsClick}
-            handleSpeakersClick={handleSpeakersClick}
-            handleBoothsClick={handleBoothsClick}
-            handleSponsorsClick={handleSponsorsClick}
-            handleTicketingClick={handleTicketingClick}
-            handleReceptionSettingsClick={handleReceptionSettingsClick}
-            handleVideosClick={handleVideosClick}
-            handleStageVibesClick={handleStageVibesClick}
-            handleLiveStreamingClick={handleLiveStreamingClick}
-            handleRecordingClick={handleRecordingClick}
-            handleAnalyticsClick={handleAnalyticsClick}
-            handleIntegrationsClick={handleIntegrationsClick}
-            handleCouponsClick={handleCouponsClick}
-            handleAffliateClick={handleAffliateClick}
-            handleMailingClick={handleMailingClick}
-            handleReviewsClick={handleReviewsClick}
-            handleTrackingClick={handleTrackingClick}
-          />
-          <SideNavEditLean
-            activeIndex={currentIndex}
-            handleEventOverviewClick={handleEventOverviewClick}
-            handleEventEntryAndParticipantsClick={
-              handleEventEntryAndParticipantsClick
-            }
-            handleScheduleClick={handleScheduleClick}
-            handleSessionsClick={handleSessionsClick}
-            handleSpeakersClick={handleSpeakersClick}
-            handleBoothsClick={handleBoothsClick}
-            handleSponsorsClick={handleSponsorsClick}
-            handleTicketingClick={handleTicketingClick}
-            handleReceptionSettingsClick={handleReceptionSettingsClick}
-            handleVideosClick={handleVideosClick}
-            handleStageVibesClick={handleStageVibesClick}
-            handleLiveStreamingClick={handleLiveStreamingClick}
-            handleRecordingClick={handleRecordingClick}
-            handleAnalyticsClick={handleAnalyticsClick}
-            handleIntegrationsClick={handleIntegrationsClick}
-            handleCouponsClick={handleCouponsClick}
-            handleAffliateClick={handleAffliateClick}
-            handleMailingClick={handleMailingClick}
-            handleReviewsClick={handleReviewsClick}
-            handleTrackingClick={handleTrackingClick}
-          />
+  
+        <EventMoreActions
+          open={openMoreActions}
+          handleClose={handleCloseMoreActions}
+        />
+      </>
+    );
+  }
+ 
 
-          <div className="main-content-wrapper" style={{ height: "100vh" }}>
-            {(() => {
-              switch (currentIndex) {
-                case "0":
-                  return <EventOverview />;
-
-                case "1":
-                  return <EventEntryAndParticipants />;
-
-                case "2":
-                  return <EventSchedule />;
-
-                case "3":
-                  return (
-                    <ErrorBoundriesEditEventSession>
-                      <Sessions />
-                    </ErrorBoundriesEditEventSession>
-                  );
-
-                case "4":
-                  return (
-                    <ErrorBoundriesEditEventSpeakers>
-                      <Speakers />
-                    </ErrorBoundriesEditEventSpeakers>
-                  );
-
-                case "5":
-                  return (
-                    <ErrorBoundriesEditEventBooths>
-                      <Booths />
-                    </ErrorBoundriesEditEventBooths>
-                  );
-                case "6":
-                  return (
-                    <ErrorBoundriesEditEventSponsors>
-                      <Sponsors />
-                    </ErrorBoundriesEditEventSponsors>
-                  );
-                case "7":
-                  return (
-                    <ErrorBoundriesEditEventTickets>
-                      <Ticketing />
-                    </ErrorBoundriesEditEventTickets>
-                  );
-                case "8":
-                  return <ReceptionSettings />;
-                case "9":
-                  return <VideoLibrary />;
-                case "10":
-                  return <StageVibesLibrary />;
-                case "11":
-                  return <Recordings />;
-                case "12":
-                  return <Analytics />;
-                case "13":
-                  return <div>Live stream</div>;
-                case "14":
-                  return <Integrations />;
-                case "15":
-                  return <Coupons />;
-                case "16":
-                  return <Email />;
-                case "17":
-                  return <Affiliates />;
-                case "18":
-                  return <Reviews />;
-                case "19":
-                  return <Tracking />;
-
-                default:
-                  return <div>You are a community Editing an event.</div>;
-              }
-            })()}
-          </div>
-        </div>
-      </div>
-
-      <EventMoreActions
-        open={openMoreActions}
-        handleClose={handleCloseMoreActions}
-      />
-    </>
-  );
+  
 };
 
 export default EditEventRoot;

@@ -90,10 +90,8 @@ const AddNewMember = ({
         createNewInvitation({ userId: userId, email: formValues.email })
       );
       handleClose();
-    window.location.reload();
+      window.location.reload();
     }
-    
-    
   };
 
   return (

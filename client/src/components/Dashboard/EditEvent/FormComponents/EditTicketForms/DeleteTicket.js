@@ -9,29 +9,28 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTicket, errorTrackerForDeleteTicket } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import styled from "styled-components";
 
-const DeleteTicket = (props) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+
+const DeleteTicket = ({openDeleteDialog, handleCloseDeleteTicket, id}) => {
   const {error, isLoading} = useSelector((state) => state.ticket);
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
 
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
 
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -52,12 +51,13 @@ const DeleteTicket = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.openDeleteDialog}
+        open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Delete this ticket."}
-        </DialogTitle>
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Delete this ticket.</FormHeading>
+        </HeaderFooter>
+
         <DialogContent>
           <DialogContentText>
             By doing so, no one will be able to register using this ticket
@@ -66,35 +66,24 @@ const DeleteTicket = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleCloseDeleteTicket}>
+
+        <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDeleteTicket}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteTicket(props.id));
-              props.handleCloseDeleteTicket();
-              setState({ open: true, vertical: "top", horizontal: "center" });
+              dispatch(deleteTicket(id));
+              handleCloseDeleteTicket();
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="info">
-            Ticket deleted successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

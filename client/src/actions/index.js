@@ -2200,76 +2200,97 @@ export const errorTrackerForDeleteBooth = () => async (dispatch, getState) => {
 export const createSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoading());
+
+    const key = `${id}/${UUID()}.jpeg`;
+
     try {
       if (file) {
-        console.log(formValues);
-        console.log(file);
+        
+        s3.getSignedUrl("putObject",  {
+          Bucket: "bluemeet",
+          Key: key,
+          ContentType: "image/jpeg",
+        }, 
+        
+        async (err, presignedURL) => {
+          const awsRes = await fetch(presignedURL, {
+            method: "PUT",
 
-        let uploadConfig = await fetch(
-          `${BaseURL}upload/user/img`,
+            body: file,
 
-          {
             headers: {
-              Authorization: `Bearer ${getState().auth.token}`,
+              "Content-Type": file.type,
             },
-          }
-        );
+          });
 
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
+          console.log(awsRes);
+
+          if (awsRes.status === 200) {
+            dispatch(communityActions.startLoading());
+
+            try {
+              let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
+                method: "POST",
+                body: JSON.stringify({
+                  ...formValues,
+                  image: key,
+                }),
+      
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().communityAuth.token}`,
+                },
+              });
+              if (!res.ok) {
+                if (!res.message) {
+                  throw new Error("Something went wrong");
+                } else {
+                  throw new Error(res.message);
+                }
+              }
+              res = await res.json();
+              console.log(res);
+      
+              dispatch(
+                sponsorActions.CreateSponsor({
+                  sponsor: res.data,
+                })
+              );
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Sponsor added successfully",
+                  severity: "success",
+                })
+              );
+
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 6000);
+            } catch (err) {
+              dispatch(communityActions.hasError(err.message));
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Failed to add sponsor.",
+                  severity: "error",
+                })
+              );
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 4000);
+            }
           }
         }
 
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
+        
+        )
 
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
+        
 
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-        // const amazoneFile = await awsRes.json();
-        // console.log(amazoneFile);
-        console.log(awsRes);
-
-        let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
-          method: "POST",
-          body: JSON.stringify({
-            ...formValues,
-            image: uploadConfig.key,
-          }),
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        });
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-        res = await res.json();
-        console.log(res);
-
-        dispatch(
-          sponsorActions.CreateSponsor({
-            sponsor: res.data,
-          })
-        );
+        
       } else {
-        console.log(id);
-        console.log(formValues);
-
+       
         let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
           method: "POST",
           body: JSON.stringify({
@@ -2297,10 +2318,34 @@ export const createSponsor =
             sponsor: res.data,
           })
         );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Sponsor added successfully",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
+
+
+
       }
     } catch (err) {
       console.log(err);
       dispatch(sponsorActions.hasError(err.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to add sponsor.",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 
@@ -2341,6 +2386,16 @@ export const fetchSponsor = (id) => async (dispatch, getState) => {
   } catch (err) {
     console.log(err);
 
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch sponsor.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
+
     dispatch(sponsorActions.detailHasError(err.message));
   }
 };
@@ -2373,7 +2428,6 @@ export const fetchSponsors =
         method: "GET",
 
         headers: {
-          // "Content-Type": "application/json",
           Authorization: `Bearer ${getState().communityAuth.token}`,
         },
       });
@@ -2399,6 +2453,16 @@ export const fetchSponsors =
     } catch (err) {
       dispatch(sponsorActions.hasError(err.message));
       console.log(err.response.data);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to fetch sponsors.",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 
@@ -2410,44 +2474,47 @@ export const errorTrackerForFetchSponsors =
 export const editSponsor =
   (formValues, file, id) => async (dispatch, getState) => {
     dispatch(sponsorActions.startLoadingDetail());
+
+    const key = `${id}/${UUID()}.jpeg`;
+
     try {
       if (file) {
-        console.log(formValues);
+       
+        s3.getSignedUrl(
 
-        console.log(file);
+          "putObject",
 
-        let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
-          headers: {
-            Authorization: `Bearer ${getState().auth.token}`,
+          {
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
           },
-        });
-        if (!uploadConfig.ok) {
-          if (!uploadConfig.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(uploadConfig.message);
-          }
-        }
 
-        uploadConfig = await uploadConfig.json();
-        console.log(uploadConfig);
 
-        const awsRes = await fetch(uploadConfig.url, {
-          method: "PUT",
 
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-        console.log(awsRes);
-
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
+  
+              body: file,
+  
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
+  
+            console.log(awsRes);
+  
+            if (awsRes.status === 200) {
+              dispatch(communityActions.startLoading());
+  
+              try {
+                
         let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
           method: "PATCH",
           body: JSON.stringify({
             ...formValues,
-            image: uploadConfig.key,
+            image: key,
           }),
 
           headers: {
@@ -2470,10 +2537,38 @@ export const editSponsor =
             sponsor: res.data,
           })
         );
+  
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Sponsor updated successfully",
+                    severity: "success",
+                  })
+                );
+  
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (err) {
+                dispatch(communityActions.hasError(err.message));
+  
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to update sponsor.",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
+              }
+            }
+          }
+
+
+        )
+
+       
       } else {
-        console.log(id);
-        console.log(formValues);
-
         let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
           method: "PATCH",
           body: JSON.stringify({
@@ -2500,9 +2595,29 @@ export const editSponsor =
             sponsor: res.data,
           })
         );
+
+        dispatch(
+          snackbarActions.openSnackBar({
+            message: "Sponsor updated successfully",
+            severity: "success",
+          })
+        );
+
+        setTimeout(function () {
+          dispatch(snackbarActions.closeSnackBar());
+        }, 6000);
       }
     } catch (err) {
       dispatch(sponsorActions.detailHasError(err.message));
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update sponsor.",
+          severity: "error",
+        })
+      );
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 4000);
     }
   };
 export const errorTrackerForEditSponsor = () => async (dispatch, getState) => {
@@ -2536,17 +2651,36 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
         id: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Sponsor deleted successfully",
+        severity: "success",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 4000);
+
   } catch (err) {
     console.log(err);
     dispatch(sponsorActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to delete sponsor.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForDeleteSponsor =
   () => async (dispatch, getState) => {
     dispatch(sponsorActions.disabledError());
   };
-
-//tickets actions
 
 export const createTicket = (formValues, id) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoading());
@@ -2580,9 +2714,30 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
         ticket: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Ticket added successfully!",
+        severity: "success",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   } catch (err) {
     console.log(err);
     dispatch(ticketActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to create ticket. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForCreateTicket = () => async (dispatch, getState) => {
@@ -2640,6 +2795,16 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch tickets. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 
@@ -2678,6 +2843,15 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
     );
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch ticket. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForFetchTicket = () => async (dispatch, getState) => {
@@ -2715,8 +2889,28 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
         ticket: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Ticket updated successfully!",
+        severity: "success",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update ticket. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
@@ -2752,8 +2946,28 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
         id: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Ticket deleted successfully!",
+        severity: "success",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to delete ticket. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForDeleteTicket = () => async (dispatch, getState) => {
@@ -2812,6 +3026,15 @@ export const madeJustForYou = () => async (dispatch) => {
     );
   } catch (err) {
     dispatch(eventActions.hasError(err.message));
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch events. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 
@@ -2878,6 +3101,16 @@ export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
     );
   } catch (err) {
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch Users in lobby. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 
@@ -2912,6 +3145,16 @@ export const fetchUsers = (id) => async (dispatch, getState) => {
     console.log(err);
 
     dispatch(speakerActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch users. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 export const errorTrackerForFetchSpeakers2 =
@@ -2949,6 +3192,16 @@ export const fetchUser = (formValues) => async (dispatch, getState) => {
   } catch (err) {
     console.log(err);
 
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch user. Please try again later.",
+        severity: "error",
+      })
+    );
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
     dispatch(userActions.hasError(err.message));
   }
 };
@@ -2959,77 +3212,86 @@ export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
   const editingUser = async () => {
+
+    const key = `${UUID()}.jpeg`;
+
     if (file) {
-      console.log(formValues);
 
-      console.log(file);
+      s3.getSignedUrl("putObject", {
+        Bucket: "bluemeet",
+        Key: key,
+        ContentType: "image/jpeg",
+      },
 
-      let uploadConfig = await fetch(`${BaseURL}upload/user/img`, {
-        headers: {
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      });
 
-      if (!uploadConfig.ok) {
-        throw new Error("Editing user details failed!");
-      }
-      if (!uploadConfig.ok) {
-        if (!uploadConfig.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(uploadConfig.message);
+      async (err, presignedURL) => {
+        const awsRes = await fetch(presignedURL, {
+          method: "PUT",
+
+          body: file,
+
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+
+        console.log(awsRes);
+
+        if (awsRes.status === 200) {
+          dispatch(communityActions.startLoading());
+
+          try {
+            const res = await fetch(`${BaseURL}users/updateMe`, {
+              method: "PATCH",
+              body: JSON.stringify({
+                ...formValues,
+                image: key,
+              }),
+      
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            });
+      
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+      
+            const result = await res.json();
+      
+            return result;
+           
+
+            
+          } catch (err) {
+            dispatch(communityActions.hasError(err.message));
+
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Failed to update community.",
+                severity: "error",
+              })
+            );
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 4000);
+          }
         }
       }
 
-      uploadConfig = await uploadConfig.json();
-      console.log(uploadConfig);
 
-      const awsRes = await fetch(uploadConfig.url, {
-        method: "PUT",
 
-        body: file,
+)
+     
+     
 
-        headers: {
-          "Content-Type": file.type,
-        },
-      });
-      // const amazoneFile = await awsRes.json();
-      // console.log(amazoneFile);
-      console.log(awsRes);
+      
 
-      const res = await fetch(`${BaseURL}users/updateMe`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-          image: uploadConfig.key,
-        }),
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      });
-
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(res.message);
-        }
-      }
-
-      const result = await res.json();
-
-      return result;
-
-      // console.log(result);
-      // // console.warn(xhr.responseText)
-      // console.log(result.data.userData);
-      // dispatch(
-      //   userActions.EditUser({
-      //     user: result.data.userData,
-      //   })
-      // );
     } else {
       const res = await fetch(`${BaseURL}users/updateMe`, {
         method: "PATCH",
@@ -3065,12 +3327,32 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
         user: result.data.userData,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "User profile updated successfully",
+        severity: "success",
+      })
+    );
+
     setTimeout(function () {
-      dispatch(userActions.disableSucceded());
-    }, 4000);
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+   
   } catch (err) {
     dispatch(userActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update profile. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
   }
 };
 
@@ -3102,7 +3384,6 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
       }
     }
     const result = await res.json();
-    console.log(result);
     dispatch(
       userActions.EditUser({
         user: result.data.userData,
@@ -3113,8 +3394,32 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
         token: result.token,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Password updated successfully",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   } catch (err) {
     dispatch(userActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update password. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   }
 };
 export const errorTrackerForEditUserPassword =
@@ -3126,10 +3431,8 @@ export const errorTrackerForEditUserPassword2 =
     dispatch(userActions.disabledError());
   };
 export const deleteUser = () => (dispatch, getState) => {
-  //not implemented yet
-};
 
-//community actions
+};
 
 export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
@@ -3161,6 +3464,18 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch communitiy. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   }
 };
 export const errorTrackerForFetchCommunity =
@@ -3197,8 +3512,32 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
         community: result.community,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Community profile updated successfully",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update community profile. Please try again later.",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
   }
 };
 

@@ -3,98 +3,89 @@ import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteSponsor, errorTrackerForDeleteSponsor } from "../../../../../actions";
+import {
+  deleteSponsor,
+  errorTrackerForDeleteSponsor,
+} from "../../../../../actions";
 import Loader from "../../../../Loader";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import styled from "styled-components";
 
-const DeleteSponsor = (props) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormHeading = styled.div`
+  font-size: 1.1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+const DeleteSponsor = ({ id, openDeleteDialog, handleCloseDeleteSponsor }) => {
   const dispatch = useDispatch();
-  const {error, isLoading} = useSelector((state) => state.sponsor);
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClose = () => {
-    setState({ vertical: "top", horizontal: "center", open: false });
-  };
+  const { error, isLoading } = useSelector((state) => state.sponsor);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForDeleteSponsor());
     alert(error);
     return;
   }
 
-
-
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.openDeleteDialog}
+        open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Remove this Sponsor."}
-        </DialogTitle>
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Remove this Sponsor.</FormHeading>
+        </HeaderFooter>
+
         <DialogContent>
           <DialogContentText>
             You are about to remove this sponsor. Are you sure ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleCloseDeleteSponsor}>
+          <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDeleteSponsor}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteSponsor(props.id));
-              props.handleCloseDeleteSponsor();
-              setState({ open: true, vertical: "top", horizontal: "center" });
+              dispatch(deleteSponsor(id));
+              handleCloseDeleteSponsor();
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
-      <div>
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={handleClose}
-          key={vertical + horizontal}
-          autoHideDuration={6000}
-        >
-          <Alert onClose={handleClose} severity="info">
-            Sponsor removed successfully!
-          </Alert>
-        </Snackbar>
-      </div>
     </>
   );
 };

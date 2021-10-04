@@ -37,27 +37,9 @@ const SectionHeading = styled.div`
   font-family: "Ubuntu";
 `;
 
-const TierIndicatorTab = styled.div`
-background-color: #F6F5F5;
-border-radius: 5px;
 
-font-size: 0.85rem;
-font-weight: 500;
-font-family: "Ubuntu";
-color: #3F3F3F;
-`
 
-const NoSponsorInTierTab = styled.div`
-text-align: center;
-background-color: #F1F1F1;
-border-radius: 5px;
 
-font-size: 0.85rem;
-font-weight: 500;
-font-family: "Ubuntu";
-color: #3F3F3F;
-
-`
 
 const options = [
   { value: "all", label: "All Sponsors" },
@@ -69,14 +51,14 @@ const options = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -136,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sponsors = () => {
-  const { enqueueSnackbar } = useSnackbar();
+  
 
   const [openManageTiers, setOpenManageTiers] = React.useState(false);
 
@@ -197,9 +179,7 @@ const Sponsors = () => {
   const classes = useStyles();
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
+    
 
     dispatch(errorTrackerForFetchTickets());
     return dispatch(errorTrackerForCreateTicket());
@@ -231,14 +211,12 @@ const Sponsors = () => {
             <div className="mx-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
                 onChange={(value) => setSponsorStatus(value.value)}
               />
             </div>
-
-            
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSponsor}

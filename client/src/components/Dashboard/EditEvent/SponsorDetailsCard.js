@@ -9,20 +9,8 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import EditSponsor from "./FormComponents/EditSponsorsForms/EditSponsor";
 import DeleteSponsor from "./FormComponents/EditSponsorsForms/deleteSponsor";
-// import { Link } from "react-router-dom";
 import { fetchSponsor } from "../../../actions";
 import { useDispatch } from "react-redux";
-
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import styled from "styled-components";
-import Draggable from "react-draggable"; // Draggable and Draggable core
-
-const OrderNumber = styled.span`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #212121;
-`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,8 +66,6 @@ const SponsorDetailsCard = (props) => {
             className="sponsors-list-fields-container"
             style={{ gridTemplateColumns: " 1fr 1.6fr 1.3fr 1fr 0.5fr", alignItems: "center" }}
           >
-           
-
             <div
               className="event-card-field "
               style={{
@@ -88,7 +74,6 @@ const SponsorDetailsCard = (props) => {
             >
               <div className="registrations-name-field">
                 <div className="registrations-field-label d-flex flex-row justify-content-start">
-                  {/* attendee avatar and name */}
                   <Avatar
                     alt={props.name}
                     src={props.url}
@@ -108,7 +93,6 @@ const SponsorDetailsCard = (props) => {
                 className="event-field-label registrations-field-label"
                 style={{ width: "100%", fontFamily: "Inter" }}
               >
-                {/* {props.organisationName} */}
                 {truncateText(props.organisationName, 30)}
               </div>
             </div>
@@ -125,7 +109,6 @@ const SponsorDetailsCard = (props) => {
                 className="event-field-label registrations-field-label d-flex flex-column align-items-start"
                 style={{ width: "100%", fontFamily: "Inter", color: "#538BF7" }}
               >
-                {/* {props.website} */}
                 {truncateText(props.website, 25)}
               </a>
             </div>
@@ -141,8 +124,6 @@ const SponsorDetailsCard = (props) => {
                   style={{ fontFamily: "Inter" }}
                 >
                   {props.status}
-                  {/* No need to limit characters here as this can only be Platinum, Diamond and Gold */}
-                  {/* {truncateText(props.status, 25)} */}
                 </div>
               </div>
             </div>

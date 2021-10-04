@@ -1,31 +1,87 @@
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
-import {SwipeableDrawer} from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
+import { SwipeableDrawer } from "@material-ui/core";
 import Select from "react-select";
 
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
 import { connect, useDispatch, useSelector } from "react-redux";
-import { reduxForm, Field } from "redux-form";
+import { reduxForm, Field, Form } from "redux-form";
 import { editTicket, errorTrackerForEditTicket } from "../../../../../actions";
 import Loader from "../../../../Loader";
+
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+import styled from "styled-components";
+
+const ticketVisibilityOptions = [
+  {value: "public", label: "Public"},
+  {value: "hidden", label: "Hidden"},
+  {value: "private", label: "Private"},
+]
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+
+  &:hover {
+    border: #538bf7;
+  }
+`;
+const StyledTextArea = styled.textarea`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const RadioLabel = styled.span`
+font-family: "Ubuntu" !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #585858 !important;
+`
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -41,7 +97,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -49,19 +105,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -76,7 +121,7 @@ const renderTextArea = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <textarea
+      <StyledTextArea
         rows="2"
         type={type}
         {...input}
@@ -86,19 +131,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -128,23 +162,20 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   </div>
 );
-const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, reset, id}) => {
+const EditTicket = ({
+  open,
+  handleClose,
+  handleSubmit,
+  pristine,
+  submitting,
+  reset,
+  id,
+}) => {
   const { detailError, isLoadingDetail } = useSelector((state) => state.ticket);
 
   const currencyOptions = [
@@ -162,8 +193,6 @@ const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, rese
     { value: "Social Lounge", label: "Social Lounge" },
     { value: "Booths", label: "Booths" },
   ];
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const dispatch = useDispatch();
 
@@ -188,27 +217,15 @@ const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, rese
 
     // console.log(ModifiedFormValues);
 
-    dispatch(editTicket(ModifiedFormValues, id));
+    dispatch(editTicket(ModifiedFormValues, id, handleClose));
 
     // showResults(ModifiedFormValues);
-    handleClose();
+    // handleClose();
   };
-
-  // if (isLoading) {
-  //   return (
-  //     <div
-  //       className="d-flex flex-row align-items-center justify-content-center"
-  //       style={{ width: "100%", height: "80vh" }}
-  //     >
-  //       {" "}
-  //       <Loader />{" "}
-  //     </div>
-  //   );
-  // }
 
   if (detailError) {
     dispatch(errorTrackerForEditTicket());
-    alert(detailError);
+    // alert(detailError);
     return null;
   }
 
@@ -225,18 +242,17 @@ const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, rese
             console.log("Side nav was closed");
           }}
         >
-        {isLoadingDetail ? (
-          <div
-            className="d-flex flex-row align-items-center justify-content-center"
-            style={{ width: "100%", height: "100%" }}
-          >
-            {" "}
-            <Loader />{" "}
-          </div>
-        ) : (
-          <form className="ui from error" onSubmit={handleSubmit(onSubmit)}>
-            <div className="create-new-coupon-form px-4 py-4">
-              <div className="form-heading-and-close-button mb-4">
+          {isLoadingDetail ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "100%", height: "100%" }}
+            >
+              {" "}
+              <Loader />{" "}
+            </div>
+          ) : (
+            <div style={{maxWidth: "600px"}}>
+              <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
                 <div></div>
                 <div className="coupon-overlay-form-headline">
                   Edit This Ticket
@@ -249,236 +265,231 @@ const EditTicket = ({open, handleClose, handleSubmit, pristine, submitting, rese
                     <CancelRoundedIcon />
                   </IconButton>
                 </div>
-              </div>
+              </HeaderFooter>
+              <form className="ui from error" onSubmit={handleSubmit(onSubmit)}>
+                <div className="create-new-coupon-form px-4 py-4">
+                  <div className="mb-3 overlay-form-input-row ">
+                    <div>
+                      <FormLabel Forhtml="eventStartDate">
+                        Ticket Name
+                      </FormLabel>
+                      <Field
+                        name="name"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="All access pass"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel Forhtml="eventEndDate">
+                      Short Description
+                    </FormLabel>
+                    <Field
+                      name="description"
+                      type="textarea"
+                      classes="form-control"
+                      id="exampleFormControlInput1"
+                      placeholder="Include all access to networking zone, expos, sessions and recordings"
+                      component={renderTextArea}
+                    />
+                  </div>
 
-              <div className="mb-3 overlay-form-input-row ">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
+                  <FormLabel Forhtml="eventStartDate">Type</FormLabel>
+                  <RadioGroup
+                    aria-label="ticket-type"
+                    defaultValue="paid"
+                    name="radio-buttons-group"
                   >
-                    Ticket Name
-                  </label>
-                  <Field
-                    name="name"
-                    type="text"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="All access pass"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
+                    <div className="mb-3 overlay-form-input-row form-row-3-in-1">
+                      <div>
+                        <FormControlLabel
+                          value="paid"
+                          control={<Radio />}
+                          label=""
+                        />
+                        <RadioLabel>Paid</RadioLabel>
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          value="free"
+                          control={<Radio />}
+                          label=""
+                        />
+                        <RadioLabel>Free</RadioLabel>
+                      </div>
+                      <div>
+                        <FormControlLabel
+                          value="donation"
+                          control={<Radio />}
+                          label=""
+                        />
+                        <RadioLabel>Donation</RadioLabel>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                  <div className="mb-4 overlay-form-input-row form-row-3-in-1">
+                    <div>
+                      <FormLabel Forhtml="eventStartDate">Currency</FormLabel>
+                      <Field
+                        name="currency"
+                        placeholder="currency"
+                        styles={styles}
+                        menuPlacement="top"
+                        options={currencyOptions}
+                        component={renderReactSelect}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel Forhtml="eventStartDate">Price</FormLabel>
+                      <Field
+                        name="price"
+                        type="number"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="50"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                    <FormLabel for="communityName">
+                      Number of ticket available
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="numberOfTicketAvailable"
+                        type="number"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="50"
+                        component={renderInput}
+                      />
+                    </div>
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel Forhtml="eventStartDate">
+                        Sales Start Date
+                      </FormLabel>
+                      <Field
+                        name="startDate"
+                        type="date"
+                        classes="form-control"
+                        id="eventStartDate"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel Forhtml="eventStartTime">
+                        Sales Start Time
+                      </FormLabel>
+                      <Field
+                        name="startTime"
+                        type="time"
+                        classes="form-control"
+                        id="eventStartTime"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
 
-              <div className="mb-4 overlay-form-input-row">
-                <label
-                  Forhtml="eventEndDate"
-                  className="form-label form-label-customized"
-                >
-                  Short Description
-                </label>
-                <Field
-                  name="description"
-                  type="textarea"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Include all access to networking zone, expos, sessions and recordings"
-                  component={renderTextArea}
-                />
-              </div>
-
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel Forhtml="eventEndDate">
+                        Sales End Date
+                      </FormLabel>
+                      <Field
+                        name="endDate"
+                        type="date"
+                        classes="form-control"
+                        id="eventEndDate"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel Forhtml="eventEndTime">
+                        Sales End Time
+                      </FormLabel>
+                      <Field
+                        name="endTime"
+                        type="time"
+                        classes="form-control"
+                        id="eventEndTime"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel for="communityName">
+                      Select Available Venue Areas
+                    </FormLabel>
+                    <Field
+                      name="venueAreasAccessible"
+                      isMulti
+                      placeholder="venue areas"
+                      styles={styles}
+                      menuPlacement="top"
+                      options={venueAreaOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel for="communityName">
+                      Visibility
+                    </FormLabel>
+                    <Field
+                      name="ticketVisibility"
+                      placeholder="Ticket visibility"
+                      styles={styles}
+                      menuPlacement="top"
+                      options={ticketVisibilityOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel for="communityName">
+                      Message for attendees
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="messageForAttendee"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
+                        placeholder="Say thank you. This message will be sent along with the ticket."
+                        component={renderTextArea}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    style={{ width: "100%" }}
+                    className="d-flex flex-row justify-content-end"
                   >
-                    Currency
-                  </label>
-                  <Field
-                    name="currency"
-                    placeholder="currency"
-                    styles={styles}
-                    menuPlacement="top"
-                    options={currencyOptions}
-                    // defaultValue={eventOptions[0]}
-                    component={renderReactSelect}
-                  />
+                    <button
+                      disabled={pristine || submitting}
+                      onClick={reset}
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                    >
+                      Discard
+                    </button>
+                    <button
+                      type="submit"
+                      // disabled={pristine || submitting}
+                      className="btn btn-primary btn-outline-text"
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Price
-                  </label>
-                  <Field
-                    name="price"
-                    type="number"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="50"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-            <div>
-              <label
-                Forhtml="eventStartDate"
-                className="form-label form-label-customized"
-              >
-               Sales Start Date
-              </label>
-              <Field
-                name="startDate"
-                type="date"
-                classes="form-control"
-                id="eventStartDate"
-                component={renderInput}
-              />
+              </form>
             </div>
-            <div>
-              <label
-                Forhtml="eventStartTime"
-                className="form-label form-label-customized"
-              >
-               Sales Start Time
-              </label>
-              <Field
-                name="startTime"
-                type="time"
-                classes="form-control"
-                id="eventStartTime"
-                component={renderInput}
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-            <div>
-              <label
-                Forhtml="eventEndDate"
-                className="form-label form-label-customized"
-              >
-               Sales End Date
-              </label>
-              <Field
-                name="endDate"
-                type="date"
-                classes="form-control"
-                id="eventEndDate"
-                component={renderInput}
-              />
-            </div>
-            <div>
-              <label
-                Forhtml="eventEndTime"
-                className="form-label form-label-customized"
-              >
-               Sales End Time
-              </label>
-              <Field
-                name="endTime"
-                type="time"
-                classes="form-control"
-                id="eventEndTime"
-                component={renderInput}
-              />
-            </div>
-          </div>
-
-              <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Select Available Venue Areas
-              </label>
-              <Field
-                name="venueAreasAccessible"
-                isMulti
-                placeholder="venue areas"
-                styles={styles}
-                menuPlacement="top"
-                options={venueAreaOptions}
-                // defaultValue={eventOptions[0]}
-                component={renderReactSelect}
-              />
-            </div>
-
-            
-
-              <div className="mb-3 overlay-form-input-row">
-                <label
-                  for="communityName"
-                  className="form-label form-label-customized"
-                >
-                  Number of ticket available
-                </label>
-                <div className="form-group">
-                  <Field
-                    name="numberOfTicketAvailable"
-                    type="number"
-                    classes="form-control"
-                    ariadescribedby="emailHelp"
-                    placeholder="50"
-                    component={renderInput}
-                  />
-                </div>
-              </div>
-
-              
-
-
-
-            <div className="mb-3 overlay-form-input-row">
-              <label
-                for="communityName"
-                className="form-label form-label-customized"
-              >
-                Message for attendees
-              </label>
-              <div className="form-group">
-                <Field
-                  name="messageForAttendee"
-                  
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="Say thank you. This message will be sent along with the ticket."
-                  component={renderTextArea}
-                />
-              </div>
-            </div>
-
-              <div
-                style={{ width: "100%" }}
-                className="d-flex flex-row justify-content-end"
-              >
-                <button
-                  disabled={pristine || submitting}
-                  onClick={reset}
-                  className="btn btn-outline-primary btn-outline-text me-3"
-                >
-                  Discard
-                </button>
-
-                <button
-                  type="submit"
-                  // disabled={pristine || submitting}
-                  className="btn btn-primary btn-outline-text"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-      </SwipeableDrawer>
+          )}
+        </SwipeableDrawer>
       </React.Fragment>
     </>
   );
