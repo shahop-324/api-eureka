@@ -134,11 +134,10 @@ const renderReactSelect = ({
   </div>
 );
 
-const AddNewCoupon = (props) => {
+const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { handleSubmit } = props;
   const dispatch = useDispatch();
 
   const events = useSelector((state) => state.event.events);
@@ -163,8 +162,8 @@ const AddNewCoupon = (props) => {
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
-    dispatch(createCoupon(ModifiedFormValues));
-    props.handleClose();
+    dispatch(createCoupon(ModifiedFormValues, handleClose));
+    // handleClose();
     window.location.reload();
   };
 
@@ -172,17 +171,14 @@ const AddNewCoupon = (props) => {
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.open}
+        open={open}
         aria-labelledby="responsive-dialog-title"
       >
         <>
           <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
             <div></div>
             <div className="coupon-overlay-form-headline">Create a coupon</div>
-            <div
-              className="overlay-form-close-button"
-              onClick={props.handleClose}
-            >
+            <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton aria-label="delete">
                 <CancelRoundedIcon />
               </IconButton>
@@ -247,7 +243,9 @@ const AddNewCoupon = (props) => {
 
               <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
-                  <FormLabel Forhtml="eventStartDate">Applicable from date</FormLabel>
+                  <FormLabel Forhtml="eventStartDate">
+                    Applicable from date
+                  </FormLabel>
                   <Field
                     name="statDate"
                     type="date"
@@ -257,7 +255,9 @@ const AddNewCoupon = (props) => {
                   />
                 </div>
                 <div>
-                  <FormLabel Forhtml="eventStartDate">Applicable from time</FormLabel>
+                  <FormLabel Forhtml="eventStartDate">
+                    Applicable from time
+                  </FormLabel>
                   <Field
                     name="startTime"
                     type="time"

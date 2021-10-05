@@ -13,7 +13,6 @@ import styled from 'styled-components';
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
 import Select from 'react-select';
 
 const couponOptions = [];
@@ -182,8 +181,6 @@ const CreateNewAffiliate = (props) => {
         open={props.open}
         aria-labelledby="responsive-dialog-title"
       >
-
-
 <>
 
 
@@ -259,15 +256,13 @@ const CreateNewAffiliate = (props) => {
                 (This indicates total commision in percent)
               </TextSmall>
               </FormLabel>
-
               <Field
                 name="commisionValue"
                 type="number"
                 classes="form-control"
                 id="exampleFormControlInput1"
                 component={renderInput}
-              />
-             
+              /> 
             </div>
 
             <FormLabel Forhtml="eventStartDate">
@@ -302,6 +297,43 @@ const CreateNewAffiliate = (props) => {
                         label=""
                       />
                       <RadioLabel>Select coupons</RadioLabel>
+                    </div>
+                  </div>
+                </RadioGroup>
+
+
+                <FormLabel Forhtml="eventStartDate">
+                  Which tickets should be visibile via this affiliate link ?
+                </FormLabel>
+                <RadioGroup
+                  aria-label="ticket-type"
+                  defaultValue="Public"
+                  name="radio-buttons-group"
+                >
+                  <div className="mb-3 overlay-form-input-row form-row-3-in-1">
+                    <div>
+                      <FormControlLabel
+                        value="Public"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Public</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="Hidden"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Hidden</RadioLabel>
+                    </div>
+                    <div>
+                      <FormControlLabel
+                        value="Both"
+                        control={<Radio />}
+                        label=""
+                      />
+                      <RadioLabel>Both</RadioLabel>
                     </div>
                   </div>
                 </RadioGroup>
@@ -358,9 +390,6 @@ const CreateNewAffiliate = (props) => {
             </div>
           </div>
         </form>
-
-
-
         </>
       </Dialog>
     </>

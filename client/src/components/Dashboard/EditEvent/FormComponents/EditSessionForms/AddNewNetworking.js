@@ -402,26 +402,7 @@ const AddNewNetworking = ({
                       />
                     </div>
                   </div>
-                  <div className="mb-4 overlay-form-input-row">
-                    <div className="d-flex flex-row align-items-center justify-content-between">
-                      <FormLabel
-                        for="communityName"
-                        className="form-label form-label-customized"
-                      >
-                        Who can join this
-                      </FormLabel>
-                      <button
-                        className="btn btn-primary btn-outline-text form-control"
-                        style={{ width: "100px", display: "block" }}
-                      >
-                        Control
-                      </button>
-                    </div>
-
-                    <WhoCanJoinThis className="mb-2">
-                      Everyone in this event can join by default.
-                    </WhoCanJoinThis>
-                  </div>
+                  
 
                   <div className="mb-3 overlay-form-input-row">
                     <FormLabel

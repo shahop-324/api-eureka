@@ -441,6 +441,24 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
           </div>
 
           <div className="mb-4 overlay-form-input-row">
+            <FormLabel
+              Forhtml="selectCategories"
+              className="form-label form-label-customized"
+            >
+              Select moderators
+            </FormLabel>
+            <Field
+              name="selectModerators"
+              isMulti="true"
+              styles={styles}
+              menuPlacement="auto"
+              options={options}
+              defaultValue={options[0]}
+              component={renderReactSelect}
+            />
+          </div>
+
+          <div className="mb-4 overlay-form-input-row">
             <FormLabel className="form-label form-label-customized">Event Visibility</FormLabel>
             <div className="form-check mb-2">
               <Field
@@ -518,6 +536,19 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
             </div>
           </div>
 
+          <div className="mb-4 overlay-form-input-row">
+                <FormLabel for="communityName" className="form-label form-label-customized">
+                  Number Of Tables in lounge
+                </FormLabel>
+                <Field
+                  name="numberOfTablesInLounge"
+                  type="number"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="100"
+                  component={renderInput}
+                />
+              </div>
           <div
             className={showInlineButton === "false" ? "hide" : ""}
           ></div>

@@ -1,8 +1,6 @@
-//  This is event overview page
-
 import React, { useState } from "react";
 import styled from "styled-components";
-import { uploadEventImage, editEvent } from "../../../actions";
+import {  editEvent } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
@@ -18,7 +16,6 @@ import { useSnackbar } from "notistack";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
 import EmbeddableWidget from "./SubComponent/EmbeddableWidget";
 
@@ -31,88 +28,13 @@ import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 
-import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import { IconButton } from "@material-ui/core";
 
-import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
-import PagesRoundedIcon from "@mui/icons-material/PagesRounded";
 import MainEventSetupCheckList from "../Checklist/Main";
 
-const CheckListSteps = styled.div`
-  background-color: #f5f7f8;
-  padding: 20px;
-  height: 100%;
 
-  border-radius: 10px;
-`;
 
-const FillerOuter = styled.div`
-  width: 100%;
-  height: 7px;
-  background-color: #cfcece;
-  border-radius: 20px;
-`;
 
-const StepSectionButton = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
 
-  font-weight: 500;
-  font-family: "Ubuntu";
-  color: #212121;
-  font-size: 0.85rem;
-  background-color: transparent;
-
-  span {
-    font-weight: 500;
-    font-family: "Ubuntu";
-    color: #757575;
-    font-size: 0.78rem;
-  }
-
-  border-radius: 10px;
-  padding: 10px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #dfebf8;
-  }
-`;
-
-const CheckListButton = styled.div`
-  background-color: ${(props) =>
-    props && props.active ? "#DFEBF8" : "transparent"};
-
-  font-weight: 500;
-  font-family: "Ubuntu";
-  color: #363636;
-  font-size: 0.85rem;
-  border-radius: 10px;
-  padding: 10px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #dfebf8;
-  }
-`;
-
-const FillerInner = styled.div`
-  width: 60%;
-  height: 7px;
-  background-color: #74c54f;
-  border-radius: 20px;
-`;
-
-const CheckListHeading = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 1rem;
-  color: #212121;
-`;
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -224,8 +146,6 @@ const EventOverview = (props) => {
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
-
-  const communityId = params.communityId;
 
   const onSubmit = () => {
     const JSONData = {

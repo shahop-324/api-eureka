@@ -26,6 +26,9 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import styled from "styled-components";
 
+let hostOptions;
+let coHostOptions;
+
 const StyledInput = styled.input`
   font-weight: 500;
   font-family: "Ubuntu";
@@ -80,6 +83,13 @@ const FormWarning = styled.div`
   color: orange;
   font-weight: 400;
   font-size: 0.8rem;
+`;
+
+const WhoCanJoinThis = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
 `;
 
 function Alert(props) {
@@ -202,6 +212,27 @@ const AddNewSession = ({
 }) => {
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
+
+
+  const { invitations, communityManagers } = useSelector(
+    (state) => state.community
+  );
+
+  const { superAdminName, superAdminEmail, superAdminImage } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  hostOptions = communityManagers.map((el) => {
+    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})` };
+  });
+
+  hostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
+
+  coHostOptions = communityManagers.map((el) => {
+    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})`};
+  });
+
+  coHostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
 
  
   const dispatch = useDispatch();
@@ -383,6 +414,46 @@ const AddNewSession = ({
                     component={renderReactSelect}
                   />
                 </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Host</FormLabel>
+                  <Field
+                    name="cohost"
+                    placeholder="Select co-host"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={hostOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Co-host</FormLabel>
+                  <Field
+                    name="cohost"
+                    placeholder="Select co-host"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={coHostOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
+                  <div className="d-flex flex-row align-items-center justify-content-between">
+                    <FormLabel for="communityName">Who can join this</FormLabel>
+                    <button
+                      className="btn btn-primary btn-outline-text form-control"
+                      style={{ width: "100px", display: "block" }}
+                    >
+                      Control
+                    </button>
+                  </div>
+
+                  <WhoCanJoinThis className="mb-2">
+                    Everyone in this event can join by default.
+                  </WhoCanJoinThis>
+                </div>
+
                 <div className="mb-3 overlay-form-input-row">
                   <FormLabel for="tags">Tags</FormLabel>
                   <div className="form-group">
@@ -395,7 +466,6 @@ const AddNewSession = ({
                     type="submit"
                     className="btn btn-primary btn-outline-text"
                     style={{ width: "100%" }}
-                    // disabled={pristine || submitting}
                   >
                     Add New Session
                   </button>

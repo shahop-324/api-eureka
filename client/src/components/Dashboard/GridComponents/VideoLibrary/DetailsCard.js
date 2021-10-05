@@ -5,6 +5,7 @@ import dateFormat from "dateformat";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import Divider from "@material-ui/core/Divider";
+import DeleteVideo from "../../SubComponents/DeleteVideo";
 
 const now = new Date();
 
@@ -32,7 +33,9 @@ const VideoLibraryListFields = () => {
         </div>
         <div className="registrations-invoice-field">
           <div className="registrations-field-label">
-            <div>
+            <div onClick={() => {
+              setOpenDeleteVideo(true);
+            }}>
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
               </IconButton>
@@ -43,6 +46,8 @@ const VideoLibraryListFields = () => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
+
+      <DeleteVideo open={openDeleteVideo} handleClose={handleCloseDeleteVideo} />
     </>
   );
 };

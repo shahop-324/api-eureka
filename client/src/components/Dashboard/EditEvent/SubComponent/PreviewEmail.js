@@ -1,17 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 
 import Select from "react-select";
@@ -43,17 +36,9 @@ const styles = {
 const Container = styled.div`
   background-color: transparent;
   height: 80vh;
-  /* display: grid;
-  grid-template-columns: 5fr 1.8fr;
-  grid-gap: 24px; */
 `;
 
-const TextSmall = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #646464;
-`;
+
 
 const TextDescriptive = styled.span`
   font-weight: 500;

@@ -58,6 +58,7 @@ import StageVibesLibrary from "./StageVibesLibrary";
 
 import EventMoreActions from "./SubComponent/EventMoreActions";
 import styled from "styled-components";
+import LiveStream from "./LiveStream";
 
 const Strip = styled.div`
   background-color: #f75353;
@@ -444,7 +445,7 @@ const EditEventRoot = () => {
                   case "12":
                     return <Analytics />;
                   case "13":
-                    return <div>Live stream</div>;
+                    return <LiveStream />;
                   case "14":
                     return <Integrations />;
                   case "15":

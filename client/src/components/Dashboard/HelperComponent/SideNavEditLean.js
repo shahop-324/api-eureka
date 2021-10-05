@@ -20,6 +20,7 @@ import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Ra
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
 import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
 import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
+import LiveTvRoundedIcon from "@mui/icons-material/LiveTvRounded"; // Live streaming
 
 const SideNavEditLean = ({
   activeIndex,
@@ -299,35 +300,36 @@ const SideNavEditLean = ({
             </div>
           </div>
 
-          {/* <div
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleReceptionSettingsClick();
+              handleCouponsClick();
             }}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "8" ? "active-wrapper-h" : "")
+                (activeIndex === "15" ? "active-wrapper-h" : "")
               }
             >
-              <CalendarViewDayRoundedIcon
+              <LoyaltyRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "8" ? "icon-btn-active-h" : "")
+                  (activeIndex === "15" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "8" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "15" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
-              Reception settings
+              Coupons
             </div>
-          </div> */}
+          </div>
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
@@ -357,7 +359,38 @@ const SideNavEditLean = ({
               Videos
             </div>
           </div>
+
           {/* <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleReceptionSettingsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "8" ? "active-wrapper-h" : "")
+              }
+            >
+              <CalendarViewDayRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "8" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "8" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Reception settings
+            </div>
+          </div> */}
+          
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleStageVibesClick();
@@ -385,66 +418,43 @@ const SideNavEditLean = ({
             >
               Stage vibes
             </div>
-          </div> */}
-          <div
+          </div>
+
+
+
+
+<div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleRecordingClick();
+              handleAffliateClick();
             }}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "11" ? "active-wrapper-h" : "")
+                (activeIndex === "17" ? "active-wrapper-h" : "")
               }
             >
-              <VideocamRoundedIcon
+              <PersonOutlinedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "11" ? "icon-btn-active-h" : "")
+                  (activeIndex === "17" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "17" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
-              Recording
+              Affiliate
             </div>
           </div>
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
-            onClick={() => {
-              handleAnalyticsClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "12" ? "active-wrapper-h" : "")
-              }
-            >
-              <AssessmentRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "12" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "12" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Analytics
-            </div>
-          </div>
-          {/* <div
+
+
+<div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleLiveStreamingClick();
@@ -472,63 +482,35 @@ const SideNavEditLean = ({
             >
               Live stream
             </div>
-          </div> */}
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
-            onClick={() => {
-              handleIntegrationsClick();
-            }}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "14" ? "active-wrapper-h" : "")
-              }
-            >
-              <SettingsEthernetRoundedIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "14" ? "icon-btn-active-h" : "")
-                }
-              />
-            </div>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "14" ? "icon-btn-text-active-h" : "")
-              }
-              style={{ textAlign: "center" }}
-            >
-              Integrations
-            </div>
           </div>
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleCouponsClick();
+              handleRecordingClick();
             }}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "15" ? "active-wrapper-h" : "")
+                (activeIndex === "11" ? "active-wrapper-h" : "")
               }
             >
-              <LoyaltyRoundedIcon
+              <VideocamRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "15" ? "icon-btn-active-h" : "")
+                  (activeIndex === "11" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "15" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "11" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
-              Coupons
+              Recording
             </div>
           </div>
           <div
@@ -563,32 +545,65 @@ const SideNavEditLean = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
-              handleAffliateClick();
+              handleAnalyticsClick();
             }}
           >
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "17" ? "active-wrapper-h" : "")
+                (activeIndex === "12" ? "active-wrapper-h" : "")
               }
             >
-              <PersonOutlinedIcon
+              <AssessmentRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "17" ? "icon-btn-active-h" : "")
+                  (activeIndex === "12" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "17" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "12" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >
-              Affiliate
+              Analytics
             </div>
           </div>
+          
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            onClick={() => {
+              handleIntegrationsClick();
+            }}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "14" ? "active-wrapper-h" : "")
+              }
+            >
+              <SettingsEthernetRoundedIcon
+                className={
+                  "icon-btn-h " +
+                  (activeIndex === "14" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text " +
+                (activeIndex === "14" ? "icon-btn-text-active-h" : "")
+              }
+              style={{ textAlign: "center" }}
+            >
+              Integrations
+            </div>
+          </div>
+          
+          
+          
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {

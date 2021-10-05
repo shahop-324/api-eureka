@@ -369,6 +369,18 @@ const AddStreamInBluemeet = ({
                 </div>
 
                 <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Speakers</FormLabel>
+                  <Field
+                    name="speaker"
+                    placeholder="Select speakers"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={speakerOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
+                <div className="mb-4 overlay-form-input-row">
                   <FormLabel>Stream settings</FormLabel>
                   <div className="form-check mb-2">
                     <Field
@@ -416,56 +428,7 @@ const AddStreamInBluemeet = ({
                   </div>
                 </div>
 
-                <div className="mb-4 overlay-form-input-row">
-                  <div className="d-flex flex-row align-items-center justify-content-between">
-                    <FormLabel for="communityName">Stream Key & URL</FormLabel>
-                  </div>
-
-                  <div className="referral-link-and-copy-to-clipboard mb-3">
-                    <div
-                      className="ui action input"
-                      style={{ minWidth: "300px" }}
-                    >
-                      <input
-                        type="text"
-                        value={"stream key"}
-                        readOnly
-                        placeholder="Search..."
-                      />
-                      <button
-                        className="ui icon button"
-                        onClick={() => {
-                          navigator.clipboard.writeText("stream key");
-                          alert("copied to clipboard!");
-                        }}
-                      >
-                        <i className="copy outline icon"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="referral-link-and-copy-to-clipboard">
-                    <div
-                      className="ui action input"
-                      style={{ minWidth: "300px" }}
-                    >
-                      <input
-                        type="text"
-                        value={"stream url"}
-                        readOnly
-                        placeholder="Search..."
-                      />
-                      <button
-                        className="ui icon button"
-                        onClick={() => {
-                          navigator.clipboard.writeText("stream url");
-                          alert("copied to clipboard!");
-                        }}
-                      >
-                        <i className="copy outline icon"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                
 
                 <div className="mb-4 overlay-form-input-row">
                   <div className="d-flex flex-row align-items-center justify-content-between">
