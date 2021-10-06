@@ -13,6 +13,12 @@ const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const mongoose = require("mongoose");
 const RegistrationForm = require("./../models/registrationFormModel");
+const User = require("./../models/userModel");
+const Mux = require("@mux/mux-node");
+const { Video } = new Mux(
+  process.env.MUX_TOKEN_ID,
+  process.env.MUX_TOKEN_SECRET
+);
 
 const uniqid = require("uniqid");
 const sgMail = require("@sendgrid/mail");
@@ -101,9 +107,18 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     communityName: communityGettingEvent.name,
     organisedBy: communityGettingEvent.name,
     communityId: communityGettingEvent._id,
+    numberOfTablesInLounge: req.body.numberOfTablesInLounge,
+  });
+
+  // Generate mux stream key --- this needs to be very very private.
+
+  const muxRes = await Video.LiveStreams.create({
+    playback_policy: "public",
+    new_asset_settings: { playback_policy: "public" },
   });
 
   // 0) Create a registration form document for this event and store its id in this event
+
   const registrationForm = await RegistrationForm.create({
     initialisedAt: Date.now(),
     eventId: createdEvent._id,
@@ -111,6 +126,10 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
   createdEvent.registrationFormId = registrationForm._id;
 
+  createdEvent.muxStreamKey = muxRes.stream_key;
+  createdEvent.muxVideoPlaybackId = muxRes.playback_ids[0].id;
+  createdEvent.mux_credentialId = muxRes.id;
+  createdEvent.moderators = req.body.moderators;
   const newEvent = await createdEvent.save({
     new: true,
     validateModifiedOnly: true,
@@ -140,6 +159,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   });
 
   const query = Event.find({ createdBy: mongoose.Types.ObjectId(communityId) })
+    .sort({ createdAt: -1 })
     .populate("sponsors")
     .populate("tickets")
     .populate("booths")
@@ -171,7 +191,9 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
 
 exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
-  const event = await Event.findById(eventId).populate("registrationFormId");
+  const event = await Event.findById(eventId)
+    .populate("registrationFormId")
+    .populate("moderators", "firstName lastName email");
 
   res.status(200).json({
     status: "success",
@@ -555,7 +577,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "mailChimpAudienceListIdForLeads",
     "mailChimpAudienceListIdForInterestedPeople",
     "addDirectAccessLinkToMailChimp",
-    "status"
+    "status",
+    "numberOfTablesInLounge"
   );
 
   const eventDoc = await Event.findByIdAndUpdate(req.params.id, filteredBody, {
@@ -571,10 +594,18 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       eventDoc.categories = req.body.categories;
     }
 
-    const updatedEvent = await eventDoc.save({
+    if (req.body.moderators) {
+      eventDoc.moderators = req.body.moderators;
+    }
+
+    await eventDoc.save({
       new: true,
       validateModifiedOnly: true,
     });
+
+    const updatedEvent = await Event.findById(eventDoc._id)
+      .populate("registrationFormId")
+      .populate("moderators", "firstName lastName email");
 
     res.status(200).json({
       status: "success",

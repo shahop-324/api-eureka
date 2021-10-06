@@ -27,7 +27,7 @@ const eventSlice = createSlice({
       state.isLoading = false;
     },
     CreateEvent(state, action) {
-      state.events.push(action.payload.event);
+      state.events.unshift(action.payload.event);
       state.isLoading = false;
     },
     FetchEvents(state, action) {

@@ -7,53 +7,54 @@ import { useDispatch } from "react-redux";
 import { createEvent } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import { useSelector } from "react-redux";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const StyledInput = styled.input`
-font-weight: 500;
-font-family: "Ubuntu";
-font-size: 0.8rem;
-color: #4E4E4E;
-`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
 
 const FormLabel = styled.label`
-font-family: "Ubuntu" !important;
-font-size: 0.82rem !important;
-font-weight: 500 !important;
-color: #727272 !important;
-`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+`;
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
 const FormHeading = styled.div`
-font-size: 1.2rem;
-font-family: "Ubuntu";
-font-weight: 600;
-color: #212121;
-`
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
 
 const FormSubHeading = styled.div`
-font-size: 0.87rem;
-font-family: "Ubuntu";
-font-weight: 500;
-color: #424242;
-`
+  font-size: 0.87rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #424242;
+`;
 
 const FormError = styled.div`
-font-family: "Ubuntu";
-color: red;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const FormWarning = styled.div`
-font-family: "Ubuntu";
-color: orange;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInput = ({
   input,
@@ -75,19 +76,8 @@ const renderInput = ({
         required
       />
       {touched &&
-        ((error && (
-          <FormError className="my-1">
-            {error}
-          </FormError>
-        )) ||
-          (warning && (
-            <FormWarning
-              className="my-1"
-              
-            >
-              {warning}
-            </FormWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -114,19 +104,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <FormError className="my-1">
-            {error}
-          </FormError>
-        )) ||
-          (warning && (
-            <FormWarning
-              className="my-1"
-              
-            >
-              {warning}
-            </FormWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -226,31 +205,59 @@ const styles = {
     ...base,
     fontFamily: "Ubuntu",
     fontWeight: "500",
-    fontSize: "0.8rem",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
     fontFamily: "Ubuntu",
     fontWeight: "500",
-    fontSize: "0.8rem",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
 };
 
-const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showInlineButton, hideFormHeading }) => {
-  
+const CreateNewEventForm = ({
+  handleSubmit,
+  handleClose,
+  showBlockButton,
+  showInlineButton,
+  hideFormHeading,
+}) => {
+  let hostOptions = [];
+  const communityManagers = useSelector((state) => state.community.communityManagers);
+
+  const { superAdminName, superAdminEmail, superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  hostOptions = communityManagers.map((el) => {
+    return {
+      value: el._id,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
+  });
+
+  hostOptions.push({
+    value: superAdmin,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
 
   const dispatch = useDispatch();
 
   const onSubmit = (formValues) => {
-    const categories = [];
+    let categories = [];
+    let moderators = [];
+
+    if (formValues.moderators !== undefined) {
+      for (let element of formValues.moderators) {
+        moderators.push(element.value);
+      }
+    }
 
     for (let element of formValues.selectCategories) {
       categories.push(element.value);
     }
-
-    console.log(categories);
 
     const ModifiedFormValues = {};
     ModifiedFormValues.eventName = formValues.eventName;
@@ -262,13 +269,17 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
     ModifiedFormValues.Timezone = formValues.selectTimeZone.value;
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
+    ModifiedFormValues.numberOfTablesInLounge =
+      formValues.numberOfTablesInLounge;
+    ModifiedFormValues.moderators = moderators;
+
     dispatch(createEvent(ModifiedFormValues));
     handleClose();
   };
   return (
     <>
       <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-      <HeaderFooter className="px-4 pt-3 pb-4">
+        <HeaderFooter className="px-4 pt-3 pb-4">
           <div
             className="form-heading-and-close-button"
             style={{ width: "100%" }}
@@ -280,11 +291,7 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
             >
               New Event
             </FormHeading>
-            <div
-              className="overlay-form-close-button"
-              onClick={handleClose}
-            >
-             
+            <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton
                 type="button"
                 aria-label="delete"
@@ -292,7 +299,6 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
               >
                 <CancelRoundedIcon />
               </IconButton>
-              
             </div>
           </div>
           <FormSubHeading
@@ -304,11 +310,13 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
           >
             Let's create an all new event for your community.
           </FormSubHeading>
-          </HeaderFooter>
+        </HeaderFooter>
         <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
-          
           <div className="mb-4 overlay-form-input-row">
-            <FormLabel for="eventName" className="form-label form-label-customized">
+            <FormLabel
+              for="eventName"
+              className="form-label form-label-customized"
+            >
               Event Name
             </FormLabel>
             <Field
@@ -448,18 +456,20 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
               Select moderators
             </FormLabel>
             <Field
-              name="selectModerators"
+              name="moderators"
               isMulti="true"
               styles={styles}
               menuPlacement="auto"
-              options={options}
-              defaultValue={options[0]}
+              options={hostOptions}
+              defaultValue={hostOptions}
               component={renderReactSelect}
             />
           </div>
 
           <div className="mb-4 overlay-form-input-row">
-            <FormLabel className="form-label form-label-customized">Event Visibility</FormLabel>
+            <FormLabel className="form-label form-label-customized">
+              Event Visibility
+            </FormLabel>
             <div className="form-check mb-2">
               <Field
                 name="visibility"
@@ -496,9 +506,7 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
                 type="radio"
                 name="visibility"
                 id="flexRadioDefault2"
-                
                 value="Private"
-                
                 component="input"
               />
               <label
@@ -513,7 +521,7 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
                 Private
               </label>
             </div>
-            <div className="form-check">
+            {/* <div className="form-check">
               <Field
                 className="form-check-input"
                 type="radio"
@@ -533,25 +541,26 @@ const CreateNewEventForm = ({ handleSubmit, handleClose, showBlockButton, showIn
               >
                 Hidden
               </label>
-            </div>
+            </div> */}
           </div>
 
           <div className="mb-4 overlay-form-input-row">
-                <FormLabel for="communityName" className="form-label form-label-customized">
-                  Number Of Tables in lounge
-                </FormLabel>
-                <Field
-                  name="numberOfTablesInLounge"
-                  type="number"
-                  classes="form-control"
-                  ariadescribedby="emailHelp"
-                  placeholder="100"
-                  component={renderInput}
-                />
-              </div>
-          <div
-            className={showInlineButton === "false" ? "hide" : ""}
-          ></div>
+            <FormLabel
+              for="communityName"
+              className="form-label form-label-customized"
+            >
+              Number Of Tables in lounge
+            </FormLabel>
+            <Field
+              name="numberOfTablesInLounge"
+              type="number"
+              classes="form-control"
+              ariadescribedby="emailHelp"
+              placeholder="24"
+              component={renderInput}
+            />
+          </div>
+          <div className={showInlineButton === "false" ? "hide" : ""}></div>
           <div
             className="d-flex flex-row justify-content-end"
             style={{ width: "100%" }}

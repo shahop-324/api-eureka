@@ -1139,7 +1139,18 @@ export const editEventDescription =
           event: res.updatedEvent,
         })
       );
-      alert("About details updated successfully!");
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:"Event description updated!",
+          severity: "success",
+        })
+      );
+  
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+      
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
     }

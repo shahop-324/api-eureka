@@ -159,8 +159,6 @@ const EventManagement = () => {
 
   const renderCommunityEventsList = (communityEvents) => {
     return communityEvents
-      .slice(0)
-      .reverse()
       .map((communityEvent) => {
         const {
           id,

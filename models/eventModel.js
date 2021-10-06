@@ -85,7 +85,7 @@ const eventSchema = new mongoose.Schema(
     visibility: {
       type: String,
       required: [true, "An event can be either public or private"],
-      enum: ["Public", "Private"],
+      enum: ["Public", "Private", "Hidden"],
     },
     views: {
       type: Number,
@@ -426,6 +426,25 @@ const eventSchema = new mongoose.Schema(
     stopTicketSale: {
       type: Boolean,
       default: false,
+    },
+
+    numberOfTablesInLounge: {
+      type: Number,
+      default: 24,
+    },
+    moderators: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+    muxServerURL: {
+      type: String,
+      default: "rtmps://global-live.mux.com:443/app",
+    },
+    muxStreamKey: {
+      type: String,
+    },
+    muxVideoPlaybackId: {
+      type: String,
+    },
+    mux_credentialId: {
+      type: String,
     },
 
     // TODO I have to do research on how recording will work and where it will be stored.

@@ -226,6 +226,26 @@ const EditBasicDetailsForm = ({
   open,
   handleClose,
 }) => {
+  let moderatorOptions = [];
+  const communityManagers = useSelector((state) => state.community.communityManagers);
+
+  const { superAdminName, superAdminEmail, superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  moderatorOptions = communityManagers.map((el) => {
+    return {
+      value: el._id,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
+  });
+
+  moderatorOptions.push({
+    value: superAdmin,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
+
+
   const { enqueueSnackbar } = useSnackbar();
 
   const theme = useTheme();
@@ -239,6 +259,13 @@ const EditBasicDetailsForm = ({
 
   const onSubmit = (formValues) => {
     const categories = [];
+    let moderators = [];
+
+    if (formValues.moderators !== undefined) {
+      for (let element of formValues.moderators) {
+        moderators.push(element.value);
+      }
+    }
 
     for (let element of formValues.selectCategories) {
       categories.push(element.value);
@@ -256,6 +283,9 @@ const EditBasicDetailsForm = ({
     ModifiedFormValues.Timezone = formValues.selectTimeZone.value;
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
+    ModifiedFormValues.numberOfTablesInLounge =
+    formValues.numberOfTablesInLounge;
+  ModifiedFormValues.moderators = moderators;
 
     dispatch(editEvent(ModifiedFormValues, id));
     handleClose();
@@ -468,12 +498,11 @@ const EditBasicDetailsForm = ({
                 Select moderators
               </FormLabel>
               <Field
-                name="selectModerators"
+                name="moderators"
                 isMulti="true"
                 styles={styles}
                 menuPlacement="auto"
-                options={options}
-                defaultValue={options[0]}
+                options={moderatorOptions}
                 component={renderReactSelect}
               />
             </div>
@@ -532,7 +561,7 @@ const EditBasicDetailsForm = ({
                   Private
                 </label>
               </div>
-              <div className="form-check">
+              {/* <div className="form-check">
                 <Field
                   className="form-check-input"
                   type="radio"
@@ -554,7 +583,7 @@ const EditBasicDetailsForm = ({
                 >
                   Hidden
                 </label>
-              </div>
+              </div> */}
             </div>
 
             <div className="mb-4 overlay-form-input-row">
@@ -665,9 +694,25 @@ const mapStateToProps = (state) => ({
           };
         })
       : null,
+
+    moderators:
+      state.event.eventDetails && state.event.eventDetails.moderators
+        ? state.event.eventDetails.moderators.map((element) => {
+            return {
+              value: element._id,
+              label: element.firstName + " " + element.lastName + `(${element.email})`,
+            };
+          })
+        : null,
+
     visibility:
       state.event.eventDetails && state.event.eventDetails.visibility
         ? state.event.eventDetails.visibility
+        : "",
+    numberOfTablesInLounge:
+      state.event.eventDetails &&
+      state.event.eventDetails.numberOfTablesInLounge
+        ? state.event.eventDetails.numberOfTablesInLounge
         : "",
     service:
       state.event.eventDetails && state.event.eventDetails.service

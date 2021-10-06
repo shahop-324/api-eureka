@@ -8,14 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SearchIcon from "@material-ui/icons/Search";
 import AddParticipantsOptions from "./AddParticipantsOptions";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import { useParams } from "react-router";
 import {
   fetchRegistrationsOfParticularEvent,
-  sendBulkAttendeeEmail,
+  showSnackbar
 } from "./../../../../actions";
 import AttendeeBulkInvite from "./AttendeeBulkInvite";
+import NoRegistrations from "./../../../../assets/images/Painter.svg";
+import NoContentFound from "../../../NoContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -204,22 +205,36 @@ const Participants = () => {
           </div>
 
           <Button
+          
             variant="contained"
-            color="primary"
+            color="secondary"
             className={`${classes.button} me-3 btn-outline-text`}
             startIcon={<GetAppIcon />}
             style={{ backgroundColor: "#538BF7" }}
             onClick={() => {
-              CreateAndDownloadCSV(processRegistrationData());
-              console.log(processRegistrationData());
+              if(typeof registrations !== "undefined" &&
+              registrations.length > 0 ) {
+                CreateAndDownloadCSV(processRegistrationData());
+                console.log(processRegistrationData());
+                dispatch(showSnackbar("success", "CSV file eported!"));
+              }
+              else {
+                dispatch(showSnackbar("info", "There are no registrations to export."));
+              }
+             
             }}
           >
             Export
           </Button>
           <button
             onClick={() => {
-              // dispatch(sendBulkAttendeeEmail(bulkMailInfo));
-              setOpenBulkMailConfirmation(true);
+              if(typeof registrations !== "undefined" &&
+              registrations.length > 0) {
+                setOpenBulkMailConfirmation(true);
+              }
+              else {
+                dispatch(showSnackbar("info", "There are no registrations to send invite."));
+              }
             }}
             className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center"
           >
@@ -243,7 +258,9 @@ const Participants = () => {
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
-        {renderParticipants(registrations)}
+        { typeof registrations !== "undefined" &&
+            registrations.length > 0 ? renderParticipants(registrations) : <NoContentFound msgText="Awaiting registrations. Please spread word about your event."
+            img={NoRegistrations} />}
       </div>
 
       <AddParticipantsOptions open={open} handleClose={handleClose} />
