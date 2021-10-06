@@ -11,10 +11,8 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   captureUserInterestInEvent,
-  createQuery,
   errorTrackerForFetchEvent,
   fetchEvent,
   getCommunityTawkLink,
@@ -25,7 +23,6 @@ import SpeakerCard from "./HelperComponent/SpeakerCard";
 import DiamondSponsorCard from "./HelperComponent/DiamondSponsorCard";
 import PlatinumSponsorCard from "./HelperComponent/PlatinumSponsorCard";
 import GoldSponsorCard from "./HelperComponent/GoldSponsorCard";
-
 import BoothCard from "./HelperComponent/BoothCard";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -37,96 +34,50 @@ import dateFormat from "dateformat";
 import { reduxForm } from "redux-form";
 import TicketForm from "./FormComponent/TicketForm";
 import AvatarMenu from "../AvatarMenu";
-// import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-// import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
-
-import { withStyles } from "@material-ui/core/styles";
-import MuiAccordion from "@material-ui/core/Accordion";
-import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
-import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
-import Typography from "@material-ui/core/Typography";
-
-import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import Footer from "../Footer";
 import { Avatar, IconButton } from "@material-ui/core";
 import StickyFooter from "./HelperComponent/StickyFooter";
 import Loader from "../Loader";
-import { useSnackbar } from "notistack";
+import styled from 'styled-components';
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
-}));
-
-const Accordion = withStyles({
-  root: {
-    border: "1px solid rgba(0, 0, 0, .125)",
-    backgroundColor: "#FFFFFF8A",
-    borderRadius: "5px",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    "&$expanded": {
-      margin: "auto",
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: "rgba(0, 0, 0, .03)",
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    marginBottom: -1,
-    minHeight: 56,
-    "&$expanded": {
-      minHeight: 56,
-    },
-  },
-  content: {
-    "&$expanded": {
-      margin: "12px 0",
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
+const MessageStrip = styled.div`
+background-color: #E74646;
+padding: 5px 12px;
+font-weight: 500;
+font-family: "Ubuntu";
+font-size: 0.86rem;
+color: #FFFFFF;
+text-align: center;
+`
 
 const EventLandingPage = (props) => {
   const params = useParams();
 
+  const currentEventId = params.id;
+
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
+  const userDetails = useSelector((state) => state.user.userDetails);
+
+  let alreadyRegistered = false; // Boolean flag
+
+  if (isSignedIn) {
+    // get list of all events in which attendee is registered.
+    // compare if eventId is included in users registered events array.
+    if (userDetails) {
+      if (userDetails.registeredInEvents) {
+        const EventsIdsArray = userDetails.registeredInEvents.map(
+          (el) => el._id
+        );
+        if (EventsIdsArray.includes(currentEventId)) {
+          alreadyRegistered = true;
+        }
+      }
+    }
+
+    // if yes then don't allow to register again
+
+    // else leave it in normal state.
+  }
 
   const { isLoading, error } = useSelector((state) => state.event);
 
@@ -153,29 +104,15 @@ const EventLandingPage = (props) => {
     }
   }, []);
 
-  const classes = useStyles();
+
 
   const [selectedSection, setSelectedSection] = useState(0);
 
-  const [expanded, setExpanded] = React.useState("panel1");
 
-  const [queryText, setQueryText] = React.useState("");
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
 
-  const [state, setState] = React.useState({
-    openSuccess: false,
-    vertical: "top",
-    horizontal: "center",
-  });
 
-  const { vertical, horizontal, openSuccess } = state;
 
-  const handleCloseSuccess = () => {
-    setState({ vertical: "top", horizontal: "center", openSuccess: false });
-  };
 
   const handleSecNav = (i) => {
     setSelectedSection(i);
@@ -186,7 +123,7 @@ const EventLandingPage = (props) => {
     return stateToHTML(convertFromRaw(JSON.parse(text)));
   };
 
-  const { userDetails } = useSelector((state) => state.user);
+ 
   let event = useSelector((state) => state.event.eventDetails);
 
   if (isLoading || isTakwLinkLoading) {
@@ -219,24 +156,8 @@ const EventLandingPage = (props) => {
 
   console.log(event);
 
-  const handleQueryText = (event) => {
-    setQueryText(event.target.value);
-  };
 
-  const handleAskQuery = () => {
-    const formValues = {};
-    formValues.createdBy = userDetails.id;
-    formValues.userName = `${userDetails.firstName} ${userDetails.lastName}`;
-    formValues.userImg = userDetails.image;
-    formValues.createdForEventId = id;
-    formValues.questionText = queryText;
 
-    console.log(formValues);
-
-    dispatch(createQuery(formValues));
-
-    setState({ openSuccess: true, vertical: "top", horizontal: "center" });
-  };
 
   let col = 2;
   let secNavCol = "1fr 1fr 1fr 1fr 1fr";
@@ -285,16 +206,11 @@ const EventLandingPage = (props) => {
 
   const renderSessionList = () => {
     return event.session.map((session) => {
-      // let startDate = new Date(session.startDate);
-      // startDate = dateFormat("mmmm dS");
-      // let startTime = new Date(session.startTime);
-      // startTime = dateFormat("h:MM TT");
-      // let endTime = new Date(session.startTime);
-      // endTime = dateFormat("h:MM TT");
+      
       console.log(session.speaker);
       return (
         <SessionCard
-          // startDate={startDate}
+         
           startTime={session.startTime}
           endTime={session.endTime}
           sessionName={session.name}
@@ -422,6 +338,8 @@ const EventLandingPage = (props) => {
 
   return (
     <>
+    <>
+    {alreadyRegistered === true ? <MessageStrip>You are registered for this event. You can now join event or add to your calender.</MessageStrip> : <></> }
       {tawkLink && chatBot(tawkLink)}
       {formatDate()}
       <CssBaseline />
@@ -973,17 +891,7 @@ const EventLandingPage = (props) => {
         />
       </div>
 
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={openSuccess}
-        onClose={handleCloseSuccess}
-        autoHideDuration={4000}
-      >
-        <Alert onClose={handleCloseSuccess} severity="info">
-          Query submitted successfully! You will recieve answer in your user
-          profile section.
-        </Alert>
-      </Snackbar>
+     </>
     </>
   );
 };

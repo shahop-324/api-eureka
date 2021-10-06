@@ -117,7 +117,7 @@ const SideNavEditLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Event entry & participants
+              Registrations
             </div>
           </div>
           {/* <div

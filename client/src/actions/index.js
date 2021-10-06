@@ -495,7 +495,7 @@ export const fetchEvents = (query) => async (dispatch) => {
     // console.log(res.data.data.events);
     dispatch(
       eventActions.FetchEvents({
-        events: res.data,
+        events: res.data.data.events,
       })
     );
   } catch (e) {
@@ -7004,3 +7004,109 @@ export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
     }, 6000);
   }
 };
+
+
+export const sendAttendeeInvite = (registrationId) => async (dispatch, getState) => {
+try{
+  let res = await fetch(
+    `${BaseURL}registrations/sendInvite/${registrationId}`,
+
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    if (!res.message) {
+      throw new Error("Something went wrong");
+    } else {
+      throw new Error(res.message);
+    }
+  }
+  res = await res.json();
+
+  dispatch(
+    snackbarActions.openSnackBar({
+      message: "Invitation sent successfully!",
+      severity: "success",
+    })
+  );
+
+  setTimeout(function () {
+    dispatch(snackbarActions.closeSnackBar());
+  }, 6000);
+}
+catch(error) {
+  console.log(error);
+
+  dispatch(
+    snackbarActions.openSnackBar({
+      message: "Sending invitation failed. Please try again later.",
+      severity: "error",
+    })
+  );
+
+  setTimeout(function () {
+    dispatch(snackbarActions.closeSnackBar());
+  }, 6000);
+}
+}
+
+export const sendBulkAttendeeEmail = (infoObject) => async(dispatch, getState) => {
+  try{
+
+    let res = await fetch(
+      `${BaseURL}registrations/sendBulkInvite`,
+      {
+        method: "POST",
+
+        body: JSON.stringify(infoObject),
+  
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+  
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+  
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Invitation sent successfully!",
+        severity: "success",
+      })
+    );
+  
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+
+  }
+  catch(error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Sending invitation failed. Please try again later.",
+        severity: "error",
+      })
+    );
+  
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+  }
+}

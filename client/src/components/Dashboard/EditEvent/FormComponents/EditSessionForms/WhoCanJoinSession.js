@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { SwipeableDrawer, IconButton, Avatar } from "@material-ui/core";
 import styled from "styled-components";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
-import Faker from 'faker';
+import Faker from "faker";
 
 const Grid = styled.div`
   width: 840px;
@@ -18,7 +18,8 @@ const Grid = styled.div`
 `;
 
 const ToggleCard = styled.div`
-  background-color: #f5f5f5;
+  background-color: ${(props) =>
+    props && props.active ? "#c7c7c7" : "#f5f5f5"};
 
   border-radius: 10px;
   padding: 20px;
@@ -32,6 +33,7 @@ const ToggleCard = styled.div`
 
   &:hover {
     background-color: #c7c7c7;
+    cursor: pointer;
   }
 `;
 
@@ -40,7 +42,6 @@ const DisplayIcon = styled.div`
   border-radius: 50%;
   background-color: #ffffff;
   padding: 10px;
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -75,14 +76,13 @@ grid-gap: 16px; */
 `;
 
 const PeopleContainer = styled.div`
-background-color: #f5f5f5;
+  background-color: #f5f5f5;
 
-border-radius: 10px;
-padding: 20px;
+  border-radius: 10px;
+  padding: 20px;
 
-height: 70vh;
-
-`
+  height: 70vh;
+`;
 
 const TicketSelector = styled.div`
   background-color: #ffffff;
@@ -96,7 +96,7 @@ const TicketSelector = styled.div`
 `;
 
 const PeopleSelector = styled.div`
-background-color: #ffffff;
+  background-color: #ffffff;
   font-size: 0.87rem;
   font-weight: 500;
   font-family: "Ubuntu";
@@ -106,13 +106,21 @@ background-color: #ffffff;
   padding: 10px;
 `;
 
-const WhoCanJoinSession = (props) => {
+const WhoCanJoinSession = ({
+  open,
+  handleClose,
+  setEntryRestriction, // *  enum: ["ticketHolders", "people"]
+  setAllowedTicketTypes, // * array: [{type: mongoose.Schema.ObjectId, ref: "Tickets"}]
+  setAllowedPeople, // * array: [{type: mongoose.Schema.ObjectId, ref: "Users"}]
+}) => {
+  const [selectedTab, setSelectedTab] = useState("ticketHolders");
+
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
           anchor="right"
-          open={props.open}
+          open={open}
           onOpen={() => {
             console.log("Side nav was opended");
           }}
@@ -129,10 +137,7 @@ const WhoCanJoinSession = (props) => {
               >
                 Control who can join
               </div>
-              <div
-                className="overlay-form-close-button"
-                onClick={props.handleClose}
-              >
+              <div className="overlay-form-close-button" onClick={handleClose}>
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
                 </IconButton>
@@ -146,7 +151,13 @@ const WhoCanJoinSession = (props) => {
               className="pe-3"
               style={{ borderRight: "1px solid #D8D8D8", height: "100%" }}
             >
-              <ToggleCard>
+              <ToggleCard
+                active={selectedTab === "ticketHolders" ? true : false}
+                onClick={() => {
+                  setSelectedTab("ticketHolders");
+                  setEntryRestriction("ticketHolders");
+                }}
+              >
                 <DisplayIcon>
                   <ConfirmationNumberIcon
                     style={{ fontSize: "2.5rem" }}
@@ -164,7 +175,13 @@ const WhoCanJoinSession = (props) => {
               </ToggleCard>
               <hr />
 
-              <ToggleCard>
+              <ToggleCard
+                active={selectedTab === "specificPeople" ? true : false}
+                onClick={() => {
+                  setSelectedTab("specificPeople");
+                  setEntryRestriction("people");
+                }}
+              >
                 <DisplayIcon>
                   <PeopleOutlineRoundedIcon
                     style={{ fontSize: "2.5rem" }}
@@ -184,41 +201,83 @@ const WhoCanJoinSession = (props) => {
 
             {/* Corresponding Ui */}
             <div>
-              {/* <TicketContainer>
-                <TextHeading style={{ fontWeight: "500", fontSize: "0.9rem" }} className="mb-4">
-                  Select tickets
-                </TextHeading>
-                <TicketSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
-                    All access pass
-                    <input type="checkbox" className="form-check-input" style={{height: "20px", width: "20px"}}></input>
-                </TicketSelector>
-                <TicketSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
-                    VIP Pass
-                    <input type="checkbox" className="form-check-input" style={{height: "20px", width: "20px"}}></input>
-                </TicketSelector>
-              </TicketContainer> */}
-              <PeopleContainer>
-              <TextHeading style={{ fontWeight: "500", fontSize: "0.9rem" }} className="mb-4">
-                  Select people (323)
-                </TextHeading>
+              {(() => {
+                switch (selectedTab) {
+                  case "ticketHolders":
+                    return (
+                      <TicketContainer>
+                        <TextHeading
+                          style={{ fontWeight: "500", fontSize: "0.9rem" }}
+                          className="mb-4"
+                        >
+                          Select tickets
+                        </TextHeading>
+                        <TicketSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
+                          All access pass
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            style={{ height: "20px", width: "20px" }}
+                          ></input>
+                        </TicketSelector>
+                        <TicketSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
+                          VIP Pass
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            style={{ height: "20px", width: "20px" }}
+                          ></input>
+                        </TicketSelector>
+                      </TicketContainer>
+                    );
 
-                <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
-                <Avatar src={Faker.image.avatar()} />
-                    {"Shreyansh shah"}
-                    <input type="checkbox" className="form-check-input" style={{height: "20px", width: "20px"}}></input>
-                </PeopleSelector>
-                <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
-                <Avatar src={Faker.image.avatar()} />
-                    {Faker.name.findName()}
-                    <input type="checkbox" className="form-check-input" style={{height: "20px", width: "20px"}}></input>
-                </PeopleSelector>
-                <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
-                <Avatar src={Faker.image.avatar()} />
-                    {Faker.name.findName()}
-                    <input type="checkbox" className="form-check-input" style={{height: "20px", width: "20px"}}></input>
-                </PeopleSelector>
+                  case "specificPeople":
+                    return (
+                      <>
+                        <PeopleContainer>
+                          <TextHeading
+                            style={{ fontWeight: "500", fontSize: "0.9rem" }}
+                            className="mb-4"
+                          >
+                            Select people (323)
+                          </TextHeading>
 
-                  </PeopleContainer>
+                          <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
+                            <Avatar src={Faker.image.avatar()} />
+                            {"Shreyansh shah"}
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              style={{ height: "20px", width: "20px" }}
+                            ></input>
+                          </PeopleSelector>
+                          <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
+                            <Avatar src={Faker.image.avatar()} />
+                            {Faker.name.findName()}
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              style={{ height: "20px", width: "20px" }}
+                            ></input>
+                          </PeopleSelector>
+                          <PeopleSelector className="d-flex flex-row align-items-center justify-content-between mb-3">
+                            <Avatar src={Faker.image.avatar()} />
+                            {Faker.name.findName()}
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              style={{ height: "20px", width: "20px" }}
+                            ></input>
+                          </PeopleSelector>
+                        </PeopleContainer>
+                      </>
+                    );
+
+                  default:
+                    break;
+                }
+              })()}
+
               <button
                 className="btn btn-primary btn-outline-text mt-5"
                 style={{ width: "100%" }}

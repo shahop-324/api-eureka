@@ -2,13 +2,7 @@
 import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import Snackbar from "@material-ui/core/Snackbar";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import {
@@ -18,13 +12,13 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import MuiAlert from "@material-ui/lab/Alert";
 import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import WhoCanJoinSession from "./WhoCanJoinSession";
 
 let hostOptions;
 let coHostOptions;
@@ -78,9 +72,7 @@ const FormWarning = styled.div`
   font-size: 0.8rem;
 `;
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+
 
 const styles = {
   control: (base) => ({
@@ -197,6 +189,17 @@ const AddStreamInBluemeet = ({
   submitting,
 }) => {
   let speakerOptions = [];
+
+  const [openControl, setOpenControl] = React.useState(false);
+
+  const handleOpenControl = () => {
+    setOpenControl(true);
+  };
+
+  const handleCloseControl = () => {
+    setOpenControl(false);
+  };
+
   const { error, isLoading } = useSelector((state) => state.session);
 
   const { invitations, communityManagers } = useSelector(
@@ -379,7 +382,6 @@ const AddStreamInBluemeet = ({
                     component={renderReactSelect}
                   />
                 </div>
-
                 <div className="mb-4 overlay-form-input-row">
                   <FormLabel>Stream settings</FormLabel>
                   <div className="form-check mb-2">
@@ -427,14 +429,13 @@ const AddStreamInBluemeet = ({
                     </FormLabel>
                   </div>
                 </div>
-
-                
-
                 <div className="mb-4 overlay-form-input-row">
                   <div className="d-flex flex-row align-items-center justify-content-between">
                     <FormLabel for="communityName">Who can join this</FormLabel>
                     <button
-                      className="btn btn-primary btn-outline-text form-control"
+                    type="button"
+                    onClick={handleOpenControl}
+                      className="btn btn-outline-primary btn-outline-text form-control"
                       style={{ width: "100px", display: "block" }}
                     >
                       Control
@@ -496,6 +497,8 @@ const AddStreamInBluemeet = ({
           </>
         </SwipeableDrawer>
       </React.Fragment>
+
+      <WhoCanJoinSession open={openControl} handleClose={handleCloseControl} />
     </>
   );
 };

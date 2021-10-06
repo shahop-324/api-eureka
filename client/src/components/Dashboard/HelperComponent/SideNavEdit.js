@@ -165,7 +165,7 @@ const SideNavEdit = ({
               (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
-            Event entry & Registrations
+           Registrations
           </div>
         </div>
         {/* <div

@@ -13,6 +13,10 @@ router.get(
   registrationController.getAllRegistrations
 );
 
+router.post("/sendInvite/:registrationId", authController.protectCommunity, registrationController.sendInvite);
+
+router.post("/sendBulkInvite", authController.protectCommunity, registrationController.sendBulkInvite);
+
 // Route for getting all registrations of one particular event
 router.get(
   "/event/:eventId/getAllRegistration",

@@ -25,6 +25,7 @@ import MultiTagInput from "../../../MultiTagInput";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import styled from "styled-components";
+import WhoCanJoinSession from "./WhoCanJoinSession";
 
 let hostOptions;
 let coHostOptions;
@@ -213,6 +214,21 @@ const AddNewSession = ({
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
 
+  const [openControl, setOpenControl] = React.useState(false);
+
+  const [entryRestriction, setEntryRestriction] = React.useState(null); // Can be ticket based or person based i.e., enum: ["ticketHolders", "people"]
+
+  const [allowedTicketsTypes, setAllowedTicketTypes] = React.useState(null); // Array of id of allowed ticket types to be given entry to this session
+
+  const [allowedPeople, setAllowedPeople] = React.useState(null); // Array of id of all participants who are allowed to access this session
+
+  const handleOpenControl = () => {
+    setOpenControl(true);
+  };
+
+  const handleCloseControl = () => {
+    setOpenControl(false);
+  };
 
   const { invitations, communityManagers } = useSelector(
     (state) => state.community
@@ -223,18 +239,29 @@ const AddNewSession = ({
   );
 
   hostOptions = communityManagers.map((el) => {
-    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})` };
+    return {
+      value: el.email,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
   });
 
-  hostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
+  hostOptions.push({
+    value: superAdminEmail,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
 
   coHostOptions = communityManagers.map((el) => {
-    return { value: el.email, label: el.firstName + " " + el.lastName + " " + `(${el.email})`};
+    return {
+      value: el.email,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
   });
 
-  coHostOptions.push({ value: superAdminEmail, label: superAdminName + " " + `(${superAdminEmail})` });
+  coHostOptions.push({
+    value: superAdminEmail,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
 
- 
   const dispatch = useDispatch();
 
   const speakers = useSelector((state) => state.speaker.speakers);
@@ -283,6 +310,26 @@ const AddNewSession = ({
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
     ModifiedFormValues.speakers = speakersArray;
     ModifiedFormValues.tags = formValues.tags;
+    ModifiedFormValues.host = formValues.hostArray;
+    ModifiedFormValues.cohost = formValues.coHostArray;
+    ModifiedFormValues.entryRestriction = formValues.entryRestriction;
+
+    if (ModifiedFormValues.entryRestriction !== null) {
+      switch (ModifiedFormValues.entryRestriction) {
+        case "ticketHolders":
+          // Save list of ticket holders to give access to in ModifiedFormValues
+          ModifiedFormValues.allowedTickets = allowedTicketsTypes;
+          break;
+
+        case "people":
+          // Save list of people to give access to in ModifiedFormValues
+          ModifiedFormValues.allowedTickets = allowedPeople;
+          break;
+
+        default:
+          break;
+      }
+    }
 
     console.log(ModifiedFormValues, "Checking session formValues");
 
@@ -417,7 +464,7 @@ const AddNewSession = ({
                 <div className="mb-4 overlay-form-input-row">
                   <FormLabel for="communityName">Host</FormLabel>
                   <Field
-                    name="cohost"
+                    name="host"
                     placeholder="Select co-host"
                     styles={styles}
                     menuPlacement="top"
@@ -437,23 +484,22 @@ const AddNewSession = ({
                     component={renderReactSelect}
                   />
                 </div>
-
                 <div className="mb-4 overlay-form-input-row">
                   <div className="d-flex flex-row align-items-center justify-content-between">
                     <FormLabel for="communityName">Who can join this</FormLabel>
                     <button
-                      className="btn btn-primary btn-outline-text form-control"
+                      onClick={handleOpenControl}
+                      type="button"
+                      className="btn btn-outline-primary btn-outline-text form-control"
                       style={{ width: "100px", display: "block" }}
                     >
                       Control
                     </button>
                   </div>
-
                   <WhoCanJoinThis className="mb-2">
                     Everyone in this event can join by default.
                   </WhoCanJoinThis>
                 </div>
-
                 <div className="mb-3 overlay-form-input-row">
                   <FormLabel for="tags">Tags</FormLabel>
                   <div className="form-group">
@@ -475,6 +521,13 @@ const AddNewSession = ({
           </>
         </SwipeableDrawer>
       </React.Fragment>
+      <WhoCanJoinSession
+        open={openControl}
+        handleClose={handleCloseControl}
+        setEntryRestriction={setEntryRestriction}
+        setAllowedTicketTypes={setAllowedTicketTypes}
+        setAllowedPeople={setAllowedPeople}
+      />
     </>
   );
 };

@@ -55,9 +55,9 @@ const SearchEvents = () => {
   useEffect(() => {
     dispatch(fetchEvents(location.search));
 
-    if (isSignedIn) {
-      dispatch(fetchMyFavouriteEvents());
-    }
+    // if (isSignedIn) {
+    //   dispatch(fetchMyFavouriteEvents());
+    // }
   }, [location.search, dispatch]);
 
   useEffect(() => {
@@ -254,7 +254,7 @@ const SearchEvents = () => {
           rating={(event.communityRating * 1.0).toFixed(1)}
           startTime={startTime}
           endTime={endTime}
-          communityId={event.createdBy}
+          communityId={event.communityId}
           isFavourite={isFavourite}
         />
       );
@@ -682,7 +682,6 @@ const SearchEvents = () => {
         <div className="row show-more-search-page " style={{ height: "auto" }}>
           <div className="col-0 col-lg-4"></div>
           <div className="col-12 col-lg-6 d-flex flex-row justify-content-center py-4">
-            {/* <Pagination count={100} color="primary" /> */}
             <button className="btn btn-light-outline disabled btn-outline-text">
               End of Results
             </button>

@@ -5,6 +5,12 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
 
+const Mux = require("@mux/mux-node");
+const { Video } = new Mux(
+  process.env.MUX_TOKEN_ID,
+  process.env.MUX_TOKEN_SECRET
+);
+
 const {
   RtcTokenBuilder,
   RtmTokenBuilder,
@@ -32,14 +38,15 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
         },
       ],
     },
-    { status: "inactive" }
+    { status: "Ended" }
   );
 
   const query = Event.find({
     $and: [
-      { status: "active" },
+      { status: { $ne: "Ended" } },
       { publishedStatus: "Published" },
       { visibility: "Public" },
+      { stopTicketSale: false },
     ],
   })
     .populate({
@@ -399,9 +406,14 @@ exports.getTawkLink = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllEvents = catchAsync(async (req, res, next) => {
-  console.log(req);
-  const events = await Event.find({});
+exports.generateMUXCredentials = catchAsync(async (req, res, next) => {
+  const muxRes = await Video.LiveStreams.create({
+    playback_policy: "public",
+    new_asset_settings: { playback_policy: "public" },
+  });
 
-  res.status(200).json(events);
+  res.status(200).json({
+    status: "success",
+    data: muxRes,
+  });
 });

@@ -420,10 +420,13 @@ const eventSchema = new mongoose.Schema(
 
     registrationFormId: {
       type: mongoose.Schema.ObjectId,
-      ref: "RegistrationForm"
+      ref: "RegistrationForm",
     },
 
-    
+    stopTicketSale: {
+      type: Boolean,
+      default: false,
+    },
 
     // TODO I have to do research on how recording will work and where it will be stored.
   },

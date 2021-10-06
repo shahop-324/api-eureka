@@ -24,9 +24,6 @@ import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import NoEvent from "./../../assets/images/noEvent.png";
 import history from "./../../history";
-
-import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-
 import styled from 'styled-components';
 
 const SectionHeading = styled.div`

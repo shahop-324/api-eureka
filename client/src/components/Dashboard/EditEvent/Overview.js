@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {  editEvent } from "../../../actions";
+import { editEvent, showSnackbar } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
@@ -28,13 +28,10 @@ import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 
-
 import MainEventSetupCheckList from "../Checklist/Main";
 
-
-
-
-
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -72,7 +69,7 @@ const EventDetailsHeading = styled.div`
 
 const EventDetailsGrid = styled.div`
   display: grid;
-  grid-template-columns: 4fr 2fr;
+  grid-template-columns: 4fr 3fr;
   grid-gap: 24px;
 `;
 
@@ -107,8 +104,6 @@ const EventLinkInput = styled.input`
 
 const EventOverview = (props) => {
   const [openBasicForm, setOpenBasicForm] = useState(false);
-
-  
 
   const [openWidget, setOpenWidget] = useState(false);
 
@@ -289,7 +284,7 @@ const EventOverview = (props) => {
                   </div>
                 </div>
               </EventDetailsGrid>
-              <div className="referral-link-and-copy-to-clipboard mb-5">
+              <div className="referral-link-and-copy-to-clipboard mb-4">
                 <div
                   className="ui action input me-4"
                   style={{ minWidth: "400px" }}
@@ -304,10 +299,15 @@ const EventOverview = (props) => {
                   <button
                     className="ui icon button"
                     onClick={() => {
-                      navigator.clipboard.writeText(
-                        `https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`
-                      );
-                      alert("copied to clipboard!");
+                      navigator.clipboard.writeText(`https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`).then(function() {
+                        console.log('Async: Copying to clipboard was successful!');
+                        dispatch(showSnackbar("success", "Copied to clipboard!"));
+                      }, function(err) {
+                        console.error('Async: Could not copy text: ', err);
+                        dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
+                      });
+    
+                      
                     }}
                   >
                     <i className="copy outline icon"></i>
@@ -325,11 +325,12 @@ const EventOverview = (props) => {
                   onClick={() => {
                     setOpenWidget(true);
                   }}
-                  className="btn btn-outline-primary btn-outline-text"
+                  className="btn btn-outline-primary btn-outline-text me-4"
                 >
                   Embeddable widget
                 </buttton>
               </div>
+
               <EventDetailsHeading className="mb-4">
                 Event organised by
               </EventDetailsHeading>

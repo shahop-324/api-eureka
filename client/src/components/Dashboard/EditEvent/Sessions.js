@@ -27,7 +27,7 @@ import NoSessionsPNG from "./../../../assets/images/confident.png";
 import { useSnackbar } from "notistack";
 import styled from "styled-components";
 
-import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
+import EventRoundedIcon from "@mui/icons-material/EventRounded"; // Schedule
 import EventSchedule from "./EventSchedule";
 import AgendaActivityOptions from "./SubComponent/AgendaActivityOptions";
 
@@ -116,11 +116,11 @@ const Sessions = () => {
 
   const handleOpenSchedule = () => {
     setOpenSchedule(true);
-  }
+  };
 
   const handleCloseSchedule = () => {
     setOpenSchedule(false);
-  }
+  };
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -140,12 +140,10 @@ const Sessions = () => {
     };
   }, [dispatch, term, id]);
 
-  
   const { sessions, isLoading, error } = useSelector((state) => {
     return state.session;
   });
 
- 
   const renderSessionsList = (sessions) => {
     return sessions
       .slice(0)
@@ -213,11 +211,11 @@ const Sessions = () => {
             </div>
 
             <button
-              className="btn btn-outline-primary btn-outline-text me-3"
+              className="btn btn-outline-primary btn-outline-text me-3 d-flex flex-row align-items-center"
               onClick={handleOpenSchedule}
             >
-              <EventRoundedIcon className="me-2"/>
-              View & share schedule
+              <EventRoundedIcon className="me-2" />
+              <span>View & share schedule</span>
             </button>
 
             <button
@@ -226,8 +224,6 @@ const Sessions = () => {
             >
               Add New Session
             </button>
-           
-
           </div>
         </div>
 

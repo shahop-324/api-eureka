@@ -8,6 +8,8 @@ const networkingController = require("./../controllers/networkingController");
 
 const router = express.Router();
 
+router.get("/mux", globalController.generateMUXCredentials);
+
 router
   .route("/exploreEvents/madeJustForYou")
   .get(globalController.aliasTopEvents, globalController.getAllEvents);

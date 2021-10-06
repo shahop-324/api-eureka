@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-vars */
+// Stream server URL : rtmps://global-live.mux.com:443/app
+// MUX ACCESS TOKEN ID : 7b811d14-10d2-48ff-8502-647f984989fe
+// MUX SECRET KEY : 6HtUbytX2zOrkdiGoaiqcWTUkave7nuy1uo336Jpk87CUiyEYsQGk3JzM2+gMft99FLKDr+Y444
+
 import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";

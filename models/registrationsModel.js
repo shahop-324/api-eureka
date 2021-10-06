@@ -18,18 +18,11 @@ const registrationSchema = new mongoose.Schema(
     userEmail: {
       type: String,
     },
-    created_by_contact: {
-      type: String,
-    },
+  
     ticketType: {
       type: String,
     },
-    paymentProcesserFee: {
-      type: Number,
-    },
-    paymentTax: {
-      type: Number,
-    },
+   
     eventTransactionId: {
       type: mongoose.Schema.ObjectId,
       ref: "EventTransaction",
@@ -47,9 +40,7 @@ const registrationSchema = new mongoose.Schema(
     orderId: {
       type: String,
     },
-    razorpayPayId: {
-      type: String,
-    },
+    
     paymentStatus: {
       type: String,
     },
@@ -74,7 +65,16 @@ const registrationSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
     },
+    // * NEW
+    invitationLink: {
+      type: String,
+    },
+    addedVia: {
+      type: String,
+      enum: ["Registration", "Invitation"],
+    },
 
+    // Form to be filled during registration.
     // Accessible venue areas, recordings and assets or add ons
   },
   {

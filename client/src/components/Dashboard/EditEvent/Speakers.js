@@ -25,13 +25,12 @@ import {
   fetchSpeakers,
 } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import Loader from "../../Loader";
 import NoSpeakers from "./../../../assets/images/scratching-head.png";
 import NoContentFound from "../../NoContent";
 import { useSnackbar } from "notistack";
 import styled from "styled-components";
-
+import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import SendInvites from "./../EditEvent/FormComponents/EditSpeakersForms/SendInvites";
 
 const SectionHeading = styled.div`
@@ -98,7 +97,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -216,10 +214,8 @@ const Speakers = () => {
     enqueueSnackbar(error, {
       variant: "error",
     });
-
     dispatch(errorTrackerForFetchSpeakers());
     return dispatch(errorTrackerForCreateSpeaker());
-    // throw new Error(error);
   }
 
   return (
@@ -252,11 +248,13 @@ const Speakers = () => {
                 menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
-                //  onChange={(value)=>console.log(value)}
                 onChange={(value) => setSessionId(value.value)}
               />
             </div>
-            
+            <button className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center me-3">
+              {" "}
+              <MailRoundedIcon className="me-2" /> <span> Send Invites </span>
+            </button>
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSpeaker}

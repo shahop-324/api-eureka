@@ -14,7 +14,7 @@ const { v4: uuidv4 } = require("uuid");
 const Registration = require("./../../models/registrationsModel");
 const EventTransactionIdsCommunityWise = require("../../models/eventTransactionIdsCommunityWise");
 const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsCommunityWiseModel");
-const EventRegistrationTemplate = require("./../email/eventRegistrationMail")
+const EventRegistrationTemplate = require("./../email/eventRegistrationMail");
 
 const sgMail = require("@sendgrid/mail");
 
@@ -382,7 +382,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
   let event;
 
-
   try {
     event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
   } catch (err) {
@@ -390,11 +389,15 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
+    const session = stripe.webhooks.constructEvent(
+      req.rawBody,
+      sig,
+      endpointSecret
+    ).data.object;
 
     const sessionId = session.id; // This is the session Id which will be used to send invoices and issue refund (application fees will also be refunded) (cs_live........)
-    const connectedAccountId = event.account; // This is the account Id of connected account
-    const createdAt = event.created; // This is the time stamp of this purchase
+    // const connectedAccountId = event.account; // This is the account Id of connected account
+    // const createdAt = event.created; // This is the time stamp of this purchase
     const amountSubtotal = session.amount_subtotal; // This is the sub total amount of this purchase (before including taxes, shipping charge and excluding discount)
     const amountTotal = session.amount_total; // This is the purchase total (after including taxes, shipping charge and excluding discount)
     const clientReferenceId = session.client_reference_id; // This is the reference Id of this purchase which will refer to total things purchased (like ticket, add-ons)
@@ -413,7 +416,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     const amountDiscount = session.total_details.amount_discount; // Discount that is offered on this purchase and excluded from amount_total
     const amountShipping = session.total_details.amount_shipping; // Shipping charge that is included in amount_total
     const amount_tax = session.total_details.amount_tax; // Tax amount that has been collected included in amount_total
-
 
     const community = await Community.findById(communityId);
     const hapikey = community.hubspotApiKey;
@@ -451,18 +453,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     if (mailChimpAccount) {
       const mailChimpFormValues = {};
 
-      // {
-
-      //   "email_address":"op.shah@bluemeet.in",
-      //   "merge_fields":{ "FNAME":"dinesh",
-      //       "LNAME":"shah",
-      //         "ADDRESS": "EE 738",
-      //           "PHONE": "8103032829"},
-
-      //   "status":"subscribed",
-      //   "tags":["Zapier test"]
-
-      //   }
       mailChimpFormValues.email_address = user.email;
       mailChimpFormValues.merge_fields = {
         FNAME: user.firstName,
@@ -543,6 +533,14 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         createdAt: Date.now(),
         accessibleVenueAreas: ticketBeingPurchased.venueAreasAccessible,
         recordingWillBeShared: ticketBeingPurchased.shareRecording,
+        addedVia: "Registration",
+      });
+
+      newlyCreatedRegistration.invitationLink = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
+
+      await newlyCreatedRegistration.save({
+        new: true,
+        validateModifiedOnly: true,
       });
 
       // 3.) Update corresponding user document
