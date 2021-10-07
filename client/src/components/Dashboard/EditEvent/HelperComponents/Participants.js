@@ -77,7 +77,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const renderParticipants = (eventRegistrations) => {
-  return eventRegistrations.map((el) => {
+  return eventRegistrations.slice(0)
+  .reverse().map((el) => {
     return (
       <ParticipantsDetailsCard
         image={

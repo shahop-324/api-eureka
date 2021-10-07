@@ -412,6 +412,7 @@ exports.addSession = catchAsync(async (req, res, next) => {
   }
 
   let session = await Session.create({
+    type: req.body.type,
     name: req.body.name,
     startDate: req.body.startDate,
     startTime: req.body.startTime,
@@ -423,6 +424,26 @@ exports.addSession = catchAsync(async (req, res, next) => {
   });
 
   session.tags = req.body.tags;
+  session.whoCanJoin = req.body.entryRestriction;
+  if (req.body.permittedTickets) {
+    session.permittedTickets = req.body.permittedTickets;
+  }
+  if (req.body.permittedPeople) {
+    session.permittedPeople = req.body.permittedPeople;
+  }
+  session.host = req.body.host;
+
+  if (req.body.type === "Stream") {
+    const muxRes = await Video.LiveStreams.create({
+      playback_policy: "public",
+      new_asset_settings: { playback_policy: "public" },
+    });
+
+    session.RTMPstreamKey = muxRes.stream_key;
+    session.RTMPPlaybackId = muxRes.playback_ids[0].id;
+    session.RTMPCredentialsId = muxRes.id;
+    session.RTMPstreamURL = `rtmps://global-live.mux.com:443/app`;
+  }
 
   await session.save({ new: true, validateModifiedOnly: true });
 

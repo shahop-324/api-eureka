@@ -7,7 +7,9 @@ const eventSlice = createSlice({
     events: [],
     favouriteEvents: [],
     eventDetails: null,
-
+    entryRestriction: null,
+    permittedTickets: [],
+    permittedPeople: [],
     isLoading: true,
     error: false,
     length: 0,
@@ -26,6 +28,7 @@ const eventSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
+
     CreateEvent(state, action) {
       state.events.unshift(action.payload.event);
       state.isLoading = false;
@@ -74,9 +77,10 @@ const eventSlice = createSlice({
     EditEvent(state, action) {
       console.log(action.payload.event);
 
-      const id = action.payload.event && action.payload.event._id
-        ? action.payload.event._id
-        : action.payload.event.id;
+      const id =
+        action.payload.event && action.payload.event._id
+          ? action.payload.event._id
+          : action.payload.event.id;
 
       state.events = state.events.map((event) =>
         event.id === id ? action.payload.event : event

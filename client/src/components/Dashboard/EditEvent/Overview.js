@@ -119,9 +119,9 @@ const EventOverview = (props) => {
     setOpenBasicForm(false);
   };
 
-  const { eventDetails } = useSelector((state) => state.event);
+  const { eventDetails, isLoading } = useSelector((state) => state.event);
 
-  const [tag, setTag] = useState(eventDetails.organisedBy);
+  const [tag, setTag] = useState( eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null);
   const [editMode, setEditMode] = useState(false);
 
   const { handleSubmit, pristine, submitting } = props;
@@ -130,9 +130,15 @@ const EventOverview = (props) => {
 
   const { error } = useSelector((state) => state.event);
 
-  const aboutText = useSelector(
-    (state) => state.event.eventDetails.editingComment
-  );
+  // const aboutText = useSelector(
+  //   (state) => state.event.eventDetails.editingComment
+  // );
+
+  let aboutText;
+
+  if(eventDetails) {
+aboutText = eventDetails.editingComment
+  }
 
   const [editorState, setEditorState] = React.useState(
     aboutText
@@ -170,6 +176,10 @@ const EventOverview = (props) => {
     );
   };
 
+  if(isLoading || !eventDetails) {
+    return <div>Loading...</div>
+  }
+
   if (error) {
     enqueueSnackbar(error, {
       variant: "error",
@@ -179,7 +189,7 @@ const EventOverview = (props) => {
     return dispatch(errorTrackerForEditEventDiscription());
   }
 
-  const previousTag = eventDetails.organisedBy;
+  const previousTag = eventDetails &&  eventDetails.organisedBy ? eventDetails.organisedBy  : null;
 
   const handleChangeTag = (e) => {
     setTag(e.target.value);

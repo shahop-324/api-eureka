@@ -1,17 +1,14 @@
 import React from "react";
 import dateFormat from "dateformat";
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
+
 import Select from "react-select";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
+
 import { connect, useSelector } from "react-redux";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
-import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch } from "react-redux";
-// import { useParams } from "react-router";
 import {
   editSession,
   errorTrackerForEditSession,
@@ -21,6 +18,12 @@ import MultiTagInput from "../../../MultiTagInput";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
+
+let hostOptions;
+let activityOptions = [
+  { value: "Session", label: "Session" },
+  { value: "Stream", label: "Stream" },
+];
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -146,18 +149,20 @@ const renderTextArea = ({
 
 const renderReactSelect = ({
   input,
+  isMulti,
   meta: { touched, error, warning },
   styles,
   menuPlacement,
   options,
   defaultValue,
-
+  disabled,
   name,
 }) => (
   <div>
     <div>
       <Select
-        isMulti
+        isMulti={isMulti}
+        isDisabled={disabled}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -170,10 +175,6 @@ const renderReactSelect = ({
     </div>
   </div>
 );
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const styles = {
   control: (base) => ({
@@ -213,6 +214,24 @@ const EditSession = ({
     };
   });
 
+  const { communityManagers } = useSelector((state) => state.community);
+
+  const { superAdminName, superAdminEmail, superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  hostOptions = communityManagers.map((el) => {
+    return {
+      value: el._id,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
+  });
+
+  hostOptions.push({
+    value: superAdmin,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
+
   const onSubmit = (formValues) => {
     const categories = [];
 
@@ -239,6 +258,14 @@ const EditSession = ({
         return speaker.value;
       });
     }
+    if (
+      typeof formValues.hosts !== "undefined" &&
+      formValues.hosts.length > 0
+    ) {
+      ModifiedFormValues.host = formValues.hosts.map((host) => {
+        return host.value;
+      });
+    }
 
     dispatch(editSession(ModifiedFormValues, id));
   };
@@ -261,142 +288,169 @@ const EditSession = ({
             console.log("Side nav was closed");
           }}
         >
-          <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
-                  <div></div>
-                  <div className="coupon-overlay-form-headline">
-                    Edit this Session
-                  </div>
-                  <div
-                    className="overlay-form-close-button"
-                    onClick={handleClose}
-                  >
-                    <IconButton aria-label="delete">
-                      <CancelRoundedIcon />
-                    </IconButton>
-                  </div>
-                </HeaderFooter>
-          {isLoadingDetail ? (
-            <div
-              className="d-flex flex-row align-items-center justify-content-center"
-              style={{ width: "100%", height: "100%" }}
-            >
-              {" "}
-              <Loader />{" "}
-            </div>
-          ) : (
-            <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-              <div className="create-new-coupon-form px-4 py-4">
-                
-                <div className="mb-4 overlay-form-input-row">
-                  <FormLabel Forhtml="sessionName">Session Name</FormLabel>
-                  <Field
-                    name="name"
-                    type="text"
-                    classes="form-control"
-                    id="sessionName"
-                    placeholder="Structuring Your Bussiness for success"
-                    ariadescribedby="name"
-                    component={renderInput}
-                  />
-                </div>
-                <div className="mb-4 overlay-form-input-row">
-                  <FormLabel Forhtml="description">Short Description</FormLabel>
-                  <Field
-                    name="description"
-                    type="textarea"
-                    classes="form-control"
-                    id="description1"
-                    component={renderTextArea}
-                  />
-                </div>
-                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                  <div>
-                    <FormLabel Forhtml="eventStartDate">Start Date</FormLabel>
-                    <Field
-                      name="startDate"
-                      type="date"
-                      classes="form-control"
-                      id="eventStartDate"
-                      component={renderInput}
-                    />
-                  </div>
-                  <div>
-                    <FormLabel Forhtml="eventStartTime">Start Time</FormLabel>
-                    <Field
-                      name="startTime"
-                      type="time"
-                      classes="form-control"
-                      id="eventStartTime"
-                      component={renderInput}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
-                  <div>
-                    <FormLabel Forhtml="eventEndDate">End Date</FormLabel>
-                    <Field
-                      name="endDate"
-                      type="date"
-                      classes="form-control"
-                      id="eventEndDate"
-                      component={renderInput}
-                    />
-                  </div>
-                  <div>
-                    <FormLabel Forhtml="eventEndTime">End Time</FormLabel>
-                    <Field
-                      name="endTime"
-                      type="time"
-                      classes="form-control"
-                      id="eventEndTime"
-                      component={renderInput}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 overlay-form-input-row">
-                  <FormLabel for="speakers">Speakers</FormLabel>
-                  <Field
-                    name="speaker"
-                    styles={styles}
-                    menuPlacement="top"
-                    options={speakerOptions}
-                    id="speakers"
-                    component={renderReactSelect}
-                  />
-                </div>
-
-                <div className="mb-3 overlay-form-input-row">
-                  <FormLabel for="tags">Tags</FormLabel>
-                  <div className="form-group">
-                    <Field name="tags" component={renderMultiTags} />
-                  </div>
-                </div>
-
-                <div
-                  style={{ width: "100%" }}
-                  className="d-flex flex-row justify-content-end"
-                >
-                  <button
-                    className="btn btn-outline-primary btn-outline-text me-3"
-                    onClick={reset}
-                    disabled={pristine || submitting}
-                  >
-                    Discard
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-outline-text"
-                    onClick={() => {
-                      handleClose();
-                    }}
-                  >
-                    Save Changes
-                  </button>
-                </div>
+          <div style={{ maxWidth: "640px" }}>
+            <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
+              <div></div>
+              <div className="coupon-overlay-form-headline">
+                Edit this Activity
               </div>
-            </form>
-          )}
+              <div className="overlay-form-close-button" onClick={handleClose}>
+                <IconButton aria-label="delete">
+                  <CancelRoundedIcon />
+                </IconButton>
+              </div>
+            </HeaderFooter>
+            {isLoadingDetail ? (
+              <div
+                className="d-flex flex-row align-items-center justify-content-center"
+                style={{ width: "100%", height: "100%" }}
+              >
+                {" "}
+                <Loader />{" "}
+              </div>
+            ) : (
+              <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+                <div className="create-new-coupon-form px-4 py-4">
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel for="communityName">Activity type</FormLabel>
+                    <Field
+                      disabled={true}
+                      isMulti={false}
+                      name="activityType"
+                      placeholder="Select one activity"
+                      styles={styles}
+                      menuPlacement="bottom"
+                      options={activityOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel Forhtml="sessionName">Activity Name</FormLabel>
+                    <Field
+                      name="name"
+                      type="text"
+                      classes="form-control"
+                      id="sessionName"
+                      placeholder="Structuring Your Bussiness for success"
+                      ariadescribedby="name"
+                      component={renderInput}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel Forhtml="description">
+                      Activity Description
+                    </FormLabel>
+                    <Field
+                      name="description"
+                      type="textarea"
+                      classes="form-control"
+                      id="description1"
+                      component={renderTextArea}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel Forhtml="eventStartDate">Start Date</FormLabel>
+                      <Field
+                        name="startDate"
+                        type="date"
+                        classes="form-control"
+                        id="eventStartDate"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel Forhtml="eventStartTime">Start Time</FormLabel>
+                      <Field
+                        name="startTime"
+                        type="time"
+                        classes="form-control"
+                        id="eventStartTime"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    <div>
+                      <FormLabel Forhtml="eventEndDate">End Date</FormLabel>
+                      <Field
+                        name="endDate"
+                        type="date"
+                        classes="form-control"
+                        id="eventEndDate"
+                        component={renderInput}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel Forhtml="eventEndTime">End Time</FormLabel>
+                      <Field
+                        name="endTime"
+                        type="time"
+                        classes="form-control"
+                        id="eventEndTime"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel for="speakers">Speakers</FormLabel>
+                    <Field
+                    isMulti={true}
+                      name="speaker"
+                      styles={styles}
+                      menuPlacement="top"
+                      options={speakerOptions}
+                      id="speakers"
+                      component={renderReactSelect}
+                    />
+                  </div>
+
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel for="communityName">Host</FormLabel>
+                    <Field
+                      isMulti={true}
+                      name="hosts"
+                      placeholder="Select hosts"
+                      styles={styles}
+                      menuPlacement="top"
+                      options={hostOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel for="tags">Tags</FormLabel>
+                    <div className="form-group">
+                      <Field name="tags" component={renderMultiTags} />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{ width: "100%" }}
+                    className="d-flex flex-row justify-content-end"
+                  >
+                    <button
+                      className="btn btn-outline-primary btn-outline-text me-3"
+                      onClick={reset}
+                      disabled={pristine || submitting}
+                    >
+                      Discard
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-outline-text"
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </div>
         </SwipeableDrawer>
       </React.Fragment>
     </>
@@ -404,6 +458,10 @@ const EditSession = ({
 };
 const mapStateToProps = (state) => ({
   initialValues: {
+    activityType:
+      state.session.sessionDetails && state.session.sessionDetails.type
+        ? { value: state.session.sessionDetails.type, label: state.session.sessionDetails.type}
+        : "",
     name:
       state.session.sessionDetails && state.session.sessionDetails.name
         ? state.session.sessionDetails.name
@@ -448,6 +506,21 @@ const mapStateToProps = (state) => ({
         return {
           value: element.id,
           label: element.firstName,
+        };
+      }),
+
+    hosts:
+      state.session.sessionDetails &&
+      state.session.sessionDetails.host.length !== 0 &&
+      state.session.sessionDetails.host.map((element) => {
+        return {
+          value: element._id,
+          label:
+            element.firstName +
+            " " +
+            element.lastName +
+            " " +
+            `(${element.email})`,
         };
       }),
   },

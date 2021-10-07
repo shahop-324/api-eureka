@@ -41,6 +41,7 @@ import eventbriteSlice from "./eventbriteSlice";
 import apiKeySlice from "./apiKeySlice";
 import SnackbarSlice from "./snackbarSlice";
 import roleSlice from "./roleSlice";
+import sessionRestrictionSlice from "./sessionRestrictionSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -84,4 +85,5 @@ export default combineReducers({
   apikey: apiKeySlice.reducer,
   snackbar: SnackbarSlice.reducer,
   role: roleSlice.reducer,
+  sessionRestriction: sessionRestrictionSlice.reducer,
 });

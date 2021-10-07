@@ -2,6 +2,36 @@ const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema(
   {
+    type: {
+      type: String,
+      enum: ["Session", "Stream"],
+    },
+    whoCanJoin: {
+      type: String,
+      enum: ["Everyone", "ticketHolders", "people"],
+    },
+    permittedTickets: [
+      {
+        type: String, // ids of tickets that will be allowed entry into this event.
+      },
+    ],
+    permittedPeople: [
+      {
+        type: String, // ids of people who will be able to join this session
+      },
+    ],
+    RTMPstreamKey: {
+      type: String,
+    },
+    RTMPstreamURL: {
+      type: String,
+    },
+    RTMPPlaybackId: {
+      type: String,
+    },
+    RTMPCredentialsId: {
+      type: String,
+    },
     tags: [
       {
         type: String,

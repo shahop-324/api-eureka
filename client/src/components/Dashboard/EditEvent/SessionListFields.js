@@ -13,7 +13,7 @@ const SessionListFields = () => {
         <div className="event-field-label" style={{width: '100%'}}>Duration</div>
       </div>
       <div className="event-status-field">
-        <div className="event-field-label" style={{width: '100%'}}>Description</div>
+        <div className="event-field-label" style={{width: '100%', justifySelf: "center"}}>Type</div>
       </div>
       <div className="event-views-field">
         <div className="event-field-label" style={{width: '100%'}}>Speakers</div>

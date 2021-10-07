@@ -38,14 +38,18 @@ const Info = styled.div`
 const EventMoreActions = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { eventDetails } = useSelector((state) => state.event);
+  const { eventDetails, isLoading } = useSelector((state) => state.event);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  if(isLoading || !eventDetails) {
+    return <div>Loading</div>
+  }
+
   return (
     <>
-      <Dialog
+    {eventDetails ? <Dialog
         fullScreen={fullScreen}
         open={open}
         aria-labelledby="responsive-dialog-title"
@@ -56,7 +60,7 @@ const EventMoreActions = ({ open, handleClose }) => {
           </HeaderFooter>
 
           <div className="d-flex flex-column align-items-center p-4">
-            {eventDetails.status === "Upcoming" ? (
+            {false ? (
               <button
                 onClick={() => {
                   dispatch(editEvent({ status: "Started" }, eventDetails._id));
@@ -69,7 +73,6 @@ const EventMoreActions = ({ open, handleClose }) => {
             ) : (
               <></>
             )}
-
             {eventDetails.status === "Started" || eventDetails.status === "Resumed" ? (
               <button
                 onClick={() => {
@@ -144,7 +147,8 @@ const EventMoreActions = ({ open, handleClose }) => {
             </DialogActions>
           </HeaderFooter>
         </div>
-      </Dialog>
+      </Dialog> : <></> }
+      
     </>
   );
 };

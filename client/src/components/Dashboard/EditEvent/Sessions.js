@@ -158,6 +158,7 @@ const Sessions = () => {
           endDate,
           description,
           speaker,
+          type,
         } = session;
 
         return (
@@ -171,6 +172,7 @@ const Sessions = () => {
             endDate={endDate}
             name={name}
             id={id}
+            type={type}
           />
         );
       });
@@ -210,13 +212,13 @@ const Sessions = () => {
               />
             </div>
 
-            <button
+            {/* <button
               className="btn btn-outline-primary btn-outline-text me-3 d-flex flex-row align-items-center"
               onClick={handleOpenSchedule}
             >
               <EventRoundedIcon className="me-2" />
               <span>View & share schedule</span>
-            </button>
+            </button> */}
 
             <button
               className="btn btn-primary btn-outline-text"
@@ -254,8 +256,7 @@ const Sessions = () => {
           </div>
         </div>
       </div>
-      <AgendaActivityOptions open={open} handleClose={handleClose} />
-      {/* <AddNewSession open={open} handleClose={handleClose} /> */}
+      <AddNewSession open={open} handleClose={handleClose} />
       <EventSchedule open={openSchedule} handleClose={handleCloseSchedule} />
     </>
   );
