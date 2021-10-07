@@ -1,9 +1,32 @@
 const mongoose = require("mongoose");
 const ticketSchema = new mongoose.Schema(
   {
+    visibility: {
+      type: String,
+      enum: ["Public", "Private", "Hidden"],
+    },
+    message: {
+      type: String,
+    },
     eventId: {
       type: mongoose.Schema.ObjectId,
       ref: "Event",
+    },
+    type: {
+      type: String,
+      enum: ["Paid", "Free", "Donation"],
+    },
+    salesStartDate: {
+      type: Date,
+    },
+    salesStartTime: {
+      type: Date,
+    },
+    salesEndDate: {
+      type: Date,
+    },
+    salesEndTime: {
+      type: Date,
     },
     status: {
       type: String,

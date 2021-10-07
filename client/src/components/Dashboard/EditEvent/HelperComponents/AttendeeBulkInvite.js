@@ -9,8 +9,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch, useSelector } from "react-redux";
 import { sendBulkAttendeeEmail } from "./../../../../actions";
 
-
-
 import styled from "styled-components";
 
 const HeaderFooter = styled.div`
@@ -24,19 +22,11 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const AttendeeBulkInvite = ({open, handleClose, bulkMailInfo}) => {
+const AttendeeBulkInvite = ({ open, handleClose, bulkMailInfo }) => {
   const dispatch = useDispatch();
 
-
-
- 
- 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
- 
-
-  
 
   return (
     <>
@@ -45,23 +35,18 @@ const AttendeeBulkInvite = ({open, handleClose, bulkMailInfo}) => {
         open={open}
         aria-labelledby="responsive-dialog-title"
       >
-      
-
         <HeaderFooter className="px-4 py-3">
           <FormHeading>Send Bulk Invite</FormHeading>
         </HeaderFooter>
 
-
         <DialogContent>
           <DialogContentText>
-            This will send bulk invitation to all participants in this event with their magic links.
-            Are you sure to proceed ?
+            This will send bulk invitation to all participants in this event
+            with their magic links. Are you sure to proceed ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-
-
-        <button
+          <button
             className="btn btn-outline-dark btn-outline-text me-3"
             onClick={handleClose}
           >
@@ -71,18 +56,14 @@ const AttendeeBulkInvite = ({open, handleClose, bulkMailInfo}) => {
           <button
             className="btn btn-outline-text btn-primary"
             onClick={() => {
-                dispatch(sendBulkAttendeeEmail(bulkMailInfo));
+              dispatch(sendBulkAttendeeEmail(bulkMailInfo));
               handleClose();
             }}
           >
             Proceed
           </button>
-
-
-        
         </DialogActions>
       </Dialog>
-      
     </>
   );
 };

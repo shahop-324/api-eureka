@@ -42,6 +42,8 @@ import apiKeySlice from "./apiKeySlice";
 import SnackbarSlice from "./snackbarSlice";
 import roleSlice from "./roleSlice";
 import sessionRestrictionSlice from "./sessionRestrictionSlice";
+import videoSlice from "./videoSlice";
+import vibeSlice from "./vibeSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -86,4 +88,6 @@ export default combineReducers({
   snackbar: SnackbarSlice.reducer,
   role: roleSlice.reducer,
   sessionRestriction: sessionRestrictionSlice.reducer,
+  video: videoSlice.reducer,
+  vibe: vibeSlice.reducer,
 });

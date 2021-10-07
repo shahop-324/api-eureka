@@ -21,7 +21,11 @@ router.post("/generateApiKey/:communityId", authController.protectCommunity, com
 
 router.get("/getApiKeys/:communityId", authController.protectCommunity, communityController.getApiKeys);
 
+router.post("/updateVideo", authController.protectCommunity, communityController.linkCommunityVideoToEvent);
 router.post("/uploadVideo", authController.protectCommunity, communityController.uploadVideo);
+router.post("/getCommunityVideo", authController.protectCommunity, communityController.getAllVideosForCommunity);
+router.post("/getEventVideo", authController.protectCommunity, communityController.getAllVideosForEvent);
+router.delete("/deleteVideo", authController.protectCommunity, communityController.deleteVideo);
 
 router.get(
   "/events",
@@ -79,7 +83,7 @@ router.get(
 
 // Done Enabling community to create a Coupon for any of their events
 router.post(
-  "/coupons/createNew",
+  "/coupons/createNew/:eventId",
   authController.protectCommunity,
   couponController.CreateNewCoupon
 );

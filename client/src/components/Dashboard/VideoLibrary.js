@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import VideoLibraryListFields from "./GridComponents/VideoLibrary/ListFields";
@@ -6,6 +6,10 @@ import VideoLibraryDetailsCard from "./GridComponents/VideoLibrary/DetailsCard";
 import UploadVideo from "./SubComponents/UploadVideo";
 import { useParams } from "react-router";
 import LinkVideoFromLibrary from "./SubComponents/LinkVideoFromLibrary";
+import { useDispatch } from "react-redux";
+import dateFormat from "dateformat";
+import {useSelector} from 'react-redux';
+import { getCommunityVideos, getEventVideos } from "./../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -21,9 +25,28 @@ const TextSmall = styled.div`
   color: #414141;
 `;
 
-const VideoLibrary = () => {
-  const params = useParams();
+const renderVideos = (videos) => {
+  return videos.map((video) => {
+    return (
+      <VideoLibraryDetailsCard
+        name={video.name}
+        id={video._id}
+        key={video._id}
+        time={dateFormat(video.date, "h:MM:ss TT")}
+        date={dateFormat(video.date, "dddd, mmmm dS, yyyy")}
+        eventId={video.eventId}
+        communityId={video.communityId}
+      />
+    );
+  });
+};
 
+const VideoLibrary = () => {
+
+  const {videos} = useSelector((state) => state.video);
+  const params = useParams();
+  const dispatch = useDispatch();
+  console.log(params);
   let eventId = params.id;
   let communityId = params.communityId;
   if (eventId && communityId) {
@@ -31,6 +54,14 @@ const VideoLibrary = () => {
   } else {
     console.log("we are in main dashboard");
   }
+
+  useEffect(() => {
+    if (eventId && communityId) {
+      dispatch(getEventVideos(params.id));
+    } else {
+      dispatch(getCommunityVideos(params.id));
+    }
+  }, []);
 
   const [openUploadVideo, setOpenUploadVideo] = React.useState(false);
 
@@ -93,10 +124,7 @@ const VideoLibrary = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
+          {renderVideos(videos)}
         </div>
       </div>
       <UploadVideo

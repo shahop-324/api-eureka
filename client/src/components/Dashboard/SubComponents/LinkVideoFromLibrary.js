@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -9,20 +9,28 @@ import VideoPNG from "./../../../assets/images/UploadVideo.svg";
 
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import Select from "react-select";
-
-const options = [];
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import {
+  getCommunityVideos,
+  showSnackbar,
+  LinkCommunityVideoToEvent,
+} from "./../../../actions";
+import { useSelector } from "react-redux";
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
 };
@@ -78,8 +86,20 @@ const VideoContainer = styled.video`
 `;
 
 const LinkVideoFromLibrary = ({ open, handleClose }) => {
+  const [video, setVideo] = React.useState(null);
+  let videoOptions = [];
+  const dispatch = useDispatch();
+  const params = useParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const videos = useSelector((state) => {
+    if (state.video) {
+      return state.video.videos;
+    } else {
+      return undefined;
+    }
+  });
 
   const [file, setFile] = React.useState(null);
 
@@ -90,6 +110,19 @@ const LinkVideoFromLibrary = ({ open, handleClose }) => {
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
+
+  useEffect(() => {
+    dispatch(getCommunityVideos(params.communityId));
+  }, []);
+
+  if (videos) {
+    videoOptions = videos.map((video) => {
+      return {
+        value: video._id,
+        label: video.name,
+      };
+    });
+  }
 
   return (
     <>
@@ -108,16 +141,14 @@ const LinkVideoFromLibrary = ({ open, handleClose }) => {
           </div>
 
           <FormLabel className="mb-2">Choose video file from library</FormLabel>
-          {/* <input
+          <Select
+            options={videoOptions}
+            styles={styles}
+            className="mb-3"
             onChange={(e) => {
-              onFileChange(e);
+              setVideo(e.value);
             }}
-            type="file"
-            accept="video/mp4,video/x-m4v,video/*"
-            className="form-control mb-5"
-          ></input> */}
-
-          <Select options={options} styles={styles} className="mb-3" />
+          />
 
           {fileToPreview ? (
             <VideoContainer
@@ -132,10 +163,19 @@ const LinkVideoFromLibrary = ({ open, handleClose }) => {
           )}
 
           <button
+            onClick={() => {
+              if (video) {
+                LinkCommunityVideoToEvent(params.id, video);
+              } else {
+                dispatch(
+                  showSnackbar("info", "Please select a video to link.")
+                );
+              }
+            }}
             className="btn btn-primary btn-outline-text"
             style={{ width: "100%" }}
           >
-            Upload video
+            Link video
           </button>
         </div>
       </Dialog>

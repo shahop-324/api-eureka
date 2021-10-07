@@ -8,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { deleteVibe } from "../../../actions";
 
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
@@ -20,7 +21,7 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const DeleteStageVibe = ({ id, open, handleClose }) => {
+const DeleteStageVibe = ({ open, handleClose, vibeId }) => {
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -55,6 +56,7 @@ const DeleteStageVibe = ({ id, open, handleClose }) => {
             className="btn btn-outline-text btn-primary"
             onClick={() => {
               //   dispatch(deleteCoupon(id));
+              dispatch(deleteVibe(vibeId));
               handleClose();
             }}
           >

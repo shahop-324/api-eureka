@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const videoSchema = new mongoose.Schema(
+const vibeSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -9,9 +9,6 @@ const videoSchema = new mongoose.Schema(
       default: Date.now(),
     },
     key: {
-      type: String,
-    },
-    communityId: {
       type: String,
     },
     eventId: {
@@ -24,5 +21,5 @@ const videoSchema = new mongoose.Schema(
   }
 );
 
-const Video = mongoose.model("Video", videoSchema);
-module.exports = Video;
+const Vibe = mongoose.model("Vibe", vibeSchema);
+module.exports = Vibe;

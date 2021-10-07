@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
@@ -11,15 +11,14 @@ import { useTheme } from "@material-ui/core/styles";
 
 import { reduxForm, Field } from "redux-form";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { editCoupon, errorTrackerForEditCoupon } from "../../../actions";
+import {
+  editCoupon,
+  errorTrackerForEditCoupon,
+  fetchTickets,
+} from "../../../actions";
 import Loader from "./../../Loader";
 import styled from "styled-components";
-
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-
-const ticketOptions = [];
+import { useParams } from "react-router";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -30,20 +29,6 @@ const StyledInput = styled.input`
   &:hover {
     border: #538bf7;
   }
-`;
-
-const RadioLabel = styled.span`
-  font-family: "Ubuntu" !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  color: #585858 !important;
-`;
-
-const StyledTextArea = styled.textarea`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #4e4e4e;
 `;
 
 const FormLabel = styled.label`
@@ -70,8 +55,6 @@ const FormWarning = styled.div`
   font-weight: 400;
   font-size: 0.8rem;
 `;
-
-let eventOptions = [];
 
 const styles = {
   control: (base) => ({
@@ -116,6 +99,7 @@ const renderInput = ({
 };
 
 const renderReactSelect = ({
+  isMulti,
   input,
   meta: { touched, error, warning },
   styles,
@@ -130,6 +114,7 @@ const renderReactSelect = ({
     <div>
       <Select
         isDisabled={isDisabled}
+        isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -155,13 +140,18 @@ const EditCoupon = ({
   submitting,
   reset,
 }) => {
-  const events = useSelector((state) => state.event.events);
+  let ticketOptions = [];
 
-  if (events) {
-    eventOptions = events.map((event) => {
+  const tickets = useSelector((state) => state.ticket.tickets);
+
+  const params = useParams();
+  const eventId = params.id;
+
+  if (tickets) {
+    ticketOptions = tickets.map((ticket) => {
       return {
-        label: event.eventName,
-        value: event._id,
+        label: ticket.name,
+        value: ticket._id,
       };
     });
   }
@@ -171,11 +161,22 @@ const EditCoupon = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // useEffect(() => {
+  //   dispatch(fetchTickets(eventId));
+  // }, []);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
 
+    const applicableTickets = formValues.eventTickets.map(
+      (ticket) => ticket.value
+    );
+    console.log("accessible areas", applicableTickets);
+
     const ModifiedFormValues = {};
-    ModifiedFormValues.discountForEventId = formValues.eventName.value;
+    ModifiedFormValues.tickets = applicableTickets;
+    ModifiedFormValues.startDate = formValues.startDate;
+    ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
     ModifiedFormValues.validTillTime = `${formValues.expiryDate}T${formValues.expiryTime}:00Z`;
     ModifiedFormValues.discountPercentage = formValues.discountPercentage;
@@ -183,13 +184,13 @@ const EditCoupon = ({
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
     dispatch(editCoupon(ModifiedFormValues, id));
-    handleClose();
-    window.location.reload();
+    // handleClose();
+    // window.location.reload();
   };
 
   if (detailError) {
     dispatch(errorTrackerForEditCoupon());
-    alert(detailError);
+    // alert(detailError);
     return null;
   }
 
@@ -224,52 +225,6 @@ const EditCoupon = ({
             <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
               <div className="create-new-coupon-form px-4 py-4">
                 <div className="mb-4 overlay-form-input-row">
-                  <FormLabel
-                    Forhtml="eventEndDate"
-                    className="form-label form-label-customized"
-                  >
-                    Select Event
-                  </FormLabel>
-                  <Field
-                    isDisabled={true}
-                    name="eventName"
-                    placeholder="Select the event"
-                    styles={styles}
-                    menuPlacement="auto"
-                    options={eventOptions}
-                    component={renderReactSelect}
-                  />
-                </div>
-
-                <FormLabel Forhtml="eventStartDate">
-                  Applicable to all tickets
-                </FormLabel>
-                <RadioGroup
-                  aria-label="ticket-type"
-                  defaultValue="paid"
-                  name="radio-buttons-group"
-                >
-                  <div className="mb-3 overlay-form-input-row form-row-2-in-1">
-                    <div>
-                      <FormControlLabel
-                        value="paid"
-                        control={<Radio />}
-                        label=""
-                      />
-                      <RadioLabel>Yes</RadioLabel>
-                    </div>
-                    <div>
-                      <FormControlLabel
-                        value="free"
-                        control={<Radio />}
-                        label=""
-                      />
-                      <RadioLabel>No</RadioLabel>
-                    </div>
-                  </div>
-                </RadioGroup>
-
-                <div className="mb-4 overlay-form-input-row">
                   <FormLabel Forhtml="eventEndDate">Select Tickets</FormLabel>
                   <Field
                     isDisabled={false}
@@ -290,7 +245,7 @@ const EditCoupon = ({
                       Applicable from date
                     </FormLabel>
                     <Field
-                      name="statDate"
+                      name="startDate"
                       type="date"
                       value="2021-07-21"
                       classes="form-control"
@@ -425,14 +380,31 @@ const EditCoupon = ({
 
 const mapStateToProps = (state) => ({
   initialValues: {
-    eventName:
-      state.coupon.couponDetails &&
-      state.coupon.couponDetails.discountForEventId &&
-      state.coupon.couponDetails.discountForEventId.eventName
-        ? {
-            label: state.coupon.couponDetails.discountForEventId.eventName,
-            value: state.coupon.couponDetails.discountForEventId.eventName,
-          }
+
+    eventTickets:
+    state.coupon.couponDetails &&
+    state.coupon.couponDetails.tickets
+      ? state.coupon.couponDetails.tickets.map((element) => {
+          return {
+            value: element._id,
+            label: element.name,
+          };
+        })
+      : "",
+
+    startDate:
+      state.coupon.couponDetails && state.coupon.couponDetails.startDate
+        ? dateFormat(
+            new Date(state.coupon.couponDetails.startDate),
+            "yyyy-mm-dd"
+          )
+        : "",
+    startTime:
+      state.coupon.couponDetails && state.coupon.couponDetails.startTime
+        ? dateFormat(
+            new Date(state.coupon.couponDetails.startTime),
+            "HH:MM"
+          )
         : "",
     expiryDate:
       state.coupon.couponDetails && state.coupon.couponDetails.validTillDate

@@ -10,7 +10,7 @@ import VibePNG from "./../../../assets/images/Welcome.svg";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 
 import { useDispatch } from "react-redux";
-import { uploadVideoForCommunity } from "../../../actions";
+import { addVibe, uploadVideoForCommunity } from "../../../actions";
 import { useParams } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
 
@@ -118,8 +118,10 @@ const renderInput = ({
 
 const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
   const params = useParams();
+  console.log(params);
 
-  const communityId = params.id;
+  const communityId = params.communityId;
+  const eventId = params.id;
 
   const dispatch = useDispatch();
 
@@ -142,6 +144,8 @@ const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
 
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    dispatch(addVibe(file, eventId, formValues.vibeName));
   };
 
   return (
@@ -200,14 +204,13 @@ const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
 
             <button
               type="submit"
-              onClick={() => {
-                uploadVideo();
-                handleClose();
-              }}
+              // onClick={() => {
+              //   handleClose();
+              // }}
               className="btn btn-primary btn-outline-text"
               style={{ width: "100%" }}
             >
-              Preview stage vibe
+              Upload vibe 
             </button>
           </form>
         </div>

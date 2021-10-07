@@ -21,9 +21,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import styled from "styled-components";
 
 const ticketVisibilityOptions = [
-  { value: "public", label: "Public" },
-  { value: "hidden", label: "Hidden" },
-  { value: "private", label: "Private" },
+  { value: "Public", label: "Public" },
+  { value: "Hidden", label: "Hidden" },
+  { value: "Private", label: "Private" },
 ];
 
 const StyledInput = styled.input`
@@ -92,6 +92,8 @@ const styles = {
 };
 
 const renderInput = ({
+  isRequired,
+  isDisabled,
   input,
   meta: { touched, error, warning },
   type,
@@ -103,6 +105,8 @@ const renderInput = ({
   return (
     <div className={className}>
       <StyledInput
+      required={isRequired}
+        disabled={isDisabled}
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -142,6 +146,8 @@ const renderTextArea = ({
 };
 
 const renderReactSelect = ({
+  isRequired,
+  isDisabled,
   isMulti,
   input,
   meta: { touched, error, warning },
@@ -154,6 +160,9 @@ const renderReactSelect = ({
   <div>
     <div>
       <Select
+      required={isRequired}
+      isRequired={isRequired}
+        isDisabled={isDisabled}
         isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
@@ -177,6 +186,7 @@ const AddNewTicket = ({
   pristine,
   submitting,
 }) => {
+  const [type, setType] = React.useState("Paid");
   const { error, isLoading } = useSelector((state) => state.ticket);
   const params = useParams();
   const id = params.id;
@@ -212,13 +222,21 @@ const AddNewTicket = ({
     ModifiedFormValues.currency = formValues.currency.value;
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
+    ModifiedFormValues.type = type;
     ModifiedFormValues.price = formValues.price;
     // ModifiedFormValues.shareRecording = formValues.shareRecording;
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
     ModifiedFormValues.venueAreasAccessible = accessibleAreas;
+    ModifiedFormValues.visibility = formValues.ticketVisibility.value;
+    ModifiedFormValues.message = formValues.messageForAttendee;
 
-    console.log(ModifiedFormValues);
+    ModifiedFormValues.salesStartDate = formValues.startDate;
+    ModifiedFormValues.salesEndDate = formValues.endDate;
+    ModifiedFormValues.salesStartTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
+    ModifiedFormValues.salesEndTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
+
+    // console.log(ModifiedFormValues);
 
     dispatch(createTicket(ModifiedFormValues, id, handleClose));
 
@@ -257,7 +275,7 @@ const AddNewTicket = ({
             console.log("Side nav was closed");
           }}
         >
-          <div style={{maxWidth: "600px"}}>
+          <div style={{ maxWidth: "600px" }}>
             <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
               <div></div>
               <div className="coupon-overlay-form-headline">Add New Ticket</div>
@@ -301,30 +319,48 @@ const AddNewTicket = ({
                 <FormLabel Forhtml="eventStartDate">Type</FormLabel>
                 <RadioGroup
                   aria-label="ticket-type"
-                  defaultValue="paid"
+                  defaultValue="Paid"
                   name="radio-buttons-group"
                 >
                   <div className="mb-3 overlay-form-input-row form-row-3-in-1">
                     <div>
                       <FormControlLabel
-                        value="paid"
-                        control={<Radio />}
+                        value={"Paid"}
+                        control={
+                          <Radio
+                            onChange={(e) => {
+                              setType(e.target.value);
+                            }}
+                          />
+                        }
                         label=""
                       />
                       <RadioLabel>Paid</RadioLabel>
                     </div>
                     <div>
                       <FormControlLabel
-                        value="free"
-                        control={<Radio />}
+                        value="Free"
+                        control={
+                          <Radio
+                            onChange={(e) => {
+                              setType(e.target.value);
+                            }}
+                          />
+                        }
                         label=""
                       />
                       <RadioLabel>Free</RadioLabel>
                     </div>
                     <div>
                       <FormControlLabel
-                        value="donation"
-                        control={<Radio />}
+                        value="Donation"
+                        control={
+                          <Radio
+                            onChange={(e) => {
+                              setType(e.target.value);
+                            }}
+                          />
+                        }
                         label=""
                       />
                       <RadioLabel>Donation</RadioLabel>
@@ -336,6 +372,8 @@ const AddNewTicket = ({
                   <div>
                     <FormLabel Forhtml="eventStartDate">Currency</FormLabel>
                     <Field
+                      isRequired={type === "Paid" ? true : false}
+                      isDisabled={type !== "Paid" ? true : false}
                       name="currency"
                       placeholder="currency"
                       styles={styles}
@@ -347,6 +385,8 @@ const AddNewTicket = ({
                   <div>
                     <FormLabel Forhtml="eventStartDate">Price</FormLabel>
                     <Field
+                      isRequired={type === "Paid" ? true : false}
+                      isDisabled={type !== "Paid" ? true : false}
                       name="price"
                       type="number"
                       classes="form-control"
@@ -361,6 +401,8 @@ const AddNewTicket = ({
                     </FormLabel>
                     <div className="form-group">
                       <Field
+                        isRequired={type !== "Donation" ? true : false}
+                        isDisabled={type === "Donation" ? true : false}
                         name="numberOfTicketAvailable"
                         type="number"
                         classes="form-control"
@@ -495,18 +537,18 @@ const validate = (formValues) => {
   if (!formValues.currency) {
     errors.currency = "Currency is required";
   }
-  if (!formValues.price) {
-    errors.price = "Ticket price is required";
-  }
+  // if (!formValues.price) {
+  //   errors.price = "Ticket price is required";
+  // }
   // if (formValues.price < 100) {
   //   errors.price = "Minimum ticket price can be Rs. 100";
   // }
-  // if (!formValues.venueAreasAccessible) {
-  //   errors.venueAreasAccessible = "Accessible venue areas is required";
-  // }
-  if (!formValues.numberOfTicketAvailable) {
-    errors.numberOfTicketAvailable = "Number of tickets available is required";
+  if (!formValues.venueAreasAccessible) {
+    errors.venueAreasAccessible = "Accessible venue areas is required";
   }
+  // if (!formValues.numberOfTicketAvailable) {
+  //   errors.numberOfTicketAvailable = "Number of tickets available is required";
+  // }
   return errors;
 };
 

@@ -423,7 +423,7 @@ const SideNavEditLean = ({
 
 
 
-<div
+{/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleAffliateClick();
@@ -451,7 +451,7 @@ const SideNavEditLean = ({
             >
               Affiliate
             </div>
-          </div>
+          </div> */}
 
 
 <div

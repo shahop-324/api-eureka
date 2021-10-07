@@ -10,12 +10,11 @@ import Typography from "@mui/material/Typography";
 
 import Slide from "@mui/material/Slide";
 import VibePreview from "./../../../../assets/images/Vibe.svg";
-import Desert from "./../../../SessionStage/Images/desert.jpeg";
-
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
+import { useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -41,6 +40,8 @@ const Container = styled.div`
 
 
 const PreviewStageVibe = ({ open, handleClose }) => {
+
+  const {vibeToPreview} = useSelector((state) => state.vibe);
   return (
     <>
       <Dialog
@@ -80,7 +81,7 @@ const PreviewStageVibe = ({ open, handleClose }) => {
               style={{
                 height: "100%",
                 width: "100%",
-                backgroundImage: `${`url(${Desert})`}`,
+                backgroundImage: `${`url(${vibeToPreview})`}`,
                 backgroundSize: "100%",
                 backgroundRepeat: "no-repeat",
 

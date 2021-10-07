@@ -6,7 +6,9 @@ import { useTheme } from "@material-ui/core/styles";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { sendBulkSpeakerEmail } from "./../../../../actions";
+
 import styled from "styled-components";
 
 const HeaderFooter = styled.div`
@@ -20,11 +22,12 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const DeleteVideo = ({ id, open, handleClose, handleDeleteVideo }) => {
+const SpeakerBulkInvite = ({ open, handleClose, bulkMailInfo, eventId }) => {
   const dispatch = useDispatch();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
       <Dialog
@@ -32,16 +35,14 @@ const DeleteVideo = ({ id, open, handleClose, handleDeleteVideo }) => {
         open={open}
         aria-labelledby="responsive-dialog-title"
       >
-        <HeaderFooter className="px-4 py-3 mb-3">
-          <FormHeading>Delete this video.</FormHeading>
+        <HeaderFooter className="px-4 py-3">
+          <FormHeading>Send Bulk Invite</FormHeading>
         </HeaderFooter>
 
         <DialogContent>
           <DialogContentText>
-            You are about to delete this video from library. By doing so, this
-            video won't be available for streaming in any sessions. But
-            the one already streaming this one will have to pause and
-            restart for changes to take effect.
+            This will send bulk invitation to all speakers in this event
+            with their magic links. Are you sure to proceed ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -51,11 +52,11 @@ const DeleteVideo = ({ id, open, handleClose, handleDeleteVideo }) => {
           >
             Cancel
           </button>
+
           <button
             className="btn btn-outline-text btn-primary"
             onClick={() => {
-              handleDeleteVideo()
-              //   dispatch(deleteCoupon(id));
+              dispatch(sendBulkSpeakerEmail(bulkMailInfo, eventId));
               handleClose();
             }}
           >
@@ -67,4 +68,4 @@ const DeleteVideo = ({ id, open, handleClose, handleDeleteVideo }) => {
   );
 };
 
-export default DeleteVideo;
+export default SpeakerBulkInvite;

@@ -8,6 +8,8 @@ router.post("/signin/:speakerId", authController.signInForSpeaker);
 
 router.post("/:speakerId/sendInvitation", authController.protectCommunity, speakerController.sendInvitation);
 
+router.post("/sendBulkInvite/:eventId", authController.protectCommunity, speakerController.sendBulkInvite);
+
 router.get(
   "/:id",
   authController.protectCommunity,

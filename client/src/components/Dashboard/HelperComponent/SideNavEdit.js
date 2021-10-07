@@ -420,7 +420,7 @@ const SideNavEdit = ({
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={handleAffliateClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -443,7 +443,7 @@ const SideNavEdit = ({
           >
             Affiliate
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={handleLiveStreamingClick}

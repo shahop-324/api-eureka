@@ -15,7 +15,7 @@ import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import noCoupons from './../../assets/images/coupons.png';
 
-const renderCouponList = (coupons) => {
+const renderCouponList = (coupons, eventDetails) => {
   return coupons
     .slice(0)
     .reverse()
@@ -24,9 +24,9 @@ const renderCouponList = (coupons) => {
         <CouponCard
           id={coupon._id}
           key={coupon._id}
-          url={`https://bluemeet.s3.us-west-1.amazonaws.com/${coupon.discountForEventId.image}`}
+          url={`https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.image}`}
           percentage={coupon.discountPercentage}
-          onEvent={coupon.discountForEventId.eventName}
+          
           validTillDate={coupon.validTillDate}
           discountCode={coupon.discountCode}
           status={coupon.status}
@@ -38,6 +38,7 @@ const renderCouponList = (coupons) => {
 const Coupons = () => {
   const dispatch = useDispatch();
   const { coupons, isLoading, error } = useSelector((state) => state.coupon);
+  const {eventDetails} = useSelector((state) => state.event);
 
   const [open, setOpen] = React.useState(false);
 
@@ -59,9 +60,7 @@ const Coupons = () => {
         <Loader />
       </div>
     );
-  } else if (error) {
-    throw new Error(error);
-  }
+  } 
 
   return (
     <>
@@ -80,7 +79,7 @@ const Coupons = () => {
           </div>
         </div>
         <div className="coupon-management-content-grid px-3 mx-3 mb-4 py-4">
-          { (typeof coupons !== 'undefined' && coupons.length > 0) ?  renderCouponList(coupons) : <NoContentFound msgText="Your event coupons will appear here" img={noCoupons} />}
+          { (typeof coupons !== 'undefined' && coupons.length > 0) ?  renderCouponList(coupons, eventDetails) : <NoContentFound msgText="Your event coupons will appear here" img={noCoupons} />}
         </div>
       </div>
     </>

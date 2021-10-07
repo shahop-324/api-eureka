@@ -15,6 +15,7 @@ const mongoose = require("mongoose");
 const RegistrationForm = require("./../models/registrationFormModel");
 const User = require("./../models/userModel");
 const Mux = require("@mux/mux-node");
+const Vibe = require("./../models/vibeModel");
 const { Video } = new Mux(
   process.env.MUX_TOKEN_ID,
   process.env.MUX_TOKEN_SECRET
@@ -547,31 +548,42 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   }
 
   // Create a new Ticket Document in Ticket collection
-  const newlyCreatedTicket = await Ticket.create({
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-    numberOfTicketAvailable: req.body.numberOfTicketAvailable,
-    currency: req.body.currency,
-    shareRecording: req.body.shareRecording,
-    venueAreasAccessible: req.body.venueAreasAccessible,
-    initiatedAt: Date.now(),
-    eventId: eventGettingNewTicket.id,
-  });
+  const newlyCreatedTicket = await Ticket.create(
+    {
+      name: req.body.name,
+      price: req.body.price,
+      description: req.body.description,
+      numberOfTicketAvailable: req.body.numberOfTicketAvailable,
+      currency: req.body.currency,
+      shareRecording: req.body.shareRecording,
+      venueAreasAccessible: req.body.venueAreasAccessible,
+      initiatedAt: Date.now(),
+      type: req.body.type,
+      salesStartDate: req.body.salesStartDate,
+      salesEndDate: req.body.salesEndDate,
+      salesEndTime: req.body.salesEndTime,
+      salesStartTime: req.body.salesStartTime,
+      visibility: req.body.visibility,
+      message: req.body.message,
+      eventId: eventGettingNewTicket.id,
+    },
+    async (err, doc) => {
+      console.log(err);
+      eventGettingNewTicket.tickets.push(doc._id ? doc._id : doc.id);
+      await eventGettingNewTicket.save({ validateModifiedOnly: true });
+      await Event.findByIdAndUpdate(eventId, {
+        minTicketPrice: updatedMinPrice,
+        maxTicketPrice: updatedMaxPrice,
+      });
 
-  eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
-  await eventGettingNewTicket.save({ validateModifiedOnly: true });
-  await Event.findByIdAndUpdate(eventId, {
-    minTicketPrice: updatedMinPrice,
-    maxTicketPrice: updatedMaxPrice,
-  });
-
-  // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
-  res.status(201).json({
-    status: "success",
-    message: "New Ticket Created Successfully",
-    data: newlyCreatedTicket,
-  });
+      // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
+      res.status(201).json({
+        status: "success",
+        message: "New Ticket Created Successfully",
+        data: doc,
+      });
+    }
+  );
 });
 
 ///////////////////////////
@@ -758,6 +770,13 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
       currency: req.body.currency,
       shareRecording: req.body.shareRecording,
       venueAreasAccessible: req.body.venueAreasAccessible,
+      type: req.body.type,
+      salesStartDate: req.body.salesStartDate,
+      salesEndDate: req.body.salesEndDate,
+      salesEndTime: req.body.salesEndTime,
+      salesStartTime: req.body.salesStartTime,
+      visibility: req.body.visibility,
+      message: req.body.message,
     },
     { new: true, validateModifiedOnly: true }
   );
@@ -880,5 +899,49 @@ exports.saveEventbriteConf = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Successfully saved eventbrite configurations.",
+  });
+});
+
+exports.addVibe = catchAsync(async (req, res, next) => {
+  try {
+    const eventId = req.body.eventId;
+    const name = req.body.name;
+    const key = req.body.key;
+
+    const VibeDoc = await Vibe.create({
+      name: name,
+      date: Date.now(),
+      key: key,
+      eventId: eventId,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: VibeDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getVibes = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const Vibes = await Vibe.find({ eventId: eventId });
+
+  res.status(200).json({
+    status: "success",
+    data: Vibes,
+  });
+});
+
+exports.deleteVibe = catchAsync(async (req, res, next) => {
+  const vibeId = req.params.vibeId;
+
+  await Vibe.findByIdAndDelete(vibeId);
+
+  res.status(200).json({
+    status: "success",
+    message: "successfully deleted stage vibe",
   });
 });
