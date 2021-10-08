@@ -22,6 +22,7 @@ import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 
 import Help from "./help.png";
+import EventStreamSettings from "../EditEvent/SubComponent/EventStreamSettings";
 
 
 
@@ -59,8 +60,6 @@ background-color: #f5f7f8;
   height: auto;
   border-radius: 10px;
 `
-
-
 
 const FillerOuter = styled.div`
   width: 100%;
@@ -150,10 +149,16 @@ background-color: #ffffff;
 border-radius:10px;
 `
 
-
-
 const MainEventSetupCheckList = () => {
   const [selectedStep, setSelectedStep] = useState("setupEvent");
+
+  const [openStreamSettings, setOpenStreamSettings] = useState(false);
+
+  const handleCloseStreamSettings = () => {
+    setOpenStreamSettings(false);
+  }
+
+
 
   return (
     <>
@@ -222,14 +227,18 @@ const MainEventSetupCheckList = () => {
 
           <div style={{ padding: "20px" }}>
             <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-              <button className="btn btn-outline-text btn-outline-primary">
+              {/* <button onClick={() => {setSelectedStep("hide")}} className="btn btn-outline-text btn-outline-primary">
                 {" "}
                 <VisibilityOffRoundedIcon className="me-2" /> Hide Checklist
-              </button>
+              </button> */}
             </div>
+
+
 
             {(() => {
               switch (selectedStep) {
+                case "hide":
+                  return;
                 case "setupEvent":
                   return (
                     <div>
@@ -262,7 +271,7 @@ const MainEventSetupCheckList = () => {
                             <div className="mt-1">
                               <span>
                                 Set up details to drive registrations and
-                                automate
+                                automate your workflow
                               </span>
                             </div>
                           </div>
@@ -487,10 +496,12 @@ const MainEventSetupCheckList = () => {
         <EventPromoImageContainer className="px-4 py-3">
             <RTMPCard className="mb-3">
                  <CheckListHeading className="mb-3">
-              RTMP Settings
+              RTMP credentials
             </CheckListHeading>
-            <TextSmall className="mb-3">You can use RTMP to stream live from Youtube, Vimeo, Facebook, Twitter, Linkedin, Vmix, OBS and more. </TextSmall>
-            <button className="btn btn-outline-text btn-outline-primary"> 
+            <TextSmall className="mb-3">You can use RTMP to stream live from Youtube, Vimeo, Facebook, Twitter, Linkedin, Vmix, OBS and more streaming software directly in your Bluemeet event. </TextSmall>
+            <button onClick={() => {
+              setOpenStreamSettings(true);
+            }} className="btn btn-outline-text btn-outline-primary"> 
                 View
             </button>
             </RTMPCard>
@@ -506,6 +517,8 @@ const MainEventSetupCheckList = () => {
             </HelpCard>
         </EventPromoImageContainer>
       </EventOverviewGrid>
+
+      <EventStreamSettings open={openStreamSettings} handleClose={handleCloseStreamSettings} />
     </>
   );
 };

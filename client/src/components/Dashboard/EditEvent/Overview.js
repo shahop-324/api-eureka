@@ -1,8 +1,6 @@
-//  This is event overview page
-
 import React, { useState } from "react";
 import styled from "styled-components";
-import { uploadEventImage, editEvent } from "../../../actions";
+import { editEvent, showSnackbar } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
@@ -18,9 +16,9 @@ import { useSnackbar } from "notistack";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
 import EmbeddableWidget from "./SubComponent/EmbeddableWidget";
+import PublishEventConfirmation from "./SubComponent/PublishEventConfirmation";
 
 import {
   editEventDescription,
@@ -30,89 +28,8 @@ import {
 import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
-
-import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import { IconButton } from "@material-ui/core";
-
-import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
-import PagesRoundedIcon from "@mui/icons-material/PagesRounded";
 import MainEventSetupCheckList from "../Checklist/Main";
-
-const CheckListSteps = styled.div`
-  background-color: #f5f7f8;
-  padding: 20px;
-  height: 100%;
-
-  border-radius: 10px;
-`;
-
-const FillerOuter = styled.div`
-  width: 100%;
-  height: 7px;
-  background-color: #cfcece;
-  border-radius: 20px;
-`;
-
-const StepSectionButton = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-
-  font-weight: 500;
-  font-family: "Ubuntu";
-  color: #212121;
-  font-size: 0.85rem;
-  background-color: transparent;
-
-  span {
-    font-weight: 500;
-    font-family: "Ubuntu";
-    color: #757575;
-    font-size: 0.78rem;
-  }
-
-  border-radius: 10px;
-  padding: 10px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #dfebf8;
-  }
-`;
-
-const CheckListButton = styled.div`
-  background-color: ${(props) =>
-    props && props.active ? "#DFEBF8" : "transparent"};
-
-  font-weight: 500;
-  font-family: "Ubuntu";
-  color: #363636;
-  font-size: 0.85rem;
-  border-radius: 10px;
-  padding: 10px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #dfebf8;
-  }
-`;
-
-const FillerInner = styled.div`
-  width: 60%;
-  height: 7px;
-  background-color: #74c54f;
-  border-radius: 20px;
-`;
-
-const CheckListHeading = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 1rem;
-  color: #212121;
-`;
+import { IconButton } from "@material-ui/core";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -150,7 +67,7 @@ const EventDetailsHeading = styled.div`
 
 const EventDetailsGrid = styled.div`
   display: grid;
-  grid-template-columns: 4fr 2fr;
+  grid-template-columns: 4fr 3fr;
   grid-gap: 24px;
 `;
 
@@ -186,9 +103,13 @@ const EventLinkInput = styled.input`
 const EventOverview = (props) => {
   const [openBasicForm, setOpenBasicForm] = useState(false);
 
-  
-
   const [openWidget, setOpenWidget] = useState(false);
+
+  const [openPublish, setOpenPublish] = useState(false);
+
+  const handleClosePublish = () => {
+    setOpenPublish(false);
+  };
 
   const handleCloseWidget = () => {
     setOpenWidget(false);
@@ -198,9 +119,9 @@ const EventOverview = (props) => {
     setOpenBasicForm(false);
   };
 
-  const { eventDetails } = useSelector((state) => state.event);
+  const { eventDetails, isLoading } = useSelector((state) => state.event);
 
-  const [tag, setTag] = useState(eventDetails.organisedBy);
+  const [tag, setTag] = useState( eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null);
   const [editMode, setEditMode] = useState(false);
 
   const { handleSubmit, pristine, submitting } = props;
@@ -209,9 +130,15 @@ const EventOverview = (props) => {
 
   const { error } = useSelector((state) => state.event);
 
-  const aboutText = useSelector(
-    (state) => state.event.eventDetails.editingComment
-  );
+  // const aboutText = useSelector(
+  //   (state) => state.event.eventDetails.editingComment
+  // );
+
+  let aboutText;
+
+  if(eventDetails) {
+aboutText = eventDetails.editingComment
+  }
 
   const [editorState, setEditorState] = React.useState(
     aboutText
@@ -225,13 +152,13 @@ const EventOverview = (props) => {
   const params = useParams();
   const id = params.id;
 
-  const communityId = params.communityId;
-
   const onSubmit = () => {
     const JSONData = {
       editingComment: convertToRaw(editorState.getCurrentContent()),
     };
-    dispatch(editEventDescription(JSONData, id));
+
+      dispatch(editEventDescription(JSONData, id));
+    
   };
 
   const renderEditor = ({ input, id }) => {
@@ -249,6 +176,10 @@ const EventOverview = (props) => {
     );
   };
 
+  if(isLoading || !eventDetails) {
+    return <div>Loading...</div>
+  }
+
   if (error) {
     enqueueSnackbar(error, {
       variant: "error",
@@ -258,7 +189,7 @@ const EventOverview = (props) => {
     return dispatch(errorTrackerForEditEventDiscription());
   }
 
-  const previousTag = eventDetails.organisedBy;
+  const previousTag = eventDetails &&  eventDetails.organisedBy ? eventDetails.organisedBy  : null;
 
   const handleChangeTag = (e) => {
     setTag(e.target.value);
@@ -322,12 +253,7 @@ const EventOverview = (props) => {
                     <button
                       disabled={eventDetails.status === "Ended" ? true : false}
                       onClick={() => {
-                        dispatch(
-                          editEvent(
-                            { publishedStatus: "Published" },
-                            eventDetails._id
-                          )
-                        );
+                        setOpenPublish(true);
                       }}
                       className="btn btn-outline-primary btn-outline-text"
                       style={{ justifySelf: "end" }}
@@ -369,7 +295,7 @@ const EventOverview = (props) => {
                   </div>
                 </div>
               </EventDetailsGrid>
-              <div className="referral-link-and-copy-to-clipboard mb-5">
+              <div className="referral-link-and-copy-to-clipboard mb-4">
                 <div
                   className="ui action input me-4"
                   style={{ minWidth: "400px" }}
@@ -384,10 +310,29 @@ const EventOverview = (props) => {
                   <button
                     className="ui icon button"
                     onClick={() => {
-                      navigator.clipboard.writeText(
-                        `https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`
-                      );
-                      alert("copied to clipboard!");
+                      navigator.clipboard
+                        .writeText(
+                          `https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`
+                        )
+                        .then(
+                          function () {
+                            console.log(
+                              "Async: Copying to clipboard was successful!"
+                            );
+                            dispatch(
+                              showSnackbar("success", "Copied to clipboard!")
+                            );
+                          },
+                          function (err) {
+                            console.error("Async: Could not copy text: ", err);
+                            dispatch(
+                              showSnackbar(
+                                "error",
+                                "Failed to copy to clipboard!"
+                              )
+                            );
+                          }
+                        );
                     }}
                   >
                     <i className="copy outline icon"></i>
@@ -405,11 +350,12 @@ const EventOverview = (props) => {
                   onClick={() => {
                     setOpenWidget(true);
                   }}
-                  className="btn btn-outline-primary btn-outline-text"
+                  className="btn btn-outline-primary btn-outline-text me-4"
                 >
                   Embeddable widget
                 </buttton>
               </div>
+
               <EventDetailsHeading className="mb-4">
                 Event organised by
               </EventDetailsHeading>
@@ -442,21 +388,32 @@ const EventOverview = (props) => {
                     <div className="d-flex flex-row align-items-center">
                       <CheckRoundedIcon
                         onClick={() => {
-                          dispatch(
-                            editEvent({ organisedBy: tag }, eventDetails._id)
-                          );
+                          if (tag === eventDetails.organisedBy) {
+                            dispatch(
+                              showSnackbar(
+                                "info",
+                                "Please make some changes to update organiser name."
+                              )
+                            );
+                          } else {
+                            dispatch(
+                              editEvent({ organisedBy: tag }, eventDetails._id)
+                            );
+                          }
+
                           // turnOffEditMode();
                         }}
                         style={{ fill: "#188627" }}
-                        className="me-3"
+                        className="editable me-3"
                       />
+
                       <ClearRoundedIcon
                         onClick={() => {
                           resetTag();
                           turnOffEditMode();
                         }}
                         style={{ fill: "#A51320" }}
-                        className=""
+                        className="editable"
                       />
                     </div>
                   )}
@@ -480,12 +437,7 @@ const EventOverview = (props) => {
               >
                 <button
                   type="submit"
-                  className={`btn btn-primary btn-outline-text `}
-                  disabled={
-                    pristine || submitting || eventDetails.status === "Ended"
-                      ? true
-                      : false
-                  }
+                  className={`btn btn-primary btn-outline-text`}
                 >
                   Save description
                 </button>
@@ -518,6 +470,10 @@ const EventOverview = (props) => {
       />
 
       <EmbeddableWidget open={openWidget} handleClose={handleCloseWidget} />
+      <PublishEventConfirmation
+        open={openPublish}
+        handleClose={handleClosePublish}
+      />
     </>
   );
 };

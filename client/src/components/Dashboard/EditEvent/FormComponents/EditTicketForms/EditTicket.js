@@ -9,6 +9,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field, Form } from "redux-form";
 import { editTicket, errorTrackerForEditTicket } from "../../../../../actions";
 import Loader from "../../../../Loader";
+import dateFormat from "dateformat";
 
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -17,25 +18,21 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import styled from "styled-components";
 
 const ticketVisibilityOptions = [
-  {value: "public", label: "Public"},
-  {value: "hidden", label: "Hidden"},
-  {value: "private", label: "Private"},
-]
+  { value: "Public", label: "Public" },
+  { value: "Hidden", label: "Hidden" },
+  { value: "Private", label: "Private" },
+];
 
 const StyledInput = styled.input`
   font-weight: 500;
   font-family: "Ubuntu";
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: #4e4e4e;
-
-  &:hover {
-    border: #538bf7;
-  }
 `;
 const StyledTextArea = styled.textarea`
   font-weight: 500;
   font-family: "Ubuntu";
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: #4e4e4e;
 `;
 
@@ -51,11 +48,11 @@ const HeaderFooter = styled.div`
 `;
 
 const RadioLabel = styled.span`
-font-family: "Ubuntu" !important;
+  font-family: "Ubuntu" !important;
   font-size: 0.8rem !important;
   font-weight: 500 !important;
   color: #585858 !important;
-`
+`;
 
 const FormError = styled.div`
   font-family: "Ubuntu";
@@ -176,7 +173,13 @@ const EditTicket = ({
   reset,
   id,
 }) => {
-  const { detailError, isLoadingDetail } = useSelector((state) => state.ticket);
+  const { detailError, isLoadingDetail, ticketDetails } = useSelector(
+    (state) => state.ticket
+  );
+
+  const [type, setType] = React.useState(
+    ticketDetails ? ticketDetails.type : "Paid"
+  );
 
   const currencyOptions = [
     // { value: "USD", label: "US Dollars" },
@@ -199,21 +202,27 @@ const EditTicket = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    // const accessibleAreas = formValues.venueAreasAccessible.map(
-    //   (area) => area.value
-    // );
-    // console.log("accessible areas", accessibleAreas);
-
+    const accessibleAreas = formValues.venueAreasAccessible.map(
+      (area) => area.value
+    );
+    console.log("accessible areas", accessibleAreas);
     const ModifiedFormValues = {};
 
     ModifiedFormValues.currency = formValues.currency.value;
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
+    ModifiedFormValues.type = type;
     ModifiedFormValues.price = formValues.price;
     // ModifiedFormValues.shareRecording = formValues.shareRecording;
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
-    ModifiedFormValues.venueAreasAccessible = [];
+    ModifiedFormValues.venueAreasAccessible = accessibleAreas;
+    ModifiedFormValues.visibility = formValues.visibility.value;
+    ModifiedFormValues.message = formValues.message;
+    ModifiedFormValues.salesStartDate = formValues.salesStartDate;
+    ModifiedFormValues.salesEndDate = formValues.salesEndDate;
+    ModifiedFormValues.salesStartTime = `${formValues.startDate}T${formValues.salesStartTime}:00Z`;
+    ModifiedFormValues.salesEndTime = `${formValues.endDate}T${formValues.salesEndTime}:00Z`;
 
     // console.log(ModifiedFormValues);
 
@@ -251,7 +260,7 @@ const EditTicket = ({
               <Loader />{" "}
             </div>
           ) : (
-            <div style={{maxWidth: "600px"}}>
+            <div style={{ maxWidth: "600px" }}>
               <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 px-4">
                 <div></div>
                 <div className="coupon-overlay-form-headline">
@@ -300,30 +309,48 @@ const EditTicket = ({
                   <FormLabel Forhtml="eventStartDate">Type</FormLabel>
                   <RadioGroup
                     aria-label="ticket-type"
-                    defaultValue="paid"
+                    defaultValue={type}
                     name="radio-buttons-group"
                   >
                     <div className="mb-3 overlay-form-input-row form-row-3-in-1">
                       <div>
                         <FormControlLabel
-                          value="paid"
-                          control={<Radio />}
+                          value="Paid"
+                          control={
+                            <Radio
+                              onChange={(e) => {
+                                setType(e.target.value);
+                              }}
+                            />
+                          }
                           label=""
                         />
                         <RadioLabel>Paid</RadioLabel>
                       </div>
                       <div>
                         <FormControlLabel
-                          value="free"
-                          control={<Radio />}
+                          value="Free"
+                          control={
+                            <Radio
+                              onChange={(e) => {
+                                setType(e.target.value);
+                              }}
+                            />
+                          }
                           label=""
                         />
                         <RadioLabel>Free</RadioLabel>
                       </div>
                       <div>
                         <FormControlLabel
-                          value="donation"
-                          control={<Radio />}
+                          value="Donation"
+                          control={
+                            <Radio
+                              onChange={(e) => {
+                                setType(e.target.value);
+                              }}
+                            />
+                          }
                           label=""
                         />
                         <RadioLabel>Donation</RadioLabel>
@@ -354,19 +381,19 @@ const EditTicket = ({
                       />
                     </div>
                     <div>
-                    <FormLabel for="communityName">
-                      Number of ticket available
-                    </FormLabel>
-                    <div className="form-group">
-                      <Field
-                        name="numberOfTicketAvailable"
-                        type="number"
-                        classes="form-control"
-                        ariadescribedby="emailHelp"
-                        placeholder="50"
-                        component={renderInput}
-                      />
-                    </div>
+                      <FormLabel for="communityName">
+                        Number of ticket available
+                      </FormLabel>
+                      <div className="form-group">
+                        <Field
+                          name="numberOfTicketAvailable"
+                          type="number"
+                          classes="form-control"
+                          ariadescribedby="emailHelp"
+                          placeholder="50"
+                          component={renderInput}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="mb-4 overlay-form-input-row form-row-2-in-1">
@@ -375,7 +402,7 @@ const EditTicket = ({
                         Sales Start Date
                       </FormLabel>
                       <Field
-                        name="startDate"
+                        name="salesStartDate"
                         type="date"
                         classes="form-control"
                         id="eventStartDate"
@@ -387,7 +414,7 @@ const EditTicket = ({
                         Sales Start Time
                       </FormLabel>
                       <Field
-                        name="startTime"
+                        name="salesStartTime"
                         type="time"
                         classes="form-control"
                         id="eventStartTime"
@@ -402,7 +429,7 @@ const EditTicket = ({
                         Sales End Date
                       </FormLabel>
                       <Field
-                        name="endDate"
+                        name="salesEndDate"
                         type="date"
                         classes="form-control"
                         id="eventEndDate"
@@ -414,7 +441,7 @@ const EditTicket = ({
                         Sales End Time
                       </FormLabel>
                       <Field
-                        name="endTime"
+                        name="salesEndTime"
                         type="time"
                         classes="form-control"
                         id="eventEndTime"
@@ -437,11 +464,9 @@ const EditTicket = ({
                     />
                   </div>
                   <div className="mb-3 overlay-form-input-row">
-                    <FormLabel for="communityName">
-                      Visibility
-                    </FormLabel>
+                    <FormLabel for="communityName">Visibility</FormLabel>
                     <Field
-                      name="ticketVisibility"
+                      name="visibility"
                       placeholder="Ticket visibility"
                       styles={styles}
                       menuPlacement="top"
@@ -455,7 +480,7 @@ const EditTicket = ({
                     </FormLabel>
                     <div className="form-group">
                       <Field
-                        name="messageForAttendee"
+                        name="message"
                         classes="form-control"
                         ariadescribedby="emailHelp"
                         placeholder="Say thank you. This message will be sent along with the ticket."
@@ -505,6 +530,7 @@ const mapStateToProps = (state) => ({
       state.ticket.ticketDetails && state.ticket.ticketDetails.description
         ? state.ticket.ticketDetails.description
         : "",
+
     price:
       state.ticket.ticketDetails && state.ticket.ticketDetails.price
         ? state.ticket.ticketDetails.price
@@ -525,16 +551,52 @@ const mapStateToProps = (state) => ({
             value: state.ticket.ticketDetails.currency,
           }
         : "",
-    // venueAreasAccessible:
-    //   state.ticket.ticketDetails &&
-    //   state.ticket.ticketDetails.venueAreasAccessible
-    //     ? state.ticket.ticketDetails.venueAreasAccessible.map((element) => {
-    //         return {
-    //           value: element,
-    //           label: element,
-    //         };
-    //       })
-    //        : "",
+    venueAreasAccessible:
+      state.ticket.ticketDetails &&
+      state.ticket.ticketDetails.venueAreasAccessible
+        ? state.ticket.ticketDetails.venueAreasAccessible.map((element) => {
+            return {
+              value: element,
+              label: element,
+            };
+          })
+        : "",
+    visibility:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.visibility
+        ? {
+            value: state.ticket.ticketDetails.visibility,
+            label: state.ticket.ticketDetails.visibility,
+          }
+        : "",
+    salesStartDate:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.salesStartDate
+        ? dateFormat(
+            new Date(state.ticket.ticketDetails.salesStartDate),
+            "yyyy-mm-dd"
+          )
+        : "",
+    salesStartTime:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.salesStartTime
+        ? dateFormat(
+            new Date(state.ticket.ticketDetails.salesStartTime),
+            "HH:MM"
+          )
+        : "",
+    salesEndDate:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.salesEndDate
+        ? dateFormat(
+            new Date(state.ticket.ticketDetails.salesEndDate),
+            "yyyy-mm-dd"
+          )
+        : "",
+    salesEndTime:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.salesEndTime
+        ? dateFormat(new Date(state.ticket.ticketDetails.salesEndTime), "HH:MM")
+        : "",
+    message:
+      state.ticket.ticketDetails && state.ticket.ticketDetails.message
+        ? state.ticket.ticketDetails.message
+        : "",
   },
 });
 

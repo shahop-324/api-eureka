@@ -13,6 +13,13 @@ const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const mongoose = require("mongoose");
 const RegistrationForm = require("./../models/registrationFormModel");
+const User = require("./../models/userModel");
+const Mux = require("@mux/mux-node");
+const Vibe = require("./../models/vibeModel");
+const { Video } = new Mux(
+  process.env.MUX_TOKEN_ID,
+  process.env.MUX_TOKEN_SECRET
+);
 
 const uniqid = require("uniqid");
 const sgMail = require("@sendgrid/mail");
@@ -101,9 +108,18 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     communityName: communityGettingEvent.name,
     organisedBy: communityGettingEvent.name,
     communityId: communityGettingEvent._id,
+    numberOfTablesInLounge: req.body.numberOfTablesInLounge,
+  });
+
+  // Generate mux stream key --- this needs to be very very private.
+
+  const muxRes = await Video.LiveStreams.create({
+    playback_policy: "public",
+    new_asset_settings: { playback_policy: "public" },
   });
 
   // 0) Create a registration form document for this event and store its id in this event
+
   const registrationForm = await RegistrationForm.create({
     initialisedAt: Date.now(),
     eventId: createdEvent._id,
@@ -111,6 +127,10 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
   createdEvent.registrationFormId = registrationForm._id;
 
+  createdEvent.muxStreamKey = muxRes.stream_key;
+  createdEvent.muxVideoPlaybackId = muxRes.playback_ids[0].id;
+  createdEvent.mux_credentialId = muxRes.id;
+  createdEvent.moderators = req.body.moderators;
   const newEvent = await createdEvent.save({
     new: true,
     validateModifiedOnly: true,
@@ -140,6 +160,7 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
   });
 
   const query = Event.find({ createdBy: mongoose.Types.ObjectId(communityId) })
+    .sort({ createdAt: -1 })
     .populate("sponsors")
     .populate("tickets")
     .populate("booths")
@@ -171,7 +192,9 @@ exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
 
 exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
-  const event = await Event.findById(eventId).populate("registrationFormId");
+  const event = await Event.findById(eventId)
+    .populate("registrationFormId")
+    .populate("moderators", "firstName lastName email");
 
   res.status(200).json({
     status: "success",
@@ -390,6 +413,7 @@ exports.addSession = catchAsync(async (req, res, next) => {
   }
 
   let session = await Session.create({
+    type: req.body.type,
     name: req.body.name,
     startDate: req.body.startDate,
     startTime: req.body.startTime,
@@ -401,6 +425,26 @@ exports.addSession = catchAsync(async (req, res, next) => {
   });
 
   session.tags = req.body.tags;
+  session.whoCanJoin = req.body.entryRestriction;
+  if (req.body.permittedTickets) {
+    session.permittedTickets = req.body.permittedTickets;
+  }
+  if (req.body.permittedPeople) {
+    session.permittedPeople = req.body.permittedPeople;
+  }
+  session.host = req.body.host;
+
+  if (req.body.type === "Stream") {
+    const muxRes = await Video.LiveStreams.create({
+      playback_policy: "public",
+      new_asset_settings: { playback_policy: "public" },
+    });
+
+    session.RTMPstreamKey = muxRes.stream_key;
+    session.RTMPPlaybackId = muxRes.playback_ids[0].id;
+    session.RTMPCredentialsId = muxRes.id;
+    session.RTMPstreamURL = `rtmps://global-live.mux.com:443/app`;
+  }
 
   await session.save({ new: true, validateModifiedOnly: true });
 
@@ -504,31 +548,42 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   }
 
   // Create a new Ticket Document in Ticket collection
-  const newlyCreatedTicket = await Ticket.create({
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-    numberOfTicketAvailable: req.body.numberOfTicketAvailable,
-    currency: req.body.currency,
-    shareRecording: req.body.shareRecording,
-    venueAreasAccessible: req.body.venueAreasAccessible,
-    initiatedAt: Date.now(),
-    eventId: eventGettingNewTicket.id,
-  });
+  const newlyCreatedTicket = await Ticket.create(
+    {
+      name: req.body.name,
+      price: req.body.price,
+      description: req.body.description,
+      numberOfTicketAvailable: req.body.numberOfTicketAvailable,
+      currency: req.body.currency,
+      shareRecording: req.body.shareRecording,
+      venueAreasAccessible: req.body.venueAreasAccessible,
+      initiatedAt: Date.now(),
+      type: req.body.type,
+      salesStartDate: req.body.salesStartDate,
+      salesEndDate: req.body.salesEndDate,
+      salesEndTime: req.body.salesEndTime,
+      salesStartTime: req.body.salesStartTime,
+      visibility: req.body.visibility,
+      message: req.body.message,
+      eventId: eventGettingNewTicket.id,
+    },
+    async (err, doc) => {
+      console.log(err);
+      eventGettingNewTicket.tickets.push(doc._id ? doc._id : doc.id);
+      await eventGettingNewTicket.save({ validateModifiedOnly: true });
+      await Event.findByIdAndUpdate(eventId, {
+        minTicketPrice: updatedMinPrice,
+        maxTicketPrice: updatedMaxPrice,
+      });
 
-  eventGettingNewTicket.tickets.push(newlyCreatedTicket.id);
-  await eventGettingNewTicket.save({ validateModifiedOnly: true });
-  await Event.findByIdAndUpdate(eventId, {
-    minTicketPrice: updatedMinPrice,
-    maxTicketPrice: updatedMaxPrice,
-  });
-
-  // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
-  res.status(201).json({
-    status: "success",
-    message: "New Ticket Created Successfully",
-    data: newlyCreatedTicket,
-  });
+      // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
+      res.status(201).json({
+        status: "success",
+        message: "New Ticket Created Successfully",
+        data: doc,
+      });
+    }
+  );
 });
 
 ///////////////////////////
@@ -555,7 +610,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "mailChimpAudienceListIdForLeads",
     "mailChimpAudienceListIdForInterestedPeople",
     "addDirectAccessLinkToMailChimp",
-    "status"
+    "status",
+    "numberOfTablesInLounge"
   );
 
   const eventDoc = await Event.findByIdAndUpdate(req.params.id, filteredBody, {
@@ -571,10 +627,18 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       eventDoc.categories = req.body.categories;
     }
 
-    const updatedEvent = await eventDoc.save({
+    if (req.body.moderators) {
+      eventDoc.moderators = req.body.moderators;
+    }
+
+    await eventDoc.save({
       new: true,
       validateModifiedOnly: true,
     });
+
+    const updatedEvent = await Event.findById(eventDoc._id)
+      .populate("registrationFormId")
+      .populate("moderators", "firstName lastName email");
 
     res.status(200).json({
       status: "success",
@@ -706,6 +770,13 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
       currency: req.body.currency,
       shareRecording: req.body.shareRecording,
       venueAreasAccessible: req.body.venueAreasAccessible,
+      type: req.body.type,
+      salesStartDate: req.body.salesStartDate,
+      salesEndDate: req.body.salesEndDate,
+      salesEndTime: req.body.salesEndTime,
+      salesStartTime: req.body.salesStartTime,
+      visibility: req.body.visibility,
+      message: req.body.message,
     },
     { new: true, validateModifiedOnly: true }
   );
@@ -828,5 +899,49 @@ exports.saveEventbriteConf = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Successfully saved eventbrite configurations.",
+  });
+});
+
+exports.addVibe = catchAsync(async (req, res, next) => {
+  try {
+    const eventId = req.body.eventId;
+    const name = req.body.name;
+    const key = req.body.key;
+
+    const VibeDoc = await Vibe.create({
+      name: name,
+      date: Date.now(),
+      key: key,
+      eventId: eventId,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: VibeDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getVibes = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const Vibes = await Vibe.find({ eventId: eventId });
+
+  res.status(200).json({
+    status: "success",
+    data: Vibes,
+  });
+});
+
+exports.deleteVibe = catchAsync(async (req, res, next) => {
+  const vibeId = req.params.vibeId;
+
+  await Vibe.findByIdAndDelete(vibeId);
+
+  res.status(200).json({
+    status: "success",
+    message: "successfully deleted stage vibe",
   });
 });

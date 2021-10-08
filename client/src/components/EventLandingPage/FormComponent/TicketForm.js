@@ -3,15 +3,20 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Radio from "@material-ui/core/Radio";
 import { withStyles } from "@material-ui/core/styles";
-
-import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import { Link } from "react-router-dom";
-import { getEventRegistrationCheckoutSession } from "../../../actions";
+import {
+  getEventRegistrationCheckoutSession,
+  showSnackbar,
+} from "../../../actions";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+const TwoButtonsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 24px;
+`;
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -28,51 +33,40 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({ eventId, tickets, coupon,  }) => {
-  console.log(tickets);
-  console.log(eventId);
+const TicketForm = ({ eventId, tickets, coupon }) => {
+  const params = useParams();
+  const currentEventId = params.id;
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
-  const [state, setState] = React.useState({
-    openSuccess: false,
-    vertical: "top",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, openSuccess } = state;
-
-  const handleCloseSuccess = () => {
-    setState({ vertical: "top", horizontal: "center", openSuccess: false });
-  };
-
-  const [registrationSuccess, setRegistrationSuccess] = React.useState({
-    openError: false,
-    verticale: "top",
-    horizontale: "center",
-  });
-
-  const {
-    verticalRegistrationSuccess,
-    horizontalRegistrationSuccess,
-    openRegistrationSuccess,
-  } = registrationSuccess;
-
-  const handleCloseRegistrationSuccess = () => {
-    setRegistrationSuccess({
-      verticalRegistrationSuccess: "top",
-      horizontalRegistrationSuccess: "center",
-      openRegistrationSuccess: false,
-    });
-  };
-
-  const event = useSelector((state) => {
-    return state.event.eventDetails;
-  });
+  let alreadyRegistered = false; // Boolean flag
 
   const userToken = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.user.userDetails);
   const userDetails = useSelector((state) => state.user.userDetails);
+
+  if (isSignedIn) {
+    // get list of all events in which attendee is registered.
+    // compare if eventId is included in users registered events array.
+    if (userDetails) {
+      if (userDetails.registeredInEvents) {
+        const EventsIdsArray = userDetails.registeredInEvents.map(
+          (el) => el._id
+        );
+        if (EventsIdsArray.includes(currentEventId)) {
+          alreadyRegistered = true;
+        }
+      }
+    }
+
+    // if yes then don't allow to register again
+
+    // else leave it in normal state.
+  }
+
+  const event = useSelector((state) => {
+    return state.event.eventDetails;
+  });
 
   const couponsArray =
     coupon &&
@@ -95,8 +89,6 @@ const TicketForm = ({ eventId, tickets, coupon,  }) => {
   const [couponToBeApplied, setCouponToBeApplied] = useState("");
 
   const handleChange = (event) => {
-    // setSelectedValue((event.target.value)*1);
-
     setSelectedTicket(event.target.value);
     console.log(event.target.value);
   };
@@ -121,104 +113,11 @@ const TicketForm = ({ eventId, tickets, coupon,  }) => {
     console.log(validationStatus);
     if (bool) {
       setFactor((100 / (100 - validatedCoupon[0].percentage * 1)) * 1);
-      setState({ openSuccess: true, vertical: "top", horizontal: "center" });
-      console.log(factor);
+      showSnackbar("success", "Coupon applied successfully!");
     } else {
       setFactor(1);
-      alert("Invalid coupon code!");
+      showSnackbar("error", "Invalid coupon code.");
     }
-  };
-
-  const displayRazorpay = async () => {
-    const res = await loadRazorpay();
-
-    if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
-
-    let order = await fetch(`${BaseURL}razorpay/createRazorpayOrder`, {
-      method: "POST",
-      body: JSON.stringify({
-        eventId: eventId,
-        ticketId: selectedTicket,
-        communityId: event.createdBy._id,
-        transaction_type: "event_registration",
-        userId: user._id,
-        couponId:
-          couponToBeApplied && couponToBeApplied[0]
-            ? couponToBeApplied[0].id
-            : null,
-      }),
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
-
-    order = await order.json();
-    console.log(order);
-
-    const options = {
-      key: "rzp_live_bDVAURs4oXxSGi",
-      amount: order.data.amount,
-      currency: "INR",
-      name: "Bluemeet",
-      description: `This is a event ticket booking for eventId ${eventId} which is made by user ${userDetails._id} and ticket Id is ${selectedTicket}.`,
-      image:
-        "https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png",
-      order_id: order.data.id,
-      handler: function (response) {
-        alert(
-          "Your registration was successful! Check your ticket in Email or Booked Tickets of user profile section."
-        );
-      },
-      prefill: {
-        name: `${userDetails.firstName} ${userDetails.lastName}`,
-        email: userDetails.email,
-      },
-      notes: {
-        eventId: eventId,
-        ticketId: selectedTicket,
-        communityId: event.createdBy._id,
-        transaction_type: "event_registration",
-        userId: user._id,
-        couponId:
-          couponToBeApplied && couponToBeApplied[0]
-            ? couponToBeApplied[0].id
-            : null,
-      },
-      theme: {
-        color: "#538BF7",
-      },
-    };
-    var paymentObject = new window.Razorpay(options);
-
-    paymentObject.open();
-    paymentObject.on("payment.failed", function (response) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
-    });
-  };
-
-  const loadRazorpay = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
   };
 
   const renderTicketsList = (tickets) => {
@@ -302,31 +201,50 @@ const TicketForm = ({ eventId, tickets, coupon,  }) => {
         </div>
       </div>
 
+      {/* // TODO Remember to show a message that you are already registerd for this event. */}
+
       <div className="reserve-your-spot">
-        <div>
-          <button
-            // disabled={!isSignedIn}
-            className="btn btn-primary btn-outline-text mb-3"
-            onClick={getEventRegistrationCheckoutSession({
-              eventId: eventId,
-              ticketId: selectedTicket,
-              communityId: event.createdBy._id,
-              transaction_type: "event_registration",
-              userId: user._id,
-              couponId:
-                couponToBeApplied && couponToBeApplied[0]
-                  ? couponToBeApplied[0].id
-                  : null,
-            })}
-
-            // onClick={displayRazorpay}
-            // onClick={ community.paymentGateway === "Paypal" ? handleRegistrationUsingPaypal : displayRazorpay}
+        {alreadyRegistered === true ? (
+          <TwoButtonsGrid
+            className=""
+            style={{
+              maxWidth: "470px",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
           >
-            Reserve Your Spot
-          </button>
+            {/* Show visit event button and add to calander button to attendee*/}
+            <button className="btn btn-outline-text btn-outline-primary">
+              Join event
+            </button>
+            <button className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center">
+              <TodayRoundedIcon className="me-2" />
+              <span>Add to calender</span>
+            </button>
+          </TwoButtonsGrid>
+        ) : (
+          <div>
+            <button
+              className="btn btn-primary btn-outline-text mb-3"
+              onClick={getEventRegistrationCheckoutSession({
+                eventId: eventId,
+                ticketId: selectedTicket,
+                communityId: event.createdBy._id,
+                transaction_type: "event_registration",
+                userId: user._id,
+                couponId:
+                  couponToBeApplied && couponToBeApplied[0]
+                    ? couponToBeApplied[0].id
+                    : null,
+              })}
+            >
+              Reserve Your Spot
+            </button>
 
-          <div id="paypal-button-container"></div>
-        </div>
+            <div id="paypal-button-container"></div>
+          </div>
+        )}
+
         <div className="col" style={{ marginTop: "4%", padding: "0" }}>
           {" "}
           <Link to={`/signin/${eventId}/?intent=eventRegistration`}>
@@ -341,34 +259,6 @@ const TicketForm = ({ eventId, tickets, coupon,  }) => {
           </Link>
         </div>
       </div>
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={openSuccess}
-        onClose={handleCloseSuccess}
-        autoHideDuration={4000}
-      >
-        <Alert
-          onClose={handleCloseSuccess}
-          severity="success"
-          autoHideDuration={4000}
-        >
-          Coupon applied successfully!
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        anchorOrigin={{
-          verticalRegistrationSuccess,
-          horizontalRegistrationSuccess,
-        }}
-        open={openRegistrationSuccess}
-        onClose={handleCloseRegistrationSuccess}
-        autoHideDuration={4000}
-      >
-        <Alert onClose={handleCloseRegistrationSuccess} severity="success">
-          Your registration was successful!
-        </Alert>
-      </Snackbar>
     </>
   );
 };

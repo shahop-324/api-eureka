@@ -21,18 +21,19 @@ import {
   errorTrackerForCreateSpeaker,
   errorTrackerForFetchSpeakers,
   fetchEvent,
+  showSnackbar,
   fetchSessions,
   fetchSpeakers,
 } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import Loader from "../../Loader";
 import NoSpeakers from "./../../../assets/images/scratching-head.png";
 import NoContentFound from "../../NoContent";
 import { useSnackbar } from "notistack";
 import styled from "styled-components";
-
+import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import SendInvites from "./../EditEvent/FormComponents/EditSpeakersForms/SendInvites";
+import SpeakerBulkInvite from "./HelperComponents/SpeakerBulkInvite";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -98,7 +99,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -112,13 +112,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Speakers = () => {
+
+  const params   = useParams();
+  const eventId = params.id;
+
   const [openInvites, setOpenInvites] = useState(false);
+
+  const { isLoading, error, speakers } = useSelector((state) => {
+    return state.speaker;
+  });
+
+  const bulkMailInfo = speakers.map((el) => {
+    return {
+      name: el.firstName + " " + el.lastName,
+      email: el.email,
+      invitationLink: el.invitationLink,
+      dashboardLink: el.dashboardLink,
+      eventId: el.eventId,
+    };
+  });
 
   const handleCloseInvites = () => {
     setOpenInvites(false);
   };
 
-  const { enqueueSnackbar } = useSnackbar();
+  const [openBulkMailConfirmation, setOpenBulkMailConfirmation] =
+    React.useState(false);
+
+  const handleCloseBulkMailConfirmation = () => {
+    setOpenBulkMailConfirmation(false);
+  };
 
   let options = [{ value: "all", label: "All Sessions" }];
 
@@ -137,14 +160,8 @@ const Speakers = () => {
   const [open, setOpen] = React.useState(false);
   const [term, setTerm] = React.useState("");
   const [sessionId, setSessionId] = React.useState("");
-
-  const params = useParams();
   const dispatch = useDispatch();
   const id = params.id;
-
-  const { isLoading, error, speakers } = useSelector((state) => {
-    return state.speaker;
-  });
 
   useEffect(() => {
     dispatch(fetchSessions(id));
@@ -213,13 +230,8 @@ const Speakers = () => {
   const classes = useStyles();
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     dispatch(errorTrackerForFetchSpeakers());
     return dispatch(errorTrackerForCreateSpeaker());
-    // throw new Error(error);
   }
 
   return (
@@ -252,11 +264,27 @@ const Speakers = () => {
                 menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
-                //  onChange={(value)=>console.log(value)}
                 onChange={(value) => setSessionId(value.value)}
               />
             </div>
-            
+            <button
+              onClick={() => {
+                if (typeof speakers !== "undefined" && speakers.length > 0) {
+                  setOpenBulkMailConfirmation(true);
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "info",
+                      "There are no registrations to send invite."
+                    )
+                  );
+                }
+              }}
+              className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center me-3"
+            >
+              {" "}
+              <MailRoundedIcon className="me-2" /> <span> Send Invites </span>
+            </button>
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSpeaker}
@@ -288,6 +316,12 @@ const Speakers = () => {
       </div>
       <AddNewSpeaker open={open} handleClose={handleClose} />
       <SendInvites open={openInvites} handleClose={handleCloseInvites} />
+      <SpeakerBulkInvite
+        open={openBulkMailConfirmation}
+        handleClose={handleCloseBulkMailConfirmation}
+        bulkMailInfo={bulkMailInfo}
+        eventId={eventId}
+      />
     </>
   );
 };

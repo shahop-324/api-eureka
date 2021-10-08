@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import styled from "styled-components";
+import Chip from '@mui/material/Chip';
 
 const EventDetailCard = ({
   id,
@@ -36,7 +37,7 @@ const EventDetailCard = ({
 
   return (
     <>
-      <div className="events-field-value-container">
+      <div className="events-field-value-container" style={{alignItems: "center"}}>
         <div className="event-edit-field me-2">
           <Link
             className="event-field-label event-edit-icon "
@@ -81,14 +82,45 @@ const EventDetailCard = ({
             className="event-field-label field-label-value"
             style={{ fontFamily: "Inter" }}
           >
-            {visibility}
+            {(() => {
+              switch (visibility) {
+                case "Public":
+                return  <Chip label={visibility} color="success" style={{fontWeight: "500"}} variant="outlined"/>
+                case "Private":
+                return  <Chip label={visibility} color="warning" style={{fontWeight: "500"}} variant="outlined"/>
+                case "Hidden":
+                return  <Chip label={visibility} color="error" style={{fontWeight: "500"}} variant="outlined"/>
+                
+              
+                default:
+                  break;
+              }
+            })()}
+            
           </div>
         </div>
         <div className="event-status-field">
           <div className="event-field-label field-label-value">
             <div className="chip-container">
               <div className="chip-text" style={{ fontFamily: "Inter" }}>
-                {publishedStatus}
+               
+
+                {(() => {
+
+switch (publishedStatus) {
+  case "Draft":
+    return  <Chip label={publishedStatus} color="secondary" style={{fontWeight: "500"}} variant="outlined"/>
+  case "Published":
+    return  <Chip label={publishedStatus} color="success" style={{fontWeight: "500"}} variant="outlined"/>
+   
+
+  default:
+    break;
+}
+
+                }
+
+                )()}
               </div>
             </div>
           </div>
@@ -110,25 +142,40 @@ const EventDetailCard = ({
           </div>
         </div>
         <div className="event-running-status-field">
-          <div className="d-flex flex-row mb-3">
-            {status === "active" ? (
-              <div
-                className="d-flex flex-row align-items-center event-field-label field-label-value"
-                style={{ color: "#75BF72", fontFamily: "Inter" }}
-              >
-                <Ripple /> Active{" "}
-              </div>
-            ) : (
-              <div
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  color: "#D64329",
-                }}
-              >
-                Inactive
-              </div>
-            )}
+          <div className="d-flex flex-row ">
+            
+
+{(() => {
+
+  switch (status) {
+    case "Upcoming":
+      return <Chip label={status} color="warning" style={{fontWeight: "500"}} variant="outlined"/>
+      
+
+      case "Started":
+        return <Chip label={status} color="success" style={{fontWeight: "500"}} variant="outlined"/>
+
+      
+      case "Paused":
+        return <Chip label={status} color="primary" style={{fontWeight: "500"}} variant="outlined"/>
+
+     
+      case "Resumed":
+        return <Chip label={status} color="secondary" style={{fontWeight: "500"}} variant="outlined"/>
+
+     
+      case "Ended":
+        return <Chip label={status} color="error" style={{fontWeight: "500"}} variant="outlined"/>
+
+     
+  
+    default:
+      break;
+  }
+
+})()}
+
+
           </div>
         </div>
         <div className="event-stage-field">

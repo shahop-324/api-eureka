@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-vars */
+// Stream server URL : rtmps://global-live.mux.com:443/app
+// MUX ACCESS TOKEN ID : 7b811d14-10d2-48ff-8502-647f984989fe
+// MUX SECRET KEY : 6HtUbytX2zOrkdiGoaiqcWTUkave7nuy1uo336Jpk87CUiyEYsQGk3JzM2+gMft99FLKDr+Y444
+
 import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
@@ -58,6 +62,7 @@ import StageVibesLibrary from "./StageVibesLibrary";
 
 import EventMoreActions from "./SubComponent/EventMoreActions";
 import styled from "styled-components";
+import LiveStream from "./LiveStream";
 
 const Strip = styled.div`
   background-color: #f75353;
@@ -444,7 +449,7 @@ const EditEventRoot = () => {
                   case "12":
                     return <Analytics />;
                   case "13":
-                    return <div>Live stream</div>;
+                    return <LiveStream />;
                   case "14":
                     return <Integrations />;
                   case "15":

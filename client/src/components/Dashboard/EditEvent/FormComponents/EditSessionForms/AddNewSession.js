@@ -1,14 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
-import Snackbar from "@material-ui/core/Snackbar";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import {
@@ -18,13 +11,17 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import MuiAlert from "@material-ui/lab/Alert";
 import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
-
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-
 import styled from "styled-components";
+import WhoCanJoinSession from "./WhoCanJoinSession";
+
+let hostOptions;
+let activityOptions = [
+  { value: "Session", label: "Session" },
+  { value: "Stream", label: "Stream" },
+];
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -54,13 +51,6 @@ const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
-const FormHeading = styled.div`
-  font-size: 1.2rem;
-  font-family: "Ubuntu";
-  font-weight: 600;
-  color: #212121;
-`;
-
 const FormSubHeading = styled.div`
   font-size: 0.87rem;
   font-family: "Ubuntu";
@@ -82,9 +72,12 @@ const FormWarning = styled.div`
   font-size: 0.8rem;
 `;
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+const WhoCanJoinThis = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
 
 const styles = {
   control: (base) => ({
@@ -173,13 +166,13 @@ const renderReactSelect = ({
   menuPlacement,
   options,
   defaultValue,
-
+  isMulti,
   name,
 }) => (
   <div>
     <div>
       <Select
-        isMulti
+        isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
         menuPlacement={menuPlacement}
@@ -203,7 +196,24 @@ const AddNewSession = ({
   let speakerOptions = [];
   const { error, isLoading } = useSelector((state) => state.session);
 
- 
+  const { communityManagers } = useSelector((state) => state.community);
+
+  const { superAdminName, superAdminEmail, superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  hostOptions = communityManagers.map((el) => {
+    return {
+      value: el._id,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
+  });
+
+  hostOptions.push({
+    value: superAdmin,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
+
   const dispatch = useDispatch();
 
   const speakers = useSelector((state) => state.speaker.speakers);
@@ -224,26 +234,20 @@ const AddNewSession = ({
     console.log(formValues);
     let speakersArray = [];
     let hostArray = [];
-    let coHostArray = [];
 
     if (formValues.speaker !== undefined)
       for (let element of formValues.speaker) {
         speakersArray.push(element.value);
       }
 
-    if (formValues.host !== undefined) {
-      for (let element of formValues.host) {
+    if (formValues.hosts !== undefined) {
+      for (let element of formValues.hosts) {
         hostArray.push(element.value);
       }
     }
 
-    if (formValues.cohost !== undefined) {
-      for (let element of formValues.cohost) {
-        coHostArray.push(element.value);
-      }
-    }
-
     const ModifiedFormValues = {};
+    ModifiedFormValues.type = formValues.activityType.value;
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.startDate = formValues.startDate;
@@ -252,14 +256,11 @@ const AddNewSession = ({
     ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
     ModifiedFormValues.speakers = speakersArray;
     ModifiedFormValues.tags = formValues.tags;
-
-    console.log(ModifiedFormValues, "Checking session formValues");
+    ModifiedFormValues.host = hostArray;
 
     dispatch(createSession(ModifiedFormValues, id));
   };
-  const theme = useTheme();
-
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+ 
 
   if (isLoading) {
     return (
@@ -292,11 +293,11 @@ const AddNewSession = ({
             console.log("Side nav was closed");
           }}
         >
-          <>
+          <div style={{ maxWidth: "640px" }}>
             <HeaderFooter className="form-heading-and-close-button mb-4 px-4 pt-3">
               <div></div>
               <div className="coupon-overlay-form-headline">
-                Add New Session
+                Add New Activity
               </div>
               <div className="overlay-form-close-button" onClick={handleClose}>
                 <IconButton aria-label="delete">
@@ -308,7 +309,18 @@ const AddNewSession = ({
             <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
               <div className="create-new-coupon-form px-4 py-4">
                 <div className="mb-4 overlay-form-input-row">
-                  <FormLabel Forhtml="eventEndDate">Session Name</FormLabel>
+                  <FormLabel for="communityName">Activity type</FormLabel>
+                  <Field
+                    name="activityType"
+                    placeholder="Select one activity"
+                    styles={styles}
+                    menuPlacement="bottom"
+                    options={activityOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel Forhtml="eventEndDate">Activity Name</FormLabel>
                   <Field
                     name="name"
                     type="text"
@@ -320,7 +332,7 @@ const AddNewSession = ({
                 </div>
                 <div className="mb-4 overlay-form-input-row">
                   <FormLabel Forhtml="eventEndDate">
-                    Short Description
+                    Activity Description
                   </FormLabel>
                   <Field
                     name="description"
@@ -375,6 +387,7 @@ const AddNewSession = ({
                 <div className="mb-4 overlay-form-input-row">
                   <FormLabel for="communityName">Speakers</FormLabel>
                   <Field
+                    isMulti={true}
                     name="speaker"
                     placeholder="Select speakers"
                     styles={styles}
@@ -383,6 +396,19 @@ const AddNewSession = ({
                     component={renderReactSelect}
                   />
                 </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Host</FormLabel>
+                  <Field
+                    isMulti={true}
+                    name="hosts"
+                    placeholder="Select hosts"
+                    styles={styles}
+                    menuPlacement="top"
+                    options={hostOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+
                 <div className="mb-3 overlay-form-input-row">
                   <FormLabel for="tags">Tags</FormLabel>
                   <div className="form-group">
@@ -395,14 +421,13 @@ const AddNewSession = ({
                     type="submit"
                     className="btn btn-primary btn-outline-text"
                     style={{ width: "100%" }}
-                    // disabled={pristine || submitting}
                   >
-                    Add New Session
+                    Add New Activity
                   </button>
                 </div>
               </div>
             </form>
-          </>
+          </div>
         </SwipeableDrawer>
       </React.Fragment>
     </>

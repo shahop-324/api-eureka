@@ -17,52 +17,44 @@ import { useTheme } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const StyledInput = styled.input`
-font-weight: 500;
-font-family: "Ubuntu";
-font-size: 0.8rem;
-color: #4E4E4E;
-`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.75rem;
+  color: #4e4e4e;
+`;
 
 const FormLabel = styled.label`
-font-family: "Ubuntu" !important;
-font-size: 0.82rem !important;
-font-weight: 500 !important;
-color: #727272 !important;
-`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+`;
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
 const FormHeading = styled.div`
-font-size: 1.2rem;
-font-family: "Ubuntu";
-font-weight: 600;
-color: #212121;
-`
-
-const FormSubHeading = styled.div`
-font-size: 0.87rem;
-font-family: "Ubuntu";
-font-weight: 500;
-color: #424242;
-`
-
+  font-size: 1.2rem;
+  font-family: "Ubuntu";
+  font-weight: 600;
+  color: #212121;
+`;
 const FormError = styled.div`
-font-family: "Ubuntu";
-color: red;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const FormWarning = styled.div`
-font-family: "Ubuntu";
-color: orange;
-font-weight: 400;
-font-size: 0.8rem;
-`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInput = ({
   input,
@@ -77,7 +69,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -85,19 +77,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -105,7 +86,6 @@ const renderInput = ({
 const renderTextArea = ({
   input,
   meta: { touched, error, warning },
-
   type,
   ariadescribedby,
   classes,
@@ -123,21 +103,9 @@ const renderTextArea = ({
         placeholder={placeholder}
         required
       />
-
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -167,8 +135,8 @@ const renderReactSelect = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -196,8 +164,8 @@ const renderReactSelectTimeZone = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -258,6 +226,26 @@ const EditBasicDetailsForm = ({
   open,
   handleClose,
 }) => {
+  let moderatorOptions = [];
+  const communityManagers = useSelector((state) => state.community.communityManagers);
+
+  const { superAdminName, superAdminEmail, superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  moderatorOptions = communityManagers.map((el) => {
+    return {
+      value: el._id,
+      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+    };
+  });
+
+  moderatorOptions.push({
+    value: superAdmin,
+    label: superAdminName + " " + `(${superAdminEmail})`,
+  });
+
+
   const { enqueueSnackbar } = useSnackbar();
 
   const theme = useTheme();
@@ -271,6 +259,13 @@ const EditBasicDetailsForm = ({
 
   const onSubmit = (formValues) => {
     const categories = [];
+    let moderators = [];
+
+    if (formValues.moderators !== undefined) {
+      for (let element of formValues.moderators) {
+        moderators.push(element.value);
+      }
+    }
 
     for (let element of formValues.selectCategories) {
       categories.push(element.value);
@@ -288,6 +283,9 @@ const EditBasicDetailsForm = ({
     ModifiedFormValues.Timezone = formValues.selectTimeZone.value;
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
+    ModifiedFormValues.numberOfTablesInLounge =
+    formValues.numberOfTablesInLounge;
+  ModifiedFormValues.moderators = moderators;
 
     dispatch(editEvent(ModifiedFormValues, id));
     handleClose();
@@ -331,11 +329,7 @@ const EditBasicDetailsForm = ({
             >
               Edit Event
             </FormHeading>
-            <div
-              className="overlay-form-close-button"
-              onClick={handleClose}
-            >
-             
+            <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton
                 type="button"
                 aria-label="delete"
@@ -343,11 +337,9 @@ const EditBasicDetailsForm = ({
               >
                 <CancelRoundedIcon />
               </IconButton>
-              
             </div>
           </div>
-          
-          </HeaderFooter>
+        </HeaderFooter>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="create-new-event-form px-4 py-4 d-flex flex-column align-items-center">
             <FormLabel
@@ -497,21 +489,45 @@ const EditBasicDetailsForm = ({
                 component={renderReactSelect}
               />
             </div>
-           
+
             <div className="mb-4 overlay-form-input-row">
-              <FormLabel>Event Visibility</FormLabel>
+              <FormLabel
+                Forhtml="selectCategories"
+                className="form-label form-label-customized"
+              >
+                Select moderators
+              </FormLabel>
+              <Field
+                name="moderators"
+                isMulti="true"
+                styles={styles}
+                menuPlacement="auto"
+                options={moderatorOptions}
+                component={renderReactSelect}
+              />
+            </div>
+
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel className="mb-3">Event Visibility</FormLabel>
               <div className="form-check mb-2">
                 <Field
                   name="visibility"
                   className="form-check-input"
                   type="radio"
-                  // name="flexRadioDefault"
                   id="flexRadioDefault1"
                   value="Public"
                   // component={renderInput}
                   component="input"
                 />
-                <label className="form-check-label" for="flexRadioDefault1">
+                <label
+                  className="form-check-label"
+                  for="flexRadioDefault1"
+                  style={{
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   Public
                 </label>
                 <div
@@ -533,11 +549,19 @@ const EditBasicDetailsForm = ({
                   // component={renderInput}
                   component="input"
                 />
-                <label className="form-check-label" for="flexRadioDefault2">
+                <label
+                  className="form-check-label"
+                  for="flexRadioDefault2"
+                  style={{
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   Private
                 </label>
               </div>
-              <div className="form-check">
+              {/* <div className="form-check">
                 <Field
                   className="form-check-input"
                   type="radio"
@@ -548,11 +572,37 @@ const EditBasicDetailsForm = ({
                   // component={renderInput}
                   component="input"
                 />
-                <label className="form-check-label" for="flexRadioDefault2">
+                <label
+                  className="form-check-label"
+                  for="flexRadioDefault2"
+                  style={{
+                    fontFamily: "Inter",
+                    fontWeight: "500",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   Hidden
                 </label>
-              </div>
+              </div> */}
             </div>
+
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                for="communityName"
+                className="form-label form-label-customized"
+              >
+                Number Of Tables in lounge
+              </FormLabel>
+              <Field
+                name="numberOfTablesInLounge"
+                type="number"
+                classes="form-control"
+                ariadescribedby="emailHelp"
+                placeholder="100"
+                component={renderInput}
+              />
+            </div>
+
             <div className={showInlineButton === "false" ? "hide" : ""}></div>
             <div
               className="d-flex flex-row justify-content-end"
@@ -644,9 +694,25 @@ const mapStateToProps = (state) => ({
           };
         })
       : null,
+
+    moderators:
+      state.event.eventDetails && state.event.eventDetails.moderators
+        ? state.event.eventDetails.moderators.map((element) => {
+            return {
+              value: element._id,
+              label: element.firstName + " " + element.lastName + `(${element.email})`,
+            };
+          })
+        : null,
+
     visibility:
       state.event.eventDetails && state.event.eventDetails.visibility
         ? state.event.eventDetails.visibility
+        : "",
+    numberOfTablesInLounge:
+      state.event.eventDetails &&
+      state.event.eventDetails.numberOfTablesInLounge
+        ? state.event.eventDetails.numberOfTablesInLounge
         : "",
     service:
       state.event.eventDetails && state.event.eventDetails.service

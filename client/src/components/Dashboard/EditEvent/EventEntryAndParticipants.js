@@ -64,10 +64,8 @@ const CommingSoonIllustration = styled.img`
   width: auto;
 `;
 
-
-
 const EventEntryAndParticipants = () => {
-  const [activeTab, setActiveTab] = useState("entryRules");
+  const [activeTab, setActiveTab] = useState("participants");
 
   const [openEntryRules, setOpenEntryRules] = useState(false);
 
@@ -92,7 +90,7 @@ const EventEntryAndParticipants = () => {
       <div style={{ minWidth: "1138px" }} className="px-4 py-4">
         <div className="secondary-heading-row d-flex flex-row justify-content-between mb-5">
           <SectionHeading className="">
-            Event entry & participants
+            Event registrations
           </SectionHeading>
         </div>
 
@@ -100,7 +98,17 @@ const EventEntryAndParticipants = () => {
           className="d-flex flex-row align-items-center mb-4"
           style={{ borderBottom: "1px solid #D1D1D1" }}
         >
+          
           <SwitchTab
+            active={activeTab === "participants" ? true : false}
+            onClick={() => {
+              setActiveTab("participants");
+            }}
+          >
+            Registrations
+          </SwitchTab>
+
+          {/* <SwitchTab
             active={activeTab === "entryRules" ? true : false}
             className=" me-5"
             onClick={() => {
@@ -108,15 +116,8 @@ const EventEntryAndParticipants = () => {
             }}
           >
             Entry rules
-          </SwitchTab>
-          <SwitchTab
-            active={activeTab === "participants" ? true : false}
-            onClick={() => {
-              setActiveTab("participants");
-            }}
-          >
-            Participants
-          </SwitchTab>
+          </SwitchTab> */}
+
         </div>
 
         <TextSmall className="mb-4">
@@ -131,7 +132,7 @@ const EventEntryAndParticipants = () => {
               return (
                 <div>
                   <TextProminent className="mb-4">
-                    Who can enter this event?
+                    How to authenticate?
                   </TextProminent>
 
                   <div className="d-flex flex-row align-items-center mb-5">
@@ -154,46 +155,6 @@ const EventEntryAndParticipants = () => {
                         style={{ fontSize: "18px" }}
                       />{" "}
                       edit
-                    </button>
-                  </div>
-
-                  <TextProminent className="mb-4">
-                    Details required for registration
-                  </TextProminent>
-
-                  <div className="d-flex flex-row align-items-center mb-5">
-                    <TextMedium style={{ marginRight: "200px" }}>
-                      {" "}
-                      <span>Default registration form</span>{" "}
-                    </TextMedium>
-
-                    <button
-                      onClick={() => {
-                        setOpenEditForm(true);
-                      }}
-                      className="btn btn-outline-primary btn-outline-text me-4"
-                      style={{ justifySelf: "end" }}
-                    >
-                      {" "}
-                      <EditRoundedIcon
-                        className="me-2"
-                        style={{ fontSize: "18px" }}
-                      />{" "}
-                      edit
-                    </button>
-                    <button
-                      onClick={() => {
-                        setOpenFormPreview(true);
-                      }}
-                      className="btn btn-outline-primary btn-outline-text me-3"
-                      style={{ justifySelf: "end" }}
-                    >
-                      {" "}
-                      <RemoveRedEyeRoundedIcon
-                        className="me-2"
-                        style={{ fontSize: "18px" }}
-                      />{" "}
-                      Preview
                     </button>
                   </div>
 
@@ -221,7 +182,7 @@ const EventEntryAndParticipants = () => {
               );
 
             case "participants":
-                 return <Participants  className="mt-3"/>;
+              return <Participants className="mt-3" />;
             default:
               break;
           }

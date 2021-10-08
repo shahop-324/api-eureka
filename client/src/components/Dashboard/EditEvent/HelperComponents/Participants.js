@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import {
-  SwipeableDrawer,
-  IconButton,
-  Avatar,
-  Divider,
-  alpha,
-  Button,
-} from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Divider, alpha, Button } from "@material-ui/core";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@mui/icons-material/Add";
-
 import ParticipantsListFields from "../GridComponents/Participants/ParticipantsListFields";
 import ParticipantsDetailsCard from "../GridComponents/Participants/ParticipantsDetailsCard";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SearchIcon from "@material-ui/icons/Search";
 import AddParticipantsOptions from "./AddParticipantsOptions";
+import MailRoundedIcon from "@mui/icons-material/MailRounded";
+import { useParams } from "react-router";
+import {
+  fetchRegistrationsOfParticularEvent,
+  showSnackbar
+} from "./../../../../actions";
+import AttendeeBulkInvite from "./AttendeeBulkInvite";
+import NoRegistrations from "./../../../../assets/images/Painter.svg";
+import NoContentFound from "../../../NoContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -78,23 +76,72 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderParticipants = (eventRegistrations) => {
+  return eventRegistrations.slice(0)
+  .reverse().map((el) => {
+    return (
+      <ParticipantsDetailsCard
+        image={
+          el.userImage.startsWith("https://")
+            ? el.userImage
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${el.userImage}`
+        }
+        id={el._id}
+        key={el._id}
+        name={el.userName}
+        email={el.userEmail}
+        ticketType={el.ticketType}
+        totalAmountPaid={el.totalAmountPaid}
+        currency={el.currency}
+        addedVia={el.addedVia}
+        invitationLink={el.invitationLink}
+      />
+    );
+  });
+};
+
 const Participants = () => {
+  const [openBulkMailConfirmation, setOpenBulkMailConfirmation] =
+    React.useState(false);
+
+  const handleCloseBulkMailConfirmation = () => {
+    setOpenBulkMailConfirmation(false);
+  };
+
+  const params = useParams();
+
+  const eventId = params.id;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRegistrationsOfParticularEvent(eventId));
+  }, []);
+
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const classes = useStyles();
+  const { registrations } = useSelector((state) => state.registration);
+  const { eventDetails } = useSelector((state) => state.event);
 
-  const communityRegistrations = useSelector(
-    (state) => state.registration.registrations
-  );
+  const bulkMailInfo = registrations.map((el) => {
+    return {
+      name: el.userName,
+      email: el.userEmail,
+      link: el.invitationLink,
+      eventName: eventDetails.eventName,
+    };
+  });
+
+  const classes = useStyles();
 
   const processRegistrationData = () => {
     const processedArray = [];
 
-    communityRegistrations.map((communityRegistration) => {
+    registrations.map((communityRegistration) => {
       const array = Object.entries(communityRegistration);
 
       const filtered = array.filter(
@@ -103,9 +150,10 @@ const Participants = () => {
           key === "userEmail" ||
           key === "ticketType" ||
           key === "eventName" ||
-          key === "userName" ||
-          key === "created_by_contact" ||
-          key === "razorpayPayId" ||
+          key === "addedVia" ||
+          key === "invitationLink" ||
+          key === "currency" ||
+          key === "totalAmountPaid" ||
           key === "createdAt"
       );
 
@@ -121,7 +169,7 @@ const Participants = () => {
 
   const CreateAndDownloadCSV = (data) => {
     var csv =
-      "Event Name,User Name, Email,Contact,Ticket Type,Transaction Id, Date & Time of Registration \n";
+      "Event name,User Name,User Email,Ticket Type, Total Amount Paid, Currency,   Date & Time of Registration , Added via, Magic link, \n";
     data.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
@@ -158,21 +206,51 @@ const Participants = () => {
           </div>
 
           <Button
+          
             variant="contained"
-            color="primary"
+            color="secondary"
             className={`${classes.button} me-3 btn-outline-text`}
             startIcon={<GetAppIcon />}
             style={{ backgroundColor: "#538BF7" }}
             onClick={() => {
-              CreateAndDownloadCSV(processRegistrationData());
-              console.log(processRegistrationData());
+              if(typeof registrations !== "undefined" &&
+              registrations.length > 0 ) {
+                CreateAndDownloadCSV(processRegistrationData());
+                console.log(processRegistrationData());
+                dispatch(showSnackbar("success", "CSV file eported!"));
+              }
+              else {
+                dispatch(showSnackbar("info", "There are no registrations to export."));
+              }
+             
             }}
           >
             Export
           </Button>
-         
-
-          
+          <button
+            onClick={() => {
+              if(typeof registrations !== "undefined" &&
+              registrations.length > 0) {
+                setOpenBulkMailConfirmation(true);
+              }
+              else {
+                dispatch(showSnackbar("info", "There are no registrations to send invite."));
+              }
+            }}
+            className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center"
+          >
+            {" "}
+            <MailRoundedIcon className="me-2" /> <span> Send Invites </span>
+          </button>
+          {/* <button
+            onClick={() => {
+              setOpen(true);
+            }}
+            className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center"
+          >
+            {" "}
+            <AddRoundedIcon className="me-2" /> <span> Add Participants </span>
+          </button> */}
         </div>
       </div>
       <div className="event-management-content-grid px-4 mb-4 py-4">
@@ -181,14 +259,17 @@ const Participants = () => {
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
-        <ParticipantsDetailsCard />
-        <ParticipantsDetailsCard />
-        <ParticipantsDetailsCard />
-        <ParticipantsDetailsCard />
-        <ParticipantsDetailsCard />
+        { typeof registrations !== "undefined" &&
+            registrations.length > 0 ? renderParticipants(registrations) : <NoContentFound msgText="Awaiting registrations. Please spread word about your event."
+            img={NoRegistrations} />}
       </div>
 
       <AddParticipantsOptions open={open} handleClose={handleClose} />
+      <AttendeeBulkInvite
+        open={openBulkMailConfirmation}
+        handleClose={handleCloseBulkMailConfirmation}
+        bulkMailInfo={bulkMailInfo}
+      />
     </>
   );
 };

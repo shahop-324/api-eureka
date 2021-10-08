@@ -20,7 +20,6 @@ import {
 } from "../../../actions";
 
 import AdjustRoundedIcon from "@mui/icons-material/AdjustRounded";
-
 import FormatAlignCenterRoundedIcon from "@mui/icons-material/FormatAlignCenterRounded"; // Event entry
 import CalendarViewDayRoundedIcon from "@mui/icons-material/CalendarViewDayRounded"; // reception settings
 import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded"; // Videos
@@ -34,9 +33,7 @@ import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded'; // Sponsor
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
-
 import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
-
 import Chip from "@mui/material/Chip";
 
 const SideNavEdit = ({
@@ -168,7 +165,7 @@ const SideNavEdit = ({
               (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
-            Event entry & Registrations
+           Registrations
           </div>
         </div>
         {/* <div
@@ -423,7 +420,7 @@ const SideNavEdit = ({
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={handleAffliateClick}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -446,7 +443,7 @@ const SideNavEdit = ({
           >
             Affiliate
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={handleLiveStreamingClick}

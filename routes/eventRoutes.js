@@ -7,7 +7,10 @@ const sessionController = require("../controllers/sessionController");
 const ticketController = require("../controllers/ticketController");
 const router = express.Router();
 
-router.patch("/saveEventbriteConf/:eventId", eventController.saveEventbriteConf);
+router.patch(
+  "/saveEventbriteConf/:eventId",
+  eventController.saveEventbriteConf
+);
 
 router.patch(
   "/:id/update",
@@ -15,10 +18,17 @@ router.patch(
   eventController.updateEvent
 );
 
-router.patch("/:eventId/updateRegistrationForm", authController.protectCommunity, eventController.updateRegistrationForm)
+router.patch(
+  "/:eventId/updateRegistrationForm",
+  authController.protectCommunity,
+  eventController.updateRegistrationForm
+);
 
-router.patch("/:id/updatePromoImage", authController.protectCommunity,
-eventController.updatePromoImage)
+router.patch(
+  "/:id/updatePromoImage",
+  authController.protectCommunity,
+  eventController.updatePromoImage
+);
 
 router.patch(
   "/:id/updateEventDescription",
@@ -60,38 +70,55 @@ router.get(
 router.get(
   "/:eventId/tickets",
   authController.protectCommunity,
-  ticketController.getAllTickets,
+  ticketController.getAllTickets
 );
 
 router.get(
   "/:id/ticket",
   authController.protectCommunity,
-  eventController.getOneTicket,
+  eventController.getOneTicket
 );
 
 router.patch(
   "/:id/updateTicket",
   authController.protectCommunity,
-  eventController.updateTicket,
+  eventController.updateTicket
 );
 
 router.delete(
   "/:id/deleteTicket",
   authController.protectCommunity,
-  eventController.deleteTicket,
+  eventController.deleteTicket
 );
 
 router.patch(
   "/:id/updateNetworking",
   authController.protectCommunity,
-  eventController.updateNetworking,
+  eventController.updateNetworking
 );
 
 router.get(
   "/getAffliates/:eventId",
   authController.protectCommunity,
-  eventController.getAffiliates,
-)
+  eventController.getAffiliates
+);
 
+router.get(
+  "/getVibes/:eventId",
+  authController.protectCommunity,
+  eventController.getVibes
+);
+
+router.post(
+  "/addVibe/:eventId",
+  authController.protectCommunity,
+  eventController.addVibe
+);
+
+router.delete(
+  "/deleteVibe/:vibeId",
+  authController.protectCommunity,
+  eventController.deleteVibe
+);
 
 module.exports = router;

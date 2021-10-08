@@ -8,6 +8,38 @@ const networkingController = require("./../controllers/networkingController");
 
 const router = express.Router();
 
+router.post(
+  "/createRTMPDestination/:eventId",
+  authController.protectCommunity,
+  globalController.createRTMPDestination
+);
+
+router.get(
+  "/getRTMPDestinations/:eventId",
+  authController.protectCommunity,
+  globalController.getRTMPDestinations
+);
+
+router.get(
+  "/getOneStreamDestination/:destinationId",
+  authController.protectCommunity,
+  globalController.getOneStreamDestination
+);
+
+router.patch(
+  "/updateStreamDestination/:destinationId",
+  authController.protectCommunity,
+  globalController.updateStreamDestination
+);
+
+router.delete(
+  "/deleteStreamDestination/:destinationId",
+  authController.protectCommunity,
+  globalController.deleteStreamDestination
+);
+
+router.get("/mux", globalController.generateMUXCredentials);
+
 router
   .route("/exploreEvents/madeJustForYou")
   .get(globalController.aliasTopEvents, globalController.getAllEvents);

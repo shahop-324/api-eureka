@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-
 import Divider from "@material-ui/core/Divider";
-import { alpha, makeStyles } from "@material-ui/core/styles";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import VideoLibraryListFields from "./GridComponents/VideoLibrary/ListFields";
 import VideoLibraryDetailsCard from "./GridComponents/VideoLibrary/DetailsCard";
 import UploadVideo from "./SubComponents/UploadVideo";
 import { useParams } from "react-router";
 import LinkVideoFromLibrary from "./SubComponents/LinkVideoFromLibrary";
+import { useDispatch } from "react-redux";
+import dateFormat from "dateformat";
+import {useSelector} from 'react-redux';
+import { getCommunityVideos, getEventVideos } from "./../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -25,65 +25,28 @@ const TextSmall = styled.div`
   color: #414141;
 `;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
+const renderVideos = (videos) => {
+  return videos.map((video) => {
+    return (
+      <VideoLibraryDetailsCard
+        name={video.name}
+        id={video._id}
+        key={video._id}
+        time={dateFormat(video.date, "h:MM:ss TT")}
+        date={dateFormat(video.date, "dddd, mmmm dS, yyyy")}
+        eventId={video.eventId}
+        communityId={video.communityId}
+      />
+    );
+  });
+};
 
 const VideoLibrary = () => {
 
+  const {videos} = useSelector((state) => state.video);
   const params = useParams();
-
+  const dispatch = useDispatch();
+  console.log(params);
   let eventId = params.id;
   let communityId = params.communityId;
   if (eventId && communityId) {
@@ -91,6 +54,14 @@ const VideoLibrary = () => {
   } else {
     console.log("we are in main dashboard");
   }
+
+  useEffect(() => {
+    if (eventId && communityId) {
+      dispatch(getEventVideos(params.id));
+    } else {
+      dispatch(getCommunityVideos(params.id));
+    }
+  }, []);
 
   const [openUploadVideo, setOpenUploadVideo] = React.useState(false);
 
@@ -113,9 +84,6 @@ const VideoLibrary = () => {
     setOpenLinkVideoFromLibrary(true);
   };
 
-  const classes = useStyles();
-
- 
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
@@ -124,16 +92,18 @@ const VideoLibrary = () => {
             Stream Pre-recorded videos
           </SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
-            
-
             <div className="d-flex flex-row align-items-center">
-              { eventId && communityId ? <button
-                className="btn btn-outline-primary btn-outline-text mx-3"
-                onClick={handleOpenLinkVideoFromLibrary}
-              >
-                Link Video from Library
-              </button> : <div className="ms-3"></div> }
-              
+              {eventId && communityId ? (
+                <button
+                  className="btn btn-outline-primary btn-outline-text mx-3"
+                  onClick={handleOpenLinkVideoFromLibrary}
+                >
+                  Link Video from Library
+                </button>
+              ) : (
+                <div className="ms-3"></div>
+              )}
+
               <button
                 className="btn btn-primary btn-outline-text"
                 onClick={handleOpenUploadVideo}
@@ -154,10 +124,7 @@ const VideoLibrary = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
+          {renderVideos(videos)}
         </div>
       </div>
       <UploadVideo

@@ -18,17 +18,8 @@ const registrationSchema = new mongoose.Schema(
     userEmail: {
       type: String,
     },
-    created_by_contact: {
-      type: String,
-    },
     ticketType: {
       type: String,
-    },
-    paymentProcesserFee: {
-      type: Number,
-    },
-    paymentTax: {
-      type: Number,
     },
     eventTransactionId: {
       type: mongoose.Schema.ObjectId,
@@ -47,9 +38,7 @@ const registrationSchema = new mongoose.Schema(
     orderId: {
       type: String,
     },
-    razorpayPayId: {
-      type: String,
-    },
+
     paymentStatus: {
       type: String,
     },
@@ -74,7 +63,50 @@ const registrationSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
     },
+    // * NEW
+    invitationLink: {
+      type: String,
+    },
+    addedVia: {
+      type: String,
+      enum: ["Registration", "Invitation"],
+    },
 
+    email: {
+      type: String,
+    },
+    first_name: {
+      type: String,
+    },
+    last_name: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    event_name: {
+      type: String,
+    },
+    magic_link: {
+      type: String,
+    },
+    ticket_name: {
+      type: String,
+    },
+    registration_amount: {
+      type: Number,
+    },
+    currency: {
+      type: String,
+    },
+    event_picture: {
+      type: String,
+    },
+    community_picture: {
+      type: String,
+    },
+
+    // Form to be filled during registration.
     // Accessible venue areas, recordings and assets or add ons
   },
   {

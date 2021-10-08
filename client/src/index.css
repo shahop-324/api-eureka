@@ -17,6 +17,10 @@
   color: #242424;
 }
 
+.editable:hover {
+cursor: pointer;
+}
+
 .custom-mui-tab {
   padding-right: 12px !important;
   font-size: 0.8rem !important;

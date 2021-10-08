@@ -162,6 +162,8 @@ class apiFeatures {
       const skip = (page - 1) * limit;
       console.log(skip);
 
+      
+
       this.query = this.query.skip(skip).limit(limit);
     }
     return this;

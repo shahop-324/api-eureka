@@ -14,14 +14,8 @@ const videoSchema = new mongoose.Schema(
     communityId: {
       type: String,
     },
-    sessionId: {
+    eventId: {
       type: String,
-    },
-    communityLevel: {
-      type: Boolean,
-    },
-    sessionLevel: {
-      type: Boolean,
     },
   },
   {

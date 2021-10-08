@@ -23,22 +23,6 @@ const TextSmall = styled.div`
   font-size: 0.75rem;
 `;
 
-const SwitchTab = styled.div`
-  font-weight: 500;
-  font-size: 0.95rem;
-  font-family: "Ubuntu";
-  color: ${(props) => (props && props.active ? "#272727" : "#575757")};
-  padding-bottom: 5px;
-  border-bottom: ${(props) =>
-    props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
-  width: fit-content;
-
-  &:hover {
-    color: #272727;
-    cursor: pointer;
-  }
-`;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -145,20 +129,18 @@ const Email = () => {
         </div>
       </div>
       <TextSmall className="px-4 pt-2 mb-4">
-        Create personalised emails and messages for your attendees, speakers or
-        exhibitors at any stage of your event.
+        Create personalised emails and messages for your attendees at any stage
+        of your event.
       </TextSmall>
 
       <div className="session-content-grid px-3 mb-4">
         <div className="basic-form-left-white px-4 py-4">
-            <EmailListFields />
-
-            <EmailDetailsCard />
-            <EmailDetailsCard />
-            <EmailDetailsCard />
+          <EmailListFields />
+          <EmailDetailsCard />
+          <EmailDetailsCard />
+          <EmailDetailsCard />
         </div>
       </div>
-
       <CreateMail open={openCreateMail} handleClose={handleCloseCreateMail} />
     </>
   );

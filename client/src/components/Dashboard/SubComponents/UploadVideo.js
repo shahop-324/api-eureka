@@ -65,10 +65,16 @@ const VideoContainer = styled.video`
 
 const UploadVideo = ({ open, handleClose }) => {
   const params = useParams();
-
-  const communityId = params.id;
-
   const dispatch = useDispatch();
+
+  let eventId = params.id;
+  let communityId = params.communityId;
+  if (eventId && communityId) {
+    console.log("We are in an event");
+  } else {
+    console.log("we are in main dashboard");
+  }
+
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -84,7 +90,11 @@ const UploadVideo = ({ open, handleClose }) => {
   };
 
   const uploadVideo = () => {
-    dispatch(uploadVideoForCommunity(communityId, file));
+    if (eventId && communityId) {
+      dispatch(uploadVideoForCommunity(params.communityId, file, params.id));
+    } else {
+      dispatch(uploadVideoForCommunity(params.id, file));
+    }
   };
 
   return (
@@ -130,7 +140,6 @@ const UploadVideo = ({ open, handleClose }) => {
               uploadVideo();
               handleClose();
             }}
-            
             className="btn btn-primary btn-outline-text"
             style={{ width: "100%" }}
           >

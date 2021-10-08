@@ -8,9 +8,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import LockIcon from "@mui/icons-material/Lock";
-
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,14 +44,16 @@ const RuleBrief = styled.div`
 const WhoCanEnterEvent = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const {eventDetails} = useSelector((state) => state.event);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const params = useParams();
 
   const eventId = params.id;
 
-  const [entryRule, setEntryRule] = React.useState( eventDetails && eventDetails.whoCanEnterEvent ? eventDetails.whoCanEnterEvent :
-    "Anyone Registered without using 2FA"
+  const [entryRule, setEntryRule] = React.useState(
+    eventDetails && eventDetails.whoCanEnterEvent
+      ? eventDetails.whoCanEnterEvent
+      : "Anyone Registered without using 2FA"
   );
 
   return (
@@ -81,7 +81,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                 </IconButton>
               </div>
             </div>
-
             <FormControl component="fieldset" className="mb-5">
               <RadioGroup
                 aria-label="gender"
@@ -103,7 +102,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                     label=""
                   />
                   <MarkEmailReadIcon className="mt-2" />
-
                   <div>
                     <RuleHeading className="mb-2">
                       Anyone who is registered can enter without 2 factor auth
@@ -137,7 +135,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                     label=""
                   />
                   <LockIcon className="mt-2" />
-
                   <div>
                     <RuleHeading className="mb-2">
                       Only invited participants can join without using 2 factor
@@ -172,7 +169,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                     label=""
                   />
                   <VerifiedUserIcon className="mt-2" />
-
                   <div>
                     <RuleHeading className="mb-2">
                       Anyone can enter using 2 factor authentication
@@ -187,7 +183,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                     </RuleBrief>
                   </div>
                 </EntryRuleGrid>
-
                 <EntryRuleGrid>
                   <FormControlLabel
                     value="invitedUsing2FA"
@@ -203,7 +198,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                     label=""
                   />
                   <AdminPanelSettingsIcon className="mt-2" />
-
                   <div>
                     <RuleHeading className="mb-2">
                       Invited only using 2 factor authentication
@@ -213,7 +207,6 @@ const WhoCanEnterEvent = ({ open, handleClose }) => {
                         Anyone on your participants list can join using signin
                         or magic link after 2 factor authentication.
                       </div>
-
                       <div>Use this for added security. </div>
                     </RuleBrief>
                   </div>

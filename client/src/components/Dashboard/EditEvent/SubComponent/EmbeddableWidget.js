@@ -1,13 +1,12 @@
 import React from "react";
 import {
-  Avatar,
   Dialog,
-  IconButton,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {showSnackbar} from "./../../../../actions";
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
@@ -20,7 +19,7 @@ const CodePaper = styled.div`
   padding: 22px;
 
   background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  /* box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); */
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
@@ -38,6 +37,7 @@ const HeaderFooter = styled.div`
 `;
 
 const EmbeddableWidget = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [maxWidth, setMaxWidth] = React.useState("lg");
@@ -75,14 +75,27 @@ const EmbeddableWidget = ({ open, handleClose }) => {
               Cancel
             </button>
             <button
+              // onClick={() => {
+              //   navigator.clipboard.writeText();
+              //   alert("copied to clipboard!");
+              // }}
+
               onClick={() => {
                 navigator.clipboard.writeText(`
-                      <iframe
-                        src=${link} {" "}
-                        width="100%" height="2000px" frameborder="0" marginheight="0"
-                        marginwidth="0" allow="camera *;microphone *">`);
-                alert("copied to clipboard!");
+                <iframe
+                  src=${link} {" "}
+                  width="100%" height="2000px" frameborder="0" marginheight="0"
+                  marginwidth="0" allow="camera *;microphone *">`).then(function() {
+                  console.log('Async: Copying to clipboard was successful!');
+                  dispatch(showSnackbar("success", "Copied to clipboard!"));
+                }, function(err) {
+                  console.error('Async: Could not copy text: ', err);
+                  dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
+                });
+
+                
               }}
+
               className="btn btn-outline-primary btn-outline-text"
             >
               <ContentCopyIcon />

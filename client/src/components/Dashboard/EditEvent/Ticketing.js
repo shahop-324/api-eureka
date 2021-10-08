@@ -132,6 +132,7 @@ const Ticketing = () => {
       .slice(0)
       .reverse()
       .map((ticket) => {
+        if(!ticket) return <></>;
         return (
           <TicketingDetailsCard
             key={ticket._id}

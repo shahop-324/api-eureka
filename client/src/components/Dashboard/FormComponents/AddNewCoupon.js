@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,11 +9,12 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { createCoupon } from "./../../../actions";
+import { createCoupon, fetchTickets } from "./../../../actions";
 import styled from "styled-components";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useParams } from "react-router-dom";
 
 const ticketOptions = [];
 
@@ -134,12 +135,30 @@ const renderReactSelect = ({
   </div>
 );
 
-const AddNewCoupon = (props) => {
+const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
+  let ticketOptions = [];
+
+  const tickets = useSelector((state) => state.ticket.tickets);
+
+  if (tickets) {
+    ticketOptions = tickets.map((ticket) => {
+      return {
+        label: ticket.name,
+        value: ticket._id,
+      };
+    });
+  }
+
   const theme = useTheme();
+  const params = useParams();
+  const id = params.id;
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { handleSubmit } = props;
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTickets(id));
+  }, []);
 
   const events = useSelector((state) => state.event.events);
 
@@ -155,34 +174,41 @@ const AddNewCoupon = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
+    const applicableTickets = formValues.eventTickets.map(
+      (ticket) => ticket.value
+    );
+    console.log("accessible areas", applicableTickets);
+
     const ModifiedFormValues = {};
-    ModifiedFormValues.discountForEventId = formValues.eventName.value;
+    ModifiedFormValues.tickets = applicableTickets;
+    ModifiedFormValues.startDate = formValues.startDate;
+    ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
     ModifiedFormValues.validTillDate = formValues.expiryDate;
     ModifiedFormValues.validTillTime = `${formValues.expiryDate}T${formValues.expiryTime}:00Z`;
     ModifiedFormValues.discountPercentage = formValues.discountPercentage;
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
-    dispatch(createCoupon(ModifiedFormValues));
-    props.handleClose();
-    window.location.reload();
+
+      // console.log(ModifiedFormValues);
+
+    dispatch(createCoupon(ModifiedFormValues, id));
+    // handleClose();
+    // window.location.reload();
   };
 
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={props.open}
+        open={open}
         aria-labelledby="responsive-dialog-title"
       >
         <>
           <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
             <div></div>
             <div className="coupon-overlay-form-headline">Create a coupon</div>
-            <div
-              className="overlay-form-close-button"
-              onClick={props.handleClose}
-            >
+            <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton aria-label="delete">
                 <CancelRoundedIcon />
               </IconButton>
@@ -191,46 +217,6 @@ const AddNewCoupon = (props) => {
 
           <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
             <div className="create-new-coupon-form px-4 py-4">
-              <div className="mb-4 overlay-form-input-row">
-                <FormLabel Forhtml="eventEndDate">Select Event</FormLabel>
-                <Field
-                  name="eventName"
-                  placeholder="Select the event"
-                  styles={styles}
-                  menuPlacement="auto"
-                  options={eventOptions}
-                  component={renderReactSelect}
-                />
-              </div>
-
-              <FormLabel Forhtml="eventStartDate">
-                Applicable to all tickets
-              </FormLabel>
-              <RadioGroup
-                aria-label="ticket-type"
-                defaultValue="paid"
-                name="radio-buttons-group"
-              >
-                <div className="mb-3 overlay-form-input-row form-row-2-in-1">
-                  <div>
-                    <FormControlLabel
-                      value="paid"
-                      control={<Radio />}
-                      label=""
-                    />
-                    <RadioLabel>Yes</RadioLabel>
-                  </div>
-                  <div>
-                    <FormControlLabel
-                      value="free"
-                      control={<Radio />}
-                      label=""
-                    />
-                    <RadioLabel>No</RadioLabel>
-                  </div>
-                </div>
-              </RadioGroup>
-
               <div className="mb-4 overlay-form-input-row">
                 <FormLabel Forhtml="eventEndDate">Select Tickets</FormLabel>
                 <Field
@@ -247,9 +233,11 @@ const AddNewCoupon = (props) => {
 
               <div className="mb-4 overlay-form-input-row form-row-2-in-1">
                 <div>
-                  <FormLabel Forhtml="eventStartDate">Applicable from date</FormLabel>
+                  <FormLabel Forhtml="eventStartDate">
+                    Applicable from date
+                  </FormLabel>
                   <Field
-                    name="statDate"
+                    name="startDate"
                     type="date"
                     value="2021-07-21"
                     classes="form-control"
@@ -257,7 +245,9 @@ const AddNewCoupon = (props) => {
                   />
                 </div>
                 <div>
-                  <FormLabel Forhtml="eventStartDate">Applicable from time</FormLabel>
+                  <FormLabel Forhtml="eventStartDate">
+                    Applicable from time
+                  </FormLabel>
                   <Field
                     name="startTime"
                     type="time"

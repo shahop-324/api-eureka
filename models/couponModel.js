@@ -1,10 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const couponSchema = new mongoose.Schema(
   {
+    tickets: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Ticket",
+      },
+    ],
     discountForEventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
     },
     discountPercentage: {
       type: Number,
@@ -12,7 +18,7 @@ const couponSchema = new mongoose.Schema(
       max: 100,
       required: [
         true,
-        'A coupon must have a valid discount percentage offered on original price',
+        "A coupon must have a valid discount percentage offered on original price",
       ],
     },
     // discountOnWhichTicketType: { // TODO I have to implement this functionality in which communities can create multiple coupons for an event based on type of ticket
@@ -20,16 +26,22 @@ const couponSchema = new mongoose.Schema(
     // },
     discountCode: {
       type: String,
-      required: [true, 'A coupon must have a coupon Code.'],
+      required: [true, "A coupon must have a coupon Code."],
+    },
+    startDate: {
+      type: Date,
+    },
+    startTime: {
+      type: Date,
     },
     validTillDate: {
       type: Date,
-      required: [true, 'A coupon must have a valid expiry Date.'],
+      required: [true, "A coupon must have a valid expiry Date."],
       default: Date.now() + 7 * 24 * 60 * 60 * 1000,
     },
     validTillTime: {
       type: Date,
-      required: [true, 'A coupon must have a valid expiry Time.'],
+      required: [true, "A coupon must have a valid expiry Time."],
       default: Date.now() + 10 * 60 * 60 * 1000,
     },
     createdAt: {
@@ -38,7 +50,7 @@ const couponSchema = new mongoose.Schema(
     },
     maxNumOfDiscountPermitted: {
       type: Number,
-      required: [true, 'A coupon must have a maximum upper limit'],
+      required: [true, "A coupon must have a maximum upper limit"],
     },
     active: {
       type: Boolean,
@@ -60,5 +72,5 @@ const couponSchema = new mongoose.Schema(
   }
 );
 
-const Coupon = mongoose.model('Coupon', couponSchema);
+const Coupon = mongoose.model("Coupon", couponSchema);
 module.exports = Coupon;

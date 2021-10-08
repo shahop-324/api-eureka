@@ -28,6 +28,7 @@ const SessionDetailCard = ({
   description,
   speaker,
   id,
+  type,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
@@ -149,18 +150,8 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div
-              className="chip-text"
-              style={{
-                fontFamily: "Inter",
-                fontWeight: "500",
-                fontSize: "0.85rem",
-              }}
-            >
-              {/* Cracking PM Interviews by Microsoft Product Leader */}
-              {truncateText(description, 50)}
-              {/* {description} */}
-            </div>
+            <Chip label={type} color="success" />
+            
           </div>
         </div>
         <div

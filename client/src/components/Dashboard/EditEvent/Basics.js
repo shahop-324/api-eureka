@@ -7,7 +7,6 @@ import "./../../../assets/Sass/EditEvent/Basics.scss";
 import "./../../../index.css";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
-//import {useEffect} from "react"
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -18,10 +17,8 @@ function Alert(props) {
 }
 
 const Basics = () => {
-  //console.log("i am inside basics")
   const params = useParams();
   const id = params.id;
-  const communityId = params.communityId;
 
   console.log(params);
 

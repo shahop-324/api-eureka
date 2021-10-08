@@ -434,18 +434,69 @@ exports.getApiKeys = catchAsync(async (req, res, next) => {
 
 exports.uploadVideo = catchAsync(async (req, res, next) => {
   const communityId = req.community._id;
+  const eventId = req.body.eventId;
 
   const videoDoc = await Video.create({
     date: Date.now(),
     name: req.body.fileName,
     communityId: communityId,
-    communityLevel: true,
-    sessionLevel: false,
+    eventId: eventId,
     key: req.body.key,
   });
 
   res.status(200).json({
     status: "success",
     video: videoDoc,
+  });
+});
+
+exports.getAllVideosForCommunity = catchAsync(async (req, res, next) => {
+  const communityId = req.body.communityId;
+
+  console.log(communityId);
+
+  const videos = await Video.find({ communityId: communityId });
+
+  res.status(200).json({
+    status: "success",
+    data: videos,
+  });
+});
+
+exports.getAllVideosForEvent = catchAsync(async (req, res, next) => {
+  const eventId = req.body.eventId;
+  const videos = await Video.find({ eventId: eventId });
+
+  console.log(eventId);
+
+  res.status(200).json({
+    status: "success",
+    data: videos,
+  });
+});
+
+exports.deleteVideo = catchAsync(async (req, res, next) => {
+  const videoId = req.body.videoId;
+
+  await Video.findByIdAndDelete(videoId);
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+
+exports.linkCommunityVideoToEvent = catchAsync(async (req, res, next) => {
+  const eventId = req.body.eventId;
+  const videoId = req.body.videoId;
+
+  const linkedVideo = await Video.findByIdAndUpdate(
+    videoId,
+    { eventId: eventId },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: success,
+    data: linkedVideo,
   });
 });

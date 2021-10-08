@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const Speaker = require("../models/speakerModel");
 const apiFeatures = require("../utils/apiFeatures");
 const mongoose = require("mongoose");
+const Event = require("./../models/eventModel");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -140,7 +141,36 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
         data: updatedSpeaker,
       });
     });
+});
 
+exports.sendBulkInvite = catchAsync(async (req, res, next) => {
+  const bulkMailInfo = req.body;
+  const eventId = req.params.eventId;
 
-  
+  const eventDoc = Event.findById(eventId);
+
+  for (let element of bulkMailInfo) {
+    const msg = {
+      to: element.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: "Your Event Invitation Link",
+      text: `Hi, ${element.name} use this link to join this event (${eventDoc.eventName}). ${element.invitationLink}. And you can access your dashboard using this link ${element.dashboardLink}`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msg)
+      .then(async () => {
+        console.log("Invitation sent successfully!");
+        console.log("Kate");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send invitation.");
+      });
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "invitation sent successfully!",
+  });
 });

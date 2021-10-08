@@ -1,99 +1,105 @@
 import React, { useState } from "react";
 
+import "./../../../../../assets/Sass/Registrations.scss";
+import "./../../../../../assets/Sass/DataGrid.scss";
+
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
-import ReceiptOutlinedIcon from "@material-ui/icons/ReceiptOutlined";
 import Avatar from "@material-ui/core/Avatar";
-import "./../../../../../assets/Sass/Registrations.scss";
-
-import "./../../../../../assets/Sass/DataGrid.scss";
 import { useDispatch } from "react-redux";
-import Faker from 'faker';
-
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import MailIcon from '@mui/icons-material/Mail';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Faker from "faker";
+import MailIcon from "@mui/icons-material/Mail";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PreviewParticipant from "../../HelperComponents/PreviewParticipant";
+import {showSnackbar, sendAttendeeInvite} from "./../../../../../actions";
 
 const ParticipantsDetailsCard = ({
-  handleSeeMoreDetails,
   id,
-  key,
-  userImgURL,
-  userName,
-  userEmail,
-  eventName,
-  userContact,
-  amount,
-  currency,
+  name,
+  email,
   ticketType,
-  preOrPostEventSale,
-  transactionId,
-  razorpayPayId,
-  orderId,
+  totalAmountPaid,
+  currency,
+  image,
+  addedVia,
+  invitationLink,
 }) => {
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-const handleClose = () => {
-  setOpen(false);
-}
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
-      <div className="registrations-field-value-container" style={{gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr"}}>
+      <div
+        className="registrations-field-value-container"
+        style={{ gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr" }}
+      >
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5 d-flex flex-row ">
-            {/* attendee avatar and name */}
-            <Avatar alt={Faker.name.findName()} src={Faker.image.avatar()} variant="rounded" />
-            <div className="ms-3 px-2 registration-name-styled">{Faker.name.findName()}</div>
+            <Avatar alt={name} src={image} variant="rounded" />
+            <div
+              className="ms-3 px-2 registration-name-styled"
+              style={{ textTransform: "capitalize" }}
+            >
+              {name}
+            </div>
           </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {Faker.internet.email()}
-            {/* attendee email */}
+            {email}
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* Ticket type */}
-            Early bird
+            {ticketType}
           </div>
         </div>
         <div className="registrations-ticket-type-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* Added via */}
-            Invitation
+            <span style={{ textTransform: "uppercase" }}> {currency} </span>
+            <span className="ms-2">
+              {((totalAmountPaid * 1) / 100).toFixed(2)}
+            </span>
+          </div>
+        </div>
+        <div className="registrations-ticket-type-field">
+          <div className="registrations-field-label registrations-field-value-modified">
+            {addedVia}
           </div>
         </div>
         <div className="registrations-amount-field">
           <div className="registrations-field-label registrations-field-value-modified">
-          <div onClick={() => {
-              setOpen(true)
-            }}>
+            <div
+              onClick={() => {
+                dispatch(sendAttendeeInvite(id)) // We have given registration id and so we will send mail invite using the registration info
+              }}
+            >
               <IconButton color="secondary" aria-label="add to shopping cart">
-                <VisibilityIcon style={{color: "#A4C513"}} />
+                <MailIcon style={{ color: "#1351C5" }} />
               </IconButton>
             </div>
-            <div onClick={() => {
-              alert("Email invitation sent!")
-            }}>
+            <div
+              onClick={() => {
+                navigator.clipboard.writeText(invitationLink).then(function() {
+                  console.log('Async: Copying to clipboard was successful!');
+                  dispatch(showSnackbar("success", "Magic link Copied to clipboard!"));
+                }, function(err) {
+                  console.error('Async: Could not copy text: ', err);
+                  dispatch(showSnackbar("error", "Failed to copy magic link to clipboard!"));
+                });
+              }}
+            >
               <IconButton color="secondary" aria-label="add to shopping cart">
-                <MailIcon style={{color: "#1351C5"}} />
-              </IconButton>
-            </div>
-            <div onClick={() => {
-              alert("Invitation Link copied to clipboard!")
-            }}>
-              <IconButton color="secondary" aria-label="add to shopping cart">
-                <ContentCopyIcon style={{color: "#A113C5"}} />
+                <ContentCopyIcon style={{ color: "#A113C5" }} />
               </IconButton>
             </div>
           </div>
         </div>
-        
       </div>
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />

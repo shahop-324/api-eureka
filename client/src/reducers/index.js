@@ -41,6 +41,11 @@ import eventbriteSlice from "./eventbriteSlice";
 import apiKeySlice from "./apiKeySlice";
 import SnackbarSlice from "./snackbarSlice";
 import roleSlice from "./roleSlice";
+import sessionRestrictionSlice from "./sessionRestrictionSlice";
+import videoSlice from "./videoSlice";
+import vibeSlice from "./vibeSlice";
+import StreamDestinationSlice from "./streamDestinationSlice";
+import mailSlice from "./mailSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -84,4 +89,9 @@ export default combineReducers({
   apikey: apiKeySlice.reducer,
   snackbar: SnackbarSlice.reducer,
   role: roleSlice.reducer,
+  sessionRestriction: sessionRestrictionSlice.reducer,
+  video: videoSlice.reducer,
+  vibe: vibeSlice.reducer,
+  streamDestination: StreamDestinationSlice.reducer,
+  mail: mailSlice.reducer,
 });

@@ -5,6 +5,20 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
+const Mux = require("@mux/mux-node");
+const { Video } = new Mux(
+  process.env.MUX_TOKEN_ID,
+  process.env.MUX_TOKEN_SECRET
+);
+
 const {
   RtcTokenBuilder,
   RtmTokenBuilder,
@@ -12,6 +26,7 @@ const {
   RtmRole,
 } = require("agora-access-token");
 const Community = require("../models/communityModel");
+const StreamDestination = require("../models/streamDestinationModel");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
   req.query.sort = "-numberOfRegistrationsReceived";
@@ -32,14 +47,15 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
         },
       ],
     },
-    { status: "inactive" }
+    { status: "Ended" }
   );
 
   const query = Event.find({
     $and: [
-      { status: "active" },
+      { status: { $ne: "Ended" } },
       { publishedStatus: "Published" },
       { visibility: "Public" },
+      { stopTicketSale: false },
     ],
   })
     .populate({
@@ -399,9 +415,134 @@ exports.getTawkLink = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllEvents = catchAsync(async (req, res, next) => {
-  console.log(req);
-  const events = await Event.find({});
+exports.generateMUXCredentials = catchAsync(async (req, res, next) => {
+  const muxRes = await Video.LiveStreams.create({
+    playback_policy: "public",
+    new_asset_settings: { playback_policy: "public" },
+  });
 
-  res.status(200).json(events);
+  res.status(200).json({
+    status: "success",
+    data: muxRes,
+  });
+});
+
+exports.createRTMPDestination = catchAsync(async (req, res, next) => {
+  const type = req.body.type;
+  const liveStreamPageURL = req.body.liveStreamPageURL;
+  const rtmpServerKey = req.body.rtmpServerKey;
+  const rtmpServerURL = req.body.rtmpServerURL;
+  const sessions = req.body.sessions;
+  const streamFriendlyName = req.body.streamFriendlyName;
+  const eventId = req.params.eventId;
+
+  const newStreamDestination = await StreamDestination.create(
+    {
+      type: type,
+      liveStreamPageURL: liveStreamPageURL,
+      rtmpServerKey: rtmpServerKey,
+      rtmpServerURL: rtmpServerURL,
+      sessions: sessions,
+      streamFriendlyName: streamFriendlyName,
+      eventId: eventId,
+    },
+    async (err, doc) => {
+      const populatedDoc = await StreamDestination.findById(doc._id).populate(
+        "sessions",
+        "name"
+      );
+      s;
+
+      res.status(200).json({
+        status: "success",
+        data: populatedDoc,
+      });
+    }
+  );
+});
+
+exports.getRTMPDestinations = catchAsync(async (req, res, next) => {
+  await StreamDestination.find(
+    { eventId: req.params.eventId },
+    async (err, doc) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({
+          status: "error",
+          message: "Failed to get stream destinations.",
+        });
+      } else {
+        const populatedDoc = await StreamDestination.find({
+          eventId: req.params.eventId,
+        }).populate("sessions", "name");
+        res.status(200).json({
+          status: "success",
+          data: populatedDoc,
+        });
+      }
+    }
+  );
+});
+
+exports.getOneStreamDestination = catchAsync(async (req, res, next) => {
+  await StreamDestination.findById(
+    req.params.destinationId,
+    async (err, doc) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({
+          status: "error",
+          message: "Failed to get stream destination.",
+        });
+      } else {
+        const populatedDoc = await StreamDestination.findById(doc._id).populate(
+          "sessions",
+          "name"
+        );
+        res.status(200).json({
+          status: "success",
+          data: populatedDoc,
+        });
+      }
+    }
+  );
+});
+
+exports.updateStreamDestination = catchAsync(async (req, res, next) => {
+  try {
+    const filteredBody = filterObj(
+      req.body,
+      "sessions",
+      "liveStreamPageURL",
+      "rtmpServerKey",
+      "rtmpServerURL",
+      "streamFriendlyName"
+    );
+
+    const destinationDoc = await StreamDestination.findByIdAndUpdate(
+      req.params.destinationId,
+      filteredBody,
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    ).populate("sessions", "name");
+
+    res.status(200).json({
+      status: "success",
+      data: destinationDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.deleteStreamDestination = catchAsync(async (req, res, next) => {
+  const deletedDoc = await StreamDestination.findByIdAndDelete(
+    req.params.destinationId
+  );
+  res.status(200).json({
+    status: "success",
+    message: "Stream destination deleted successfully!",
+  });
 });

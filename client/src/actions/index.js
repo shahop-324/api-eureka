@@ -42,6 +42,11 @@ import { eventbriteActions } from "../reducers/eventbriteSlice";
 import { apiKeyActions } from "../reducers/apiKeySlice";
 import { snackbarActions } from "../reducers/snackbarSlice";
 import { roleActions } from "../reducers/roleSlice";
+import { sessionRestrictionActions } from "../reducers/sessionRestrictionSlice";
+import { videoActions } from "./../reducers/videoSlice";
+import { vibeActions } from "../reducers/vibeSlice";
+import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
+import { mailActions } from "../reducers/mailSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -495,7 +500,7 @@ export const fetchEvents = (query) => async (dispatch) => {
     // console.log(res.data.data.events);
     dispatch(
       eventActions.FetchEvents({
-        events: res.data,
+        events: res.data.data.events,
       })
     );
   } catch (e) {
@@ -1139,7 +1144,17 @@ export const editEventDescription =
           event: res.updatedEvent,
         })
       );
-      alert("About details updated successfully!");
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Event description updated!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
     } catch (err) {
       dispatch(eventActions.hasError(err.message));
     }
@@ -2205,92 +2220,86 @@ export const createSponsor =
 
     try {
       if (file) {
-        
-        s3.getSignedUrl("putObject",  {
-          Bucket: "bluemeet",
-          Key: key,
-          ContentType: "image/jpeg",
-        }, 
-        
-        async (err, presignedURL) => {
-          const awsRes = await fetch(presignedURL, {
-            method: "PUT",
+        s3.getSignedUrl(
+          "putObject",
+          {
+            Bucket: "bluemeet",
+            Key: key,
+            ContentType: "image/jpeg",
+          },
 
-            body: file,
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-            headers: {
-              "Content-Type": file.type,
-            },
-          });
+              body: file,
 
-          console.log(awsRes);
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
 
-          if (awsRes.status === 200) {
-            dispatch(communityActions.startLoading());
+            console.log(awsRes);
 
-            try {
-              let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
-                method: "POST",
-                body: JSON.stringify({
-                  ...formValues,
-                  image: key,
-                }),
-      
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${getState().communityAuth.token}`,
-                },
-              });
-              if (!res.ok) {
-                if (!res.message) {
-                  throw new Error("Something went wrong");
-                } else {
-                  throw new Error(res.message);
+            if (awsRes.status === 200) {
+              dispatch(communityActions.startLoading());
+
+              try {
+                let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
+                  method: "POST",
+                  body: JSON.stringify({
+                    ...formValues,
+                    image: key,
+                  }),
+
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getState().communityAuth.token}`,
+                  },
+                });
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
                 }
+                res = await res.json();
+                console.log(res);
+
+                dispatch(
+                  sponsorActions.CreateSponsor({
+                    sponsor: res.data,
+                  })
+                );
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Sponsor added successfully",
+                    severity: "success",
+                  })
+                );
+
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 6000);
+              } catch (err) {
+                dispatch(communityActions.hasError(err.message));
+
+                dispatch(
+                  snackbarActions.openSnackBar({
+                    message: "Failed to add sponsor.",
+                    severity: "error",
+                  })
+                );
+                setTimeout(function () {
+                  dispatch(snackbarActions.closeSnackBar());
+                }, 4000);
               }
-              res = await res.json();
-              console.log(res);
-      
-              dispatch(
-                sponsorActions.CreateSponsor({
-                  sponsor: res.data,
-                })
-              );
-
-              dispatch(
-                snackbarActions.openSnackBar({
-                  message: "Sponsor added successfully",
-                  severity: "success",
-                })
-              );
-
-              setTimeout(function () {
-                dispatch(snackbarActions.closeSnackBar());
-              }, 6000);
-            } catch (err) {
-              dispatch(communityActions.hasError(err.message));
-
-              dispatch(
-                snackbarActions.openSnackBar({
-                  message: "Failed to add sponsor.",
-                  severity: "error",
-                })
-              );
-              setTimeout(function () {
-                dispatch(snackbarActions.closeSnackBar());
-              }, 4000);
             }
           }
-        }
-
-        
-        )
-
-        
-
-        
+        );
       } else {
-       
         let res = await fetch(`${BaseURL}community/sponsors/${id}`, {
           method: "POST",
           body: JSON.stringify({
@@ -2329,9 +2338,6 @@ export const createSponsor =
         setTimeout(function () {
           dispatch(snackbarActions.closeSnackBar());
         }, 6000);
-
-
-
       }
     } catch (err) {
       console.log(err);
@@ -2479,9 +2485,7 @@ export const editSponsor =
 
     try {
       if (file) {
-       
         s3.getSignedUrl(
-
           "putObject",
 
           {
@@ -2490,67 +2494,64 @@ export const editSponsor =
             ContentType: "image/jpeg",
           },
 
-
-
           async (err, presignedURL) => {
             const awsRes = await fetch(presignedURL, {
               method: "PUT",
-  
+
               body: file,
-  
+
               headers: {
                 "Content-Type": file.type,
               },
             });
-  
+
             console.log(awsRes);
-  
+
             if (awsRes.status === 200) {
               dispatch(communityActions.startLoading());
-  
+
               try {
-                
-        let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...formValues,
-            image: key,
-          }),
+                let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
+                  method: "PATCH",
+                  body: JSON.stringify({
+                    ...formValues,
+                    image: key,
+                  }),
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        });
-        if (!res.ok) {
-          if (!res.message) {
-            throw new Error("Something went wrong");
-          } else {
-            throw new Error(res.message);
-          }
-        }
-        res = await res.json();
-        console.log(res);
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getState().communityAuth.token}`,
+                  },
+                });
+                if (!res.ok) {
+                  if (!res.message) {
+                    throw new Error("Something went wrong");
+                  } else {
+                    throw new Error(res.message);
+                  }
+                }
+                res = await res.json();
+                console.log(res);
 
-        dispatch(
-          sponsorActions.EditSponsor({
-            sponsor: res.data,
-          })
-        );
-  
+                dispatch(
+                  sponsorActions.EditSponsor({
+                    sponsor: res.data,
+                  })
+                );
+
                 dispatch(
                   snackbarActions.openSnackBar({
                     message: "Sponsor updated successfully",
                     severity: "success",
                   })
                 );
-  
+
                 setTimeout(function () {
                   dispatch(snackbarActions.closeSnackBar());
                 }, 6000);
               } catch (err) {
                 dispatch(communityActions.hasError(err.message));
-  
+
                 dispatch(
                   snackbarActions.openSnackBar({
                     message: "Failed to update sponsor.",
@@ -2563,11 +2564,7 @@ export const editSponsor =
               }
             }
           }
-
-
-        )
-
-       
+        );
       } else {
         let res = await fetch(`${BaseURL}sponsors/${id}/update`, {
           method: "PATCH",
@@ -2661,7 +2658,6 @@ export const deleteSponsor = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 4000);
-
   } catch (err) {
     console.log(err);
     dispatch(sponsorActions.hasError(err.message));
@@ -2724,7 +2720,6 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   } catch (err) {
     console.log(err);
     dispatch(ticketActions.hasError(err.message));
@@ -2899,7 +2894,6 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
     dispatch(
@@ -2956,7 +2950,6 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
     dispatch(
@@ -3212,86 +3205,74 @@ export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
   const editingUser = async () => {
-
     const key = `${UUID()}.jpeg`;
 
     if (file) {
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet",
+          Key: key,
+          ContentType: "image/jpeg",
+        },
 
-      s3.getSignedUrl("putObject", {
-        Bucket: "bluemeet",
-        Key: key,
-        ContentType: "image/jpeg",
-      },
+        async (err, presignedURL) => {
+          const awsRes = await fetch(presignedURL, {
+            method: "PUT",
 
+            body: file,
 
-      async (err, presignedURL) => {
-        const awsRes = await fetch(presignedURL, {
-          method: "PUT",
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
 
-          body: file,
+          console.log(awsRes);
 
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
+          if (awsRes.status === 200) {
+            dispatch(communityActions.startLoading());
 
-        console.log(awsRes);
+            try {
+              const res = await fetch(`${BaseURL}users/updateMe`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                  ...formValues,
+                  image: key,
+                }),
 
-        if (awsRes.status === 200) {
-          dispatch(communityActions.startLoading());
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().auth.token}`,
+                },
+              });
 
-          try {
-            const res = await fetch(`${BaseURL}users/updateMe`, {
-              method: "PATCH",
-              body: JSON.stringify({
-                ...formValues,
-                image: key,
-              }),
-      
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().auth.token}`,
-              },
-            });
-      
-            if (!res.ok) {
-              if (!res.message) {
-                throw new Error("Something went wrong");
-              } else {
-                throw new Error(res.message);
+              if (!res.ok) {
+                if (!res.message) {
+                  throw new Error("Something went wrong");
+                } else {
+                  throw new Error(res.message);
+                }
               }
+
+              const result = await res.json();
+
+              return result;
+            } catch (err) {
+              dispatch(communityActions.hasError(err.message));
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "Failed to update community.",
+                  severity: "error",
+                })
+              );
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 4000);
             }
-      
-            const result = await res.json();
-      
-            return result;
-           
-
-            
-          } catch (err) {
-            dispatch(communityActions.hasError(err.message));
-
-            dispatch(
-              snackbarActions.openSnackBar({
-                message: "Failed to update community.",
-                severity: "error",
-              })
-            );
-            setTimeout(function () {
-              dispatch(snackbarActions.closeSnackBar());
-            }, 4000);
           }
         }
-      }
-
-
-
-)
-     
-     
-
-      
-
+      );
     } else {
       const res = await fetch(`${BaseURL}users/updateMe`, {
         method: "PATCH",
@@ -3338,7 +3319,6 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-   
   } catch (err) {
     dispatch(userActions.hasError(err.message));
     console.log(err);
@@ -3405,7 +3385,6 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   } catch (err) {
     dispatch(userActions.hasError(err.message));
 
@@ -3419,7 +3398,6 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   }
 };
 export const errorTrackerForEditUserPassword =
@@ -3430,9 +3408,7 @@ export const errorTrackerForEditUserPassword2 =
   () => async (dispatch, getState) => {
     dispatch(userActions.disabledError());
   };
-export const deleteUser = () => (dispatch, getState) => {
-
-};
+export const deleteUser = () => (dispatch, getState) => {};
 
 export const fetchCommunity = (id) => async (dispatch, getState) => {
   dispatch(communityActions.startLoading());
@@ -3475,7 +3451,6 @@ export const fetchCommunity = (id) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   }
 };
 export const errorTrackerForFetchCommunity =
@@ -3523,7 +3498,6 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   } catch (err) {
     dispatch(communityActions.hasError(err.message));
 
@@ -3537,7 +3511,6 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(snackbarActions.closeSnackBar());
     }, 6000);
-
   }
 };
 
@@ -4143,42 +4116,68 @@ export const errorTrackerForEditNetworking =
     dispatch(networkingActions.disabledError());
   };
 
-export const createCoupon = (formValues) => async (dispatch, getState) => {
-  dispatch(couponActions.startLoading());
-  try {
-    console.log(formValues);
+export const createCoupon =
+  (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(couponActions.startLoading());
+    try {
+      console.log(formValues);
 
-    let res = await fetch(`${BaseURL}community/coupons/createNew`, {
-      method: "POST",
-      body: JSON.stringify({
-        ...formValues,
-      }),
+      let res = await fetch(
+        `${BaseURL}community/coupons/createNew/${eventId}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...formValues,
+          }),
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
-      },
-    });
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
-    }
-    res = await res.json();
-    console.log(res);
+      res = await res.json();
+      console.log(res);
 
-    dispatch(
-      couponActions.CreateCoupon({
-        coupon: res.data,
-      })
-    );
-  } catch (err) {
-    dispatch(couponActions.hasError(err.message));
-    console.log(err);
-  }
-};
+      dispatch(
+        couponActions.CreateCoupon({
+          coupon: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Coupon added successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (err) {
+      dispatch(couponActions.hasError(err.message));
+      console.log(err);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to create coupon. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
 export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledError());
 };
@@ -4218,6 +4217,17 @@ export const fetchCoupons = () => async (dispatch, getState) => {
   } catch (err) {
     dispatch(couponActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch coupons. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   }
 };
 export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
@@ -4256,6 +4266,17 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(couponActions.detailHasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch coupon. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   }
 };
 export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
@@ -4292,9 +4313,31 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
         coupon: res.data,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Coupon updated successfully.",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   } catch (err) {
     dispatch(couponActions.detailHasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to update coupon. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   }
 };
 export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
@@ -4330,9 +4373,31 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
         id: res.data.id,
       })
     );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Coupon deleted successfully.",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   } catch (err) {
     dispatch(couponActions.hasError(err.message));
     console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to delete coupon. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
   }
 };
 export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
@@ -6505,7 +6570,7 @@ export const fetchRoles = (communityId) => async (dispatch, getState) => {
 };
 
 export const uploadVideoForCommunity =
-  (communityId, file) => async (dispatch, getState) => {
+  (communityId, file, eventId) => async (dispatch, getState) => {
     try {
       const key = `${communityId}/${UUID()}.mp4`;
 
@@ -6539,6 +6604,7 @@ export const uploadVideoForCommunity =
                 body: JSON.stringify({
                   fileName: file.name,
                   key: key,
+                  eventId: eventId,
                 }),
 
                 headers: {
@@ -6549,6 +6615,12 @@ export const uploadVideoForCommunity =
 
               const result = await res.json();
               console.log(result);
+
+              dispatch(
+                videoActions.UploadVideo({
+                  video: res.video,
+                })
+              );
 
               dispatch(
                 snackbarActions.openSnackBar({
@@ -7004,3 +7076,1070 @@ export const sendBoothInvitation = (boothId) => async (dispatch, getState) => {
     }, 6000);
   }
 };
+
+export const sendAttendeeInvite =
+  (registrationId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}registrations/sendInvite/${registrationId}`,
+
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Invitation sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Sending invitation failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const sendBulkAttendeeEmail =
+  (infoObject) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}registrations/sendBulkInvite`, {
+        method: "POST",
+
+        body: JSON.stringify(infoObject),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Invitation sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Sending invitation failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const sendBulkSpeakerEmail =
+  (infoObject, eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}speakers/sendBulkInvite/:eventId`, {
+        method: "POST",
+
+        body: JSON.stringify(infoObject),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Invitation sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Sending invitation failed. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const setEntryRestriction =
+  (entryRestriction) => async (dispatch, getState) => {
+    console.log(entryRestriction);
+    dispatch(
+      sessionRestrictionActions.EditRestriction({
+        entryRestriction: entryRestriction,
+      })
+    );
+  };
+
+export const setPermittedTickets =
+  (permittedTickets) => async (dispatch, getState) => {
+    dispatch(
+      sessionRestrictionActions.EditPermittedTickets({
+        permittedTickets: permittedTickets,
+      })
+    );
+  };
+
+export const setPermittedPeople =
+  (permittedPeople) => async (dispatch, getState) => {
+    console.log(permittedPeople);
+    dispatch(
+      sessionRestrictionActions.EditPermittedPeople({
+        permittedPeople: permittedPeople,
+      })
+    );
+  };
+
+export const getCommunityVideos =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      console.log(communityId);
+      let res = await fetch(`${BaseURL}community/getCommunityVideo`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          communityId: communityId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        videoActions.FetchVideos({
+          videos: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const getEventVideos = (eventId) => async (dispatch, getState) => {
+  try {
+    console.log(eventId);
+
+    let res = await fetch(`${BaseURL}community/getEventVideo`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        eventId: eventId,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      videoActions.FetchVideos({
+        videos: res.data,
+      })
+    );
+
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteVideo = (videoId) => async (dispatch, getState) => {
+  try {
+    console.log(videoId);
+    let res = await fetch(`${BaseURL}community/deleteVideo`, {
+      method: "DELETE",
+
+      body: JSON.stringify({
+        videoId: videoId,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      videoActions.DeleteVideo({
+        videoId: videoId,
+      })
+    );
+
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const LinkCommunityVideoToEvent =
+  (eventId, videoId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}community/updateVideo`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          eventId: eventId,
+          videoId: videoId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
+  try {
+    const key = `${eventId}/${UUID()}.jpeg`;
+
+    s3.getSignedUrl(
+      "putObject",
+      {
+        Bucket: "bluemeet",
+        Key: key,
+        ContentType: "image/jpeg",
+      },
+      async (err, presignedURL) => {
+        const awsRes = await fetch(presignedURL, {
+          method: "PUT",
+
+          body: file,
+
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+
+        console.log(awsRes);
+
+        if (awsRes.status === 200) {
+          try {
+            // Save this vibe info in event document.
+            let res = await fetch(`${BaseURL}events/addVibe/${eventId}`, {
+              method: "POST",
+
+              body: JSON.stringify({
+                eventId: eventId,
+                name: name,
+                key: key,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().communityAuth.token}`,
+              },
+            });
+
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+            res = await res.json();
+            console.log(res);
+
+            dispatch(
+              vibeActions.UploadVibe({
+                vibe: res.data,
+              })
+            );
+
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Vibe uploaded successfully!",
+                severity: "success",
+              })
+            );
+
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 6000);
+          } catch (error) {
+            eventActions.hasError(error.message);
+            console.log(error);
+
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Failed to upload promo image.",
+                severity: "error",
+              })
+            );
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 4000);
+          }
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVibes = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}events/getVibes/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      vibeActions.FetchVibes({
+        vibes: res.data,
+      })
+    );
+
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteVibe = (vibeId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}events/deleteVibe/${vibeId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      vibeActions.DeleteVibe({
+        vibeId: vibeId,
+      })
+    );
+
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const setVibeToPreview = (imgURL) => async (dispatch, getState) => {
+  try {
+    dispatch(
+      vibeActions.SetVibeToPreview({
+        imgURL: imgURL,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Create RTMP stream destination
+
+export const createRTMPDestination =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}createRTMPDestination/${eventId}`, {
+        method: "POST",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data); // * Confirmed that res.data is the stream destination object
+      //* Make Slice and actions and then dispatch it in global redux store.
+
+      dispatch(
+        StreamDestinationActions.CreateStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Stream destination added successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:
+            "Failed to create stream destination. Please try again later!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Fetch streamDestinations
+
+export const fetchStreamDestinations =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}getRTMPDestinations/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.FetchStreamDestinations({
+          streamDestinations: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Fetch streamDestination
+
+export const fetchOneStreamDestination =
+  (destinationId) => async (dispatch, getState) => {
+    console.log("This fxn was called.");
+    try {
+      let res = await fetch(
+        `${BaseURL}getOneStreamDestination/${destinationId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.FetchStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Update streamDestination
+
+export const updateStreamDestination =
+  (destinationId, formValues) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}updateStreamDestination/${destinationId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({ ...formValues }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.UpdateStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Delete streamDestination
+
+export const deleteStreamDestination =
+  (destinationId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}deleteStreamDestination/${destinationId}`,
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        StreamDestinationActions.DeleteStreamDestination({
+          destinationId: destinationId,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Create Mail
+
+export const createMail =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/createNewMail/${eventId}`, {
+        method: "POST",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        mailActions.CreateMail({
+          mail: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "New mail added successfully to draft!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to save mail. Please try again.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Get Mails
+
+export const fetchMails = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/getMails/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.FetchMails({
+        mails: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch mails. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Get one mail details
+
+export const getOneMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/getMailDetails/${mailId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.FetchMail({
+        mail: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch mail details. Please try again later!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Update mail
+
+export const updateMail =
+  (formValues, mailId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/updateMail/${mailId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        mailActions.UpdateMail({
+          mail: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Successfully Update mail!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update mail. Please try again later!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Delete mail
+
+export const deleteMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/deleteMail/${mailId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.DeleteMail({
+        deletedMailId: mailId,
+      })
+    );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Successfully deleted mail!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Send mail
+
+export const SendMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/sendMail/${mailId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.UpdateMail({
+        mail: res.data,
+      })
+    );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Mail sent successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to send mail. Please try again later!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Send test mail
+
+export const sendTestMail =
+  (mailId, mailInfoObject, receiverMail) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/sendTestMail/${mailId}`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          mailInfoObject: mailInfoObject,
+          receiverMail: receiverMail,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      // Show snackbar that test mail has been sent successfully.
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Test mail sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to send test mail. Please try again.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };

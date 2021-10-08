@@ -1,17 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 
 import Select from "react-select";
@@ -20,6 +13,10 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
 import SendTestEmail from "./SendTestEmail";
 import EmailConfirmation from "./EmailConfirmation";
+import { useSelector } from "react-redux";
+
+import { stateToHTML } from "draft-js-export-html";
+import { convertFromRaw } from "draft-js";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,16 +40,6 @@ const styles = {
 const Container = styled.div`
   background-color: transparent;
   height: 80vh;
-  /* display: grid;
-  grid-template-columns: 5fr 1.8fr;
-  grid-gap: 24px; */
-`;
-
-const TextSmall = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #646464;
 `;
 
 const TextDescriptive = styled.span`
@@ -80,6 +67,16 @@ const MailContainer = styled.div`
 `;
 
 const PreviewEmail = ({ open, handleClose }) => {
+  let Attendees = [];
+
+  const { registrations } = useSelector((state) => state.registration);
+
+  for (let element of registrations) {
+    Attendees.push({ label: element.userName, value: element._id });
+  }
+
+  const { mailDetails } = useSelector((state) => state.mail);
+
   const [openSendTestEmail, setOpenSendTestEmail] = React.useState(false);
 
   const [openEmailConfirmation, setOpenEmailConfirmation] =
@@ -92,6 +89,15 @@ const PreviewEmail = ({ open, handleClose }) => {
   const handleCloseEmailConfirmation = () => {
     setOpenEmailConfirmation(false);
   };
+
+  const convertFromJSONToHTML = (text) => {
+    console.log(JSON.parse(text));
+    return stateToHTML(convertFromRaw(JSON.parse(text).editingComment));
+  };
+
+  if (!mailDetails) {
+    return;
+  }
 
   return (
     <>
@@ -143,14 +149,14 @@ const PreviewEmail = ({ open, handleClose }) => {
             </div>
             <div className="mb-3">
               <TextDescriptive>
-                <span className="me-2">Email subject: </span> Announcing event
-                speakers line up
+                <span className="me-2">Email subject: </span>{" "}
+                {mailDetails ? mailDetails.subject : "----"}
               </TextDescriptive>
             </div>
             <div className="mb-3">
               <TextDescriptive>
-                <span className="me-2"> Pre header: </span> Hi there, we have an
-                exciting news for you all.
+                <span className="me-2"> Pre header: </span>{" "}
+                {mailDetails ? mailDetails.preHeader : "-----"}
               </TextDescriptive>
             </div>
           </div>
@@ -158,24 +164,32 @@ const PreviewEmail = ({ open, handleClose }) => {
           <div style={{ maxWidth: "420px" }} className="mb-5">
             <FormLabel className="mb-1">Preview email as</FormLabel>
             <Select
-              options={[
-                { label: "Speakers", value: "Speakers" },
-                { label: "Attendees", value: "Attendees" },
-                { label: "Exhibitors", value: "Exhibitors" },
-              ]}
+              // Build a list of all attendees from registrations data its very easy.
+              options={Attendees}
               styles={styles}
             />
           </div>
 
-          <MailContainer></MailContainer>
+          {/*  Set dangerously set inner html */}
+          {mailDetails.body ? (
+            <MailContainer
+              dangerouslySetInnerHTML={{
+                __html: convertFromJSONToHTML(mailDetails.body),
+              }}
+            ></MailContainer>
+          ) : (
+            <></>
+          )}
         </Container>
       </Dialog>
       <SendTestEmail
         open={openSendTestEmail}
         handleClose={handleCloseSendTestEmail}
       />
-      <EmailConfirmation open={openEmailConfirmation}
-        handleClose={handleCloseEmailConfirmation} />
+      <EmailConfirmation
+        open={openEmailConfirmation}
+        handleClose={handleCloseEmailConfirmation}
+      />
     </>
   );
 };

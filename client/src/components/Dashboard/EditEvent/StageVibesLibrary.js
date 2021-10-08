@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import { IconButton } from "@material-ui/core";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import VibePreview from "./../../../assets/images/Vibe.svg";
+import Chip from "@mui/material/Chip";
 
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 import Beach from "./../../SessionStage/Images/beach.jpeg";
 import Christmas from "./../../SessionStage/Images/christmas.jpeg";
@@ -25,6 +28,12 @@ import Sunrise from "./../../SessionStage/Images/sunrise.jpeg";
 import Sunset from "./../../SessionStage/Images/sunset.jpeg";
 import Tech from "./../../SessionStage/Images/tech.jpeg";
 import Winter from "./../../SessionStage/Images/winter.jpeg";
+import Bluemeet from "./../../default-event.jpg";
+import UploadStageVibe from "./../SubComponents/UploadStageVibe";
+import PreviewStageVibe from "./SubComponent/PreviewStageVibe";
+import DeleteStageVibe from "../SubComponents/DeleteStageVibe";
+
+import { getVibes, setVibeToPreview } from "./../../../actions";
 
 const Paper = styled.div`
   background-color: #ffffff;
@@ -45,21 +54,6 @@ const SectionHeading = styled.div`
   font-family: "Ubuntu";
 `;
 
-const SubHeading = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 1rem;
-  color: #212121;
-`;
-
-const TextSmall = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.87rem;
-  color: #555555;
-  text-align: center;
-`;
-
 const TextMini = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
@@ -67,45 +61,12 @@ const TextMini = styled.div`
   color: #555555;
 `;
 
-const StageVibePreview = styled.img`
-  height: 700px;
-  width: 100%;
-  object-fit: contain;
-  background-color: transparent !important;
-  border-radius: 15px;
-`;
-
 const VibeCard = styled.div`
   box-shadow: 0 8px 32px 0 #eeecec;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 15px;
-  height: 360px;
-`;
-
-const BackdropNameRow = styled.div`
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.85rem;
-  color: #212121;
-`;
-
-const RadioLabel = styled.div`
-  font-family: "Ubuntu";
-  font-weight: 500;
-  font-size: 0.85rem;
-  color: #575757;
-`;
-
-const StyledImgWithBackdrop = styled.img`
-  height: 220px;
-  width: auto;
-  object-fit: contain;
-`;
-const StyledBackDrop = styled.img`
-  height: 220px;
-  width: auto;
-  object-fit: cover;
+  height: auto;
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -150,7 +111,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -163,7 +123,98 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderVibes = (vibes, handleOpenPreview, handleOpenDelete, setVibeId) => {
+  return vibes
+    .slice(0)
+    .reverse()
+    .map((vibe) => {
+      return (
+        <VibeCard key={vibe._id} id={vibe._id} className="p-3">
+          <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center">
+              <Chip label={vibe.name} color="success" variant="outlined" />
+            </div>
+            <div className="d-flex flex-row align-items-center">
+              <IconButton
+                onClick={() => {
+                  setVibeId(vibe._id);
+                  handleOpenDelete();
+                }}
+                className=""
+              >
+                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  handleOpenPreview(
+                    `https://bluemeet.s3.us-west-1.amazonaws.com/${vibe.key}`
+                  );
+                }}
+              >
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
+              </IconButton>
+            </div>
+          </div>
+
+          <div
+            style={{
+              height: "230px",
+              width: "100%",
+              backgroundImage: `${`url(${`https://bluemeet.s3.us-west-1.amazonaws.com/${vibe.key}`})`}`,
+              backgroundSize: "100%",
+              backgroundRepeat: "no-repeat",
+              borderRadius: "15px",
+            }}
+            className="d-flex flex-row align-items-center justify-content-center"
+          ></div>
+        </VibeCard>
+      );
+    });
+};
+
 const StageVibesLibrary = () => {
+  const [vibeId, setVibeId] = React.useState(null);
+
+  const params = useParams();
+
+  const { vibes } = useSelector((state) => state.vibe);
+
+  const eventId = params.id;
+
+  const dispatch = useDispatch();
+
+  const [openUpload, setOpenUpload] = React.useState(false);
+
+  const [openPreview, setOpenPreview] = React.useState(false);
+
+  const [openDelete, setOpenDelete] = React.useState(false);
+
+  useEffect(() => {
+    dispatch(getVibes(eventId));
+  }, []);
+
+  const handleCloseUpload = () => {
+    setOpenUpload(false);
+  };
+
+  const handleOpenPreview = (url) => {
+    setOpenPreview(true);
+
+    dispatch(setVibeToPreview(url));
+  };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
+  };
+
+  const handleOpenDelete = () => {
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
   const classes = useStyles();
 
   return (
@@ -191,7 +242,9 @@ const StageVibesLibrary = () => {
           <div className="d-flex flex-row align-items-center">
             <button
               className="btn btn-primary btn-outline-text ms-3"
-              // onClick={handleOpenUploadVideo}
+              onClick={() => {
+                setOpenUpload(true);
+              }}
             >
               Upload backdrop
             </button>
@@ -205,473 +258,419 @@ const StageVibesLibrary = () => {
       </TextMini>
 
       <div className="px-4">
-        <Paper className="p-4">
+        <Paper className="p-4 mb-5">
+          {renderVibes(vibes, handleOpenPreview, handleOpenDelete, setVibeId)}
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Christmas</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
-              </IconButton>
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                {/* <BackdropNameRow className="me-3">Christmas</BackdropNameRow> */}
+                <Chip label="Bluemeet" color="success" variant="outlined" />
+              </div>
+              <div className="d-flex flex-row align-items-center">
+                <IconButton onClick={handleOpenDelete} className="">
+                  <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+                </IconButton>
+                <IconButton onClick={handleOpenPreview}>
+                  <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
+                </IconButton>
+              </div>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
+                width: "100%",
+                backgroundImage: `${`url(${Bluemeet})`}`,
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
+                borderRadius: "15px",
+              }}
+              className="d-flex flex-row align-items-center justify-content-center"
+            ></div>
+          </VibeCard>
+          <VibeCard className="p-3">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                {/* <BackdropNameRow className="me-3">Christmas</BackdropNameRow> */}
+                <Chip label="Christmas" color="success" variant="outlined" />
+              </div>
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
+              </IconButton>
+              {/* <IconButton>
+                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+              </IconButton> */}
+            </div>
+
+            <div
+              style={{
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Christmas})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Beach</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Beach" color="success" variant="outlined" />
+              </div>
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Beach})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Dark Christmas</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip
+                  label="Dark Christmas"
+                  color="success"
+                  variant="outlined"
+                />
+              </div>
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${DarkChristmas})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Desert</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Desert" color="success" variant="outlined" />
+              </div>
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Desert})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Festival</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Festival" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Festival})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Finance</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Finance" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Finance})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Ice</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Ice" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Ice})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Mountains</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Mountains" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Mountains})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>NewYear</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="NewYear" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${NewYear})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Ocean</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Ocean" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Ocean})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Rocks</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Rocks" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Rocks})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Startup</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Startup" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Startup})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Sunrise</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Sunrise" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Sunrise})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Sunset</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Sunset" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Sunset})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Tech</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Tech" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Tech})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "15px",
               }}
               className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+            ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <BackdropNameRow>Winter</BackdropNameRow>
-              <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
+            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+              <div className="d-flex flex-row align-items-center">
+                <Chip label="Winter" color="success" variant="outlined" />
+              </div>
+
+              <IconButton onClick={handleOpenPreview}>
+                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
               </IconButton>
             </div>
-            <div className="d-flex flex-row align-items-center mb-3">
-              <input
-                className="form-check-input me-3"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <RadioLabel>Set as default backdrop</RadioLabel>
-            </div>
+
             <div
               style={{
-                height: "220px",
+                height: "230px",
                 width: "100%",
                 backgroundImage: `${`url(${Winter})`}`,
-                objectFit: "cover",
+                backgroundSize: "100%",
+                backgroundRepeat: "no-repeat",
+
                 borderRadius: "15px",
               }}
-              className="d-flex flex-row align-items-center justify-content-center"
-            >
-              <StyledImgWithBackdrop src={VibePreview} />
-            </div>
+              // className="d-flex flex-row align-items-center justify-content-center"
+            ></div>
           </VibeCard>
         </Paper>
       </div>
+
+      <UploadStageVibe open={openUpload} handleClose={handleCloseUpload} />
+      <PreviewStageVibe open={openPreview} handleClose={handleClosePreview} />
+      <DeleteStageVibe
+        open={openDelete}
+        handleClose={handleCloseDelete}
+        vibeId={vibeId}
+      />
     </>
   );
 };

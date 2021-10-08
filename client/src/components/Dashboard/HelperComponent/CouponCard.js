@@ -70,8 +70,8 @@ const CouponCard = ({
         className="coupon-card-other-info px-4 py-3 d-flex flex-column align-items-center"
         style={{ height: "60%" }}
       >
-        <div className="coupon-discount-percent mb-3">{percentage}% Off</div>
-        <div className="discount-on mb-3" style={{fontFamily: "Ubuntu"}}>On {onEvent}</div>
+        <div className="coupon-discount-percent mb-4">{percentage}% Off</div>
+        {/* <div className="discount-on mb-3" style={{fontFamily: "Ubuntu"}}>On {onEvent}</div> */}
         <div className="mb-3">
           <button
             type="button"
