@@ -459,6 +459,35 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
   });
 });
 
+app.get("/api-eureka/eureka/v1/oauth/facebook/callback",catchAsync(async(req,res,next)=>{
+
+    console.log(req.query.code,"I am counting on you req.query.code");
+
+   const response= await  axios.get(`https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${req.query.code}&redirect_uri=${process.env.FACEBOOK_REDIRECT_URI}`)
+
+   console.log(response.data,"I am counting on you access token")
+
+
+
+res.status(200).json({
+
+
+  status:"success"
+})
+
+
+
+})
+)
+
+
+
+
+
+
+
+
+
 // const workos = new WorkOS(process.env.WORKOS_API_KEY);
 // const ssoClientId = process.env.WORKOS_CLIENT_ID;
 
