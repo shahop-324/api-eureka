@@ -2,9 +2,9 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
+import Chip from '@mui/material/Chip';
 import { makeStyles } from "@material-ui/core/styles";
-
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,15 +23,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Linkedin = () => {
+const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const classes = useStyles();
@@ -41,40 +37,41 @@ const Linkedin = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
-              "https://cdn-icons-png.flaticon.com/512/174/174857.png"
+              "https://developers.google.com/analytics/images/terms/logo_lockup_analytics_icon_vertical_black_2x.png"
             }
             alt={"Google Sheets"}
-            className={classes.large}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Linkedin</div>
+            <div className="integration-name mb-2">Google Analytics</div>
             <div className="integration-short-description">
-              Post your event directly on your linkedin page and get more traffic.
+              Track key metrics about people who interact with your events for trageted campaigns.
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
-            <button
+          <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
+          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
+          {/* <button type="button" className="btn btn-primary btn-outline-text me-3">Upgrade</button> */}
+            {/* <button
               onClick={() => {
                 handleOpen();
               }}
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
-
-      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
     </>
   );
 };
 
-export default Linkedin;
+export default GoogleAnalytics;

@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
+import Chip from '@mui/material/Chip';
 import { makeStyles } from "@material-ui/core/styles";
-import FigmaAuth from "./Forms/FigmaAuth";
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Figma = () => {
+const MicrosoftDynamics = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -40,26 +41,28 @@ const Figma = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
-              "https://cdn.sanity.io/images/599r6htc/production/46a76c802176eb17b04e12108de7e7e0f3736dc6-1024x1024.png?w=670&h=670&q=75&fit=max&auto=format"
+              "https://global.hitachi-solutions.com/-/media/Project/Hitachi/landscape/Dynamics-Cloud.png"
             }
-            alt={"Mailchimp"}
-            className={classes.large}
+            alt={"Google Sheets"}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Figma</div>
+            <div className="integration-name mb-2">Microsoft Dynamics</div>
             <div className="integration-short-description">
-              Collaborate and brainstrom in real time using figma boards with
-              Evenz.
+              Add your Bluemeet registrants as contacts in Microsoft Dynamics 365 CRM.
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
+          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
+          {/* <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();
@@ -67,14 +70,14 @@ const Figma = () => {
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
 
-      <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} />
+      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
     </>
   );
 };
 
-export default Figma;
+export default MicrosoftDynamics;

@@ -383,6 +383,10 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
+app.get("/api-eureka/eureka/v1/auth/facebook-live", function (req, res) {
+  res.redirect(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=https://d1cd-122-175-219-242.ngrok.io/api-eureka/eureka/v1/oauth/facebook/callback&state={"{st=state123abc,ds=123456789}"}&response-type=code&scope=publish_video pages_read_engagement pages_manage_posts`)
+})
+
 app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,

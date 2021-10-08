@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import IntercomAppID from "./Forms/IntercomAppID";
+import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Tawk = () => {
- 
-
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -41,22 +41,22 @@ const Tawk = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
               "https://www.tawk.to/wp-content/uploads/2020/04/tawk-sitelogo.png"
             }
             alt={"Mailchimp"}
-            className={classes.large}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
 
           <div>
             <div className="integration-name mb-2">TAWK.to</div>
             <div className="integration-short-description">
-              Get in touch with your attendees as they visit your event pages
-              and solve their queries to boost registrations.
+              Get in touch with your attendees as they visit your event
+              registration page and assist them to boost registrations.
             </div>
           </div>
 
@@ -64,7 +64,30 @@ const Tawk = () => {
             className="d-flex flex-row align-items-center"
             style={{ justifySelf: "end" }}
           >
-            <button type="button" className="btn btn-primary btn-outline-text me-3">
+            <Button
+              style={{
+                fontFamily: "Ubuntu",
+                fontSize: "0.85rem",
+                fontWeight: "500",
+                textTransform: "capitalize",
+              }}
+              className="me-3"
+            >
+              Learn more
+            </Button>
+            <Chip
+              label="Premium"
+              color="warning"
+              variant="outlined"
+              style={{ fontWeight: "500" }}
+            />
+            <button
+              type="button"
+              className="btn btn-primary btn-outline-text ms-3"
+            >
+              Upgrade
+            </button>
+            {/* <button type="button" className="btn btn-primary btn-outline-text me-3">
               Upgrade
             </button>
             <button
@@ -74,7 +97,7 @@ const Tawk = () => {
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
