@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import LiveStreamListFields from "../GridComponents/LiveStream/ListFields";
 import LiveStreamDetailsCard from "../GridComponents/LiveStream/DetailsCard";
 import AddStreamDestinationOptions from "../FormComponents/AddStreamDestinationOptions";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { fetchStreamDestinations } from "./../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -19,8 +22,37 @@ const TextSmall = styled.div`
   color: #414141;
 `;
 
+const renderStreams = (streamDestinations) => {
+  return streamDestinations.map((destination) => {
+    return (
+      <LiveStreamDetailsCard
+        type={destination.type}
+        name={destination.streamFriendlyName}
+        sessions={destination.sessions}
+        key={destination._id}
+        id={destination._id}
+        url={destination.liveStreamPageURL}
+      />
+    );
+  });
+};
+
 const LiveStream = () => {
+  const { streamDestinations } = useSelector(
+    (state) => state.streamDestination
+  );
+
   const [open, setOpen] = useState(false);
+
+  const params = useParams();
+
+  const eventId = params.id;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchStreamDestinations(eventId));
+  }, []);
 
   const handleClose = () => {
     setOpen(false);
@@ -38,6 +70,7 @@ const LiveStream = () => {
 
           <div className="sec-heading-action-button d-flex flex-row">
             <div className="d-flex flex-row align-items-center">
+          
               <button
                 className="btn btn-primary btn-outline-text"
                 onClick={handleOpen}
@@ -56,11 +89,7 @@ const LiveStream = () => {
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
-          <LiveStreamDetailsCard />
-          {/* <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard />
-          <VideoLibraryDetailsCard /> */}
+          {renderStreams(streamDestinations)}
         </div>
       </div>
       <AddStreamDestinationOptions open={open} handleClose={handleClose} />

@@ -44,6 +44,8 @@ import roleSlice from "./roleSlice";
 import sessionRestrictionSlice from "./sessionRestrictionSlice";
 import videoSlice from "./videoSlice";
 import vibeSlice from "./vibeSlice";
+import StreamDestinationSlice from "./streamDestinationSlice";
+import mailSlice from "./mailSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -90,4 +92,6 @@ export default combineReducers({
   sessionRestriction: sessionRestrictionSlice.reducer,
   video: videoSlice.reducer,
   vibe: vibeSlice.reducer,
+  streamDestination: StreamDestinationSlice.reducer,
+  mail: mailSlice.reducer,
 });

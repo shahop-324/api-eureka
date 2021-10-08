@@ -534,10 +534,22 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         accessibleVenueAreas: ticketBeingPurchased.venueAreasAccessible,
         recordingWillBeShared: ticketBeingPurchased.shareRecording,
         addedVia: "Registration",
+
+        email: userDoingEventTransaction.email,
+        firstName:userDoingEventTransaction.firstName,
+        lastName:userDoingEventTransaction.lastName,
+        name:`${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
+        event_name:eventGettingEventTransaction.eventName,
+        // magic_link: // * will be assigned after registration object is created
+        ticket_name:ticketBeingPurchased.name,
+        registration_amount: amountTotal/100,
+        currency:currency,
+        event_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
+        community_picture:`https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
       });
 
       newlyCreatedRegistration.invitationLink = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
-
+      newlyCreatedRegistration.magic_link = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
       await newlyCreatedRegistration.save({
         new: true,
         validateModifiedOnly: true,

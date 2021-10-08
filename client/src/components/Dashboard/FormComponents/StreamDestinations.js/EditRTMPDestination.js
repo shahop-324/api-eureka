@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -9,6 +8,11 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 
 import Select from "react-select";
+import { connect, useDispatch, useSelector } from "react-redux";
+import {
+  fetchOneStreamDestination,
+  updateStreamDestination,
+} from "./../../../../actions";
 
 const styles = {
   control: (base) => ({
@@ -24,15 +28,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-const sessionOptions = [
-  { label: "Session 1", value: "Session 1" },
-  { label: "Session 2", value: "Session 2" },
-  { label: "Session 3", value: "Session 3" },
-  { label: "Session 4", value: "Session 4" },
-  { label: "Session 5", value: "Session 5" },
-  { label: "Session 6", value: "Session 6" },
-]; // Build a list of session options for this event
 
 const renderReactSelect = ({
   input,
@@ -73,13 +68,6 @@ const StyledInput = styled.input`
   &:hover {
     border: #538bf7;
   }
-`;
-
-const RadioLabel = styled.span`
-  font-family: "Ubuntu" !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  color: #585858 !important;
 `;
 
 const FormLabel = styled.label`
@@ -135,12 +123,48 @@ const renderInput = ({
   );
 };
 
-const EditRTMPDestination = ({ open, handleClose, handleSubmit }) => {
+const EditRTMPDestination = ({
+  open,
+  handleClose,
+  handleSubmit,
+  reset,
+  destinationId,
+}) => {
+  let sessionOptions = [];
   const theme = useTheme();
+  const dispatch = useDispatch();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { streamDestinationDetails } = useSelector(
+    (state) => state.streamDestination
+  );
+
+  const sessions = useSelector((state) => state.session.sessions);
+
+  if (sessions) {
+    sessionOptions = sessions.map((session) => {
+      return { value: session._id, label: session.name };
+    });
+  }
+
+  
+
   const onSubmit = (formValues) => {
-    console.log(formValues);
+    let ModifiedFormValues = {};
+    let sessions = [];
+    if (formValues.sessions) {
+      sessions = formValues.sessions.map((session) => session.value);
+    }
+
+    ModifiedFormValues.type = "RTMP";
+    ModifiedFormValues.rtmpServerURL = formValues.rtmpServerURL;
+    ModifiedFormValues.rtmpServerKey = formValues.rtmpServerKey;
+    ModifiedFormValues.liveStreamPageURL = formValues.liveStreamPageURL;
+    ModifiedFormValues.streamFriendlyName = formValues.streamFriendlyName;
+    ModifiedFormValues.sessions = sessions;
+
+    console.log(ModifiedFormValues);
+    dispatch(updateStreamDestination(destinationId, ModifiedFormValues));
   };
 
   return (
@@ -239,35 +263,30 @@ const EditRTMPDestination = ({ open, handleClose, handleSubmit }) => {
                   styles={styles}
                   menuPlacement="top"
                   options={sessionOptions}
-                  // create a list of all sessions in this event
                   component={renderReactSelect}
                 />
               </div>
 
               <div
-                  style={{ width: "100%" }}
-                  className="d-flex flex-row justify-content-end"
+                style={{ width: "100%" }}
+                className="d-flex flex-row justify-content-end"
+              >
+                <button
+                  className="btn btn-outline-primary btn-outline-text me-3"
+                  onClick={reset}
+                  style={{ textAlign: "center" }}
                 >
-                  <button
-                    className="btn btn-outline-primary btn-outline-text me-3"
-                    // onClick={reset}
-                    // disabled={pristine || submitting}
-                    style={{ textAlign: "center" }}
-                  >
-                    Discard
-                  </button>
+                  Discard
+                </button>
 
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-outline-text"
-                    style={{ textAlign: "center" }}
-                    // onClick={() => {
-                    //   handleClose();
-                    // }}
-                  >
-                    Save Changes
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline-text"
+                  style={{ textAlign: "center" }}
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
           </form>
         </>
@@ -275,6 +294,43 @@ const EditRTMPDestination = ({ open, handleClose, handleSubmit }) => {
     </>
   );
 };
+
+const mapStateToProps = (state) => ({
+  initialValues: {
+    sessions:
+      state.streamDestination.streamDestinationDetails &&
+      state.streamDestination.streamDestinationDetails.sessions
+        ? state.streamDestination.streamDestinationDetails.sessions.map(
+            (el) => {
+              return {
+                value: el._id,
+                label: el.name,
+              };
+            }
+          )
+        : "",
+    rtmpServerURL:
+      state.streamDestination.streamDestinationDetails &&
+      state.streamDestination.streamDestinationDetails.rtmpServerURL
+        ? state.streamDestination.streamDestinationDetails.rtmpServerURL
+        : "",
+    rtmpServerKey:
+      state.streamDestination.streamDestinationDetails &&
+      state.streamDestination.streamDestinationDetails.rtmpServerKey
+        ? state.streamDestination.streamDestinationDetails.rtmpServerKey
+        : "",
+    liveStreamPageURL:
+      state.streamDestination.streamDestinationDetails &&
+      state.streamDestination.streamDestinationDetails.liveStreamPageURL
+        ? state.streamDestination.streamDestinationDetails.liveStreamPageURL
+        : "",
+    streamFriendlyName:
+      state.streamDestination.streamDestinationDetails &&
+      state.streamDestination.streamDestinationDetails.streamFriendlyName
+        ? state.streamDestination.streamDestinationDetails.streamFriendlyName
+        : "",
+  },
+});
 
 const validate = (formValues) => {
   const errors = {};
@@ -295,7 +351,11 @@ const validate = (formValues) => {
   return errors;
 };
 
-export default reduxForm({
-  form: "newRTMPDestination",
-  validate,
-})(EditRTMPDestination);
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: "newRTMPDestination",
+    validate,
+    enableReinitialize: true,
+    destroyOnUnmount: false,
+  })(EditRTMPDestination)
+);

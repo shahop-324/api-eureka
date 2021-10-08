@@ -10,8 +10,18 @@ import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRound
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import DeleteStreamDestination from "../../FormComponents/StreamDestinations.js/DeleteDestination";
 import EditRTMPDestination from "../../FormComponents/StreamDestinations.js/EditRTMPDestination";
+import { fetchOneStreamDestination, showSnackbar } from "./../../../../actions";
+import { useDispatch } from "react-redux";
 
-const LiveStreamDetailsCard = () => {
+const renderSessions = (sessions) => {
+  return sessions.map((session) => {
+    return <Chip label={session.name} color="primary" variant="outlined" />;
+  });
+};
+
+const LiveStreamDetailsCard = ({ type, name, sessions, id, url }) => {
+  const dispatch = useDispatch();
+
   const [openDeleteVideo, setOpenDeleteVideo] = React.useState(false);
   const [openEditRTMP, setOpenEditRTMP] = React.useState(false);
 
@@ -21,7 +31,7 @@ const LiveStreamDetailsCard = () => {
 
   const handleCloseEditRTMP = () => {
     setOpenEditRTMP(false);
-  }
+  };
 
   return (
     <>
@@ -32,34 +42,61 @@ const LiveStreamDetailsCard = () => {
               style={{ color: "#538BF7" }}
               className="me-2"
             />
-            Facebook
+            {name}
           </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label">
-            <Chip label="Custom RTMP" color="warning" />
+            <Chip label={type} color="warning" />
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label">
-            <Chip label="Session" color="primary" variant="outlined" />
+            {typeof sessions !== "undefined" && sessions.length > 0 ? (
+              renderSessions(sessions)
+            ) : (
+              <Chip
+                label={"Not mapped to any session yet"}
+                color="error"
+                variant="outlined"
+                style={{ width: "100%" }}
+              />
+            )}
           </div>
         </div>
         <div className="registrations-invoice-field">
           <div className="registrations-field-label">
-            <div onClick={() => {
-              setOpenEditRTMP(true);
-            }}>
+            <div
+              onClick={() => {
+                setOpenEditRTMP(true);
+
+                dispatch(fetchOneStreamDestination(id));
+              }}
+            >
               <IconButton color="primary" aria-label="add to shopping cart">
                 <ModeEditOutlineRoundedIcon />
               </IconButton>
             </div>
             <div>
-              <IconButton aria-label="add to shopping cart">
+              <IconButton onClick={() => {
+                  navigator.clipboard.writeText(url).then(function() {
+                    console.log('Async: Copying to clipboard was successful!');
+                    dispatch(showSnackbar("success", "URL Copied to clipboard!"));
+                  }, function(err) {
+                    console.error('Async: Could not copy text: ', err);
+                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
+                  });
+
+                  
+                }} aria-label="add to shopping cart">
                 <ContentCopyIcon style={{ color: "#DA580D" }} />
               </IconButton>
             </div>
-            <div onClick={() => {setOpenDeleteVideo(true)}}>
+            <div
+              onClick={() => {
+                setOpenDeleteVideo(true);
+              }}
+            >
               <IconButton color="secondary" aria-label="add to shopping cart">
                 <DeleteRoundedIcon />
               </IconButton>
@@ -71,11 +108,16 @@ const LiveStreamDetailsCard = () => {
         <Divider />
       </div>
 
-      <EditRTMPDestination open={openEditRTMP} handleClose={handleCloseEditRTMP} />
+      <EditRTMPDestination
+        open={openEditRTMP}
+        handleClose={handleCloseEditRTMP}
+        destinationId={id}
+      />
 
       <DeleteStreamDestination
         open={openDeleteVideo}
         handleClose={handleCloseDeleteVideo}
+        destinationId={id}
       />
     </>
   );

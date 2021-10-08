@@ -16,7 +16,7 @@ const EmailListFields = () => {
       <div
         className="session-list-fields-container"
         style={{
-          gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr",
           gridGap: "16px",
         }}
       >
@@ -30,11 +30,7 @@ const EmailListFields = () => {
             Subject
           </ListFieldText>
         </div>
-        <div className="">
-          <ListFieldText className="" style={{ width: "100%" }}>
-            Recipient
-          </ListFieldText>
-        </div>
+       
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             Status

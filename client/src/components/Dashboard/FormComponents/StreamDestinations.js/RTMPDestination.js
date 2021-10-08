@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -9,6 +9,12 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 
 import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSessions } from "../../../../actions";
+
+import { useParams } from "react-router-dom";
+import validator from "validator";
+import { createRTMPDestination } from "./../../../../actions";
 
 const styles = {
   control: (base) => ({
@@ -24,15 +30,6 @@ const styles = {
     color: "#757575",
   }),
 };
-
-const sessionOptions = [
-  { label: "Session 1", value: "Session 1" },
-  { label: "Session 2", value: "Session 2" },
-  { label: "Session 3", value: "Session 3" },
-  { label: "Session 4", value: "Session 4" },
-  { label: "Session 5", value: "Session 5" },
-  { label: "Session 6", value: "Session 6" },
-]; // Build a list of session options for this event
 
 const renderReactSelect = ({
   input,
@@ -73,13 +70,6 @@ const StyledInput = styled.input`
   &:hover {
     border: #538bf7;
   }
-`;
-
-const RadioLabel = styled.span`
-  font-family: "Ubuntu" !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  color: #585858 !important;
 `;
 
 const FormLabel = styled.label`
@@ -136,11 +126,45 @@ const renderInput = ({
 };
 
 const RTMPDestination = ({ open, handleClose, handleSubmit }) => {
+  let sessionOptions = [];
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const params = useParams();
+  const dispatch = useDispatch();
+  const id = params.id;
+  const eventId = params.id;
+
+  useEffect(() => {
+    dispatch(fetchSessions(id));
+  }, []);
+
+  const sessions = useSelector((state) => state.session.sessions);
+
+  if (sessions) {
+    sessionOptions = sessions.map((session) => {
+      return { value: session._id, label: session.name };
+    });
+  }
 
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    let ModifiedFormValues = {};
+    let sessions = [];
+    if (formValues.sessions) {
+      sessions = formValues.sessions.map((session) => session.value);
+    }
+
+    ModifiedFormValues.type = "RTMP";
+    ModifiedFormValues.rtmpServerURL = formValues.rtmpServerURL;
+    ModifiedFormValues.rtmpServerKey = formValues.rtmpServerKey;
+    ModifiedFormValues.liveStreamPageURL = formValues.liveStreamPageURL;
+    ModifiedFormValues.streamFriendlyName = formValues.streamFriendlyName;
+    ModifiedFormValues.sessions = sessions;
+
+    console.log(ModifiedFormValues);
+    dispatch(createRTMPDestination(ModifiedFormValues, eventId));
   };
 
   return (
@@ -273,6 +297,12 @@ const validate = (formValues) => {
   if (!formValues.liveStreamPageURL) {
     errors.liveStreamPageURL = "Expiry Time is required";
   }
+  if (
+    formValues.liveStreamPageURL &&
+    !validator.isURL(formValues.liveStreamPageURL)
+  ) {
+    errors.liveStreamPageURL = "Please enter a valid stream page URL.";
+  }
   if (!formValues.streamFriendlyName) {
     errors.streamFriendlyName =
       "Stream friendly name for identification is required";
@@ -282,5 +312,6 @@ const validate = (formValues) => {
 
 export default reduxForm({
   form: "newRTMPDestination",
+  destroyOnUnmount: true,
   validate,
 })(RTMPDestination);

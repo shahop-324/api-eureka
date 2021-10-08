@@ -8,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import {deleteStreamDestination} from "./../../../../actions";
 
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
@@ -20,7 +21,7 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const DeleteStreamDestination = ({ id, open, handleClose }) => {
+const DeleteStreamDestination = ({  open, handleClose, destinationId }) => {
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -54,7 +55,7 @@ const DeleteStreamDestination = ({ id, open, handleClose }) => {
           <button
             className="btn btn-outline-text btn-primary"
             onClick={() => {
-              //   dispatch(deleteCoupon(id));
+                dispatch(deleteStreamDestination(destinationId));
               handleClose();
             }}
           >

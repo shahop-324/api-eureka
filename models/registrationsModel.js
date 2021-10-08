@@ -18,11 +18,9 @@ const registrationSchema = new mongoose.Schema(
     userEmail: {
       type: String,
     },
-  
     ticketType: {
       type: String,
     },
-   
     eventTransactionId: {
       type: mongoose.Schema.ObjectId,
       ref: "EventTransaction",
@@ -40,7 +38,7 @@ const registrationSchema = new mongoose.Schema(
     orderId: {
       type: String,
     },
-    
+
     paymentStatus: {
       type: String,
     },
@@ -72,6 +70,40 @@ const registrationSchema = new mongoose.Schema(
     addedVia: {
       type: String,
       enum: ["Registration", "Invitation"],
+    },
+
+    email: {
+      type: String,
+    },
+    first_name: {
+      type: String,
+    },
+    last_name: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    event_name: {
+      type: String,
+    },
+    magic_link: {
+      type: String,
+    },
+    ticket_name: {
+      type: String,
+    },
+    registration_amount: {
+      type: Number,
+    },
+    currency: {
+      type: String,
+    },
+    event_picture: {
+      type: String,
+    },
+    community_picture: {
+      type: String,
     },
 
     // Form to be filled during registration.

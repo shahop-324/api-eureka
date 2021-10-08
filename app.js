@@ -52,6 +52,7 @@ const interestedPeopleRoutes = require("./routes/interestedPeopleRoutes");
 const paypalRoutes = require("./routes/payPalRoutes");
 const zapierRoutes = require("./routes/zapierRoutes");
 const roleRoutes = require("./routes/roleRoutes");
+const mailRoutes = require("./routes/mailRoutes");
 
 // const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
@@ -101,16 +102,6 @@ app.use(
 );
 
 app.use(cookieParser());
-// app.use(bodyParser.json());
-// app.use(bodyParser.raw({ type: "application/json" }));
-// app.use(bodyParser.json({
-//   verify: function (req, res, buf) {
-//     var url = req.originalUrl;
-//     if (url.startsWith('/stripe')) {
-//        req.rawBody = buf.toString();
-//     }
-//   }
-// }));
 
 // Use JSON parser for all non-webhook routes
 app.use(
@@ -256,6 +247,7 @@ app.use("/api-eureka/eureka/v1/interestedPeople", interestedPeopleRoutes);
 app.use("/api-eureka/eureka/v1/paypal", paypalRoutes);
 app.use("/api-eureka/eureka/v1/zapier", zapierRoutes);
 app.use("/api-eureka/eureka/v1/role", roleRoutes);
+app.use("/api-eureka/eureka/v1/mail", mailRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

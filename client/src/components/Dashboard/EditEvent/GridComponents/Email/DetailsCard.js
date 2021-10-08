@@ -48,7 +48,7 @@ const EmailDetailsCard = () => {
       <div
         className="session-list-fields-container"
         style={{
-            gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr",
             gridGap: "16px",
             alignItems: "center",
           }}
@@ -69,18 +69,7 @@ const EmailDetailsCard = () => {
             New Speakers Line up
           </ListFieldText>
         </div>
-        <div className="">
-          <ListFieldText className="" style={{ width: "100%" }}>
-            {/* Recipient */}
-            <div className="d-flex flex-row align-items-center">
-              <PersonRoundedIcon
-                style={{ fontSize: "20px", color: "#213FC7" }}
-                className="me-2"
-              />
-              <span>Attendee</span>
-            </div>
-          </ListFieldText>
-        </div>
+        
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             {/* Email status */}

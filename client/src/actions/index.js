@@ -45,6 +45,8 @@ import { roleActions } from "../reducers/roleSlice";
 import { sessionRestrictionActions } from "../reducers/sessionRestrictionSlice";
 import { videoActions } from "./../reducers/videoSlice";
 import { vibeActions } from "../reducers/vibeSlice";
+import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
+import { mailActions } from "../reducers/mailSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -7562,3 +7564,582 @@ export const setVibeToPreview = (imgURL) => async (dispatch, getState) => {
     console.log(error);
   }
 };
+
+// Create RTMP stream destination
+
+export const createRTMPDestination =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}createRTMPDestination/${eventId}`, {
+        method: "POST",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data); // * Confirmed that res.data is the stream destination object
+      //* Make Slice and actions and then dispatch it in global redux store.
+
+      dispatch(
+        StreamDestinationActions.CreateStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Stream destination added successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        snackbarActions.openSnackBar({
+          message:
+            "Failed to create stream destination. Please try again later!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Fetch streamDestinations
+
+export const fetchStreamDestinations =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}getRTMPDestinations/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.FetchStreamDestinations({
+          streamDestinations: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Fetch streamDestination
+
+export const fetchOneStreamDestination =
+  (destinationId) => async (dispatch, getState) => {
+    console.log("This fxn was called.");
+    try {
+      let res = await fetch(
+        `${BaseURL}getOneStreamDestination/${destinationId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.FetchStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Update streamDestination
+
+export const updateStreamDestination =
+  (destinationId, formValues) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}updateStreamDestination/${destinationId}`,
+        {
+          method: "PATCH",
+
+          body: JSON.stringify({ ...formValues }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res.data);
+
+      dispatch(
+        StreamDestinationActions.UpdateStreamDestination({
+          streamDestination: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Delete streamDestination
+
+export const deleteStreamDestination =
+  (destinationId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}deleteStreamDestination/${destinationId}`,
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        StreamDestinationActions.DeleteStreamDestination({
+          destinationId: destinationId,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+// Create Mail
+
+export const createMail =
+  (formValues, eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/createNewMail/${eventId}`, {
+        method: "POST",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        mailActions.CreateMail({
+          mail: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "New mail added successfully to draft!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to save mail. Please try again.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Get Mails
+
+export const fetchMails = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/getMails/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.FetchMails({
+        mails: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch mails. Please try again later.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Get one mail details
+
+export const getOneMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/getMailDetails/${mailId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.FetchMail({
+        mail: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch mail details. Please try again later!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Update mail
+
+export const updateMail =
+  (formValues, mailId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/updateMail/${mailId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({ ...formValues }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        mailActions.UpdateMail({
+          mail: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Successfully Update mail!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update mail. Please try again later!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+// Delete mail
+
+export const deleteMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/deleteMail/${mailId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.DeleteMail({
+        deletedMailId: mailId,
+      })
+    );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Successfully deleted mail!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Send mail
+
+export const SendMail = (mailId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}mail/sendMail/${mailId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    console.log(res);
+
+    dispatch(
+      mailActions.UpdateMail({
+        mail: res.data,
+      })
+    );
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Mail sent successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to send mail. Please try again later!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+// Send test mail
+
+export const sendTestMail =
+  (mailId, mailInfoObject, receiverMail) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/sendTestMail/${mailId}`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          mailInfoObject: mailInfoObject,
+          receiverMail: receiverMail,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      // Show snackbar that test mail has been sent successfully.
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Test mail sent successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to send test mail. Please try again.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
