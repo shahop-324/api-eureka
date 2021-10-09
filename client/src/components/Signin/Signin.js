@@ -16,7 +16,7 @@ import {
 import LinkedinAuth from "../LinkedinAuth";
 // import FacebookLogin from "react-facebook-login";
 import GoogleAuth from "../GoogleAuth";
-import { signIn } from "../../actions/index";
+
 import { reduxForm, Field } from "redux-form";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -31,7 +31,7 @@ let formIsvalidated = false;
 const renderInput = ({
   input,
 
-  meta,
+  
   type,
   ariadescribedby,
   classes,
@@ -108,9 +108,9 @@ const Signin = (props) => {
     });
     //dispatch(signIn(formValues));
   };
-  const responseFacebook = (response) => {
-    console.log(response);
-  };
+  // const responseFacebook = (response) => {
+  //   console.log(response);
+  // };
 
   // render() {
   //   return (

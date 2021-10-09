@@ -210,12 +210,13 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
 
               res.status(200).json({ userProfile });
             })
-            .catch((error) => console.log("Error getting user email"));
+            .catch((error) => next(error));
         })
-        .catch((error) => console.log("Error grabbing user profile"));
+        .catch((error) => next(error));
     })
     .catch((err) => {
-      console.log("Error getting LinkedIn access token");
+
+      next(err);
     });
 });
 
@@ -257,7 +258,7 @@ app.get("/api-eureka/eureka/v1/current_user", (req, res) => {
   res.send({ user: req.user, token: token });
 });
 
-app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
+app.get("/api-eureka/eureka/v1/auth/mailchimp", (req, res, next) => {
   res.redirect(
     `https://login.mailchimp.com/oauth2/authorize?${querystring.stringify({
       response_type: "code",
@@ -267,7 +268,7 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", async (req, res) => {
   );
 });
 
-app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
+app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res, next) => {
   let accessToken = null;
   const config = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -321,19 +322,19 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res) => {
                           status: "SUCCESS",
                         });
                       })
-                      .catch((error) => console.log(error));
+                      .catch((error) => next(error));
                   } else {
                     res.status(200).json({
                       status: "You already have one for same communityId",
                     });
                   }
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => next(error));
             })
-            .catch((error) => console.log(error));
+            .catch((error) => next(error));
         })
-        .catch((error) => console.log(error));
-    });
+        .catch((error) => next(error));
+    })
 });
 
 app.get(
@@ -374,7 +375,7 @@ app.get("/api-eureka/eureka/v1/logout", (req, res) => {
 app.use("/api-eureka/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
-app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
+app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res,next) {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -383,7 +384,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
-app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
+app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response,next) => {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -403,16 +404,6 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
       if (err) {
         return console.error(err);
       }
-
-      // //console.log("res:" + res);
-      // console.log("user ID: " + res.user_id);
-      // console.log("organization ID: " + res.organization_id);
-      // console.log("username: " + res.username);
-      // console.log("display name: " + res.display_name);
-
-      // console.log("Access Token:" + conn.accessToken);
-      // console.log("Instance url:" + conn.instanceUrl);
-      // console.log(conn.refreshToken, "i am counting on you refresh token");
       Community.findOne({ email: res.username })
         .then((community) => {
           SalesForce.findOne({ communityId: community._id })
@@ -429,7 +420,6 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                     // const [a] = community;
                     await community.save({
                       new: true,
-
                       validateModifiedOnly: true,
                     });
 
@@ -437,63 +427,19 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
                       status: "SUCCESS",
                     });
                   })
-                  .catch((err) => console.log(err));
+                  .catch((err) => next(err));
               } else {
                 response.status(200).json({
                   status: "You already have one for same communityId",
                 });
               }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => next(err));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => next(err));
     });
   });
 });
 
-app.get("/api-eureka/eureka/v1/oauth/facebook/callback",catchAsync(async(req,res,next)=>{
-
-    console.log(req.query.code,"I am counting on you req.query.code");
-
-   const response= await  axios.get(`https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${req.query.code}&redirect_uri=${process.env.FACEBOOK_REDIRECT_URI}`)
-
-   console.log(response.data,"I am counting on you access token")
-
-
-
-res.status(200).json({
-
-
-  status:"success"
-})
-
-
-
-})
-)
-
-
-
-
-
-
-
-
-
-// const workos = new WorkOS(process.env.WORKOS_API_KEY);
-// const ssoClientId = process.env.WORKOS_CLIENT_ID;
-
-// app.get("/api-eureka/eureka/v1/auth/sso", (req, res) => {
-//   const domain = req.body.domain;
-//   const redirectURI = process.env.SS0_REDIRECT_URI;
-
-//   const authorizationURL = workos.sso.getAuthorizationURL({
-//     domain,
-//     redirectURI,
-//     ssoClientId,
-//   });
-
-//   res.redirect(authorizationURL);
-// });
 
 module.exports = app;
