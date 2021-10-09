@@ -384,17 +384,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
-<<<<<<< HEAD
 app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response, next) => {
-=======
-app.get("/api-eureka/eureka/v1/auth/facebook-live", function (req, res) {
-  res.redirect(
-    `https://www.facebook.com/v12.0/dialog/oauth?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=https://d1cd-122-175-219-242.ngrok.io/api-eureka/eureka/v1/oauth/facebook/callback&state={"{st=state123abc,ds=123456789}"}&response-type=code&scope=publish_video pages_read_engagement pages_manage_posts public_profile`
-  );
-});
-
-app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
->>>>>>> 1117044 (commit)
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -451,61 +441,5 @@ app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response) => {
   });
 });
 
-<<<<<<< HEAD
-=======
-app.get(
-  "/api-eureka/eureka/v1/oauth/facebook/callback",
-  catchAsync(async (req, res, next) => {
-    console.log(req.query.code, "I am counting on you req.query.code");
-    axios
-      .get(
-        `https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${req.query.code}&redirect_uri=${process.env.FACEBOOK_REDIRECT_URI}`
-      )
-      .then((response) => {
-        console.log(response.data);
-
-        axios
-          .post(
-            `https://graph.facebook.com/v3.3/me/live_videos?status=LIVE_NOW&access_token=${response.data.access_token}`
-          )
-          .then((liveResponse) => {
-            console.log(liveResponse.data);
-
-            res.status(200).json({
-              status: "success",
-              data: liveResponse.data,
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(400).json({
-          status: "error",
-        });
-      });
-
-    // console.log(response.data, "I am counting on you access token");
-  })
-);
-
-// const workos = new WorkOS(process.env.WORKOS_API_KEY);
-// const ssoClientId = process.env.WORKOS_CLIENT_ID;
-
-// app.get("/api-eureka/eureka/v1/auth/sso", (req, res) => {
-//   const domain = req.body.domain;
-//   const redirectURI = process.env.SS0_REDIRECT_URI;
-
-//   const authorizationURL = workos.sso.getAuthorizationURL({
-//     domain,
-//     redirectURI,
-//     ssoClientId,
-//   });
-
-//   res.redirect(authorizationURL);
-// });
->>>>>>> 1117044 (commit)
 
 module.exports = app;
