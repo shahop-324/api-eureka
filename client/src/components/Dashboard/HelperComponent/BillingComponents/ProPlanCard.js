@@ -111,52 +111,30 @@ const ProPlanCard = () => {
   return (
     <>
       <div className="pricing-plan-card p-4">
-              <div className="pricing-plan-name mb-3">Pro</div>
+              <div className="pricing-plan-name mb-3">Free</div>
               <div className="d-flex flex-row align-items-center">
-                <div className="original-plan-price-value me-3">$699</div>
+                {/* <div className="original-plan-price-value me-3">$699</div> */}
                 <div className="original-plan--reduced-price-value me-1">
-                  $599 /
+                 $0
                 </div>
-                <div className="plan-tax-text">month + applicable Tax</div>
+                {/* <div className="plan-tax-text">month + applicable Tax</div> */}
               </div>
               <div className="my-4">
                 <Divider />
               </div>
-              <div className="plan-features-offered-list">
+              <div className="plan-features-offered-list" style={{height: "778px"}}>
                 <div className="d-flex flex-row align-items-center mb-2">
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
-                  <div className="plan-feature-text">2 organizer included</div>
+                  <div className="plan-feature-text">1 organizer included</div>
                 </div>
                 <div className="d-flex flex-row align-items-center mb-2">
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
                   <div className="plan-feature-text">
-                    12000 registrations included per year
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Full access to Evenz Event Platform
-                  </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">72 hours of streaming</div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    Livestream and custom RTMP{" "}
+                    Upto 10 registrations included per month
                   </div>
                 </div>
                 <div className="d-flex flex-row align-items-center mb-2">
@@ -164,23 +142,37 @@ const ProPlanCard = () => {
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
                   <div className="plan-feature-text">
-                    Email customisation and branding
+                   Social lounge
                   </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-2">
+                  <div className="me-3">
+                    <CheckRoundedIcon style={{ fontSize: "18" }} />
+                  </div>
+                  <div className="plan-feature-text">
+                    Networking
+                  </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-2">
+                  <div className="me-3">
+                    <CheckRoundedIcon style={{ fontSize: "18" }} />
+                  </div>
+                  <div className="plan-feature-text">
+                    Host upto 2 live sessions
+                  </div>
+                </div>
+                <div className="d-flex flex-row align-items-center mb-2">
+                  <div className="me-3">
+                    <CheckRoundedIcon style={{ fontSize: "18" }} />
+                  </div>
+                  <div className="plan-feature-text">2 hours of streaming</div>
                 </div>
                 <div className="d-flex flex-row align-items-center mb-2">
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
                   <div className="plan-feature-text">Live polls and Q&A </div>
-                </div>
-                <div className="d-flex flex-row align-items-center mb-2">
-                  <div className="me-3">
-                    <CheckRoundedIcon style={{ fontSize: "18" }} />
-                  </div>
-                  <div className="plan-feature-text">
-                    SEO-optimized event registration pages{" "}
-                  </div>
-                </div>
+                </div>   
                 <div className="d-flex flex-row align-items-center mb-2">
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
@@ -193,25 +185,22 @@ const ProPlanCard = () => {
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
-                  <div className="plan-feature-text">
-                    Event Analytics Dashboard
-                  </div>
+                  <div className="plan-feature-text">1 Event per month</div>
                 </div>
                 <div className="d-flex flex-row align-items-center mb-2">
                   <div className="me-3">
                     <CheckRoundedIcon style={{ fontSize: "18" }} />
                   </div>
-                  <div className="plan-feature-text">Unlimited Events</div>
+                  <div className="plan-feature-text">Email support</div>
                 </div>
               </div>
-
               <button
               onClick={() => {
                 setOpenDrawer(true);
                 // displayRazorpay()
               }}
                 className="btn btn-outline-primary btn-outline-text mt-3"
-                style={{ width: "100%" }}
+                style={{ width: "100%", marginTop: "80px" }}
               >
                 Upgrade
               </button>

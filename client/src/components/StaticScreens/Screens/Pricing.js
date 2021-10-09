@@ -318,7 +318,6 @@ const Pricing = (props) => {
         transaction_type: "community_plan",
         userId: user._id,
       }),
-
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userToken}`,

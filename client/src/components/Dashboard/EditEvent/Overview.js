@@ -29,7 +29,6 @@ import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 import MainEventSetupCheckList from "../Checklist/Main";
-import { IconButton } from "@material-ui/core";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -124,9 +123,8 @@ const EventOverview = (props) => {
   const [tag, setTag] = useState( eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null);
   const [editMode, setEditMode] = useState(false);
 
-  const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
 
   const { error } = useSelector((state) => state.event);
 
@@ -181,10 +179,6 @@ aboutText = eventDetails.editingComment
   }
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     dispatch(errorTrackerForFetchEvent());
     return dispatch(errorTrackerForEditEventDiscription());
   }

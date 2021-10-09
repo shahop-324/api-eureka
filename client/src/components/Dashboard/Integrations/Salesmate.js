@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,24 +41,28 @@ const Salesmate = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
               "https://cdn1.ourmailserv.com/siteContent/appLogos/38/salesMateAppLogo1.png"
             }
             alt={"Google Sheets"}
-            className={classes.large}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Salesmate</div>
+            <div className="integration-name mb-2">
+            <span className="me-3">  Salesmate </span>
+              <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+              </div>
             <div className="integration-short-description">
               Sync attendee, leads and interested people to salesmate
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
+          <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
           <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
           <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
           {/* <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>

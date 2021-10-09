@@ -45,6 +45,8 @@ import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
 import VideoLibrary from "./VideoLibrary";
 import Tracking from "./EditEvent/Tracking";
+import GetStarted from "./GetStarted";
+import AddOnsAndPlan from "./AddOnsAndPlan";
 
 const DashboardRoot = () => {
   console.log(window.paypal);
@@ -95,9 +97,9 @@ const DashboardRoot = () => {
     history.push(`/user/${userId}/community/integrations/${id}`);
   };
 
-  const handleSnapClick = () => {
+  const handleAddOnsAndPlanClick = () => {
     dispatch(navigationIndexForCommunityDash(5));
-    history.push(`/user/${userId}/community/snap/${id}`);
+    history.push(`/user/${userId}/community/addons-and-plan/${id}`);
   };
   const handleTrackingClick = () => {
     dispatch(navigationIndexForCommunityDash(6));
@@ -129,7 +131,7 @@ const DashboardRoot = () => {
             handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
             handleBillingClick={handleBillingClick}
-            handleSnapClick={handleSnapClick}
+            handleAddOnsAndPlanClick={handleAddOnsAndPlanClick}
             handleTrackingClick={handleTrackingClick}
           />
           <SideNavLean
@@ -140,7 +142,7 @@ const DashboardRoot = () => {
             handleVideoLibraryClick={handleVideoLibraryClick}
             handleIntegrationsClick={handleIntegrationsClick}
             handleBillingClick={handleBillingClick}
-            handleSnapClick={handleSnapClick}
+            handleAddOnsAndPlanClick={handleAddOnsAndPlanClick}
             handleTrackingClick={handleTrackingClick}
           />
 
@@ -150,7 +152,8 @@ const DashboardRoot = () => {
                 case "0":
                   return (
                     <ErrorBoundriesDashboardOverview>
-                      <Overview />
+                      {/* <Overview /> */}
+                      <GetStarted />
                     </ErrorBoundriesDashboardOverview>
                   );
 
@@ -179,6 +182,12 @@ const DashboardRoot = () => {
                   return (
                     <ErrorBoundriesRegistrations>
                       <Integrations />
+                    </ErrorBoundriesRegistrations>
+                  );
+                case "5":
+                  return (
+                    <ErrorBoundriesRegistrations>
+                      <AddOnsAndPlan />
                     </ErrorBoundriesRegistrations>
                   );
 

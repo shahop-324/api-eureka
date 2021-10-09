@@ -747,3 +747,34 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
     status: "success",
   });
 });
+
+
+exports.CreateCommunityBillOrder = catchAsync(async(req, res, next) => {
+console.log("This fxn was fired")
+  try{
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Growth',
+            },
+            unit_amount: 100000,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: 'https://bluemeet.in/',
+      cancel_url: 'https://bluemeet.in/privacy-policy/',
+    });
+  
+    res.redirect(303, session.url);
+  }
+   catch(error) {
+console.log(error);
+   }
+  
+});

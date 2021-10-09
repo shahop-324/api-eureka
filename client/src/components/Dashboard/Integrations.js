@@ -5,12 +5,35 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Registrations.scss";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import IntegrationsSub from "./IntegrationSubComponents.js/IntegrationsSub";
 import ApiKeysSub from "./IntegrationSubComponents.js/ApiKeysSub";
 import GenerateApiKey from "./IntegrationSubComponents.js/Forms/GenerateApiKey";
-import StreamDestination from "./IntegrationSubComponents.js/StreamDestinations/StreamDestination";
+import styled from "styled-components";
+
+const SectionHeading = styled.div`
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #555555;
+  font-family: "Ubuntu";
+`;
+
+const SwitchTab = styled.div`
+  font-weight: 500;
+  font-size: 0.95rem;
+  font-family: "Ubuntu";
+  color: ${(props) => (props && props.active ? "#272727" : "#575757")};
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  border-bottom: ${(props) =>
+    props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
+  width: fit-content;
+
+  &:hover {
+    color: #272727;
+    cursor: pointer;
+  }
+`;
 
 const Integrations = () => {
   const [alignment, setAlignment] = React.useState("integrations");
@@ -32,10 +55,10 @@ const Integrations = () => {
           {(() => {
             switch (alignment) {
               case "integrations":
-                return <div className="sec-heading-text">Integrations</div>;
+                return <SectionHeading >Integrations</SectionHeading>;
 
               case "apikeys":
-                return <div className="sec-heading-text">Api keys</div>;
+                return <SectionHeading >Api keys</SectionHeading>;
 
               default:
                 break;
@@ -45,20 +68,16 @@ const Integrations = () => {
             {(() => {
               switch (alignment) {
                 case "integrations":
-                  return <div className="d-flex flex-row align-items-center">
-                    <button
-                     
-                      className="btn btn-outline-dark btn-outline-text me-3"
-                    >
-                      Build with Bluemeet
-                    </button>
-                    <button
-                     
-                      className="btn btn-dark btn-outline-text"
-                    >
-                      Request integration
-                    </button>
-                  </div> ;
+                  return (
+                    <div className="d-flex flex-row align-items-center">
+                      <button className="btn btn-outline-dark btn-outline-text me-3">
+                        Build with Bluemeet
+                      </button>
+                      <button className="btn btn-dark btn-outline-text">
+                        Request integration
+                      </button>
+                    </div>
+                  );
 
                 case "apikeys":
                   return (
@@ -78,7 +97,7 @@ const Integrations = () => {
             })()}
           </div>
         </div>
-        <div className="px-4 py-4">
+        {/* <div className="px-4 py-4">
           <ToggleButtonGroup
             color="primary"
             value={alignment}
@@ -89,6 +108,33 @@ const Integrations = () => {
 
             <ToggleButton value="apikeys">API Keys</ToggleButton>
           </ToggleButtonGroup>
+        </div> */}
+
+        <div className="px-4 py-4">
+          <div
+            className="d-flex flex-row align-items-center "
+            style={{ borderBottom: "1px solid #D1D1D1" }}
+          >
+            <SwitchTab
+              active={alignment === "integrations" ? true : false}
+              onClick={() => {
+                setAlignment("integrations");
+              }}
+              className="me-4"
+            >
+              Integrations
+            </SwitchTab>
+
+            <SwitchTab
+              active={alignment === "apikeys" ? true : false}
+              className=" me-5"
+              onClick={() => {
+                setAlignment("apikeys");
+              }}
+            >
+              API keys
+            </SwitchTab>
+          </div>
         </div>
 
         {(() => {
@@ -96,11 +142,8 @@ const Integrations = () => {
             case "integrations":
               return <IntegrationsSub />;
 
-
             case "apikeys":
               return <ApiKeysSub />;
-
-            
 
             default:
               break;

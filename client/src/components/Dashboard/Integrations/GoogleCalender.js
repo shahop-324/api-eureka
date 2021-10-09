@@ -48,7 +48,10 @@ const GooglCalender = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Google Calender</div>
+            <div className="integration-name mb-2">
+          <span className="me-3">    Google Calender</span>
+          <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+              </div>
             <div className="integration-short-description">
               Create events in google calender whenever you create an event.
             </div>

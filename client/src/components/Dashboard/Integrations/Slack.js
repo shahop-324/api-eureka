@@ -54,7 +54,9 @@ const Slack = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-3"><span className="me-3">Slack </span> </div>
+            <div className="integration-name mb-3"><span className="me-3">Slack </span>
+            <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+             </div>
             <div className="integration-short-description">
               Add your event registrants as slack subscribers.
             </div>

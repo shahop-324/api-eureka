@@ -63,160 +63,58 @@ const communitySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    planDetails: {
-      planName: {
-        type: String,
-        enum: ["Free", "Starter", "Growth", "Business"],
-        default: "Free",
-      },
-      planRenewDuration: {
-        type: Number,
-        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      },
-      currentPlanExpiresOn: {
-        type: Date,
-      },
-      features: {
-        eventManagement: {
-          ticketing: {
-            type: Boolean,
-          },
-          registartionPage: {
-            type: Boolean,
-          },
-          queries: {
-            type: Boolean,
-          },
-          reviews: {
-            type: Boolean,
-          },
-          email: {
-            type: Boolean,
-          },
-          coupon: {
-            type: Boolean,
-          },
-        },
-        eventExperience: {
-          reception: {
-            type: Boolean,
-          },
-          messaging: {
-            type: Boolean,
-          },
-          connection: {
-            type: Boolean,
-          },
-          networking: {
-            type: Boolean,
-          },
-          customNetworking: {
-            type: Boolean,
-          },
-          multiSession: {
-            type: Boolean,
-          },
-          multiTrack: {
-            type: Boolean,
-          },
-          moderation: {
-            type: Boolean,
-          },
-          liveStreaming: {
-            type: Boolean,
-          },
-          RTMP: {
-            type: Boolean,
-          },
-          twitterAndInstaWall: {
-            type: Boolean,
-          },
-          photoBooth: {
-            type: Boolean,
-          },
-          leaderShipBoard: {
-            type: Boolean,
-          },
-          sponsorShoutout: {
-            type: Boolean,
-          },
-        },
-        customization: {
-          email: {
-            type: Boolean,
-          },
-          registrationForm: {
-            type: Boolean,
-          },
-          stageBranding: {
-            type: Boolean,
-          },
-        },
-        analytics: {
-          basic: {
-            type: Boolean,
-          },
-          advanced: {
-            type: Boolean,
-          },
-          realTimeAnalytics: {
-            type: Boolean,
-          },
-        },
-        integrations: {
-          zapier: {
-            type: Boolean,
-          },
-          miro: {
-            type: Boolean,
-          },
-          limnu: {
-            type: Boolean,
-          },
-          mailchimp: {
-            type: Boolean,
-          },
-          socialMedia: {
-            type: Boolean,
-          },
-          CRM: {
-            type: Boolean,
-          },
-        },
-        services: {
-          emailAndChatSupport: {
-            type: Boolean,
-          },
-          uptimeSLA: {
-            type: Boolean,
-          },
-          onboardingAndTraining: {
-            type: Boolean,
-          },
-        },
-        moreDetails: {
-          eventLength: {
-            type: Number,
-          },
-          registrationsPerMonth: {
-            type: Number,
-          },
-          speakersPerEvent: {
-            type: Number,
-          },
-          maxTeamMembers: {
-            type: Number,
-          },
-          ticketingCommission: {
-            type: Number,
-          },
-          pricePerAdditionalRegistration: {
-            type: Number,
-          },
-        },
-      },
+    // ! /////////////////////////////////////////////////////////////////////////
+    allowedRegistrationLimit: {
+      type: Number,
+      default: 10,
     },
+    registrationsReceived: {
+      type: Number, // This will be resetted to 0 at the end of every billing cycle.
+      default: 0,
+    },
+    cloudStorageLimit: {
+      type: Number, // In GB
+    },
+    storageLimitUtilised: {
+      type: Number,
+    },
+    emailLimit: {
+      type: Number, // Limit on emails that can be sent
+    },
+    emailLimitUsed: {
+      type: Number,
+    },
+    streamingHoursLimit: {
+      type: Number, // Limit on streaming hours
+    },
+    streamingHoursUsed: {
+      type: Number,
+    },
+    organisersLimit: {
+      type: Number, // Limit on number of organisers in team
+    },
+    organisersLimitUsed: {
+      type: Number,
+    },
+    planName: {
+      type: String,
+      default: "Free",
+    },
+    isUsingFreePlan: {
+      type: Boolean,
+      default: true,
+    },
+
+    planTransactions: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "CommunityTransaction",
+      },
+    ],
+    planExpiresAt: {
+      type: Date,
+    },
+    // ! ////////////////////////////////////////////////////////////////
     coupons: [
       {
         type: mongoose.Schema.ObjectId,

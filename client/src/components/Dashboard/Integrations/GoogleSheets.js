@@ -52,7 +52,10 @@ const GoogleSheets = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Google Sheets</div>
+            <div className="integration-name mb-2">
+             <span className="me-3"> Google Sheets </span>
+             <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+              </div>
             <div className="integration-short-description">
               Sync your attendee, speakers, booths, sponsors, leads and interested people directly with google sheets.
             </div>

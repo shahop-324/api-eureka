@@ -15,11 +15,10 @@
   grid-gap: 24px;
   align-items: center;
   background-color: #ffffff;
-
 }
 
 .event-name-head-text {
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-weight: 600;
   font-size: 1.1rem;
   color: #212121;
@@ -49,7 +48,7 @@ $bg-color-light-sea: #eef3f6;
 
 $color-icon: #231f20;
 
-$font-family: 'Ubuntu';
+$font-family: "Ubuntu";
 
 // SideNav Styling
 //===========================================================================================//
@@ -111,7 +110,7 @@ $font-family: 'Ubuntu';
 }
 
 .button-text-dashboard-sidenav {
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -219,13 +218,13 @@ $font-family: 'Ubuntu';
 
 .plan-limit-indicator-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 24px;
 
   .registrations-in-period,
   .streaming-hours {
     padding-top: 3%;
-    background: #5a75f8;
+    background: #f2f4fb;
     border-radius: 20px;
     height: 150px;
   }
@@ -377,32 +376,32 @@ $font-family: 'Ubuntu';
   line-height: 1.4rem;
   /* identical to box height */
 
-  color: $color-white;
+  color: #538bf7;
 }
 
 .consumed-value {
-  font-family: Inter;
+  font-family: "Ubuntu";
   font-style: normal;
-  font-weight: 600;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 22px;
   line-height: 32px;
   letter-spacing: 0.5px;
   /* identical to box height, or 133% */
-  color: #ffffff;
+  color: #416ed8;
   display: flex;
 }
 
 .limit-value-small-text {
   font-family: $font-family;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 15px;
   line-height: 16px;
   letter-spacing: 0.4px;
   /* identical to box height, or 114% */
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: #494949;
   mix-blend-mode: normal;
   opacity: 0.7;
 }
@@ -416,7 +415,7 @@ $font-family: 'Ubuntu';
   /* identical to box height, or 114% */
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: #1f1f1f;
   mix-blend-mode: normal;
   opacity: 0.7;
   margin-top: 4%;
@@ -580,7 +579,7 @@ $font-family: 'Ubuntu';
   height: 592px;
 }
 
-@media only screen and (max-width: '1480px') {
+@media only screen and (max-width: "1480px") {
   .overview-content-grid {
     grid-template-columns: 1fr;
   }
@@ -609,18 +608,18 @@ $font-family: 'Ubuntu';
     margin-top: 0 !important;
   }
 }
-@media only screen and (min-width: '1480px') {
+@media only screen and (min-width: "1480px") {
   .team-overview-and-top-events-row-container {
     display: none;
     margin-top: 0 !important;
   }
 }
-@media only screen and (min-width: '1380px') {
+@media only screen and (min-width: "1380px") {
   .dash-root-menu {
     display: none;
   }
 }
-@media only screen and (max-width: '1380px') {
+@media only screen and (max-width: "1380px") {
   .dashboard-body {
     grid-template-columns: 1fr;
   }
@@ -639,14 +638,15 @@ $font-family: 'Ubuntu';
   }
 }
 
-@media only screen and (min-width: '1441px') {
+@media only screen and (min-width: "1441px") {
   .publish-btn-lg {
     display: inline-block;
   }
   .publish-btn-sm {
     display: none;
   }
-  .lg-side-nav, .side-nav-wrapper {
+  .lg-side-nav,
+  .side-nav-wrapper {
     display: inline-block;
   }
   .lean-side-nav {
@@ -662,7 +662,7 @@ $font-family: 'Ubuntu';
   }
 }
 
-@media only screen and (max-width: '1440px') {
+@media only screen and (max-width: "1440px") {
   .publish-btn-lg {
     display: none;
   }
@@ -672,7 +672,8 @@ $font-family: 'Ubuntu';
   .dashboard-body {
     grid-template-columns: 0.7fr 10fr;
   }
-  .lg-side-nav, .side-nav-wrapper {
+  .lg-side-nav,
+  .side-nav-wrapper {
     display: none;
   }
   .lean-side-nav {

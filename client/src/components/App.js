@@ -538,7 +538,7 @@ class App extends React.Component {
               )}
               {isSignedIn && (
                 <Route
-                  path="/user/:userId/community/snap/:id"
+                  path="/user/:userId/community/addons-and-plan/:id"
                   exact
                   component={DashboardRoot}
                 />

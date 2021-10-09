@@ -52,12 +52,13 @@ const Twitter = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Twitter</div>
+            <div className="integration-name mb-2"><span className="me-3">Twitter</span> 
+            <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+            </div>
             <div className="integration-short-description">
               Boost engagement in your event with twitter walls.
             </div>
           </div>
-
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
           <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
           <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />

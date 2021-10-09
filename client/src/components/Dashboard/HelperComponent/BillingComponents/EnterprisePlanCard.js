@@ -171,61 +171,25 @@ const EnterprisePlanCard = (props) => {
         <div className="my-4">
           <Divider />
         </div>
-        <div className="plan-features-offered-list">
+        <div className="plan-features-offered-list" style={{height: "773px"}}>
+        <div
+            className="plan-feature-text mb-4"
+            style={{ fontWeight: "600", fontSize: "0.9rem" }}
+          >
+            Everything in Growth, and
+          </div>
           <div className="d-flex flex-row align-items-center mb-2">
             <div className="me-3">
               <CheckRoundedIcon style={{ fontSize: "18" }} />
             </div>
-            <div className="plan-feature-text">2 organizer included</div>
+            <div className="plan-feature-text">15 organizer included</div>
           </div>
           <div className="d-flex flex-row align-items-center mb-2">
             <div className="me-3">
               <CheckRoundedIcon style={{ fontSize: "18" }} />
             </div>
             <div className="plan-feature-text">
-              12000 registrations included per year
-            </div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">
-              Full access to Evenz Event Platform
-            </div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">72 hours of streaming</div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">Livestream and custom RTMP </div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">
-              Email customisation and branding
-            </div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">Live polls and Q&A </div>
-          </div>
-          <div className="d-flex flex-row align-items-center mb-2">
-            <div className="me-3">
-              <CheckRoundedIcon style={{ fontSize: "18" }} />
-            </div>
-            <div className="plan-feature-text">
-              SEO-optimized event registration pages{" "}
+             Upto 100k registrations included
             </div>
           </div>
           <div className="d-flex flex-row align-items-center mb-2">
@@ -233,20 +197,99 @@ const EnterprisePlanCard = (props) => {
               <CheckRoundedIcon style={{ fontSize: "18" }} />
             </div>
             <div className="plan-feature-text">
-              Ticketing and payment processing{" "}
+             Upto 1 Million Email credits / month
             </div>
           </div>
           <div className="d-flex flex-row align-items-center mb-2">
             <div className="me-3">
               <CheckRoundedIcon style={{ fontSize: "18" }} />
             </div>
-            <div className="plan-feature-text">Event Analytics Dashboard</div>
+            <div className="plan-feature-text">
+             Advanced promotinal and marketing tools
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">
+              Full access to Bluemeet Platform (Reception, Live stage, Networking and
+              Social lounge, Booths, Sponsors, Photobooth.)
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">Customisable hours of streaming</div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">Reception customisation</div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">
+              Hybrid ready
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">Sponsor showcase and shoutouts</div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">
+              Advanced gamification{" "}
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">
+              SSO and advanced security options{" "}
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">
+              Advanced networking capabilities{" "}
+            </div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">Unlimited session duration</div>
           </div>
           <div className="d-flex flex-row align-items-center mb-2">
             <div className="me-3">
               <CheckRoundedIcon style={{ fontSize: "18" }} />
             </div>
             <div className="plan-feature-text">Unlimited Events</div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-3">
+              <CheckRoundedIcon style={{ fontSize: "18" }} />
+            </div>
+            <div className="plan-feature-text">24*7 one-on-one support</div>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-2">
+            <div className="me-4">
+              {/* <CheckRoundedIcon style={{ fontSize: "18" }} /> */}
+            </div>
+            <div className="plan-feature-text px-2">& much more...</div>
           </div>
         </div>
         <button
@@ -255,7 +298,7 @@ const EnterprisePlanCard = (props) => {
             setOpenDrawer(true);
           }}
           className="btn btn-primary btn-outline-text mt-3"
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginTop: "80px" }}
         >
           Schedule a demo
         </button>

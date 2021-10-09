@@ -7,10 +7,10 @@ import { useTheme } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TwitterIcon from "@mui/icons-material/Twitter";
 import LanguageIcon from "@mui/icons-material/Language";
 import RTMPDestination from "./StreamDestinations.js/RTMPDestination";
+import Chip from "@mui/material/Chip";
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
@@ -32,6 +32,7 @@ const StreamDestinationButton = styled.div`
   font-size: 0.85rem;
   border-radius: 10px;
   padding: 20px;
+  text-decoration: none !important;
 
   &:hover {
     cursor: pointer;
@@ -82,30 +83,43 @@ const AddStreamDestinationOptions = ({ open, handleClose }) => {
               onClick={() => {
                 handleClose();
                 handleOpenRTMP();
-                
               }}
             >
               <LanguageIcon style={{ color: "#4F5BC5" }} className="me-3" />
               <span>Custom RTMP</span>
             </StreamDestinationButton>
-            <a href={`${BaseURL}/auth/facebook-live`}>
+            {/* <a href={`${BaseURL}/auth/facebook-live`}> */}
             <StreamDestinationButton className="mb-3">
-              <FacebookIcon style={{ color: "#4267B2" }} className="me-3" />
+              <div className="d-flex flex-row align-items-center justify-content-between">
+                <div>
+                  <FacebookIcon style={{ color: "#4267B2" }} className="me-3" />
+                  <span style={{ textDecoration: "none" }}>Facebook Live</span>
+                </div>
+                <Chip
+                  label="coming this week"
+                  color="primary"
+                  style={{ textDecoration: "none !important" }}
+                />
+              </div>
+            </StreamDestinationButton>
+            {/* </a> */}
+            <StreamDestinationButton className="mb-3">
+             
+             
 
-              <span>Facebook Live</span>
-            </StreamDestinationButton>
-            </a>
-            <StreamDestinationButton className="mb-3">
-              <YouTubeIcon style={{ color: "#FF0000" }} className="me-3" />
-              <span>Youtube Live</span>
-            </StreamDestinationButton>
-            <StreamDestinationButton className="mb-3">
-              <LinkedInIcon style={{ color: "#0e76a8" }} className="me-3" />
-              <span>Linkedin Live</span>
-            </StreamDestinationButton>
-            <StreamDestinationButton className="mb-3">
-              <TwitterIcon style={{ color: "#1DA1F2" }} className="me-3" />
-              <span>Twitter Live</span>
+
+              <div className="d-flex flex-row align-items-center justify-content-between">
+                <div>
+                <YouTubeIcon style={{ color: "#FF0000" }} className="me-3" />
+                  <span style={{ textDecoration: "none" }}>Youtube Live</span>
+                </div>
+                <Chip
+                  label="coming next week"
+                  color="warning"
+                  style={{ textDecoration: "none !important" }}
+                />
+              </div>
+
             </StreamDestinationButton>
           </Paper>
         </div>

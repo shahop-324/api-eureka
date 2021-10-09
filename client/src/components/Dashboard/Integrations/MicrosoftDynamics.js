@@ -52,7 +52,10 @@ const MicrosoftDynamics = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Microsoft Dynamics</div>
+            <div className="integration-name mb-2">
+           <span className="me-3">   Microsoft Dynamics </span>
+              <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+              </div>
             <div className="integration-short-description">
               Add your Bluemeet registrants as contacts in Microsoft Dynamics 365 CRM.
             </div>

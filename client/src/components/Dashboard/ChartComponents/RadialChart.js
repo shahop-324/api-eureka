@@ -37,7 +37,7 @@ class RadialChart extends React.Component {
                 }
               },
               track: {
-                background: '#BDE4F92A',
+                background: '#EBEBEB',
                 strokeWidth: '70%',
                 margin: 0, // margin is in pixels
                 dropShadow: {
@@ -54,7 +54,7 @@ class RadialChart extends React.Component {
                 name: {
                   offsetY: -10,
                   show: true,
-                  color: '#888',
+                  color: '#BBBBBB',
                   fontSize: '17px'
                 },
                 value: {
@@ -69,7 +69,7 @@ class RadialChart extends React.Component {
             }
           },
           fill: {
-            colors: ['#FFFFFF'],
+            colors: ['#A0B9EB'],
           },
           stroke: {
             lineCap: 'round'

@@ -2,7 +2,6 @@ import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
-
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,24 +9,18 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
-
 import SettingsEthernetRoundedIcon from "@material-ui/icons/SettingsEthernetRounded";
 import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import FeedbackOutlinedIcon from "@material-ui/icons/FeedbackOutlined";
 import { useDispatch } from "react-redux";
 import { createCommunityFeedback } from "./../../../actions";
-
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
-
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
-
-import CameraEnhanceRoundedIcon from '@mui/icons-material/CameraEnhanceRounded'; // Snap
-import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
+import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -40,7 +33,7 @@ const SideNav = ({
   handleTeamClick,
   handleVideoLibraryClick,
   handleIntegrationsClick,
-  handleSnapClick,
+  handleAddOnsAndPlanClick,
   handleTrackingClick,
   handleBillingClick,
 }) => {
@@ -209,9 +202,9 @@ const SideNav = ({
           </div>
         </div>
 
-        {/* <div
+        <div
           onClick={() => {
-            handleSnapClick();
+            handleAddOnsAndPlanClick();
           }}
           className={
             `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
@@ -224,7 +217,7 @@ const SideNav = ({
               (activeIndex === "5" ? "btn-icon-active-d" : " ")
             }
           >
-            <CameraEnhanceRoundedIcon style={{ fontSize: 26 }} />
+            <ShoppingBasketRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div
             className={
@@ -232,11 +225,11 @@ const SideNav = ({
               (activeIndex === "5" ? "btn-text-active-d" : " ")
             }
           >
-            Snap
+            Add ons & plan
           </div>
-        </div> */}
+        </div>
 
-        <div
+        {/* <div
           onClick={() => {
             handleTrackingClick();
           }}
@@ -261,7 +254,7 @@ const SideNav = ({
           >
            Tracking
           </div>
-        </div>
+        </div> */}
         <div
           onClick={() => {
             handleBillingClick();

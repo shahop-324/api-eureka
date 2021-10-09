@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const UUID = require("uuid/v4");
 const catchAsync = require("../../utils/catchAsync");
 
+const CommunityTransaction = require("./../../models/communityTransactionModel");
 const hubspot = require("@hubspot/api-client");
 const axios = require("axios");
 const Ticket = require("../../models/ticketModel");
@@ -29,101 +30,102 @@ const razorpay = new Razorpay({
   key_secret: "TFitnOVh9eOIFK3qdZsfCLfQ",
 });
 
-exports.createRazorpayOrder = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const eventId = req.body.eventId;
-  const ticketId = req.body.ticketId;
-  const couponId = req.body.couponId;
+exports.createAddOnOrder = catchAsync(async (req, res, next) => {
+  const addOnName = req.body.addonName;
+  const numOfRegistrations = req.body.numOfRegistrations;
+  const numOfOrganiserSeats = req.body.numOfOrganiserSeats;
+  const cloudStorage = req.body.cloudStorage;
+  const emailCredits = req.body.emailCredits;
+  const streamingHours = req.body.streamingHours;
+  const price = req.body.price;
   const communityId = req.body.communityId;
+  const userId = req.body.userId;
 
-  const EventDoc = await Event.findById(eventId);
-  const ticketBeingUsed = await Ticket.findById(ticketId);
-  let originalTicketPrice = ticketBeingUsed.price * 1;
-  let discountToBeApplied = 0;
-  let amountToBeCharged;
+  console.log(price);
 
-  if (couponId) {
-    const couponToBeApplied = await Coupon.findById(couponId);
-
-    discountToBeApplied = couponToBeApplied
-      ? couponToBeApplied.discountPercentage * 1
-      : 0;
-  }
-
-  amountToBeCharged =
-    originalTicketPrice - (originalTicketPrice / 100) * discountToBeApplied; // in INR (in paise not Rupee)
+  let priceToBeCharged = Math.ceil(price * 100 * 1.03);
 
   const newOrder = razorpay.orders.create(
     {
-      amount: amountToBeCharged * 100,
-      currency: "INR",
+      amount: priceToBeCharged,
+      currency: "USD",
       receipt: UUID(),
       notes: {
         userId: userId,
-        ticketId: ticketId,
-        eventId: eventId,
-        couponId: couponId,
+        addOnName: addOnName,
         communityId: communityId,
-        registrationType: "Pre Event Sale",
+        price: price,
+        numOfRegistrations: numOfRegistrations,
+        cloudStorage: cloudStorage,
+        emailCredits: emailCredits,
+        streamingHours: streamingHours,
+        numOfOrganiserSeats: numOfOrganiserSeats,
+        transactionType: "addon",
       },
     },
-    async (err, order) => {
-      const newEventOrder = await EventOrder.create({
-        eventOrderEntity: order,
-        order_id: order.id,
-        created_by: userId,
-        created_for_event: eventId,
-        created_for_community: communityId,
-        created_for_ticket: ticketId,
-        created_at: Date.now(),
-      });
-
-      res.status(200).json({
-        status: "success",
-        data: order,
-      });
+    async (error, order) => {
+      if (error) {
+        console.log(error);
+        res.status(400).json({
+          status: "error",
+        });
+      } else {
+        res.status(200).json({
+          status: "success",
+          data: order,
+        });
+      }
     }
   );
+
+  // addonName: "Registrations",
+  //       numOfRegistrations: value,
+  //       price: value * 1,
+  //       communityId: communityDetails._id,
+  //       userId: userDetails._id,
 });
 
 exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
-  const planDetails = req.body.planDetails;
   const planName = req.body.planName;
-
+  const price = req.body.price;
+  const registrations = req.body.registrations;
+  const duration = req.body.duration;
   const communityId = req.body.communityId;
-
   const userId = req.body.userId;
 
-  let priceToBeCharged = 0;
+  let priceToBeCharged = Math.ceil(price * 100 * 1.03);
 
-  if (planName === "Basic") {
-    priceToBeCharged = 0;
-  } else if (planName === "Starter") {
-    priceToBeCharged = 0.51 * 100 * 1; // In Cents
-  } else if (planName === "Professional") {
-    priceToBeCharged = 39 * 75 * 100 * 1; // In INR (paise)
+  if (duration === "yearly") {
+    priceToBeCharged = priceToBeCharged;
   }
 
   const newOrder = razorpay.orders.create(
     {
-      amount: priceToBeCharged * 1,
-      currency: "USD",
+      amount: 100,
+      currency: "INR",
       receipt: UUID(),
       notes: {
         userId: userId,
         planName: planName,
         communityId: communityId,
+        price: price,
+        duration: duration,
+        registrations: registrations,
         transactionType: "community plan purchase",
       },
     },
-    async (err, order) => {
-      if (err) {
+    async (error, order) => {
+      if (error) {
+        console.log(error);
+        res.status(400).json({
+          status: "error",
+        });
+      } else {
+        res.status(200).json({
+          status: "success",
+          data: order,
+        });
       }
-
-      res.status(200).json({
-        status: "success",
-        data: order,
-      });
     }
   );
 });
@@ -138,328 +140,41 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
   const digest = shasum.digest("hex");
 
   if (digest === req.headers["x-razorpay-signature"]) {
-    // console.log("Request is legit");
+    // This is a legit community plan purchase so process it.
+    console.log(req.body.payload.payment.entity);
 
-    // console.log("referral", paymentEntity.notes.referral);
-    // console.log("transaction_type", paymentEntity.notes.transaction_type);
-    // console.log("userId", paymentEntity.notes.userId);
-    // console.log("ticketId", paymentEntity.notes.ticketId);
-    // console.log("eventId", paymentEntity.notes.eventId);
-    // console.log("couponId", paymentEntity.notes.couponId);
-    // console.log("communityId", paymentEntity.notes.communityId);
-    // console.log("razorpayFee", paymentEntity.fee);
-    // console.log("GST", paymentEntity.tax);
-    // console.log("Created By Mail", paymentEntity.email);
-    // console.log("Created By Contact", paymentEntity.contact);
-    // console.log("Amount Charged", paymentEntity.amount);
-    // console.log("Currency", paymentEntity.currency);
-    // console.log("Order Id", paymentEntity.order_id);
-    // console.log("Razorpay Pay Id", paymentEntity.id); // this is razorpay pay_id
-    // console.log("Transaction Status", paymentEntity.status);
-    // console.log("Transaction Description", paymentEntity.description);
-    // console.log("Transaction Created At", paymentEntity.created_at);
-    // console.log("Plan Name", paymentEntity.notes.planName);
+    try {
+      // Take that community and activate thier plan and tell them when their plan will end and how many registrations they can have.
+      const registrations = paymentEntity.notes.registrations;
+      const communityId = paymentEntity.notes.communityId;
+      const userId = paymentEntity.notes.userId;
+      const price = paymentEntity.amount;
+      const currency = paymentEntity.currency;
+      const planName = paymentEntity.notes.planName;
+      const timestamp = paymentEntity.created_at;
+      const transactionId = paymentEntity.id;
 
-    if (paymentEntity.notes.transaction_type === "community_plan") {
-      try {
-        let referrer;
+      const userDoc = await User.findById(userId);
 
-        if (paymentEntity.notes.referral) {
-          referrer = await User.findOneAndUpdate(
-            { referralCode: paymentEntity.notes.referral },
+      const newCommunityTransaction = await CommunityTransaction.create({
+        planName: planName,
+        purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+        price: (price * 1) / 100,
+        currency: currency,
+        date: timestamp,
+        transactionId: transactionId,
+      });
 
-            { $inc: { upgrades: 1, credit: 5 } },
+      const communityDoc = await Community.findById(communityId);
+      communityDoc.planName = planName;
+      communityDoc.planExpiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
+      communityDoc.allowedRegistrationLimit = registrations * 1;
+      communityDoc.isUsingFreePlan = false;
+      communityDoc.planTransactions.push(newCommunityTransaction._id);
 
-            {
-              new: true,
-              validateModifiedOnly: true,
-            }
-          );
-
-          await User.findByIdAndUpdate(
-            paymentEntity.notes.userId,
-            { $inc: { credit: 5, hasUsedAnyReferral: 1 } },
-            {
-              new: true,
-              validateModifiedOnly: true,
-            }
-          );
-
-          // Assign plan to community
-          await Community.findByIdAndUpdate(
-            communityId,
-            { planName: paymentEntity.notes.planName },
-            {
-              new: true,
-              validateModifiedOnly: true,
-            }
-          );
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    } else if (paymentEntity.notes.transaction_type === "event_registration") {
-      let communityCredit = paymentEntity.amount * 0.95; // TODO Charge Based on Plan Here
-
-      try {
-        // 1.) Created a New Event Transaction Doc and saved its reference in user, event and community documents.
-
-        const newlyCreatedEventTransaction = await EventTransaction.create({
-          transactionEntity: paymentEntity,
-          amount_charged: paymentEntity.amount,
-          currency: paymentEntity.currency,
-          order_id: paymentEntity.order_id,
-          transaction_id: paymentEntity.id,
-          created_by_email: paymentEntity.email,
-          created_by_phone: paymentEntity.contact,
-          status: paymentEntity.status,
-          created_at: Date.now(),
-        });
-
-        const communityGettingEventTransaction = await Community.findById(
-          paymentEntity.notes.communityId
-        );
-
-        const userDoingEventTransaction = await User.findById(
-          paymentEntity.notes.userId
-        );
-
-        const eventGettingEventTransaction = await Event.findById(
-          paymentEntity.notes.eventId
-        );
-
-        const ticketBeingPurchased = await Ticket.findById(
-          paymentEntity.notes.ticketId
-        );
-
-        userDoingEventTransaction.eventTransactionIds.push(
-          newlyCreatedEventTransaction._id
-        );
-        eventGettingEventTransaction.eventTransactionIds.push(
-          newlyCreatedEventTransaction._id
-        );
-
-        const eventTransactionIdsDoc =
-          await EventTransactionIdsCommunityWise.findById(
-            communityGettingEventTransaction.eventTransactionDocIdCommunityWise
-          );
-
-        eventTransactionIdsDoc.eventTransactionIds.push(
-          newlyCreatedEventTransaction._id
-        );
-
-        await eventTransactionIdsDoc.save({ validateModifiedOnly: true });
-
-        // 2.) Create a Invoice / Registration Doc
-
-        const newlyCreatedRegistration = await Registration.create({
-          registrationType: "Pre Event Sale",
-          eventName: eventGettingEventTransaction.eventName,
-          userName: `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-          userImage: userDoingEventTransaction.image,
-          userEmail: userDoingEventTransaction.email,
-          created_by_contact: paymentEntity.contact,
-          ticketType: ticketBeingPurchased.name,
-          paymentProcesserFee: paymentEntity.fee,
-          paymentTax: paymentEntity.tax,
-          eventTransactionId: newlyCreatedEventTransaction._id,
-          ticketId: paymentEntity.notes.ticketId._id,
-          totalAmountPaid: paymentEntity.amount,
-          currency: paymentEntity.currency,
-          orderId: paymentEntity.order_id,
-          razorpayPayId: paymentEntity.id,
-          paymentStatus: paymentEntity.status,
-          paymentDescription: paymentEntity.description,
-          bookedByUser: paymentEntity.notes.userId,
-          bookedForEventId: paymentEntity.notes.eventId,
-          eventByCommunityId: paymentEntity.notes.communityId,
-          appliedCouponId: paymentEntity.notes.couponId
-            ? paymentEntity.notes.couponId
-            : "No Coupon Id Found",
-          createdAt: Date.now(),
-          accessibleVenueAreas: ticketBeingPurchased.venueAreasAccessible,
-          recordingWillBeShared: ticketBeingPurchased.shareRecording,
-        });
-
-        // 3.) Update corresponding user document
-
-        userDoingEventTransaction.registeredInEvents.push(
-          paymentEntity.notes.eventId
-        );
-        userDoingEventTransaction.registrations.push(
-          newlyCreatedRegistration._id
-        );
-
-        // 4.) Update Corresponding Event document
-        eventGettingEventTransaction.registrations.push(
-          newlyCreatedRegistration._id
-        );
-        eventGettingEventTransaction.registrationsRecieved =
-          eventGettingEventTransaction.registrationsRecieved + 1;
-
-        // 5.) Update Corresponding Community document
-        const communityRegistrationIdsDoc =
-          await RegistrationsIdsCommunityWise.findById(
-            communityGettingEventTransaction.registrationsDocIdCommunityWise
-          );
-        communityRegistrationIdsDoc.registrationsId.push(
-          newlyCreatedRegistration._id
-        );
-
-        await communityRegistrationIdsDoc.save({ validateModifiedOnly: true });
-
-        communityGettingEventTransaction.analytics.totalRegistrations =
-          communityGettingEventTransaction.analytics.totalRegistrations + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsPreviousMonth =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsPreviousMonth + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsThisMonth =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsThisMonth + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsPreviousDay =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsPreviousDay + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsThisDay =
-          communityGettingEventTransaction.analytics.totalRegistrationsThisDay +
-          1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsPreviousYear =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsPreviousYear + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsThisYear =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsThisYear + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsPreviousWeek =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsPreviousWeek + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsThisWeek =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsThisWeek + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsYesterday =
-          communityGettingEventTransaction.analytics
-            .totalRegistrationsYesterday + 1;
-
-        communityGettingEventTransaction.analytics.totalRegistrationsToday =
-          communityGettingEventTransaction.analytics.totalRegistrationsToday +
-          1;
-
-        communityGettingEventTransaction.analytics.totalRevenue =
-          communityGettingEventTransaction.analytics.totalRevenue +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenuePreviousMonth =
-          communityGettingEventTransaction.analytics.revenuePreviousMonth +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueThisMonth =
-          communityGettingEventTransaction.analytics.revenueThisMonth +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenuePreviousDay =
-          communityGettingEventTransaction.analytics.revenuePreviousDay +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueThisDay =
-          communityGettingEventTransaction.analytics.revenueThisDay +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenuePreviousYear =
-          communityGettingEventTransaction.analytics.revenuePreviousYear +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueThisYear =
-          communityGettingEventTransaction.analytics.revenueThisYear +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenuePreviousWeek =
-          communityGettingEventTransaction.analytics.revenuePreviousWeek +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueThisWeek =
-          communityGettingEventTransaction.analytics.revenueThisWeek +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueYesterday =
-          communityGettingEventTransaction.analytics.revenueYesterday +
-          communityCredit;
-
-        communityGettingEventTransaction.analytics.revenueToday =
-          communityGettingEventTransaction.analytics.revenueToday +
-          communityCredit;
-
-        // 6.) Update Corresponding Ticket document
-
-        ticketBeingPurchased.numberOfTicketSold =
-          ticketBeingPurchased.numberOfTicketSold + 1;
-
-        ticketBeingPurchased.ticketIsSoldOut =
-          ticketBeingPurchased.numberOfTicketSold ===
-          ticketBeingPurchased.numberOfTicketAvailable
-            ? true
-            : false;
-
-        // 7.) update Corresponding Coupon document (if applicable)
-        if (paymentEntity.notes.couponId) {
-          const coupondDocBeingUsed = await Coupon.findById(
-            paymentEntity.notes.couponId
-          );
-
-          coupondDocBeingUsed.numOfCouponsUsed =
-            coupondDocBeingUsed.numOfCouponsUsed + 1;
-
-          coupondDocBeingUsed.status =
-            coupondDocBeingUsed.maxNumOfDiscountPermitted ===
-            coupondDocBeingUsed.numOfCouponsUsed
-              ? "Inactive"
-              : "Active";
-
-          await coupondDocBeingUsed.save({ validateModifiedOnly: true });
-        }
-
-        // 8. ) Save all Modified documents to the database
-
-        await communityGettingEventTransaction.save({
-          validateModifiedOnly: true,
-        });
-
-        await userDoingEventTransaction.save({ validateModifiedOnly: true });
-        await eventGettingEventTransaction.save({ validateModifiedOnly: true });
-        await ticketBeingPurchased.save({ validateModifiedOnly: true });
-
-        // DONE VVIP Adding revenue in community account
-
-        const msg = {
-          to: userEmail, // Change to your recipient
-          from: "shreyanshshah242@gmail.com", // Change to your verified sender
-          subject: "Your Event Registration Confirmation.",
-          text: "You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! ",
-          html: EventRegistrationTemplate(
-            userName,
-            eventName,
-            ticketType,
-            amount
-          ),
-        };
-
-        sgMail
-          .send(msg)
-          .then(() => {
-            console.log("Event Registraion email sent to user");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } catch (err) {
-        console.log(err);
-      }
+      await communityDoc.save({ new: true, validateModifiedOnly: true });
+    } catch (error) {
+      console.log(error);
     }
   } else {
     // pass it

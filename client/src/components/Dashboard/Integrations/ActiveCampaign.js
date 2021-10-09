@@ -49,7 +49,10 @@ const ActiveCampaign = () => {
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Active Campaign</div>
+            <div className="integration-name mb-2">
+             <span className="me-3"> Active Campaign </span>
+              <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
+              </div>
             <div className="integration-short-description">
               Sync attendee, leads and interested people to active campaign 
             </div>

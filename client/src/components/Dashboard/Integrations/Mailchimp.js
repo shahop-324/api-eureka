@@ -61,16 +61,16 @@ const Mailchimp = () => {
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
           <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
           <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
-          {/* <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button> */}
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
           {/* <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button> */}
-            <button
+            {/* <button
               onClick={() => {
                 handleOpen();
               }}
               className="btn btn-outline-primary btn-outline-text ms-3"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

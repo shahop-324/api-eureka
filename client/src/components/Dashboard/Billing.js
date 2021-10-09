@@ -23,11 +23,39 @@ import { IconButton } from "@material-ui/core";
 import BillingListFields from "./HelperComponent/BillingComponents/BillingListFields";
 import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/BillingHistoryDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchCommunity,
-  getStripeConnectLink,
-} from "../../actions";
+import { fetchCommunity, getStripeConnectLink } from "../../actions";
 import { useParams } from "react-router-dom";
+
+const DurationSwitchBase = styled.div`
+  background-color: #e0e0e08c;
+  border-radius: 5px;
+  height: 40px;
+  width: 330px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 16px;
+`;
+const DurationSwitch = styled.div`
+  font-size: 0.8rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: ${(props) => (props && props.active ? "#FFFFFF" : "#333333")};
+
+  padding: 5px 10px;
+  background-color: ${(props) =>
+    props && props.active ? "#538BF7" : "transparent"};
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${(props) =>
+      props && props.active ? "#538BF7" : "#E0E0E0"};
+  }
+`;
 
 const StripeAccountCardBody = styled.div`
   background-color: #ffffff;
@@ -56,6 +84,8 @@ const Billing = () => {
   const { isStripeEnabled, verifiedStripeAccountId } = useSelector(
     (state) => state.community.communityDetails
   );
+
+  const [duration, setDuration] = React.useState("monthly");
 
   const params = useParams();
 
@@ -156,6 +186,7 @@ const Billing = () => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Billing</div>
           <div className="sec-heading-action-button d-flex flex-row">
+            
             <button
               type="button"
               onClick={() => {
@@ -167,21 +198,54 @@ const Billing = () => {
             </button>
           </div>
         </div>
-        <div className="event-management-content-grid px-4 mx-3 mb-4 py-4">
-          <CurrentPlanCard />
+        <div
+          className="px-4 mx-3 mb-4 py-4 pb-4"
+          style={{
+            backgroundColor: "#ffffff",
+            height: "auto",
+            borderRadius: "20px",
+            minHeight: "none !important",
+          }}
+        >
+          <div>
+            {/* <CurrentPlanCard /> */}
 
-          <div className="pricing-cards-section pt-4">
-            {/* Free Plan Goes Here */}
-            {/* <FreePlanCard /> */}
-            {/* Basic plan goes here */}
-            <BasicPlanCard />
-            {/* Pro Plan Goes here */}
-            <ProPlanCard />
-            {/* Enterprise Plan Goes Here */}
-            <EnterprisePlanCard />
+            {/* <div className="d-flex flex-row align-items-center justify-content-center">
+              <DurationSwitchBase className="px-1 py-1">
+                <DurationSwitch
+                  onClick={() => {
+                    setDuration("monthly");
+                  }}
+                  active={duration === "monthly" ? true : false}
+                >
+                  Monthly
+                </DurationSwitch>
+                <DurationSwitch
+                  onClick={() => {
+                    setDuration("yearly");
+                  }}
+                  active={duration === "yearly" ? true : false}
+                >
+                  Yearly (15% off)
+                </DurationSwitch>
+              </DurationSwitchBase>
+            </div> */}
+
+            <div className="pricing-cards-section pt-4">
+              {/* Free Plan Goes Here */}
+              {/* <FreePlanCard /> */}
+              <ProPlanCard />
+              {/* Basic plan goes here */}
+
+              <BasicPlanCard duration={duration}/>
+              {/* Pro Plan Goes here */}
+
+              {/* Enterprise Plan Goes Here */}
+              <EnterprisePlanCard />
+            </div>
+
+            {/* Here goes main billing related content */}
           </div>
-
-          {/* Here goes main billing related content */}
         </div>
         {/* Here I have to use pagination */}
       </div>

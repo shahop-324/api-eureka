@@ -8,8 +8,9 @@ import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 
-import CameraEnhanceRoundedIcon from '@mui/icons-material/CameraEnhanceRounded'; // Snap
-import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
+import CameraEnhanceRoundedIcon from "@mui/icons-material/CameraEnhanceRounded"; // Snap
+import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
+import ShoppingBasketRounded from "@mui/icons-material/ShoppingBasketRounded";
 
 const SideNavLean = ({
   activeIndex,
@@ -18,11 +19,10 @@ const SideNavLean = ({
   handleTeamClick,
   handleVideoLibraryClick,
   handleIntegrationsClick,
-  handleSnapClick,
+  handleAddOnsAndPlanClick,
   handleTrackingClick,
   handleBillingClick,
 }) => {
-
   return (
     <>
       <div
@@ -180,10 +180,10 @@ const SideNavLean = ({
             </div>
           </div>
 
-          {/* <div
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
-              handleSnapClick();
+              handleAddOnsAndPlanClick();
             }}
           >
             <div
@@ -192,7 +192,7 @@ const SideNavLean = ({
                 (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
-              <CameraEnhanceRoundedIcon
+              <ShoppingBasketRounded
                 className={
                   "icon-btn-h " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -206,10 +206,10 @@ const SideNavLean = ({
               }
               style={{ textAlign: "center" }}
             >
-              Snap
+              Add ons & plan
             </div>
-          </div> */}
-          <div
+          </div>
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
               handleBillingClick();
@@ -237,7 +237,7 @@ const SideNavLean = ({
             >
               Tracking
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
@@ -247,20 +247,20 @@ const SideNavLean = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "5" ? "active-wrapper-h" : "")
+                (activeIndex === "7" ? "active-wrapper-h" : "")
               }
             >
               <PaymentOutlinedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "5" ? "icon-btn-active-h" : "")
+                  (activeIndex === "7" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "7" ? "icon-btn-text-active-h" : "")
               }
               style={{ textAlign: "center" }}
             >

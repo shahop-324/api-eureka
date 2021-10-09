@@ -5,15 +5,11 @@ const razorpay = require("../services/payments/Razorpay");
 
 const router = express.Router();
 
-router.post(
-  "/createRazorpayOrder",
-  authController.protect,
-  razorpay.createRazorpayOrder
-);
+router.post("/createAddOnOrder", authController.protectCommunity, razorpay.createAddOnOrder);
 
 router.post(
   "/createCommunityPlanOrder",
-  authController.protect,
+  authController.protectCommunity,
   razorpay.createOrderForCommunityPlan
 );
 

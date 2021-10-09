@@ -1,34 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import { IconButton } from "@material-ui/core";
 import EmailSVG from "./../../../../assets/images/email.svg";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import Select from "react-select";
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-  }),
-};
 
 const Heading = styled.div`
   font-size: 1.1rem;

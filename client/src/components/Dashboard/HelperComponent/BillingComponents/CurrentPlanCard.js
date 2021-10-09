@@ -27,7 +27,7 @@ const CurrentPlanCard = () => {
 
   return (
     <>
-      <div className="current-plan-card px-4 py-3 mb-5">
+      <div className="current-plan-card px-4 py-3 mb-3">
         <div>
           <div className="btn-outline-text">Current plan</div>
           <div className="btn-outline-text my-4 current-plan-name">FREE</div>

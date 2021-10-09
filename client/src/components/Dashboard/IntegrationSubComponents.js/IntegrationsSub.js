@@ -18,6 +18,8 @@ import GoogleAnalytics from "../Integrations/GoogleAnalytics";
 import FacebookPixel from "../Integrations/FacebookPixel";
 import Zapier from "../Integrations/Zapier";
 import MicrosoftDynamics from "../Integrations/MicrosoftDynamics";
+import RequestIntegration from "./../Integrations/RequestIntegration";
+import BuildWithBluemeet from "./../Integrations/BuildWithBluemeet";
 
 const IntegrationsSub = () => {
   return (
@@ -30,10 +32,10 @@ const IntegrationsSub = () => {
         <Typeform />
         <GoogleAnalytics />
         <FacebookPixel />
+        <Marketo />
         <Zapier />
         <Slack />
         <Twitter />
-        <Marketo />      
         <GoogleSheets />
         <GooglCalender />
         <Drip />
@@ -42,6 +44,8 @@ const IntegrationsSub = () => {
         <Salesmate />
         <Mailjet />
         <SendinBlue />
+        <RequestIntegration />
+        <BuildWithBluemeet />
       </div>
     </>
   );

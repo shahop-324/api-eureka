@@ -5,6 +5,11 @@
   border: 1px solid transparent;
 }
 
+.legend {
+  background-color: #ffffff !important;
+  color: #538af7 !important;
+}
+
 .mandatory-field {
   color: red;
 }

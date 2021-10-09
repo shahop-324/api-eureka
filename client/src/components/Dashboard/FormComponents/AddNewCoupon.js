@@ -11,12 +11,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { createCoupon, fetchTickets } from "./../../../actions";
 import styled from "styled-components";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { useParams } from "react-router-dom";
-
-const ticketOptions = [];
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -27,13 +22,6 @@ const StyledInput = styled.input`
   &:hover {
     border: #538bf7;
   }
-`;
-
-const RadioLabel = styled.span`
-  font-family: "Ubuntu" !important;
-  font-size: 0.8rem !important;
-  font-weight: 500 !important;
-  color: #585858 !important;
 `;
 
 const FormLabel = styled.label`
