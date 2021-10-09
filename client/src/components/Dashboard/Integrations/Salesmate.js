@@ -3,6 +3,7 @@ import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 import { makeStyles } from "@material-ui/core/styles";
+import Chip from '@mui/material/Chip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +58,9 @@ const Salesmate = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
+          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
+          {/* <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
             <button
               onClick={() => {
                 handleOpen();
@@ -65,7 +68,7 @@ const Salesmate = () => {
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -1,9 +1,10 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
-
+import Chip from '@mui/material/Chip';
 import { makeStyles } from "@material-ui/core/styles";
 import TwitterAuth from "./Forms/TwitterAuth";
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Twitter = () => {
-
-
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -42,14 +41,14 @@ const Twitter = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
               "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg"
             }
             alt={"Mailchimp"}
-            className={classes.large}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
@@ -60,15 +59,18 @@ const Twitter = () => {
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
-            <button
+          <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
+          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
+          
+            {/* <button
               onClick={() => {
                 handleOpen();
               }}
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

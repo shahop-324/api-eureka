@@ -375,7 +375,7 @@ app.get("/api-eureka/eureka/v1/logout", (req, res) => {
 app.use("/api-eureka/eureka/v1", globalRoutes);
 app.use(globalErrorHandler);
 
-app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res,next) {
+app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
@@ -384,7 +384,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res,next) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
-app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response,next) => {
+app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response, next) => {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,

@@ -11,6 +11,10 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LanguageIcon from "@mui/icons-material/Language";
 import RTMPDestination from "./StreamDestinations.js/RTMPDestination";
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1"
+  : "https://www.evenz.co.in/api-eureka/eureka/v1";
 
 const Paper = styled.div`
   width: 450px;
@@ -84,10 +88,13 @@ const AddStreamDestinationOptions = ({ open, handleClose }) => {
               <LanguageIcon style={{ color: "#4F5BC5" }} className="me-3" />
               <span>Custom RTMP</span>
             </StreamDestinationButton>
+            <a href={`${BaseURL}/auth/facebook-live`}>
             <StreamDestinationButton className="mb-3">
               <FacebookIcon style={{ color: "#4267B2" }} className="me-3" />
+
               <span>Facebook Live</span>
             </StreamDestinationButton>
+            </a>
             <StreamDestinationButton className="mb-3">
               <YouTubeIcon style={{ color: "#FF0000" }} className="me-3" />
               <span>Youtube Live</span>

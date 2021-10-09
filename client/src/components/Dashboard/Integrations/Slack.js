@@ -4,6 +4,8 @@ import "./Styles/IntegrationCard.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
 import SlackAuth from "./Forms/SlackAuth";
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,33 +43,35 @@ const Slack = () => {
       <div className="integration-card-container px-4 py-3 mb-4">
         <div
           className=""
-          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 0.7fr" }}
+          style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
             src={
               "https://preview.redd.it/ar87gdk7atk51.png?auto=webp&s=d02a24204684382ba2ca4d79aeeef902ab007f3d"
             }
             alt={"Mailchimp"}
-            className={classes.large}
+            className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">Slack</div>
+            <div className="integration-name mb-3"><span className="me-3">Slack </span> </div>
             <div className="integration-short-description">
-              Get your team to know about what's happening in your event and engage in real time for high value actions.
+              Add your event registrants as slack subscribers.
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
-          <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button>
-            <button
+          <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
+          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
+            {/* <button
               onClick={() => {
                 handleOpen();
               }}
               className="btn btn-outline-primary btn-outline-text"
             >
               Add
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
