@@ -1,105 +1,131 @@
 import React from "react";
-import Ripple from "./../../../ActiveStatusRipple";
-
-import Dialog from "@material-ui/core/Dialog";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
+import DowngradeToFree from "../../SubComponents/DowngradeToFree";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import { navigationIndexForCommunityDash } from "../../../../actions";
+import Chip from "@mui/material/Chip";
+import GetProductDemo from "./GetProductDemo";
+import dateFormat from "dateformat";
 
 const CurrentPlanCard = () => {
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openContact, setOpenContact] = React.useState(false);
 
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-
-  const handleDeleteCoupon = () => {
-    setOpenDeleteDialog(true);
+  const handleCloseContact = () => {
+    setOpenContact(false);
   };
 
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  const userId = params.userId;
+  const communityId = params.id;
+
+  const { communityDetails } = useSelector((state) => state.community);
+
+  const [openConfirmation, setOpenConfirmation] = React.useState(false);
+
+  const handleOpenConfirmation = () => {
+    setOpenConfirmation(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setOpenConfirmation(false);
   };
 
   return (
     <>
-      <div className="current-plan-card px-4 py-3 mb-3">
+      <div className="current-plan-card px-4 py-3 mb-3" style={{height: "auto"}}>
         <div>
-          <div className="btn-outline-text">Current plan</div>
-          <div className="btn-outline-text my-4 current-plan-name">FREE</div>
-          <div className="plan-limit-left-message mb-3">
-            You have 100 registrations available and 2hrs of streaming left.
+          <div className="btn-outline-text" style={{height: "auto"}}>Current plan</div>
+          <div className="btn-outline-text my-4 current-plan-name d-flex flex-row align-items-center">
+            <span className="me-4"> {communityDetails.planName} </span>
+            {communityDetails.planName === "AppSumo" ? <Chip label="Lifetime Deal" color="warning" /> : <></> }
           </div>
-          <div className="plan-card-upgrade-message">
-            Wanna lift up your capabilities ? Upgrade to Basics
+          <div className="plan-limit-left-message mb-3" style={{height: "auto"}}>
+            {/* You have 100 registrations available and 2hrs of streaming left. */}
+            {/* Render dynamic numbers here, indicating how many registrations and streaming hour are left. */}
+          </div>
+          <div className="plan-card-upgrade-message" style={{height: "auto"}}>
+            {(() => {
+              switch (communityDetails.planName) {
+                case "AppSumo":
+                  return <></>;
+                case "Free":
+                  return (
+                    <>
+                      Wanna lift up your capabilities ?{" "}
+                      <Link
+                        to={`/user/${userId}/community/billing/${communityId}`}
+                        onClick={() => {
+                          dispatch(navigationIndexForCommunityDash(7));
+                        }}
+                      >
+                        {" "}
+                        Upgrade to Growth{" "}
+                      </Link>
+                    </>
+                  );
+
+                case "Growth":
+                  return (
+                    <>
+                      Want to have sponsors booths, advanced gamification, SSO
+                      and much more?{" "}
+                      <Link
+                        onClick={() => {
+                          setOpenContact(true);
+                        }}
+                      >
+                        {" "}
+                        Contact us{" "}
+                      </Link>
+                    </>
+                  );
+
+                default:
+                  break;
+              }
+            })()}
           </div>
         </div>
         <div>
           <div className="d-flex flex-row justify-content-end mb-3">
             <div className="btn-outline-text current-plan-will-renew-at">
-              Current plan will renew at:
+              Current plan will expire at:
             </div>
-            <div className="plan-renewal-date ms-3">22/07/2021</div>
-          </div>
-          <div className="d-flex flex-row justify-content-end mb-3">
-            <div className="btn-outline-text current-plan-will-renew-at me-3">
-              Current status:
-            </div>
-            <div
-              className="d-flex flex-row align-items-center event-field-label field-label-value"
-              style={{ color: "#75BF72", fontFamily: "Ubuntu" }}
-            >
-              <Ripple /> Active{" "}
+            <div className="plan-renewal-date ms-3">
+              {communityDetails.planName === "AppSumo" ||
+              communityDetails.planName === "Free"
+                ? <Chip label="Never" color="primary" variant="outlined" />
+                : dateFormat(
+                    communityDetails.planExpiresAt,
+                    "ddd, mmm dS, yyyy"
+                  )}
             </div>
           </div>
-
-          <div className="d-flex flex-row justify-content-end">
-            <button
-              type="button"
-              onClick={handleDeleteCoupon}
-              className="btn btn-outline-primary btn-outline-text"
-            >
-              Cancel Membership
-            </button>
-          </div>
+          {communityDetails.planName === "AppSumo" ||
+          communityDetails.planName === "Free" ? (
+            <></>
+          ) : (
+            <div className="d-flex flex-row justify-content-end">
+              <button
+                type="button"
+                onClick={handleOpenConfirmation}
+                className="btn btn-outline-primary btn-outline-text"
+              >
+                Cancel Membership
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">
-          {"Cancel membership."}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You are about to terminate your current plan. By doing so, this plan
-            will not renew automatically as it end. You can still enjoy all
-            features in this plan until it expires.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleCloseDeleteDialog}>
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              // dispatch(deleteCoupon(id));
-              handleCloseDeleteDialog();
-            }}
-            style={{ color: "#538BF7" }}
-            autoFocus
-          >
-            Proceed
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DowngradeToFree
+        open={openConfirmation}
+        handleClose={handleCloseConfirmation}
+      />
+      <GetProductDemo open={openContact} handleClose={handleCloseContact} />
     </>
   );
 };

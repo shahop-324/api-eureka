@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const CommunityTransactionSchema = new mongoose.Schema(
   {
+    type: {
+      type: String,
+      // Community plan, add on 
+    },
     planName: {
       type: String,
     },
@@ -20,6 +24,10 @@ const CommunityTransactionSchema = new mongoose.Schema(
     },
     transactionId: {
       type: String,
+    },
+    communityId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Community",
     },
   },
   {

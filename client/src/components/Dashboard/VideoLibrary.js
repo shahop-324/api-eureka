@@ -9,7 +9,7 @@ import LinkVideoFromLibrary from "./SubComponents/LinkVideoFromLibrary";
 import { useDispatch } from "react-redux";
 import dateFormat from "dateformat";
 import {useSelector} from 'react-redux';
-import { getCommunityVideos, getEventVideos } from "./../../actions";
+import { getCommunityVideos, getEventVideos, resetProgress } from "./../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -26,7 +26,9 @@ const TextSmall = styled.div`
 `;
 
 const renderVideos = (videos) => {
+  if(!videos) return;
   return videos.map((video) => {
+    if(!video) return <></>;
     return (
       <VideoLibraryDetailsCard
         name={video.name}
@@ -47,26 +49,16 @@ const VideoLibrary = () => {
   const params = useParams();
   const dispatch = useDispatch();
   console.log(params);
-  let eventId = params.id;
-  let communityId = params.communityId;
-  if (eventId && communityId) {
-    console.log("We are in an event");
-  } else {
-    console.log("we are in main dashboard");
-  }
+  let communityId = params.id;
 
   useEffect(() => {
-    if (eventId && communityId) {
-      dispatch(getEventVideos(params.id));
-    } else {
       dispatch(getCommunityVideos(params.id));
-    }
   }, []);
 
   const [openUploadVideo, setOpenUploadVideo] = React.useState(false);
 
-  const [openLinkVideoFromLibrary, setOpenLinkVideoFromLibrary] =
-    React.useState(false);
+  // const [openLinkVideoFromLibrary, setOpenLinkVideoFromLibrary] =
+  //   React.useState(false);
 
   const handleCloseUploadVideo = () => {
     setOpenUploadVideo(false);
@@ -76,13 +68,13 @@ const VideoLibrary = () => {
     setOpenUploadVideo(true);
   };
 
-  const handleCloseLinkVideoFromLibrary = () => {
-    setOpenLinkVideoFromLibrary(false);
-  };
+  // const handleCloseLinkVideoFromLibrary = () => {
+  //   setOpenLinkVideoFromLibrary(false);
+  // };
 
-  const handleOpenLinkVideoFromLibrary = () => {
-    setOpenLinkVideoFromLibrary(true);
-  };
+  // const handleOpenLinkVideoFromLibrary = () => {
+  //   setOpenLinkVideoFromLibrary(true);
+  // };
 
   return (
     <>
@@ -93,7 +85,7 @@ const VideoLibrary = () => {
           </SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <div className="d-flex flex-row align-items-center">
-              {eventId && communityId ? (
+              {/* {eventId && communityId ? (
                 <button
                   className="btn btn-outline-primary btn-outline-text mx-3"
                   onClick={handleOpenLinkVideoFromLibrary}
@@ -102,11 +94,15 @@ const VideoLibrary = () => {
                 </button>
               ) : (
                 <div className="ms-3"></div>
-              )}
+              )} */}
 
               <button
                 className="btn btn-primary btn-outline-text"
-                onClick={handleOpenUploadVideo}
+                onClick={ () => {
+                  dispatch(resetProgress());
+                  handleOpenUploadVideo();
+
+                } }
               >
                 Upload video
               </button>
@@ -114,9 +110,10 @@ const VideoLibrary = () => {
           </div>
         </div>
         <TextSmall className="mx-4 mb-4">
-          {eventId && communityId
+        These videos can be linked to any event in your community.
+          {/* {eventId && communityId
             ? "These videos will be available for you to stream directly in all sessions of this event."
-            : "These videos can be linked to any event in your community."}
+            : "These videos can be linked to any event in your community."} */}
         </TextSmall>
 
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
@@ -131,10 +128,10 @@ const VideoLibrary = () => {
         open={openUploadVideo}
         handleClose={handleCloseUploadVideo}
       />
-      <LinkVideoFromLibrary
+      {/* <LinkVideoFromLibrary
         open={openLinkVideoFromLibrary}
         handleClose={handleCloseLinkVideoFromLibrary}
-      />
+      /> */}
     </>
   );
 };

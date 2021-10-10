@@ -63,6 +63,34 @@ const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1/"
   : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
+function uploadS3(url, file, progressCallback) {
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          resolve(xhr);
+        } else {
+          reject(xhr);
+        }
+      }
+    };
+
+    if (progressCallback) {
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          var percentComplete = (e.loaded / file.size) * 100;
+          progressCallback(percentComplete);
+        }
+      };
+    }
+
+    xhr.open("PUT", url);
+    xhr.send(file);
+  });
+}
+
 export const closeSnackbar = () => async (dispatch, getState) => {
   dispatch(snackbarActions.closeSnackBar());
 };
@@ -6570,7 +6598,7 @@ export const fetchRoles = (communityId) => async (dispatch, getState) => {
 };
 
 export const uploadVideoForCommunity =
-  (communityId, file, eventId) => async (dispatch, getState) => {
+  (communityId, file, handleClose) => async (dispatch, getState) => {
     try {
       const key = `${communityId}/${UUID()}.mp4`;
 
@@ -6582,71 +6610,66 @@ export const uploadVideoForCommunity =
           ContentType: "video/mp4",
         },
         async (err, presignedURL) => {
-          const awsRes = await fetch(presignedURL, {
-            method: "PUT",
-
-            body: file,
-
-            headers: {
-              "Content-Type": file.type,
-            },
+          await uploadS3(presignedURL, file, (percent) => {
+            console.log(percent);
+            dispatch(
+              communityActions.SetUploadPercent({
+                percent: percent*1 > 1.2 ? (percent*1).toFixed(1) : 1.2,
+              })
+            );
           });
 
-          console.log(awsRes);
+          try {
+            // Save this video info in community document.
 
-          if (awsRes.status === 200) {
-            try {
-              // Save this video info in community document.
+            const res = await fetch(`${BaseURL}community/uploadVideo/`, {
+              method: "POST",
 
-              const res = await fetch(`${BaseURL}community/uploadVideo/`, {
-                method: "POST",
+              body: JSON.stringify({
+                fileName: file.name,
+                key: key,
+              }),
 
-                body: JSON.stringify({
-                  fileName: file.name,
-                  key: key,
-                  eventId: eventId,
-                }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().communityAuth.token}`,
+              },
+            });
 
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${getState().communityAuth.token}`,
-                },
-              });
+            const result = await res.json();
+            console.log(result);
 
-              const result = await res.json();
-              console.log(result);
+            dispatch(
+              videoActions.UploadVideo({
+                video: res.video,
+              })
+            );
 
-              dispatch(
-                videoActions.UploadVideo({
-                  video: res.video,
-                })
-              );
+            dispatch(
+              snackbarActions.openSnackBar({
+                message:
+                  "Video file uploaded successfully! Make sure to link it to an event.",
+                severity: "success",
+              })
+            );
 
-              dispatch(
-                snackbarActions.openSnackBar({
-                  message:
-                    "Video file uploaded successfully! Make sure to link it to an event.",
-                  severity: "success",
-                })
-              );
+            handleClose();
 
-              setTimeout(function () {
-                dispatch(snackbarActions.closeSnackBar());
-              }, 6000);
-            } catch (error) {
-              console.log(error);
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 6000);
+          } catch (error) {
+            console.log(error);
 
-              dispatch(
-                snackbarActions.openSnackBar({
-                  message: "Failed to upload video file. Please try again",
-                  severity: "error",
-                })
-              );
-              setTimeout(function () {
-                dispatch(snackbarActions.closeSnackBar());
-              }, 4000);
-            }
-          } else {
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Failed to upload video file. Please try again",
+                severity: "error",
+              })
+            );
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 4000);
           }
         }
       );
@@ -8143,3 +8166,115 @@ export const sendTestMail =
       }, 6000);
     }
   };
+
+export const fetchCodes = () => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}getCodes`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      communityActions.FetchCodes({
+        codes: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch codes!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const redeemCodes =
+  (communityId, userId, codes) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}redeemAppSumoCode`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          communityId: communityId,
+          userId: userId,
+          codes: codes,
+        }),
+
+        headers: {
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        communityActions.EditCommunity({
+          community: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Successfully redeemed codes.",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to redeem codes. Invalid or used codes.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const resetProgress = () => async (dispatch, getState) => {
+  try {
+    dispatch(
+      communityActions.SetUploadPercent({
+        percent: 0,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};

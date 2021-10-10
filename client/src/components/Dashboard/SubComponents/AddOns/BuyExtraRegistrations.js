@@ -176,6 +176,7 @@ const BuyExtraRegistrations = ({ open, handleClose }) => {
             </button>
             <button
               onClick={() => {
+                handleClose();
                 displayRazorpay();
               }}
               disabled={!value || value <= 0 ? true : false}

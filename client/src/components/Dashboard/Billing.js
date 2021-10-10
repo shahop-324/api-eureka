@@ -9,22 +9,17 @@ import "./../../assets/Sass/DataGrid.scss";
 import "./../../assets/Sass/Billing.scss";
 import styled from "styled-components";
 import Ripple from "./../ActiveStatusRipple";
-
-import BasicPlanCard from "./HelperComponent/BillingComponents/BasicsPlanCard";
-import ProPlanCard from "./HelperComponent/BillingComponents/ProPlanCard";
 import EnterprisePlanCard from "./HelperComponent/BillingComponents/EnterprisePlanCard";
-
-import CurrentPlanCard from "./HelperComponent/BillingComponents/CurrentPlanCard";
 import { SwipeableDrawer } from "@material-ui/core";
-
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
 import { IconButton } from "@material-ui/core";
 import BillingListFields from "./HelperComponent/BillingComponents/BillingListFields";
 import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/BillingHistoryDetailsCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCommunity, getStripeConnectLink } from "../../actions";
 import { useParams } from "react-router-dom";
+import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
+import GrowthPlanCard from "./HelperComponent/BillingComponents/GrowthPlanCard";
 
 const DurationSwitchBase = styled.div`
   background-color: #e0e0e08c;
@@ -234,10 +229,10 @@ const Billing = () => {
             <div className="pricing-cards-section pt-4">
               {/* Free Plan Goes Here */}
               {/* <FreePlanCard /> */}
-              <ProPlanCard />
+              <FreePlanCard />
               {/* Basic plan goes here */}
 
-              <BasicPlanCard duration={duration}/>
+              <GrowthPlanCard duration={duration}/>
               {/* Pro Plan Goes here */}
 
               {/* Enterprise Plan Goes Here */}

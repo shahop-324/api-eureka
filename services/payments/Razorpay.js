@@ -22,7 +22,6 @@ const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsComm
 const { convert } = require("exchange-rates-api");
 const EventRegistrationTemplate = require("../email/eventRegistrationMail");
 const sgMail = require("@sendgrid/mail");
-
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const razorpay = new Razorpay({
@@ -47,10 +46,11 @@ exports.createAddOnOrder = catchAsync(async (req, res, next) => {
 
   const newOrder = razorpay.orders.create(
     {
-      amount: priceToBeCharged,
-      currency: "USD",
+      amount: 100,
+      currency: "INR",
       receipt: UUID(),
       notes: {
+        purpose: "add on",
         userId: userId,
         addOnName: addOnName,
         communityId: communityId,
@@ -105,6 +105,7 @@ exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
       currency: "INR",
       receipt: UUID(),
       notes: {
+        purpose: "community plan",
         userId: userId,
         planName: planName,
         communityId: communityId,
@@ -143,38 +144,303 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
     // This is a legit community plan purchase so process it.
     console.log(req.body.payload.payment.entity);
 
-    try {
-      // Take that community and activate thier plan and tell them when their plan will end and how many registrations they can have.
-      const registrations = paymentEntity.notes.registrations;
-      const communityId = paymentEntity.notes.communityId;
+    const purpose = paymentEntity.notes.purpose;
+
+    if (purpose === "community plan") {
+      try {
+        // Take that community and activate thier plan and tell them when their plan will end and how many registrations they can have.
+        const registrations = paymentEntity.notes.registrations;
+        const communityId = paymentEntity.notes.communityId;
+        const userId = paymentEntity.notes.userId;
+        const price = paymentEntity.amount;
+        const currency = paymentEntity.currency;
+        const planName = paymentEntity.notes.planName;
+        const timestamp = paymentEntity.created_at;
+        const transactionId = paymentEntity.id;
+
+        const userDoc = await User.findById(userId);
+
+        const newCommunityTransaction = await CommunityTransaction.create({
+          type: "Community Plan",
+          planName: planName,
+          purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+          price: (price * 1) / 100,
+          currency: currency,
+          date: Date.now(),
+          transactionId: transactionId,
+          communityId: communityId,
+        });
+
+        const communityDoc = await Community.findById(communityId);
+        communityDoc.planName = planName;
+        communityDoc.planExpiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
+        communityDoc.allowedRegistrationLimit = registrations * 1;
+        communityDoc.isUsingFreePlan = false;
+        communityDoc.planTransactions.push(newCommunityTransaction._id);
+
+        await communityDoc.save({ new: true, validateModifiedOnly: true });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (purpose === "add on") {
+      const addOnName = paymentEntity.notes.addOnName;
+
       const userId = paymentEntity.notes.userId;
+      const communityId = paymentEntity.notes.communityId;
+      const numOfRegistrations = paymentEntity.notes.numOfRegistrations;
+      const cloudStorage = paymentEntity.notes.cloudStorage;
+      const emailCredits = paymentEntity.notes.emailCredits;
+      const streamingHours = paymentEntity.notes.streamingHours;
+      const numOfOrganiserSeats = paymentEntity.notes.numOfOrganiserSeats;
+
       const price = paymentEntity.amount;
       const currency = paymentEntity.currency;
-      const planName = paymentEntity.notes.planName;
       const timestamp = paymentEntity.created_at;
       const transactionId = paymentEntity.id;
 
       const userDoc = await User.findById(userId);
+      const communityDoc = await Community.findByIdAndUpdate(communityId);
 
-      const newCommunityTransaction = await CommunityTransaction.create({
-        planName: planName,
-        purchasedBy: userDoc.firstName + " " + userDoc.lastName,
-        price: (price * 1) / 100,
-        currency: currency,
-        date: timestamp,
-        transactionId: transactionId,
-      });
+      switch (addOnName) {
+        case "Registrations":
+          // Process registration add on request
 
-      const communityDoc = await Community.findById(communityId);
-      communityDoc.planName = planName;
-      communityDoc.planExpiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
-      communityDoc.allowedRegistrationLimit = registrations * 1;
-      communityDoc.isUsingFreePlan = false;
-      communityDoc.planTransactions.push(newCommunityTransaction._id);
+          const registrationTransaction = await CommunityTransaction.create({
+            type: "Add on",
+            planName: addOnName,
+            purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+            price: (price * 1) / 100,
+            currency: currency,
+            date: Date.now(),
+            transactionId: transactionId,
+            communityId: communityId,
+          });
 
-      await communityDoc.save({ new: true, validateModifiedOnly: true });
-    } catch (error) {
-      console.log(error);
+          communityDoc.extraRegistrationsLimit =
+            communityDoc.extraRegistrationsLimit + numOfRegistrations * 1;
+          communityDoc.extraRegistrationsToBeExpiredAt =
+            Date.now() + 60 * 24 * 60 * 60 * 1000;
+          communityDoc.planTransactions = registrationTransaction._id;
+
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send mail to community superadmin and add on is processed completely.
+
+          const registrationMsg = {
+            to: communityDoc.superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Registration add added to your ${communityDoc.name} community.`,
+            text: `We have successfully processed your request to add ${
+              numOfRegistrations * 1
+            } extra registrations to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(registrationMsg)
+            .then(async () => {
+              console.log("Confirmation mail sent to Community Super admin.");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail Community Super admin."
+              );
+            });
+
+          break;
+
+        case "Organisers":
+          // Process organiser add on request
+
+          const organiserSeatTransaction = await CommunityTransaction.create({
+            type: "Add on",
+            planName: addOnName,
+            purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+            price: (price * 1) / 100,
+            currency: currency,
+            date: Date.now(),
+            transactionId: transactionId,
+            communityId: communityId,
+          });
+
+          communityDoc.extraOrganiserLimit =
+            communityDoc.extraOrganiserLimit + numOfOrganiserSeats * 1;
+          communityDoc.extraOrganiserLimitToBeExpiredAt =
+            Date.now() + 30 * 24 * 60 * 60 * 1000;
+          communityDoc.planTransactions = organiserSeatTransaction._id;
+
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send mail to community superadmin and add on is processed completely.
+
+          const organiserSeatMsg = {
+            to: communityDoc.superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Extra Organiser seats added to your ${communityDoc.name} community.`,
+            text: `We have successfully processed your request to add ${
+              numOfOrganiserSeats * 1
+            } extra organsiser seats to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(organiserSeatMsg)
+            .then(async () => {
+              console.log("Confirmation mail sent to Community Super admin.");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail Community Super admin."
+              );
+            });
+
+          break;
+
+        case "Streaming hours":
+          // Process extra streaming hours add on request
+
+          const streamingHourTransaction = await CommunityTransaction.create({
+            type: "Add on",
+            planName: addOnName,
+            purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+            price: (price * 1) / 100,
+            currency: currency,
+            date: Date.now(),
+            transactionId: transactionId,
+            communityId: communityId,
+          });
+
+          communityDoc.extraStreamingHours =
+            communityDoc.extraStreamingHours + streamingHours * 1;
+          communityDoc.extraStreamingHoursToBeExpiredAt =
+            Date.now() + 60 * 24 * 60 * 60 * 1000;
+          communityDoc.planTransactions = streamingHourTransaction._id;
+
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send mail to community superadmin and add on is processed completely.
+
+          const streamingHourMsg = {
+            to: communityDoc.superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Extra Streaming hours added to your ${communityDoc.name} community.`,
+            text: `We have successfully processed your request to add ${
+              streamingHours * 1
+            } extra streaming hours to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(streamingHourMsg)
+            .then(async () => {
+              console.log("Confirmation mail sent to Community Super admin.");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail Community Super admin."
+              );
+            });
+
+          break;
+
+        case "Email":
+          // Process extra emails add on request
+
+          const emailCreditsTransaction = await CommunityTransaction.create({
+            type: "Add on",
+            planName: addOnName,
+            purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+            price: (price * 1) / 100,
+            currency: currency,
+            date: Date.now(),
+            transactionId: transactionId,
+            communityId: communityId,
+          });
+
+          communityDoc.extraEmailLimit =
+            communityDoc.extraEmailLimit + emailCredits * 1;
+          communityDoc.extraEmailLimitToBeExpiredAt =
+            Date.now() + 60 * 24 * 60 * 60 * 1000;
+          communityDoc.planTransactions = emailCreditsTransaction._id;
+
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send mail to community superadmin and add on is processed completely.
+
+          const emailCreditsMsg = {
+            to: communityDoc.superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Extra Email credits added to your ${communityDoc.name} community.`,
+            text: `We have successfully processed your request to add ${
+              emailCredits * 1
+            } extra email credits to your community. You can use this add on till 60 days from today. Thanks, From Bluemeet Team.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(emailCreditsMsg)
+            .then(async () => {
+              console.log("Confirmation mail sent to Community Super admin.");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail Community Super admin."
+              );
+            });
+
+          break;
+
+        case "Cloud storage":
+          // Process extra cloud storage add on request
+
+          const cloudStorageTransaction = await CommunityTransaction.create({
+            type: "Add on",
+            planName: addOnName,
+            purchasedBy: userDoc.firstName + " " + userDoc.lastName,
+            price: (price * 1) / 100,
+            currency: currency,
+            date: Date.now(),
+            transactionId: transactionId,
+            communityId: communityId,
+          });
+
+          communityDoc.extraCloudStorageLimit =
+            communityDoc.extraCloudStorageLimit + cloudStorage * 1;
+          communityDoc.extraCloudStorageLimitToBeExpiredAt =
+            Date.now() + 60 * 24 * 60 * 60 * 1000;
+          communityDoc.planTransactions = cloudStorageTransaction._id;
+
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send mail to community superadmin and add on is processed completely.
+
+          const cloudStorageMsg = {
+            to: communityDoc.superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Extra Cloud storage added to your ${communityDoc.name} community.`,
+            text: `We have successfully processed your request to add ${
+              cloudStorage * 1
+            } extra cloud storage to your community. You can use this add on till 30 days from today. Thanks, From Bluemeet Team.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(cloudStorageMsg)
+            .then(async () => {
+              console.log("Confirmation mail sent to Community Super admin.");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail Community Super admin."
+              );
+            });
+
+          break;
+
+        default:
+          break;
+      }
     }
   } else {
     // pass it

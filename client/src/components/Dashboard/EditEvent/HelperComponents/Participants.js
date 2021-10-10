@@ -12,7 +12,8 @@ import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import { useParams } from "react-router";
 import {
   fetchRegistrationsOfParticularEvent,
-  showSnackbar
+  showSnackbar,
+  fetchCodes,
 } from "./../../../../actions";
 import AttendeeBulkInvite from "./AttendeeBulkInvite";
 import NoRegistrations from "./../../../../assets/images/Painter.svg";
@@ -77,27 +78,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const renderParticipants = (eventRegistrations) => {
-  return eventRegistrations.slice(0)
-  .reverse().map((el) => {
-    return (
-      <ParticipantsDetailsCard
-        image={
-          el.userImage.startsWith("https://")
-            ? el.userImage
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${el.userImage}`
-        }
-        id={el._id}
-        key={el._id}
-        name={el.userName}
-        email={el.userEmail}
-        ticketType={el.ticketType}
-        totalAmountPaid={el.totalAmountPaid}
-        currency={el.currency}
-        addedVia={el.addedVia}
-        invitationLink={el.invitationLink}
-      />
-    );
-  });
+  return eventRegistrations
+    .slice(0)
+    .reverse()
+    .map((el) => {
+      return (
+        <ParticipantsDetailsCard
+          image={
+            el.userImage.startsWith("https://")
+              ? el.userImage
+              : `https://bluemeet.s3.us-west-1.amazonaws.com/${el.userImage}`
+          }
+          id={el._id}
+          key={el._id}
+          name={el.userName}
+          email={el.userEmail}
+          ticketType={el.ticketType}
+          totalAmountPaid={el.totalAmountPaid}
+          currency={el.currency}
+          addedVia={el.addedVia}
+          invitationLink={el.invitationLink}
+        />
+      );
+    });
 };
 
 const Participants = () => {
@@ -116,6 +119,7 @@ const Participants = () => {
 
   useEffect(() => {
     dispatch(fetchRegistrationsOfParticularEvent(eventId));
+    dispatch(fetchCodes());
   }, []);
 
   const [open, setOpen] = useState(false);
@@ -126,6 +130,7 @@ const Participants = () => {
 
   const { registrations } = useSelector((state) => state.registration);
   const { eventDetails } = useSelector((state) => state.event);
+  const { codes } = useSelector((state) => state.community);
 
   const bulkMailInfo = registrations.map((el) => {
     return {
@@ -137,6 +142,39 @@ const Participants = () => {
   });
 
   const classes = useStyles();
+
+  const processCodesData = () => {
+    const processedArray = [];
+
+    codes.map((code) => {
+      const array = Object.entries(code);
+
+      const filtered = array.filter(([key, value]) => key === "code");
+
+      const asObject = Object.fromEntries(filtered);
+
+      processedArray.push(asObject);
+    });
+
+    const finalArray = processedArray.map((obj) => Object.values(obj));
+
+    return finalArray;
+  };
+
+  const CreateAndDownloadCodesCSV = (data) => {
+    var csv = "Code, \n";
+    data.forEach(function (row) {
+      csv += row.join(",");
+      csv += "\n";
+    });
+
+    console.log(csv);
+    var hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+    hiddenElement.download = "codes.csv";
+    hiddenElement.click();
+  };
 
   const processRegistrationData = () => {
     const processedArray = [];
@@ -206,35 +244,59 @@ const Participants = () => {
           </div>
 
           <Button
-          
             variant="contained"
             color="secondary"
             className={`${classes.button} me-3 btn-outline-text`}
             startIcon={<GetAppIcon />}
             style={{ backgroundColor: "#538BF7" }}
             onClick={() => {
-              if(typeof registrations !== "undefined" &&
-              registrations.length > 0 ) {
+              if (typeof codes !== "undefined" && codes.length > 0) {
+                CreateAndDownloadCodesCSV(processCodesData());
+                dispatch(showSnackbar("success", "Codes CSV file eported!"));
+              } else {
+                dispatch(showSnackbar("info", "There are no codes to export."));
+              }
+            }}
+          >
+            Codes
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={`${classes.button} me-3 btn-outline-text`}
+            startIcon={<GetAppIcon />}
+            style={{ backgroundColor: "#538BF7" }}
+            onClick={() => {
+              if (
+                typeof registrations !== "undefined" &&
+                registrations.length > 0
+              ) {
                 CreateAndDownloadCSV(processRegistrationData());
                 console.log(processRegistrationData());
                 dispatch(showSnackbar("success", "CSV file eported!"));
+              } else {
+                dispatch(
+                  showSnackbar("info", "There are no registrations to export.")
+                );
               }
-              else {
-                dispatch(showSnackbar("info", "There are no registrations to export."));
-              }
-             
             }}
           >
             Export
           </Button>
           <button
             onClick={() => {
-              if(typeof registrations !== "undefined" &&
-              registrations.length > 0) {
+              if (
+                typeof registrations !== "undefined" &&
+                registrations.length > 0
+              ) {
                 setOpenBulkMailConfirmation(true);
-              }
-              else {
-                dispatch(showSnackbar("info", "There are no registrations to send invite."));
+              } else {
+                dispatch(
+                  showSnackbar(
+                    "info",
+                    "There are no registrations to send invite."
+                  )
+                );
               }
             }}
             className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center"
@@ -259,9 +321,14 @@ const Participants = () => {
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
-        { typeof registrations !== "undefined" &&
-            registrations.length > 0 ? renderParticipants(registrations) : <NoContentFound msgText="Awaiting registrations. Please spread word about your event."
-            img={NoRegistrations} />}
+        {typeof registrations !== "undefined" && registrations.length > 0 ? (
+          renderParticipants(registrations)
+        ) : (
+          <NoContentFound
+            msgText="Awaiting registrations. Please spread word about your event."
+            img={NoRegistrations}
+          />
+        )}
       </div>
 
       <AddParticipantsOptions open={open} handleClose={handleClose} />

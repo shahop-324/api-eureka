@@ -4,6 +4,7 @@ const communitySlice = createSlice({
   name: "Community",
 
   initialState: {
+    codes: [],
     communities: [],
     communityDetails: null,
     isCommunityLoading: false,
@@ -12,6 +13,7 @@ const communitySlice = createSlice({
     mailChimpAudiences: [],
     invitations: [],
     communityManagers: [],
+    uplooadPercent: 0, // Number indicating upload progress (Range => 0-100%)
   },
   reducers: {
     ResetError(state, action) {
@@ -26,13 +28,20 @@ const communitySlice = createSlice({
     },
 
     hasError(state, action) {
-      state.error = action.payload;
+      state.error = action.payload.error;
     },
     disabledError(state, action) {
       state.error = false;
       state.isLoading = false;
     },
 
+    SetUploadPercent(state, action) {
+      state.uplooadPercent = action.payload.percent;
+    },
+
+    FetchCodes(state, action) {
+      state.codes = action.payload.codes;
+    },
     FetchInvitations(state, action) {
       state.invitations = action.payload.invitations;
     },

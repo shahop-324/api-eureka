@@ -56,7 +56,7 @@ const BuyExtraCloudStorage = ({ open, handleClose }) => {
       let order = await fetch(`${BaseURL}razorpay/createAddOnOrder`, {
         method: "POST",
         body: JSON.stringify({
-          addonName: "Organisers",
+          addonName: "Cloud storage",
           cloudStorage: value,
           price: value * 1.599,
           communityId: communityDetails._id,
@@ -178,6 +178,7 @@ const BuyExtraCloudStorage = ({ open, handleClose }) => {
             </button>
             <button
             onClick={() => {
+              handleClose();
                 displayRazorpay();
             }}
               disabled={!value || value <= 0 ? true : false}

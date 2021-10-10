@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -6,11 +6,9 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 import VideoPNG from "./../../../assets/images/UploadVideo.svg";
-
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-
-import { useDispatch } from "react-redux";
-import { uploadVideoForCommunity } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadVideoForCommunity, resetProgress } from "../../../actions";
 import { useParams } from "react-router-dom";
 
 const Heading = styled.div`
@@ -18,6 +16,27 @@ const Heading = styled.div`
   font-family: "Ubuntu";
   font-size: 1.4rem;
   color: #212121;
+`;
+
+const ProgressContainer = styled.div`
+  width: 100%;
+  height: 40px;
+  background-color: #dadada;
+  border-radius: 10px;
+`;
+
+const ProgressFill = styled.div`
+  height: 40px;
+  background-color: #47D188;
+  border-radius: 10px;
+`;
+
+const ProgressText = styled.div`
+  font-weight: 600;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+  color: #000000;
+  padding-left: 32px;
 `;
 
 const BeforePreviewContainer = styled.div`
@@ -66,18 +85,12 @@ const VideoContainer = styled.video`
 const UploadVideo = ({ open, handleClose }) => {
   const params = useParams();
   const dispatch = useDispatch();
-
-  let eventId = params.id;
-  let communityId = params.communityId;
-  if (eventId && communityId) {
-    console.log("We are in an event");
-  } else {
-    console.log("we are in main dashboard");
-  }
-
+  let communityId = params.id;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { uplooadPercent } = useSelector((state) => state.community);
 
   const [file, setFile] = React.useState(null);
 
@@ -89,12 +102,14 @@ const UploadVideo = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
+  useEffect(() => {
+    dispatch(resetProgress());
+    setFile(null);
+    setFileToPreview(null);
+  }, []);
+
   const uploadVideo = () => {
-    if (eventId && communityId) {
-      dispatch(uploadVideoForCommunity(params.communityId, file, params.id));
-    } else {
-      dispatch(uploadVideoForCommunity(params.id, file));
-    }
+    dispatch(uploadVideoForCommunity(communityId, file, handleClose));
   };
 
   return (
@@ -135,16 +150,32 @@ const UploadVideo = ({ open, handleClose }) => {
             className="form-control mb-5"
           ></input>
 
-          <button
-            onClick={() => {
-              uploadVideo();
-              handleClose();
-            }}
-            className="btn btn-primary btn-outline-text"
-            style={{ width: "100%" }}
-          >
-            Upload video
-          </button>
+          {uplooadPercent !== 0 ? (
+            <ProgressContainer>
+              <ProgressFill
+                style={{
+                  width: `${uplooadPercent ? `${uplooadPercent}%` : "0%"}`,
+                }}
+                className="d-flex flex-row align-items-center py-2"
+              >
+                <ProgressText>
+                  {uplooadPercent && uplooadPercent * 1 > 1.2
+                    ? `${(uplooadPercent * 1).toFixed(2)}%`
+                    : "Uploading..."}
+                </ProgressText>
+              </ProgressFill>
+            </ProgressContainer>
+          ) : (
+            <button
+              onClick={() => {
+                uploadVideo();
+              }}
+              className="btn btn-primary btn-outline-text mb-3"
+              style={{ width: "100%" }}
+            >
+              Upload video
+            </button>
+          )}
         </div>
       </Dialog>
     </>

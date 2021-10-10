@@ -60,7 +60,7 @@ const BuyExtraEmails = ({ open, handleClose }) => {
       let order = await fetch(`${BaseURL}razorpay/createAddOnOrder`, {
         method: "POST",
         body: JSON.stringify({
-          addonName: "Organisers",
+          addonName: "Email",
           emailCredits: value,
           price: value * 0.01099,
           communityId: communityDetails._id,
@@ -180,6 +180,7 @@ const BuyExtraEmails = ({ open, handleClose }) => {
             </button>
             <button
             onClick={() => {
+              handleClose();
                 displayRazorpay();
             }}
               disabled={!value || value <= 0 ? true : false}

@@ -7,6 +7,9 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DialogContent from "@material-ui/core/DialogContent";
 import AppSumo from "./../../../../assets/images/clip-1.svg";
+import AlreadyRedeemed from "./../../../../assets/images/Food.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { showSnackbar, redeemCodes } from "./../../../../actions";
 
 const Heading = styled.div`
   font-size: 1.1rem;
@@ -36,8 +39,21 @@ const Image = styled.img`
 const RedeemCode = ({ open, handleClose }) => {
   const [tags, setTags] = React.useState([]);
 
+  const { communityDetails } = useSelector((state) => state.community);
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  const communityId = communityDetails._id;
+
+  const codesApplied = communityDetails.codesApplied.length;
+
+  const remainingMaxCodes = 3 - codesApplied * 1;
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -57,35 +73,44 @@ const RedeemCode = ({ open, handleClose }) => {
           >
             {/* Here write main content */}
 
-            <Image className="mb-4" src={AppSumo} />
+            <Image
+              className="mb-4"
+              src={remainingMaxCodes === 0 ? AlreadyRedeemed : AppSumo}
+            />
 
             <div className="mb-3">
               <FormLabel className="mb-2">
-                You are just a step away from enjoying lifetime benefits.
+                {remainingMaxCodes === 0
+                  ? "You have already stacked 3 codes. Now you can enjoy all premium features for lifetime."
+                  : "You are just a step away from enjoying lifetime benefits."}
               </FormLabel>
             </div>
 
-            <div className="mb-3 overlay-form-input-row">
-              <FormLabel
-                for="tags"
-                className="form-label form-label-customized"
-              >
-                Enter codes 
-              </FormLabel>
-              <div className="form-group">
-                <ReactTagInput
-                  tags={tags}
-                  placeholder="Type code and press enter. You can stack codes."
-                  maxTags={6}
-                  editable={true}
-                  readOnly={false}
-                  removeOnBackspace={true}
-                  onChange={(newTags) => {
-                    setTags(newTags);
-                  }}
-                />
+            {remainingMaxCodes === 0 ? (
+              <></>
+            ) : (
+              <div className="mb-3 overlay-form-input-row">
+                <FormLabel
+                  for="tags"
+                  className="form-label form-label-customized"
+                >
+                  Enter codes (Remaining {remainingMaxCodes})
+                </FormLabel>
+                <div className="form-group">
+                  <ReactTagInput
+                    tags={tags}
+                    placeholder="Type code and press enter. You can stack codes."
+                    maxTags={remainingMaxCodes}
+                    editable={true}
+                    readOnly={false}
+                    removeOnBackspace={true}
+                    onChange={(newTags) => {
+                      setTags(newTags);
+                    }}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </DialogContent>
           <div className="d-flex flex-row align-items-center justify-content-end px-4 pb-4">
             <button
@@ -96,9 +121,26 @@ const RedeemCode = ({ open, handleClose }) => {
             >
               Cancel
             </button>
-            <button className="btn btn-outline-text btn-primary">
-              Apply codes
-            </button>
+
+            {remainingMaxCodes === 0 ? (
+              <></>
+            ) : (
+              <button
+                onClick={() => {
+                  console.log(tags.length * 1 === 0);
+                  if (tags.length * 1 === 0) {
+                    dispatch(
+                      showSnackbar("info", "Please enter a code to apply.")
+                    );
+                  } else {
+                    dispatch(redeemCodes(communityId, userId, tags)); // send a request to backend for redemption process.
+                  }
+                }}
+                className="btn btn-outline-text btn-primary"
+              >
+                Apply codes
+              </button>
+            )}
           </div>
         </div>
       </Dialog>

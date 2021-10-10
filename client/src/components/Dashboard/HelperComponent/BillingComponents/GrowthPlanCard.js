@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-
+import Chip from "@mui/material/Chip";
 import "./../../../../assets/Sass/Billing.scss";
 import { Divider } from "@material-ui/core";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
@@ -83,16 +83,16 @@ const PrettoSlider = styled(Slider)({
   },
 });
 
-const BasicPlanCard = ({ duration }) => {
+const GrowthPlanCard = ({ duration }) => {
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [registrations, setRegistrations] = React.useState(100);
-  const[price, setPrice] = React.useState(85);
+  const [price, setPrice] = React.useState(85);
 
   const handlePriceChange = () => {
     // Decide price based on monthly/yearly and no. of registrations
 
-    if(duration === "monthly") {
+    if (duration === "monthly") {
       // Charge 100%
       switch (registrations) {
         case 100:
@@ -113,12 +113,11 @@ const BasicPlanCard = ({ duration }) => {
         case 1000:
           setPrice(630);
           break;
-      
+
         default:
           break;
       }
-    }
-    else {
+    } else {
       // Charge 80%
 
       switch (registrations) {
@@ -140,14 +139,12 @@ const BasicPlanCard = ({ duration }) => {
         case 1000:
           setPrice(553);
           break;
-      
+
         default:
           break;
       }
     }
-
-  }
-
+  };
 
   useEffect(() => {
     handlePriceChange();
@@ -157,77 +154,73 @@ const BasicPlanCard = ({ duration }) => {
   const { communityDetails } = useSelector((state) => state.community);
   const { userDetails } = useSelector((state) => state.user);
 
+  const currentNumOfReg = communityDetails.allowedRegistrationLimit * 1;
+
   const displayRazorpay = async () => {
-
-    try{
-
+    try {
       const res = await loadRazorpay();
 
-    if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        return;
+      }
 
-    
+      let order = await fetch(`${BaseURL}razorpay/createCommunityPlanOrder`, {
+        method: "POST",
+        body: JSON.stringify({
+          planName: "Growth",
+          registrations: registrations,
+          price: price,
+          duration: duration,
+          communityId: communityDetails._id,
+          userId: userDetails._id,
+        }),
 
-    let order = await fetch(`${BaseURL}razorpay/createCommunityPlanOrder`, {
-      method: "POST",
-      body: JSON.stringify({
-        planName: "Growth",
-        registrations: registrations,
-        price: price,
-        duration: duration,
-        communityId: communityDetails._id,
-        userId: userDetails._id,
-      }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${communityToken}`,
+        },
+      });
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${communityToken}`,
-      },
-    });
+      if (!order.ok) {
+        throw new Error("something went wrong.");
+      }
 
-    if(!order.ok) {
-throw new Error("something went wrong.");
-    }
+      order = await order.json();
+      console.log(order);
 
-    order = await order.json();
-    console.log(order);
+      const options = {
+        key: "rzp_live_bDVAURs4oXxSGi",
+        amount: order.data.amount,
+        currency: "USD",
+        name: "Bluemeet",
+        description: `Growth Plan Subscription.`,
+        image:
+          "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg",
+        order_id: order.data.id,
+        handler: function (response) {
+          // dispatch(showSnackbar("success", "You payment was successful!"));
+        },
+        prefill: {
+          name: `${userDetails.firstName} ${userDetails.lastName}`,
+          email: userDetails.email,
+        },
+        notes: {
+          // We can add some notes here
+        },
+        theme: {
+          color: "#538BF7",
+        },
+      };
+      var paymentObject = new window.Razorpay(options);
 
-    const options = {
-      key: "rzp_live_bDVAURs4oXxSGi",
-      amount: order.data.amount,
-      currency: "USD",
-      name: "Bluemeet",
-      description: `Growth Plan Subscription.`,
-      image:
-        "https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-superJumbo-v4.jpg",
-      order_id: order.data.id,
-      handler: function (response) {
-        // dispatch(showSnackbar("success", "You payment was successful!"));
-      },
-      prefill: {
-        name: `${userDetails.firstName} ${userDetails.lastName}`,
-        email: userDetails.email,
-      },
-      notes: {
-        // We can add some notes here
-      },
-      theme: {
-        color: "#538BF7",
-      },
-    };
-    var paymentObject = new window.Razorpay(options);
-
-    paymentObject.open();
-    paymentObject.on("payment.failed", function (response) {
-      // dispatch(showSnackbar("error", `${response.error.reason}.`));
-    });
-
-    }catch(error) {
+      paymentObject.open();
+      paymentObject.on("payment.failed", function (response) {
+        // dispatch(showSnackbar("error", `${response.error.reason}.`));
+      });
+    } catch (error) {
       console.log(error);
     }
-    
   };
 
   const loadRazorpay = () => {
@@ -247,7 +240,14 @@ throw new Error("something went wrong.");
   return (
     <>
       <div className="pricing-plan-card p-4">
-        <div className="pricing-plan-name mb-3">Growth</div>
+        <div className="pricing-plan-name d-flex flex-row align-items-center justify-content-between mb-3">
+          <span>Growth</span>
+          {communityDetails.planName === "Growth" ? (
+            <Chip label="Current plan" color="success" />
+          ) : (
+            <></>
+          )}
+        </div>
         <div className="d-flex flex-row align-items-center mb-5">
           {}
           {duration === "yearly" ? (
@@ -462,15 +462,86 @@ throw new Error("something went wrong.");
             <div className="plan-feature-text">Priority support</div>
           </div>
         </div>
-        <button
-          onClick={() => {
-            setOpenDrawer(true);
-          }}
-          className="btn btn-outline-primary btn-outline-text"
-          style={{ width: "100%", marginTop: "80px" }}
-        >
-          Upgrade
-        </button>
+        {(() => {
+          switch (communityDetails.planName) {
+            case "Free":
+              return (
+                <button
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
+                  className="btn btn-outline-success btn-outline-text"
+                  style={{ width: "100%", marginTop: "80px" }}
+                >
+                  Upgrade
+                </button>
+              );
+            case "Growth":
+              return (
+                <div className="d-flex flex-row align-items-center justify-content-between">
+                  <Chip
+                    label="Current plan"
+                    color="success"
+                    style={{
+                      width: "49%",
+                      fontWeight: "500",
+                      marginTop: "80px",
+                    }}
+                  />
+
+                  {(() => {
+                    if (currentNumOfReg > registrations) {
+                   return   <button
+                        onClick={() => {
+                          setOpenDrawer(true);
+                        }}
+                        className="btn btn-outline-danger btn-outline-text"
+                        style={{ width: "49%", marginTop: "80px" }}
+                      >
+                        Downgrade
+                      </button>;
+                    }
+                    if (currentNumOfReg < registrations) {
+                     return <button
+                        onClick={() => {
+                          setOpenDrawer(true);
+                        }}
+                        className="btn btn-outline-success btn-outline-text"
+                        style={{ width: "49%", marginTop: "80px" }}
+                      >
+                        Upgrade
+                      </button>;
+                    }
+                    if (currentNumOfReg == registrations) {
+                     return <button
+                        disabled
+                        className="btn btn-outline-success btn-outline-text"
+                        style={{ width: "49%", marginTop: "80px" }}
+                      >
+                        Same as current plan
+                      </button>;
+                    }
+                  })()}
+                </div>
+              );
+
+            case "Custom":
+              return (
+                <button
+                  onClick={() => {
+                    setOpenDrawer(true);
+                  }}
+                  className="btn btn-outline-danger btn-outline-text"
+                  style={{ width: "100%", marginTop: "80px" }}
+                >
+                  Downgrade
+                </button>
+              );
+
+            default:
+              break;
+          }
+        })()}
       </div>
 
       <React.Fragment key="right">
@@ -544,7 +615,8 @@ throw new Error("something went wrong.");
                   Registrations / month
                 </div>
                 <div className="side-drawer-main-content-text ms-5 ps-5">
-                  {registrations}{/* This will be variable */}
+                  {registrations}
+                  {/* This will be variable */}
                   {/* <div className="plan-tax-text">month + applicable Tax</div> */}
                 </div>
               </div>
@@ -689,7 +761,7 @@ throw new Error("something went wrong.");
                     {" "}
                     Bluemeet terms & conditions{" "}
                   </a>
-                  for communities.
+                  for communities guildelines.
                 </div>{" "}
               </div>
 
@@ -700,7 +772,7 @@ throw new Error("something went wrong.");
                     setOpenDrawer(false);
                   }}
                   type="button"
-                  className="btn btn-primary btn-outline-text mt-4"
+                  className="btn btn-success btn-outline-text mt-4"
                   style={{ width: "100%" }}
                 >
                   Proceed to checkout
@@ -714,4 +786,4 @@ throw new Error("something went wrong.");
   );
 };
 
-export default BasicPlanCard;
+export default GrowthPlanCard;

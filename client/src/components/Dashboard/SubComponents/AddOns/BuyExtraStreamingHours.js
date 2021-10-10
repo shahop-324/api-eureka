@@ -60,7 +60,7 @@ const BuyExtraStreamingHours = ({ open, handleClose }) => {
       let order = await fetch(`${BaseURL}razorpay/createAddOnOrder`, {
         method: "POST",
         body: JSON.stringify({
-          addonName: "Organisers",
+          addonName: "Streaming hours",
           streamingHours: value,
           price: value * 35.99,
           communityId: communityDetails._id,
@@ -178,6 +178,7 @@ const BuyExtraStreamingHours = ({ open, handleClose }) => {
             </button>
             <button
             onClick={() => {
+              handleClose();
                 displayRazorpay();
             }}
               disabled={!value || value <= 0 ? true : false}

@@ -13,6 +13,7 @@ import BuyExtraStreamingHours from "./SubComponents/AddOns/BuyExtraStreamingHour
 import BuyExtraCloudStorage from "./SubComponents/AddOns/BuyExtraCloudStorage";
 import BuyExtraEmails from "./SubComponents/AddOns/BuyExtraEmails";
 import BuyExtraOrganiser from "./SubComponents/AddOns/BuyExtraOrganiser";
+import { useSelector } from "react-redux";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -89,6 +90,12 @@ const AddOnsAndPlan = () => {
   const [openEmailCredit, setOpenEmailCredit] = React.useState(false);
   const [openCloudStorage, setOpenCloudStorage] = React.useState(false);
 
+  const { communityDetails } = useSelector((state) => state.community);
+
+  const codesApplied = communityDetails.codesApplied.length;
+
+  const remainingMaxCodes = 3 - codesApplied * 1;
+
   const handleCloseRedeem = () => {
     setOpenRedeem(false);
   };
@@ -125,7 +132,7 @@ const AddOnsAndPlan = () => {
             }}
             className="btn btn-success btn-outline-text"
           >
-            Redeem AppSumo Code
+            Redeem AppSumo Code ({remainingMaxCodes} Remaining)
           </button>
         </div>
 

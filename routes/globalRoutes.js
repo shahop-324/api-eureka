@@ -8,6 +8,16 @@ const networkingController = require("./../controllers/networkingController");
 
 const router = express.Router();
 
+router.post("/generateCodes", globalController.generateCodes);
+
+router.get("/getCodes", globalController.getCodes);
+
+router.post(
+  "/redeemAppSumoCode",
+  authController.protectCommunity,
+  globalController.redeemAppSumoCode
+);
+
 router.post(
   "/createRTMPDestination/:eventId",
   authController.protectCommunity,

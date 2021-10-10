@@ -4,6 +4,13 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
+const AppSumoCodes = require("./../models/appSumoCodesModel");
+const Community = require("./../models/communityModel");
+const { v4: uuidv4 } = require("uuid");
+const { nanoid } = require("nanoid");
+
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -25,7 +32,6 @@ const {
   RtcRole,
   RtmRole,
 } = require("agora-access-token");
-const Community = require("../models/communityModel");
 const StreamDestination = require("../models/streamDestinationModel");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
@@ -545,4 +551,208 @@ exports.deleteStreamDestination = catchAsync(async (req, res, next) => {
     status: "success",
     message: "Stream destination deleted successfully!",
   });
+});
+
+exports.generateCodes = catchAsync(async (req, res, next) => {
+  try {
+    for (let i = 0; i <= 25000; i++) {
+      await AppSumoCodes.create({
+        code: nanoid(),
+      });
+      console.log("Successfully created code!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Codes created successfully!",
+  });
+});
+
+exports.getCodes = catchAsync(async (req, res, next) => {
+  const codes = await AppSumoCodes.find({});
+
+  res.status(200).json({
+    status: "success",
+    data: codes,
+  });
+});
+
+exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
+  // community Id
+  const communityId = req.body.communityId;
+  const userId = req.body.userId;
+  const codes = req.body.codes;
+
+  const userDoc = await User.findById(userId);
+
+  const communityDoc = await Community.findById(communityId);
+
+  const codesDoc = await AppSumoCodes.find({ status: "Unused" });
+
+  const codesArray = codesDoc.map((el) => el.code);
+
+  let bool = false; // Flag which indicates if codes we have recieved are legit or not
+
+  for (let element of codes) {
+    bool = codesArray.includes(element);
+  }
+
+  let numOfCodesRedeemed = communityDoc.codesApplied.length;
+
+  let providedUsedCode = false;
+
+  for (let element of codes) {
+    providedUsedCode = communityDoc.codesApplied.includes(element);
+  }
+
+  // Check if any the provided code is already added into community if yes then reject this redemption
+  // Check if community has already used 3 codes if yes then reject this redemption
+
+  const eligible = bool && !providedUsedCode && numOfCodesRedeemed * 1 <= 2;
+
+  if (eligible) {
+    try {
+      // Go forward with redemption process
+
+      // push new ones to the array of appSumo codes of this community's document
+
+      let totalNumOfCodes = 0;
+
+      for (let element of codes) {
+        totalNumOfCodes = communityDoc.codesApplied.push(element);
+      }
+
+      // Now get back total no. of codes in community doc
+
+      if (totalNumOfCodes * 1 === 1) {
+        // If total = 1 => Orgainser: 2, Mails: 2500, Storage: 15GB, Registrations: 100, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: false, integration: none, analytics: false, booth: false, sponsor: false, customisation: false, tables: upto 60
+        communityDoc.isAppSumoCustomer = true;
+        communityDoc.tablesLimit = 60;
+        communityDoc.isAnalyticsAvailable = false;
+        communityDoc.isLiveStreamingAvailable = false;
+        communityDoc.availableIntegrations = "none";
+        communityDoc.isCustomisationAvailable = false;
+        communityDoc.isBoothAvailable = false;
+        communityDoc.isSponsorAvailable = false;
+        communityDoc.isCouponsAvailable = true;
+        communityDoc.isBackdropAvailable = true;
+        communityDoc.ticketingCharge = 7;
+        communityDoc.allowedRegistrationLimit = 100;
+        communityDoc.cloudStorageLimit = 15;
+        communityDoc.emailLimit = 2500;
+        communityDoc.streamingHoursLimit = 72;
+        communityDoc.organisersLimit = 2;
+        communityDoc.planName = "AppSumo";
+      }
+      if (totalNumOfCodes * 1 === 2) {
+        // If total = 2 => Orgainser: 4, Mails: 4000, Storage: 30GB, Registrations: 250, Streaming: 72 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: Zapier, Google Analytics, Facebook pixel, analytics: true, booth: false, sponsor: false, customisation: false, tables: upto 210
+
+        communityDoc.isAppSumoCustomer = true;
+        communityDoc.tablesLimit = 210;
+        communityDoc.isAnalyticsAvailable = true;
+        communityDoc.isLiveStreamingAvailable = true;
+        communityDoc.availableIntegrations = "zapier google facebook";
+        communityDoc.isCustomisationAvailable = false;
+        communityDoc.isBoothAvailable = false;
+        communityDoc.isSponsorAvailable = false;
+        communityDoc.isCouponsAvailable = true;
+        communityDoc.isBackdropAvailable = true;
+        communityDoc.ticketingCharge = 7;
+        communityDoc.allowedRegistrationLimit = 250;
+        communityDoc.cloudStorageLimit = 30;
+        communityDoc.emailLimit = 4000;
+        communityDoc.streamingHoursLimit = 72;
+        communityDoc.organisersLimit = 4;
+        communityDoc.planName = "AppSumo";
+      }
+      if (totalNumOfCodes * 1 === 3) {
+        // If total = 2 => Orgainser: 8, Mails: 8000, Storage: 60GB, Registrations: 500, Streaming: 144 hours, backdrop: true, coupons: true, mail: true, live Stream: true, integration: all, analytics: true, booth: true, sponsor: true, customisation: true, tables: upto 600
+
+        communityDoc.isAppSumoCustomer = true;
+        communityDoc.tablesLimit = 600;
+        communityDoc.isAnalyticsAvailable = true;
+        communityDoc.isLiveStreamingAvailable = true;
+        communityDoc.availableIntegrations = "all";
+        communityDoc.isCustomisationAvailable = true;
+        communityDoc.isBoothAvailable = true;
+        communityDoc.isSponsorAvailable = true;
+        communityDoc.isCouponsAvailable = true;
+        communityDoc.isBackdropAvailable = true;
+        communityDoc.ticketingCharge = 7;
+        communityDoc.allowedRegistrationLimit = 500;
+        communityDoc.cloudStorageLimit = 60;
+        communityDoc.emailLimit = 8000;
+        communityDoc.streamingHoursLimit = 144;
+        communityDoc.organisersLimit = 8;
+        communityDoc.planName = "AppSumo";
+      }
+
+      // Save all changes
+
+      const updatedCommunity = await communityDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      // Mark the used codes as used in our database.
+
+      for (let element of codes) {
+        await AppSumoCodes.findOneAndUpdate(
+          { code: element },
+          { status: "Used" }
+        );
+        // Updated codes status as well
+      }
+
+      //* Now send a mail to community admin and person who applied code that the process was successful. Enjoy Bluemeet and have a good day ahead. Thanks for embarking on this journey with us. See you soon.
+
+      const mailsArray = [communityDoc.superAdminEmail, userDoc.email];
+
+      for (let element of mailsArray) {
+        const msg = {
+          to: element, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: "AppSumo codes redeemed!",
+          text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        };
+
+        sgMail
+          .send(msg)
+          .then(async () => {
+            console.log(
+              "Confirmation mail sent to User and Community Super admin."
+            );
+          })
+          .catch(async (error) => {
+            console.log(
+              "Failed to send confirmation mail to user and Community."
+            );
+          });
+      }
+
+      // console.log(updatedCommunity);
+      // console.log(communityDoc);
+
+      res.status(200).json({
+        status: "success",
+        message: "Codes redeemed successfully!",
+        data: updatedCommunity, // Send updated commuity as response
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    // Someone is just trying their luck. Just let it pass.
+
+    // Codes are not valid then send response saying that
+
+    res.status(400).json({
+      status: "error",
+      message: "Codes are not valid or already used please check again.",
+    });
+  }
 });

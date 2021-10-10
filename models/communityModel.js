@@ -64,37 +64,154 @@ const communitySchema = new mongoose.Schema(
       default: false,
     },
     // ! /////////////////////////////////////////////////////////////////////////
+    isAppSumoCustomer: {
+      type: Boolean,
+      default: false,
+    },
+    codesApplied: [
+      {
+        type: String,
+      },
+    ],
+    tablesLimit: {
+      type: Number,
+      default: 10, // For free plan
+    },
+    isAnalyticsAvailable: {
+      type: Boolean, // * will only be checked if customer is from App Sumo
+      default: false, // * For Free plan
+    },
+    isLiveStreamingAvailable: {
+      type: Boolean, // * will only be checked if customer is from App Sumo
+      default: false, // * For Free plan
+    },
+    availableIntegrations: {
+      type: String,
+      default: "none", // * For Free plan
+      enum: ["none", "all", "zapier google facebook"],
+    },
+    isCustomisationAvailable: {
+      type: Boolean,
+      default: false, // * For Free plan
+    },
+    isBoothAvailable: {
+      type: Boolean,
+      default: false, // * For Free plan
+    },
+    isSponsorAvailable: {
+      type: Boolean,
+      default: false, // * For Free plan
+    },
+    isCouponsAvailable: {
+      type: Boolean,
+      default: false, // * For Free plan
+    },
+    isBackdropAvailable: {
+      type: Boolean,
+      default: false, // * For Free plan
+    },
+    ticketingCharge: {
+      type: Number, // Commision on each ticket in percentage.
+      default: 15,  // * For Free plan
+    },
     allowedRegistrationLimit: {
       type: Number,
-      default: 10,
+      default: 10, // * For Free plan
+    },
+    extraRegistrationsLimit: {
+      type: Number, 
+      default: 0, // * For Free plan
+    },
+    extraRegistrationsToBeExpiredAt: {
+      type: Date, // 2 months from the date of purchase.
+    },
+    extraRegistrationsReceieved: {
+      type: Number,
+      default: 0,
     },
     registrationsReceived: {
       type: Number, // This will be resetted to 0 at the end of every billing cycle.
-      default: 0,
+      default: 0, 
     },
     cloudStorageLimit: {
       type: Number, // In GB
+      default: 1, // * For Free plan
+    },
+    extraCloudStorageLimit: {
+      type: Number,
+      default: 0, 
+    },
+    extraCloudStorageLimitToBeExpiredAt: {
+      type: Date,
+    },  
+    extraStorageLimitUtilised: {
+      type: Number,
+      default: 0,
     },
     storageLimitUtilised: {
       type: Number,
+      default: 0,
     },
     emailLimit: {
       type: Number, // Limit on emails that can be sent
+      default: 100, // * For Free plan
+    },
+    extraEmailLimit: {
+      type: Number, 
+      default: 0,
+    },
+    extraEmailLimitToBeExpiredAt: {
+      type: Date,
+    },
+    extraEmailLimitUsed: {
+      type: Number,
+      default: 0,
     },
     emailLimitUsed: {
       type: Number,
+      default: 0,
     },
     streamingHoursLimit: {
       type: Number, // Limit on streaming hours
+      default: 2, // * For Free plan
+    },
+    extraStreamingHours: {
+      type: Number,
+      default: 0,
+    },
+    extraStreamingHoursToBeExpiredAt: {
+      type: Date,
+    },
+    extraStreamingHoursUsed: {
+      type: Number,
+      default: 0, 
     },
     streamingHoursUsed: {
       type: Number,
+      default: 0,
     },
     organisersLimit: {
       type: Number, // Limit on number of organisers in team
+      default: 1, // * For Free plan
+    },
+    extraOrganiserLimit: {
+      type: Number,
+      default: 0,
+    },
+    extraOrganiserLimitToBeExpiredAt: {
+      type: Date,
+    },
+    extraOrganiserLimitUsed: {
+      type: Number,
+      default: 0,
     },
     organisersLimitUsed: {
       type: Number,
+      default: 0,
+    },
+    downgradeToFreeOnNextCycle: {
+      type: Boolean,
+      default: false,
     },
     planName: {
       type: String,
@@ -104,7 +221,6 @@ const communitySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-
     planTransactions: [
       {
         type: mongoose.Schema.ObjectId,
