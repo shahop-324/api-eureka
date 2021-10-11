@@ -4,11 +4,10 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DialogContent from "@material-ui/core/DialogContent";
-import AppSumo from "./../../../assets/images/clip-unsubscribed.svg";
-
+import WelcomeBack from "./../../../assets/images/welcome-back.png";
 import dateFormat from "dateformat";
 import { useDispatch, useSelector } from "react-redux";
-import { downgradeToFree } from "../../../actions";
+import {restartMembership } from "../../../actions";
 import { useParams } from "react-router";
 
 const Heading = styled.div`
@@ -36,7 +35,7 @@ const Image = styled.img`
   border-radius: 10px;
 `;
 
-const DowngradeToFree = ({ open, handleClose }) => {
+const RestartMembership = ({ open, handleClose }) => {
   const params = useParams();
   const dispatch = useDispatch();
 
@@ -56,7 +55,7 @@ const DowngradeToFree = ({ open, handleClose }) => {
       >
         <div className="" style={{ width: "520px" }}>
           <HeaderFooter className="p-3">
-            <Heading className="">Downgrade & Lose Benefits</Heading>
+            <Heading className="">Welcome back</Heading>
           </HeaderFooter>
 
           <DialogContent
@@ -65,17 +64,16 @@ const DowngradeToFree = ({ open, handleClose }) => {
           >
             {/* Here write main content */}
 
-            <Image className="mb-4" src={AppSumo} />
+            <Image className="mb-4" src={WelcomeBack} />
 
             <div className="mb-3">
               <FormLabel className="mb-2">
-                You will lose all of your access to premium features from
-                starting of next Billing cycle on{" "}
-                {dateFormat(
+                This will restart your membership and you will continue to have all features after {dateFormat(
                   communityDetails.planExpiresAt,
                   "ddd, mmm dS, yyyy"
-                )}
-                . Are you sure to proceed ?
+                )} (current billing period). Your credit card will be charged accordingly as your current plan price at the end of this billing period. Please confirm to continue.{" "}
+                
+                
               </FormLabel>
             </div>
           </DialogContent>
@@ -90,11 +88,11 @@ const DowngradeToFree = ({ open, handleClose }) => {
             </button>
             <button
               onClick={() => {
-                dispatch(downgradeToFree(communityId, handleClose));
+                dispatch(restartMembership(communityId, handleClose));
               }}
-              className="btn btn-outline-text btn-danger"
+              className="btn btn-outline-text btn-success"
             >
-              Proceed
+              Confirm
             </button>
           </div>
         </div>
@@ -103,4 +101,4 @@ const DowngradeToFree = ({ open, handleClose }) => {
   );
 };
 
-export default DowngradeToFree;
+export default RestartMembership;

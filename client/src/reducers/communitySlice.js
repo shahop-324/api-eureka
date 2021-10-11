@@ -14,6 +14,7 @@ const communitySlice = createSlice({
     invitations: [],
     communityManagers: [],
     uplooadPercent: 0, // Number indicating upload progress (Range => 0-100%)
+    transactions: [],
   },
   reducers: {
     ResetError(state, action) {
@@ -44,6 +45,9 @@ const communitySlice = createSlice({
     },
     FetchInvitations(state, action) {
       state.invitations = action.payload.invitations;
+    },
+    FetchTransactions(state, action) {
+state.transactions = action.payload.transactions;
     },
 
     FetchCommunityManagers(state, action) {

@@ -5,12 +5,11 @@ import { Divider } from "@material-ui/core";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import Chip from "@mui/material/Chip";
 import GetProductDemo from "./GetProductDemo";
+import RequestDemo from "../../../StaticScreens/FormComponents/RequestDemo";
 
 
 
 const EnterprisePlanCard = () => {
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-
   const [openGetDemo, setOpenGetDemo] = React.useState(false);
 
   const handleCloseGetDemo = () => {
@@ -164,7 +163,7 @@ const EnterprisePlanCard = () => {
           Schedule a demo
         </button>
       </div>
-      <GetProductDemo open={openGetDemo} handleClose={handleCloseGetDemo} />
+      <RequestDemo openDemoForm={openGetDemo} handleCloseRequestDemo={handleCloseGetDemo} />
     </>
   );
 };

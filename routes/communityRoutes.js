@@ -17,15 +17,43 @@ const router = express.Router();
 
 router.get("/validate", authController.authenticateCommunity);
 
-router.post("/generateApiKey/:communityId", authController.protectCommunity, communityController.generateApiKey);
+router.post(
+  "/generateApiKey/:communityId",
+  authController.protectCommunity,
+  communityController.generateApiKey
+);
 
-router.get("/getApiKeys/:communityId", authController.protectCommunity, communityController.getApiKeys);
+router.get(
+  "/getApiKeys/:communityId",
+  authController.protectCommunity,
+  communityController.getApiKeys
+);
 
-router.post("/updateVideo", authController.protectCommunity, communityController.linkCommunityVideoToEvent);
-router.post("/uploadVideo", authController.protectCommunity, communityController.uploadVideo);
-router.post("/getCommunityVideo", authController.protectCommunity, communityController.getAllVideosForCommunity);
-router.post("/getEventVideo", authController.protectCommunity, communityController.getAllVideosForEvent);
-router.delete("/deleteVideo", authController.protectCommunity, communityController.deleteVideo);
+router.post(
+  "/updateVideo",
+  authController.protectCommunity,
+  communityController.linkCommunityVideoToEvent
+);
+router.post(
+  "/uploadVideo",
+  authController.protectCommunity,
+  communityController.uploadVideo
+);
+router.post(
+  "/getCommunityVideo",
+  authController.protectCommunity,
+  communityController.getAllVideosForCommunity
+);
+router.post(
+  "/getEventVideo",
+  authController.protectCommunity,
+  communityController.getAllVideosForEvent
+);
+router.delete(
+  "/deleteVideo",
+  authController.protectCommunity,
+  communityController.deleteVideo
+);
 
 router.get(
   "/events",
@@ -219,6 +247,18 @@ router.post(
   "/:eventId/addTicket",
   authController.protectCommunity,
   eventController.createTicket
+);
+
+router.post(
+  "/downgradeToFree",
+  authController.protectCommunity,
+  communityController.downgradeToFree
+);
+
+router.post(
+  "/restartMembership",
+  authController.protectCommunity,
+  communityController.restartMembership
 );
 
 // router.patch("/event/:id/update",authController.protectCommunity,eventController.updateEvent)

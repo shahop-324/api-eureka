@@ -6,6 +6,15 @@ import { useSelector } from "react-redux";
 import DowngradeToFree from "../../SubComponents/DowngradeToFree";
 import Chip from "@mui/material/Chip";
 
+import styled from 'styled-components';
+
+const TextInfo = styled.div`
+font-weight: 500;
+font-family: "Ubuntu";
+color: #212121;
+font-size: 0.8rem;
+`
+
 const FreePlanCard = () => {
   const [openConfirmation, setOpenConfirmation] = React.useState(false);
 
@@ -91,26 +100,50 @@ const FreePlanCard = () => {
             <div className="plan-feature-text">Email support</div>
           </div>
         </div>
-        {communityDetails.planName === "Free" ?  <Chip
-                    label="Current plan"
-                    color="success"
-                    style={{
-                      width: "100%",
-                      fontWeight: "500",
-                      marginTop: "80px",
-                    }}
-                  /> : <button
-          onClick={() => {
-            setOpenConfirmation(true);
-          }}
-          className="btn btn-outline-primary btn-outline-text mt-3"
-          style={{ width: "100%", marginTop: "80px" }}
-        >
-          {communityDetails.isUsingFreePlan ? "Upgrade" : "Downgrade & Lose Benefits"}
-        </button> }
-        
+        {communityDetails.downgradeToFreeOnNextCycle ? (
+          <>
+          <div className="d-flex flex-row align-items-center justify-content-between mb-3">
+            <Chip
+              label="Will be downgraded to free on next billing"
+              color="error"
+              style={{
+                width: "100%",
+                fontWeight: "500",
+                marginTop: "20px",
+              }}
+            />
+          </div>
+          <TextInfo>Current plan will not be renewed at the end of current billing cycle.</TextInfo>
+          </>
+        ) : communityDetails.planName === "Free" ? (
+          <Chip
+            label="Current plan"
+            color="primary"
+            style={{
+              width: "100%",
+              fontWeight: "500",
+              marginTop: "80px",
+            }}
+          />
+        ) : (
+          <button
+            disabled={communityDetails.planName === "AppSumo" ? true : false}
+            onClick={() => {
+              setOpenConfirmation(true);
+            }}
+            className="btn btn-outline-primary btn-outline-text mt-3"
+            style={{ width: "100%", marginTop: "80px" }}
+          >
+            {communityDetails.isUsingFreePlan
+              ? "Upgrade"
+              : "Downgrade & Lose Benefits"}
+          </button>
+        )}
       </div>
-      <DowngradeToFree open={openConfirmation} handleClose={handleCloseConfirmation} />
+      <DowngradeToFree
+        open={openConfirmation}
+        handleClose={handleCloseConfirmation}
+      />
     </>
   );
 };

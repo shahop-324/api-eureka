@@ -155,7 +155,6 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         const price = paymentEntity.amount;
         const currency = paymentEntity.currency;
         const planName = paymentEntity.notes.planName;
-        const timestamp = paymentEntity.created_at;
         const transactionId = paymentEntity.id;
 
         const userDoc = await User.findById(userId);
@@ -177,6 +176,7 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityDoc.allowedRegistrationLimit = registrations * 1;
         communityDoc.isUsingFreePlan = false;
         communityDoc.planTransactions.push(newCommunityTransaction._id);
+        communityDoc.downgradeToFreeOnNextCycle = false;
 
         await communityDoc.save({ new: true, validateModifiedOnly: true });
       } catch (error) {
@@ -193,12 +193,9 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
       const emailCredits = paymentEntity.notes.emailCredits;
       const streamingHours = paymentEntity.notes.streamingHours;
       const numOfOrganiserSeats = paymentEntity.notes.numOfOrganiserSeats;
-
       const price = paymentEntity.amount;
       const currency = paymentEntity.currency;
-      const timestamp = paymentEntity.created_at;
       const transactionId = paymentEntity.id;
-
       const userDoc = await User.findById(userId);
       const communityDoc = await Community.findByIdAndUpdate(communityId);
 

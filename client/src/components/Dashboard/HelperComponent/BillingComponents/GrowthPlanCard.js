@@ -4,7 +4,7 @@ import Chip from "@mui/material/Chip";
 import "./../../../../assets/Sass/Billing.scss";
 import { Divider } from "@material-ui/core";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { IconButton } from "@material-ui/core";
@@ -84,7 +84,6 @@ const PrettoSlider = styled(Slider)({
 });
 
 const GrowthPlanCard = ({ duration }) => {
-  const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [registrations, setRegistrations] = React.useState(100);
   const [price, setPrice] = React.useState(85);
@@ -467,6 +466,7 @@ const GrowthPlanCard = ({ duration }) => {
             case "Free":
               return (
                 <button
+                disabled={communityDetails.planName === "AppSumo" ? true : false }
                   onClick={() => {
                     setOpenDrawer(true);
                   }}
@@ -475,6 +475,21 @@ const GrowthPlanCard = ({ duration }) => {
                 >
                   Upgrade
                 </button>
+              );
+            case "AppSumo":
+              return (
+                <>
+                  <button
+                  disabled={communityDetails.planName === "AppSumo" ? true : false }
+                    onClick={() => {
+                      setOpenDrawer(true);
+                    }}
+                    className="btn btn-outline-success btn-outline-text"
+                    style={{ width: "100%", marginTop: "80px" }}
+                  >
+                    Upgrade
+                  </button>
+                </>
               );
             case "Growth":
               return (
@@ -491,35 +506,43 @@ const GrowthPlanCard = ({ duration }) => {
 
                   {(() => {
                     if (currentNumOfReg > registrations) {
-                   return   <button
-                        onClick={() => {
-                          setOpenDrawer(true);
-                        }}
-                        className="btn btn-outline-danger btn-outline-text"
-                        style={{ width: "49%", marginTop: "80px" }}
-                      >
-                        Downgrade
-                      </button>;
+                      return (
+                        <button
+                        disabled={communityDetails.planName === "AppSumo" ? true : false }
+                          onClick={() => {
+                            setOpenDrawer(true);
+                          }}
+                          className="btn btn-outline-danger btn-outline-text"
+                          style={{ width: "49%", marginTop: "80px" }}
+                        >
+                          Downgrade
+                        </button>
+                      );
                     }
                     if (currentNumOfReg < registrations) {
-                     return <button
-                        onClick={() => {
-                          setOpenDrawer(true);
-                        }}
-                        className="btn btn-outline-success btn-outline-text"
-                        style={{ width: "49%", marginTop: "80px" }}
-                      >
-                        Upgrade
-                      </button>;
+                      return (
+                        <button
+                        disabled={communityDetails.planName === "AppSumo" ? true : false }
+                          onClick={() => {
+                            setOpenDrawer(true);
+                          }}
+                          className="btn btn-outline-success btn-outline-text"
+                          style={{ width: "49%", marginTop: "80px" }}
+                        >
+                          Upgrade
+                        </button>
+                      );
                     }
                     if (currentNumOfReg == registrations) {
-                     return <button
-                        disabled
-                        className="btn btn-outline-success btn-outline-text"
-                        style={{ width: "49%", marginTop: "80px" }}
-                      >
-                        Same as current plan
-                      </button>;
+                      return (
+                        <button
+                          disabled
+                          className="btn btn-outline-success btn-outline-text"
+                          style={{ width: "49%", marginTop: "80px" }}
+                        >
+                          Same as current plan
+                        </button>
+                      );
                     }
                   })()}
                 </div>
@@ -528,6 +551,7 @@ const GrowthPlanCard = ({ duration }) => {
             case "Custom":
               return (
                 <button
+                disabled={communityDetails.planName === "AppSumo" ? true : false }
                   onClick={() => {
                     setOpenDrawer(true);
                   }}

@@ -15,6 +15,10 @@ import BuyExtraEmails from "./SubComponents/AddOns/BuyExtraEmails";
 import BuyExtraOrganiser from "./SubComponents/AddOns/BuyExtraOrganiser";
 import { useSelector } from "react-redux";
 
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { IconButton } from "@material-ui/core";
+import RestartMembership from "./SubComponents/RestartMembership";
+
 const SectionHeading = styled.div`
   font-size: 1.25rem;
   font-weight: 500;
@@ -83,6 +87,8 @@ const AddOnPrice = styled.div`
 `;
 
 const AddOnsAndPlan = () => {
+  const [openRestartMembership, setOpenRestartMembership] =
+    React.useState(false);
   const [openRedeem, setOpenRedeem] = React.useState(false);
   const [openRegistrations, setOpenRegistrations] = React.useState(false);
   const [openOrganisers, setOpenOrganisers] = React.useState(false);
@@ -95,6 +101,10 @@ const AddOnsAndPlan = () => {
   const codesApplied = communityDetails.codesApplied.length;
 
   const remainingMaxCodes = 3 - codesApplied * 1;
+
+  const handleCloseRestartMembership = () => {
+    setOpenRestartMembership(false);
+  };
 
   const handleCloseRedeem = () => {
     setOpenRedeem(false);
@@ -120,20 +130,67 @@ const AddOnsAndPlan = () => {
     setOpenCloudStorage(false);
   };
 
+  const RegistrationPercentage =
+    ((communityDetails.extraRegistrationsReceieved +
+      communityDetails.registrationsReceived) /
+      (communityDetails.extraRegistrationsLimit +
+        communityDetails.allowedRegistrationLimit)) *
+    100;
+
+  const StreamingPercentage =
+    ((communityDetails.extraStreamingHoursUsed +
+      communityDetails.streamingHoursUsed) /
+      (communityDetails.streamingHoursLimit +
+        communityDetails.extraStreamingHours)) *
+    100;
+
+  const OrganiserLimitPercentage =
+    ((communityDetails.organisersLimitUsed +
+      communityDetails.extraOrganiserLimitUsed) /
+      (communityDetails.organisersLimit +
+        communityDetails.extraOrganiserLimit)) *
+    100;
+
+  const EmailLimitPercentage =
+    ((communityDetails.emailLimitUsed + communityDetails.extraEmailLimitUsed) /
+      (communityDetails.emailLimit + communityDetails.extraEmailLimit)) *
+    100;
+
+  const CloudStorageLimitPercentage =
+    ((communityDetails.extraStorageLimitUtilised +
+      communityDetails.storageLimitUtilised) /
+      (communityDetails.cloudStorageLimit +
+        communityDetails.extraCloudStorageLimit)) *
+    100;
+
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <SectionHeading>Current Plan and Usage</SectionHeading>
-          <button
-            type="button"
-            onClick={() => {
-              setOpenRedeem(true);
-            }}
-            className="btn btn-success btn-outline-text"
-          >
-            Redeem AppSumo Code ({remainingMaxCodes} Remaining)
-          </button>
+          <div className="d-flex flex-row align-items-center">
+            {communityDetails.downgradeToFreeOnNextCycle ? (
+              <button
+                onClick={() => {
+                  setOpenRestartMembership(true);
+                }}
+                className="btn btn-primary btn-outline-text me-3"
+              >
+                Restart membership
+              </button>
+            ) : (
+              <></>
+            )}
+
+            <button
+              onClick={() => {
+                setOpenRedeem(true);
+              }}
+              className="btn btn-success btn-outline-text"
+            >
+              Redeem AppSumo Code ({remainingMaxCodes} Remaining)
+            </button>
+          </div>
         </div>
 
         <CurrentPlanContainer className="mx-4 px-4 pt-4 pb-1 mb-4">
@@ -146,13 +203,22 @@ const AddOnsAndPlan = () => {
             {/* Radial Indicator 1 */}
             <div className="registrations-in-period p-0 px-4 d-flex flex-row align-items-center">
               <div className="radial-chart-container me-3">
-                <div className="percentage-label">50%</div>
-                <RadialChart value="50" />
+                <div className="percentage-label">
+                  {RegistrationPercentage}%
+                </div>
+                <RadialChart value={RegistrationPercentage} />
               </div>
 
               <div className="limit-value-and-heading-conatiner">
                 <div className="consumed-value">
-                  50 <span className="limit-value-small-text"> / 100</span>
+                  {communityDetails.extraRegistrationsReceieved +
+                    communityDetails.registrationsReceived}{" "}
+                  <span className="limit-value-small-text">
+                    {" "}
+                    /{" "}
+                    {communityDetails.extraRegistrationsLimit +
+                      communityDetails.allowedRegistrationLimit}
+                  </span>
                 </div>
                 <div className="limit-heading">Registrations</div>
               </div>
@@ -161,43 +227,64 @@ const AddOnsAndPlan = () => {
             {/* Radial Indicator 2 */}
             <div className="streaming-hours p-0 px-4 d-flex flex-row align-items-center">
               <div className="radial-chart-container me-3">
-                <div className="percentage-label">30%</div>
-                <RadialChart value="30" />
+                <div className="percentage-label">{StreamingPercentage}%</div>
+                <RadialChart value={StreamingPercentage} />
               </div>
 
               <div className="limit-value-and-heading-conatiner">
                 <div className="consumed-value">
-                  21.6 hrs{" "}
-                  <span className="limit-value-small-text"> / 72 Hrs</span>
+                  {communityDetails.extraStreamingHoursUsed +
+                    communityDetails.streamingHoursUsed}{" "}
+                  Hrs{" "}
+                  <span className="limit-value-small-text">
+                    {" "}
+                    /{" "}
+                    {communityDetails.streamingHoursLimit +
+                      communityDetails.extraStreamingHours}{" "}
+                    Hrs
+                  </span>
                 </div>
                 <div className="limit-heading">Streaming</div>
               </div>
             </div>
             <div className="streaming-hours p-0 px-4 d-flex flex-row align-items-center">
               <div className="radial-chart-container me-3">
-                <div className="percentage-label">30%</div>
-                <RadialChart value="30" />
+                <div className="percentage-label">
+                  {OrganiserLimitPercentage}%
+                </div>
+                <RadialChart value={OrganiserLimitPercentage} />
               </div>
 
               <div className="limit-value-and-heading-conatiner">
                 <div className="consumed-value">
-                  2 <span className="limit-value-small-text"> / 5</span>
+                  {communityDetails.organisersLimitUsed +
+                    communityDetails.extraOrganiserLimitUsed}{" "}
+                  <span className="limit-value-small-text">
+                    {" "}
+                    /{" "}
+                    {communityDetails.organisersLimit +
+                      communityDetails.extraOrganiserLimit}
+                  </span>
                 </div>
                 <div className="limit-heading">Team members</div>
               </div>
             </div>
             <div className="streaming-hours p-0 px-4 d-flex flex-row align-items-center">
               <div className="radial-chart-container me-3">
-                <div className="percentage-label">30%</div>
-                <RadialChart value="30" />
+                <div className="percentage-label">{EmailLimitPercentage}%</div>
+                <RadialChart value={EmailLimitPercentage} />
               </div>
 
               <div className="limit-value-and-heading-conatiner">
                 <div className="consumed-value">
-                  1230{" "}
+                  {communityDetails.emailLimitUsed +
+                    communityDetails.extraEmailLimitUsed}{" "}
                   <span className="limit-value-small-text">
                     {" "}
-                    / 2500 Available
+                    /{" "}
+                    {communityDetails.emailLimit +
+                      communityDetails.extraEmailLimit}{" "}
+                    Available
                   </span>
                 </div>
                 <div className="limit-heading">Emails</div>
@@ -205,14 +292,24 @@ const AddOnsAndPlan = () => {
             </div>
             <div className="streaming-hours p-0 px-4 d-flex flex-row align-items-center">
               <div className="radial-chart-container me-3">
-                <div className="percentage-label">30%</div>
-                <RadialChart value="30" />
+                <div className="percentage-label">
+                  {CloudStorageLimitPercentage}%
+                </div>
+                <RadialChart value={CloudStorageLimitPercentage} />
               </div>
 
               <div className="limit-value-and-heading-conatiner">
                 <div className="consumed-value">
-                  6.2 GB{" "}
-                  <span className="limit-value-small-text"> / 35 GB</span>
+                  {communityDetails.extraStorageLimitUtilised +
+                    communityDetails.storageLimitUtilised}{" "}
+                  GB{" "}
+                  <span className="limit-value-small-text">
+                    {" "}
+                    /{" "}
+                    {communityDetails.cloudStorageLimit +
+                      communityDetails.extraCloudStorageLimit}{" "}
+                    GB
+                  </span>
                 </div>
                 <div className="limit-heading">Cloud storage</div>
               </div>
@@ -345,6 +442,11 @@ const AddOnsAndPlan = () => {
           </AddOnCard>
         </AddOnsContainer>
       </div>
+
+      <RestartMembership
+        open={openRestartMembership}
+        handleClose={handleCloseRestartMembership}
+      />
 
       <RedeemCode open={openRedeem} handleClose={handleCloseRedeem} />
       <BuyExtraRegistrations

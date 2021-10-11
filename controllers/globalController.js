@@ -6,6 +6,8 @@ const AppError = require("../utils/appError");
 const apiFeatures = require("../utils/apiFeatures");
 const AppSumoCodes = require("./../models/appSumoCodesModel");
 const Community = require("./../models/communityModel");
+const CommunityTransaction = require("./../models/communityTransactionModel");
+const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 
@@ -755,4 +757,17 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
       message: "Codes are not valid or already used please check again.",
     });
   }
+});
+
+exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const transactions = await CommunityTransaction.find({
+    communityId: mongoose.Types.ObjectId(communityId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: transactions,
+  });
 });

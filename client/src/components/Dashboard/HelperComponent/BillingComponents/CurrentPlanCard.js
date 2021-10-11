@@ -8,6 +8,16 @@ import { navigationIndexForCommunityDash } from "../../../../actions";
 import Chip from "@mui/material/Chip";
 import GetProductDemo from "./GetProductDemo";
 import dateFormat from "dateformat";
+import RequestDemo from "../../../StaticScreens/FormComponents/RequestDemo";
+
+import styled from "styled-components";
+
+const TextInfo = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #212121;
+  font-size: 0.8rem;
+`;
 
 const CurrentPlanCard = () => {
   const [openContact, setOpenContact] = React.useState(false);
@@ -36,18 +46,30 @@ const CurrentPlanCard = () => {
 
   return (
     <>
-      <div className="current-plan-card px-4 py-3 mb-3" style={{height: "auto"}}>
+      <div
+        className="current-plan-card px-4 py-3 mb-3"
+        style={{ height: "auto" }}
+      >
         <div>
-          <div className="btn-outline-text" style={{height: "auto"}}>Current plan</div>
+          <div className="btn-outline-text" style={{ height: "auto" }}>
+            Current plan
+          </div>
           <div className="btn-outline-text my-4 current-plan-name d-flex flex-row align-items-center">
             <span className="me-4"> {communityDetails.planName} </span>
-            {communityDetails.planName === "AppSumo" ? <Chip label="Lifetime Deal" color="warning" /> : <></> }
+            {communityDetails.planName === "AppSumo" ? (
+              <Chip label="Lifetime Deal" color="warning" />
+            ) : (
+              <></>
+            )}
           </div>
-          <div className="plan-limit-left-message mb-3" style={{height: "auto"}}>
+          <div
+            className="plan-limit-left-message mb-3"
+            style={{ height: "auto" }}
+          >
             {/* You have 100 registrations available and 2hrs of streaming left. */}
             {/* Render dynamic numbers here, indicating how many registrations and streaming hour are left. */}
           </div>
-          <div className="plan-card-upgrade-message" style={{height: "auto"}}>
+          <div className="plan-card-upgrade-message" style={{ height: "auto" }}>
             {(() => {
               switch (communityDetails.planName) {
                 case "AppSumo":
@@ -97,12 +119,11 @@ const CurrentPlanCard = () => {
             </div>
             <div className="plan-renewal-date ms-3">
               {communityDetails.planName === "AppSumo" ||
-              communityDetails.planName === "Free"
-                ? <Chip label="Never" color="primary" variant="outlined" />
-                : dateFormat(
-                    communityDetails.planExpiresAt,
-                    "ddd, mmm dS, yyyy"
-                  )}
+              communityDetails.planName === "Free" ? (
+                <Chip label="Never" color="primary" variant="outlined" />
+              ) : (
+                dateFormat(communityDetails.planExpiresAt, "ddd, mmm dS, yyyy")
+              )}
             </div>
           </div>
           {communityDetails.planName === "AppSumo" ||
@@ -110,13 +131,29 @@ const CurrentPlanCard = () => {
             <></>
           ) : (
             <div className="d-flex flex-row justify-content-end">
-              <button
-                type="button"
-                onClick={handleOpenConfirmation}
-                className="btn btn-outline-primary btn-outline-text"
-              >
-                Cancel Membership
-              </button>
+              {communityDetails.downgradeToFreeOnNextCycle ? (
+                <div className="d-flex flex-column align-items-end">
+                  <div className="mb-3">
+                    <Chip
+                      label="Membership cancelled"
+                      color="error"
+                      style={{ fontWeight: "500", textAlign: "right" }}
+                    />
+                  </div>
+                  <TextInfo>
+                    Current plan will not be renewed at the end of current
+                    billing cycle.
+                  </TextInfo>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleOpenConfirmation}
+                  className="btn btn-outline-primary btn-outline-text"
+                >
+                  Cancel Membership
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -125,7 +162,10 @@ const CurrentPlanCard = () => {
         open={openConfirmation}
         handleClose={handleCloseConfirmation}
       />
-      <GetProductDemo open={openContact} handleClose={handleCloseContact} />
+      <RequestDemo
+        openDemoForm={openContact}
+        handleCloseRequestDemo={handleCloseContact}
+      />
     </>
   );
 };

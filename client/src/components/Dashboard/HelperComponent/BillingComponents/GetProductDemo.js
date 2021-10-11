@@ -67,15 +67,6 @@ const styles = {
   }),
 };
 
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 
 const renderInput = ({
   input,
@@ -95,7 +86,7 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-     {touched &&
+      {touched &&
         ((error && <FormError className="my-1">{error}</FormError>) ||
           (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
@@ -156,6 +147,16 @@ const showResults = (formValues) => {
   window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 const onSubmit = (formValues) => {
+  let ModifiedFormValues = {};
+
+  ModifiedFormValues.firstName = formValues.firstName;
+  ModifiedFormValues.lastName = formValues.lastName;
+  ModifiedFormValues.email = formValues.email;
+  ModifiedFormValues.companyName = formValues.companyName;
+  ModifiedFormValues.phoneNumber = formValues.phoneNumber;
+  ModifiedFormValues.jobTitle = formValues.jobTitle;
+  ModifiedFormValues.region = formValues.region.value;
+
   console.log(formValues);
   showResults(formValues);
   alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
@@ -291,7 +292,7 @@ const GetProductDemo = ({
                       Company
                     </FormLabel>
                     <Field
-                      name="headline"
+                      name="companyName"
                       type="text"
                       classes="form-control"
                       component={renderInput}
@@ -310,7 +311,7 @@ const GetProductDemo = ({
                       Job Title
                     </FormLabel>
                     <Field
-                      name="headline"
+                      name="jobTitle"
                       type="text"
                       classes="form-control"
                       component={renderInput}
@@ -328,9 +329,9 @@ const GetProductDemo = ({
                     Select Your Region
                   </FormLabel>
                   <Field
-                    name="interests"
+                    name="region"
                     component={renderEventPreferences}
-                    label="Event Preferences"
+                    label="Select your region"
                   />
                 </div>
               </div>
@@ -345,16 +346,19 @@ const GetProductDemo = ({
 
                 <div className="form-check mb-2">
                   <Field
-                    name="visibility"
+                    name="isEventAgency"
                     className="form-check-input"
                     type="radio"
                     // name="flexRadioDefault"
                     id="flexRadioDefault1"
-                    value="Public"
+                    value="Yes"
                     // component={renderInput}
                     component="input"
                   />
-                  <FormLabel className="form-check-label" for="flexRadioDefault1">
+                  <FormLabel
+                    className="form-check-label"
+                    for="flexRadioDefault1"
+                  >
                     Yes
                   </FormLabel>
                 </div>
@@ -365,11 +369,14 @@ const GetProductDemo = ({
                     name="visibility"
                     id="flexRadioDefault2"
                     // checked="true"
-                    value="Private"
+                    value="No"
                     // component={renderInput}
                     component="input"
                   />
-                  <FormLabel className="form-check-label" for="flexRadioDefault2">
+                  <FormLabel
+                    className="form-check-label"
+                    for="flexRadioDefault2"
+                  >
                     No
                   </FormLabel>
                 </div>
@@ -381,12 +388,10 @@ const GetProductDemo = ({
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      
                       name="policySigned"
                       required
                       id="defaultCheck1"
                       checked
-                      
                     />
                     <FormLabel
                       className="form-check-label btn-outline-text mb-3"

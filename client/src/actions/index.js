@@ -3532,7 +3532,7 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     dispatch(
       snackbarActions.openSnackBar({
         message: "Failed to update community profile. Please try again later.",
-        severity: "success",
+        severity: "error",
       })
     );
 
@@ -3541,6 +3541,124 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     }, 6000);
   }
 };
+
+export const downgradeToFree = (communityId, handleClose) => async(dispatch, getState) => {
+  try{
+    const res = await fetch(`${BaseURL}community/downgradeToFree`, {
+      method: "POST",
+      body: JSON.stringify({
+       communityId: communityId,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+
+    dispatch(
+      communityActions.EditCommunity({
+        community: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Downgraded to free. Changes will apply from next Billing Date.",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+  }
+  catch(error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to downgrade to free. Please try again.",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      dispatch(snackbarActions.closeSnackBar());
+    }, 6000);
+  }
+}
+
+export const restartMembership = (communityId, handleClose) => async(dispatch, getState) => {
+try{
+
+  const res = await fetch(`${BaseURL}community/restartMembership`, {
+    method: "POST",
+    body: JSON.stringify({
+     communityId: communityId,
+    }),
+
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getState().communityAuth.token}`,
+    },
+  });
+  if (!res.ok) {
+    if (!res.message) {
+      throw new Error("Something went wrong");
+    } else {
+      throw new Error(res.message);
+    }
+  }
+  const result = await res.json();
+
+
+  dispatch(
+    communityActions.EditCommunity({
+      community: result.data,
+    })
+  );
+
+  handleClose();
+
+  dispatch(
+    snackbarActions.openSnackBar({
+      message: "Membership restarted successfully!",
+      severity: "success",
+    })
+  );
+
+  setTimeout(function () {
+    dispatch(snackbarActions.closeSnackBar());
+  }, 6000);
+
+}
+catch(error) {
+  console.log(error);
+
+  dispatch(
+    snackbarActions.openSnackBar({
+      message: "Failed to restart your membership. Please try again.",
+      severity: "error",
+    })
+  );
+
+  setTimeout(function () {
+    dispatch(snackbarActions.closeSnackBar());
+  }, 6000);
+
+}
+}
 
 export const errorTrackerForEditCommunity =
   () => async (dispatch, getState) => {
@@ -8278,3 +8396,37 @@ export const resetProgress = () => async (dispatch, getState) => {
     console.log(error);
   }
 };
+
+export const fetchCommunityTransactions = (communityId) => async(dispatch, getState) => {
+  try{
+
+    let res = await fetch(`${BaseURL}getCommunityTransactions/${communityId}`, {
+      method: "GET",
+
+      headers: {
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res);
+
+    dispatch(communityActions.FetchTransactions({
+      transactions: res.data,
+    }));
+  }
+  catch(error) {
+    console.log(error);
+
+    // Show snack bar that failed to fetch transactions.
+  }
+}
+

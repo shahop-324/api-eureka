@@ -8,7 +8,39 @@ import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
-import { useSnackbar } from "notistack";
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const options = [
   { value: "RGe_0001", label: "Asia" },
@@ -23,14 +55,16 @@ const options = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
     color: "#757575",
   }),
 };
@@ -46,7 +80,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -55,17 +89,16 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   );
@@ -92,17 +125,16 @@ const renderPhoneInput = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   </div>
@@ -127,17 +159,16 @@ const renderEventPreferences = ({
       />
       {touched &&
         ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
+          <FormError className="my-1">
             {error}
-          </div>
+          </FormError>
         )) ||
           (warning && (
-            <div
+            <FormWarning
               className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
             >
               {warning}
-            </div>
+            </FormWarning>
           )))}
     </div>
   </div>
@@ -150,7 +181,6 @@ const RequestDemo = ({
   pristine,
   submitting,
 }) => {
-  const { enqueueSnackbar } = useSnackbar();
 
   const { error, succeded } = useSelector((state) => state.demo);
 
@@ -175,15 +205,8 @@ const RequestDemo = ({
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
+    
     return dispatch(errorTrackerForCreateDemo());
-  }
-  if (succeded) {
-    enqueueSnackbar("Demo request recieved successfully!", {
-      variant: "success",
-    });
   }
 
   return (
@@ -224,12 +247,12 @@ const RequestDemo = ({
                   }}
                 >
                   <div className="form-group">
-                    <label
+                    <FormLabel
                       for="communityHeadline"
                       className="form-label form-label-customized"
                     >
                       First name
-                    </label>
+                    </FormLabel>
 
                     <Field
                       name="firstName"
@@ -242,12 +265,12 @@ const RequestDemo = ({
                   </div>
 
                   <div className="form-group">
-                    <label
+                    <FormLabel
                       for="communityHeadline"
                       className="form-label form-label-customized"
                     >
                       Last name
-                    </label>
+                    </FormLabel>
                     <Field
                       name="lastName"
                       type="text"
@@ -261,12 +284,12 @@ const RequestDemo = ({
 
                 <div className="row edit-profile-form-row mb-3">
                   <div className="form-group">
-                    <label
+                    <FormLabel
                       for="communityHeadline"
                       className="form-label form-label-customized"
                     >
                       Work E-mail
-                    </label>
+                    </FormLabel>
                     <Field
                       name="email"
                       type="email"
@@ -282,12 +305,12 @@ const RequestDemo = ({
                   className="row edit-profile-form-row mb-3"
                   style={{ width: "100%" }}
                 >
-                  <label
+                  <FormLabel
                     for="communityHeadline"
                     className="form-label form-label-customized"
                   >
                     contact Number
-                  </label>
+                  </FormLabel>
                   <Field
                     name="phoneNumber"
                     component={renderPhoneInput}
@@ -297,12 +320,12 @@ const RequestDemo = ({
 
                 <div className="row edit-profile-form-row mb-3">
                   <div className="form-group">
-                    <label
+                    <FormLabel
                       for="communityHeadline"
                       className="form-label form-label-customized"
                     >
                       Company
-                    </label>
+                    </FormLabel>
                     <Field
                       name="companyName"
                       type="text"
@@ -316,12 +339,12 @@ const RequestDemo = ({
 
                 <div className="row edit-profile-form-row mb-3">
                   <div className="form-group">
-                    <label
+                    <FormLabel
                       for="communityHeadline"
                       className="form-label form-label-customized"
                     >
                       Job Title
-                    </label>
+                    </FormLabel>
                     <Field
                       name="jobTitle"
                       type="text"
@@ -334,12 +357,12 @@ const RequestDemo = ({
                 </div>
 
                 <div className="row edit-profile-form-row mb-3">
-                  <label
+                  <FormLabel
                     for="communityHeadline"
                     className="form-label form-label-customized"
                   >
                     Select Your Region
-                  </label>
+                  </FormLabel>
                   <Field
                     name="region"
                     component={renderEventPreferences}
@@ -349,12 +372,12 @@ const RequestDemo = ({
               </div>
 
               <div className="mb-4 overlay-form-input-row">
-                <label
+                <FormLabel
                   for="communityHeadline"
                   className="form-label form-label-customized"
                 >
                   Are you an event agency ?
-                </label>
+                </FormLabel>
 
                 <div className="form-check mb-2">
                   <Field
@@ -367,9 +390,9 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <label className="form-check-label" for="flexRadioDefault1">
+                  <FormLabel className="form-check-label" for="flexRadioDefault1">
                     Yes
-                  </label>
+                  </FormLabel>
                 </div>
                 <div className="form-check">
                   <Field
@@ -382,9 +405,9 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <label className="form-check-label" for="flexRadioDefault2">
+                  <FormLabel className="form-check-label" for="flexRadioDefault2">
                     No
-                  </label>
+                  </FormLabel>
                 </div>
               </div>
 
@@ -401,14 +424,14 @@ const RequestDemo = ({
                       checked
                       // onChange={this.onPrivacyPolicyChange}
                     />
-                    <label
+                    <FormLabel
                       className="form-check-label btn-outline-text mb-3"
                       htmlFor="flexCheckChecked"
                       style={{ color: "grey", fontSize: "13px" }}
                     >
                       By registering, I agree to recieve product updates and
                       marketing communications from Bluemeet.
-                    </label>
+                    </FormLabel>
                   </div>
                 </div>
               </div>

@@ -10,16 +10,17 @@ import "./../../assets/Sass/Billing.scss";
 import styled from "styled-components";
 import Ripple from "./../ActiveStatusRipple";
 import EnterprisePlanCard from "./HelperComponent/BillingComponents/EnterprisePlanCard";
-import { SwipeableDrawer } from "@material-ui/core";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import { IconButton } from "@material-ui/core";
-import BillingListFields from "./HelperComponent/BillingComponents/BillingListFields";
-import BillingHistoryDetailsCard from "./HelperComponent/BillingComponents/BillingHistoryDetailsCard";
+
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCommunity, getStripeConnectLink } from "../../actions";
+import {
+  fetchCommunity,
+  getStripeConnectLink,
+  fetchCommunityTransactions,
+} from "../../actions";
 import { useParams } from "react-router-dom";
 import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
 import GrowthPlanCard from "./HelperComponent/BillingComponents/GrowthPlanCard";
+import BillingHistory from "./SubComponents/BillingHistory";
 
 const DurationSwitchBase = styled.div`
   background-color: #e0e0e08c;
@@ -94,9 +95,14 @@ const Billing = () => {
 
   useEffect(() => {
     dispatch(fetchCommunity(communityId));
+    dispatch(fetchCommunityTransactions(communityId));
   }, []);
 
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
+  };
 
   const color = isStripeEnabled ? "#90EE7D" : "#dfe769";
 
@@ -181,7 +187,6 @@ const Billing = () => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Billing</div>
           <div className="sec-heading-action-button d-flex flex-row">
-            
             <button
               type="button"
               onClick={() => {
@@ -232,7 +237,7 @@ const Billing = () => {
               <FreePlanCard />
               {/* Basic plan goes here */}
 
-              <GrowthPlanCard duration={duration}/>
+              <GrowthPlanCard duration={duration} />
               {/* Pro Plan Goes here */}
 
               {/* Enterprise Plan Goes Here */}
@@ -245,50 +250,7 @@ const Billing = () => {
         {/* Here I have to use pagination */}
       </div>
 
-      <React.Fragment key="right">
-        <SwipeableDrawer
-          anchor="right"
-          open={openDrawer}
-          onOpen={() => {
-            console.log("Side nav was opended");
-          }}
-          onClose={() => {
-            console.log("Side nav was closed");
-          }}
-        >
-          <div
-            className="registration-more-details-right-drawer px-4 py-4"
-            style={{ width: "45vw" }}
-          >
-            <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
-              <div className="side-drawer-heading">Your Billing History</div>
-              <div
-                onClick={() => {
-                  setOpenDrawer(false);
-                }}
-              >
-                <IconButton aria-label="close-drawer">
-                  <CancelOutlinedIcon
-                    style={{ fontSize: "26", color: "#4D4D4D" }}
-                  />
-                </IconButton>
-              </div>
-            </div>
-            <div className="my-3">
-              <hr />
-            </div>
-            <BillingListFields />
-
-            <div className="my-3">
-              <hr />
-            </div>
-            <BillingHistoryDetailsCard />
-            <BillingHistoryDetailsCard />
-            <BillingHistoryDetailsCard />
-            <BillingHistoryDetailsCard />
-          </div>
-        </SwipeableDrawer>
-      </React.Fragment>
+      <BillingHistory open={openDrawer} handleClose={handleCloseDrawer} />
     </>
   );
 };

@@ -128,4 +128,10 @@ router.get("/getTawkLink/:communityId", globalController.getTawkLink);
 
 router.get("/getAllEvents", globalController.getAllEvents);
 
+router.get(
+  "/getCommunityTransactions/:communityId",
+  authController.protectCommunity,
+  globalController.getCommunityTransactions
+);
+
 module.exports = router;

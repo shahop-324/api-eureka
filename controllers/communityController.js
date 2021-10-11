@@ -500,3 +500,33 @@ exports.linkCommunityVideoToEvent = catchAsync(async (req, res, next) => {
     data: linkedVideo,
   });
 });
+
+exports.downgradeToFree = catchAsync(async (req, res, next) => {
+  const communityId = req.body.communityId;
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    { downgradeToFreeOnNextCycle: true },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
+
+exports.restartMembership = catchAsync(async (req, res, next) => {
+  const communityId = req.body.communityId;
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    { downgradeToFreeOnNextCycle: false },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
