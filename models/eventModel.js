@@ -249,9 +249,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
     },
 
-    mailChimpAudienceTag: {
-      type: String,
-    },
+    mailChimpAudienceTag: [
+      {
+        type: String,
+      },
+    ],
 
     addDirectAccessLinkToMailChimp: {
       type: Boolean,

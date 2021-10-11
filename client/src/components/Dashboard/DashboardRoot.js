@@ -49,7 +49,7 @@ import GetStarted from "./GetStarted";
 import AddOnsAndPlan from "./AddOnsAndPlan";
 
 const DashboardRoot = () => {
-  console.log(window.paypal);
+  
 
   const params = useParams();
 
@@ -58,13 +58,13 @@ const DashboardRoot = () => {
   const dispatch = useDispatch();
   const id = params.id;
   const userId = params.userId;
-  console.log(userId);
+  
   useEffect(() => {
     dispatch(fetchCommunity(id));
   }, [id, dispatch]);
   useEffect(() => {
     return () => {
-      console.log("cleaned up");
+      
       dispatch(navigationIndexForCommunityDash(0));
     };
   }, [dispatch]);
@@ -75,7 +75,7 @@ const DashboardRoot = () => {
   };
 
   const handleEventsClick = () => {
-    console.log("handle event was clicked");
+    
     dispatch(navigationIndexForCommunityDash(1));
     history.push(
       `/user/${userId}/community/event-management/${id}/?limit=5&page=1`

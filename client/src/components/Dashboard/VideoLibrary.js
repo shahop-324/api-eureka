@@ -5,11 +5,10 @@ import VideoLibraryListFields from "./GridComponents/VideoLibrary/ListFields";
 import VideoLibraryDetailsCard from "./GridComponents/VideoLibrary/DetailsCard";
 import UploadVideo from "./SubComponents/UploadVideo";
 import { useParams } from "react-router";
-import LinkVideoFromLibrary from "./SubComponents/LinkVideoFromLibrary";
 import { useDispatch } from "react-redux";
 import dateFormat from "dateformat";
 import {useSelector} from 'react-redux';
-import { getCommunityVideos, getEventVideos, resetProgress } from "./../../actions";
+import { getCommunityVideos, resetProgress } from "./../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -48,8 +47,6 @@ const VideoLibrary = () => {
   const {videos} = useSelector((state) => state.video);
   const params = useParams();
   const dispatch = useDispatch();
-  console.log(params);
-  let communityId = params.id;
 
   useEffect(() => {
       dispatch(getCommunityVideos(params.id));
@@ -57,8 +54,6 @@ const VideoLibrary = () => {
 
   const [openUploadVideo, setOpenUploadVideo] = React.useState(false);
 
-  // const [openLinkVideoFromLibrary, setOpenLinkVideoFromLibrary] =
-  //   React.useState(false);
 
   const handleCloseUploadVideo = () => {
     setOpenUploadVideo(false);
@@ -67,14 +62,6 @@ const VideoLibrary = () => {
   const handleOpenUploadVideo = () => {
     setOpenUploadVideo(true);
   };
-
-  // const handleCloseLinkVideoFromLibrary = () => {
-  //   setOpenLinkVideoFromLibrary(false);
-  // };
-
-  // const handleOpenLinkVideoFromLibrary = () => {
-  //   setOpenLinkVideoFromLibrary(true);
-  // };
 
   return (
     <>
@@ -111,9 +98,6 @@ const VideoLibrary = () => {
         </div>
         <TextSmall className="mx-4 mb-4">
         These videos can be linked to any event in your community.
-          {/* {eventId && communityId
-            ? "These videos will be available for you to stream directly in all sessions of this event."
-            : "These videos can be linked to any event in your community."} */}
         </TextSmall>
 
         <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">

@@ -45,15 +45,15 @@ const RoyalBlueSwitch = withStyles({
 })(Switch);
 
 const Eventbrite = () => {
-
-  const {eventbritePrivateToken} = useSelector((state) => state.community.communityDetails);
+  const { eventbritePrivateToken } = useSelector(
+    (state) => state.community.communityDetails
+  );
   const [open, setOpen] = useState(false);
 
   const [checked, setChecked] = React.useState(false);
   const handleChange = () => {
     if (!checked) {
-      //   dispatch(fetchMailChimpAudiences(eventId));
-        setOpen(true);
+      setOpen(true);
     }
 
     setChecked(!checked);
@@ -77,9 +77,7 @@ const Eventbrite = () => {
           }}
         >
           <Avatar
-            src={
-                EventbriteLogo
-            }
+            src={EventbriteLogo}
             alt={"Mailchimp"}
             className={classes.large}
             variant="rounded"
@@ -88,7 +86,8 @@ const Eventbrite = () => {
           <div>
             <div className="integration-name mb-2">Eventbrite</div>
             <div className="integration-short-description">
-              It allows Bluemeet to register your eventbrite buyers to register for event and sends direct access link.
+              It allows Bluemeet to register your eventbrite buyers to register
+              for event and sends direct access link.
             </div>
           </div>
 
@@ -119,10 +118,14 @@ const Eventbrite = () => {
               </div>
             </React.Fragment>
           </div>
-          <ol in></ol>
+          
         </div>
       </div>
-      <EventbriteConfigure openDrawer={open} handleCloseDrawer={handleCloseDrawer} eventbritePrivateToken={eventbritePrivateToken} />
+      <EventbriteConfigure
+        openDrawer={open}
+        handleCloseDrawer={handleCloseDrawer}
+        eventbritePrivateToken={eventbritePrivateToken}
+      />
     </>
   );
 };

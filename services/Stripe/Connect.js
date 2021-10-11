@@ -8,13 +8,14 @@ const EventTransaction = require("./../../models/eventTransactionModel");
 const User = require("./../../models/userModel");
 const SalesForce = require("../../models/salesForceModel");
 const MailChimp = require("../../models/mailChimpModel");
-
+var request = require("request");
 const hash = require("hash-converter");
 const { v4: uuidv4 } = require("uuid");
 const Registration = require("./../../models/registrationsModel");
 const EventTransactionIdsCommunityWise = require("../../models/eventTransactionIdsCommunityWise");
 const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsCommunityWiseModel");
 const EventRegistrationTemplate = require("./../email/eventRegistrationMail");
+const appError = require("./../../utils/appError");
 
 const sgMail = require("@sendgrid/mail");
 
@@ -44,9 +45,6 @@ const hubspotRegistrationCapture = (
         { property: "email", value: email },
         { property: "firstname", value: firstName },
         { property: "lastname", value: lastName },
-
-        { property: "company", value: company },
-        // { property: "hs_lead_status", value: "Connected" },
         { property: "lifecyclestage", value: "subscriber" },
       ],
     },
@@ -54,37 +52,38 @@ const hubspotRegistrationCapture = (
   };
 
   request(options, function (error, response, body) {
+    console.log(error);
     if (error) return new appError(error, 401);
   });
 };
+
 const salesForceRegistrationCapture = async (
   salesForceAccount,
-  user,
-  event,
-  ticket,
-  amountTotal
+  firstName,
+  lastName,
+  email,
+  eventName,
+  ticketName,
+  amountTotal,
 ) => {
+  console.log(firstName, lastName, email, eventName, ticketName, amountTotal);
   try {
     const res = await fetch(
       `${salesForceAccount.instanceUrl}/services/apexrest/CreateContact/`,
       {
         method: "POST",
+        body: JSON.stringify({
 
+          FirstName: firstName,
+          LastName: lastName,
+          Email: email.toString(),
+          Description: `Ticket booked for ${eventName} event. Amount Paid is ${amountTotal}. Ticket name is ${ticketName}.`
+
+        }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${salesForceAccount.accessToken}`,
         },
-
-        body: JSON.stringify({
-          FirstName: user.firstName,
-          LastName: user.lastName,
-          Email: user.email,
-          Description: `Event name: ${event.eventName} , Ticket name: ${
-            ticket.name
-          } ,Price:${amountTotal},Date and time of booking:${new Date(
-            Date.now()
-          )} `,
-        }),
       }
     );
 
@@ -153,8 +152,7 @@ const salesForceRegistrationCapture = async (
           console.log(error);
         }
       } else {
-        console.log(res);
-        throw new Error(res.message);
+        throw new Error("something went wrong");
       }
     }
     const result = await res.json();
@@ -165,31 +163,107 @@ const salesForceRegistrationCapture = async (
 
 const mailChimpRegistrationCapture = catchAsync(
   async (mailChimpAccount, event, mailChimpFormValues) => {
-    // https://us5.api.mailchimp.com/3.0/lists/1e96addd9e/members/e0894719c49cc9d0abfa09b90ca62960
+    try {
+      const prevMembersRes = await fetch(
+        `${mailChimpAccount.apiEndPoint}/3.0/lists/${event.mailChimpAudienceListIdForRegistrants}/members`,
+        {
+          method: "GET",
 
-    const md5 = hash.MD5(mailChimpFormValues.email);
-    const res = await fetch(
-      `${mailChimpAccount.apiEndPoint}/3.0/lists/${event.mailChimpAudienceListIdForRegistrants}/members/${md5}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${mailChimpAccount.accessToken}`,
+          },
+        }
+      );
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${mailChimpAccount.accessToken}`,
-        },
+      if (!prevMembersRes.ok) {
+        throw new Error("something went wrong");
       }
-    );
 
-    if (!res.ok) {
-      throw new Error("something went wrong");
+      const prevMembers = await prevMembersRes.json();
+
+      const membersArray = prevMembers.members.map(
+        (element) => element.email_address
+      );
+
+      const isAlreadyInList = membersArray.includes(
+        mailChimpFormValues.email_address
+      ); // Boolean flag
+
+      if (isAlreadyInList) {
+        // Update this members tags
+
+        const memberDoc = prevMembers.members.find(
+          (element) =>
+            element.email_address == mailChimpFormValues.email_address
+        );
+
+        let prevTags = memberDoc.tags.map((el) => el.name);
+
+        for (let element of mailChimpFormValues.tags) {
+          if (!prevTags.includes(element)) {
+            prevTags.push(element);
+          }
+        }
+
+        const md5 = hash.MD5(mailChimpFormValues.email_address);
+
+        const updateUserRes = await fetch(
+          `${mailChimpAccount.apiEndPoint}/3.0/lists/${event.mailChimpAudienceListIdForRegistrants}/members/${md5}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({
+              tags: prevTags,
+              email_address: mailChimpFormValues.email_address,
+              merge_fields: mailChimpFormValues.merge_fields,
+            }),
+
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${mailChimpAccount.accessToken}`,
+            },
+          }
+        );
+
+        if (!updateUserRes.ok) {
+          throw new Error("something went wrong");
+        }
+
+        const updatedUser = await updateUserRes.json();
+      } else {
+        // Create a new member in the list
+
+        const md5 = hash.MD5(mailChimpFormValues.email_address);
+        try {
+          const res = await fetch(
+            `${mailChimpAccount.apiEndPoint}/3.0/lists/${event.mailChimpAudienceListIdForRegistrants}/members/${md5}`,
+            {
+              method: "PUT",
+              body: JSON.stringify({
+                ...mailChimpFormValues,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${mailChimpAccount.accessToken}`,
+              },
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      // console.log("i am counting on you mailChimp registration capture");
+      // console.log(
+      //   mailChimpFormValues,
+      //   "I am counting on you mailChimp form values"
+      // );
+
+      // console.log(result);
+    } catch (err) {
+      console.log(err);
     }
-
-    const result = await res.json();
-
-    console.log(result);
   }
 );
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
@@ -431,41 +505,6 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
 
     const user = await User.findById(userId);
 
-    if (hapikey) {
-      hubspotRegistrationCapture(
-        hapikey,
-        user.firstName,
-        user.lastName,
-        user.email,
-        event.eventName
-      );
-    }
-    if (salesForceAccount) {
-      salesForceRegistrationCapture(
-        salesForceAccount,
-        user,
-        event,
-        ticket,
-        amountTotal
-      );
-    }
-
-    if (mailChimpAccount) {
-      const mailChimpFormValues = {};
-
-      mailChimpFormValues.email_address = user.email;
-      mailChimpFormValues.merge_fields = {
-        FNAME: user.firstName,
-        LNAME: user.lastName,
-      };
-      mailChimpFormValues.status = "Subscribed";
-      mailChimpFormValues.tags = event.eventName;
-      mailChimpRegistrationCapture(
-        mailChimpAccount,
-        event,
-        mailChimpFormValues
-      );
-    }
     ////////////////////////////////
     // Fullfill the purchase
 
@@ -536,16 +575,16 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         addedVia: "Registration",
 
         email: userDoingEventTransaction.email,
-        firstName:userDoingEventTransaction.firstName,
-        lastName:userDoingEventTransaction.lastName,
-        name:`${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-        event_name:eventGettingEventTransaction.eventName,
+        firstName: userDoingEventTransaction.firstName,
+        lastName: userDoingEventTransaction.lastName,
+        name: `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
+        event_name: eventGettingEventTransaction.eventName,
         // magic_link: // * will be assigned after registration object is created
-        ticket_name:ticketBeingPurchased.name,
-        registration_amount: amountTotal/100,
-        currency:currency,
+        ticket_name: ticketBeingPurchased.name,
+        registration_amount: amountTotal / 100,
+        currency: currency,
         event_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${eventGettingEventTransaction.image}`,
-        community_picture:`https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
+        community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
       });
 
       newlyCreatedRegistration.invitationLink = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
@@ -713,7 +752,50 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         validateModifiedOnly: true,
       });
 
-      // DONE VVIP Adding revenue in community account
+      // Update mailchimp, salesforce and hubspot
+
+      if (hapikey) {
+        hubspotRegistrationCapture(
+          hapikey,
+          user.firstName,
+          user.lastName,
+          user.email,
+          event.eventName
+        );
+      }
+
+      if (salesForceAccount) {
+        salesForceRegistrationCapture(
+          salesForceAccount,
+          user.firstName,
+          user.lastName,
+          user.email,
+          event.eventName,
+          ticket.name,
+          amountTotal
+        );
+      }
+
+      if (mailChimpAccount) {
+        let mailChimpFormValues = {};
+        mailChimpFormValues.tags = [];
+        mailChimpFormValues.email_address = user.email;
+        mailChimpFormValues.merge_fields = {
+          FNAME: user.firstName,
+          LNAME: user.lastName,
+          MAGIC_LINK: `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`,
+        };
+        mailChimpFormValues.status = "subscribed";
+        for (let element of event.mailChimpAudienceTag) {
+          mailChimpFormValues.tags.push(element);
+        }
+
+        mailChimpRegistrationCapture(
+          mailChimpAccount,
+          event,
+          mailChimpFormValues
+        );
+      }
 
       const msg = {
         to: email, // Change to your recipient
@@ -748,33 +830,30 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
   });
 });
 
-
-exports.CreateCommunityBillOrder = catchAsync(async(req, res, next) => {
-console.log("This fxn was fired")
-  try{
+exports.CreateCommunityBillOrder = catchAsync(async (req, res, next) => {
+  console.log("This fxn was fired");
+  try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: "usd",
             product_data: {
-              name: 'Growth',
+              name: "Growth",
             },
             unit_amount: 100000,
           },
           quantity: 1,
         },
       ],
-      mode: 'payment',
-      success_url: 'https://bluemeet.in/',
-      cancel_url: 'https://bluemeet.in/privacy-policy/',
+      mode: "payment",
+      success_url: "https://bluemeet.in/",
+      cancel_url: "https://bluemeet.in/privacy-policy/",
     });
-  
+
     res.redirect(303, session.url);
+  } catch (error) {
+    console.log(error);
   }
-   catch(error) {
-console.log(error);
-   }
-  
 });

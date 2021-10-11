@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
+import React from "react";
 import { useSelector } from "react-redux";
 
 import { SwipeableDrawer } from "@material-ui/core";
@@ -7,6 +6,8 @@ import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { IconButton } from "@material-ui/core";
 import BillingListFields from "./../HelperComponent/BillingComponents/BillingListFields";
 import BillingHistoryDetailsCard from "./../HelperComponent/BillingComponents/BillingHistoryDetailsCard";
+import NoContentFound from "../../NoContent";
+import NoTransaction from "./../../../assets/images/no-transaction.svg";
 
 const renderTransactionsList = (transactions) => {
   return transactions.map((transaction) => {
@@ -67,7 +68,15 @@ const BillingHistory = ({ open, handleClose }) => {
               <hr />
             </div>
 
-            {renderTransactionsList(transactions)}
+            {typeof transactions !== "undefined" && transactions.length > 0 ? (
+              renderTransactionsList(transactions)
+            ) : (
+              <NoContentFound
+                msgText={"Seems like this there are no transactions yet."}
+                img={NoTransaction}
+
+              />
+            )}
           </div>
         </SwipeableDrawer>
       </React.Fragment>

@@ -14,10 +14,9 @@ import BuyExtraCloudStorage from "./SubComponents/AddOns/BuyExtraCloudStorage";
 import BuyExtraEmails from "./SubComponents/AddOns/BuyExtraEmails";
 import BuyExtraOrganiser from "./SubComponents/AddOns/BuyExtraOrganiser";
 import { useSelector } from "react-redux";
-
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { IconButton } from "@material-ui/core";
 import RestartMembership from "./SubComponents/RestartMembership";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "./../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -87,6 +86,8 @@ const AddOnPrice = styled.div`
 `;
 
 const AddOnsAndPlan = () => {
+  const dispatch = useDispatch();
+
   const [openRestartMembership, setOpenRestartMembership] =
     React.useState(false);
   const [openRedeem, setOpenRedeem] = React.useState(false);
@@ -335,7 +336,14 @@ const AddOnsAndPlan = () => {
                 <AddOnPrice>$1.00 / Registrant</AddOnPrice>
                 <button
                   onClick={() => {
-                    setOpenRegistrations(true);
+                    communityDetails.planName === "Free"
+                      ? dispatch(
+                          showSnackbar(
+                            "warning",
+                            "You need to have a premium plan to buy add on."
+                          )
+                        )
+                      : setOpenRegistrations(true);
                   }}
                   className="btn btn-outline-text btn-outline-primary"
                 >
@@ -359,7 +367,14 @@ const AddOnsAndPlan = () => {
                 <AddOnPrice>$49.99 / Organiser per month</AddOnPrice>
                 <button
                   onClick={() => {
-                    setOpenOrganisers(true);
+                    communityDetails.planName === "Free"
+                      ? dispatch(
+                          showSnackbar(
+                            "warning",
+                            "You need to have a premium plan to buy add on."
+                          )
+                        )
+                      : setOpenOrganisers(true);
                   }}
                   className="btn btn-outline-text btn-outline-primary"
                 >
@@ -383,7 +398,14 @@ const AddOnsAndPlan = () => {
                 <AddOnPrice>$35.99 / per hour</AddOnPrice>
                 <button
                   onClick={() => {
-                    setOpenStreaming(true);
+                    communityDetails.planName === "Free"
+                      ? dispatch(
+                          showSnackbar(
+                            "warning",
+                            "You need to have a premium plan to buy add on."
+                          )
+                        )
+                      : setOpenStreaming(true);
                   }}
                   className="btn btn-outline-text btn-outline-primary"
                 >
@@ -406,7 +428,14 @@ const AddOnsAndPlan = () => {
                 <AddOnPrice>$10.99 / 1000 mails</AddOnPrice>
                 <button
                   onClick={() => {
-                    setOpenEmailCredit(true);
+                    communityDetails.planName === "Free"
+                      ? dispatch(
+                          showSnackbar(
+                            "warning",
+                            "You need to have a premium plan to buy add on."
+                          )
+                        )
+                      : setOpenEmailCredit(true);
                   }}
                   className="btn btn-outline-text btn-outline-primary"
                 >
@@ -431,7 +460,14 @@ const AddOnsAndPlan = () => {
                 <AddOnPrice>$15.99 / 10GB cloud storage per month</AddOnPrice>
                 <button
                   onClick={() => {
-                    setOpenCloudStorage(true);
+                    communityDetails.planName === "Free"
+                      ? dispatch(
+                          showSnackbar(
+                            "warning",
+                            "You need to have a premium plan to buy add on."
+                          )
+                        )
+                      : setOpenCloudStorage(true);
                   }}
                   className="btn btn-outline-text btn-outline-primary"
                 >

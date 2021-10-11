@@ -6,6 +6,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import MarketoAuth from "./Forms/MarketoAuth";
 import Button from '@mui/material/Button';
 
+import { Link, useParams } from "react-router-dom";
+import {navigationIndexForCommunityDash} from "./../../../actions";
+import { useDispatch } from "react-redux";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -26,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
 const Marketo = () => {
 
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const userId = params.userId;
+  const communityId = params.id;
 
   const handleOpen = () => {
     setOpen(true);
@@ -62,16 +73,18 @@ const Marketo = () => {
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
           <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
           <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
-          <button type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</button>
-          {/* <button type="button" className="btn btn-primary btn-outline-text me-3" >Upgrade</button> */}
-            {/* <button
+          <Link to={`/user/${userId}/community/billing/${communityId}`}
+                        onClick={() => {
+                          dispatch(navigationIndexForCommunityDash(7));
+                        }} type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</Link>
+            <button
               onClick={() => {
                 handleOpen();
               }}
-              className="btn btn-outline-primary btn-outline-text"
+              className="btn btn-outline-primary btn-outline-text ms-3"
             >
               Add
-            </button> */}
+            </button>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
-/* eslint-disable no-unused-vars */
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Styles/IntegrationCard.scss";
 import Chip from '@mui/material/Chip';
 import { makeStyles } from "@material-ui/core/styles";
+import TypeformEnable from "./Forms/TypeformEnable";
 import Button from '@mui/material/Button';
+
 import { Link, useParams } from "react-router-dom";
 import {navigationIndexForCommunityDash} from "./../../../actions";
 import { useDispatch } from "react-redux";
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MicrosoftDynamics = () => {
+const Slido = () => {
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -54,20 +55,15 @@ const MicrosoftDynamics = () => {
           style={{ display: "grid", gridTemplateColumns: "0.7fr 8fr 4fr" }}
         >
           <Avatar
-            src={
-              "https://global.hitachi-solutions.com/-/media/Project/Hitachi/landscape/Dynamics-Cloud.png"
-            }
-            alt={"Google Sheets"}
+            src={"https://blog.sli.do/wp-content/uploads/2020/12/slidoicon300.jpg"}
+            alt={"Mailchimp"}
             className={`${classes.large} me-3`}
             variant="rounded"
           />
           <div>
-            <div className="integration-name mb-2">
-           <span className="me-3">   Microsoft Dynamics </span>
-              <Chip label="Via zapier" color="info" variant="outlined" style={{fontWeight: "500", fontSize: "0.7rem", padding: '0px'}} />
-              </div>
+            <div className="integration-name mb-2">Slido</div>
             <div className="integration-short-description">
-              Add your Bluemeet registrants as contacts in Microsoft Dynamics 365 CRM.
+              Make audience interaction easy with slido live QnA, Poll and Surveys
             </div>
           </div>
 
@@ -78,22 +74,21 @@ const MicrosoftDynamics = () => {
                         onClick={() => {
                           dispatch(navigationIndexForCommunityDash(7));
                         }} type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</Link>
-          {/* 
+          
             <button
               onClick={() => {
                 handleOpen();
               }}
-              className="btn btn-outline-primary btn-outline-text"
+              className="btn btn-outline-primary btn-outline-text ms-3"
             >
               Add
-            </button> */}
+            </button>
           </div>
         </div>
       </div>
-
-      {/* <FigmaAuth openDrawer={open} handleCloseDrawer={handleClose} /> */}
+      <TypeformEnable openDrawer={open} handleCloseDrawer={handleClose} />
     </>
   );
 };
 
-export default MicrosoftDynamics;
+export default Slido;

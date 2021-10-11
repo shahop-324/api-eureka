@@ -18,6 +18,7 @@ import Tawk from "./../Integration/Cards/Tawk";
 import Hubspot from "./../Integration/Cards/Hubspot";
 import Salesforce from "./../Integration/Cards/Salesforce";
 import Typeform from "./../Integration/Cards/Typeform";
+import Slido from "./../Integration/Cards/Slido";
 
 const options = [
   { value: "All", label: "All Integrations" },
@@ -35,14 +36,14 @@ const options = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -93,7 +94,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -112,44 +112,22 @@ const Integrations = () => {
 
   return (
     <>
-      <div style={{ minWidth: "1138px" }}>
-        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
+      <div style={{ minWidth: "1138px" }} className="mb-4">
+        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 pb-3">
           <div className="sec-heading-text">Integrations</div>
           <div className="sec-heading-action-button d-flex flex-row">
-            <div
-              className={`${classes.search} me-3`}
-              style={{ backgroundColor: "#ffffff" }}
-            >
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
-            <div className="me-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="bottom"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
+           
+            
             <button className="btn btn-outline-primary btn-outline-text">Suggest Integration</button>
           </div>
         </div>
-        <div className="px-4 py-4">
-        <Eventbrite />
+        <div className="px-4 py-4 mb-4">
         <Mailchimp />
         <Salesforce />
         <Hubspot />
         <Tawk />
-        <Typeform />
+        <Typeform className="mb-4"/>
+        <Slido />
         {/* <Intercom />
         <Hubspot />
         <Salesforce />

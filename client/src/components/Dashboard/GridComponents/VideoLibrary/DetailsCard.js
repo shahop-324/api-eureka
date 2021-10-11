@@ -5,26 +5,16 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import Divider from "@material-ui/core/Divider";
 import DeleteVideo from "../../SubComponents/DeleteVideo";
-import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { deleteVideo } from "./../../../../actions";
 
 const VideoLibraryListFields = ({ name, id, time, date }) => {
   const [openDeleteVideo, setOpenDeleteVideo] = React.useState(false);
 
-  const params = useParams();
   const dispatch = useDispatch();
 
-  let eventId = params.id;
-  let communityId = params.communityId;
-  if (eventId && communityId) {
-    console.log("We are in an event");
-  } else {
-    console.log("we are in main dashboard");
-  }
-
   const handleDeleteVideo = () => {
-      dispatch(deleteVideo(id));
+    dispatch(deleteVideo(id));
   };
 
   const handleCloseDeleteVideo = () => {

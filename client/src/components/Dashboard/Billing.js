@@ -22,6 +22,20 @@ import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
 import GrowthPlanCard from "./HelperComponent/BillingComponents/GrowthPlanCard";
 import BillingHistory from "./SubComponents/BillingHistory";
 
+const SectionHeading = styled.div`
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #3D3D3D;
+  font-family: "Ubuntu";
+`;
+
+const TextSmall = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.78rem;
+  color: #414141;
+`;
+
 const DurationSwitchBase = styled.div`
   background-color: #e0e0e08c;
   border-radius: 5px;
@@ -109,10 +123,14 @@ const Billing = () => {
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
-        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Accept Payments</div>
+        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 pb-2">
+          <SectionHeading>Accept Payments</SectionHeading>
         </div>
 
+        <TextSmall className="mx-4 mb-4">
+        Your ticketing revenue will be deposited instantly in your connected stripe account.
+        </TextSmall>
+        
         <StripeAccountCardBody
           className="px-4 mx-3 mb-4 py-4 d-flex flex-column align-items-center justify-content-center"
           style={{
@@ -185,7 +203,8 @@ const Billing = () => {
         </StripeAccountCardBody>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Billing</div>
+          <SectionHeading >Billing</SectionHeading>
+
           <div className="sec-heading-action-button d-flex flex-row">
             <button
               type="button"

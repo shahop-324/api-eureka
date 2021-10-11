@@ -122,7 +122,7 @@ const FreePlanCard = () => {
             style={{
               width: "100%",
               fontWeight: "500",
-              marginTop: "80px",
+              marginTop: "20px",
             }}
           />
         ) : (

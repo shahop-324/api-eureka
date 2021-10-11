@@ -94,36 +94,7 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
               <div>
 
 
-              <div className="mb-3">
-                <label
-                    Forhtml="eventStartDate"
-                    className="form-label form-label-customized"
-                  >
-                    Hubspot Webhook URL
-                  </label>
-                <div
-              className="referral-link-and-copy-to-clipboard"
               
-            >
-              <div className="ui action input" style={{ minWidth: "400px", width: "100%" }}>
-                <input
-                  type="text"
-                  value={"Web hook url"}
-                  readOnly
-                  placeholder="Search..."
-                />
-                <button
-                  className="ui icon button"
-                  onClick={() => {
-                    navigator.clipboard.writeText("web hook url");
-                    alert("copied to clipboard!");
-                  }}
-                >
-                  <i className="copy outline icon"></i>
-                </button>
-              </div>
-            </div>
-            </div>
 
                 <div className="mb-3">
                   <label

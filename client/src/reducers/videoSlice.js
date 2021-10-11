@@ -32,9 +32,7 @@ const videoSlice = createSlice({
 
     // upload video
     UploadVideo(state, action) {
-      const newVideo = action.payload.video;
-
-      state.videos.push(newVideo);
+      state.videos.push(action.payload.video);
     },
     // Delete video
     DeleteVideo(state, action) {

@@ -1,64 +1,42 @@
-import React, { useState } from "react";
-
-import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
-
+import React from "react";
 import Select from "react-select";
-
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-
 import { withStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Loader from "../../../../../components/Loader";
-
+import styled from "styled-components";
 import {
   errorTrackerForFetchMailChimpAudiences,
   editEvent,
 } from "../../../../../actions";
 import { useParams } from "react-router-dom";
+import MultiTagInput from "../../../MultiTagInput";
 let audienceList = [];
 
-const renderInput = ({
-  input,
-  meta: { touched, error, warning },
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-  readOnly,
-}) => {
-  return (
-    <div>
-      <input
-        readOnly={readOnly}
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className="mail-group-name-input"
-        placeholder={placeholder}
-        required
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  );
-};
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
 
 const renderReactSelect = ({
   isMulti,
@@ -90,6 +68,18 @@ const renderReactSelect = ({
     </div>
   </div>
 );
+
+const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
+  const className = `field ${error && touched ? "error" : ""}`;
+  return (
+    <div className={className}>
+      <MultiTagInput input={input} value={input.value} />
+      {touched &&
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
+    </div>
+  );
+};
 
 const styles = {
   control: (base) => ({
@@ -132,31 +122,15 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
   );
 
   const { isLoading, error } = useSelector((state) => state.community);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const handleChange = () => {
     setChecked(!checked);
   };
 
-  const previousTag = "Confluence 2021";
+  
 
-  const [tag, setTag] = useState("Confluence 2021");
-  const [editMode, setEditMode] = useState(false);
-
-  const handleChangeTag = (e) => {
-    setTag(e.target.value);
-  };
-
-  const resetTag = () => {
-    setTag(previousTag);
-  };
-
-  const turnOnEditMode = () => {
-    setEditMode(true);
-  };
-
-  const turnOffEditMode = () => {
-    setEditMode(false);
-  };
+ 
 
   const onSubmit = (formValues) => {
     console.log(formValues, "I am counting on you formValues mailChimpGeneral");
@@ -164,13 +138,16 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
 
     ModifiedFormValues.mailChimpAudienceListIdForRegistrants =
       formValues.registrantsList.value;
-    ModifiedFormValues.mailChimpAudienceListIdForLeads =
-      formValues.leadsList.value;
-    ModifiedFormValues.mailChimpAudienceListIdForInterestedPeople =
-      formValues.interestedPeopleList.value;
     ModifiedFormValues.mailChimpAudienceTag = formValues.tag;
+    const bool = ModifiedFormValues.mailChimpAudienceTag.includes(
+      eventDetails.eventName
+    );
+
+    if (!bool) {
+      ModifiedFormValues.mailChimpAudienceTag.push(eventDetails.eventName);
+    }
     ModifiedFormValues.addDirectAccessLinkToMailChimp = checked;
-    dispatch(editEvent(ModifiedFormValues, params.eventId));
+    dispatch(editEvent(ModifiedFormValues, params.id));
   };
 
   if (isLoading) {
@@ -226,98 +203,42 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
               menuPlacement="bottom"
               options={audienceList}
               component={renderReactSelect}
-              // onChange={(e) => console.log(e)}
-            />
-            <div className="form-label form-label-customized mt-3">
-              Leads list
-            </div>
-            <Field
-              name="leadsList"
-              classes="mb-3"
-              placeholder="Leads list"
-              styles={styles}
-              menuPlacement="bottom"
-              component={renderReactSelect}
-              options={audienceList}
-            />
-            <div className="form-label form-label-customized mt-3">
-              Interested people list
-            </div>
-            <Field
-              name="interestedPeopleList"
-              placeholder="Interested people list"
-              styles={styles}
-              menuPlacement="bottom"
-              options={audienceList}
-              component={renderReactSelect}
             />
           </div>
           <div className="d-flex flex-column mb-5 overlay-form-input-row">
-            <label for="communityName" className="form-label form-label-customized">
+            <label
+              for="communityName"
+              className="form-label form-label-customized"
+            >
               Audience tag
             </label>
             <small className="mb-3 form-small-text">
-              Tag will be added to all contact registering for this event or who
-              are captured as leads or interested people.
+              Tag will be added to all contact registering for this event.
             </small>
 
-            <div className="form-group">
-              <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
-                <Field
-                  name="tag"
-                  type="text"
-                  readOnly={!editMode}
-                  classes="mail-group-name-input"
-                  style={{ width: "100%" }}
-                  onChange={(e) => {
-                    handleChangeTag(e);
-                  }}
-                  value={tag}
-                  id="tag"
-                  aria-describedby="tag"
-                  placeholder="Enter tag"
-                  component={renderInput}
-                />
-                {!editMode ? (
-                  <EditRoundedIcon
-                    onClick={() => {
-                      turnOnEditMode();
-                    }}
-                    className="chat-msg-hover-icon"
-                    style={{ position: "absolute", right: "10px" }}
-                  />
-                ) : (
-                  <div className="d-flex flex-row align-items-center">
-                    <CheckRoundedIcon
-                      onClick={() => {
-                        turnOffEditMode();
-                      }}
-                      style={{ fill: "#188627" }}
-                      className="me-3"
-                    />
-                    <ClearRoundedIcon
-                      onClick={() => {
-                        resetTag();
-                        turnOffEditMode();
-                      }}
-                      style={{ fill: "#A51320" }}
-                      className=""
-                    />
-                  </div>
-                )}
+            <div className="mb-3 overlay-form-input-row">
+              <FormLabel
+                for="tags"
+                className="form-label form-label-customized"
+              >
+                Tags
+              </FormLabel>
+              <div className="form-group">
+                <Field name="tag" component={renderMultiTags} />
               </div>
             </div>
           </div>
-
           <div className="d-flex flex-column mb-4 overlay-form-input-row">
-            <label for="communityName" className="form-label form-label-customized">
+            <label
+              for="communityName"
+              className="form-label form-label-customized"
+            >
               Add direct access link
             </label>
             <small className="mb-3 form-small-text">
               Direct access link will be saved and shared with attendees in
               mailing list to join event at ease.
             </small>
-
             <div
               className="d-flex flex-row align-items-center"
               style={{ justifySelf: "end" }}
@@ -368,7 +289,8 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
   );
 };
 
+
+
 export default reduxForm({
   form: "mailchimpGeneralPreference",
-  // validate,
 })(MailchimpGeneral);

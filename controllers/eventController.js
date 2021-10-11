@@ -607,9 +607,6 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
     "publishedStatus",
     "mailChimpAudienceTag",
     "mailChimpAudienceListIdForRegistrants",
-    "mailChimpAudienceListIdForLeads",
-    "mailChimpAudienceListIdForInterestedPeople",
-    "addDirectAccessLinkToMailChimp",
     "status",
     "numberOfTablesInLounge"
   );

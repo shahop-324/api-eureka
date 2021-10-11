@@ -20,6 +20,7 @@ import Zapier from "../Integrations/Zapier";
 import MicrosoftDynamics from "../Integrations/MicrosoftDynamics";
 import RequestIntegration from "./../Integrations/RequestIntegration";
 import BuildWithBluemeet from "./../Integrations/BuildWithBluemeet";
+import Slido from "./../Integrations/Slido.js";
 
 const IntegrationsSub = () => {
   return (
@@ -30,6 +31,7 @@ const IntegrationsSub = () => {
         <Intercom />
         <Salesforce />
         <Typeform />
+        <Slido />
         <GoogleAnalytics />
         <FacebookPixel />
         <Marketo />

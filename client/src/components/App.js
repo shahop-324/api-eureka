@@ -77,22 +77,18 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 AOS.init();
 
 class App extends React.Component {
-  handleClose = () => {
-    console.log("Close snackbar was pressed!");
-  };
+  
 
   componentDidMount = () => {
     socket.on("logOutUser", ({ userId, message }) => {
-      console.log("hey,hitting logOutUser");
-      console.log(userId);
-      console.log(message);
+      
       // dispatch(createNewEventAlert(newAlert));
 
       this.props.DuplicateUserSignOut(userId, message);
     });
 
     socket.on("newLogin", (res) => {
-      console.log("hey hitting the new login in App.js 64 ");
+      
       this.props.signIn(
         res,
         this.props.signinForEventRegistrationEventId,
@@ -118,13 +114,8 @@ class App extends React.Component {
   render() {
     const { isSignedIn, open, message, severity } = this.props;
 
-    // (() => {
-    //   console.log("i run ");
-    //   window.localStorage.clear();
-    //   console.log("i runned");
-    // })();
-
-    console.log(typeof isSignedIn);
+    
+    
     return (
       <>
         <Router history={history}>
@@ -709,7 +700,7 @@ class App extends React.Component {
           </div>
         </Router>
 
-        {console.log(this.props, "This is props object in app")}
+       
 
         {this.props && this.props.message && this.props.open ? (
           <Snackbar

@@ -1,7 +1,6 @@
 import { Avatar } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import "./../../../Integrations/Styles/IntegrationCard.scss";
-import MailchimpConfigure from "../Forms/MailchimpConfigure";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,10 +9,6 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-import { fetchMailChimpAudiences } from "../../../../../actions/index";
-
-import { useParams } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -45,27 +40,14 @@ const RoyalBlueSwitch = withStyles({
   track: {},
 })(Switch);
 
-const Mailchimp = () => {
-  const params = useParams();
-  const eventId = params.id;
-
-  console.log(eventId, "I am counting on you eventId");
-  const [open, setOpen] = useState(false);
-
+const Slido = () => {
   const [checked, setChecked] = React.useState(false);
-  const dispatch = useDispatch();
+  
   const handleChange = () => {
     if (!checked) {
-      dispatch(fetchMailChimpAudiences(eventId));
-
-      setOpen(true);
     }
 
     setChecked(!checked);
-  };
-
-  const handleCloseDrawer = () => {
-    setOpen(false);
   };
 
   const classes = useStyles();
@@ -82,16 +64,18 @@ const Mailchimp = () => {
           }}
         >
           <Avatar
-            src={"https://www.drupal.org/files/project-images/MC_Logo.jpg"}
+            src={
+              "https://blog.sli.do/wp-content/uploads/2020/12/slidoicon300.jpg"
+            }
             alt={"Mailchimp"}
             className={classes.large}
             variant="rounded"
           />
 
           <div>
-            <div className="integration-name mb-2">Mailchimp</div>
+            <div className="integration-name mb-2">Slido</div>
             <div className="integration-short-description">
-              It allows to push Bluemeet registrants to your mailchimp account.
+              Make audience interaction easy with slido live QnA, Poll and surveys
             </div>
           </div>
 
@@ -124,12 +108,8 @@ const Mailchimp = () => {
           </div>
         </div>
       </div>
-      <MailchimpConfigure
-        openDrawer={open}
-        handleCloseDrawer={handleCloseDrawer}
-      />
     </>
   );
 };
 
-export default Mailchimp;
+export default Slido;

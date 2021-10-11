@@ -215,7 +215,6 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
         .catch((error) => next(error));
     })
     .catch((err) => {
-
       next(err);
     });
 });
@@ -334,20 +333,20 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res, next) => {
             .catch((error) => next(error));
         })
         .catch((error) => next(error));
-    })
+    });
 });
 
 app.get(
   "/api-eureka/eureka/v1/fetchMailChimpAudiences",
   async (req, res, next) => {
     // 1. find by community id by event id
-
+    console.log(req.query, "i am counting on you eventid");
     const eventData = await Event.findById(req.query.eventId);
 
     //2. find the mailchimp account with community id
 
-    const communityId = eventData.createdBy;
-
+    const communityId = eventData.communityId;
+    console.log(communityId, "i am counting on you communityId");
     const mailChimpData = await MailChimp.findOne({ communityId });
 
     //3. dynamically form request for fetching list
@@ -384,62 +383,71 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
 
-app.get("/api-eureka/eureka/v1/oauth/salesforce/callback", (req, response, next) => {
-  const oauth2 = new jsforce.OAuth2({
-    clientId: process.env.SALESFORCE_CLIENT_ID,
-    clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-    redirectUri: process.env.SALESFORCE_REDIRECT_URI,
-  });
-  const conn = new jsforce.Connection({ oauth2: oauth2 });
-  conn.authorize(req.query.code, function (err, userInfo) {
-    if (err) {
-      return console.error(err);
-    }
-    const conn2 = new jsforce.Connection({
-      instanceUrl: conn.instanceUrl,
-      accessToken: conn.accessToken,
+app.get(
+  "/api-eureka/eureka/v1/oauth/salesforce/callback",
+  (req, response, next) => {
+    const oauth2 = new jsforce.OAuth2({
+      clientId: process.env.SALESFORCE_CLIENT_ID,
+      clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
+      redirectUri: process.env.SALESFORCE_REDIRECT_URI,
     });
-
-    conn2.identity(function (err, res) {
+    const conn = new jsforce.Connection({ oauth2: oauth2 });
+    conn.authorize(req.query.code, function (err, userInfo) {
       if (err) {
         return console.error(err);
       }
-      Community.findOne({ email: res.username })
-        .then((community) => {
-          SalesForce.findOne({ communityId: community._id })
-            .then((salesForceCommunityAccount) => {
-              if (!salesForceCommunityAccount) {
-                SalesForce.create({
-                  communityId: community._id,
-                  accessToken: conn.accessToken,
-                  instanceUrl: conn.instanceUrl,
-                  refreshToken: conn.refreshToken,
-                })
-                  .then(async () => {
-                    community.isSalesForceConnected = true;
-                    // const [a] = community;
-                    await community.save({
-                      new: true,
-                      validateModifiedOnly: true,
-                    });
+      const conn2 = new jsforce.Connection({
+        instanceUrl: conn.instanceUrl,
+        accessToken: conn.accessToken,
+      });
 
+      conn2.identity(function (err, res) {
+        if (err) {
+          return console.error(err);
+        }
+        Community.findOne({ email: res.username })
+          .then((community) => {
+            if (!community) {
+              response.status(200).json({
+                status:
+                  "There is no community with this email Id. Please make sure to use your community email Id to sign up with salesforce.",
+              });
+            } else {
+              SalesForce.findOne({ communityId: community._id })
+                .then((salesForceCommunityAccount) => {
+                  if (!salesForceCommunityAccount) {
+                    SalesForce.create({
+                      communityId: community._id,
+                      accessToken: conn.accessToken,
+                      instanceUrl: conn.instanceUrl,
+                      refreshToken: conn.refreshToken,
+                    })
+                      .then(async () => {
+                        community.isSalesForceConnected = true;
+                        // const [a] = community;
+                        await community.save({
+                          new: true,
+                          validateModifiedOnly: true,
+                        });
+
+                        response.status(200).json({
+                          status: "SUCCESS",
+                        });
+                      })
+                      .catch((err) => next(err));
+                  } else {
                     response.status(200).json({
-                      status: "SUCCESS",
+                      status: "You already have one for same communityId",
                     });
-                  })
-                  .catch((err) => next(err));
-              } else {
-                response.status(200).json({
-                  status: "You already have one for same communityId",
-                });
-              }
-            })
-            .catch((err) => next(err));
-        })
-        .catch((err) => next(err));
+                  }
+                })
+                .catch((err) => next(err));
+            }
+          })
+          .catch((err) => next(err));
+      });
     });
-  });
-});
-
+  }
+);
 
 module.exports = app;
