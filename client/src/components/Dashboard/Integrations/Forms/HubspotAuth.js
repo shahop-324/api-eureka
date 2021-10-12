@@ -7,8 +7,38 @@ import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
+import { editCommunity, showSnackbar } from "../../../../actions";
 
-import { editCommunity } from "../../../../actions";
+const StyledInput = styled.input`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #4e4e4e;
+`;
+
+const FormLabel = styled.label`
+  font-family: "Ubuntu" !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #727272 !important;
+  margin-bottom: 5px;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 const renderInput = ({
   input,
   value,
@@ -21,7 +51,7 @@ const renderInput = ({
   const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <input
+      <StyledInput
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -31,19 +61,8 @@ const renderInput = ({
         style={{ width: "100%" }}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -55,19 +74,30 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
   const dispatch = useDispatch();
   const onSubmit = (formValues) => {
     console.log(formValues);
-    dispatch(editCommunity(communityId, formValues));
+
+    if(!formValues.hubspotApiKey) {
+      dispatch(showSnackbar("warning", "Invalid API Key."))
+      return;
+    }
+
+    dispatch(
+      editCommunity(communityId, {
+        hubspotApiKey: formValues.hubspotApiKey,
+        isConnectedHubspot: true,
+      })
+    );
   };
 
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -92,17 +122,13 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
-
-
-              
-
                 <div className="mb-3">
-                  <label
+                  <FormLabel
                     Forhtml="eventStartDate"
                     className="form-label form-label-customized"
                   >
                     Hubspot Api key
-                  </label>
+                  </FormLabel>
 
                   <Field
                     type="text"
@@ -123,7 +149,6 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                   </button>
                 </div>
 
-
                 <div>
                   <div className="want-help-heading mb-3">Want help ?</div>
                   <div className="integration-guide-btn px-4 py-2">
@@ -132,8 +157,6 @@ const HubspotAuth = ({ openDrawer, handleCloseDrawer, handleSubmit }) => {
                 </div>
               </div>
             </form>
-
-            
           </div>
         </SwipeableDrawer>
       </React.Fragment>

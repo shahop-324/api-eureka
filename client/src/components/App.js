@@ -66,6 +66,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { closeSnackbar } from "../actions/index";
 import InvitationAccepted from "./Supplement/InvitationAccepted";
+import Blank from "./Blank";
+import SalesforceRedirect from "./SalesforceRedirect";
 
 const vertical = "top";
 const horizontal = "center";
@@ -121,6 +123,8 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
+              <Route path="/bluemeet/redirect" exact component={Blank} />
+              <Route path="/bluemeet/salesforce/redirect" exact component={SalesforceRedirect} />
               <Route
                 path="/accept-invite/:inviteId"
                 exact

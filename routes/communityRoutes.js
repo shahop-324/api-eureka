@@ -261,6 +261,19 @@ router.post(
   communityController.restartMembership
 );
 
+// Disconnect Mailchimp
+router.patch(
+  "/disconnectMailchimp/:communityId",
+  authController.protectCommunity,
+  communityController.disconnectMailchimp
+);
+// Disconnect Salesforce
+router.patch(
+  "/disconnectSalesforce/:communityId",
+  authController.protectCommunity,
+  communityController.disconnectSalesforce
+);
+
 // router.patch("/event/:id/update",authController.protectCommunity,eventController.updateEvent)
 
 module.exports = router;

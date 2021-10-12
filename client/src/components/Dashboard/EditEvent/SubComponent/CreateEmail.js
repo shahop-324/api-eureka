@@ -480,7 +480,7 @@ const CreateMail = ({
           </Container>
         </Dialog>
       </div>
-      <PreviewEmail open={openPreview} handleClose={handleClosePreview} />
+      {/* <PreviewEmail open={openPreview} handleClose={handleClosePreview} /> */}
     </>
   );
 };

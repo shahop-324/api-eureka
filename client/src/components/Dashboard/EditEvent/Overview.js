@@ -394,8 +394,6 @@ aboutText = eventDetails.editingComment
                               editEvent({ organisedBy: tag }, eventDetails._id)
                             );
                           }
-
-                          // turnOffEditMode();
                         }}
                         style={{ fill: "#188627" }}
                         className="editable me-3"

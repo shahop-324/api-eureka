@@ -10,8 +10,9 @@ import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchMailChimpAudiences } from "../../../../../actions/index";
+import DisableMailchimp from "./../DisableConfirmation/DisableMailchimp";
 
 import { useParams } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
@@ -49,19 +50,28 @@ const Mailchimp = () => {
   const params = useParams();
   const eventId = params.id;
 
+  const {eventDetails} = useSelector((state) => state.event);
+
+  // isMailchimpEnabled
+
   console.log(eventId, "I am counting on you eventId");
   const [open, setOpen] = useState(false);
+  const [openDisable, setOpenDisable] = React.useState(false);
 
-  const [checked, setChecked] = React.useState(false);
+  const handleCloseDisable = () => {
+    setOpenDisable(false);
+  }
+
   const dispatch = useDispatch();
   const handleChange = () => {
-    if (!checked) {
+    if (!eventDetails.isMailchimpEnabled) {
       dispatch(fetchMailChimpAudiences(eventId));
-
       setOpen(true);
     }
-
-    setChecked(!checked);
+    else {
+      setOpenDisable(true);
+      // show a confirmation to ask if user wants to disconnect mailchimp for this event.
+    }
   };
 
   const handleCloseDrawer = () => {
@@ -104,7 +114,7 @@ const Mailchimp = () => {
                 <FormControlLabel
                   control={
                     <RoyalBlueSwitch
-                      checked={checked}
+                      checked={eventDetails.isMailchimpEnabled}
                       onChange={handleChange}
                       name="mailchimpSwitch"
                     />
@@ -118,7 +128,7 @@ const Mailchimp = () => {
                   fontWeight: "500",
                 }}
               >
-                {checked ? "Disable" : "Enable"}
+                {eventDetails.isMailchimpEnabled ? "Disable" : "Enable"}
               </div>
             </React.Fragment>
           </div>
@@ -128,6 +138,8 @@ const Mailchimp = () => {
         openDrawer={open}
         handleCloseDrawer={handleCloseDrawer}
       />
+
+      <DisableMailchimp open={openDisable} handleClose={handleCloseDisable} />
     </>
   );
 };

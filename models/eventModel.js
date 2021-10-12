@@ -84,8 +84,8 @@ const eventSchema = new mongoose.Schema(
     },
     visibility: {
       type: String,
-      required: [true, "An event can be either public or private"],
       enum: ["Public", "Private", "Hidden"],
+      default: "Private",
     },
     views: {
       type: Number,
@@ -111,10 +111,6 @@ const eventSchema = new mongoose.Schema(
     },
     organisedBy: {
       type: String,
-    },
-    RegistrationLimit: {
-      type: Number,
-      default: 100000,
     },
     host: [
       {
@@ -255,11 +251,15 @@ const eventSchema = new mongoose.Schema(
       },
     ],
 
-    addDirectAccessLinkToMailChimp: {
+    isMailchimpEnabled: {
       type: Boolean,
       default: false,
     },
 
+    addDirectAccessLinkToMailChimp: {
+      type: Boolean,
+      default: false,
+    },
     publishedStatus: {
       type: String,
       default: "Draft",

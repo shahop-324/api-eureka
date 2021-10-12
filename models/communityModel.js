@@ -47,6 +47,14 @@ const communitySchema = new mongoose.Schema(
       type: String,
     },
 
+    googleAnalyticsCode: {
+      type: String,
+    },
+
+    facebookPixelCode: {
+      type: String,
+    },
+
     subscribedToCommunityMailList: {
       type: Boolean,
       default: false,
@@ -60,6 +68,34 @@ const communitySchema = new mongoose.Schema(
       default: "Free",
     },
     isConnectedMailChimp: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedHubspot: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedTawk: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedTypeform: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedSlido: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedGoogleAnalytics: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedFacebookPixel: {
+      type: Boolean,
+      default: false,
+    },
+    isConnectedSalesforce: {
       type: Boolean,
       default: false,
     },
@@ -112,14 +148,14 @@ const communitySchema = new mongoose.Schema(
     },
     ticketingCharge: {
       type: Number, // Commision on each ticket in percentage.
-      default: 15,  // * For Free plan
+      default: 15, // * For Free plan
     },
     allowedRegistrationLimit: {
       type: Number,
       default: 10, // * For Free plan
     },
     extraRegistrationsLimit: {
-      type: Number, 
+      type: Number,
       default: 0, // * For Free plan
     },
     extraRegistrationsToBeExpiredAt: {
@@ -131,7 +167,7 @@ const communitySchema = new mongoose.Schema(
     },
     registrationsReceived: {
       type: Number, // This will be resetted to 0 at the end of every billing cycle.
-      default: 0, 
+      default: 0,
     },
     cloudStorageLimit: {
       type: Number, // In GB
@@ -139,11 +175,11 @@ const communitySchema = new mongoose.Schema(
     },
     extraCloudStorageLimit: {
       type: Number,
-      default: 0, 
+      default: 0,
     },
     extraCloudStorageLimitToBeExpiredAt: {
       type: Date,
-    },  
+    },
     extraStorageLimitUtilised: {
       type: Number,
       default: 0,
@@ -157,7 +193,7 @@ const communitySchema = new mongoose.Schema(
       default: 100, // * For Free plan
     },
     extraEmailLimit: {
-      type: Number, 
+      type: Number,
       default: 0,
     },
     extraEmailLimitToBeExpiredAt: {
@@ -184,7 +220,7 @@ const communitySchema = new mongoose.Schema(
     },
     extraStreamingHoursUsed: {
       type: Number,
-      default: 0, 
+      default: 0,
     },
     streamingHoursUsed: {
       type: Number,

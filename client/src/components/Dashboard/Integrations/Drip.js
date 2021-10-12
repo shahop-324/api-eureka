@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 
 import { Link, useParams } from "react-router-dom";
 import {navigationIndexForCommunityDash} from "./../../../actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +41,27 @@ const Drip = () => {
     setOpen(true);
   };
 
+  const { communityDetails } = useSelector((state) => state.community);
+
+  let isEligible = false; // plan !== Free & if plan === "AppSumo" then codesApplied.length*1 === 3 => eligible
+
+  if (communityDetails.planName !== "Free") {
+    if (communityDetails.isAppSumoCustomer) {
+      if (communityDetails.codesApplied.length * 1 === 3) {
+        // Eligible
+        isEligible = true;
+      }
+    }
+    if (communityDetails.planName === "Growth") {
+      // Eligible
+      isEligible = true;
+    }
+    if (communityDetails.planName === "Custom") {
+      // Eligible
+      isEligible = true;
+    }
+  }
+
   const classes = useStyles();
 
   return (
@@ -70,20 +91,16 @@ const Drip = () => {
 
           <div className="d-flex flex-row align-items-center" style={{ justifySelf: "end" }}>
           <Button style={{fontFamily: "Ubuntu", fontSize: "0.85rem", fontWeight: "500", textTransform: "capitalize"}} className="me-3">Learn more</Button>
-          <Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
+          
+         {isEligible ? <><Chip
+                  label="Available"
+                  color="success"
+                  style={{ fontWeight: "500" }}
+                /></> : <><Chip  label="Premium" color="warning" variant="outlined" style={{fontWeight: "500"}} />
           <Link to={`/user/${userId}/community/billing/${communityId}`}
                         onClick={() => {
                           dispatch(navigationIndexForCommunityDash(7));
-                        }} type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</Link>
-          {/* 
-            <button
-              onClick={() => {
-                handleOpen();
-              }}
-              className="btn btn-outline-primary btn-outline-text"
-            >
-              Add
-            </button> */}
+                        }} type="button" className="btn btn-primary btn-outline-text ms-3" >Upgrade</Link></>}
           </div>
         </div>
       </div>

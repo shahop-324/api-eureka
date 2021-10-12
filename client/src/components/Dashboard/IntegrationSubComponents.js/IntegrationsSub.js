@@ -34,8 +34,8 @@ const IntegrationsSub = () => {
         <Slido />
         <GoogleAnalytics />
         <FacebookPixel />
-        <Marketo />
         <Zapier />
+        <Marketo />
         <Slack />
         <Twitter />
         <GoogleSheets />

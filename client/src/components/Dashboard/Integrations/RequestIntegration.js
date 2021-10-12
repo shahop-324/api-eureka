@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import RequestPNG from "./../../../assets/images/request_integration.svg";
+import RequestIntegrationForm from "./MoreIntegrations/RequestIntegrationForm";
 
 const Paper = styled.div`
   border-radius: 10px;
@@ -42,6 +43,13 @@ font-size: 1rem !important;
 `
 
 const RequestIntegration = () => {
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <>
       <Paper className="d-flex flex-row align-items-center justify-content-between mb-4 pe-4">
@@ -57,8 +65,11 @@ const RequestIntegration = () => {
           </div>
           
         </div>
-        <StyledButton className="btn btn-primary btn-outline-text">Request Integration</StyledButton>
+        <StyledButton onClick={() => {setOpen(true)}} className="btn btn-primary btn-outline-text">Request Integration</StyledButton>
       </Paper>
+
+      <RequestIntegrationForm open={open} handleClose={handleClose} />
+      
     </>
   );
 };

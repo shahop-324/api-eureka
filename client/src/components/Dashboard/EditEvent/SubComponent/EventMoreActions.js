@@ -60,7 +60,7 @@ const EventMoreActions = ({ open, handleClose }) => {
           </HeaderFooter>
 
           <div className="d-flex flex-column align-items-center p-4">
-            {false ? (
+            {eventDetails.status === "Upcoming" ? (
               <button
                 onClick={() => {
                   dispatch(editEvent({ status: "Started" }, eventDetails._id));

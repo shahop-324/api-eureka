@@ -9,6 +9,8 @@ import IntegrationsSub from "./IntegrationSubComponents.js/IntegrationsSub";
 import ApiKeysSub from "./IntegrationSubComponents.js/ApiKeysSub";
 import GenerateApiKey from "./IntegrationSubComponents.js/Forms/GenerateApiKey";
 import styled from "styled-components";
+import RequestIntegrationForm from "./Integrations/MoreIntegrations/RequestIntegrationForm";
+import BuildWithBluemeetForm from "./Integrations/MoreIntegrations/BuildWithBluemeetForm";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -36,12 +38,24 @@ const SwitchTab = styled.div`
 `;
 
 const Integrations = () => {
+  const [openRequestIntegration, setOpenRequestIntegration] =
+    React.useState(false);
+  const [openBuildWithBluemeet, setOpenBuildWithBluemeet] =
+    React.useState(false);
   const [alignment, setAlignment] = React.useState("integrations");
 
   const [openGenerateApikey, setOpenGenerateApikey] = useState(false);
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
+  };
+
+  const handleCloseRequestIntegration = () => {
+    setOpenRequestIntegration(false);
+  };
+
+  const handleCloseBuildWithBluemeet = () => {
+    setOpenBuildWithBluemeet(false);
   };
 
   const handleCloseOpenGenerateApiKey = () => {
@@ -55,10 +69,10 @@ const Integrations = () => {
           {(() => {
             switch (alignment) {
               case "integrations":
-                return <SectionHeading >Integrations</SectionHeading>;
+                return <SectionHeading>Integrations</SectionHeading>;
 
               case "apikeys":
-                return <SectionHeading >Api keys</SectionHeading>;
+                return <SectionHeading>Api keys</SectionHeading>;
 
               default:
                 break;
@@ -70,10 +84,20 @@ const Integrations = () => {
                 case "integrations":
                   return (
                     <div className="d-flex flex-row align-items-center">
-                      <button className="btn btn-outline-dark btn-outline-text me-3">
+                      <button
+                        onClick={() => {
+                          setOpenBuildWithBluemeet(true);
+                        }}
+                        className="btn btn-outline-dark btn-outline-text me-3"
+                      >
                         Build with Bluemeet
                       </button>
-                      <button className="btn btn-dark btn-outline-text">
+                      <button
+                        onClick={() => {
+                          setOpenRequestIntegration(true);
+                        }}
+                        className="btn btn-dark btn-outline-text"
+                      >
                         Request integration
                       </button>
                     </div>
@@ -153,6 +177,15 @@ const Integrations = () => {
       <GenerateApiKey
         openDrawer={openGenerateApikey}
         handleCloseDrawer={handleCloseOpenGenerateApiKey}
+      />
+
+      <BuildWithBluemeetForm
+        open={openBuildWithBluemeet}
+        handleClose={handleCloseBuildWithBluemeet}
+      />
+      <RequestIntegrationForm
+        open={openRequestIntegration}
+        handleClose={handleCloseRequestIntegration}
       />
     </>
   );

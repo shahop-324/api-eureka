@@ -8,6 +8,8 @@ const AppSumoCodes = require("./../models/appSumoCodesModel");
 const Community = require("./../models/communityModel");
 const CommunityTransaction = require("./../models/communityTransactionModel");
 const mongoose = require("mongoose");
+const RequestIntegration = require("./../models/requestIntegrationModel");
+const BuildWithBluemeet = require("./../models/buildWithBluemeetModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 
@@ -758,6 +760,55 @@ exports.redeemAppSumoCode = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+exports.requestIntegration = catchAsync(async (req, res, next) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const communityId = req.body.communityId;
+  const requestedIntegrations = req.body.requestedIntegrations;
+  const otherIntegrations = req.body.otherIntegrations;
+
+  await RequestIntegration.create({
+    name: name,
+    email: email,
+    communityId: communityId,
+    requestedIntegrations: requestedIntegrations,
+    otherIntegrations: otherIntegrations,
+    initiatedAt: Date.now(),
+  });
+
+  // TODO Send a mail to a bluemeet person saying that someone has requested an integration
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+
+exports.buildWithBluemeet = catchAsync(async (req, res, next) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const communityId = req.body.communityId;
+  const productName = req.body.productName;
+  const companyName = req.body.companyName;
+  const productDescription = req.body.productDescription;
+
+  await BuildWithBluemeet.create({
+    name: name,
+    email: email,
+    communityId: communityId,
+    productName: productName,
+    companyName: companyName,
+    productDescription: productDescription,
+    initiatedAt: Date.now(),
+  });
+
+  // TODO Send a mail to a bluemeet person saying that someone has proposed an integration
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+
 
 exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
   const communityId = req.params.communityId;

@@ -16,6 +16,7 @@ const EventTransactionIdsCommunityWise = require("../../models/eventTransactionI
 const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsCommunityWiseModel");
 const EventRegistrationTemplate = require("./../email/eventRegistrationMail");
 const appError = require("./../../utils/appError");
+const axios = require('axios');
 
 const sgMail = require("@sendgrid/mail");
 
@@ -764,17 +765,17 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         );
       }
 
-      if (salesForceAccount) {
-        salesForceRegistrationCapture(
-          salesForceAccount,
-          user.firstName,
-          user.lastName,
-          user.email,
-          event.eventName,
-          ticket.name,
-          amountTotal
-        );
-      }
+      // if (salesForceAccount) {
+      //   salesForceRegistrationCapture(
+      //     salesForceAccount,
+      //     user.firstName,
+      //     user.lastName,
+      //     user.email,
+      //     event.eventName,
+      //     ticket.name,
+      //     amountTotal
+      //   );
+      // }
 
       if (mailChimpAccount) {
         let mailChimpFormValues = {};

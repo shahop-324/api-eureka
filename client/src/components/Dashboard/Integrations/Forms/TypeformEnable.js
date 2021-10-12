@@ -3,21 +3,29 @@ import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { IconButton } from "@material-ui/core";
 import TypeformIntegrationPNG from "./../../../../assets/images/int-12.png";
+import { useDispatch } from "react-redux";
+import { editCommunity } from "../../../../actions";
+import { useParams } from "react-router-dom";
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
   ? "http://localhost:3000/api-eureka/eureka/v1"
   : "https://www.evenz.co.in/api-eureka/eureka/v1";
 const TypeformEnable = ({ openDrawer, handleCloseDrawer }) => {
+  const params = useParams();
+  const communityId = params.id;
+
+  const dispatch = useDispatch();
+
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -41,17 +49,17 @@ const TypeformEnable = ({ openDrawer, handleCloseDrawer }) => {
             </div>
             <div>
               <div className="d-flex flex-row align-items-center justify-content-end mb-4">
-                <a
-                  href={`${BaseURL}/auth/mailChimp`}
-                  style={{ textDecoration: "none", width: "100%" }}
+                <button
+                  onClick={() => {
+                    dispatch(
+                      editCommunity(communityId, { isConnectedTypeform: true })
+                    );
+                  }}
+                  className="btn btn-outline-primary btn-outline-text"
+                  style={{ width: "100%" }}
                 >
-                  <button
-                    className="btn btn-outline-primary btn-outline-text"
-                    style={{ width: "100%" }}
-                  >
-                    Enable typeform
-                  </button>
-                </a>
+                  Enable typeform
+                </button>
               </div>
               <div>
                 <div className="want-help-heading mb-3">Want help ?</div>

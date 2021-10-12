@@ -3509,9 +3509,10 @@ export const editCommunity = (id, formValues) => async (dispatch, getState) => {
     const result = await res.json();
 
     console.log(result);
+
     dispatch(
       communityActions.EditCommunity({
-        community: result.community,
+        community: result.data,
       })
     );
 
@@ -8428,3 +8429,304 @@ export const fetchCommunityTransactions =
       // Show snack bar that failed to fetch transactions.
     }
   };
+
+export const connectMailchimp =
+  (code, communityId, userId) => async (dispatch, getState) => {
+    try {
+      const res = await eureka.get(
+        `/eureka/v1/oauth/mailchimp/callback/?code=${code}&communityId=${communityId}`
+      );
+      const updatedCommunity = res.data;
+
+      dispatch(
+        communityActions.EditCommunity({
+          community: updatedCommunity,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Mailchimp connected successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+
+      history.push(`/user/${userId}/community/integrations/${communityId}`);
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to connect mailchimp. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const connectSalesforce =
+  (code, communityId, userId) => async (dispatch, getState) => {
+    try {
+      const res = await eureka.get(
+        `/eureka/v1/oauth/salesforce/callback/?code=${code}&communityId=${communityId}`
+      );
+      const updatedCommunity = res.data;
+
+      dispatch(
+        communityActions.EditCommunity({
+          community: updatedCommunity,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Salesforce connected successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+
+      history.push(`/user/${userId}/community/integrations/${communityId}`);
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to connect salesforce. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const disconnectMailchimp =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}community/disconnectMailchimp/${communityId}`,
+        {
+          method: "PATCH",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        communityActions.EditCommunity({
+          community: result.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Mailchimp uninstalled successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to disconnect mailchimp. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const disconnectSalesforce =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}community/disconnectSalesforce/${communityId}`,
+        {
+          method: "PATCH",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        communityActions.EditCommunity({
+          community: result.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Salesforce uninstalled successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to disconnect salesforce. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const requestIntegration =
+  (formValues) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}requestIntegration`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Integration request recieved successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to submit integration request. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, getState) => {
+  try {
+    console.log("Build with bluemeet was called.")
+    const res = await fetch(`${BaseURL}buildWithBluemeet`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+
+    handleClose();
+    console.log(result);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Integration request recieved successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to submit integration request. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};

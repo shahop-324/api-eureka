@@ -85,9 +85,10 @@ const renderParticipants = (eventRegistrations) => {
       return (
         <ParticipantsDetailsCard
           image={
+            el.userImage ? 
             el.userImage.startsWith("https://")
               ? el.userImage
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${el.userImage}`
+              : `https://bluemeet.s3.us-west-1.amazonaws.com/${el.userImage}` : "#"
           }
           id={el._id}
           key={el._id}
@@ -119,7 +120,7 @@ const Participants = () => {
 
   useEffect(() => {
     dispatch(fetchRegistrationsOfParticularEvent(eventId));
-    dispatch(fetchCodes());
+    // dispatch(fetchCodes()); 
   }, []);
 
   const [open, setOpen] = useState(false);

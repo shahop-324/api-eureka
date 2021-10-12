@@ -134,4 +134,20 @@ router.get(
   globalController.getCommunityTransactions
 );
 
+// * Request Integration
+
+router.post(
+  "/requestIntegration",
+  authController.protectCommunity,
+  globalController.requestIntegration
+);
+
+// * Build with Bluemeet
+
+router.post(
+  "/buildWithBluemeet",
+  authController.protectCommunity,
+  globalController.buildWithBluemeet
+);
+
 module.exports = router;

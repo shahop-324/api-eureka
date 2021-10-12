@@ -7,6 +7,8 @@ const { promisify } = require("util");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
 const Video = require("../models/videoModel");
 const { v4: uuidv4 } = require("uuid");
+const MailChimp = require("./../models/mailChimpModel");
+const SalesForce = require("./../models/salesForceModel");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -375,7 +377,17 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
     "tawkLink",
     "paymentGateway",
     "paypalOnboardingData",
-    "hubspotApiKey"
+    "hubspotApiKey",
+    "googleAnalyticsCode",
+    "isConnectedMailChimp",
+    "isConnectedHubspot",
+    "isConnectedTypeform",
+    "isConnectedTawk",
+    "isConnectedSlido",
+    "isConnectedGoogleAnalytics",
+    "isConnectedFacebookPixel",
+    "facebookPixelCode",
+    "isConnectedSalesforce"
   );
 
   const updatedCommunity = await Community.findByIdAndUpdate(
@@ -383,6 +395,43 @@ exports.updateCommunity = catchAsync(async (req, res, next) => {
     filteredBody,
     { new: true, validateModifiedOnly: true }
   );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
+
+exports.disconnectMailchimp = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    { isConnectedMailChimp: false },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  // Delete all occurence of mailchimp object for this community
+
+  await MailChimp.findOneAndDelete({ communityId: communityId });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
+
+exports.disconnectSalesforce = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    { isConnectedSalesforce: false },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  // Delete all occurence of mailchimp object for this community
+  await SalesForce.findOneAndDelete({ communityId: communityId });
 
   res.status(200).json({
     status: "success",

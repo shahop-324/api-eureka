@@ -4,7 +4,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Loader from "../../../../../components/Loader";
 import styled from "styled-components";
@@ -128,10 +128,6 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
     setChecked(!checked);
   };
 
-  
-
- 
-
   const onSubmit = (formValues) => {
     console.log(formValues, "I am counting on you formValues mailChimpGeneral");
     const ModifiedFormValues = {};
@@ -147,6 +143,8 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
       ModifiedFormValues.mailChimpAudienceTag.push(eventDetails.eventName);
     }
     ModifiedFormValues.addDirectAccessLinkToMailChimp = checked;
+    ModifiedFormValues.isMailchimpEnabled = true;
+    
     dispatch(editEvent(ModifiedFormValues, params.id));
   };
 
@@ -179,7 +177,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
     <>
       <div>
         <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
-          <div className="d-flex flex-column mb-5 overlay-form-input-row">
+          <div className="d-flex flex-column mb-4 overlay-form-input-row">
             <label
               for="communityName"
               className="form-label form-label-customized"
@@ -189,17 +187,15 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
             </label>
             <small className="mb-3 form-small-text">
               Select audience list from your mailchimp account where you want to
-              sync registrants, leads and interested people.
+              sync registrants.
             </small>
-            <div className="form-label form-label-customized">
-              Registrants list
-            </div>
 
             <Field
               name="registrantsList"
               classes="mb-3"
               placeholder="Registrants list"
               styles={styles}
+              
               menuPlacement="bottom"
               options={audienceList}
               component={renderReactSelect}
@@ -223,7 +219,7 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
               >
                 Tags
               </FormLabel>
-              <div className="form-group">
+              <div className="">
                 <Field name="tag" component={renderMultiTags} />
               </div>
             </div>
@@ -233,39 +229,12 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
               for="communityName"
               className="form-label form-label-customized"
             >
-              Add direct access link
+              Note:
             </label>
             <small className="mb-3 form-small-text">
-              Direct access link will be saved and shared with attendees in
-              mailing list to join event at ease.
+              Magic link will be synced along with name and email and will be
+              shared with attendees via mail to join event at ease.
             </small>
-            <div
-              className="d-flex flex-row align-items-center"
-              style={{ justifySelf: "end" }}
-            >
-              <React.Fragment>
-                <FormGroup row>
-                  <FormControlLabel
-                    control={
-                      <RoyalBlueSwitch
-                        checked={checked}
-                        onChange={handleChange}
-                        name="mailchimpSwitch"
-                      />
-                    }
-                  />
-                </FormGroup>
-                <div
-                  style={{
-                    color: "#212121",
-                    fontFamily: "Ubuntu",
-                    fontWeight: "500",
-                  }}
-                >
-                  {checked ? "Disable" : "Enable"}
-                </div>
-              </React.Fragment>
-            </div>
 
             {/* <div className="tag">Confluenece 2021</div> */}
           </div>
@@ -289,8 +258,36 @@ const MailchimpGeneral = ({ handleSubmit, pristine, submitting }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  initialValues: {
+    registrantsList:
+      state.event.eventDetails &&
+      state.event.eventDetails.mailChimpAudienceListIdForRegistrants
+        ? (() => {
+            for (let element of state.community.mailChimpAudiences) {
+              if (
+                element.id ===
+                state.event.eventDetails.mailChimpAudienceListIdForRegistrants
+              ) {
+                return { value: element.id, label: element.name };
+              }
+            }
+          })()
+        : "",
 
+    // mailChimpAudienceTag
+    tag:
+      state.event.eventDetails && state.event.eventDetails.mailChimpAudienceTag
+        ? state.event.eventDetails.mailChimpAudienceTag
+        : [state.event.eventDetails.eventName],
+  },
+});
 
-export default reduxForm({
-  form: "mailchimpGeneralPreference",
-})(MailchimpGeneral);
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: "mailchimpGeneralPreference",
+    // validate,
+    enableReinitialize: true,
+    destroyOnUnmount: false,
+  })(MailchimpGeneral)
+);

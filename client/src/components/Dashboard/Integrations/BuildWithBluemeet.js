@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Build from "./../../../assets/images/build-with-bluemeet.svg";
+import BuildWithBluemeetForm from "./MoreIntegrations/BuildWithBluemeetForm";
 
 const Paper = styled.div`
   border-radius: 10px;
@@ -41,6 +42,13 @@ const StyledButton = styled.button`
 `;
 
 const BuildWithBluemeet = () => {
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <>
       <Paper className="d-flex flex-row align-items-center justify-content-between mb-4 pe-4">
@@ -54,10 +62,12 @@ const BuildWithBluemeet = () => {
             </SubHeading>
           </div>
         </div>
-        <StyledButton className="btn btn-primary btn-outline-text">
+        <StyledButton onClick={() => {setOpen(true)}} className="btn btn-primary btn-outline-text">
           Start discussing
         </StyledButton>
       </Paper>
+
+       <BuildWithBluemeetForm open={open} handleClose={handleClose} />
     </>
   );
 };

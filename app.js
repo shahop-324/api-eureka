@@ -82,7 +82,7 @@ const BASE_URL =
     ? "http://127.0.0.1:3000"
     : "https://api.bluemeet.in";
 
-const OAUTH_CALLBACK = `${BASE_URL}/api-eureka/eureka/v1/oauth/mailchimp/callback`;
+const OAUTH_CALLBACK = `http://127.0.0.1:3001/bluemeet/redirect`;
 
 app.use(
   cors({
@@ -268,6 +268,8 @@ app.get("/api-eureka/eureka/v1/auth/mailchimp", (req, res, next) => {
 });
 
 app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res, next) => {
+  const communityId = req.query.communityId;
+
   let accessToken = null;
   const config = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -296,39 +298,40 @@ app.get("/api-eureka/eureka/v1/oauth/mailchimp/callback", (req, res, next) => {
           },
         })
         .then((metadataResponse) => {
-          Community.findOne({ email: metadataResponse.data.login.email })
+          Community.findById(communityId)
             .then((community) => {
-              MailChimp.findOne({ communityId: community._id })
-                .then((mailChimpCommunityAccount) => {
-                  if (!mailChimpCommunityAccount) {
-                    MailChimp.create({
-                      communityId: community._id,
-                      accessToken,
-                      server: metadataResponse.data.dc,
+              const isConnectedMailChimp = community.isConnectedMailChimp;
 
-                      apiEndPoint: metadataResponse.data.api_endpoint,
-                    })
-                      .then(async () => {
-                        community.isMailChimpConnected = true;
-                        // const [a] = community;
-                        await community.save({
-                          new: true,
+              if (isConnectedMailChimp) {
+                //
+                res.status(200).json({
+                  status: "success",
+                  data: community,
+                });
+              } else {
+                MailChimp.create({
+                  communityId: community._id,
+                  accessToken,
+                  server: metadataResponse.data.dc,
 
-                          validateModifiedOnly: true,
-                        });
-
-                        res.status(200).json({
-                          status: "SUCCESS",
-                        });
-                      })
-                      .catch((error) => next(error));
-                  } else {
-                    res.status(200).json({
-                      status: "You already have one for same communityId",
-                    });
-                  }
+                  apiEndPoint: metadataResponse.data.api_endpoint,
                 })
-                .catch((error) => next(error));
+                  .then(async () => {
+                    community.isConnectedMailChimp = true;
+                    // const [a] = community;
+                    const updatedCommunity = await community.save({
+                      new: true,
+
+                      validateModifiedOnly: true,
+                    });
+
+                    res.status(200).json({
+                      status: "success",
+                      data: updatedCommunity,
+                    });
+                  })
+                  .catch((error) => next(error));
+              }
             })
             .catch((error) => next(error));
         })
@@ -378,7 +381,7 @@ app.get("/api-eureka/eureka/v1/auth/salesforce", function (req, res, next) {
   const oauth2 = new jsforce.OAuth2({
     clientId: process.env.SALESFORCE_CLIENT_ID,
     clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-    redirectUri: process.env.SALESFORCE_REDIRECT_URI,
+    redirectUri: "http://localhost:3001/bluemeet/salesforce/redirect",
   });
   res.redirect(oauth2.getAuthorizationUrl({}));
 });
@@ -389,7 +392,7 @@ app.get(
     const oauth2 = new jsforce.OAuth2({
       clientId: process.env.SALESFORCE_CLIENT_ID,
       clientSecret: process.env.SALESFORCE_CLIENT_SECRET_ID,
-      redirectUri: process.env.SALESFORCE_REDIRECT_URI,
+      redirectUri: "http://localhost:3001/bluemeet/salesforce/redirect",
     });
     const conn = new jsforce.Connection({ oauth2: oauth2 });
     conn.authorize(req.query.code, function (err, userInfo) {
@@ -405,44 +408,27 @@ app.get(
         if (err) {
           return console.error(err);
         }
-        Community.findOne({ email: res.username })
+        Community.findById(req.query.communityId)
           .then((community) => {
-            if (!community) {
-              response.status(200).json({
-                status:
-                  "There is no community with this email Id. Please make sure to use your community email Id to sign up with salesforce.",
-              });
-            } else {
-              SalesForce.findOne({ communityId: community._id })
-                .then((salesForceCommunityAccount) => {
-                  if (!salesForceCommunityAccount) {
-                    SalesForce.create({
-                      communityId: community._id,
-                      accessToken: conn.accessToken,
-                      instanceUrl: conn.instanceUrl,
-                      refreshToken: conn.refreshToken,
-                    })
-                      .then(async () => {
-                        community.isSalesForceConnected = true;
-                        // const [a] = community;
-                        await community.save({
-                          new: true,
-                          validateModifiedOnly: true,
-                        });
+            SalesForce.create({
+              communityId: req.query.communityId,
+              accessToken: conn.accessToken,
+              instanceUrl: conn.instanceUrl,
+              refreshToken: conn.refreshToken,
+            })
+              .then(async () => {
+                community.isConnectedSalesforce = true;
+                const updatedCommunity = await community.save({
+                  new: true,
+                  validateModifiedOnly: true,
+                });
 
-                        response.status(200).json({
-                          status: "SUCCESS",
-                        });
-                      })
-                      .catch((err) => next(err));
-                  } else {
-                    response.status(200).json({
-                      status: "You already have one for same communityId",
-                    });
-                  }
-                })
-                .catch((err) => next(err));
-            }
+                response.status(200).json({
+                  status: "success",
+                  data: updatedCommunity,
+                });
+              })
+              .catch((err) => next(err));
           })
           .catch((err) => next(err));
       });

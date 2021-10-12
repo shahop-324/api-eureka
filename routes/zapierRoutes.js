@@ -9,11 +9,14 @@ const zapierController = require("./../controllers/zapierController");
 
 const router = express.Router();
 
+// * Get all Events
 router.get(
   "/getAllEvents",
   zapierController.authenticateCommunity,
   zapierController.getAllEvents
 );
+
+// * Get Attendee registered
 
 router.get(
   "/attendeeRegistered",
@@ -21,11 +24,15 @@ router.get(
   zapierController.getRegisteredAttendee
 );
 
+// * Get started events
+
 router.get(
   "/eventStarted",
   zapierController.authenticateCommunity,
   zapierController.getStartedEvents
 );
+
+// * Get Finished events
 
 router.get(
   "/eventFinished",
@@ -33,24 +40,12 @@ router.get(
   zapierController.getFinishedEvents
 );
 
-router.get("/eventReminder", zapierController.authenticateCommunity, zapierController.getEventReminders);
+// * Create new event
 
-router.get("/getNewAttendeesByExternalMeans", zapierController.authenticateCommunity, zapierController.getNewAttendeesByExternalMeans);
-
-router.get("/getNewLeads", zapierController.authenticateCommunity, zapierController.getNewLeads);
-
-router.get("/newInterestedPerson", zapierController.authenticateCommunity, zapierController.getInterestedPeople);
-
-router.get("/newAttendeeQuery", zapierController.authenticateCommunity, zapierController.getAttendeeQuery);
-
-router.get("/getEventReiviews", zapierController.authenticateCommunity, zapierController.getEventReiviews);
-
-router.get("/getCouponReminders", zapierController.authenticateCommunity, zapierController.getCouponReminders);
-
-router.get("/getAllAffiliate", zapierController.authenticateCommunity, zapierController.getAllAffiliate);
-
-router.get("/getAllCoupon", zapierController.authenticateCommunity, zapierController.getAllCoupon);
-
-router.get("/getAllTicketReminder", zapierController.authenticateCommunity, zapierController.getAllTicketReminder);
+router.post(
+  "/createEvent",
+  zapierController.authenticateCommunity,
+  zapierController.createEvent
+);
 
 module.exports = router;

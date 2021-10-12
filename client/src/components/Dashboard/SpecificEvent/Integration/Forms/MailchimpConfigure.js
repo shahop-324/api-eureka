@@ -55,7 +55,9 @@ const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
                 General
               </div>
 
-              <div
+              {/* // TODO This is for mailchimp form fields */}
+
+              {/* <div
                 onClick={() => {
                   setSelectedTab("formFields");
                 }}
@@ -64,7 +66,8 @@ const MailchimpConfigure = ({ openDrawer, handleCloseDrawer }) => {
                 }`}
               >
                 Form fields
-              </div>
+              </div> */}
+              
             </div>
 
             {/* Here goes general and form field components */}
