@@ -150,4 +150,8 @@ router.post(
   globalController.buildWithBluemeet
 );
 
+router.post("/acquireRecordingResource/:channelName", globalController.acquireRecordingResource);
+router.get("/getRecordingStatus/:sessionId", globalController.getRecordingStatus);
+router.post("/stopCloudRecording/:sessionId", globalController.stopCloudRecording);
+
 module.exports = router;

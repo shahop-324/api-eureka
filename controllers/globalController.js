@@ -10,8 +10,11 @@ const CommunityTransaction = require("./../models/communityTransactionModel");
 const mongoose = require("mongoose");
 const RequestIntegration = require("./../models/requestIntegrationModel");
 const BuildWithBluemeet = require("./../models/buildWithBluemeetModel");
+const Session = require("./../models/sessionModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
+const random = require("random");
+var btoa = require("btoa");
 
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -809,7 +812,6 @@ exports.buildWithBluemeet = catchAsync(async (req, res, next) => {
   });
 });
 
-
 exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
   const communityId = req.params.communityId;
 
@@ -821,4 +823,248 @@ exports.getCommunityTransactions = catchAsync(async (req, res, next) => {
     status: "success",
     data: transactions,
   });
+});
+
+// ***************** Acquire cloud recording resource ******************* //
+
+exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
+  const channelName = req.params.channelName;
+  const isPublisher = false;
+  const appID = "702d57c3092c4fd389eb7ea5a505d471";
+  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+
+  const expirationTimeInSeconds = 3600;
+
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  // Build token with uid
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appID,
+    appCertificate,
+    channelName,
+    "527841",
+    role,
+    privilegeExpiredTs
+  );
+
+  console.log("Channel name", channelName, process.env.AGORA_APP_ID);
+
+  const customerKey = process.env.AGORA_CUSTOMER_KEY;
+  // Customer secret
+  const customerSecret = process.env.AGORA_CUSTOMER_SECRET;
+
+  // Concatenate customer key and customer secret and use base64 to encode the concatenated string
+  const plainCredential = customerKey + ":" + customerSecret;
+
+  // Encode with base64
+  encodedCredential = btoa(plainCredential);
+
+  try {
+    const response = await fetch(
+      `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/acquire`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          cname: channelName,
+          uid: "527841",
+          clientRequest: {},
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${encodedCredential}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      res.status(400).json({
+        status: "error",
+        message: "Failed to acquire recording resource.",
+      });
+
+      throw new Error("Something went wrong");
+    }
+
+    const result = await response.json();
+
+    const startResponse = await fetch(
+      `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${result.resourceId}/mode/mix/start`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          uid: "527841",
+          cname: channelName,
+          clientRequest: {
+            token: token,
+            recordingConfig: {
+              maxIdleTime: 30,
+              streamTypes: 2,
+              channelType: 0,
+              transcodingConfig: {
+                height: 640,
+                width: 360,
+                bitrate: 500,
+                fps: 15,
+                mixedVideoLayout: 1,
+                backgroundColor: "#FF0000",
+              },
+              subscribeVideoUids: ["123", "456"],
+              subscribeAudioUids: ["123", "456"],
+              subscribeUidGroup: 0,
+            },
+            recordingFileConfig: {
+              avFileType: ["hls"],
+            },
+            storageConfig: {
+              accessKey: "AKIA476PXBEVI6FHBGWC",
+              region: 2,
+              bucket: "bluemeet",
+              secretKey: "o9fN3IeJOdBEvUlZ0mEjXkVMz8d4loxp/nY5YXhb",
+              vendor: 1,
+              fileNamePrefix: ["directory1", "directory2"],
+            },
+          },
+        }),
+
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          Authorization: `Basic ${encodedCredential}`,
+        },
+      }
+    );
+
+    if (!startResponse.ok) {
+      res.status(400).json({
+        status: "error",
+        message: "Failed to start recording.",
+        res: startResponse,
+      });
+
+      throw new Error("Something went wrong");
+    }
+
+    const startResult = await startResponse.json();
+
+    console.log(startResult);
+
+    await Session.findByIdAndUpdate(channelName, {
+      resourceId: startResult.resourceId,
+      sid: startResult.sid,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: startResult,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getRecordingStatus = catchAsync(async (req, res, next) => {
+  const sessionId = req.params.sessionId;
+
+  const sessionDoc = await Session.findById(sessionId);
+  const resourceId = sessionDoc.resourceId;
+  const sid = sessionDoc.sid;
+
+  const customerKey = process.env.AGORA_CUSTOMER_KEY;
+  // Customer secret
+  const customerSecret = process.env.AGORA_CUSTOMER_SECRET;
+
+  // Concatenate customer key and customer secret and use base64 to encode the concatenated string
+  const plainCredential = customerKey + ":" + customerSecret;
+
+  // Encode with base64
+  encodedCredential = btoa(plainCredential);
+
+  const response = await fetch(
+    `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/query`,
+    {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${encodedCredential}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    res.status(400).json({
+      status: "error",
+      message: "Failed to fetch recording status.",
+      res: response,
+    });
+
+    throw new Error("Something went wrong");
+  } else {
+    const result = await response.json();
+
+    res.status(200).json({
+      status: "success",
+      data: result,
+    });
+  }
+});
+
+exports.stopCloudRecording = catchAsync(async (req, res, next) => {
+  const sessionId = req.params.sessionId;
+
+  const sessionDoc = await Session.findById(sessionId);
+  const resourceId = sessionDoc.resourceId;
+  const sid = sessionDoc.sid;
+
+  const customerKey = process.env.AGORA_CUSTOMER_KEY;
+  // Customer secret
+  const customerSecret = process.env.AGORA_CUSTOMER_SECRET;
+
+  // Concatenate customer key and customer secret and use base64 to encode the concatenated string
+  const plainCredential = customerKey + ":" + customerSecret;
+
+  // Encode with base64
+  encodedCredential = btoa(plainCredential);
+
+  const response = await fetch(
+    `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/stop`,
+    {
+      method: "POST",
+
+      body: JSON.stringify({
+        cname: sessionId,
+        uid: "527841",
+        clientRequest: {
+          async_stop: false,
+        },
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${encodedCredential}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    res.status(400).json({
+      status: "error",
+      message: "Failed to stop recording.",
+      res: response,
+    });
+
+    throw new Error("Something went wrong");
+  } else {
+    const result = await response.json();
+
+    res.status(200).json({
+      status: "success",
+      data: result,
+    });
+  }
 });

@@ -5,6 +5,11 @@
   border: 1px solid transparent;
 }
 
+.blockbuilder-branding {
+  display: none !important;
+  visibility:  hidden !important;
+}
+
 .legend {
   background-color: #ffffff !important;
   color: #538af7 !important;

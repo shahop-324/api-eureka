@@ -8,6 +8,7 @@ import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import EmailListFields from "./GridComponents/Email/ListFields";
 import EmailDetailsCard from "./GridComponents/Email/DetailsCard";
 import CreateMail from "./SubComponent/CreateEmail";
+import DndEmailEditor from "./SubComponent/DndEmailEditor";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -141,7 +142,8 @@ const Email = () => {
           <EmailDetailsCard />
         </div>
       </div>
-      <CreateMail open={openCreateMail} handleClose={handleCloseCreateMail} />
+      {/* <CreateMail open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
+      <DndEmailEditor open={openCreateMail} handleClose={handleCloseCreateMail} />
     </>
   );
 };

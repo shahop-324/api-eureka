@@ -120,7 +120,6 @@ const Participants = () => {
 
   useEffect(() => {
     dispatch(fetchRegistrationsOfParticularEvent(eventId));
-    // dispatch(fetchCodes()); 
   }, []);
 
   const [open, setOpen] = useState(false);

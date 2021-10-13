@@ -2,38 +2,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-
-import {
-  StageBody,
-
-} from "./../../../components/SessionStage/Elements";
-
-
-
+import { StageBody } from "./../../../components/SessionStage/Elements";
 import PhotoBooth from "../../Elements/PhotoBooth";
 import StageNavComponent from "../../SessionStage/StageNavComponent";
 import StageControlsComponent from "../../SessionStage/StageControlsComponent";
 import StageSideDrawerComponent from "../../SessionStage/StageSideDrawer";
-
 import { useParams } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 import socket from "../service/socket";
-
 import { userActions } from "../../../reducers/userSlice";
 import { stageActions } from "../../../reducers/stageSlice";
 import { sessionActions } from "../../../reducers/sessionSlice";
 import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPlayer";
 import AgoraRTC from "agora-rtc-sdk-ng";
-
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
 
-import {
- 
-  fetchSessionForSessionStage,
-
-} from "../../../actions";
+import { fetchSessionForSessionStage } from "../../../actions";
 import StreamBody from "../Functions/Stage/StreamBody";
 
 let rtc = {
@@ -242,7 +227,6 @@ const SessionStage = () => {
 
   const [uplinkStat, setUplinkStat] = useState("");
   const [downlinkStat, setDownLinkStat] = useState("");
-
   const [localVolumeLevel, setLocalVolumeLevel] = useState("");
 
   const handleOpenSideDrawer = () => {
@@ -398,20 +382,6 @@ const SessionStage = () => {
     return rtc.localScreenTrack;
   };
 
-  // const shareScreenEvent = () => {
-  //   startScreenCall();
-  //   const track = startScreenCall();
-
-  //   if(track) {
-  //     track.on('track-ended', () => {
-  //       console.log('screen share track-ended');
-  //       handleStopScreenShare();
-  //     })
-  //   }
-  // }
-
-  // if(r)
-
   const startAdvancedLiveStreaming = async () => {
     // Created client object using Agora SDK
     rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
@@ -419,11 +389,13 @@ const SessionStage = () => {
     // Set client role
     rtc.client.setClientRole(options.role);
 
+    // TODO Important => Get local downlink and Uplink stat and show it to users that what is your network condition.
     // Get client network quality
-    rtc.client.on("network-quality", (stats) => {
-      setDownLinkStat(stats.downlinkNetworkQuality);
-      setUplinkStat(stats.uplinkNetworkQuality);
-    });
+    // rtc.client.on("network-quality", (stats) => {
+    //   setDownLinkStat(stats.downlinkNetworkQuality);
+    //   setUplinkStat(stats.uplinkNetworkQuality);
+    // });
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Listen for event "user-published" explanation: Some kind of audio or video stream is published
     rtc.client.on("user-published", async (user, mediaType) => {
@@ -586,7 +558,9 @@ const SessionStage = () => {
         }
       });
 
-    rtc.client
+       // * DONE Enable dual stream mode
+
+      rtc.client
       .enableDualStream()
       .then(() => {
         console.log("Enable Dual stream success!");
@@ -595,8 +569,11 @@ const SessionStage = () => {
         console.log(err);
       });
 
-    // Find active speakers
+    // * Enable audioVolume indicator
+
     rtc.client.enableAudioVolumeIndicator();
+
+    // * Find active speakers
 
     rtc.client.on("volume-indicator", (volumes) => {
       let arr = [];
@@ -695,7 +672,7 @@ const SessionStage = () => {
       if (!rtc.localAudioTrack) return;
       const level = rtc.localAudioTrack.getVolumeLevel();
       setLocalVolumeLevel(level * 100);
-    }, 1000);
+    }, 2000);
 
     document.getElementById("leave-session").onclick = async function () {
       if (agoraRole === "host") {
@@ -779,7 +756,6 @@ const SessionStage = () => {
           style={{ height: "100%" }}
         >
           <StageBody openSideDrawer={sideDrawerOpen}>
-           
             {/* Stream body goes here */}
             <StreamBody
               handleOpenSideDrawer={handleOpenSideDrawer}

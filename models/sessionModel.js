@@ -113,6 +113,12 @@ const sessionSchema = new mongoose.Schema(
         ref: "SessionChatMessage",
       },
     ],
+    resourceId: {
+      type: String,
+    },
+    sid: {
+      type: String,
+    }
   },
   {
     toJSON: { virtuals: true },
