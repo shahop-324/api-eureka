@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import "./../Styles/root.scss";
 
 import GroupIcon from "@material-ui/icons/Group";
-
+import styled from "styled-components";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-
-
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import SecurityIcon from "@material-ui/icons/Security";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
@@ -19,7 +17,6 @@ import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainCompone
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
 import SettingsDrawer from "./SettingsDrawer";
-import styled from 'styled-components';
 
 const DrawerBackground = styled.div`
 background-color: #ffffff;
@@ -44,10 +41,14 @@ const RightContent = () => {
     setOpenSettings(false);
   }
 
+ 
+
   return (
     <>
       <div>
         <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
+       
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
             onClick={() => {

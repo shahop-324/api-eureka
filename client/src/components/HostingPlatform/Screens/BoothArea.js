@@ -6,53 +6,99 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import { Avatar, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
 import Faker from "faker";
 import BoothLiveStream from "./BoothLiveStream";
-import styled  from "styled-components";
+import styled from "styled-components";
 
 const ThemedBackgroundButtonOutlined = styled.div`
-background-color: transparent;
-text-decoration: none !important;
-border: 1px solid #152d35 !important;
-color: #152d35;
-
-outline: none !important;
-
-&:hover {
-  background-color: #152d35;
-  color: #ffffff;
-  cursor: pointer;
-
-}
-`
-const ThemedBackgroundButtonFilled = styled.div`
-
-
-
-
-outline: none !important;
-
-background-color: #152d35;
-border: 1px solid #152d35 !important;
-  color: #ffffff;
- 
-
-&:hover {
   background-color: transparent;
+  text-decoration: none !important;
   color: #152d35;
 
-  background-color: transparent;
-text-decoration: none !important;
+  outline: none !important;
 
-  cursor: pointer;
+  &:hover {
+    background-color: #152d35;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`;
+const ThemedBackgroundButtonFilled = styled.div`
+  outline: none !important;
+  background-color: #152d35 !important;
+  border: 1px solid #152d35 !important;
+  color: #ffffff;
 
-}
-`
+  &:hover {
+    color: #152d35 !important;
+    background-color: transparent !important;
+    text-decoration: none !important;
+    cursor: pointer;
+  }
+`;
 
+const BasicGrid = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 24px;
+`;
 
+const GetInTouchCard = styled.div`
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+  height: 160px;
+`;
+
+const DemoRoomCard = styled.div`
+  height: 220px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
+
+const Videos = styled.div`
+  height: 260px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
+const ProductsAndServices = styled.div`
+  height: 260px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
+
+const Files = styled.div`
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
+const OffersCard = styled.div`
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
+
+const Exhibitors = styled.div`
+  height: 260px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 100%;
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,7 +136,6 @@ const BoothArea = () => {
     setOpenAssets(true);
   };
 
-
   const classes = useStyles();
 
   return (
@@ -122,19 +167,12 @@ const BoothArea = () => {
           <div>
             <ThemedBackgroundButtonOutlined
               onClick={() => {
-                handleOpenAssets();
-              }}
-              className="btn btn-outline-primary btn-outline-text me-3"
-            >
-              Assets
-            </ThemedBackgroundButtonOutlined>
-            <ThemedBackgroundButtonOutlined
-              onClick={() => {
                 handleOpenLiveStream();
               }}
-              className="btn btn-outline-primary btn-outline-text"
+              className="btn btn-dark btn-outline-text d-flex flex-row align-items-center"
             >
-              Watch Live
+              <GroupRoundedIcon className="me-2" />
+              <span>Meet</span>
             </ThemedBackgroundButtonOutlined>
           </div>
         </div>
@@ -192,23 +230,43 @@ const BoothArea = () => {
           </div>
           <div style={{ height: "100px" }}>
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
-              <div className="button-custom-bg p-2 ms-3">
-                <LanguageRoundedIcon style={{ fontSize: "24px" }} />
+              <div
+                className="button-custom-bg p-2 ms-3"
+                style={{ backgroundColor: "#ffffff" }}
+              >
+                <LanguageRoundedIcon
+                  style={{ fontSize: "24px", color: "#538BF7" }}
+                />
               </div>
-              <div className="button-custom-bg p-2 ms-3">
-                <LinkedInIcon style={{ fontSize: "24px" }} />
+              <div
+                className="button-custom-bg p-2 ms-3"
+                style={{ backgroundColor: "#ffffff" }}
+              >
+                <LinkedInIcon style={{ fontSize: "24px", color: "#0e76a8" }} />
               </div>
-              <div className="button-custom-bg p-2 ms-3">
-                <TwitterIcon style={{ fontSize: "24px" }} />
+              <div
+                className="button-custom-bg p-2 ms-3"
+                style={{ backgroundColor: "#ffffff" }}
+              >
+                <TwitterIcon style={{ fontSize: "24px", color: "#1DA1F2" }} />
               </div>
-              <div className="button-custom-bg p-2 ms-3">
-                <FacebookIcon style={{ fontSize: "24px" }} />
+              <div
+                className="button-custom-bg p-2 ms-3"
+                style={{ backgroundColor: "#ffffff" }}
+              >
+                <InstagramIcon style={{ fontSize: "24px", color: "#8a3ab9" }} />
+              </div>
+              <div
+                className="button-custom-bg p-2 ms-3"
+                style={{ backgroundColor: "#ffffff" }}
+              >
+                <FacebookIcon style={{ fontSize: "24px", color: "#3b5998" }} />
               </div>
             </div>
 
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
               <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
-                Mark as interested
+                Share Business Card
               </ThemedBackgroundButtonFilled>
             </div>
           </div>
@@ -216,7 +274,6 @@ const BoothArea = () => {
 
         <div className="mb-5">
           <div className="booth-about-heading mb-3">About</div>
-
           <div className="d-flex flex-row align-items-center mb-3">
             <div
               className="me-3 px-3 py-2 user-registration-status-chip"
@@ -247,6 +304,19 @@ const BoothArea = () => {
           </div>
         </div>
 
+        <BasicGrid className="mb-5">
+          <DemoRoomCard></DemoRoomCard>
+          <GetInTouchCard></GetInTouchCard>
+
+          <Videos></Videos>
+          <OffersCard></OffersCard>
+
+          <ProductsAndServices></ProductsAndServices>
+          <Files></Files>
+        </BasicGrid>
+
+        <Exhibitors className="mb-5"></Exhibitors>
+
         <div
           className="row d-flex flex-row"
           style={{ alignItems: "center", marginBottom: "6%" }}
@@ -273,9 +343,10 @@ const BoothArea = () => {
         <Rooms />
       </div>
 
-
-<BoothLiveStream open={openLiveStream} handleClose={handleCloseLiveStream} />
-
+      <BoothLiveStream
+        open={openLiveStream}
+        handleClose={handleCloseLiveStream}
+      />
     </>
   );
 };

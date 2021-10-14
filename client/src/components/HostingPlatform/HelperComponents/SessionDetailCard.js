@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   getRTCToken,
-  getRTCTokenForSpeaker,
+  getRTCTokenForNonUser,
   setSessionRoleAndJoinSession,
 } from "../../../actions";
 
@@ -72,7 +72,7 @@ const renderSpeakerList = (speakers) => {
           speaker.image &&
           speaker.image.startsWith("https://lh3.googleusercontent.com")
             ? speaker.image
-            : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speaker.image}`
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
         name={`${speaker.firstName} ${speaker.lastName}`}
         headline={speaker.headline}
@@ -89,6 +89,7 @@ const SessionDetailCard = ({
   startTime,
   duration,
   speakers,
+  hosts,
 }) => {
   const [openPriority, setOpenPriority] = useState(false);
 
@@ -147,13 +148,29 @@ const SessionDetailCard = ({
   if (role === "audience") {
     sessionRole = "audience";
   } else if (role === "host") {
-    sessionRole = "host";
+    // Check if he's a host for this session or not
+    if (hosts.includes(userId)) {
+      sessionRole = "host";
+    } else {
+      sessionRole = "organiser";
+    }
+    // sessionRole = "host";
+  } else if (role === "moderator") {
+    // Check if he's a host in this session
+    if (hosts.includes(userId)) {
+      sessionRole = "host";
+    } else {
+      sessionRole = "organiser";
+    }
+  }
+  if (role === "organiser") {
+    sessionRole = "organiser"; // We are sure that organiser is the one who is in community team but not host in any session and not a moderator as well.
   } else if (role === "speaker") {
-    const bool = speaker.sessions.find((session) => session._id === id);
+    const bool = speakers.includes(userId); // Flag which indicates if this speaker is a speaker in this session or not
     if (bool) {
       sessionRole = "host";
     } else {
-      sessionRole = "audience";
+      sessionRole = "speaker";
     }
   }
 
@@ -162,49 +179,20 @@ const SessionDetailCard = ({
     bgColor = "#538BF7";
   }
 
-  const roleToBeDisplayed = role;
+  let roleToBeDisplayed = role;
 
-  const handleClick = () => {
-    console.info("You clicked the Chip.");
-  };
-
-  // const readFilePro = file => {
-  //   return new Promise((resolve, reject) => {
-  //     fs.readFile(file, (err, data) => {
-  //       if (err) reject('I could not find that file 😢');
-  //       resolve(data);
-  //     });
-  //   });
-  // };
-  // const writeFilePro = (file, data) => {
-  //   return new Promise((resolve, reject) => {
-  //     fs.writeFile(file, data, err => {
-  //       if (err) reject('Could not write file 😢');
-  //       resolve('success');
-  //     });
-  //   });
-  // };
-
-  //   const joining =()=>{
-  //       return new Promise((resolve,reject)=>{
-  //           dispatch(getRTCToken(id,sessionRole))
-
-  //       }).then(()=>{
-
-  //         if(token)
-  //         {
-
-  //           console.log(token)
-
-  //         }
-  // else{
-
-  //     alert("joining session failed")
-  // }
-
-  //       })
-
-  //   }
+  if(role === "audience") {
+    roleToBeDisplayed = "audience";
+  }
+  else if(role === 'speaker') {
+    roleToBeDisplayed = "speaker";
+  }
+  else if (sessionRole === "host" ) {
+    roleToBeDisplayed = "host";
+  }
+  else {
+    roleToBeDisplayed = "organiser";
+  }
 
   return (
     <>
@@ -256,19 +244,25 @@ const SessionDetailCard = ({
               <NotificationsNoneOutlinedIcon />
             </IconButton>
             <Link
-              // to={`/community/${communityId}/event/${eventId}/hosting-platform/session/${id}`}
               onClick={() => {
-                if (role === "speaker") {
+                
+
+               if(role === "speaker" || role === "audience") {
+                  // Speaker or audience in event => does not have a userDoc
+
+                  // Get a RTC token
+
                   dispatch(
-                    getRTCTokenForSpeaker(
+                    getRTCTokenForNonUser(
                       id,
                       sessionRole,
-
                       eventId,
                       communityId,
                       userId
                     )
                   );
+
+                  // Join session channel
 
                   socket.emit(
                     "joinSession",
@@ -281,12 +275,12 @@ const SessionDetailCard = ({
                         " " +
                         speakerDetails.lastName,
                       userEmail: speakerDetails.email,
-                      userImage: `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${speakerDetails.image}`,
+                      userImage: `https://bluemeet.s3.us-west-1.amazonaws.com/${speakerDetails.image}`,
                       userCity: userCity,
                       userCountry: userCountry,
                       userOrganisation: userOrganisation,
                       userDesignation: userDesignation,
-                      roleToBeDisplayed: role,
+                      roleToBeDisplayed: roleToBeDisplayed,
                     },
                     (error) => {
                       if (error) {
@@ -294,32 +288,38 @@ const SessionDetailCard = ({
                       }
                     }
                   );
-                } else {
-                  dispatch(getRTCToken(id, sessionRole, eventId, communityId));
+               } 
+               else if(role === "moderator" || role === "organiser" || role === "host") {
+                // have userDoc
 
-                  socket.emit(
-                    "joinSession",
-                    {
-                      sessionId: id,
-                      userId: userId,
-                      sessionRole: sessionRole,
-                      userName: userName,
-                      userEmail: email,
-                      userImage: userImage,
-                      userCity: userCity,
-                      userCountry: userCountry,
-                      userOrganisation: userOrganisation,
-                      userDesignation: userDesignation,
-                      roleToBeDisplayed: role,
-                    },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
+                // Get a RTC token
+                dispatch(getRTCToken(id, sessionRole, eventId, communityId));
+
+                // Join session channel
+
+                socket.emit(
+                  "joinSession",
+                  {
+                    sessionId: id,
+                    userId: userId,
+                    sessionRole: sessionRole,
+                    userName: userName,
+                    userEmail: email,
+                    userImage: userImage,
+                    userCity: userCity,
+                    userCountry: userCountry,
+                    userOrganisation: userOrganisation,
+                    userDesignation: userDesignation,
+                    roleToBeDisplayed: roleToBeDisplayed,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
                     }
-                  );
-                }
-
+                  }
+                );
+               }
+              
                 dispatch(
                   setSessionRoleAndJoinSession(
                     sessionRole,

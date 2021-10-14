@@ -30,6 +30,9 @@ let rtc = {
 };
 
 const SessionStage = () => {
+
+  const {sessionDetails} = useSelector((state) => state.session);
+  
   const [volumeIndicators, setVolumeIndicators] = useState([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 
   const [audioStreamStat, setAudioStreamStat] = useState([]); // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
@@ -243,7 +246,6 @@ const SessionStage = () => {
 
   const handleStopScreenShare = async () => {
     rtc.localScreenTrack && rtc.localScreenTrack.close();
-    // await rtc.screenClient.unpublish(rtc.localScreenTrack);
     await rtc.screenClient.leave().then(() => {
       setView("gallery");
     });
@@ -255,7 +257,23 @@ const SessionStage = () => {
 
   const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
 
-  const agoraRole = sessionRole !== "audience" ? "host" : "audience";
+  const agoraRole = sessionRole === "host" ? "host" : "audience";
+
+        // ? if session is ended then take everyone to mainstage and replay session recording
+       // ? if session is started or resumed then take everyone to mainstage
+      // ? if agoraRole is anything except host then take user to mainstage
+     // ? if agoraRole is host and session is paused or not started then take user to backstage 
+
+   let avenue = 'mainstage'; // avenue can be either backstage or mainstage
+
+   if(sessionDetails.runningStatus === "Paused" || sessionDetails.runningStatus === "Not Yet Started") {
+     if(agoraRole === "host") {
+      // take to backstage
+      avenue = 'backstage'
+     }
+   }
+
+  //  alert(avenue);
 
   // Defined options for connecting to Agora RTC server
 
@@ -537,7 +555,7 @@ const SessionStage = () => {
             },
           });
           rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: "120p_1",
+            encoderConfig: "1080p_2",
           });
 
           // Set to all streams
@@ -755,27 +773,26 @@ const SessionStage = () => {
           className="d-flex flex-column align-items-center"
           style={{ height: "100%" }}
         >
+          
           <StageBody openSideDrawer={sideDrawerOpen}>
             {/* Stream body goes here */}
-            <StreamBody
-              handleOpenSideDrawer={handleOpenSideDrawer}
-              sideDrawerOpen={sideDrawerOpen}
-              col={col}
-              row={row}
-              allStreams={allStreams}
-              screenStream={screenStream}
-              prominentStream={prominentStream}
-              mainStream={mainStream}
-              miniStreams={miniStreams}
-              view={view}
-              audioStreamStat={audioStreamStat}
-              videoStreamStat={videoStreamStat}
-              volumeIndicators={volumeIndicators}
-              peopleInThisSession={peopleInThisSession}
-            />
-
+             <StreamBody
+            handleOpenSideDrawer={handleOpenSideDrawer}
+            sideDrawerOpen={sideDrawerOpen}
+            col={col}
+            row={row}
+            allStreams={allStreams}
+            screenStream={screenStream}
+            prominentStream={prominentStream}
+            mainStream={mainStream}
+            miniStreams={miniStreams}
+            view={view}
+            audioStreamStat={audioStreamStat}
+            videoStreamStat={videoStreamStat}
+            volumeIndicators={volumeIndicators}
+            peopleInThisSession={peopleInThisSession}
+          /> 
             {/* Stage side drawer component goes here */}
-
             {sideDrawerOpen && <StageSideDrawerComponent />}
           </StageBody>
 

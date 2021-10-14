@@ -247,7 +247,7 @@ const SessionSideDrawer = styled.div`
 const SessionSideIconBtnNav = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
   grid-gap: 12px;
 
   padding: 12px 7px;

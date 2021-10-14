@@ -43,7 +43,6 @@ import SocialSpace from "./Screens/SocialSpace";
 
 const RootBackground = styled.div`
   background-color: #345b63;
-
   min-height: 92vh;
 `;
 
@@ -199,7 +198,6 @@ const Root = () => {
 
   useEffect(() => {
     socket.on("roomData", ({ users }) => {
-      // console.log(users, "op12324567987652789opopopopopopoppoppoppop");
       dispatch(
         userActions.FetchPeopleInEvent({
           peopleInThisEvent: users,
@@ -210,34 +208,22 @@ const Root = () => {
 
   console.log(isEventLoading);
 
-  // if (isEventLoading) {
-  //   return (
-  //     <div
-  //       className="d-flex flex-row align-items-center justify-content-center"
-  //       style={{ width: "100vw", height: "100vh" }}
-  //     >
-  //       {" "}
-  //       <Loader />{" "}
-  //     </div>
-  //   );
-  // }
-
   if (eventError) {
     alert(eventError);
     dispatch(errorTrackerForFetchEvent());
     return null;
   }
 
-  const handleReceptionClick = () => {
-    dispatch(navigationIndexForHostingPlatform(0));
+  // const handleReceptionClick = () => {
+  //   dispatch(navigationIndexForHostingPlatform(0));
 
-    history.push(
-      `/community/${communityId}/event/${eventId}/hosting-platform/reception`
-    );
-  };
+  //   history.push(
+  //     `/community/${communityId}/event/${eventId}/hosting-platform/reception`
+  //   );
+  // };
 
   const handleLobbyClick = () => {
-    dispatch(navigationIndexForHostingPlatform(1));
+    dispatch(navigationIndexForHostingPlatform(0));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
@@ -299,7 +285,7 @@ const Root = () => {
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
-          communityLogo={`https://evenz-img-234.s3.ap-south-1.amazonaws.com/${eventDetails.createdBy.image}`}
+          communityLogo={`https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.createdBy.image}`}
           communityName={eventDetails.createdBy.name}
           socket={socket}
           activeIndex={currentIndex}
@@ -308,7 +294,7 @@ const Root = () => {
           handleNetworkingClick={handleNetworkingClick}
           handleRoomsClick={handleRoomsClick}
           handleBoothsClick={handleBoothsClick}
-          handleReceptionClick={handleReceptionClick}
+          // handleReceptionClick={handleReceptionClick}
           handleLogoutClick={handleLogoutClick}
           handleSocialSpaceClick={handleSocialSpaceClick}
         />
@@ -317,14 +303,13 @@ const Root = () => {
         <div style={{ height: "100vh" }}>
           <MidTopNav eventName={eventDetails.eventName} />
           <div className="main-body-content-h">
-            {/* <div className="layer-3-mh py-4 px-5">
-              <div style={{ maxWidth: "1360px", margin: "0 auto" }}> */}
+            
             {(() => {
               switch (currentIndex) {
-                case "0":
-                  return <Reception />;
+                // case "0":
+                //   return <Reception />;
 
-                case "1":
+                case "0":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div

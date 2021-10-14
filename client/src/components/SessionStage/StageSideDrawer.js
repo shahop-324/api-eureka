@@ -31,6 +31,7 @@ import { makeStyles } from "@material-ui/core";
 
 import Poll from "./../Elements/Poll";
 import QnA from "../Elements/Q&A";
+import { useSelector } from "react-redux";
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown
@@ -80,6 +81,8 @@ const useStyles = makeStyles((theme) => ({
 const StageSideDrawerComponent = () => {
   const [activeLinkTab, setActiveLinkTab] = useState("chat");
 
+  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+
   const [activeTab, setActiveTab] = useState("activity");
 
   const [view, setView] = useState("grid");
@@ -93,8 +96,10 @@ const StageSideDrawerComponent = () => {
   return (
     <>
       <SessionSideDrawer>
-        <SessionSideIconBtnNav>
+        <SessionSideIconBtnNav style={{gridTemplateColumns: sessionRole === "host" || sessionRole === "organiser"  ? "1fr 1fr 1fr 1fr" : "1fr 1fr"}}>
           <TabButton
+          className=""
+          style={{paddingTop: "10px", paddingBottom: "10px"}}
             active={activeTab === "activity" ? true : false}
             onClick={() => {
               setActiveTab("activity");
@@ -110,7 +115,7 @@ const StageSideDrawerComponent = () => {
           >
             People
           </TabButton>
-          <TabButton
+          {sessionRole === "host" || sessionRole === "organiser" ? <> <TabButton
             active={activeTab === "raisedHands" ? true : false}
             onClick={() => {
               setActiveTab("raisedHands");
@@ -125,7 +130,8 @@ const StageSideDrawerComponent = () => {
             }}
           >
             Videos
-          </TabButton>
+          </TabButton> </> : <></>}
+          
         </SessionSideIconBtnNav>
 
         {/* <MainChatComponent /> */}

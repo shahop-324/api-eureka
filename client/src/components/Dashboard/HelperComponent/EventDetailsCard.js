@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import styled from "styled-components";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
 
 const EventDetailCard = ({
   id,
@@ -25,7 +25,10 @@ const EventDetailCard = ({
   visibility,
   eventName,
   communityId,
+  moderators, // ids of moderators
+  hosts, // ids of hosts
 }) => {
+  let role = "organiser"; // default role is organiser
   const dispatch = useDispatch();
   const eventId = id;
   console.log(eventId);
@@ -35,9 +38,24 @@ const EventDetailCard = ({
   const email = useSelector((state) => state.user.userDetails.email);
   console.log(userId);
 
+  // Check if the entering person is a host/ moderator / organiser
+
+  if(moderators.includes(userId)) {
+    role = "moderator";
+  }
+  if(hosts.includes(userId)) {
+    role = "host";
+  }
+  if(!moderators.includes(userId) && !hosts.includes(userId)) {
+    role = "organiser";
+  }
+
   return (
     <>
-      <div className="events-field-value-container" style={{alignItems: "center"}}>
+      <div
+        className="events-field-value-container"
+        style={{ alignItems: "center" }}
+      >
         <div className="event-edit-field me-2">
           <Link
             className="event-field-label event-edit-icon "
@@ -85,42 +103,68 @@ const EventDetailCard = ({
             {(() => {
               switch (visibility) {
                 case "Public":
-                return  <Chip label={visibility} color="success" style={{fontWeight: "500"}} variant="outlined"/>
+                  return (
+                    <Chip
+                      label={visibility}
+                      color="success"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
                 case "Private":
-                return  <Chip label={visibility} color="warning" style={{fontWeight: "500"}} variant="outlined"/>
+                  return (
+                    <Chip
+                      label={visibility}
+                      color="warning"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
                 case "Hidden":
-                return  <Chip label={visibility} color="error" style={{fontWeight: "500"}} variant="outlined"/>
-                
-              
+                  return (
+                    <Chip
+                      label={visibility}
+                      color="error"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
+
                 default:
                   break;
               }
             })()}
-            
           </div>
         </div>
         <div className="event-status-field">
           <div className="event-field-label field-label-value">
             <div className="chip-container">
               <div className="chip-text" style={{ fontFamily: "Inter" }}>
-               
-
                 {(() => {
+                  switch (publishedStatus) {
+                    case "Draft":
+                      return (
+                        <Chip
+                          label={publishedStatus}
+                          color="secondary"
+                          style={{ fontWeight: "500" }}
+                          variant="outlined"
+                        />
+                      );
+                    case "Published":
+                      return (
+                        <Chip
+                          label={publishedStatus}
+                          color="success"
+                          style={{ fontWeight: "500" }}
+                          variant="outlined"
+                        />
+                      );
 
-switch (publishedStatus) {
-  case "Draft":
-    return  <Chip label={publishedStatus} color="secondary" style={{fontWeight: "500"}} variant="outlined"/>
-  case "Published":
-    return  <Chip label={publishedStatus} color="success" style={{fontWeight: "500"}} variant="outlined"/>
-   
-
-  default:
-    break;
-}
-
-                }
-
-                )()}
+                    default:
+                      break;
+                  }
+                })()}
               </div>
             </div>
           </div>
@@ -143,39 +187,62 @@ switch (publishedStatus) {
         </div>
         <div className="event-running-status-field">
           <div className="d-flex flex-row ">
-            
+            {(() => {
+              switch (status) {
+                case "Upcoming":
+                  return (
+                    <Chip
+                      label={status}
+                      color="warning"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
 
-{(() => {
+                case "Started":
+                  return (
+                    <Chip
+                      label={status}
+                      color="success"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
 
-  switch (status) {
-    case "Upcoming":
-      return <Chip label={status} color="warning" style={{fontWeight: "500"}} variant="outlined"/>
-      
+                case "Paused":
+                  return (
+                    <Chip
+                      label={status}
+                      color="primary"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
 
-      case "Started":
-        return <Chip label={status} color="success" style={{fontWeight: "500"}} variant="outlined"/>
+                case "Resumed":
+                  return (
+                    <Chip
+                      label={status}
+                      color="secondary"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
 
-      
-      case "Paused":
-        return <Chip label={status} color="primary" style={{fontWeight: "500"}} variant="outlined"/>
+                case "Ended":
+                  return (
+                    <Chip
+                      label={status}
+                      color="error"
+                      style={{ fontWeight: "500" }}
+                      variant="outlined"
+                    />
+                  );
 
-     
-      case "Resumed":
-        return <Chip label={status} color="secondary" style={{fontWeight: "500"}} variant="outlined"/>
-
-     
-      case "Ended":
-        return <Chip label={status} color="error" style={{fontWeight: "500"}} variant="outlined"/>
-
-     
-  
-    default:
-      break;
-  }
-
-})()}
-
-
+                default:
+                  break;
+              }
+            })()}
           </div>
         </div>
         <div className="event-stage-field">
@@ -188,13 +255,12 @@ switch (publishedStatus) {
                 to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
               >
                 <button
-                  // disabled
                   onClick={() => {
                     dispatch(
                       generateEventAccessToken(
                         userId,
                         email,
-                        "host",
+                        role, // organiser ||  moderator ||  host
                         eventId,
                         communityId
                       )

@@ -11,7 +11,7 @@ import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video C
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
 // import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded"; // Tools Icon
-import WidgetsIcon from '@mui/icons-material/Widgets'; // Tools Icon
+import WidgetsIcon from "@mui/icons-material/Widgets"; // Tools Icon
 
 import { BtnDanger, StageControl, IconButton } from "./Elements";
 
@@ -33,7 +33,14 @@ import { withStyles } from "@material-ui/core/styles";
 
 import Settings from "./Settings";
 import Tools from "./Tools";
+import StartRecordingConfirmation from "./SubComponent/StartRecordingConfirmation";
+import StopRecordingConfirmation from "./SubComponent/StopRecordingConfirmation";
 
+import PanToolRoundedIcon from "@mui/icons-material/PanToolRounded";
+import Like from "./../../assets/images/like.png";
+import Clapping from "./../../assets/images/clapping.png";
+import Love from "./../../assets/images/love.png";
+import Smile from "./../../assets/images/Smile.png";
 
 const IOSSwitch = withStyles((theme) => ({
   root: {
@@ -107,13 +114,27 @@ const StageControlsComponent = ({
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
 
+  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+
   const [openSettings, setOpenSettings] = useState(false);
 
   const [showTools, setShowTools] = useState(false);
 
+  const [startRecording, setStartRecording] = useState(false);
+
+  const [stopRecording, setStopRecording] = useState(false);
+
+  const handleCloseStopRecording = () => {
+    setStopRecording(false);
+  };
+
+  const handleCloseStartRecording = () => {
+    setStartRecording(false);
+  };
+
   const handleCloseTools = () => {
     setShowTools(false);
-  }
+  };
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
@@ -138,6 +159,10 @@ const StageControlsComponent = ({
 
     if (event.target.checked) {
       // startCloudRecording();
+      // Aks if you are sure to start recording ?
+      setStartRecording(true);
+    } else {
+      setStopRecording(true);
     }
   };
 
@@ -198,107 +223,152 @@ const StageControlsComponent = ({
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-center">
-          <a
-            data-tip={videoIsEnabled ? "Turn off camera" : "Turn on camera"}
-            className=""
-          >
-            <IconButton
-              onClick={() => {
-                videoIsEnabled
-                  ? turnOffVideo(options.uid)
-                  : turnOnVideo(options.uid);
-              }}
-              className="me-4"
+          {sessionRole === "host" ? (
+            <a
+              data-tip={videoIsEnabled ? "Turn off camera" : "Turn on camera"}
+              className=""
             >
-              {videoIsEnabled ? (
-                <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-              ) : (
-                <VideocamOffOutlinedIcon
-                  style={{ fontSize: "20px", color: "#BE1D1D" }}
-                />
-              )}
+              <IconButton
+                onClick={() => {
+                  videoIsEnabled
+                    ? turnOffVideo(options.uid)
+                    : turnOnVideo(options.uid);
+                }}
+                className="me-4"
+              >
+                {videoIsEnabled ? (
+                  <VideocamRoundedIcon style={{ fontSize: "20px" }} />
+                ) : (
+                  <VideocamOffOutlinedIcon
+                    style={{ fontSize: "20px", color: "#BE1D1D" }}
+                  />
+                )}
+              </IconButton>
+            </a>
+          ) : (
+            <IconButton style={{ padding: "4px" }} className="me-3">
+              <img
+                src={Like}
+                alt="like-reaction"
+                style={{ maxWidth: "20px" }}
+                className="m-2"
+              />
             </IconButton>
-          </a>
+          )}
 
-          <a
-            data-tip={
-              audioIsEnabled ? "Turn off microphone" : "Turn on microphone"
-            }
-            className=""
-          >
-            <IconButton
-              onClick={() => {
-                audioIsEnabled
-                  ? turnOffAudio(options.uid)
-                  : turnOnAudio(options.uid);
-              }}
-              className="me-4"
+          {sessionRole === "host" ? (
+            <a
+              data-tip={
+                audioIsEnabled ? "Turn off microphone" : "Turn on microphone"
+              }
+              className=""
             >
-              {audioIsEnabled ? (
-                <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-              ) : (
-                <MicOffOutlinedIcon
-                  style={{ fontSize: "20px", color: "#BE1D1D" }}
-                />
-              )}
+              <IconButton
+                onClick={() => {
+                  audioIsEnabled
+                    ? turnOffAudio(options.uid)
+                    : turnOnAudio(options.uid);
+                }}
+                className="me-4"
+              >
+                {audioIsEnabled ? (
+                  <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
+                ) : (
+                  <MicOffOutlinedIcon
+                    style={{ fontSize: "20px", color: "#BE1D1D" }}
+                  />
+                )}
+              </IconButton>
+            </a>
+          ) : (
+            <IconButton style={{ padding: "3px" }} className="me-3">
+              <img
+                src={Smile}
+                alt="smile-reaction"
+                style={{ maxWidth: "24px" }}
+                className="m-2"
+              />
             </IconButton>
-          </a>
+          )}
 
-          <a
-            data-tip={
-              screenSharingIsEnabled
-                ? "Stop screen share"
-                : "Start screen share"
-            }
-            className=""
-          >
-            <IconButton
-              onClick={() => {
-                if (screenSharingIsEnabled) {
-                  handleStopScreenShare();
-                  setScreenSharingIsEnabled(false);
-                } else {
-                  dispatch(
-                    getRTCTokenForScreenShare(
-                      sessionId,
-                      userId,
-                      startScreenCall
-                    )
-                  );
-                  setScreenSharingIsEnabled(true);
-                }
-
-                // // TODO Execute this logic to start sharing screen
-                // screenSharingIsEnabled
-                //   ? setScreenSharingIsEnabled(false)
-                //   : setScreenSharingIsEnabled(true);
-              }}
-              className="me-4"
+          {sessionRole === "host" ? (
+            <a
+              data-tip={
+                screenSharingIsEnabled
+                  ? "Stop screen share"
+                  : "Start screen share"
+              }
+              className=""
             >
-              {screenSharingIsEnabled ? (
-                <CancelPresentationOutlinedIcon
-                  style={{ fontSize: "20px", color: "#BE1D1D" }}
-                />
-              ) : (
-                <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-              )}
+              <IconButton
+                onClick={() => {
+                  if (screenSharingIsEnabled) {
+                    handleStopScreenShare();
+                    setScreenSharingIsEnabled(false);
+                  } else {
+                    dispatch(
+                      getRTCTokenForScreenShare(
+                        sessionId,
+                        userId,
+                        startScreenCall
+                      )
+                    );
+                    setScreenSharingIsEnabled(true);
+                  }
+                }}
+                className="me-4"
+              >
+                {screenSharingIsEnabled ? (
+                  <CancelPresentationOutlinedIcon
+                    style={{ fontSize: "20px", color: "#BE1D1D" }}
+                  />
+                ) : (
+                  <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
+                )}
+              </IconButton>
+            </a>
+          ) : (
+            <IconButton style={{ padding: "3px" }} className="me-3">
+              <img
+                src={Clapping}
+                alt="clapping-reaction"
+                style={{ maxWidth: "24px" }}
+                className="m-2"
+              />
             </IconButton>
-          </a>
+          )}
 
-          <a data-tip={"Open photo booth"} className="">
-            <IconButton
-              onClick={() => {
-                handleOpenPhotoBooth();
-              }}
-              className="me-4"
-            >
-              <PhotoCameraIcon style={{ fontSize: "20px" }} />
+          {sessionRole === "host" ? (
+            <a data-tip={"Open photo booth"} className="">
+              <IconButton
+                onClick={() => {
+                  handleOpenPhotoBooth();
+                }}
+                className="me-4"
+              >
+                <PhotoCameraIcon style={{ fontSize: "20px" }} />
+              </IconButton>
+            </a>
+          ) : (
+            <IconButton style={{ padding: "3px" }} className="me-3">
+              <img
+                src={Love}
+                alt="love-reaction"
+                style={{ maxWidth: "24px" }}
+                className="m-2"
+              />
             </IconButton>
-          </a>
+          )}
+
+<IconButton style={{padding: "12px"}} className="me-3">
+  <PanToolRoundedIcon style={{ fontSize: "20px" }} />
+</IconButton>
+
+
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-end">
-          <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
+          {sessionRole === "host" ? <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
             <FormControlLabel
               control={
                 <IOSSwitch
@@ -309,17 +379,18 @@ const StageControlsComponent = ({
               }
             />
             <div className="rec-label-text">REC</div>
-          </div>
-
-          <IconButton
-          className="me-4"
+          </div> : <></> }
+          
+          {sessionRole === "host" ? <IconButton
+            className="me-4"
             onClick={() => {
               setShowTools(true);
             }}
           >
             <WidgetsIcon style={{ fontSize: "20px" }} />
-          </IconButton>
+          </IconButton> : <></> }
 
+          
 
           <IconButton
             onClick={() => {
@@ -359,6 +430,15 @@ const StageControlsComponent = ({
       <Tools open={showTools} handleClose={handleCloseTools} />
       <ReactTooltip place="top" type="light" effect="float" />
       <Settings open={openSettings} handleClose={handleCloseSettings} />
+
+      <StartRecordingConfirmation
+        open={startRecording}
+        handleClose={handleCloseStartRecording}
+      />
+      <StopRecordingConfirmation
+        open={stopRecording}
+        handleClose={handleCloseStopRecording}
+      />
     </>
   );
 };

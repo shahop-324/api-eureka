@@ -72,7 +72,7 @@ else {
     <>
       <div className="full-page-body">
         <div className="simple-nav d-flex flex-row align-items-center justify-content-between px-5 py-2">
-          <div className="navbar-brand">Evenz</div>
+          <div className="navbar-brand">Bluemeet</div>
           <AvatarMenu />
         </div>
 

@@ -169,6 +169,8 @@ const EventManagement = () => {
           views,
           registrationsRecieved,
           status,
+          moderators,
+          host
         } = communityEvent;
         console.log(id);
         let imgUrl = " #";
@@ -189,6 +191,8 @@ const EventManagement = () => {
             eventName={eventName}
             communityId={communityId}
             id={id}
+            moderators={moderators}
+            hosts={host}
           />
         );
       });

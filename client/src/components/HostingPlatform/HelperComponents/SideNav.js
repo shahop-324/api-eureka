@@ -4,12 +4,13 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
-import GrainRoundedIcon from "@material-ui/icons/GrainRounded";
-import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded';
-
+import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
+import Faker from "faker";
 import WeekendIcon from "@mui/icons-material/Weekend";
 import { Avatar } from "@material-ui/core";
 import styled from "styled-components";
+import { IconButton } from "@mui/material";
+
 
 const SideNavBody = styled.div`
   background-color: #233e44 !important;
@@ -19,7 +20,7 @@ const SideNav = ({
   activeIndex,
   communityLogo,
   communityName,
-  handleReceptionClick,
+  // handleReceptionClick,
   handleLobbyClick,
   handleNetworkingClick,
   handleRoomsClick,
@@ -27,8 +28,16 @@ const SideNav = ({
   handleSessionsClick,
   // handleSocialSpaceClick,
 }) => {
+
+ 
+
+
   return (
     <>
+
+
+
+      
       <SideNavBody className="h-side-nav">
         <div
           className="community-logo-container d-flex flex-row align-items-center justify-content-center py-2 px-3"
@@ -38,7 +47,7 @@ const SideNav = ({
           <Avatar src={communityLogo} alt={communityName} variant="rounded" />
         </div>
         <div className="main-icon-btn-container py-3">
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleReceptionClick}
           >
@@ -55,7 +64,7 @@ const SideNav = ({
                 }
               />
 
-              {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
+              
             </div>
             <div
               className={
@@ -65,7 +74,7 @@ const SideNav = ({
             >
               Reception
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleLobbyClick}
@@ -73,20 +82,20 @@ const SideNav = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "1" ? "active-wrapper-h" : "")
+                (activeIndex === "0" ? "active-wrapper-h" : "")
               }
             >
-              <WeekendIcon
+              <HomeRoundedIcon
                 className={
                   "icon-btn-h " +
-                  (activeIndex === "1" ? "icon-btn-active-h" : "")
+                  (activeIndex === "0" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text " +
-                (activeIndex === "1" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "0" ? "icon-btn-text-active-h" : "")
               }
             >
               Lobby
@@ -181,7 +190,7 @@ const SideNav = ({
                 (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
-              <GrainRoundedIcon
+              <WeekendIcon
                 className={
                   "icon-btn-h " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -194,7 +203,7 @@ const SideNav = ({
                 (activeIndex === "5" ? "icon-btn-text-active-h" : "")
               }
             >
-              Rooms
+              Lounge
             </div>
           </div>
 
@@ -226,44 +235,21 @@ const SideNav = ({
           </div>
         </div>
 
-        {/* <div className="logout-btn-side-nav-h">
+        <div className="logout-btn-side-nav-h">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleLogoutClick}
+            // onClick={handleLogoutClick}
           >
-            <Link
-              onClick={() => {
-                // history.push("/signin");
-                socket.emit(
-                  "disconnectUser",
-                  { userId, eventId },
-                  () => {}
-                );
-                dispatch(signOut());
-              }}
-              to="/signin"
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "5" ? "active-wrapper-h" : "")
-              }
-            >
-              <ExitToAppIcon
-                className={
-                  "icon-btn-h " +
-                  (activeIndex === "5" ? "icon-btn-active-h" : "")
-                }
-              />
-            </Link>
-            <div
-              className={
-                "icon-btn-text " +
-                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
-              }
-            >
-              Leave
-            </div>
+
+
+
+
+            
+              
+           
+            
           </div>
-        </div> */}
+        </div>
       </SideNavBody>
     </>
   );

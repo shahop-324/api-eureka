@@ -3,20 +3,14 @@ import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
 import Faker from "faker";
 import Chip from "@mui/material/Chip";
-import Button from "@mui/material/Button";
-import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
-import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
-
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
-// import { IconButton } from "@material-ui/core";
-
-import {
-  IconButton,
-} from "./../../SessionStage/Elements";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import { Button } from "@material-ui/core";
+import { IconButton } from "./../../SessionStage/Elements";
 
 const HostedByCard = styled.div`
   width: 100%;
@@ -104,7 +98,7 @@ const ButtonFilledDark = styled.div`
 const WhatsHappeningAndSponsorGrid = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 3fr 1.5fr;
+  grid-template-columns: 1fr;
   grid-gap: 32px;
 `;
 
@@ -116,9 +110,9 @@ const WhatsHappeningHeading = styled.div`
 `;
 
 const WhatsHappeningBody = styled.div`
-  /* background-color: #ffffff; */
   border-radius: 5px;
   height: 400px;
+  margin-bottom: 40px;
 `;
 
 const SessionPlaybackPreview = styled.div`
@@ -126,43 +120,118 @@ const SessionPlaybackPreview = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px;
+  height: 420px;
+  background-color: #cecfcf;
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: 3fr 1.5fr;
+  border-radius: 15px;
 
   img {
     border-radius: 10px;
-    width: inherit;
-    max-height: 100%;
-    /* max-height: 320px; */
-    object-fit: cover;
+    width: 100%;
+    max-height: 400px;
   }
 `;
 
-const TransparentSponsorCardsBody = styled.div`
-  height: 500px;
-
-  display: grid;
-  grid-gap: 16px;
-  grid-auto-flow: column;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+const SessionName = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1.1rem;
+  color: #212121;
 `;
 
-const TransparentSponsorCard = styled.div`
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+const SessionDescription = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.82rem;
+  color: #5c5c5c;
+`;
+
+const SubHeading = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #152d35;
+`;
+
+const SponsorTitle = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+  color: #152d35;
+`;
+
+const SponsorCard = styled.img`
+  padding: 10px 20px;
+  object-fit: contain;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 3px solid #152d35;
+  background-color: #e6e6e6;
+  height: 120px;
+  width: 100%;
 
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
 
-  img {
-    width: 60%;
-    max-height: 80px;
-    object-fit: contain;
+    cursor: pointer;
   }
+`;
+
+const TierOneGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+
+const TierTwoGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+
+const TierThreeGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+const TierFourGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+const TierFiveGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+const TierSixGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+const TierSevenGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
+`;
+const TierEightGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 24px;
+  min-height: 130px;
 `;
 
 const About = () => {
@@ -211,83 +280,320 @@ const About = () => {
 
           <WhatsHappeningBody>
             <SessionPlaybackPreview>
-              <Chip
-                label="Live"
-                color="error"
-                style={{
-                  position: "absolute",
-                  top: "20px",
-                  left: "20px",
-                  zIndex: "10",
-                }}
-              />
-              <Button
-                variant="contained"
-                style={{
-                  position: "absolute",
-                  top: "20px",
-                  right: "20px",
-                  zIndex: "10",
-                }}
-              >
-                Enter stage
-              </Button>
-              <img
-                src={
-                  "https://inspirationfeed.com/wp-content/uploads/2020/04/Audience-applauding-speaker-at-a-business-seminar-min.jpg"
-                }
-                alt="session-playback-preview"
-              />
+              <div>
+                <Chip
+                  label="Live"
+                  color="error"
+                  style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "20px",
+                    zIndex: "10",
+                    fontWeight: "500",
+                  }}
+                />
+
+                <img
+                  src={
+                    "https://inspirationfeed.com/wp-content/uploads/2020/04/Audience-applauding-speaker-at-a-business-seminar-min.jpg"
+                  }
+                  alt="session-playback-preview"
+                />
+              </div>
+
+              <div className="p-3">
+                <SessionName className="mb-3">Welcome session</SessionName>
+                <SessionDescription className="mb-4">
+                  In this ssession you will get to uncover secrets of how and
+                  why to start a business. This session will have a panel
+                  discussion by prominent founders and business leaders.
+                </SessionDescription>
+
+                <SubHeading className="mb-3">Speakers</SubHeading>
+
+                <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                  <AvatarGroup max={5}>
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                  </AvatarGroup>
+                </div>
+
+                <SubHeading className="mb-3">Attendees</SubHeading>
+
+                <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                  <AvatarGroup max={5}>
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                    <Avatar
+                      alt={Faker.name.findName()}
+                      src={Faker.image.avatar()}
+                    />
+                  </AvatarGroup>
+                </div>
+                <button
+                  className="btn btn-outline-text btn-primary"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  Enter stage
+                </button>
+              </div>
             </SessionPlaybackPreview>
           </WhatsHappeningBody>
         </div>
-
-        <div>
-          <div className="d-flex flex-row align-items-center justify-content-between mb-3">
-            <WhatsHappeningHeading>Sponsors</WhatsHappeningHeading>
-            <div className="d-flex flex-row align-items-center">
-              <IconButton className="me-3">
-                <ArrowLeftRoundedIcon />
-              </IconButton>
-              <IconButton>
-                <ArrowRightRoundedIcon />
-              </IconButton>
-            </div>
-          </div>
-          <TransparentSponsorCardsBody>
-            <TransparentSponsorCard>
-              <img
-                src={
-                  "http://assets.stickpng.com/images/580b57fcd9996e24bc43c513.png"
-                }
-                alt="sponsor name"
-              />
-            </TransparentSponsorCard>
-            <TransparentSponsorCard>
-              <img
-                src={"https://www.logo.wine/a/logo/SpaceX/SpaceX-Logo.wine.svg"}
-                alt="sponsor name"
-              />
-            </TransparentSponsorCard>
-            <TransparentSponsorCard>
-              <img
-                src={
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png"
-                }
-                alt="sponsor name"
-              />
-            </TransparentSponsorCard>
-            <TransparentSponsorCard>
-              <img
-                src={
-                  "https://logos-world.net/wp-content/uploads/2020/05/PayPal-Logo.png"
-                }
-                alt="sponsor name"
-              />
-            </TransparentSponsorCard>
-          </TransparentSponsorCardsBody>
-        </div>
       </WhatsHappeningAndSponsorGrid>
+
+      <div className="py-4">
+        <WhatsHappeningHeading className="mb-4">
+          Our partners
+        </WhatsHappeningHeading>
+
+        <SponsorTitle className="mb-3">Platinum</SponsorTitle>
+
+        <TierOneGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/368px-Google_2015_logo.svg.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "http://media.corporate-ir.net/media_files/IROL/17/176060/Oct18/Amazon%20logo.PNG"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://logos-world.net/wp-content/uploads/2020/04/Facebook-Logo.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://cdn.corporate.walmart.com/dims4/WMT/c2bbbe9/2147483647/strip/true/crop/2389x930+0+0/resize/1446x563!/quality/90/?url=https%3A%2F%2Fcdn.corporate.walmart.com%2Fd6%2Fe7%2F48e91bac4a8ca8f22985b3682370%2Fwalmart-logos-lockupwtag-horiz-blu-rgb.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://logos-world.net/wp-content/uploads/2020/11/Flipkart-Logo.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://www.zoho.com/sites/default/files/ogimage/zoho-logo.png"
+            }
+          />
+        </TierOneGrid>
+
+        <SponsorTitle className="mb-3">Media partners</SponsorTitle>
+
+        <TierTwoGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/CNBC_logo.svg/2560px-CNBC_logo.svg.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/d/db/Forbes_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://assets-global.website-files.com/5ae98eec19474ec4b00cd02a/5bee83f7a69edda26bc5b891_YourStory_Logo-New-01.png"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://1000logos.net/wp-content/uploads/2017/04/New-York-Times-logo.png"
+            }
+          />
+        </TierTwoGrid>
+
+        <SponsorTitle className="mb-3">Swag partners</SponsorTitle>
+
+        <TierThreeGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierThreeGrid>
+
+        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+
+        <TierFourGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierFourGrid>
+        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+
+        <TierFiveGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierFiveGrid>
+        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+
+        <TierSixGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierSixGrid>
+        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+
+        <TierSevenGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierSevenGrid>
+        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+
+        <TierEightGrid className="mb-5">
+          <SponsorCard
+            src={
+              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
+            }
+          />
+          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
+          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
+          <SponsorCard
+            src={
+              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
+            }
+          />
+          <SponsorCard
+            src={
+              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
+            }
+          />
+        </TierEightGrid>
+      </div>
     </>
   );
 };

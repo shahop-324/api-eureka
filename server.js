@@ -779,18 +779,6 @@ io.on("connect", (socket) => {
           });
       };
 
-      const fetchCurrentlyOnStage = async (sessionId) => {
-        await Session.findById(sessionId, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(sessionId).emit("stageMembers", {
-              stageMembers: doc,
-            });
-          }
-        }).select("currentlyOnStage");
-      };
-
       const addUserInSession = async ({
         id,
         userId,
@@ -841,10 +829,6 @@ io.on("connect", (socket) => {
                   const sessionDoc = await Session.findById(room);
                   sessionDoc.currentlyInSession.push(doc._id);
 
-                  if (sessionRole !== "audience") {
-                    sessionDoc.currentlyOnStage =
-                      sessionDoc.currentlyOnStage + 1;
-                  }
                   await sessionDoc.save(
                     { validateModifiedOnly: true },
                     (err, doc) => {
@@ -852,7 +836,6 @@ io.on("connect", (socket) => {
                         console.log(err);
                       } else {
                         fetchCurrentUsersInSession(sessionId);
-                        fetchCurrentlyOnStage(sessionId);
                       }
                     }
                   );
@@ -873,7 +856,6 @@ io.on("connect", (socket) => {
                     console.log(err);
                   } else {
                     fetchCurrentUsersInSession(sessionId);
-                    fetchCurrentlyOnStage(sessionId);
                   }
                 }
               );

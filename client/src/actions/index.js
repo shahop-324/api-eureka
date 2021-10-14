@@ -5031,12 +5031,9 @@ export const generateEventAccessToken =
   };
 
 export const setSessionRoleAndJoinSession =
-  (sessionRole, sessionId, eventId, communityId) =>
+  (sessionRole) =>
   async (dispatch, getState) => {
-    // dispatch(eventAccessActions.startLoading())
     try {
-      console.log(sessionRole, sessionId);
-
       dispatch(
         eventAccessActions.setSessionRole({
           sessionRole: sessionRole,
@@ -5044,7 +5041,6 @@ export const setSessionRoleAndJoinSession =
       );
     } catch (err) {
       console.log(err);
-      // dispatch(eventAccessActions.hasError(err.message))
     }
   };
 
@@ -5563,18 +5559,18 @@ export const getRTCTokenForScreenShare =
     }
   };
 
-export const getRTCTokenForSpeaker =
-  (sessionId, role, eventId, communityId, speakerId) =>
+export const getRTCTokenForNonUser =
+  (sessionId, role, eventId, communityId, userId) =>
   async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
-      let res = await fetch(`${BaseURL}getLiveStreamingTokenForSpeaker`, {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForNonUser`, {
         method: "POST",
         body: JSON.stringify({
           sessionId: sessionId,
           role: role,
-          speakerId: speakerId,
+          userId: userId,
         }),
 
         headers: {
@@ -8680,7 +8676,6 @@ export const requestIntegration =
 
 export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, getState) => {
   try {
-    console.log("Build with bluemeet was called.")
     const res = await fetch(`${BaseURL}buildWithBluemeet`, {
       method: "POST",
 
@@ -8730,3 +8725,110 @@ export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, g
     }, 6000);
   }
 };
+
+export const startSessionRecording = (sessionId, handleClose) => async(dispatch, getState) => {
+  try{
+    const res = await fetch(`${BaseURL}startSessionRecording/${sessionId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+
+
+    handleClose();
+    console.log(result);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Session recording started successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
+  }
+  catch(error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to start recording. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+}
+
+export const stopSessionRecording = (sessionId, handleClose) => async(dispatch, getState) => {
+  try{
+
+    const res = await fetch(`${BaseURL}stopSessionRecording/${sessionId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+
+    handleClose();
+    console.log(result);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Session recording stopped successfully!",
+        severity: "success",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
+
+  }catch(error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to stop recording. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+
+  }
+}

@@ -27,6 +27,7 @@ const SessionDetailCardsList = ({
           speakers={session.speaker}
           duration={duration}
           startTime={session.startTime}
+          hosts={session.host}
         />
       );
     });

@@ -340,10 +340,10 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
   }
 );
 
-exports.generateTokenForLiveStreamingForSpeaker = catchAsync(
+exports.generateTokenForLiveStreamingForNonUser = catchAsync(
   async (req, res, next) => {
     const channel = req.body.sessionId;
-    const userId = req.body.speakerId;
+    const userId = req.body.userId;
     const isPublisher = req.body.role === "host" ? true : false;
 
     const appID = "702d57c3092c4fd389eb7ea5a505d471";
@@ -958,17 +958,20 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
       sid: startResult.sid,
     });
 
-    res.status(200).json({
-      status: "success",
-      data: startResult,
-    });
+    // res.status(200).json({
+    //   status: "success",
+    //   data: startResult,
+    // });
+
+    next();
+
   } catch (error) {
     console.log(error);
   }
 });
 
 exports.getRecordingStatus = catchAsync(async (req, res, next) => {
-  const sessionId = req.params.sessionId;
+  const sessionId = req.params.channelName;
 
   const sessionDoc = await Session.findById(sessionId);
   const resourceId = sessionDoc.resourceId;

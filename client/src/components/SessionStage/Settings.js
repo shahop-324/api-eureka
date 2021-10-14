@@ -17,7 +17,9 @@ import "./../../index.css";
 import StreamSettings from "./SubComponent/StreamSettings";
 import SessionCustomisation from "./SubComponent/SessionCustomisation";
 import EnableDisableLiveStreaming from "./SubComponent/EnableDisableLiveStreaming";
-import ImageEnhancement from "./SubComponent/ImageEnhancement";
+import { useSelector } from "react-redux";
+
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,6 +57,8 @@ function a11yProps(index) {
 function VerticalTabs() {
   const [value, setValue] = React.useState(0);
 
+  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -74,21 +78,25 @@ function VerticalTabs() {
           {...a11yProps(0)}
           className="custom-mui-tab"
         />
-        <Tab
-          label="Customisation"
-          {...a11yProps(1)}
-          className="custom-mui-tab"
-        />
-        <Tab
-          label="Live streaming"
-          {...a11yProps(2)}
-          className="custom-mui-tab"
-        />
-        <Tab
-          label="Image enhancement"
-          {...a11yProps(3)}
-          className="custom-mui-tab"
-        />
+        {sessionRole === "host" || sessionRole === "organiser" ? (
+          <Tab
+            label="Customisation"
+            {...a11yProps(1)}
+            className="custom-mui-tab"
+          />
+        ) : (
+          <></>
+        )}
+
+        {sessionRole === "host" || sessionRole === "organiser" ? (
+          <Tab
+            label="Live streaming"
+            {...a11yProps(2)}
+            className="custom-mui-tab"
+          />
+        ) : (
+          <></>
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <StreamSettings />
@@ -98,9 +106,6 @@ function VerticalTabs() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <EnableDisableLiveStreaming />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <ImageEnhancement />
       </TabPanel>
     </Box>
   );

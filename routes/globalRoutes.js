@@ -99,8 +99,8 @@ router.post(
 );
 
 router.post(
-  "/getLiveStreamingTokenForSpeaker",
-  globalController.generateTokenForLiveStreamingForSpeaker
+  "/getLiveStreamingTokenForNonUser",
+  globalController.generateTokenForLiveStreamingForNonUser
 );
 
 router.post(
@@ -150,8 +150,8 @@ router.post(
   globalController.buildWithBluemeet
 );
 
-router.post("/acquireRecordingResource/:channelName", globalController.acquireRecordingResource);
+router.post("/startSessionRecording/:channelName", globalController.acquireRecordingResource ,globalController.getRecordingStatus);
 router.get("/getRecordingStatus/:sessionId", globalController.getRecordingStatus);
-router.post("/stopCloudRecording/:sessionId", globalController.stopCloudRecording);
+router.post("/stopSessionRecording/:sessionId", globalController.stopCloudRecording);
 
 module.exports = router;
