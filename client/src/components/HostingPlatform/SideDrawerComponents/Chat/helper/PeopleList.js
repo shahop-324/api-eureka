@@ -1,31 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import Faker from "faker";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
-
+import { useDispatch, useSelector } from "react-redux";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../../Styles/PeopleList.scss";
 import { Avatar, IconButton } from "@material-ui/core";
+import { useParams } from "react-router";
+import {
+  getPeopleInEvent,
+  setPersonalChatConfig,
+} from "../../../../../actions";
 
-const PeopleComponent = () => {
+const PeopleComponent = ({
+  name,
+  image,
+  organisation,
+  designation,
+  socketId,
+  userId,
+  tag,
+}) => {
+  const dispatch = useDispatch();
   return (
     <>
       <div
         className=" mb-3"
         style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
       >
-        <Avatar
-          src={Faker.image.avatar()}
-          alt={Faker.name.findName()}
-          variant="rounded"
-        />
+        <Avatar src={image} alt={name} variant="rounded" />
         <div
           className="chat-box-name ms-3"
           style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
         >
-          <div>{Faker.name.findName()}</div>
+          <div>{name}</div>
 
           <div
             style={{
@@ -35,9 +44,15 @@ const PeopleComponent = () => {
             }}
             className="d-flex flex-row align-items-center justify-content-between"
           >
-            <div>Product Manager, Evenz</div>
-
             <div>
+              {designation}, {organisation}
+            </div>
+
+            <div
+              onClick={() => {
+                dispatch(setPersonalChatConfig(userId));
+              }}
+            >
               <ChatBubbleOutlineRoundedIcon className="chat-msg-hover-icon" />
             </div>
           </div>
@@ -50,6 +65,39 @@ const PeopleComponent = () => {
 const PeopleList = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { peopleInThisEvent } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const eventId = params.eventId;
+  // Get a list of everyone in this event
+
+  useEffect(() => {
+    dispatch(getPeopleInEvent(eventId));
+  }, []);
+
+  const renderPeople = (people) => {
+    return people.map((person) => {
+      return (
+        <PeopleComponent
+          name={person.userName}
+          image={
+            person.userImage && person.userImage.startsWith("https://")
+              ? person.userImage
+              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.userImage}`
+          }
+          organisation={person.userOrganisation}
+          designation={person.userDesignation}
+          socketId={person.socketId}
+          userId={person.userId}
+          key={person._id}
+          tag={person.tag}
+        />
+      );
+    });
+  };
 
   return (
     <>
@@ -91,29 +139,9 @@ const PeopleList = ({ open, handleClose }) => {
             />
             <i className="search icon"></i>
           </div>
-
-          {/* <div className="my-3">
-            <hr />
-          </div> */}
-
           {/* Here goes list of people */}
 
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
-          <PeopleComponent />
+          {renderPeople(peopleInThisEvent)}
         </div>
       </Dialog>
     </>

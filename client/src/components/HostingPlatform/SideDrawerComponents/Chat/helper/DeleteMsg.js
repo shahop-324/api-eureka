@@ -1,13 +1,28 @@
 import React from "react";
-
+import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
+import socket from "./../../../service/socket";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../../Styles/report.scss";
 import { Avatar, IconButton } from "@material-ui/core";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 
-const MsgElement = ({ name, image, msgText }) => {
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
+
+const MsgElement = ({
+  name,
+  image,
+  msgText,
+  organisation,
+  designation,
+  timestamp,
+}) => {
   return (
     <>
       <div
@@ -37,9 +52,11 @@ const MsgElement = ({ name, image, msgText }) => {
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
+                <div>
+                  {designation}, {organisation}
+                </div>
 
-                <div>3m ago</div>
+                <div>{timeAgo.format(new Date(timestamp), "round")}</div>
               </div>
             </div>
           </div>
@@ -60,9 +77,37 @@ const MsgElement = ({ name, image, msgText }) => {
   );
 };
 
-const DeleteMsg = ({ name, image, msgText, open, handleClose }) => {
+const DeleteMsg = ({
+  name,
+  image,
+  msgText,
+  msgId,
+  organisation,
+  designation,
+  timestamp,
+  open,
+  handleClose,
+}) => {
+  const params = useParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const eventId = params.eventId;
+
+  const deleteMsg = (msgId) => {
+    socket.emit(
+      "deleteEventMessage",
+      {
+        msgId: msgId,
+        eventId: eventId,
+      },
+      (error) => {
+        if (error) {
+          alert(error);
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -94,7 +139,14 @@ const DeleteMsg = ({ name, image, msgText, open, handleClose }) => {
 
           {/* <ChatMsgElement /> */}
           <div className="msg-to-report-container p-3 mb-4">
-            <MsgElement name={name} image={image} msgText={msgText} />
+            <MsgElement
+              name={name}
+              image={image}
+              msgText={msgText}
+              organisation={organisation}
+              designation={designation}
+              timestamp={timestamp}
+            />
           </div>
 
           {/* Write warning message here */}
@@ -104,6 +156,10 @@ const DeleteMsg = ({ name, image, msgText, open, handleClose }) => {
             style={{ border: "none" }}
           >
             <button
+              onClick={() => {
+                console.log("Delete msg with this Id", msgId);
+                deleteMsg(msgId);
+              }}
               className="btn btn-primary btn-outline-text"
               style={{ width: "100%" }}
             >

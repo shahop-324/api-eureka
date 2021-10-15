@@ -154,4 +154,9 @@ router.post("/startSessionRecording/:channelName", globalController.acquireRecor
 router.get("/getRecordingStatus/:sessionId", globalController.getRecordingStatus);
 router.post("/stopSessionRecording/:sessionId", globalController.stopCloudRecording);
 
+router.get("/getEventSpeakers/:eventId", globalController.getEventSpeakers);
+
+router.get("/getPeopleInEvent/:eventId", globalController.getPeopleInEvent);
+router.get("/getMyAllPersonalChatMsg/:userId", globalController.getMyAllPersonalChatMsg);
+
 module.exports = router;

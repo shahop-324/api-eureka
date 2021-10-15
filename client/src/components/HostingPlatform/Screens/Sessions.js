@@ -47,7 +47,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -107,15 +106,6 @@ const Sessions = () => {
     <>
       <div className="sessions-heading-and-search-box-wrapper-grid d-flex flex-row mb-5">
         <div className="col-3">
-          <Dropdown
-            icon="filter"
-            floating
-            button
-            className="icon"
-            onClick={() => {
-              setOpenFilter(true);
-            }}
-          ></Dropdown>
         </div>
         <div className="sessions-and-networking-body-heading col-6">
           Select Session to enter

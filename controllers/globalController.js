@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 const RequestIntegration = require("./../models/requestIntegrationModel");
 const BuildWithBluemeet = require("./../models/buildWithBluemeetModel");
 const Session = require("./../models/sessionModel");
+const Speaker = require("./../models/speakerModel");
+const PersonalChat = require("./../models/PersonalChatModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -964,7 +966,6 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
     // });
 
     next();
-
   } catch (error) {
     console.log(error);
   }
@@ -1070,4 +1071,48 @@ exports.stopCloudRecording = catchAsync(async (req, res, next) => {
       data: result,
     });
   }
+});
+
+exports.getEventSpeakers = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const speakers = await Speaker.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: speakers,
+  });
+});
+
+exports.getPeopleInEvent = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const peopleInEvent = await Event.findById(eventId)
+    .select("currentlyInEvent")
+    .populate({
+      path: "currentlyInEvent",
+      options: {
+        match: { status: "Active" },
+      },
+    });
+
+  res.status(200).json({
+    status: "success",
+    data: peopleInEvent,
+  });
+});
+
+exports.getMyAllPersonalChatMsg = catchAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  const personalChats = await PersonalChat.find({
+    $or: [{ recieverId: userId }, { senderId: userId }],
+  }).populate("replyTo");
+
+  res.status(200).json({
+    status: "success",
+    data: personalChats,
+  });
 });

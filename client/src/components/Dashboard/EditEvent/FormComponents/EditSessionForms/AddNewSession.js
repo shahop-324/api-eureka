@@ -438,7 +438,7 @@ const validate = (formValues) => {
   const errors = {};
   console.log(formValues.name);
   if (!formValues.name) {
-    errors.name = "Session name is required";
+    errors.name = "Name is required";
   }
   if (!formValues.description) {
     errors.description = "Description is required";

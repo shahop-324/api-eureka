@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import "./../Styles/root.scss";
-
+import { useDispatch } from "react-redux";
 import GroupIcon from "@material-ui/icons/Group";
 import styled from "styled-components";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import AssessmentIcon from "@material-ui/icons/Assessment";
 import SecurityIcon from "@material-ui/icons/Security";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
-
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import NotificationsRoundedIcon from "@material-ui/icons/NotificationsRounded";
-
 import MainChatComponent from "../SideDrawerComponents/Chat/MainChatComponent";
 import MainPeopleComponent from "../SideDrawerComponents/People/MainPeopleComponent";
 import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainComponent";
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
 import SettingsDrawer from "./SettingsDrawer";
+import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
+import { setPersonalChatConfig } from "../../../actions";
 
 const DrawerBackground = styled.div`
-background-color: #ffffff;
-`
+  background-color: #ffffff;
+`;
 
 const RightContent = () => {
+
+  const dispatch = useDispatch();
+  
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const [openSettings, setOpenSettings] = useState(false);
@@ -35,26 +37,24 @@ const RightContent = () => {
 
   const handleOpenSettings = () => {
     setOpenSettings(true);
-  }
+  };
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
-  }
-
- 
+  };
 
   return (
     <>
       <div>
-        <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
-       
-
+        <div
+          className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4"
+          style={{ width: "28rem" }}
+        >
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
             onClick={() => {
-              // setSelectedTab("feed");
-              // setOpenDrawer(true);
               handleOpenSettings();
+              dispatch(setPersonalChatConfig(null));
             }}
             style={{ borderRight: "1px solid #D3D2D2" }}
           >
@@ -64,14 +64,14 @@ const RightContent = () => {
               } py-2 px-3 mb-1`}
             >
               <SettingsRoundedIcon
-                className={`icon-btn-h ${
+                className={`icon-btn-venue ${
                   selectedTab === "feed" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "feed" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -83,6 +83,7 @@ const RightContent = () => {
             onClick={() => {
               setSelectedTab("feed");
               setOpenDrawer(true);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
@@ -91,14 +92,14 @@ const RightContent = () => {
               } py-2 px-3 mb-1`}
             >
               <DashboardIcon
-                className={`icon-btn-h ${
+                className={`icon-btn-venue ${
                   selectedTab === "feed" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "feed" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -111,6 +112,7 @@ const RightContent = () => {
             onClick={() => {
               setSelectedTab("people");
               setOpenDrawer(true);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
@@ -119,14 +121,14 @@ const RightContent = () => {
               } py-2 px-3 mb-1`}
             >
               <GroupIcon
-                className={`icon-btn-h ${
+                className={`icon-btn-venue ${
                   selectedTab === "people" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "people" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -139,6 +141,7 @@ const RightContent = () => {
             onClick={() => {
               setSelectedTab("alerts");
               setOpenDrawer(true);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
@@ -147,14 +150,14 @@ const RightContent = () => {
               } py-2 px-3 mb-1`}
             >
               <NotificationsRoundedIcon
-                className={`icon-btn-h ${
+                className={`icon-btn-venue ${
                   selectedTab === "alerts" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "alerts" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -167,6 +170,7 @@ const RightContent = () => {
             onClick={() => {
               setSelectedTab("polls");
               setOpenDrawer(true);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
@@ -174,15 +178,15 @@ const RightContent = () => {
                 selectedTab === "polls" ? "active-wrapper-h" : " "
               } py-2 px-3 mb-1`}
             >
-              <AssessmentIcon
-                className={`icon-btn-h ${
+              <AssessmentRoundedIcon
+                className={`icon-btn-venue ${
                   selectedTab === "polls" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "polls" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -195,6 +199,7 @@ const RightContent = () => {
             onClick={() => {
               setSelectedTab("moderation");
               setOpenDrawer(true);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
@@ -203,14 +208,14 @@ const RightContent = () => {
               } py-2 px-3 mb-1`}
             >
               <SecurityIcon
-                className={`icon-btn-h ${
+                className={`icon-btn-venue ${
                   selectedTab === "moderation" ? "icon-btn-active-h" : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
-              className={`icon-btn-text ${
+              className={`icon-btn-text-venue ${
                 selectedTab === "moderation" ? "icon-btn-text-active-h" : " "
               }`}
             >
@@ -223,12 +228,12 @@ const RightContent = () => {
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -331,7 +336,7 @@ const RightContent = () => {
                     selectedTab === "polls" ? "active-wrapper-h" : " "
                   } py-2 px-3 mb-1`}
                 >
-                  <AssessmentIcon
+                  <AssessmentRoundedIcon
                     className={`icon-btn-h ${
                       selectedTab === "polls" ? "icon-btn-active-h" : " "
                     }`}
@@ -433,7 +438,10 @@ const RightContent = () => {
         </SwipeableDrawer>
       </React.Fragment>
 
-      <SettingsDrawer openDrawer={openSettings} handleCloseDrawer={handleCloseSettings}/>
+      <SettingsDrawer
+        openDrawer={openSettings}
+        handleCloseDrawer={handleCloseSettings}
+      />
     </>
   );
 };

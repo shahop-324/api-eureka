@@ -4,38 +4,75 @@ import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
-
+import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
+import {useDispatch, useSelector} from "react-redux";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-
 import Ripple from "../../../../ActiveStatusRipple";
 import MsgInput from "./MsgInput";
 import ChatMsgElement from "./ChatMsgElement";
 import OutgoingChatMsgElement from "./OutgoingChatElement";
+import { setPersonalChatConfig } from "../../../../../actions";
+import Loader from "./../../../../Loader";
 
 const IndividualChat = ({
   handleOpen,
   exitPersonalChat,
   handleOpenVideoOptions,
 }) => {
+
+  const {id} = useSelector((state) => state.personalChat);
+
+  const {peopleInThisEvent} = useSelector((state) => state.user);
+
+  const requiredPerson = peopleInThisEvent.find((element) => element.userId === id);
+
+  const IsPersonLoaded = requiredPerson ? true : false;
+
+  const dispatch = useDispatch();
+
   const [status] = useState("active");
 
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
   const [msg, setMsg] = useState(null);
+  const [timestamp, setTimestamp] = useState(null);
+  const [organisation, setOrganisation] = useState(null);
+  const [designation, setDesignation] = useState(null);
 
-  const createReplyWidget = (name, img, msg) => {
+  const createReplyWidget = (
+    name,
+    img,
+    msg,
+    organisation,
+    designation,
+    timestamp
+  ) => {
     setName(name);
     setImage(img);
     setMsg(msg);
-
-    console.log("create reply widget was invoked");
+    setOrganisation(organisation);
+    setDesignation(designation);
+    setTimestamp(timestamp);
   };
 
   const destroyReplyWidget = () => {
     setName(null);
     setImage(null);
     setMsg(null);
+    setOrganisation(null);
+    setDesignation(null);
+    setTimestamp(null);
   };
+
+  if(!IsPersonLoaded) {
+    return <Loader />
+  }
+
+  const profileName = requiredPerson.userName;
+  const profileImage = requiredPerson.userImage.startsWith("https://") ? requiredPerson.userImage : `https://bluemeet.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
+  const profileOrganisation = requiredPerson.userOrganisation;
+  const profileDesigantion = requiredPerson.userDesignation;
+  const profileStatus = requiredPerson.status;
 
   return (
     <>
@@ -54,7 +91,7 @@ const IndividualChat = ({
               className="chat-msg-hover-icon"
               style={{ fontSize: "18px" }}
               onClick={() => {
-                exitPersonalChat();
+                dispatch(setPersonalChatConfig(null))
               }}
             />
           </div>
@@ -71,8 +108,8 @@ const IndividualChat = ({
         <div className="">
           <div className="individual-chat-summary-container mb-2 px-3 ">
             <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
+              src={profileImage}
+              alt={profileName}
               variant="rounded"
             />
             <div className="">
@@ -80,9 +117,9 @@ const IndividualChat = ({
                 className="chat-box-name"
                 style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
               >
-                {Faker.name.findName()}
+                {profileName}
               </div>
-              {status === "active" ? (
+              {profileStatus === "Active" ? (
                 <div
                   className="d-flex flex-row align-items-center event-field-label field-label-value"
                   style={{
@@ -111,7 +148,7 @@ const IndividualChat = ({
               className="d-flex flex-row align-items-center"
               style={{ justifySelf: "end" }}
             >
-              <VideocamOutlinedIcon
+              <CalendarTodayRoundedIcon
                 onClick={() => {
                   handleOpenVideoOptions();
                 }}
@@ -136,7 +173,6 @@ const IndividualChat = ({
         </div>
 
         {/* Incoming and outgoing Chat widget */}
-
         {/* Message input box */}
 
         <div
@@ -147,17 +183,30 @@ const IndividualChat = ({
             className="scrollable-chat-element-container"
             id="all-chat-msg-container"
           >
-              {/* <IncomingChat /> */}
-              <ChatMsgElement name={Faker.name.findName()} image={Faker.image.avatar()} msgText={"Hi there"}/>
-              <OutgoingChatMsgElement msgText={"Hi, how you have been?"}/>
+            {/* <IncomingChat /> */}
+            <ChatMsgElement
+              name={Faker.name.findName()}
+              image={Faker.image.avatar()}
+              msgText={"Hi there"}
+              organisation={"Google"}
+              designation={"SDE"}
+              timestamp={Date.now()} // timestamp of chat msg
+              chatMsgId={'901skk'} // Id of chat msg
+            />
+            {/* Outgoing chat */}
+            <OutgoingChatMsgElement msgText={"Hi, how you have been?"} timestamp={Date.now()} />
             {/* {renderChats(eventChats)} */}
           </div>
+
           <MsgInput
             name={name}
             image={image}
             msg={msg}
+            organisation={organisation}
+            designation={designation}
+            timestamp={timestamp}
             destroyReplyWidget={destroyReplyWidget}
-            //  sendChannelMessage={sendChannelMessage}
+            // sendChannelMessage={sendChannelMessage}
           />
         </div>
       </div>

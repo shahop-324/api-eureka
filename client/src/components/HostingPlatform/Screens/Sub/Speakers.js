@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import Faker from "faker";
 import PersonProfile from "../../PersonProfile";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import NoContent from "./../../NoContent";
+import NoSpeaker from "./../../../../assets/images/NoSpeaker.svg";
+import { fetchEventSpeakers } from "./../../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -18,124 +23,62 @@ const useStyles = makeStyles((theme) => ({
 
 const EventSpeakersGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 24px;
 `;
 
 const SpeakerCardBody = styled.div`
-  background-color: #ffffff;
+  background-color: #2a2a2a;
   border-radius: 10px;
   height: auto;
-
-  display: grid;
-  grid-template-columns: 1.5fr 3fr;
-  grid-gap: 24px;
+  min-height: 300px;
 `;
 
-const SpeakerCardleft = styled.div`
-  border-radius: 10px;
-  height: 100%;
-
-  /* display: grid;
-grid-auto-flow: column;
-grid-template-rows: 3fr 1fr 1fr;
-grid-gap: 24px; */
+const SpeakerImg = styled.img`
+  height: 200px;
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  object-fit: cover;
 `;
 
-const ProfileName = styled.div`
+const SpeakerName = styled.div`
   font-weight: 500;
-  font-size: 0.9rem;
-  color: #152d35;
   font-family: "Ubuntu";
-  text-transform: capitalize;
-  text-align: center;
-`;
-
-const ProfileSmallText = styled.div`
-  font-weight: 500;
-  font-size: 0.72rem;
-  color: #152d35;
-  font-family: "Ubuntu";
-  text-transform: capitalize;
-`;
-
-const ButtonOutlinedDark = styled.div`
-  padding: 6px 10px;
-  text-align: center;
-
-  font-weight: 500;
-  font-size: 0.8rem;
   color: #ffffff;
-  font-family: "Ubuntu";
-
-  color: #152d35;
-  background-color: transparent;
-
-  border: 1px solid #152d35;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #152d35;
-
-    color: #ffffff;
-
-    cursor: pointer;
-  }
+  font-size: 0.93rem;
 `;
 
-const SpeakerCardRight = styled.div`
-  font-family: "Ubuntu";
+const SpeakerDesignationOrg = styled.div`
   font-weight: 500;
-  font-size: 0.8rem;
-  padding: 10px;
+  font-family: "Ubuntu";
+  color: #ffffff;
+  font-size: 0.78rem;
 `;
 
-const SpeakerCardComponent = () => {
+const SpeakerCardComponent = ({name, image, organisation, designation}) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const classes = useStyles();
-
   return (
     <>
-      <SpeakerCardBody className="px-4 py-3">
-        <SpeakerCardleft className="px-3 py-2">
-          <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-            <Avatar
-              alt={Faker.name.findName()}
-              src={Faker.image.avatar()}
-              variant="rounded"
-              className={classes.large}
-              sx={{ width: 100, height: 100 }}
-            />
-          </div>
+      <SpeakerCardBody className="">
+        <SpeakerImg
+          src={
+            image
+          }
+        ></SpeakerImg>
 
-          <div style={{ textAlign: "center" }} className="mb-4">
-            <ProfileName className="mb-2">{Faker.name.findName()}</ProfileName>
-            <ProfileSmallText>Prdouct Manager, Bluemeet</ProfileSmallText>
-          </div>
-
-          <ButtonOutlinedDark
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Know more
-          </ButtonOutlinedDark>
-
-          <div></div>
-        </SpeakerCardleft>
-
-        <SpeakerCardRight>
-          When developing an event curriculum, our primary goal is to address
-          the most pressing, current and emerging HR management issues, and
-          feature speakers who represent the diversity of the SHRM membership
-          community. Learn more about speaking at SHRM's events and our Call for
-          Presentations process.
-        </SpeakerCardRight>
+        <div className="p-3">
+          <SpeakerName className="mb-3">{name}</SpeakerName>
+          <SpeakerDesignationOrg className="mb-2">
+            {designation}
+          </SpeakerDesignationOrg>
+          <SpeakerDesignationOrg>{organisation}</SpeakerDesignationOrg>
+        </div>
       </SpeakerCardBody>
 
       <PersonProfile
@@ -150,15 +93,49 @@ const SpeakerCardComponent = () => {
   );
 };
 
+const renderSpeakers = (speakers) => {
+  return speakers.map((speaker) => {
+    return (
+      <SpeakerCardComponent
+        name={speaker.firstName + " " + speaker.lastName}
+        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        organisation={speaker.organisation}
+        designation={speaker.designation}
+      />
+    );
+  });
+};
+
 const Speakers = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const { eventDetails } = useSelector((state) => state.event);
+  const { speakers } = useSelector((state) => state.speaker);
+  const eventId = params.eventId;
+
+  // Fetch all speakers of this event
+  useEffect(() => {
+    dispatch(fetchEventSpeakers(eventId));
+  }, []);
+
   return (
     <>
-      <EventSpeakersGrid>
-        <SpeakerCardComponent />
-        <SpeakerCardComponent />
-        <SpeakerCardComponent />
-        <SpeakerCardComponent />
-      </EventSpeakersGrid>
+      {typeof speakers !== "undefined" && speakers.length > 0 ? (
+        <EventSpeakersGrid>
+          {" "}
+         {renderSpeakers(speakers)}{" "}
+        </EventSpeakersGrid>
+      ) : (
+        <div
+          style={{ width: "100%" }}
+          className="d-flex flex-row align-items-center justify-content-center mt-4"
+        >
+          <NoContent
+            Msg={"There are no speakers in this event yet."}
+            Image={NoSpeaker}
+          />
+        </div>
+      )}
     </>
   );
 };

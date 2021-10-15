@@ -33,6 +33,8 @@ const MsgInput = (props) => {
   let lastName;
   let email;
   let image;
+  let organisation;
+  let designation;
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -43,11 +45,15 @@ const MsgInput = (props) => {
     lastName = userDetails.lastName;
     email = userDetails.email;
     image = userDetails.image;
+    organisation = userDetails.organisation;
+    designation = userDetails.designation;
   } else {
     firstName = speakerDetails.firstName;
     lastName = speakerDetails.lastName;
     email = speakerDetails.email;
     image = speakerDetails.image;
+    organisation = speakerDetails.organisation;
+    designation = speakerDetails.designation;
   }
 
   const [Message, setMessage] = useState("");
@@ -56,6 +62,8 @@ const MsgInput = (props) => {
     socket.emit(
       "transmitEventMessage",
       {
+        isReply: props.name && props.image && props.msg ? true : false,
+        replyTo: props.chatMsgId,
         textMessage: Message,
         eventId: eventId,
         createdAt: Date.now(),
@@ -63,7 +71,8 @@ const MsgInput = (props) => {
         userName: firstName + " " + lastName,
         userEmail: email,
         userImage: image,
-        userId: id,
+        userOrganisation: organisation,
+        userDesignation: designation,
         reported: false,
         numOfTimesReported: 0,
         visibilityStatus: "Active",
@@ -78,7 +87,18 @@ const MsgInput = (props) => {
 
   return (
     <>
-      <div>
+      <div
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            console.log("Submit msg form.");
+
+            if (!Message) return;
+              sendChannelMessage(Message);
+              setMessage("");
+              props.destroyReplyWidget();
+          }
+        }}
+      >
         {props.name && props.image && props.msg ? (
           <div className="p-2">
             <div className="d-flex flex-row align-items-center justify-content-end mb-2">
@@ -98,6 +118,9 @@ const MsgInput = (props) => {
                 image={props.image}
                 msgText={props.msg}
                 forReply={true}
+                timestamp={props.timestamp}
+                organisation={props.organisation}
+                designation={props.designation}
               />
             </div>
           </div>
@@ -108,6 +131,13 @@ const MsgInput = (props) => {
           style={{ position: "relative" }}
         >
           <Picker
+            onSelect={(emoji) => {
+              console.log(emoji);
+
+              setMessage((prev) => {
+                return prev + emoji.native;
+              });
+            }}
             perLine={8}
             emoji=""
             showPreview={false}
@@ -115,6 +145,7 @@ const MsgInput = (props) => {
             style={{
               position: "absolute",
               bottom: "50px",
+              marginLeft: "10px",
               display: emojiMartVisbility,
             }}
           />
@@ -131,6 +162,7 @@ const MsgInput = (props) => {
             placeholder="Write a message ..."
             onChange={(e) => setMessage(e.target.value)}
             style={{
+              width: "70%",
               border: "none",
               backgroundColor: "transparent",
               outline: "none",
@@ -138,6 +170,7 @@ const MsgInput = (props) => {
             value={Message}
           />
           <IconButton
+            disabled={!Message ? true : false}
             onClick={() => {
               if (!Message) return;
               sendChannelMessage(Message);

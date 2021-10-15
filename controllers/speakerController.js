@@ -37,7 +37,8 @@ exports.updateSpeaker = catchAsync(async (req, res, next) => {
     "bio",
     "sessions",
     "socialMediaHandles",
-    "image"
+    "image",
+    "designation"
   );
 
   const updatedSpeaker = await Speaker.findByIdAndUpdate(

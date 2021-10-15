@@ -6,20 +6,10 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       enum: ["Session", "Stream"],
     },
-    whoCanJoin: {
+    previewImage: {
       type: String,
-      enum: ["Everyone", "ticketHolders", "people"],
+      default: "pexels-david-yu-2684383.jpg",
     },
-    permittedTickets: [
-      {
-        type: String, // ids of tickets that will be allowed entry into this event.
-      },
-    ],
-    permittedPeople: [
-      {
-        type: String, // ids of people who will be able to join this session
-      },
-    ],
     RTMPstreamKey: {
       type: String,
     },
@@ -89,8 +79,6 @@ const sessionSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default:
-        "From combatting Email Fraud to Building Your Brand! Research: Stories about brands being phished, loss of trust due to phishing, Success stories due to DMARC",
     },
     currentlyInSession: [
       { type: mongoose.Schema.ObjectId, ref: "UsersInSession" },
@@ -118,7 +106,7 @@ const sessionSchema = new mongoose.Schema(
     },
     sid: {
       type: String,
-    }
+    },
   },
   {
     toJSON: { virtuals: true },

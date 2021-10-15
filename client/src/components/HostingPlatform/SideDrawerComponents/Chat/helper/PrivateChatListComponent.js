@@ -41,7 +41,6 @@ const IndividualChatSummary = ({ open, handleClose, enterPersonalChat }) => {
             className={classes.large}
             variant="rounded"
           />
-
           <div className="">
             <div
               className="chat-box-name"
@@ -135,14 +134,11 @@ const PrivateChatListComponent = ({ open, handleClose, enterPersonalChat }) => {
             />
           </div>
         </div>
-        <div
-          className={classes.root}
-          style={{ textAlign: "end" }}
-          onClick={() => {
-            setOpenPeopleList(true);
-          }}
-        >
+        <div className={classes.root} style={{ textAlign: "end" }}>
           <Fab
+            onClick={() => {
+              setOpenPeopleList(true);
+            }}
             color="primary"
             aria-label="add"
             style={{ backgroundColor: "#538BF7" }}

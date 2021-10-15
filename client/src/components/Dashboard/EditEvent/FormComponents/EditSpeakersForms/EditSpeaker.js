@@ -231,6 +231,7 @@ const EditSpeakerForm = ({
     ModifiedFormValues.phoneNumber = formValues.phoneNumber;
     ModifiedFormValues.email = formValues.email;
     ModifiedFormValues.organisation = formValues.organisation;
+    ModifiedFormValues.designation = formValues.designation;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
@@ -373,6 +374,24 @@ const EditSpeakerForm = ({
                         classes="form-control"
                         ariadescribedby="emailHelp"
                         // placeholder="CEO of App Brewery"
+                        component={renderInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-3 overlay-form-input-row">
+                    <FormLabel
+                      Forhtml="eventStartDate"
+                      className="form-label form-label-customized"
+                    >
+                      Designation
+                    </FormLabel>
+                    <div className="form-group">
+                      <Field
+                        name="designation"
+                        type="text"
+                        classes="form-control"
+                        ariadescribedby="emailHelp"
                         component={renderInput}
                       />
                     </div>
@@ -558,6 +577,10 @@ const mapStateToProps = (state) => ({
       state.speaker.speakerDetails && state.speaker.speakerDetails.organisation
         ? state.speaker.speakerDetails.organisation
         : "",
+        designation:
+      state.speaker.speakerDetails && state.speaker.speakerDetails.designation
+        ? state.speaker.speakerDetails.designation
+        : "",
     facebook:
       state.speaker.speakerDetails &&
       state.speaker.speakerDetails.socialMediaHandles &&
@@ -618,6 +641,9 @@ const validate = (formValues) => {
 
   if (!formValues.organisation) {
     errors.organisation = "Organisation is required";
+  }
+  if (!formValues.designation) {
+    errors.designation = "Designation is required";
   }
   if (!formValues.headline) {
     errors.headline = "Headline is required";

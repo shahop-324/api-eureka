@@ -7,7 +7,12 @@ exports.getPreviousEventChatMessage = catchAsync(async (req, res, next) => {
 
   const eventChatMessages = await Event.findById(eventId)
     .select("chatMessages")
-    .populate("chatMessages");
+    .populate({
+      path: "chatMessages",
+      populate: {
+        path: "replyTo",
+      },
+    });
 
   res.status(200).json({
     status: "success",

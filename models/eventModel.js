@@ -112,13 +112,6 @@ const eventSchema = new mongoose.Schema(
     organisedBy: {
       type: String,
     },
-    host: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: [true, "An event must have a Host."],
-      },
-    ],
     speaker: [
       {
         type: mongoose.Schema.ObjectId,
@@ -448,7 +441,15 @@ const eventSchema = new mongoose.Schema(
     mux_credentialId: {
       type: String,
     },
-
+    sessionTags: [
+      {
+        type: String,
+      },
+    ],
+    highlightedSession: {
+      type: String, // This will be used to show highlighted session in what's happening section.
+    },
+    hosts: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
     // TODO I have to do research on how recording will work and where it will be stored.
   },
   {

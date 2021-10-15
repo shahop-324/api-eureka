@@ -47,6 +47,7 @@ import { videoActions } from "./../reducers/videoSlice";
 import { vibeActions } from "../reducers/vibeSlice";
 import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
 import { mailActions } from "../reducers/mailSlice";
+import {personalChatActions} from "../reducers/personalChatSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -3731,7 +3732,7 @@ export const createSession = (formValues, id) => async (dispatch, getState) => {
 
     dispatch(
       snackbarActions.openSnackBar({
-        message: "New session added successfully!",
+        message: "New activity added successfully!",
         severity: "success",
       })
     );
@@ -5031,8 +5032,7 @@ export const generateEventAccessToken =
   };
 
 export const setSessionRoleAndJoinSession =
-  (sessionRole) =>
-  async (dispatch, getState) => {
+  (sessionRole) => async (dispatch, getState) => {
     try {
       dispatch(
         eventAccessActions.setSessionRole({
@@ -8674,20 +8674,172 @@ export const requestIntegration =
     }
   };
 
-export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, getState) => {
-  try {
-    const res = await fetch(`${BaseURL}buildWithBluemeet`, {
-      method: "POST",
+export const buildWithBluemeet =
+  (formValues, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}buildWithBluemeet`, {
+        method: "POST",
 
-      body: JSON.stringify({
-        ...formValues,
-      }),
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      handleClose();
+      console.log(result);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Integration request recieved successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to submit integration request. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const startSessionRecording =
+  (sessionId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}startSessionRecording/${sessionId}`, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      handleClose();
+      console.log(result);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Session recording started successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to start recording. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const stopSessionRecording =
+  (sessionId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}stopSessionRecording/${sessionId}`, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      handleClose();
+      console.log(result);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Session recording stopped successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to stop recording. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const fetchEventSpeakers = (eventId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getEventSpeakers/${eventId}`, {
+      method: "GET",
 
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getState().communityAuth.token}`,
       },
     });
+
     if (!res.ok) {
       if (!res.message) {
         throw new Error("Something went wrong");
@@ -8695,27 +8847,21 @@ export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, g
         throw new Error(res.message);
       }
     }
-    const result = await res.json();
 
-    handleClose();
+    const result = await res.json();
     console.log(result);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Integration request recieved successfully!",
-        severity: "success",
+      speakerActions.FetchSpeakers({
+        speakers: result.data,
       })
     );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
   } catch (error) {
     console.log(error);
 
     dispatch(
       snackbarActions.openSnackBar({
-        message: "Failed to submit integration request. Please try again!",
+        message: "Failed to fetch speakers. Please try again!",
         severity: "error",
       })
     );
@@ -8726,14 +8872,13 @@ export const buildWithBluemeet = (formValues, handleClose) => async (dispatch, g
   }
 };
 
-export const startSessionRecording = (sessionId, handleClose) => async(dispatch, getState) => {
-  try{
-    const res = await fetch(`${BaseURL}startSessionRecording/${sessionId}`, {
-      method: "POST",
+export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getPeopleInEvent/${eventId}`, {
+      method: "GET",
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
       },
     });
 
@@ -8746,29 +8891,19 @@ export const startSessionRecording = (sessionId, handleClose) => async(dispatch,
     }
 
     const result = await res.json();
-
-
-    handleClose();
     console.log(result);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Session recording started successfully!",
-        severity: "success",
+      userActions.FetchPeopleInEvent({
+        peopleInThisEvent: result.data.currentlyInEvent,
       })
     );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
-
-  }
-  catch(error) {
+  } catch (error) {
     console.log(error);
 
     dispatch(
       snackbarActions.openSnackBar({
-        message: "Failed to start recording. Please try again!",
+        message: "Failed to fetch people in this event. Please try again!",
         severity: "error",
       })
     );
@@ -8777,51 +8912,21 @@ export const startSessionRecording = (sessionId, handleClose) => async(dispatch,
       closeSnackbar();
     }, 6000);
   }
-}
+};
 
-export const stopSessionRecording = (sessionId, handleClose) => async(dispatch, getState) => {
+export const setPersonalChatConfig = (id) => async(dispatch, getState) => {
   try{
 
-    const res = await fetch(`${BaseURL}stopSessionRecording/${sessionId}`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
-      },
-    });
-
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
-      }
-    }
-
-    const result = await res.json();
-
-    handleClose();
-    console.log(result);
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Session recording stopped successfully!",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
-
+    dispatch(personalChatActions.EditPersonalChat({
+      id: id,
+    }))
 
   }catch(error) {
     console.log(error);
 
     dispatch(
       snackbarActions.openSnackBar({
-        message: "Failed to stop recording. Please try again!",
+        message: "Failed to set personal chat configuration. Please try again!",
         severity: "error",
       })
     );
@@ -8829,6 +8934,5 @@ export const stopSessionRecording = (sessionId, handleClose) => async(dispatch, 
     setTimeout(function () {
       closeSnackbar();
     }, 6000);
-
   }
 }

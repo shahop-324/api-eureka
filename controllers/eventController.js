@@ -330,6 +330,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
     organisation: req.body.organisation,
     eventId: eventGettingSpeaker.id,
     image: req.body.image,
+    designation: req.body.designation,
   });
 
   const speakerInvitationLink = `http://localhost:3001/join-as-speaker?role=speaker&id=${speaker._id}&community=${communityId}&event=${eventId}`;
@@ -424,15 +425,20 @@ exports.addSession = catchAsync(async (req, res, next) => {
     eventId: eventGettingSessions.id,
   });
 
-  session.tags = req.body.tags;
-  session.whoCanJoin = req.body.entryRestriction;
-  if (req.body.permittedTickets) {
-    session.permittedTickets = req.body.permittedTickets;
+  session.host = req.body.host; // Save all host to whole event document as well
+  session.tags = req.body.tags; // Save all tags to whole event document as well
+
+  for (let element of req.body.tags) {
+    if (!eventGettingSessions.sessionTags.includes(element)) {
+      eventGettingSessions.sessionTags.push(element);
+    }
   }
-  if (req.body.permittedPeople) {
-    session.permittedPeople = req.body.permittedPeople;
+
+  for (let element of req.body.host) {
+    if (!eventGettingSessions.hosts.includes(element)) {
+      eventGettingSessions.hosts.push(element);
+    }
   }
-  session.host = req.body.host;
 
   if (req.body.type === "Stream") {
     const muxRes = await Video.LiveStreams.create({

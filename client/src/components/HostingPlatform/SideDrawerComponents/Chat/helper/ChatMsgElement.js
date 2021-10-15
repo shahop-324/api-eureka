@@ -5,18 +5,27 @@ import "./../../../Styles/chatComponent.scss";
 import ReplyRoundedIcon from "@material-ui/icons/ReplyRounded";
 import ReportOutlinedIcon from "@material-ui/icons/ReportOutlined";
 import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
-
-
 import ReportMsg from "./ReportMsg";
 import DeleteMsg from "./DeleteMsg";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const ChatMsgElement = ({
   name,
   image,
+  organisation,
+  designation,
   msgText,
   forReply,
   createReplyWidget,
   showOptions,
+  timestamp,
+  chatMsgId,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -32,10 +41,6 @@ const ChatMsgElement = ({
     setOpenDelete(false);
   };
 
-  // if(!showOptions) {
-  //   setVisibility("none");
-  // }
-
   return (
     <>
       <div
@@ -44,15 +49,11 @@ const ChatMsgElement = ({
           if (!forReply) {
             setVisibility("inline-block");
           }
-
-          console.log("mouse enter detected");
         }}
         onMouseLeave={() => {
           if (!forReply) {
             setVisibility("none");
           }
-
-          console.log("mouse leave detected");
         }}
       >
         <div style={{ position: "relative" }}>
@@ -63,12 +64,13 @@ const ChatMsgElement = ({
             <Avatar src={image} alt={name} variant="rounded" />
             <div
               className="chat-box-name ms-3"
-              style={{ textTransform: "capitalize", fontFamily: "Ubuntu", color: "#fff" }}
+              style={{
+                textTransform: "capitalize",
+                fontFamily: "Ubuntu",
+                color: "#fff",
+              }}
             >
-              <div>
-                {name}
-                {/* <span>Host</span> */}
-                </div>
+              <div style={{ color: "#212121" }}>{name}</div>
 
               <div
                 style={{
@@ -78,9 +80,12 @@ const ChatMsgElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
-
-                <div>3m ago</div>
+                <div style={{ color: "#212121" }}>
+                  {designation}, {organisation}
+                </div>
+                <div style={{ color: "#212121" }}>
+                  {timeAgo.format(new Date(timestamp) , "round")}
+                </div>
               </div>
             </div>
           </div>
@@ -98,7 +103,7 @@ const ChatMsgElement = ({
             >
               <ReplyRoundedIcon
                 onClick={() => {
-                  createReplyWidget(name, image, msgText);
+                  createReplyWidget(name, image, msgText, organisation, designation, timestamp, chatMsgId);
                 }}
                 className="chat-msg-hover-icon me-2"
                 style={{ display: visibility, fontSize: "18px" }}
@@ -122,7 +127,7 @@ const ChatMsgElement = ({
               className="chat-msg-text ms-3 p-3"
               style={{ borderTopLeftRadius: "0", color: "#212121" }}
             >
-              <div >{msgText}</div>
+              <div>{msgText}</div>
             </div>
           </div>
         </div>
@@ -133,6 +138,7 @@ const ChatMsgElement = ({
         name={name}
         image={image}
         msgText={msgText}
+        msgId={chatMsgId}
         open={open}
         handleClose={handleClose}
       />
@@ -141,6 +147,10 @@ const ChatMsgElement = ({
         name={name}
         image={image}
         msgText={msgText}
+        msgId={chatMsgId}
+        organisation={organisation}
+        designation={designation}
+        timestamp={timestamp}
         open={openDelete}
         handleClose={handleCloseDelete}
       />

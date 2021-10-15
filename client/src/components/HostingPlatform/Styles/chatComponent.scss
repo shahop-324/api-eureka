@@ -1,6 +1,8 @@
 .scrollable-chat-element-container {
   overflow: scroll;
   height: auto;
+  display: flex !important;
+  flex-direction: column-reverse !important;
 }
 
 .chat-msg-input-container {
@@ -11,6 +13,7 @@
 
 .chat-msg-container {
   overflow: hidden;
+  
 }
 
 .chat-msg-text {

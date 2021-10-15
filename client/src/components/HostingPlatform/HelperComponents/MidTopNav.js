@@ -9,7 +9,7 @@ background-color: #233E44 !important;
 `
 
 const EventName = styled.div`
-color: #ffffff;
+color: #ffffff !important;
 text-transform: capitalize;
 font-weight: 500;
 `

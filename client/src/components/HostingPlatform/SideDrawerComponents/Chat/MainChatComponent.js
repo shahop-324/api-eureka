@@ -6,25 +6,28 @@ import "./../../Styles/root.scss";
 import AllChatsComponent from "./helper/AllChatsComponent";
 import "./../../../../index.css";
 import PrivateChat from "./helper/PrivateChat";
+import { useDispatch } from "react-redux";
+import { setPersonalChatConfig } from "../../../../actions";
 
 const MainChatComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState("all");
+
+  const dispatch = useDispatch();
 
   return (
     <>
       <div>
         <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-4">
           <div className="d-flex flex-column">
-          <div className="event-platform-side-drawer-heading">Messages</div>
-          <div className="setting-tab-sub-text">
-                  Event wide and private Messages
-                </div>
+            <div className="event-platform-side-drawer-heading">Messages</div>
+            <div className="setting-tab-sub-text">Event wide Messages</div>
           </div>
-          
+
           <div
             onClick={() => {
               props.resetSelectedTab();
               props.setOpenDrawer(false);
+              dispatch(setPersonalChatConfig(null));
             }}
           >
             <IconButton aria-label="close-drawer">

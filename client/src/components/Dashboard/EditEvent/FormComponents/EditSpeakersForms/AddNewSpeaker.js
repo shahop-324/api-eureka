@@ -215,9 +215,7 @@ const AddNewSpeaker = ({
 
   const classes = useStyles();
 
-
   const dispatch = useDispatch();
-
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
 
@@ -238,6 +236,7 @@ const AddNewSpeaker = ({
     ModifiedFormValues.phoneNumber = formValues.phoneNumber;
     ModifiedFormValues.email = formValues.email;
     ModifiedFormValues.organisation = formValues.organisation;
+    ModifiedFormValues.designation = formValues.designation;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
@@ -368,6 +367,22 @@ const AddNewSpeaker = ({
                 <div className="form-group">
                   <Field
                     name="organisation"
+                    type="text"
+                    classes="form-control"
+                    ariadescribedby="emailHelp"
+                    // placeholder=""
+                    component={renderInput}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3 overlay-form-input-row">
+                <FormLabel Forhtml="eventStartDate">
+                  Designation<span className="mandatory-field">*</span>
+                </FormLabel>
+                <div className="form-group">
+                  <Field
+                    name="designation"
                     type="text"
                     classes="form-control"
                     ariadescribedby="emailHelp"
@@ -527,6 +542,9 @@ const validate = (formValues) => {
 
   if (!formValues.organisation) {
     errors.organisation = "Organisation is required";
+  }
+  if (!formValues.designation) {
+    errors.designation = "Designation is required";
   }
   if (!formValues.headline) {
     errors.headline = "Headline is required";

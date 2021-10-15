@@ -3,6 +3,8 @@ import styled from "styled-components";
 import FAQs from "./Helper/FAQs";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
+import EditInfoDesk from "./EditInfoDesk";
 
 const Paper = styled.div`
   min-height: 200px;
@@ -24,16 +26,14 @@ const DocumentTab = styled.div`
   padding: 12px;
   border-radius: 50px;
 
-
   &:hover {
     cursor: pointer;
     -webkit-border-radius: 50px;
-border-radius: 50px;
-background: #D1D8EC;
--webkit-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
+    border-radius: 50px;
+    background: #d1d8ec;
+    -webkit-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
+    box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
   }
-
 `;
 
 const LinkTab = styled.div`
@@ -41,15 +41,14 @@ const LinkTab = styled.div`
   background-color: #f0f2f2;
   padding: 12px;
   border-radius: 50px;
-  
 
   &:hover {
     -webkit-border-radius: 50px;
-border-radius: 50px;
-background: #D1D8EC;
--webkit-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
-cursor: pointer;
+    border-radius: 50px;
+    background: #d1d8ec;
+    -webkit-box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
+    box-shadow: 12px 12px 24px #b2b8c9, -12px -12px 24px #f0f8ff;
+    cursor: pointer;
   }
 `;
 
@@ -61,20 +60,34 @@ const DocumentName = styled.span`
 `;
 
 const OverviewContent = styled.div`
-font-size: 0.78rem;
-font-weight: 500;
-color: #525252;
-font-family: "Ubuntu";
-`
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #525252;
+  font-family: "Ubuntu";
+`;
 
 const InfoDesk = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <div className="py-4">
-        <Paper className="mb-5 px-4 py-3">
-          <Heading className="mb-3">FAQs</Heading>
-          <FAQs className="mb-3" />
-        </Paper>
+        <div className="d-flex flex-row align-items-center justify-content-end mb-4">
+          <button
+            onClick={() => {
+              setOpen(true);
+            }}
+            className="d-flex flex-row align-items-center btn btn-outline-text btn-primary"
+          >
+            {" "}
+            <ModeEditRoundedIcon className="me-2" /> <span>Edit</span>{" "}
+          </button>
+        </div>
+
         <Paper className="mb-5 px-4 py-3">
           <Heading className="mb-3">Documents & Links</Heading>
           <div
@@ -98,12 +111,14 @@ const InfoDesk = () => {
         <Paper className="mb-5 px-4 py-3">
           <Heading className="mb-3">Overview</Heading>
 
-<OverviewContent>
-    This event is for trial purpose. We will begin hosting large scale events soon.
-</OverviewContent>
-
+          <OverviewContent>
+            This event is for trial purpose. We will begin hosting large scale
+            events soon.
+          </OverviewContent>
         </Paper>
       </div>
+
+      <EditInfoDesk open={open} handleClose={handleClose} />
     </>
   );
 };

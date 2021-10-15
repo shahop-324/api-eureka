@@ -4,28 +4,10 @@ import EventBanner from "../HelperComponents/EventBanner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvent, fetchSessionsForUser } from "../../../actions";
 import { useParams } from "react-router-dom";
-import Schedule from "./Schedule";
-import MyMeetings from "./MyMeetings";
-import Reminders from "./Reminders";
 import About from "./About";
 import styled from "styled-components";
 import Speakers from "./Sub/Speakers";
 import Hosts from "./Sub/Hosts";
-import InfoDesk from "./Sub/Infodesk";
-
-const LobbyLinkBtn = styled.div`
-  /* Color the border and text with theme.main */
-  color: ${(props) => (props.active ? "#152d35" : "#FFFFFF")};
-  border-bottom: ${(props) =>
-    props.active ? " 2px solid #152d35" : "2px solid #FFFFFF00"};
-
-  &:hover {
-    color: #152d35;
-    cursor: pointer;
-  }
-`;
-
-
 
 const CustomHorizontalTabWarpper = styled.div`
   min-width: 500px;
@@ -34,7 +16,7 @@ const CustomHorizontalTabWarpper = styled.div`
   background-color: #345b63;
 
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 16px;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -55,10 +37,6 @@ const CustomTabButton = styled.div`
   border: 1px solid transparent;
 
   &:hover {
-
-    
-
-    /* border: 1px solid #fff; */
     background-color: #a0a0a057;
     cursor: pointer;
   }
@@ -106,14 +84,7 @@ const LobbyAgenda = () => {
         >
           About
         </CustomTabButton>
-        <CustomTabButton
-          active={selectedTab === "myMeetings" ? true : false}
-          onClick={() => {
-            setSelectedTab("myMeetings");
-          }}
-        >
-          My meetings
-        </CustomTabButton>
+
         <CustomTabButton
           active={selectedTab === "speakers" ? true : false}
           onClick={() => {
@@ -130,28 +101,17 @@ const LobbyAgenda = () => {
         >
           Hosts
         </CustomTabButton>
-        <CustomTabButton
-          active={selectedTab === "infodesk" ? true : false}
-          onClick={() => {
-            setSelectedTab("infodesk");
-          }}
-        >
-          Info desk
-        </CustomTabButton>
       </CustomHorizontalTabWarpper>
       {(() => {
         switch (selectedTab) {
           case "about":
             return <About />;
 
-          case "myMeetings":
-            return <MyMeetings />;
           case "speakers":
             return <Speakers />;
           case "hosts":
             return <Hosts />;
-          case "infodesk":
-            return <InfoDesk />;
+
           default:
             return <div>You are inside lobby.</div>;
         }

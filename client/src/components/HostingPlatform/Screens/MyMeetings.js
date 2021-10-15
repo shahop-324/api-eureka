@@ -9,6 +9,8 @@ import MyMeetingsFilter from "./Sub/MyMeetingsFilter";
 
 import styled from "styled-components";
 import MyMeetingCard from "./Sub/MyMeetingCard";
+import NoContent from "../NoContent";
+import NoMeetings from "./../../../assets/images/NoMeetings.svg";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -109,12 +111,6 @@ const ButtonFilledDark = styled.div`
 const MyMeetings = () => {
   const [open, setOpen] = useState(false);
 
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   const handleOpen = () => {
     setOpen(true);
   };
@@ -129,15 +125,6 @@ const MyMeetings = () => {
     <>
       <div className="session-btn-and-filter-search-wrapper d-flex flex-row justify-content-between mb-5">
         <div className="search-box-and-filter-icon-btn-w d-flex flex-row">
-          <Dropdown
-            icon="filter"
-            floating
-            button
-            className="icon"
-            onClick={() => {
-              setOpenFilter(true);
-            }}
-          ></Dropdown>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -154,14 +141,6 @@ const MyMeetings = () => {
         </div>
 
         <div className="all-and-my-sessions-w d-flex flex-row align-items-center">
-          {/* <button
-            onClick={() => {
-              handleOpen();
-            }}
-            className="btn btn-primary btn-outline-text me-4"
-          >
-            Create New Meet
-          </button> */}
           <ButtonFilledDark
             onClick={() => {
               handleOpen();
@@ -172,35 +151,22 @@ const MyMeetings = () => {
         </div>
       </div>
 
-{/* // ! Show this when no meetings are scheduled */}
+      {/* // ! Show this when no meetings are scheduled */}
 
-      {/* <div
-        style={{ width: "300px", marginLeft: "auto", marginRight: "auto" }}
-        className="my-5"
-      >
-        <NoMeetingsFoundMsg className="mb-3">No scheduleded meetings found</NoMeetingsFoundMsg>
-
-        <div>
-          <ButtonOutlinedDark
-            onClick={() => {
-              handleOpen();
-            }}
-          >
-            Create new meet
-          </ButtonOutlinedDark>
-        </div>
-      </div> */}
+      <NoContent
+        Image={NoMeetings}
+        Msg="There are no meetings in your schedule yet"
+        style={{ padding: "12px" }}
+      />
 
       {/* // ! Show this when meetings are scheduled */}
 
-      <MyMeetingCard />
+      {/* <MyMeetingCard /> */}
 
       <ScheduleGroupMeeting
         openDrawer={open}
         handleCloseDrawer={handleCloseDrawer}
       />
-
-      <MyMeetingsFilter open={openFilter} handleClose={handleCloseFilter} />
     </>
   );
 };

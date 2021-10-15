@@ -63,8 +63,11 @@ $Shadow-inset-color: '#00000029';
 }
 
 .icon-btn-h {
-  
   color: #696969;
+}
+
+.icon-btn-venue{
+  color: #d8d8d8;
 }
 
 .icon-btn-active-h {
@@ -74,9 +77,14 @@ $Shadow-inset-color: '#00000029';
 .icon-btn-text {
   font: normal normal 500 0.78rem/0.813rem Ubuntu;
   letter-spacing: 0px;
-  
   color: #696969;
   opacity: 1;
+}
+
+.icon-btn-text-venue {
+  font: normal normal 500 0.78rem/0.813rem Ubuntu;
+  letter-spacing: 0px;
+  color: #d8d8d8 !important;
 }
 
 .icon-btn-text-active-h {

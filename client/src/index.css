@@ -5,7 +5,16 @@
 
 .blockbuilder-branding {
   display: none !important;
-  visibility:  hidden !important;
+  visibility: hidden !important;
+}
+
+.overviewEditor {
+  padding: 10px;
+  /* background-color: #f5f0f0; */
+  height: 100%;
+  min-height: 250px;
+  border-radius: 10px;
+  border: 1px solid #dbdbdb;
 }
 
 .rec-toggle-btn-wrapper {
@@ -36,7 +45,7 @@
 }
 
 .editable:hover {
-cursor: pointer;
+  cursor: pointer;
 }
 
 .custom-mui-tab {
@@ -65,14 +74,6 @@ cursor: pointer;
   font-family: "Ubuntu" !important;
   color: #333333 !important;
 }
-
-/* video {
-  object-fit: contain !important;
-} */
-
-/* .screen-share-container {
-  object-fit: contain !important;
-} */
 
 .btn {
   text-align: center;

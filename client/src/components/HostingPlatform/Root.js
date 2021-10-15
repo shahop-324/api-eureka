@@ -214,13 +214,7 @@ const Root = () => {
     return null;
   }
 
-  // const handleReceptionClick = () => {
-  //   dispatch(navigationIndexForHostingPlatform(0));
 
-  //   history.push(
-  //     `/community/${communityId}/event/${eventId}/hosting-platform/reception`
-  //   );
-  // };
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
@@ -294,7 +288,6 @@ const Root = () => {
           handleNetworkingClick={handleNetworkingClick}
           handleRoomsClick={handleRoomsClick}
           handleBoothsClick={handleBoothsClick}
-          // handleReceptionClick={handleReceptionClick}
           handleLogoutClick={handleLogoutClick}
           handleSocialSpaceClick={handleSocialSpaceClick}
         />

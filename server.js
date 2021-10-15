@@ -95,12 +95,10 @@ io.on("connect", (socket) => {
   });
 
   socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
-  
     await Event.findById(eventId, async (err, eventDoc) => {
       if (err) {
         console.log(err);
       } else {
-       
         eventDoc.currentlyInNetworking;
 
         const index = eventDoc.currentlyInNetworking.indexOf(userId);
@@ -128,8 +126,6 @@ io.on("connect", (socket) => {
   socket.on(
     "startNetworking",
     async ({ eventId, userId, userName, image, socketId }, callback) => {
-      
-
       const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
         const availableInThisEvent = await AvailableForNetworking.find({
           $and: [{ eventId: eventId }, { status: "Available" }],
@@ -231,15 +227,12 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
-             
                 sessionDoc.chatMessages.push(chatMsgDoc._id);
 
                 sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
                   if (err) {
                     console.log(err);
                   } else {
-                   
-
                     io.in(sessionId).emit("newSessionMsg", {
                       newMsg: chatMsgDoc,
                     });
@@ -588,17 +581,22 @@ io.on("connect", (socket) => {
       socket.join(eventId);
 
       const fetchCurrentMessages = async (eventId) => {
-        await Event.findById(eventId, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(eventId).emit("previousEventMessages", {
-              chats: doc.chatMessages,
-            });
+        console.log(
+          "This is a flag for fetching pervious messages of this event"
+        );
+        const populatedEventChats = await EventChatMessage.find(
+          { eventId: mongoose.Types.ObjectId(eventId) },
+          (err, doc) => {
+            // console.log(doc);
+            if (err) {
+              console.log(err);
+            } else {
+              io.to(eventId).emit("previousEventMessages", {
+                chats: doc,
+              });
+            }
           }
-        })
-          .select("chatMessages")
-          .populate("chatMessages");
+        ).populate("replyTo");
       };
 
       fetchCurrentMessages(eventId);
@@ -608,7 +606,6 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-           
             io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
           }
         })
@@ -632,6 +629,7 @@ io.on("connect", (socket) => {
         userCountry,
         userOrganisation,
         userDesignation,
+        
       }) => {
         const existingUser = await UsersInEvent.findOne(
           {
@@ -742,7 +740,6 @@ io.on("connect", (socket) => {
       callback
     ) => {
       socket.join(sessionId);
-     
 
       const fetchCurrentMessages = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
@@ -912,8 +909,6 @@ io.on("connect", (socket) => {
   );
 
   socket.on("updatePoll", async ({ userId, selectedPoll, selectedOption }) => {
-   
-
     await EventPoll.findById(selectedPoll, async (err, pollDoc) => {
       if (err) {
         console.log(err);
@@ -1050,7 +1045,6 @@ io.on("connect", (socket) => {
               if (err) {
                 console.log(err);
               } else {
-              
                 eventDoc.alerts.push(eventAlertDoc._id);
 
                 eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
@@ -1067,13 +1061,23 @@ io.on("connect", (socket) => {
           }
         }
       );
-    
     }
   );
+
+  socket.on("transmitPersonalMessage", async({
+    // Here get all transmitted properties
+    // Recieve Id of both sender and reciever
+  }) => {
+    // Find current socketId of both sender and reciever
+    // Create a new chat message in personal chat document and send newly created msg doc to both sender and reciever
+    // Close the connection => private messaging successful.
+  })
 
   socket.on(
     "transmitEventMessage",
     async ({
+      isReply,
+      replyTo,
       textMessage,
       eventId,
       createdAt,
@@ -1081,6 +1085,8 @@ io.on("connect", (socket) => {
       userName,
       userEmail,
       userImage,
+      userOrganisation,
+      userDesignation,
       userId,
       reported,
       numOfTimesReported,
@@ -1088,6 +1094,7 @@ io.on("connect", (socket) => {
     }) => {
       await EventChatMessage.create(
         {
+          isReply,
           textMessage,
           eventId,
           createdAt,
@@ -1095,6 +1102,8 @@ io.on("connect", (socket) => {
           userName,
           userEmail,
           userImage,
+          userOrganisation,
+          userDesignation,
           userId,
           reported,
           numOfTimesReported,
@@ -1104,19 +1113,25 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
             await Event.findById(eventId, async (err, eventDoc) => {
               if (err) {
                 console.log(err);
               } else {
-               
                 eventDoc.chatMessages.push(chatMsgDoc._id);
+                const populatedChatMsg = await EventChatMessage.findById(
+                  chatMsgDoc._id
+                ).populate("replyTo");
 
                 eventDoc.save({ validateModifiedOnly: true }, (err, data) => {
                   if (err) {
                     console.log(err);
                   } else {
                     io.in(eventId).emit("newEventMsg", {
-                      newMsg: chatMsgDoc,
+                      newMsg: populatedChatMsg,
                     });
                   }
                 });
@@ -1127,6 +1142,19 @@ io.on("connect", (socket) => {
       );
     }
   );
+
+  socket.on("deleteEventMessage", async ({ msgId, eventId }) => {
+    await EventChatMessage.findByIdAndUpdate(msgId, { deleted: true });
+
+    await EventChatMessage.find(
+      { eventId: mongoose.Types.ObjectId(eventId) },
+      async (err, doc) => {
+        io.in(eventId).emit("previousEventMessages", {
+          chats: doc,
+        });
+      }
+    ).populate("replyTo");
+  });
 
   socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
     const sessionUser = removeUserFromSession(userId, sessionId);
@@ -1221,7 +1249,6 @@ io.on("connect", (socket) => {
     "googleSignIn",
 
     async ({ ModifiedFormValues }) => {
-     
       const { googleId, firstName, lastName, image, email, referralCode } =
         ModifiedFormValues;
       const user = await User.findOne({ googleId: googleId });
@@ -1229,7 +1256,6 @@ io.on("connect", (socket) => {
         const isUserLoggedInAlready = await LoggedInUsers.find({
           userId: user._id,
         });
-    
 
         if (isUserLoggedInAlready.length > 0) {
           socket.broadcast.emit("logOutUser", {
@@ -1247,7 +1273,6 @@ io.on("connect", (socket) => {
 
         const token = signToken(user._id);
 
-      
         socket.emit("newGoogleLogin", {
           token,
           data: { user },
@@ -1288,7 +1313,6 @@ io.on("connect", (socket) => {
 
             const token = signToken(user._id);
 
-           
             socket.emit("newGoogleLogin", {
               token,
               data: { user },
@@ -1315,7 +1339,6 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-       
           socket.emit("newGoogleLogin", {
             token,
             data: { user },
@@ -1328,16 +1351,16 @@ io.on("connect", (socket) => {
   socket.on("linkedinSignIn", async ({ result }) => {
     const { linkedinId, firstName, lastName, email, image, referralCode } =
       result;
-   
+
     const user = await User.findOne({
       linkedinId: linkedinId,
     });
-   
+
     if (user) {
       const isUserLoggedInAlready = await LoggedInUsers.find({
         userId: user._id,
       });
-     
+
       if (isUserLoggedInAlready.length > 0) {
         socket.broadcast.emit("logOutUser", {
           userId: user._id,
@@ -1354,14 +1377,13 @@ io.on("connect", (socket) => {
 
       const token = signToken(user._id);
 
-     
       socket.emit("newLinkedinLogin", {
         token,
         data: { user },
       });
       //  we already have a record with the givenuserProfile ID
       //done(null, existingUser);
-     
+
       // createSendToken(existingUser, 200, req, res);
     } else {
       let referrer;
@@ -1399,7 +1421,6 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-         
           socket.emit("newLinkedinLogin", {
             token,
             data: { user },
@@ -1426,7 +1447,6 @@ io.on("connect", (socket) => {
 
           const token = signToken(user._id);
 
-        
           socket.emit("newLinkedinLogin", {
             token,
             data: { user },
@@ -1454,18 +1474,15 @@ io.on("connect", (socket) => {
 
         const token = signToken(user._id);
 
-       
         socket.emit("newLinkedinLogin", {
           token,
           data: { user },
         });
       }
-      
     }
   });
 
   socket.on("logOut", async (user) => {
-   
     await LoggedInUsers.findOneAndDelete({
       userId: user.userId,
     });

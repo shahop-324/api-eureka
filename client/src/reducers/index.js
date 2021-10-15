@@ -46,6 +46,7 @@ import videoSlice from "./videoSlice";
 import vibeSlice from "./vibeSlice";
 import StreamDestinationSlice from "./streamDestinationSlice";
 import mailSlice from "./mailSlice";
+import personalChatSlice from "./personalChatSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -94,4 +95,5 @@ export default combineReducers({
   vibe: vibeSlice.reducer,
   streamDestination: StreamDestinationSlice.reducer,
   mail: mailSlice.reducer,
+  personalChat: personalChatSlice.reducer,
 });

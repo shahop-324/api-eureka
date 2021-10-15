@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const usersInEventSchema = new mongoose.Schema(
   {
+    tag: {
+      type: String, // Can be User || Speaker || Exhibitor
+    },
     status: {
       type: String,
       default: "Active",

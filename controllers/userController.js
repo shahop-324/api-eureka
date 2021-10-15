@@ -107,7 +107,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
       options: {
         match: { status: "Active" },
       },
-    });
+    }).populate('hosts');
 
   await Event.findByIdAndUpdate(
     req.params.id,

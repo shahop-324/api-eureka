@@ -94,7 +94,7 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
 exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
   const query = Session.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
-  }).populate("speaker");
+  }).populate("speaker").populate('currentlyInSession');
 
   const features = new apiFeatures(query, req.query).textFilter();
   const sessions = await features.query;

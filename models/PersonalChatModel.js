@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const eventChatMessageSchema = new mongoose.Schema({
+const personalChatSchema = new mongoose.Schema({
   textMessage: {
     type: String,
   },
@@ -9,7 +9,7 @@ const eventChatMessageSchema = new mongoose.Schema({
   },
   replyTo: {
     type: mongoose.Schema.ObjectId,
-    ref: "EventChatMessage",
+    ref: "PersonalChat",
   },
   eventId: {
     type: mongoose.Schema.ObjectId,
@@ -28,39 +28,35 @@ const eventChatMessageSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  userRole: {
+  senderId: {
     type: String,
   },
-  userName: {
+  recieverId: {
     type: String,
   },
-  userEmail: {
+  senderRole: {
     type: String,
   },
-  userImage: {
+  senderName: {
     type: String,
   },
-  userOrganisation: {
+  senderEmail: {
     type: String,
   },
-  userDesignation: {
+  senderImage: {
     type: String,
   },
-  userId: {
+  senderOrganisation: {
+    type: String,
+  },
+  senderDesignation: {
     type: String,
   },
   reported: {
     type: Boolean,
     default: false,
   },
-  numOfTimesReported: {
-    type: Number,
-    default: 0,
-  },
 });
 
-const EventChatMessage = mongoose.model(
-  "EventChatMessage",
-  eventChatMessageSchema
-);
-module.exports = EventChatMessage;
+const PersonalChat = mongoose.model("PersonalChat", personalChatSchema);
+module.exports = PersonalChat;

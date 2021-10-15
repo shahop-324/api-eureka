@@ -15,12 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { editEventDescription, errorTrackerForEditEventDiscription, errorTrackerForFetchEvent } from "../../../actions";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { useSnackbar } from "notistack";
 
 const About = (props) => {
   const { handleSubmit, pristine, submitting } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
+
 
   const { error } = useSelector((state) => state.event);
 
@@ -63,9 +62,7 @@ const About = (props) => {
   };
 
   if(error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
+    
 
     dispatch(errorTrackerForFetchEvent())
    return dispatch(errorTrackerForEditEventDiscription());

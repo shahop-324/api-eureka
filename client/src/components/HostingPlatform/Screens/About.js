@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
 import Faker from "faker";
@@ -6,11 +6,18 @@ import Chip from "@mui/material/Chip";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
 import AvatarGroup from "@mui/material/AvatarGroup";
-import { Button } from "@material-ui/core";
-import { IconButton } from "./../../SessionStage/Elements";
+import { useDispatch, useSelector } from "react-redux";
+import NoContent from "../NoContent";
+import NoSession from "./../../../assets/images/NoSession.svg";
+import NoSposnors from "./../../../assets/images/NoSponsor.svg";
+import {
+  fetchSessionsForUser,
+  navigationIndexForHostingPlatform,
+} from "../../../actions";
+import { useParams } from "react-router";
+import history from "./../../../history";
 
 const HostedByCard = styled.div`
   width: 100%;
@@ -38,8 +45,6 @@ const HostedByRight = styled.div`
 const CommunityLogo = styled.div`
   background-color: #ffffff;
   border-radius: 10px;
-  padding: 10px;
-
   align-self: center;
   justify-self: center;
   text-align: center;
@@ -234,40 +239,171 @@ const TierEightGrid = styled.div`
   min-height: 130px;
 `;
 
+const renderSpeakers = (speakers) => {
+  speakers.map((speaker) => {
+    return (
+      <Avatar
+        alt={speaker.name}
+        src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
+      />
+    );
+  });
+};
+
+const renderAttendees = (attendees) => {
+  console.log(attendees, "This is attendees array.");
+  return attendees.map((attendee) => {
+    if (attendee.status !== "Active") return;
+    return (
+      <Avatar
+        alt={attendee.userName}
+        src={`https://bluemeet.s3.us-west-1.amazonaws.com/${attendee.userImage}`}
+      />
+    );
+  });
+};
+
+// Diamond || Platinum || Gold || Bronze
+
+const PlatinumSponsors = (sponsors) => {
+  return sponsors.map((sponsor) => {
+    if (sponsor.status !== "Platinum") return;
+    return (
+      <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
+        <SponsorCard
+          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+        />
+      </a>
+    );
+  });
+};
+const DiamondSponsors = (sponsors) => {
+  return sponsors.map((sponsor) => {
+    if (sponsor.status !== "Diamond") return;
+    return (
+      <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
+        <SponsorCard
+          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+        />
+      </a>
+    );
+  });
+};
+const GoldSponsors = (sponsors) => {
+  return sponsors.map((sponsor) => {
+    if (sponsor.status !== "Gold") return;
+    return (
+      <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
+        <SponsorCard
+          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+        />
+      </a>
+    );
+  });
+};
+const BronzeSponsors = (sponsors) => {
+  return sponsors.map((sponsor) => {
+    if (sponsor.status !== "Bronze") return;
+    return (
+      <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
+        <SponsorCard
+          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+        />
+      </a>
+    );
+  });
+};
+
 const About = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.eventId;
+  const communityId = params.communityId;
+
+  const { communityDetails } = useSelector((state) => state.community);
+  const { eventDetails } = useSelector((state) => state.event);
+  const { sessions } = useSelector((state) => state.session);
+  const { sponsors } = useSelector((state) => state.sponsor);
+
+  // fetch all sessions on this page
+
+  useEffect(() => {
+    dispatch(fetchSessionsForUser(eventId));
+  }, [dispatch, eventId]);
+
+  let highlightedSessionId;
+
+  if (eventDetails.highlightedSession) {
+    highlightedSessionId = eventDetails.highlightedSession;
+  } else {
+    highlightedSessionId = sessions[0]._id;
+  }
+
+  // Now get the document of session that is to be highlighted.
+
+  const requiredSession = sessions.find(
+    (session) => session._id === highlightedSessionId
+  );
+
   return (
     <>
       <HostedByCard className="mb-5">
         <HostedByLeft>
           <CommunityLogo className="me-3">
-            <Avatar src={Faker.image.avatar()} variant="rounded" />
+            <Avatar
+              src={`https://bluemeet.s3.us-west-1.amazonaws.com/${communityDetails.image}`}
+              variant="rounded"
+              style={{ height: "3rem", width: "3rem" }}
+            />
           </CommunityLogo>
           <div>
             <HostedByText className="mb-2">Hosted by</HostedByText>
             <HostedByCommunityName>
-              Imperial college of London
+              {communityDetails.name}
             </HostedByCommunityName>
           </div>
         </HostedByLeft>
         <HostedByRight>
-          <ButtonFilledDark className="me-4">Follow</ButtonFilledDark>
-
           <div className="d-flex flex-row align-items-center justify-content-center">
-            <SocialIconWrapper className="me-3">
-              <FacebookIcon style={{ fontSize: "24px", color: "#4267B2" }} />
-            </SocialIconWrapper>
-            <SocialIconWrapper className="me-3">
-              <LinkedInIcon style={{ fontSize: "24px", color: "#0077b5" }} />
-            </SocialIconWrapper>
-            <SocialIconWrapper className="me-3">
-              <TwitterIcon style={{ fontSize: "24px", color: "#1DA1F2" }} />
-            </SocialIconWrapper>
-            <SocialIconWrapper className="me-3">
-              <InstagramIcon style={{ fontSize: "24px", color: "#DD2A7B" }} />
-            </SocialIconWrapper>
-            <SocialIconWrapper>
-              <LanguageIcon style={{ fontSize: "24px", color: "#152d35" }} />
-            </SocialIconWrapper>
+            <a
+              href={`//${communityDetails.socialMediaHandles.facebook}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SocialIconWrapper className="me-3">
+                <FacebookIcon style={{ fontSize: "24px", color: "#4267B2" }} />
+              </SocialIconWrapper>
+            </a>
+
+            <a
+              href={`//${communityDetails.socialMediaHandles.linkedin}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SocialIconWrapper className="me-3">
+                <LinkedInIcon style={{ fontSize: "24px", color: "#0077b5" }} />
+              </SocialIconWrapper>
+            </a>
+
+            <a
+              href={`//${communityDetails.socialMediaHandles.twitter}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SocialIconWrapper className="me-3">
+                <TwitterIcon style={{ fontSize: "24px", color: "#1DA1F2" }} />
+              </SocialIconWrapper>
+            </a>
+
+            <a
+              href={`//${communityDetails.socialMediaHandles.website}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SocialIconWrapper>
+                <LanguageIcon style={{ fontSize: "24px", color: "#152d35" }} />
+              </SocialIconWrapper>
+            </a>
           </div>
         </HostedByRight>
       </HostedByCard>
@@ -278,125 +414,97 @@ const About = () => {
             What's happening
           </WhatsHappeningHeading>
 
-          <WhatsHappeningBody>
-            <SessionPlaybackPreview>
-              <div>
-                <Chip
-                  label="Live"
-                  color="error"
-                  style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    zIndex: "10",
-                    fontWeight: "500",
-                  }}
-                />
-
-                <img
-                  src={
-                    "https://inspirationfeed.com/wp-content/uploads/2020/04/Audience-applauding-speaker-at-a-business-seminar-min.jpg"
-                  }
-                  alt="session-playback-preview"
-                />
-              </div>
-
-              <div className="p-3">
-                <SessionName className="mb-3">Welcome session</SessionName>
-                <SessionDescription className="mb-4">
-                  In this ssession you will get to uncover secrets of how and
-                  why to start a business. This session will have a panel
-                  discussion by prominent founders and business leaders.
-                </SessionDescription>
-
-                <SubHeading className="mb-3">Speakers</SubHeading>
-
-                <div className="d-flex flex-row align-items-center justify-content-start mb-4">
-                  <AvatarGroup max={5}>
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                  </AvatarGroup>
+          {typeof eventDetails.session !== "undefined" &&
+          eventDetails.session.length > 0 &&
+          requiredSession ? (
+            <WhatsHappeningBody>
+              <SessionPlaybackPreview>
+                <div>
+                  <Chip
+                    label={requiredSession.runningStatus}
+                    color="error"
+                    style={{
+                      position: "absolute",
+                      top: "20px",
+                      left: "20px",
+                      zIndex: "10",
+                      fontWeight: "500",
+                    }}
+                  />
+                  <img
+                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${requiredSession.previewImage}`}
+                    alt="session-playback-preview"
+                  />
                 </div>
 
-                <SubHeading className="mb-3">Attendees</SubHeading>
+                <div className="p-3">
+                  <SessionName className="mb-3">
+                    {requiredSession.name}
+                  </SessionName>
+                  <SessionDescription className="mb-4">
+                    {requiredSession.description}
+                  </SessionDescription>
 
-                <div className="d-flex flex-row align-items-center justify-content-start mb-4">
-                  <AvatarGroup max={5}>
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                    <Avatar
-                      alt={Faker.name.findName()}
-                      src={Faker.image.avatar()}
-                    />
-                  </AvatarGroup>
+                  <SubHeading className="mb-3">Speakers</SubHeading>
+
+                  <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                    <AvatarGroup max={5}>
+                      {typeof requiredSession.speaker !== "undefined" &&
+                      requiredSession.speaker.length > 0 ? (
+                        renderSpeakers(requiredSession.speaker)
+                      ) : (
+                        <Chip
+                          label="No speaker assigned"
+                          color="primary"
+                          style={{ fontWeight: "500" }}
+                        />
+                      )}
+                    </AvatarGroup>
+                  </div>
+
+                  <SubHeading className="mb-3">Attendees</SubHeading>
+
+                  <div className="d-flex flex-row align-items-center justify-content-start mb-4">
+                    <AvatarGroup max={5}>
+                      {typeof requiredSession.currentlyInSession !==
+                        "undefined" &&
+                      requiredSession.currentlyInSession.length > 0 ? (
+                        renderAttendees(requiredSession.currentlyInSession)
+                      ) : (
+                        <Chip
+                          label="Be the first to attend"
+                          color="primary"
+                          style={{ fontWeight: "500" }}
+                        />
+                      )}
+                    </AvatarGroup>
+                  </div>
+                  <button
+                    onClick={() => {
+                      dispatch(navigationIndexForHostingPlatform(3));
+                      history.push(
+                        `/community/${communityId}/event/${eventId}/hosting-platform/Sessions`
+                      );
+                    }}
+                    className="btn btn-outline-text btn-primary"
+                    style={{
+                      width: "100%",
+                    }}
+                  >
+                    Join
+                  </button>
                 </div>
-                <button
-                  className="btn btn-outline-text btn-primary"
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  Enter stage
-                </button>
-              </div>
-            </SessionPlaybackPreview>
-          </WhatsHappeningBody>
+              </SessionPlaybackPreview>
+            </WhatsHappeningBody>
+          ) : (
+            <>
+              <NoContent
+                className="mb-4"
+                Image={NoSession}
+                Msg={"There is nothing in agenda."}
+              />
+            </>
+          )}
         </div>
       </WhatsHappeningAndSponsorGrid>
 
@@ -405,194 +513,42 @@ const About = () => {
           Our partners
         </WhatsHappeningHeading>
 
-        <SponsorTitle className="mb-3">Platinum</SponsorTitle>
+        {typeof eventDetails.sponsors !== "undefined" &&
+        eventDetails.sponsors.length > 0 ? (
+          <>
+            <SponsorTitle className="mb-3">Platinum</SponsorTitle>
 
-        <TierOneGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/368px-Google_2015_logo.svg.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "http://media.corporate-ir.net/media_files/IROL/17/176060/Oct18/Amazon%20logo.PNG"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://logos-world.net/wp-content/uploads/2020/04/Facebook-Logo.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://cdn.corporate.walmart.com/dims4/WMT/c2bbbe9/2147483647/strip/true/crop/2389x930+0+0/resize/1446x563!/quality/90/?url=https%3A%2F%2Fcdn.corporate.walmart.com%2Fd6%2Fe7%2F48e91bac4a8ca8f22985b3682370%2Fwalmart-logos-lockupwtag-horiz-blu-rgb.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://logos-world.net/wp-content/uploads/2020/11/Flipkart-Logo.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://www.zoho.com/sites/default/files/ogimage/zoho-logo.png"
-            }
-          />
-        </TierOneGrid>
+            <TierOneGrid className="mb-5">
+              {PlatinumSponsors(sponsors)}
+            </TierOneGrid>
 
-        <SponsorTitle className="mb-3">Media partners</SponsorTitle>
+            <SponsorTitle className="mb-3">Diamond</SponsorTitle>
 
-        <TierTwoGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/CNBC_logo.svg/2560px-CNBC_logo.svg.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/d/db/Forbes_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://assets-global.website-files.com/5ae98eec19474ec4b00cd02a/5bee83f7a69edda26bc5b891_YourStory_Logo-New-01.png"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://1000logos.net/wp-content/uploads/2017/04/New-York-Times-logo.png"
-            }
-          />
-        </TierTwoGrid>
+            <TierTwoGrid className="mb-5">
+              {DiamondSponsors(sponsors)}
+            </TierTwoGrid>
 
-        <SponsorTitle className="mb-3">Swag partners</SponsorTitle>
+            <SponsorTitle className="mb-3">Gold</SponsorTitle>
 
-        <TierThreeGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierThreeGrid>
+            <TierThreeGrid className="mb-5">
+              {GoldSponsors(sponsors)}
+            </TierThreeGrid>
 
-        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
+            <SponsorTitle className="mb-3">Bronze</SponsorTitle>
 
-        <TierFourGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierFourGrid>
-        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
-
-        <TierFiveGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierFiveGrid>
-        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
-
-        <TierSixGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierSixGrid>
-        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
-
-        <TierSevenGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierSevenGrid>
-        <SponsorTitle className="mb-3">Gold partners</SponsorTitle>
-
-        <TierEightGrid className="mb-5">
-          <SponsorCard
-            src={
-              "https://upload.wikimedia.org/wikipedia/en/1/18/Airtel_logo.svg"
-            }
-          />
-          <SponsorCard src={"https://static.toiimg.com/photo/57268146.cms"} />
-          <SponsorCard src={"https://static.toiimg.com/photo/47529300.cms"} />
-          <SponsorCard
-            src={
-              "https://www.titan.co.in/wps/wcm/connect/titan/ae6812fe-6bf7-40b0-99f9-96648df12dbc/TITAN+Logo+new.svg?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_90IA1H80OO8010QKMQAAEP2004-ae6812fe-6bf7-40b0-99f9-96648df12dbc-mFEw0vR"
-            }
-          />
-          <SponsorCard
-            src={
-              "https://teeandco.lk/media/mgs_brand/1/4/14d4ec6a45ba3271650c22fbe9fa15bc_1.jpg"
-            }
-          />
-        </TierEightGrid>
+            <TierFourGrid className="mb-5">
+              {BronzeSponsors(sponsors)}
+            </TierFourGrid>
+          </>
+        ) : (
+          <>
+            <NoContent
+              className="mb-4"
+              Image={NoSposnors}
+              Msg={"There are no sponsors yet."}
+            />
+          </>
+        )}
       </div>
     </>
   );
