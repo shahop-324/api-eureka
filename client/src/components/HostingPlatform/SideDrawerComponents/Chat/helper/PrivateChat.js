@@ -26,18 +26,7 @@ const PrivateChat = () => {
     setOpen(false);
   };
 
-  const [selectedPerson, setSelectedPerson] = useState("empty");
-
-  const {id} = useSelector((state) => state.personalChat);
-
-  const enterPersonalChat = (id) => {
-    setSelectedPerson("some id");
-    // Set some persons id in global redux store along with tag [person || Speaker || Exhibitor]
-  };
-
-  const exitPersonalChat = () => {
-    setSelectedPerson("empty");
-  };
+  const { id } = useSelector((state) => state.personalChat);
 
   const bool = id ? true : false; // Flag to detect if we have to show personal chat or not
 
@@ -46,14 +35,11 @@ const PrivateChat = () => {
       {(() => {
         switch (bool) {
           case false:
-            return (
-              <PrivateChatListComponent enterPersonalChat={enterPersonalChat} />
-            );
+            return <PrivateChatListComponent />;
 
-            case true: 
+          case true:
             return (
               <IndividualChat
-                exitPersonalChat={exitPersonalChat}
                 handleOpen={handleOpen}
                 handleOpenVideoOptions={handleOpenVideoOptions}
               />
@@ -62,7 +48,6 @@ const PrivateChat = () => {
           default:
             return (
               <IndividualChat
-                exitPersonalChat={exitPersonalChat}
                 handleOpen={handleOpen}
                 handleOpenVideoOptions={handleOpenVideoOptions}
               />

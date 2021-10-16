@@ -12,7 +12,7 @@ import SentimentSatisfiedRoundedIcon from "@material-ui/icons/SentimentSatisfied
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 
-const MsgInput = (props) => {
+const OneOnOneMsgInput = (props) => {
   const [emojiMartVisbility, setEmojiMartVisbility] = useState("none");
 
   const toggleEmojiMart = () => {
@@ -28,54 +28,45 @@ const MsgInput = (props) => {
   const eventId = params.eventId;
 
   const { role, id } = useSelector((state) => state.eventAccessToken);
+  const recieverId = useSelector((state) => state.personalChat.id);
 
-  let firstName;
-  let lastName;
-  let email;
-  let image;
-  let organisation;
-  let designation;
+  let firstName; // Sender first name
+  let lastName; // Sender last name
+  let email; // Sender email
+  let image; // Sender Image
+  let organisation; // Sender organisation
+  let designation; // Sender designation
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
-
-  if (role !== "speaker") {
-    firstName = userDetails.firstName;
-    lastName = userDetails.lastName;
-    email = userDetails.email;
-    image = userDetails.image;
-    organisation = userDetails.organisation;
-    designation = userDetails.designation;
-  } else {
-    firstName = speakerDetails.firstName;
-    lastName = speakerDetails.lastName;
-    email = speakerDetails.email;
-    image = speakerDetails.image;
-    organisation = speakerDetails.organisation;
-    designation = speakerDetails.designation;
-  }
+  firstName = userDetails.firstName;
+  lastName = userDetails.lastName;
+  email = userDetails.email;
+  image = userDetails.image;
+  organisation = userDetails.organisation;
+  designation = userDetails.designation;
 
   const [Message, setMessage] = useState("");
 
   const sendChannelMessage = () => {
     socket.emit(
-      "transmitEventMessage",
+      "transmitPersonalMessage",
       {
         isReply: props.name && props.image && props.msg ? true : false,
         replyTo: props.chatMsgId,
         textMessage: Message,
         eventId: eventId,
         createdAt: Date.now(),
-        userRole: role,
-        userName: firstName + " " + lastName,
-        userEmail: email,
-        userImage: image,
-        userOrganisation: organisation,
-        userDesignation: designation,
+        senderRole: role,
+        senderName: firstName + " " + lastName,
+        senderEmail: email,
+        senderImage: image,
+        senderOrganisation: organisation,
+        senderDesignation: designation,
         reported: false,
-        numOfTimesReported: 0,
         visibilityStatus: "Active",
+        senderId: id, // Access it from event access token in redux store
+        recieverId: recieverId, // Access it from personal chat in redux store
       },
       (error) => {
         if (error) {
@@ -93,9 +84,9 @@ const MsgInput = (props) => {
             console.log("Submit msg form.");
 
             if (!Message) return;
-              sendChannelMessage(Message);
-              setMessage("");
-              props.destroyReplyWidget();
+            sendChannelMessage(Message);
+            setMessage("");
+            props.destroyReplyWidget();
           }
         }}
       >
@@ -133,7 +124,6 @@ const MsgInput = (props) => {
           <Picker
             onSelect={(emoji) => {
               console.log(emoji);
-
               setMessage((prev) => {
                 return prev + emoji.native;
               });
@@ -186,4 +176,4 @@ const MsgInput = (props) => {
   );
 };
 
-export default MsgInput;
+export default OneOnOneMsgInput;

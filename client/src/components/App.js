@@ -68,6 +68,9 @@ import { closeSnackbar } from "../actions/index";
 import InvitationAccepted from "./Supplement/InvitationAccepted";
 import Blank from "./Blank";
 import SalesforceRedirect from "./SalesforceRedirect";
+import AttendeeMagicLinkDestination from "./MagicLinkDestination/AttendeeMagicLinkDestination";
+import SpeakerMagicLinkDestination from "./MagicLinkDestination/SpeakerMagicLinkDestination";
+import BoothMagicLinkDestination from "./MagicLinkDestination/BoothMagicLinkDestination";
 
 const vertical = "top";
 const horizontal = "center";
@@ -79,18 +82,14 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 AOS.init();
 
 class App extends React.Component {
-  
-
   componentDidMount = () => {
     socket.on("logOutUser", ({ userId, message }) => {
-      
       // dispatch(createNewEventAlert(newAlert));
 
       this.props.DuplicateUserSignOut(userId, message);
     });
 
     socket.on("newLogin", (res) => {
-      
       this.props.signIn(
         res,
         this.props.signinForEventRegistrationEventId,
@@ -116,15 +115,41 @@ class App extends React.Component {
   render() {
     const { isSignedIn, open, message, severity } = this.props;
 
-    
-    
     return (
       <>
         <Router history={history}>
           <div>
             <Switch>
               <Route path="/bluemeet/redirect" exact component={Blank} />
-              <Route path="/bluemeet/salesforce/redirect" exact component={SalesforceRedirect} />
+              <Route
+                path="/bluemeet/salesforce/redirect"
+                exact
+                component={SalesforceRedirect}
+              />
+
+              {/* Attendee magic link destination */}
+              <Route
+                path="/event/attendee/:registrationId"
+                exact
+                component={AttendeeMagicLinkDestination}
+              />
+
+              {/* // event/invite/speaker/:registrationId => magic link for speakers */}
+
+              <Route
+                path="/event/speaker/:registrationId"
+                exact
+                component={SpeakerMagicLinkDestination}
+              />
+
+              {/* // event/invite/booth/:registrationId => magic link for exhibitors */}
+
+              <Route
+                path="/event/booth/:registrationId"
+                exact
+                component={BoothMagicLinkDestination}
+              />
+
               <Route
                 path="/accept-invite/:inviteId"
                 exact
@@ -703,8 +728,6 @@ class App extends React.Component {
             </Switch>
           </div>
         </Router>
-
-       
 
         {this.props && this.props.message && this.props.open ? (
           <Snackbar

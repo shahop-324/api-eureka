@@ -8936,3 +8936,47 @@ export const setPersonalChatConfig = (id) => async(dispatch, getState) => {
     }, 6000);
   }
 }
+
+export const getMyAllPersonalMessages = (userId) => async(dispatch, getState) => {
+  try{
+
+    const res = await fetch(`${BaseURL}getMyAllPersonalChatMsg/${userId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+     personalChatActions.FetchChats({
+        chats: result.data,
+      })
+    );
+  }
+  catch(error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch personal messages. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+}

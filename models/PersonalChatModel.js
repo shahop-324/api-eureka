@@ -31,7 +31,7 @@ const personalChatSchema = new mongoose.Schema({
   senderId: {
     type: String,
   },
-  recieverId: {
+  receiverId: {
     type: String,
   },
   senderRole: {

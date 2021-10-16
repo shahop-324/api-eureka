@@ -802,13 +802,13 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         to: email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: "Your Event Registration Confirmation.",
-        text: "You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! ",
-        html: EventRegistrationTemplate(
-          `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
-          eventGettingEventTransaction.eventName,
-          ticketBeingPurchased.name,
-          amountTotal
-        ),
+        text: `You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! Here is your magic link http://localhost:3001/event/attendee/${newlyCreatedRegistration._id}`,
+        // html: EventRegistrationTemplate(
+        //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
+        //   eventGettingEventTransaction.eventName,
+        //   ticketBeingPurchased.name,
+        //   amountTotal/100
+        // ),
       };
 
       sgMail

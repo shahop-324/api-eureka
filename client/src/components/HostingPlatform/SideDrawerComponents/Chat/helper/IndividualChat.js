@@ -3,34 +3,65 @@ import React, { useState } from "react";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
-import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-import {useDispatch, useSelector} from "react-redux";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import { useDispatch, useSelector } from "react-redux";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import Ripple from "../../../../ActiveStatusRipple";
-import MsgInput from "./MsgInput";
+import OneOnOneMsgInput from "./OneOnOneMsgInput";
 import ChatMsgElement from "./ChatMsgElement";
 import OutgoingChatMsgElement from "./OutgoingChatElement";
 import { setPersonalChatConfig } from "../../../../../actions";
 import Loader from "./../../../../Loader";
 
-const IndividualChat = ({
-  handleOpen,
-  exitPersonalChat,
-  handleOpenVideoOptions,
-}) => {
+const renderMessages = (chats, receiverId) => {
+  if(!chats) return;
+  //  Filter out all chats in which receiverId matches with reciver or sender
+  let filteredChats;
 
-  const {id} = useSelector((state) => state.personalChat);
+  filteredChats = chats.filter(
+    (chat) => chat.senderId === receiverId || chat.receiverId === receiverId
+  );
 
-  const {peopleInThisEvent} = useSelector((state) => state.user);
+  return filteredChats.map((chat) => {
+    // Determine incoming and outgoing message
+    if (chat.recieverId === receiverId) {
+      // This is an outgoing msg
+      return (
+        <OutgoingChatMsgElement
+          msgText={"Hi, how you have been?"}
+          timestamp={Date.now()}
+        />
+      );
+    } else {
+      // This is an incoming message
+      return (
+        <ChatMsgElement
+          name={Faker.name.findName()}
+          image={Faker.image.avatar()}
+          msgText={"Hi there"}
+          organisation={"Google"}
+          designation={"SDE"}
+          timestamp={Date.now()} // timestamp of chat msg
+          chatMsgId={"901skk"} // Id of chat msg we will provide it when looping over all chats in render method
+        />
+      );
+    }
+  });
+};
 
-  const requiredPerson = peopleInThisEvent.find((element) => element.userId === id);
+const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
+
+  const { id, chats } = useSelector((state) => state.personalChat);
+
+  const { peopleInThisEvent } = useSelector((state) => state.user);
+
+  const requiredPerson = peopleInThisEvent.find(
+    (element) => element.userId === id
+  );
 
   const IsPersonLoaded = requiredPerson ? true : false;
 
   const dispatch = useDispatch();
-
-  const [status] = useState("active");
 
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
@@ -38,6 +69,7 @@ const IndividualChat = ({
   const [timestamp, setTimestamp] = useState(null);
   const [organisation, setOrganisation] = useState(null);
   const [designation, setDesignation] = useState(null);
+  const [chatMsgId, setChatMsgId] = useState(null);
 
   const createReplyWidget = (
     name,
@@ -64,12 +96,14 @@ const IndividualChat = ({
     setTimestamp(null);
   };
 
-  if(!IsPersonLoaded) {
-    return <Loader />
+  if (!IsPersonLoaded) {
+    return <Loader />;
   }
 
   const profileName = requiredPerson.userName;
-  const profileImage = requiredPerson.userImage.startsWith("https://") ? requiredPerson.userImage : `https://bluemeet.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
+  const profileImage = requiredPerson.userImage.startsWith("https://")
+    ? requiredPerson.userImage
+    : `https://bluemeet.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
   const profileOrganisation = requiredPerson.userOrganisation;
   const profileDesigantion = requiredPerson.userDesignation;
   const profileStatus = requiredPerson.status;
@@ -91,7 +125,7 @@ const IndividualChat = ({
               className="chat-msg-hover-icon"
               style={{ fontSize: "18px" }}
               onClick={() => {
-                dispatch(setPersonalChatConfig(null))
+                dispatch(setPersonalChatConfig(null));
               }}
             />
           </div>
@@ -107,11 +141,7 @@ const IndividualChat = ({
 
         <div className="">
           <div className="individual-chat-summary-container mb-2 px-3 ">
-            <Avatar
-              src={profileImage}
-              alt={profileName}
-              variant="rounded"
-            />
+            <Avatar src={profileImage} alt={profileName} variant="rounded" />
             <div className="">
               <div
                 className="chat-box-name"
@@ -183,25 +213,17 @@ const IndividualChat = ({
             className="scrollable-chat-element-container"
             id="all-chat-msg-container"
           >
-            {/* <IncomingChat /> */}
-            <ChatMsgElement
-              name={Faker.name.findName()}
-              image={Faker.image.avatar()}
-              msgText={"Hi there"}
-              organisation={"Google"}
-              designation={"SDE"}
-              timestamp={Date.now()} // timestamp of chat msg
-              chatMsgId={'901skk'} // Id of chat msg
-            />
-            {/* Outgoing chat */}
-            <OutgoingChatMsgElement msgText={"Hi, how you have been?"} timestamp={Date.now()} />
+            {/* // TODO Here render list of all personal chat msg */}
+
+            {renderMessages(chats)}
             {/* {renderChats(eventChats)} */}
           </div>
 
-          <MsgInput
+          <OneOnOneMsgInput
             name={name}
             image={image}
             msg={msg}
+            chatMsgId={chatMsgId}
             organisation={organisation}
             designation={designation}
             timestamp={timestamp}
