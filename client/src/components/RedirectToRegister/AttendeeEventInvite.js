@@ -1,11 +1,50 @@
 import React from "react";
 import styled from "styled-components";
+import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
+
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import dateFormat from "dateformat";
-import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
-import AvatarMenu from "./../AvatarMenu";
+
+const Paper = styled.div`
+  height: auto;
+  background-color: #f32f2f;
+  text-align: center;
+`;
+
+const NormalText = styled.span`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #ffffff;
+`;
+
+const AttractiveText = styled.a`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #e2d40e;
+  text-decoration: none;
+
+  &:hover {
+      cursor: pointer;
+      color: #212121;
+  }
+`;
+
+const StaticBanner = () => {
+  return (
+    <>
+      <Paper className="py-2">
+        <NormalText>
+          You have been invited to register for this event.
+        </NormalText>{" "}
+        <AttractiveText>Create your account</AttractiveText>
+      </Paper>
+    </>
+  );
+};
 
 const NavBar = styled.div`
   height: 7vh;
@@ -81,20 +120,20 @@ const Announcement = styled.div`
   color: #db3a3a;
 `;
 
-const AttendeeMagicLinkDestination = () => {
-  // Get event details and display on page.
-  // Get attendee || speaker || exhibitor logged in and when clicked on join event or waiting room please set event access token.
-
+const AttendeeEventInvite = () => {
   return (
     <>
+      <StaticBanner></StaticBanner>
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
-        <AvatarMenu />
+        <button className="btn btn-outline-primary btn-outline-text">
+          Go to bluemeet.in
+        </button>
       </NavBar>
 
       <div
         className="container d-flex flex-row align-items-center"
-        style={{ height: "93vh" }}
+        style={{ height: "91vh" }}
       >
         <Grid className="p-3">
           <div className="d-flex flex-column justify-content-center">
@@ -142,24 +181,18 @@ const AttendeeMagicLinkDestination = () => {
             {/* Event not yet started announcement */}
 
             <Announcement className="mb-3">
-              This event has not yet started. Please join the waiting room.
+              You have been invited to register for this event. Please create an
+              account with this email (test@gmail.com) in order to register.
             </Announcement>
 
             {/* Join button */}
 
             <div className="d-flex flex-row align-items-center justify-content-between">
               <JoinEventButton
-                disabled
                 className="btn btn-outline-text btn-primary"
-                style={{ width: "48%" }}
+                style={{ width: "100%" }}
               >
-                Join event
-              </JoinEventButton>
-              <JoinEventButton
-                className="btn btn-outline-text btn-outline-primary"
-                style={{ width: "48%" }}
-              >
-                Go to waiting room
+                Create my account
               </JoinEventButton>
             </div>
           </div>
@@ -169,4 +202,4 @@ const AttendeeMagicLinkDestination = () => {
   );
 };
 
-export default AttendeeMagicLinkDestination;
+export default AttendeeEventInvite;

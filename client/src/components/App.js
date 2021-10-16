@@ -72,6 +72,11 @@ import AttendeeMagicLinkDestination from "./MagicLinkDestination/AttendeeMagicLi
 import SpeakerMagicLinkDestination from "./MagicLinkDestination/SpeakerMagicLinkDestination";
 import BoothMagicLinkDestination from "./MagicLinkDestination/BoothMagicLinkDestination";
 
+import AttendeeEventInvite from "./RedirectToRegister/AttendeeEventInvite";
+import SpeakerEventInvite from "./RedirectToRegister/SpeakerInvite";
+import BoothEventInvite from "./RedirectToRegister/BoothInvite";
+import CommunityTeamInvite from "./RedirectToRegister/TeamInvite";
+
 const vertical = "top";
 const horizontal = "center";
 
@@ -149,6 +154,22 @@ class App extends React.Component {
                 exact
                 component={BoothMagicLinkDestination}
               />
+
+              {/* Attendee event invite for registering in event */}
+
+              <Route path="/event/invite/attendee/:invitationId" exact component={AttendeeEventInvite} />
+
+              {/* Speaker event invite for registering in event */}
+
+              <Route path="/event/invite/speaker/:invitationId" exact component={SpeakerEventInvite} />
+
+              {/* Booth event invite for registering in event */}
+
+              <Route path="/event/invite/booth/:invitationId" exact component={BoothEventInvite} />
+
+              {/* Team invite for joining bluemeet community team */}
+
+              <Route path="/event/invite/team/:invitationId" exact component={CommunityTeamInvite} />
 
               <Route
                 path="/accept-invite/:inviteId"
