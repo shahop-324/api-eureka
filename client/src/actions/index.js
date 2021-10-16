@@ -572,6 +572,17 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
   try {
     const res = await fetchData();
     console.log(res);
+
+    let allCommuities = [];
+
+    for (let element of res.data.personalData.communities) {
+      allCommuities.push(element);
+    }
+
+    for(let item of res.data.personalData.invitedCommunities) {
+      allCommuities.push(item);
+    }
+
     dispatch(
       eventActions.FetchEvents({
         events: res.data.personalData.registeredInEvents,
@@ -579,7 +590,7 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
     );
     dispatch(
       communityActions.FetchCommunities({
-        communities: res.data.personalData.communities,
+        communities: allCommuities,
       })
     );
 
@@ -6890,8 +6901,31 @@ export const removeFromTeam =
           status: status,
         })
       );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Successfully removed from community team.",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+
     } catch (error) {
       console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to remove from community team. Please try again.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
     }
   };
 

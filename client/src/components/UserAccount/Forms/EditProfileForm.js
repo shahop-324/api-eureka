@@ -19,7 +19,7 @@ import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
 import { useSnackbar } from "notistack";
 
-import {FormLabel, Input} from "./../Elements";
+import { FormLabel, Input } from "./../Elements";
 
 const options = [
   { value: "Technology", label: "Technology" },
@@ -207,7 +207,7 @@ let EditProfileForm = (props) => {
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
-  const [ editProfileClicked, setEditProfileClicked] = useState(false);
+  const [editProfileClicked, setEditProfileClicked] = useState(false);
 
   useEffect(() => {
     dispatch(resetUserError());
@@ -228,10 +228,16 @@ let EditProfileForm = (props) => {
     ModifiedFormValues.phoneNumber = formValues.phoneNumber;
     ModifiedFormValues.email = formValues.email;
 
+    ModifiedFormValues.organisation = formValues.organisation;
+    ModifiedFormValues.designation = formValues.designation;
+    ModifiedFormValues.city = formValues.city;
+    ModifiedFormValues.country = formValues.country;
+
     const groupedSocialHandles = {
       facebook: formValues.facebook,
       twitter: formValues.twitter,
       linkedin: formValues.linkedin,
+      website: formValues.website
     };
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
@@ -246,8 +252,6 @@ let EditProfileForm = (props) => {
 
     ModifiedFormValues.interests = modifiedInterests;
 
-    console.log(ModifiedFormValues);
-    console.log(file);
     dispatch(editUser(ModifiedFormValues, file));
   };
 
@@ -258,15 +262,7 @@ let EditProfileForm = (props) => {
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForEditUser());
-  }
-  if (succeded) {
-    enqueueSnackbar("User details updated successfully!", {
-      variant: "success",
-    });
   }
 
   return (
@@ -282,12 +278,7 @@ let EditProfileForm = (props) => {
                 className={classes.large}
               />
             </div>
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Avatar
-            </FormLabel>
+            <FormLabel for="communityHeadline">Avatar</FormLabel>
             <Input
               name="imgUpload"
               type="file"
@@ -305,12 +296,7 @@ let EditProfileForm = (props) => {
             }}
           >
             <div className="form-group">
-              <FormLabel
-                for="communityHeadline"
-               
-              >
-                First name
-              </FormLabel>
+              <FormLabel for="communityHeadline">First name</FormLabel>
 
               <Field
                 name="firstName"
@@ -324,12 +310,7 @@ let EditProfileForm = (props) => {
             </div>
 
             <div className="form-group">
-              <FormLabel
-                for="communityHeadline"
-                
-              >
-                Last name
-              </FormLabel>
+              <FormLabel for="communityHeadline">Last name</FormLabel>
               <Field
                 name="lastName"
                 type="text"
@@ -344,12 +325,7 @@ let EditProfileForm = (props) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <FormLabel
-                for="communityHeadline"
-               
-              >
-                Headline
-              </FormLabel>
+              <FormLabel for="communityHeadline">Headline</FormLabel>
               <Field
                 name="headline"
                 type="text"
@@ -364,11 +340,7 @@ let EditProfileForm = (props) => {
 
           <div className="row edit-profile-form-row mb-3">
             <div className="form-group">
-              <FormLabel
-                for="communityHeadline"
-              >
-                E-mail
-              </FormLabel>
+              <FormLabel for="communityHeadline">E-mail</FormLabel>
               <Field
                 name="email"
                 type="email"
@@ -385,25 +357,84 @@ let EditProfileForm = (props) => {
             className="row edit-profile-form-row mb-3"
             style={{ width: "100%" }}
           >
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              contact Number
-            </FormLabel>
+            <FormLabel for="communityHeadline">contact Number</FormLabel>
             <Field
               name="phoneNumber"
               component={renderPhoneInput}
               type="number"
             />
           </div>
+
+          <div
+            className="row edit-profile-form-row mb-3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gridGap: "24px",
+            }}
+          >
+            <div className="form-group">
+              <FormLabel for="communityHeadline">Organisation</FormLabel>
+
+              <Field
+                name="organisation"
+                type="text"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                placeholder="e.g. Google"
+              />
+            </div>
+
+            <div className="form-group">
+              <FormLabel for="communityHeadline">Designation</FormLabel>
+              <Field
+                name="designation"
+                type="text"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                placeholder="e.g. Product manager"
+              />
+            </div>
+          </div>
+
+          <div
+            className="row edit-profile-form-row mb-3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gridGap: "24px",
+            }}
+          >
+            <div className="form-group">
+              <FormLabel for="communityHeadline">City</FormLabel>
+
+              <Field
+                name="city"
+                type="text"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                placeholder="e.g. New york city"
+              />
+            </div>
+
+            <div className="form-group">
+              <FormLabel for="communityHeadline">Country</FormLabel>
+              <Field
+                name="country"
+                type="text"
+                classes="form-control"
+                component={renderInput}
+                ariadescribedby="emailHelp"
+                placeholder="e.g. USA"
+              />
+            </div>
+          </div>
+
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Event Preferences
-            </FormLabel>
+            <FormLabel for="communityHeadline">Event Preferences</FormLabel>
             <Field
               name="interests"
               component={renderEventPreferences}
@@ -411,12 +442,7 @@ let EditProfileForm = (props) => {
             />
           </div>
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              LinkedIn
-            </FormLabel>
+            <FormLabel for="communityHeadline">LinkedIn</FormLabel>
             <div className="form-group">
               <Field
                 name="linkedin"
@@ -431,12 +457,7 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Facebook
-            </FormLabel>
+            <FormLabel for="communityHeadline">Facebook</FormLabel>
             <div className="form-group">
               <Field
                 name="facebook"
@@ -451,12 +472,7 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-3">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Twitter
-            </FormLabel>
+            <FormLabel for="communityHeadline">Twitter</FormLabel>
             <div className="form-group">
               <Field
                 name="twitter"
@@ -471,12 +487,7 @@ let EditProfileForm = (props) => {
           </div>
 
           <div className="row edit-profile-form-row mb-5">
-            <FormLabel
-              for="communityHeadline"
-              
-            >
-              Website
-            </FormLabel>
+            <FormLabel for="communityHeadline">Website</FormLabel>
             <div className="form-group">
               <Field
                 name="website"
@@ -493,9 +504,6 @@ let EditProfileForm = (props) => {
           <div className="row edit-profile-form-row mb-3 d-flex flex-row justify-content-end">
             <button
               type="submit"
-              // disabled={!error}
-
-              // disabled={pristine}
               className="col-3 btn btn-primary btn-outline-text me-3"
               style={{ textAlign: "center" }}
             >
@@ -534,6 +542,16 @@ const mapStateToProps = (state) => ({
       ? state.user.userDetails.interests.map((interest) => {
           return { value: interest, label: interest };
         })
+      : "",
+    organisation: state.user.userDetails.organisation
+      ? state.user.userDetails.organisation
+      : "",
+    designation: state.user.userDetails.designation
+      ? state.user.userDetails.designation
+      : "",
+    city: state.user.userDetails.city ? state.user.userDetails.city : "",
+    country: state.user.userDetails.country
+      ? state.user.userDetails.country
       : "",
 
     linkedin:

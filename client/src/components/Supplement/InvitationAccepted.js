@@ -3,8 +3,8 @@ import styled from "styled-components";
 import BluemeetLogo from "./../../assets/Logo/light.svg";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { useParams } from "react-router";
-import {useDispatch} from "react-redux";
-import {acceptInvitation} from "./../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { acceptInvitation, fetchInvitationDetails } from "./../../actions";
 
 const Nav = styled.div`
   background-color: #525f7f;
@@ -27,20 +27,34 @@ const MsgText = styled.div`
 `;
 
 const InvitationAccepted = () => {
+  const params = useParams();
 
-    const params = useParams();
+  const InvitationId = params.inviteId;
 
-    const dispatch = useDispatch();
+  const { invitationDetails } = useSelector((state) => state.teamInvite);
 
-    const InvitationId = params.inviteId;
+  useEffect(() => {
+    dispatch(fetchInvitationDetails(InvitationId));
+  }, []);
 
-    useEffect(() => {
-        dispatch(acceptInvitation(InvitationId));
-    }, []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(acceptInvitation(InvitationId));
+  }, []);
+
+  let communityName;
+  let invitedUserEmail;
+
+  if (invitationDetails) {
+    communityName = invitationDetails.communityName;
+
+    invitedUserEmail = invitationDetails.invitedUserEmail;
+  }
 
   return (
     <>
-      <Nav className="py-2 px-4">
+      <Nav className="py-2 px-4 d-flex flex-row align-items-center">
         <img src={BluemeetLogo} alt="Logo" />
       </Nav>
 
@@ -62,8 +76,7 @@ const InvitationAccepted = () => {
             className="mb-5"
             style={{ maxWidth: "300px", textAlign: "center" }}
           >
-            You have successfully accepted invitation to join {"Community Name"}
-            .
+            You have successfully accepted invitation to join {communityName} community.
           </MsgText>
 
           <MsgText
@@ -73,8 +86,7 @@ const InvitationAccepted = () => {
               color: "#F0E114",
             }}
           >
-            Please log in using shreyanshshah242@gmail.com to access this
-            community.
+            Please log in using <br /> {invitedUserEmail} to access this community.
           </MsgText>
         </CenteredPaper>
       </div>

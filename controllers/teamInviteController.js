@@ -146,11 +146,28 @@ exports.acceptInvitation = catchAsync(async (req, res, next) => {
     InviteDoc.status = "Accepted";
     await InviteDoc.save({ new: true, validateModifiedOnly: true });
 
-    res.status(200).json({
-      status: "success",
-      message: "successfully accepted invitation to join community!",
-      code: "S001",
-    });
+    // TODO Send a mail to community super admin saying that this person has accepted team invitation.
+
+    const msg = {
+      to: email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: "New member added to your Bluemeet community",
+      text: `Hey ${CommunityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has accepted invitation to join your ${CommunityDoc.name} community on Bluemeet.`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msg)
+      .then(async () => {
+        res.status(200).json({
+          status: "success",
+          message: "successfully accepted invitation to join community!",
+          code: "S001",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 });
 
@@ -186,23 +203,33 @@ exports.fetchCommunityManagers = catchAsync(async (req, res, next) => {
 
 exports.removeFromTeam = catchAsync(async (req, res, next) => {
   const communityId = req.community._id;
-  const email = req.body.email;
-  const status = req.body.status;
+  const email = req.params.email;
+  const status = req.params.status;
 
   if (status === "Pending") {
     await TeamInvite.findOneAndUpdate(
-      { invitedUserEmail: email },
+      {
+        $and: [
+          { invitedUserEmail: email },
+          { communityId: mongoose.Types.ObjectId(communityId) },
+        ],
+      }, // email and community Id both should match then only that document can be marked as canceled.
       { canceled: true },
-      { new: true, validateModifiedOnly: true }
+      { new: true, validateModifiedOnly: true },
+      (error, doc) => {
+        console.log(doc);
+      }
     );
-    // Removed from team , now this invitation won't be valid anymore
+
+    // Removed from team , now this invitation won't be valid anymore and appropriate message will be shown to the user.
   }
   if (status === "Accepted") {
+    console.log("entered into accepted case");
     // Remove from user invited communities
     const userDoc = await User.findOne({ email: email });
 
     userDoc.invitedCommunities = userDoc.invitedCommunities.filter(
-      (el) => el !== communityId
+      (el) => el.toString() !== communityId.toString()
     );
 
     await userDoc.save({ new: true, validateModifiedOnly: true });
@@ -210,10 +237,53 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
     // Remove from community doc eventManagers array
     const communityDoc = await Community.findById(communityId);
 
+    console.log(communityDoc.eventManagers, "Before");
+    console.log(userDoc._id);
     communityDoc.eventManagers = communityDoc.eventManagers.filter(
-      (el) => el !== userDoc._id
+      (el) => el.toString() !== userDoc._id.toString()
     );
+    console.log(communityDoc.eventManagers, "After");
     await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+    // TODO Send a mail to concerned person and community super admin saying that he/she has been removed from community as a community manager.
+
+    // 1.) Send mail to community super admin
+
+    const msgToSuperAdmin = {
+      to: communityDoc.superAdminName, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `${userDoc.firstName} has been removed from your community.`,
+      text: `Hey ${communityDoc.superAdminName}. This is to inform you that ${userDoc.firstName} has been removed from your ${communityDoc.name} community on Bluemeet.`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msgToSuperAdmin)
+      .then(async () => {
+        console.log("Mail sent to community super admin.");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // 2.) Send mail to concerned person
+
+    const msgToConcernedPerson = {
+      to: userDoc.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `You have been removed from ${communityDoc.name}`,
+      text: `Hey ${userDoc.firstName}. This is to inform you that you have been removed as community manager from ${CommunityDoc.name} community on Bluemeet.`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msgToConcernedPerson)
+      .then(async () => {
+        console.log("Mail sent to concerned person.");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   res.status(200).json({

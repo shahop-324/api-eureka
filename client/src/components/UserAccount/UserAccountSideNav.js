@@ -61,8 +61,6 @@ const CommunityTabPaper = styled.div`
   font-weight: 500;
   font-size: 0.85rem;
   text-transform: capitalize;
-
-  /* width: 100%; */
   display: grid;
   grid-template-columns: 1fr 3fr;
 
@@ -186,10 +184,6 @@ const UserAccountSideNav = () => {
   }
   if (error) {
     throw new Error(error);
-
-    // dispatch(errorTrackerForPersonalData());
-    // alert(error);
-    // return;
   }
 
   const { firstName, lastName, email, image } = userDetails;
@@ -204,8 +198,8 @@ const UserAccountSideNav = () => {
           <CommunityProfileTab
             name={community.name}
             // TODO ALLOW COMMUNITY TO UPLOAD AND EDIT ITS LOGO
-            communityId={community.id}
-            key={community.id}
+            communityId={community._id}
+            key={community._id}
             communityImage={`https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`}
           />
         );
@@ -260,17 +254,10 @@ const UserAccountSideNav = () => {
             />
           )}
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
-            {/* <button
-              className="btn btn-outline-text btn-outline-light py-2"
-             
-            >
-              
-            </button> */}
             <BtnOutlinedWithIcon className="py-2" onClick={handleClickOpen}>
               Create New Community
             </BtnOutlinedWithIcon>
 
-            
             <CreateNewCommunityForm closeHandler={handleClose} open={open} />
           </div>
         </div>

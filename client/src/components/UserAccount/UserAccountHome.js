@@ -1,70 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import "./../../assets/css/hiddenScroll.css";
-import { CssBaseline, IconButton } from "@material-ui/core";
+import { CssBaseline } from "@material-ui/core";
 import "./../../assets/css/UserAccountStyle.css";
 import CenteredTabs from "./UserAccountCenteredTabBar";
 import UserAccountSideNav from "./UserAccountSideNav";
 import UserAccountHomeMainBody from "./UserAccountHomeMainBodyComponent";
 import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
-import UserAccountRecordings from "./UserAccountRecordings";
 import { fetchUserAllPersonalData } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../history";
 import Loader from "../Loader";
-import UserAccountReviews from "./UserAccountReviews";
-import UserAccountQueries from "./UserAccountQueries";
-import styled from "styled-components";
-import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
-import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
-import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
-import Badge from "@mui/material/Badge";
-import Avatar from "@material-ui/core/Avatar";
-import Faker from "faker";
-
-import { Dropdown } from "semantic-ui-react";
 import AvatarMenu from "./../AvatarMenu";
-
-import {
-  NotificationPaper,
-  NotificationBody,
-  NotificationHeadline,
-  AvatarMenuListItem,
-  TimeAgoText,
-} from "./Elements";
-
 import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
-
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
-import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
-
-const trigger = (
-  <span>
-    <Avatar src={Faker.image.avatar()} className="mb-3" variant="rounded" />
-  </span>
-);
-
-const BtnOutlinedWithIcon = styled.div`
-  border: 1px solid #152d35;
-  color: #152d35;
-  padding: 8px 16px;
-  border-radius: 10px;
-
-  font-size: 0.8rem;
-  font-family: "Ubuntu";
-  font-weight: 500;
-
-  &:hover {
-    background-color: #152d35;
-    color: #dcc7be;
-    cursor: pointer;
-  }
-`;
 
 const UserAccountHome = () => {
   const { isLoading } = useSelector((state) => state.user);
@@ -184,7 +136,7 @@ const UserAccountHome = () => {
                     return <UserAccountEventsMainBody />;
                   case 2:
                     return <UserAccountProfileMainBody />;
-                  
+
                   default:
                     return <div>You are a User.</div>;
                 }

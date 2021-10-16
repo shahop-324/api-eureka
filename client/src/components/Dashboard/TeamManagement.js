@@ -26,6 +26,7 @@ const SectionHeading = styled.div`
 `;
 
 const renderInvitedPeople = (persons) => {
+  if (!persons) return;
   return persons.map((person) => {
     return (
       <TeamMembersDetailsCard
@@ -34,13 +35,19 @@ const renderInvitedPeople = (persons) => {
         status={"Pending"}
         position={"Community Manager"}
         name={person.existingUserName}
-        image={person.existingUserImage}
+        image={
+          person.existingUserImage &&
+          person.existingUserImage.startsWith("https://")
+            ? person.existingUserImage
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.existingUserImage}`
+        }
       />
     );
   });
 };
 
 const renderCommunityManagers = (persons) => {
+  if (!persons) return;
   return persons.map((person) => {
     return (
       <TeamMembersDetailsCard
@@ -49,7 +56,11 @@ const renderCommunityManagers = (persons) => {
         status={"Accepted"}
         position={"Community Manager"}
         email={person.email}
-        image={person.image}
+        image={
+          person.image && person.image.startsWith("https://")
+            ? person.image
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.image}`
+        }
       />
     );
   });
@@ -83,8 +94,6 @@ const TeamManagement = (props) => {
   const [openAddNewMember, setOpenAddNewMember] = React.useState(false);
 
   const [openCreateNewRole, setOpenCreateNewRole] = React.useState(false);
-
-
 
   const handleOpenCreateNewRole = () => {
     setOpenCreateNewRole(true);

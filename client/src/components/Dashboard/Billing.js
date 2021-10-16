@@ -16,6 +16,7 @@ import {
   fetchCommunity,
   getStripeConnectLink,
   fetchCommunityTransactions,
+  showSnackbar,
 } from "../../actions";
 import { useParams } from "react-router-dom";
 import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
@@ -25,7 +26,7 @@ import BillingHistory from "./SubComponents/BillingHistory";
 const SectionHeading = styled.div`
   font-size: 1.25rem;
   font-weight: 500;
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-family: "Ubuntu";
 `;
 
@@ -95,13 +96,17 @@ const Billing = () => {
     (state) => state.community.communityDetails
   );
 
+  const [isClicked, setIsClicked] = React.useState(false);
+
   const [duration, setDuration] = React.useState("monthly");
 
   const params = useParams();
 
   const communityId = params.id;
 
-  const userId = params.userId;
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
 
   console.log(userId, communityId);
 
@@ -120,6 +125,15 @@ const Billing = () => {
 
   const color = isStripeEnabled ? "#90EE7D" : "#dfe769";
 
+  // Determine if currently logged in user is the community super admin
+
+  const { superAdmin } = useSelector(
+    (state) => state.community.communityDetails
+  );
+
+  const isSuperAdmin =
+    superAdmin.toString() === userId.toString() ? true : false;
+
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
@@ -128,9 +142,10 @@ const Billing = () => {
         </div>
 
         <TextSmall className="mx-4 mb-4">
-        Your ticketing revenue will be deposited instantly in your connected stripe account.
+          Your ticketing revenue will be deposited instantly in your connected
+          stripe account.
         </TextSmall>
-        
+
         <StripeAccountCardBody
           className="px-4 mx-3 mb-4 py-4 d-flex flex-column align-items-center justify-content-center"
           style={{
@@ -141,22 +156,53 @@ const Billing = () => {
         >
           {isStripeEnabled ? (
             <div className="mb-3">
-              <button className="btn btn-outline-danger btn-outline-text me-3">
+              <button
+                disabled={!isSuperAdmin}
+                className="btn btn-outline-danger btn-outline-text me-3"
+              >
                 Terminate connection
               </button>
-              <button className="btn btn-outline-info btn-outline-text">
+              <button
+                disabled={!isSuperAdmin}
+                className="btn btn-outline-info btn-outline-text"
+              >
                 Change account
               </button>
             </div>
           ) : (
             <a
+              disabled={!isSuperAdmin}
               onClick={() => {
-                dispatch(getStripeConnectLink(userId, communityId));
+                if (!isSuperAdmin) {
+                  dispatch(
+                    showSnackbar(
+                      "info",
+                      "Sorry, Only super admin can manage stripe account."
+                    )
+                  );
+                }
+                if (isSuperAdmin) {
+                  if (!isClicked) {
+                    dispatch(getStripeConnectLink(userId, communityId));
+                  }
+                  setIsClicked(true);
+                }
               }}
               href="#"
               className="stripe-connect slate mb-3"
             >
-              <span>Connect with</span>
+              {isClicked ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center py-1"
+                  style={{ width: "100%" }}
+                >
+                  <div class="spinner-border text-light" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              ) : (
+                <span>Connect with</span>
+              )}
             </a>
           )}
 
@@ -203,7 +249,7 @@ const Billing = () => {
         </StripeAccountCardBody>
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <SectionHeading >Billing</SectionHeading>
+          <SectionHeading>Billing</SectionHeading>
 
           <div className="sec-heading-action-button d-flex flex-row">
             <button

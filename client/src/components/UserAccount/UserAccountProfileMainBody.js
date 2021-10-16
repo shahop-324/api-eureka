@@ -1,26 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import VerticalTabsProfile from "./UserAccountVerticalTabsProfile";
 import {
   CustomHorizontalTabWarpper,
   CustomTabButton,
-  FormLabel,
   EventCardsGrid,
-  EventCardWrapper,
-  EventCardImg,
-  EventCardEventName,
-  EventCardEventTimeLine,
-  EventCardEventPriceRange,
 } from "./Elements";
 
 import EditProfileForm from "./Forms/EditProfileForm";
 import EditNotificationSettings from "./Forms/EditNotificationSettings";
-import UserBookedTickets from "./Forms/UserBookedTickets";
 import ResetPasswordAndDeactivation from "./Forms/ResetPasswordAndDeactivation";
-
-import Fab from "@material-ui/core/Fab";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-// import { useSnackbar } from "notistack";
 
 import { fetchMyFavouriteEvents } from "./../../actions";
 
@@ -112,14 +100,6 @@ const UserAccountProfileMainBody = () => {
           >
             Settings
           </CustomTabButton>
-          {/* <CustomTabButton
-            active={selectedTab === "favourites" ? true : false}
-            onClick={() => {
-              setSelectedTab("favourites");
-            }}
-          >
-            Favourites
-          </CustomTabButton> */}
         </CustomHorizontalTabWarpper>
 
         <div className="my-3 pt-3">

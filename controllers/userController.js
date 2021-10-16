@@ -51,13 +51,15 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
-    .populate("communities")
+    .populate("communities", 'name image')
+    .populate("invitedCommunities", 'name image')
     .populate({
       path: "registeredInEvents",
       populate: {
         path: "speaker tickets coupon sponsors session booths",
       },
     });
+
   res.status(200).json({
     status: "SUCCESSS",
     data: {
@@ -571,7 +573,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "notificationsForRegisteredEvents",
     "notificationsForEventRemainder",
     "notificationBasedOnMyPreference",
-    "image"
+    "image",
+    "organisation",
+    "designation",
+    "city",
+    "country"
   );
 
   const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {

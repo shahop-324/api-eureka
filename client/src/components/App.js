@@ -60,8 +60,6 @@ import SessionStage from "./HostingPlatform/Screens/SessionStage";
 import CheckConnectedStatus from "./PaymentHandlingComponents/CheckConnectedStatus";
 import SuccessfullyConnected from "./PaymentHandlingComponents/SuccessfullyConnected";
 import NotConnected from "./PaymentHandlingComponents/NotConnected";
-
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { closeSnackbar } from "../actions/index";
@@ -71,8 +69,6 @@ import SalesforceRedirect from "./SalesforceRedirect";
 import AttendeeMagicLinkDestination from "./MagicLinkDestination/AttendeeMagicLinkDestination";
 import SpeakerMagicLinkDestination from "./MagicLinkDestination/SpeakerMagicLinkDestination";
 import BoothMagicLinkDestination from "./MagicLinkDestination/BoothMagicLinkDestination";
-
-import AttendeeEventInvite from "./RedirectToRegister/AttendeeEventInvite";
 import SpeakerEventInvite from "./RedirectToRegister/SpeakerInvite";
 import BoothEventInvite from "./RedirectToRegister/BoothInvite";
 import CommunityTeamInvite from "./RedirectToRegister/TeamInvite";
@@ -154,10 +150,6 @@ class App extends React.Component {
                 exact
                 component={BoothMagicLinkDestination}
               />
-
-              {/* Attendee event invite for registering in event */}
-
-              <Route path="/event/invite/attendee/:invitationId" exact component={AttendeeEventInvite} />
 
               {/* Speaker event invite for registering in event */}
 

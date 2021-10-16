@@ -27,7 +27,7 @@ const ProgressContainer = styled.div`
 
 const ProgressFill = styled.div`
   height: 40px;
-  background-color: #47D188;
+  background-color: #47d188;
   border-radius: 10px;
 `;
 
@@ -159,9 +159,15 @@ const UploadVideo = ({ open, handleClose }) => {
                 className="d-flex flex-row align-items-center py-2"
               >
                 <ProgressText>
-                  {uplooadPercent && uplooadPercent * 1 > 1.2
-                    ? `${(uplooadPercent * 1).toFixed(2)}%`
-                    : "Uploading..."}
+                  {uplooadPercent && uplooadPercent * 1 > 1.2 ? (
+                    `${(uplooadPercent * 1).toFixed(2)}%`
+                  ) : (
+                    <div className="py-2">
+                      <div class="spinner-border text-dark" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                  )}
                 </ProgressText>
               </ProgressFill>
             </ProgressContainer>
