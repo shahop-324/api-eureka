@@ -1,13 +1,10 @@
 const catchAsync = require("./../utils/catchAsync");
 const mongoose = require("mongoose");
-
 const TeamInvite = require("./../models/teamInviteModel");
 const Community = require("../models/communityModel");
 const User = require("../models/userModel");
 const TeamInviteTemplate = require("../services/email/teamInviteTemplate");
-
 const sgMail = require("@sendgrid/mail");
-const { Mongoose } = require("mongoose");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.createNewInvitation = catchAsync(async (req, res, next) => {
@@ -21,8 +18,6 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
 
   const communityDoc = await Community.findById(communityId);
 
-  const superAdminEmail = communityDoc.superAdminEmail;
-
   const eventManagers = await Community.findById(communityId).populate(
     "eventManagers",
     "email"
@@ -35,12 +30,9 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
     ],
   });
 
-  // .push(superAdminEmail)
-
   const newArray = pendingInvitations
     .map((el) => el.invitedUserEmail)
     .concat(eventManagers.eventManagers.map((el) => el.email));
-  console.log(newArray);
 
   const userDoc = await User.findById(inviteeId);
 
@@ -61,7 +53,6 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
     inviteeId: inviteeId,
     inviteeName: `${userDoc.firstName} ${userDoc.lastName}`,
     invitedUserEmail: email,
-    // permissionsAlloted: permissions,
     userAlreadyOnPlatform: bool,
     existingUserName: name,
     existingUserImage: image,
@@ -71,7 +62,7 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
   if (existingUser) {
     urlToBeSent = `http://localhost:3001/accept-invite/${newlyCreatedInvitation._id}`;
   } else {
-    urlToBeSent = `http://localhost:3001/signup/${newlyCreatedInvitation._id}/?intent=accept-invite/`;
+    urlToBeSent = `http://localhost:3001/team/invite/${newlyCreatedInvitation._id}`;
   }
 
   // 2.) Send new Invitation via mail to user

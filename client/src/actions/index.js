@@ -47,7 +47,8 @@ import { videoActions } from "./../reducers/videoSlice";
 import { vibeActions } from "../reducers/vibeSlice";
 import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
 import { mailActions } from "../reducers/mailSlice";
-import {personalChatActions} from "../reducers/personalChatSlice";
+import { personalChatActions } from "../reducers/personalChatSlice";
+import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -8914,14 +8915,14 @@ export const getPeopleInEvent = (eventId) => async (dispatch, getState) => {
   }
 };
 
-export const setPersonalChatConfig = (id) => async(dispatch, getState) => {
-  try{
-
-    dispatch(personalChatActions.EditPersonalChat({
-      id: id,
-    }))
-
-  }catch(error) {
+export const setPersonalChatConfig = (id) => async (dispatch, getState) => {
+  try {
+    dispatch(
+      personalChatActions.EditPersonalChat({
+        id: id,
+      })
+    );
+  } catch (error) {
     console.log(error);
 
     dispatch(
@@ -8935,48 +8936,93 @@ export const setPersonalChatConfig = (id) => async(dispatch, getState) => {
       closeSnackbar();
     }, 6000);
   }
-}
+};
 
-export const getMyAllPersonalMessages = (userId) => async(dispatch, getState) => {
-  try{
+export const getMyAllPersonalMessages =
+  (userId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}getMyAllPersonalChatMsg/${userId}`, {
+        method: "GET",
 
-    const res = await fetch(`${BaseURL}getMyAllPersonalChatMsg/${userId}`, {
-      method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        personalChatActions.FetchChats({
+          chats: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to fetch personal messages. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
     }
+  };
 
-    const result = await res.json();
-    console.log(result);
+export const fetchInvitationDetails =
+  (invitationId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}fetchInvitationDetails/${invitationId}`,
+        {
+          method: "GET",
 
-    dispatch(
-     personalChatActions.FetchChats({
-        chats: result.data,
-      })
-    );
-  }
-  catch(error) {
-    console.log(error);
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch personal messages. Please try again!",
-        severity: "error",
-      })
-    );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
 
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
-  }
-}
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        teamInvitationActions.FetchInvitationDetails({
+          invitationDetails: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to fetch invitation details. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };

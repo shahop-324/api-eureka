@@ -5,20 +5,10 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-import InputBase from "@material-ui/core/InputBase";
-import { alpha, makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
 import TeamMembersListFields from "./HelperComponent/TeamMembersListFields";
 import TeamMembersDetailsCard from "./HelperComponent/TeamMembersDetailsCard";
-import HowManyMembersCanBeAddedMsg from "./HelperComponent/HowManyMembersCanbeAddedMsg";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded"; // Members Icon
-import LabelRoundedIcon from "@mui/icons-material/LabelRounded"; // Roles Icon
-
 import styled from "styled-components";
 import AddNewMember from "./FormComponents/AddNewMember";
-import AddNewRole from "./FormComponents/AddNewRole";
-import RolesListFields from "./HelperComponent/RolesListFields";
-import RoleDetailsCard from "./HelperComponent/RoleDetailsCard";
 import CreateNewRole from "./FormComponents/CreateNewRole";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -27,9 +17,6 @@ import {
   fetchCommunityManagers,
 } from "./../../actions";
 import { useParams } from "react-router-dom";
-import NoContentFound from "../NoContent";
-
-import NoRoles from "./../../assets/images/NoRoles.png";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -37,101 +24,6 @@ const SectionHeading = styled.div`
   color: #212121;
   font-family: "Ubuntu";
 `;
-
-const SwitchTab = styled.div`
-  font-weight: 500;
-  font-size: 0.95rem;
-  font-family: "Ubuntu";
-  color: ${(props) => (props && props.active ? "#272727" : "#575757")};
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 5px;
-  border-bottom: ${(props) =>
-    props && props.active ? "3px solid #538BF7" : "3px solid transparent"};
-  width: fit-content;
-
-  &:hover {
-    color: #272727;
-    cursor: pointer;
-  }
-`;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
-
-const renderTeamRoles = (roles) => {
-  return roles.map((role) => {
-    return (
-      <RoleDetailsCard
-        key={role.id}
-        id={role.id}
-        assignedTo={role.assignedTo}
-        title={role.title}
-        lastUpdatedByName={
-          role.lastUpdatedBy.firstName + " " + role.lastUpdatedBy.lastName
-        }
-        lastUpdatedByImage={
-          role.lastUpdatedBy.image.startsWith("https://")
-            ? role.lastUpdatedBy.image
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${role.lastUpdatedBy.image}`
-        }
-        lastUpdatedAt={role.lastUpdatedAt}
-      />
-    );
-  });
-};
 
 const renderInvitedPeople = (persons) => {
   return persons.map((person) => {
@@ -192,7 +84,7 @@ const TeamManagement = (props) => {
 
   const [openCreateNewRole, setOpenCreateNewRole] = React.useState(false);
 
-  const classes = useStyles();
+
 
   const handleOpenCreateNewRole = () => {
     setOpenCreateNewRole(true);

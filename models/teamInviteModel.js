@@ -26,7 +26,6 @@ const teamInviteSchema = new mongoose.Schema({
   invitedUserEmail: {
     type: String,
   },
-  permissionsAlloted: [{ type: String }],
   userAlreadyOnPlatform: {
     type: Boolean,
   },

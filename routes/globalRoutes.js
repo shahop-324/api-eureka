@@ -150,13 +150,30 @@ router.post(
   globalController.buildWithBluemeet
 );
 
-router.post("/startSessionRecording/:channelName", globalController.acquireRecordingResource ,globalController.getRecordingStatus);
-router.get("/getRecordingStatus/:sessionId", globalController.getRecordingStatus);
-router.post("/stopSessionRecording/:sessionId", globalController.stopCloudRecording);
+router.post(
+  "/startSessionRecording/:channelName",
+  globalController.acquireRecordingResource,
+  globalController.getRecordingStatus
+);
+router.get(
+  "/getRecordingStatus/:sessionId",
+  globalController.getRecordingStatus
+);
+router.post(
+  "/stopSessionRecording/:sessionId",
+  globalController.stopCloudRecording
+);
 
 router.get("/getEventSpeakers/:eventId", globalController.getEventSpeakers);
 
 router.get("/getPeopleInEvent/:eventId", globalController.getPeopleInEvent);
-router.get("/getMyAllPersonalChatMsg/:userId", globalController.getMyAllPersonalChatMsg);
+router.get(
+  "/getMyAllPersonalChatMsg/:userId",
+  globalController.getMyAllPersonalChatMsg
+);
+router.get(
+  "/fetchInvitationDetails/:invitationId",
+  globalController.fetchInvitationDetails
+);
 
 module.exports = router;

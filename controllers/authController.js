@@ -11,6 +11,7 @@ const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
 const LoggedInUsers = require("../models/loggedInUsers");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
+const TeamInvite = require("../models/teamInviteModel");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -126,6 +127,49 @@ exports.signup = catchAsync(async (req, res) => {
         userId: newUser._id,
       });
 
+       // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+       // Remember there can be multiple invites in any category on an email
+
+const teamInvites = await TeamInvite.find({invitedUserEmail: req.body.email});
+
+for (let element of teamInvites) {
+  const status = element.status;
+
+  const userEmail = element.invitedUserEmail;
+
+  const communityId = element.communityId;
+
+  const userDoc = newUser;
+
+  const CommunityDoc = await Community.findById(communityId).populate(
+    "eventManagers",
+    "email"
+  );
+
+    // accept team invitaion
+
+    // Push this persons userId in eventManagers array in community
+    CommunityDoc.eventManagers.push(userDoc._id);
+    await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+
+    // add this community in this users doc in invited communities array
+    userDoc.invitedCommunities.push(communityId);
+    await userDoc.save({ new: true, validateModifiedOnly: true });
+
+    // Mark this invitation document status as accepted
+    element.status = "Accepted";
+    await element.save({ new: true, validateModifiedOnly: true });
+
+    // Team invitation accepted
+}
+
+// At this point we are sure that we have accepted all pending team invitations
+
+
+      // * Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
+     // * Register this user in event as a speaker if he / she has any pending event invitation on his / her email
+
+
       createSendToken(newUser, 201, req, res);
     }
   } else {
@@ -152,9 +196,53 @@ exports.signup = catchAsync(async (req, res) => {
       userId: newUser._id,
     });
 
+    // TODO Add this user to communities in which he / she is invited if there is any pending team invite on his email
+
+    // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+       // Remember there can be multiple invites in any category on an email
+
+const teamInvites = await TeamInvite.find({invitedUserEmail: req.body.email});
+
+for (let element of teamInvites) {
+  const status = element.status;
+
+  const userEmail = element.invitedUserEmail;
+
+  const communityId = element.communityId;
+
+  const userDoc = newUser;
+
+  const CommunityDoc = await Community.findById(communityId).populate(
+    "eventManagers",
+    "email"
+  );
+
+    // accept team invitaion
+
+    // Push this persons userId in eventManagers array in community
+    CommunityDoc.eventManagers.push(userDoc._id);
+    await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+
+    // add this community in this users doc in invited communities array
+    userDoc.invitedCommunities.push(communityId);
+    await userDoc.save({ new: true, validateModifiedOnly: true });
+
+    // Mark this invitation document status as accepted
+    element.status = "Accepted";
+    await element.save({ new: true, validateModifiedOnly: true });
+
+    // Team invitation accepted
+}
+
+// At this point we are sure that we have accepted all pending team invitations
+
+
+
+    // TODO Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
+    // TODO Register this user in event as a speaker if he / she has any pending event invitation on his / her email
+
     createSendToken(newUser, 201, req, res);
   }
-  // create new user
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

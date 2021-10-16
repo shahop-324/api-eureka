@@ -268,14 +268,6 @@ exports.DoesTicketBelongToThisEvent = catchAsync(async (req, res, next) => {
 });
 
 exports.registerInAnEvent = catchAsync(async (req, res, next) => {
-  // Handled Firstly we need to check if user is already registered in this event he is trying to register for if so then return an error saying already registered
-
-  // if(req.body.referralCode)
-  // {
-  //       await
-
-  // }
-
   const ticketId = req.params.ticketId;
   const ticketWhichIsBeingUtilised = await Ticket.findById(ticketId);
   const eventGettingRegistration = await Event.findById(req.params.eventId);

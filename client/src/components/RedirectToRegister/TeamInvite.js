@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchInvitationDetails } from "./../../actions";
+import history from "./../../history";
+import Chip from "@mui/material/Chip";
 
 const Paper = styled.div`
   height: auto;
   background-color: #f32f2f;
+  text-align: center;
+`;
+
+const PaperGreen = styled.div`
+  height: auto;
+  background-color: #55940E;
   text-align: center;
 `;
 
@@ -30,16 +41,25 @@ const AttractiveText = styled.a`
   }
 `;
 
-const StaticBanner = () => {
+const StaticBanner = ({ communityName, status }) => {
   return (
     <>
-      <Paper className="py-2">
-        <NormalText>
-          You have been invited to join as a community manager in Orchid
-          Investment community.
-        </NormalText>{" "}
-        <AttractiveText>Create your account to get access.</AttractiveText>
-      </Paper>
+      {status === "Accepted" ? (
+        <PaperGreen className="py-2">
+          <NormalText>
+            You have already joined {communityName} community as a community
+            manager.
+          </NormalText>{" "}
+        </PaperGreen>
+      ) : (
+        <Paper className="py-2">
+          <NormalText>
+            You have been invited to join as a community manager in{" "}
+            {communityName} community.
+          </NormalText>{" "}
+          <AttractiveText>Create your account to get access.</AttractiveText>
+        </Paper>
+      )}
     </>
   );
 };
@@ -67,7 +87,6 @@ const TextDescriptive = styled.div`
 const TextEmphasis = styled.div`
   font-weight: 500;
   font-size: 0.85rem;
-
   font-family: "Ubuntu";
   color: #db3a3a;
 `;
@@ -82,12 +101,48 @@ const CreateAccountButton = styled.button`
 `;
 
 const CommunityTeamInvite = () => {
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  let communityName;
+  let communityImage;
+  let invitedUserEmail;
+  let invitationStatus;
+
+  const invitationId = params.invitationId;
+
+  const { invitationDetails } = useSelector((state) => state.teamInvite);
+
+  useEffect(() => {
+    dispatch(fetchInvitationDetails(invitationId));
+  }, []);
+
+  if (invitationDetails) {
+    communityName = invitationDetails.communityName;
+    communityImage =
+      invitationDetails.communityImage &&
+      invitationDetails.communityImage.startsWith("https://")
+        ? invitationDetails.communityImage
+        : `https://bluemeet.s3.us-west-1.amazonaws.com/${invitationDetails.communityImage}`;
+    invitedUserEmail = invitationDetails.invitedUserEmail;
+    invitationStatus = invitationDetails.status;
+  }
+
   return (
     <>
-      <StaticBanner></StaticBanner>
+      <StaticBanner
+        communityName={communityName}
+        status={invitationStatus}
+      ></StaticBanner>
+
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
-        <button className="btn btn-outline-primary btn-outline-text">
+        <button
+          onClick={() => {
+            history.push("/");
+          }}
+          className="btn btn-outline-primary btn-outline-text"
+        >
           Go to bluemeet.in
         </button>
       </NavBar>
@@ -97,30 +152,46 @@ const CommunityTeamInvite = () => {
         style={{ height: "91vh" }}
       >
         <Avatar
-          alt={Faker.image.avatar()}
+          alt={communityName}
           style={{ height: "6rem", width: "6rem" }}
-          src={Faker.image.avatar()}
+          src={communityImage}
           variant="rounded"
           className="mb-4"
         />
 
-        <Heading className="mb-3">Community Name</Heading>
+        <Heading className="mb-3">{communityName}</Heading>
 
         <TextDescriptive className="mb-3">
-          You have been invited to join this community as a community manager on
-          Bluemeet. <br />{" "}
+          You have been invited to join {communityName} as a community manager
+          on Bluemeet. <br />{" "}
         </TextDescriptive>
-        <TextEmphasis className="mb-5">
-          Please create your account with this email (test@gmail.com) to get
-          stated.
-        </TextEmphasis>
 
-        <CreateAccountButton
-          className="btn btn-outline-text btn-primary"
-          style={{ width: "330px" }}
-        >
-          Create my account
-        </CreateAccountButton>
+        {invitationStatus === "Pending" ? (
+          <TextEmphasis className="mb-5">
+            Please create your account with this email {invitedUserEmail} to get
+            stated.
+          </TextEmphasis>
+        ) : (
+          <></>
+        )}
+
+        {invitationStatus === "Accepted" ? (
+          <Chip
+            label="Already accepted"
+            color="success"
+            style={{ width: "330px", fontWeight: "500" }}
+          />
+        ) : (
+          <CreateAccountButton
+            onClick={() => {
+              history.push("/signup");
+            }}
+            className="btn btn-outline-text btn-primary"
+            style={{ width: "330px" }}
+          >
+            Create my account
+          </CreateAccountButton>
+        )}
       </div>
     </>
   );

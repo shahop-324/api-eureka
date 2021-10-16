@@ -47,6 +47,7 @@ import vibeSlice from "./vibeSlice";
 import StreamDestinationSlice from "./streamDestinationSlice";
 import mailSlice from "./mailSlice";
 import personalChatSlice from "./personalChatSlice";
+import teamInvitationSlice from "./teamInvitationSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -96,4 +97,5 @@ export default combineReducers({
   streamDestination: StreamDestinationSlice.reducer,
   mail: mailSlice.reducer,
   personalChat: personalChatSlice.reducer,
+  teamInvite: teamInvitationSlice.reducer,
 });

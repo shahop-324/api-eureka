@@ -42,6 +42,7 @@ const {
   RtmRole,
 } = require("agora-access-token");
 const StreamDestination = require("../models/streamDestinationModel");
+const TeamInvite = require("../models/teamInviteModel");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
   req.query.sort = "-numberOfRegistrationsReceived";
@@ -1114,5 +1115,19 @@ exports.getMyAllPersonalChatMsg = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: personalChats,
+  });
+});
+
+exports.fetchInvitationDetails = catchAsync(async (req, res, next) => {
+  const invitationId = req.params.invitationId;
+
+  const invitationDetails = await TeamInvite.findById(invitationId).populate(
+    "communityId",
+    "name image"
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: invitationDetails,
   });
 });

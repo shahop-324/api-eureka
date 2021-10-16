@@ -169,7 +169,7 @@ class App extends React.Component {
 
               {/* Team invite for joining bluemeet community team */}
 
-              <Route path="/event/invite/team/:invitationId" exact component={CommunityTeamInvite} />
+              <Route path="/team/invite/:invitationId" exact component={CommunityTeamInvite} />
 
               <Route
                 path="/accept-invite/:inviteId"
