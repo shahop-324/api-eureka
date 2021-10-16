@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import Chip from "@mui/material/Chip";
 import ComingSoon from "./../../../assets/images/coming-soon.png";
 import WhoCanEnterEvent from "./HelperComponents/WhoCanEnterEvent";

@@ -16,7 +16,7 @@ const EventTransactionIdsCommunityWise = require("../../models/eventTransactionI
 const RegistrationsIdsCommunityWise = require("../../models/registrationsIdsCommunityWiseModel");
 const EventRegistrationTemplate = require("./../email/eventRegistrationMail");
 const appError = require("./../../utils/appError");
-const axios = require('axios');
+const axios = require("axios");
 
 const sgMail = require("@sendgrid/mail");
 
@@ -65,7 +65,7 @@ const salesForceRegistrationCapture = async (
   email,
   eventName,
   ticketName,
-  amountTotal,
+  amountTotal
 ) => {
   console.log(firstName, lastName, email, eventName, ticketName, amountTotal);
   try {
@@ -74,12 +74,10 @@ const salesForceRegistrationCapture = async (
       {
         method: "POST",
         body: JSON.stringify({
-
           FirstName: firstName,
           LastName: lastName,
           Email: email.toString(),
-          Description: `Ticket booked for ${eventName} event. Amount Paid is ${amountTotal}. Ticket name is ${ticketName}.`
-
+          Description: `Ticket booked for ${eventName} event. Amount Paid is ${amountTotal}. Ticket name is ${ticketName}.`,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -554,7 +552,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
       // 2.) Create a Invoice / Registration Doc
 
       const newlyCreatedRegistration = await Registration.create({
-        registrationType: "Pre Event Sale",
+        type: "Attendee",
         eventName: eventGettingEventTransaction.eventName,
         userName: `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
         userImage: userDoingEventTransaction.image,
@@ -588,8 +586,8 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
       });
 
-      newlyCreatedRegistration.invitationLink = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
-      newlyCreatedRegistration.magic_link = `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.invitationLink = `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.magic_link = `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`;
       await newlyCreatedRegistration.save({
         new: true,
         validateModifiedOnly: true,
@@ -784,7 +782,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         mailChimpFormValues.merge_fields = {
           FNAME: user.firstName,
           LNAME: user.lastName,
-          MAGIC_LINK: `https://www.bluemeet.in/event/attendee/${newlyCreatedRegistration._id}`,
+          MAGIC_LINK: `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`,
         };
         mailChimpFormValues.status = "subscribed";
         for (let element of event.mailChimpAudienceTag) {
@@ -802,7 +800,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         to: email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: "Your Event Registration Confirmation.",
-        text: `You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! Here is your magic link http://localhost:3001/event/attendee/${newlyCreatedRegistration._id}`,
+        text: `You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! Here is your magic link http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`,
         // html: EventRegistrationTemplate(
         //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
         //   eventGettingEventTransaction.eventName,

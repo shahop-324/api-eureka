@@ -130,7 +130,7 @@ class App extends React.Component {
 
               {/* Attendee magic link destination */}
               <Route
-                path="/event/attendee/:registrationId"
+                path="/event/link/attendee/:registrationId"
                 exact
                 component={AttendeeMagicLinkDestination}
               />

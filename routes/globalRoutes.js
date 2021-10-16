@@ -176,4 +176,6 @@ router.get(
   globalController.fetchInvitationDetails
 );
 
+router.get("/getEventDetailsForMagicLinkPage/:registrationId", globalController.getEventDetailsForMagicLinkPage);
+
 module.exports = router;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
@@ -6,9 +6,55 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import dateFormat from "dateformat";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import AvatarMenu from "./../AvatarMenu";
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchEventForMagicLinkPage,
+  generateEventAccessToken,
+  navigationIndexForHostingPlatform,
+  logInMagicLinkUser,
+} from "./../../actions";
+import Loader from "../Loader";
+import { Link } from "react-router-dom";
+
+const Paper = styled.div`
+  height: auto;
+  background-color: #2f9bf3;
+  text-align: center;
+`;
+
+const NormalText = styled.span`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #ffffff;
+`;
+
+const AttractiveText = styled.a`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  color: #e2d40e;
+  text-decoration: none;
+  &:hover {
+    cursor: pointer;
+    color: #212121;
+  }
+`;
+
+const StaticBanner = () => {
+  return (
+    <>
+      <Paper className="py-2">
+        <NormalText>This event has already ended.</NormalText>{" "}
+        <AttractiveText>Take me home.</AttractiveText>
+      </Paper>
+    </>
+  );
+};
 
 const NavBar = styled.div`
-  height: 7vh;
+  min-height: 7vh;
   background-color: #ffffff;
   border-bottom: 1px solid #ebebeb;
 `;
@@ -22,7 +68,7 @@ const Grid = styled.div`
 `;
 
 const EventPoster = styled.img`
-  object-fit: contain;
+  object-fit: cover;
   height: 40vh;
   width: 100%;
   border-radius: 10px;
@@ -81,15 +127,68 @@ const Announcement = styled.div`
   color: #db3a3a;
 `;
 
+const renderSpeakers = (speakers) => {
+  return speakers.map((speaker) => {
+    return (
+      <Avatar
+        alt={speaker.firstName}
+        src={
+          speaker.image.startsWith("https://")
+            ? speaker.image
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
+        }
+      />
+    );
+  });
+};
+
 const AttendeeMagicLinkDestination = () => {
+  let eventStatus = 0;
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  const { eventDetails, userId, userEmail, userRole } = useSelector(
+    (state) => state.magicLink
+  );
+
+  const { isSignedIn } = useSelector((state) => state.auth);
+
+  const registrationId = params.registrationId;
+
+  useEffect(() => {
+    dispatch(fetchEventForMagicLinkPage(registrationId));
+  }, []);
+
   // Get event details and display on page.
   // Get attendee || speaker || exhibitor logged in and when clicked on join event or waiting room please set event access token.
 
+  if (!eventDetails || !userId || !userRole) {
+    return <Loader />;
+  }
+
+  if (eventDetails) {
+    if (eventDetails.status === "Upcoming") {
+      eventStatus = 0;
+    }
+    if (
+      eventDetails.status === "Started" ||
+      eventDetails.status === "Resumed" ||
+      eventDetails.status === "Paused"
+    ) {
+      eventStatus = 1;
+    }
+    if (eventDetails.status === "Ended") {
+      eventStatus = 2;
+    }
+  }
+
   return (
     <>
-      <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
+      {eventDetails.status === "Ended" ? <StaticBanner></StaticBanner> : <></>}
+
+      <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-1">
         <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
-        <AvatarMenu />
+        {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
 
       <div
@@ -100,68 +199,127 @@ const AttendeeMagicLinkDestination = () => {
           <div className="d-flex flex-column justify-content-center">
             <EventPoster
               className="mb-3"
-              src={`https://static.wixstatic.com/media/e46278_311494821d824bb0a8d6bd7f8b7c8b8d~mv2.png/v1/fill/w_2500,h_1305,al_c/e46278_311494821d824bb0a8d6bd7f8b7c8b8d~mv2.png`}
+              src={
+                eventDetails.image.startsWith("https://")
+                  ? eventDetails.image
+                  : `https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.image}`
+              }
             ></EventPoster>
             <div className="d-flex flex-row align-items-center">
               <Avatar
+                // src={eventDetails.communityLogo.startsWith("https://") ? eventDetails.communityLogo : `https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.communityLogo}` }
                 src={Faker.image.avatar()}
+                alt={eventDetails.communityName}
                 variant="rounded"
                 className="me-3"
               />
 
               <div>
                 <HostedBy className="mb-1">Hosted by</HostedBy>
-                <CommunityName>Community Name </CommunityName>
+                <CommunityName>{eventDetails.communityName}</CommunityName>
               </div>
             </div>
           </div>
 
           <div className="p-4">
             {/* Event Name */}
-            <EventName className="mb-5">
-              How to build a thriving Business from scratch.
-            </EventName>
+            <EventName className="mb-5">{eventDetails.eventName}</EventName>
             {/* Event timeline */}
             <Heading className="mb-3">Event Timeline</Heading>
             <EventTimeline className="mb-4">
-              {dateFormat(Date.now(), "ddd, mmm dS, yy")} {"  "} - {"  "}{" "}
-              {dateFormat(Date.now(), "ddd, mmm dS, yy")}
+              {dateFormat(eventDetails.startTime, "ddd, mmm dS, yy")} {"  "} -{" "}
+              {"  "} {dateFormat(eventDetails.endTime, "ddd, mmm dS, yy")}
             </EventTimeline>
             {/* Event speakers */}
             <Heading className="mb-3">Speakers</Heading>
             <div className="d-flex flex-row align-items-center justify-content-start mb-5">
               <AvatarGroup max={4}>
-                <Avatar alt={Faker.image.avatar()} src={Faker.image.avatar()} />
-                <Avatar alt={Faker.image.avatar()} src={Faker.image.avatar()} />
-                <Avatar alt={Faker.image.avatar()} src={Faker.image.avatar()} />
-                <Avatar alt={Faker.image.avatar()} src={Faker.image.avatar()} />
-                <Avatar alt={Faker.image.avatar()} src={Faker.image.avatar()} />
+                {renderSpeakers(eventDetails.speaker)}
               </AvatarGroup>
             </div>
 
             {/* Event not yet started announcement */}
 
-            <Announcement className="mb-3">
-              This event has not yet started. Please join the waiting room.
-            </Announcement>
+            {(() => {
+              switch (eventStatus) {
+                case 0:
+                  // Event has not yet Started
+                  return (
+                    <>
+                      <Announcement className="mb-3">
+                        This event has not yet started. Please join the waiting
+                        room.
+                      </Announcement>
+                      <div className="d-flex flex-row align-items-center justify-content-between">
+                        <JoinEventButton
+                          disabled
+                          className="btn btn-outline-text btn-primary"
+                          style={{ width: "48%" }}
+                        >
+                          Join event
+                        </JoinEventButton>
+                        <Link
+                          style={{ width: "48%" }}
+                          to={`/community/${eventDetails.communityId}/event/${eventDetails._id}/hosting-platform/rooms`}
+                        >
+                          <JoinEventButton
+                            onClick={() => {
+                              dispatch(logInMagicLinkUser(userId));
+                              dispatch(navigationIndexForHostingPlatform(5));
+                              dispatch(
+                                generateEventAccessToken(
+                                  userId,
+                                  userEmail,
+                                  "attendee", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                                  eventDetails._id,
+                                  eventDetails.communityId
+                                )
+                              );
+                            }}
+                            className="btn btn-outline-text btn-outline-primary"
+                            style={{ width: "100%" }}
+                          >
+                            Go to waiting room
+                          </JoinEventButton>
+                        </Link>
+                      </div>
+                    </>
+                  );
+
+                case 1:
+                  // Event has started or resumed or paused
+                  return (
+                    <JoinEventButton
+                      className="btn btn-outline-text btn-primary"
+                      style={{ width: "100%" }}
+                    >
+                      Join event
+                    </JoinEventButton>
+                  );
+
+                case 2:
+                  // Event has Ended
+                  return (
+                    <>
+                      <Announcement className="mb-3">
+                        This event is already ended.
+                      </Announcement>
+                      <JoinEventButton
+                        className="btn btn-outline-text btn-primary"
+                        style={{ width: "100%" }}
+                      >
+                        Take me home
+                      </JoinEventButton>
+                    </>
+                  );
+
+                default:
+                  console.log(eventStatus);
+                  break;
+              }
+            })()}
 
             {/* Join button */}
-
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <JoinEventButton
-                disabled
-                className="btn btn-outline-text btn-primary"
-                style={{ width: "48%" }}
-              >
-                Join event
-              </JoinEventButton>
-              <JoinEventButton
-                className="btn btn-outline-text btn-outline-primary"
-                style={{ width: "48%" }}
-              >
-                Go to waiting room
-              </JoinEventButton>
-            </div>
           </div>
         </Grid>
       </div>

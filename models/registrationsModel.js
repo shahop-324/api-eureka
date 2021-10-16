@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 
 const registrationSchema = new mongoose.Schema(
   {
-    registrationType: {
+    type: {
       type: String,
-      enum: ["Pre Event Sale", "Post Event Sale"],
+      default: "Attendee",
+      enum: ["Attendee", "Speaker", "Booth"],
     },
     eventName: {
       type: String,
@@ -49,7 +50,7 @@ const registrationSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    bookedForEventId: {
+    bookedForEventId: { // ! Event Id
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
@@ -71,7 +72,6 @@ const registrationSchema = new mongoose.Schema(
       type: String,
       enum: ["Registration", "Invitation"],
     },
-
     email: {
       type: String,
     },
@@ -105,9 +105,6 @@ const registrationSchema = new mongoose.Schema(
     community_picture: {
       type: String,
     },
-
-    // Form to be filled during registration.
-    // Accessible venue areas, recordings and assets or add ons
   },
   {
     toJSON: { virtuals: true },

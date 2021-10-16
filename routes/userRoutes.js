@@ -13,6 +13,8 @@ router.post("/forgotPassword", userController.forgotPassword);
 
 router.post("/signup", authController.signup);
 
+router.get("/loginMagicLinkUser/:userId", authController.loginMagicLinkUser);
+
 router.patch("/resetPassword/:token", authController.resetPassword);
 
 router.get("/event/:id", userController.getParticularEvent);
@@ -27,10 +29,9 @@ router.use((req, res, next) => {
 });
 
 router.get("/registeredEvents", userController.getAllRegisteredEvents);
+router.get("/getUserRegistrations", userController.getUserRegistrations); // TODO
 router.get("/personalData", userController.getAllPersonalData);
-
 router.patch("/updateMe", userController.updateMe);
-
 router.post("/newCommunity", userController.createNewCommunity);
 
 // ! Select Plan

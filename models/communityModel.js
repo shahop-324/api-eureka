@@ -458,7 +458,7 @@ const communitySchema = new mongoose.Schema(
       },
     ],
     coverPhoto: String,
-    image: String,
+    image: { type: String, default: "#" },
     superAdmin: {
       type: mongoose.Schema.ObjectId,
       ref: "User",

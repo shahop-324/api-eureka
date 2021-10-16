@@ -48,6 +48,7 @@ import StreamDestinationSlice from "./streamDestinationSlice";
 import mailSlice from "./mailSlice";
 import personalChatSlice from "./personalChatSlice";
 import teamInvitationSlice from "./teamInvitationSlice";
+import magicLinkSlice from "./magicLinkSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -98,4 +99,5 @@ export default combineReducers({
   mail: mailSlice.reducer,
   personalChat: personalChatSlice.reducer,
   teamInvite: teamInvitationSlice.reducer,
+  magicLink: magicLinkSlice.reducer,
 });

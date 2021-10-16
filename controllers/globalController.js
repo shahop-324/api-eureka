@@ -13,6 +13,7 @@ const BuildWithBluemeet = require("./../models/buildWithBluemeetModel");
 const Session = require("./../models/sessionModel");
 const Speaker = require("./../models/speakerModel");
 const PersonalChat = require("./../models/PersonalChatModel");
+const Registration = require("./../models/registrationsModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1129,5 +1130,31 @@ exports.fetchInvitationDetails = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: invitationDetails,
+  });
+});
+
+exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
+  const registrationId = req.params.registrationId;
+
+  const registrationDoc = await Registration.findById(registrationId);
+
+  const userId = registrationDoc.bookedByUser;
+
+  const userDoc = await User.findById(userId);
+
+  const eventId = registrationDoc.bookedForEventId;
+  const userRole = registrationDoc.type;
+  const userEmail = userDoc.email;
+  const eventDetails = await Event.findById(eventId).populate(
+    "speaker",
+    "firstName lastName image"
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: eventDetails,
+    userId: userId,
+    userRole: userRole,
+    userEmail: userEmail,
   });
 });

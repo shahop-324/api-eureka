@@ -3,6 +3,20 @@
   border: 1px solid transparent;
 }
 
+.hide-scrollbar {
+  /* this will hide the scrollbar in mozilla based browsers */
+  overflow: -moz-scrollbars-none;
+  scrollbar-width: none;
+  /* this will hide the scrollbar in internet explorers */
+  -ms-overflow-style: none;
+}
+
+/* this will hide the scrollbar in webkit based browsers - safari, chrome, etc */
+.scroll-hide ul::-webkit-scrollbar { 
+  width: 0 !important;
+  display: none; 
+}
+
 .blockbuilder-branding {
   display: none !important;
   visibility: hidden !important;

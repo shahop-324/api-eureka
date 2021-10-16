@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.scss";
 import styled from "styled-components";
@@ -13,15 +14,37 @@ import {
 import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
 import Fab from "@material-ui/core/Fab";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import history from "./../history";
+
+const SpeakersHeading = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #212121;
+  font-size: 0.8rem;
+`;
 
 const RatingPaper = styled.div`
   background-color: #152d35 !important;
 `;
 
+const renderSpeakers = (speakers) => {
+  if (!speakers) return;
+  return speakers.map((speaker) => {
+    return (
+      <Avatar
+        alt={speaker.name}
+        src={
+          speaker.image.startsWith("https://")
+            ? speaker.image
+            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
+        }
+      />
+    );
+  });
+};
+
 const EventCard = ({
   image,
-  date,
-  endDate,
   id,
   eventName,
   minPrice,
@@ -30,8 +53,9 @@ const EventCard = ({
   communityId,
   rating,
   startTime,
-  endTime,
   isFavourite,
+  speakers,
+  magic_link,
 }) => {
   console.log(communityId);
   const dispatch = useDispatch();
@@ -58,22 +82,6 @@ const EventCard = ({
         >
           <img src={image} className="poster-img" alt="event-poster" />
         </Link>
-        {/* <div className="favourite-icon">
-          <Fab
-            onClick={() => {
-              if (isFavourite) {
-                dispatch(removeFromFavouriteEvents(id));
-              } else {
-                dispatch(addToFavouriteEvents(id));
-              }
-            }}
-            aria-label="like"
-            style={{ position: "absolute", right: "10px", bottom: "-10px" }}
-            size="small"
-          >
-            <FavoriteIcon className="favourite-icon" style={{ color: color }} />
-          </Fab>
-        </div> */}
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
         <div className="event-card-name-main mb-3">
@@ -98,23 +106,37 @@ const EventCard = ({
             className="event-card-date-main mb-3"
             style={{ fontWeight: "600", fontSize: "0.8rem", color: "#1b2653" }}
           >
-            {startTime} <span style={{ fontWeight: "600" }}>{/* to */}</span>
-            {/* <br/> {endTime} */}
+            {startTime} <span style={{ fontWeight: "600" }}></span>
           </div>
-          <RatingPaper
-            className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2"
-            style={{ fontSize: "0.8rem" }}
-          >
-            <StarRateRoundedIcon
-              style={{ fontSize: "1rem" }}
-              className="me-1"
-            />
-            {rating}
-          </RatingPaper>
+
+          {/* // TODO Show event speakers here */}
+
+          {!displayJoinBtn ? (
+            <RatingPaper
+              className="rating-indicator d-flex flex-row align-items-center ps-1 pe-2 py-2"
+              style={{ fontSize: "0.8rem" }}
+            >
+              <StarRateRoundedIcon
+                style={{ fontSize: "1rem" }}
+                className="me-1"
+              />
+              {rating.toFixed(1)}
+            </RatingPaper>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div className="d-flex flex-column align-items-start justify-content-start mb-3">
+          <SpeakersHeading style={{ textAlign: "left" }} className="mb-3">
+            Speakers
+          </SpeakersHeading>
+
+          <AvatarGroup max={4}>{renderSpeakers(speakers)}</AvatarGroup>
         </div>
 
         <div
-          className="event-card-price-main"
+          className="event-card-price-main mb-2"
           style={{ fontWeight: "600", fontSize: "0.9rem" }}
         >
           {console.log(minPrice)}
@@ -125,32 +147,21 @@ const EventCard = ({
           <Divider />
         </div> */}
         <div className="d-flex flex-row justify-content-end align-items-center">
-          <Link
-            to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
-          >
-            {/* <button
+          <a href={`${magic_link}`} target="_blank" rel="noreferrer">
+            <button
               type="button"
-              onClick={() => {
-                dispatch(
-                  generateEventAccessToken(
-                    userDetails.id,
-                    userDetails.email,
-                    "audience",
-                    eventId,
-                    communityId
-                  )
-                );
+              // onClick={() => {
+              //   history.push(magic_link);
+              // }}
+              className="btn btn-outline-primary btn-outline-text"
+              style={{
+                display: displayJoinBtn,
+                textDecoration: "none !important",
               }}
-              className="btn btn-primary btn-outline-text me-3"
-              style={{ display: displayJoinBtn }}
             >
               Join Event
-            </button> */}
-          </Link>
-
-          {/* <button className="btn btn-outline-primary btn-outline-text" style={{display: displayJoinBtn}}>
-            View Reciept
-          </button> */}
+            </button>
+          </a>
         </div>
       </div>
     </div>

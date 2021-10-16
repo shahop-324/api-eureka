@@ -51,8 +51,8 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
-    .populate("communities", 'name image')
-    .populate("invitedCommunities", 'name image')
+    .populate("communities", "name image")
+    .populate("invitedCommunities", "name image")
     .populate({
       path: "registeredInEvents",
       populate: {
@@ -102,14 +102,15 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     .populate("speaker")
     .populate({
       path: "createdBy",
-      select: "name socialMediaHandles image email",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
     })
     .populate({
       path: "coupon",
       options: {
         match: { status: "Active" },
       },
-    }).populate('hosts');
+    })
+    .populate("hosts");
 
   await Event.findByIdAndUpdate(
     req.params.id,
@@ -778,6 +779,17 @@ exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
     data: {
       registeredInEventsList,
     },
+  });
+});
+
+exports.getUserRegistrations = catchAsync(async (req, res, next) => {
+  const registrations = await User.findById(req.user.id)
+    .select("registrations")
+    .populate("registrations");
+
+  res.status(200).json({
+    status: "success",
+    data: registrations,
   });
 });
 

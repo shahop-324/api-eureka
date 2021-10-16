@@ -49,6 +49,7 @@ import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
 import { mailActions } from "../reducers/mailSlice";
 import { personalChatActions } from "../reducers/personalChatSlice";
 import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
+import { magicLinkActions } from "./../reducers/magicLinkSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -579,7 +580,7 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
       allCommuities.push(element);
     }
 
-    for(let item of res.data.personalData.invitedCommunities) {
+    for (let item of res.data.personalData.invitedCommunities) {
       allCommuities.push(item);
     }
 
@@ -622,7 +623,6 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
         },
       }
     );
-    console.log(res);
 
     if (!res.ok) {
       if (!res.message) {
@@ -633,6 +633,7 @@ export const fetchUserRegisteredEvents = () => async (dispatch, getState) => {
     }
 
     res = await res.json();
+    console.log(res, "These are events in which user has registered!");
     return res;
   };
 
@@ -3054,7 +3055,7 @@ export const madeJustForYou = () => async (dispatch) => {
 
     dispatch(
       eventActions.FetchEvents({
-        events: res.data,
+        events: res.data.data,
       })
     );
   } catch (err) {
@@ -6912,7 +6913,6 @@ export const removeFromTeam =
       setTimeout(function () {
         dispatch(snackbarActions.closeSnackBar());
       }, 6000);
-
     } catch (error) {
       console.log(error);
 
@@ -9060,3 +9060,158 @@ export const fetchInvitationDetails =
       }, 6000);
     }
   };
+
+export const getUserRegistrations = () => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}users/getUserRegistrations`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      registrationActions.FetchRegistrations({
+        registrations: result.data.registrations,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch user registrations. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const fetchEventForMagicLinkPage =
+  (registrationId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}getEventDetailsForMagicLinkPage/${registrationId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+      // Inside result we get data(eventDetails) userId (userToBeLoggedIn) and userRole (role of user in event)
+
+      dispatch(
+        magicLinkActions.FetchEventDetails({
+          event: result.data,
+        })
+      );
+      dispatch(
+        magicLinkActions.FetchUserId({
+          userId: result.userId,
+        })
+      );
+      dispatch(
+        magicLinkActions.FetchUserRole({
+          userRole: result.userRole,
+        })
+      );
+      dispatch(
+        magicLinkActions.FetchUserEmail({
+          userEmail: result.userEmail,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to fetch event details. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}users/loginMagicLinkUser/${userId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+        referralCode: result.data.user.hasUsedAnyReferral
+          ? null
+          : result.data.user.referralCode,
+      })
+    );
+    dispatch(
+      userActions.CreateUser({
+        user: result.data.user,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to log in. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};

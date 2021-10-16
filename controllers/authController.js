@@ -25,6 +25,23 @@ exports.signInForSpeaker = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.loginMagicLinkUser = catchAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  const userDoc = await User.findById(userId);
+
+  const token = signToken(userId);
+
+  res.status(200).json({
+    status: "success",
+
+    token,
+    data: {
+      user: userDoc,
+    },
+  });
+});
+
 const signTokenForSalesLogin = (salesPersonId) =>
   jwt.sign({ salesPersonId }, process.env.JWT_SECRET);
 
@@ -127,48 +144,48 @@ exports.signup = catchAsync(async (req, res) => {
         userId: newUser._id,
       });
 
-       // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
-       // Remember there can be multiple invites in any category on an email
+      // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+      // Remember there can be multiple invites in any category on an email
 
-const teamInvites = await TeamInvite.find({invitedUserEmail: req.body.email});
+      const teamInvites = await TeamInvite.find({
+        invitedUserEmail: req.body.email,
+      });
 
-for (let element of teamInvites) {
-  const status = element.status;
+      for (let element of teamInvites) {
+        const status = element.status;
 
-  const userEmail = element.invitedUserEmail;
+        const userEmail = element.invitedUserEmail;
 
-  const communityId = element.communityId;
+        const communityId = element.communityId;
 
-  const userDoc = newUser;
+        const userDoc = newUser;
 
-  const CommunityDoc = await Community.findById(communityId).populate(
-    "eventManagers",
-    "email"
-  );
+        const CommunityDoc = await Community.findById(communityId).populate(
+          "eventManagers",
+          "email"
+        );
 
-    // accept team invitaion
+        // accept team invitaion
 
-    // Push this persons userId in eventManagers array in community
-    CommunityDoc.eventManagers.push(userDoc._id);
-    await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+        // Push this persons userId in eventManagers array in community
+        CommunityDoc.eventManagers.push(userDoc._id);
+        await CommunityDoc.save({ new: true, validateModifiedOnly: true });
 
-    // add this community in this users doc in invited communities array
-    userDoc.invitedCommunities.push(communityId);
-    await userDoc.save({ new: true, validateModifiedOnly: true });
+        // add this community in this users doc in invited communities array
+        userDoc.invitedCommunities.push(communityId);
+        await userDoc.save({ new: true, validateModifiedOnly: true });
 
-    // Mark this invitation document status as accepted
-    element.status = "Accepted";
-    await element.save({ new: true, validateModifiedOnly: true });
+        // Mark this invitation document status as accepted
+        element.status = "Accepted";
+        await element.save({ new: true, validateModifiedOnly: true });
 
-    // Team invitation accepted
-}
+        // Team invitation accepted
+      }
 
-// At this point we are sure that we have accepted all pending team invitations
-
+      // At this point we are sure that we have accepted all pending team invitations
 
       // * Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
-     // * Register this user in event as a speaker if he / she has any pending event invitation on his / her email
-
+      // * Register this user in event as a speaker if he / she has any pending event invitation on his / her email
 
       createSendToken(newUser, 201, req, res);
     }
@@ -199,44 +216,44 @@ for (let element of teamInvites) {
     // TODO Add this user to communities in which he / she is invited if there is any pending team invite on his email
 
     // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
-       // Remember there can be multiple invites in any category on an email
+    // Remember there can be multiple invites in any category on an email
 
-const teamInvites = await TeamInvite.find({invitedUserEmail: req.body.email});
+    const teamInvites = await TeamInvite.find({
+      invitedUserEmail: req.body.email,
+    });
 
-for (let element of teamInvites) {
-  const status = element.status;
+    for (let element of teamInvites) {
+      const status = element.status;
 
-  const userEmail = element.invitedUserEmail;
+      const userEmail = element.invitedUserEmail;
 
-  const communityId = element.communityId;
+      const communityId = element.communityId;
 
-  const userDoc = newUser;
+      const userDoc = newUser;
 
-  const CommunityDoc = await Community.findById(communityId).populate(
-    "eventManagers",
-    "email"
-  );
+      const CommunityDoc = await Community.findById(communityId).populate(
+        "eventManagers",
+        "email"
+      );
 
-    // accept team invitaion
+      // accept team invitaion
 
-    // Push this persons userId in eventManagers array in community
-    CommunityDoc.eventManagers.push(userDoc._id);
-    await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+      // Push this persons userId in eventManagers array in community
+      CommunityDoc.eventManagers.push(userDoc._id);
+      await CommunityDoc.save({ new: true, validateModifiedOnly: true });
 
-    // add this community in this users doc in invited communities array
-    userDoc.invitedCommunities.push(communityId);
-    await userDoc.save({ new: true, validateModifiedOnly: true });
+      // add this community in this users doc in invited communities array
+      userDoc.invitedCommunities.push(communityId);
+      await userDoc.save({ new: true, validateModifiedOnly: true });
 
-    // Mark this invitation document status as accepted
-    element.status = "Accepted";
-    await element.save({ new: true, validateModifiedOnly: true });
+      // Mark this invitation document status as accepted
+      element.status = "Accepted";
+      await element.save({ new: true, validateModifiedOnly: true });
 
-    // Team invitation accepted
-}
+      // Team invitation accepted
+    }
 
-// At this point we are sure that we have accepted all pending team invitations
-
-
+    // At this point we are sure that we have accepted all pending team invitations
 
     // TODO Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
     // TODO Register this user in event as a speaker if he / she has any pending event invitation on his / her email
@@ -464,4 +481,3 @@ exports.authenticateCommunity = catchAsync(async (req, res, next) => {
   // 3) If everything ok, send pass on to next middleware
   res.status(200).json(CommunityDoc);
 });
-

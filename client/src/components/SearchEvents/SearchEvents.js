@@ -13,7 +13,6 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import {
   errorTrackerForFetchEvents,
   fetchEvents,
-  fetchMyFavouriteEvents,
 } from "../../actions/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
@@ -26,7 +25,6 @@ import PreFooter from "../PreFooter";
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
 import NoResultsFound from "../NoResultsFound";
-import { useSnackbar } from "notistack";
 
 const categories = [
   { title: "Technology" },
@@ -42,8 +40,6 @@ const categories = [
 ];
 
 const SearchEvents = () => {
-  const { enqueueSnackbar } = useSnackbar();
-
   const dispatch = useDispatch();
 
   const { isSignedIn } = useSelector((state) => state.auth);
@@ -54,10 +50,6 @@ const SearchEvents = () => {
 
   useEffect(() => {
     dispatch(fetchEvents(location.search));
-
-    // if (isSignedIn) {
-    //   dispatch(fetchMyFavouriteEvents());
-    // }
   }, [location.search, dispatch]);
 
   useEffect(() => {
@@ -256,6 +248,7 @@ const SearchEvents = () => {
           endTime={endTime}
           communityId={event.communityId}
           isFavourite={isFavourite}
+          speakers={event.speaker}
         />
       );
     });
@@ -329,9 +322,6 @@ const SearchEvents = () => {
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForFetchEvents());
   }
 

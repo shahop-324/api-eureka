@@ -1,30 +1,14 @@
 import React, { useEffect } from "react";
-// import EventCard from "../EventCard";
 import { useSelector, useDispatch } from "react-redux";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 import { errorTrackerForMadeJustForYou, madeJustForYou } from "../../actions";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
-import { useSnackbar } from "notistack";
 import EventCard from "./../EventCard";
 
-import {
-  DashboardSectionHeading,
-  EventCardsGrid,
-  EventCardWrapper,
-  EventCardImg,
-  EventCardEventName,
-  EventCardEventTimeLine,
-  EventCardEventPriceRange,
-} from "./Elements";
-
-import Fab from "@material-ui/core/Fab";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-
-
+import { DashboardSectionHeading } from "./Elements";
 
 const UserAccountEventsMainBody = () => {
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(madeJustForYou());
@@ -33,13 +17,11 @@ const UserAccountEventsMainBody = () => {
   // console.log(events);
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForMadeJustForYou());
   }
 
   const renderSuggestedEventsList = (events) => {
+    if (!events) return;
     if (events.length !== 0) {
       return events.map((event) => {
         const now = new Date(event.startDate);
@@ -63,10 +45,7 @@ const UserAccountEventsMainBody = () => {
             startTime={startTime}
             endTime={endTime}
             rating={(event.communityRating * 1).toFixed(1)}
-            communityId={
-              event.createdBy
-                
-            }
+            communityId={event.createdBy}
           />
         );
       });
@@ -85,10 +64,7 @@ const UserAccountEventsMainBody = () => {
         <DashboardSectionHeading className="pb-4 ps-4">
           Exclusive events for you
         </DashboardSectionHeading>
-        <div
-          style={{ height: "100%" }}
-
-        >
+        <div style={{ height: "100%" }}>
           {typeof events !== "undefined" && events.length > 0 ? (
             <div className="user-account-events-event-card-grid px-2 py-2">
               {isLoading ? (
@@ -113,8 +89,6 @@ const UserAccountEventsMainBody = () => {
               />
             </div>
           )}
-
-          
         </div>
       </div>
     </div>

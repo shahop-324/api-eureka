@@ -1,52 +1,83 @@
 import React, { useEffect } from "react";
-import EventCardNew from "../EventCardNew";
-
+import EventCard from "../EventCard";
 import { DashboardSectionHeading, EventCardsGrid } from "./Elements";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   errorTrackerForRegisteredEvents,
   fetchUserRegisteredEvents,
+  getUserRegistrations
 } from "../../actions";
-import { useSnackbar } from "notistack";
 import Loader from "./../Loader";
 import dateFormat from "dateformat";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 
-const renderRegisteredEvents = (events) => {
+const renderRegisteredEvents = (events, registrations) => {
   return events.map((event) => {
-    const startDate = dateFormat(event.startDate, "mmm dS, h:MM TT");
-    const endDate = dateFormat(event.endDate, "mmm dS, h:MM TT");
+    const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+    let magic_link;
+
+    for (let element of registrations) {
+      if (element.bookedForEventId.toString() === event._id.toString()) {
+        magic_link = element.magic_link;
+      }
+    }
 
     return (
-      <EventCardNew
+      <EventCard
         image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
         key={event.id}
         eventName={event.eventName}
         minPrice={event.minTicketPrice}
         maxPrice={event.maxTicketPrice}
         id={event.id}
-        communityId={
-          typeof event.createdBy === String
-            ? event.createdBy
-            : event.createdBy.id
-        }
-        startDate={startDate}
-        endDate={endDate}
+        communityId={event.communityId}
+        startTime={startTime}
+        showBtn={true}
+        speakers={event.speaker}
+        // TODO show commuity rating on thier events cards
+        rating={4.0}
+        magic_link={magic_link}
       />
     );
   });
 };
 
 const UserAccountHomeMainBody = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { events, isLoading, error } = useSelector((state) => state.event);
+  const { registrations } = useSelector((state) => state.registration);
+
+  const uniqueEventIds = []; // No duplicates allowed
+  const uniqueEventRegistrations = []; // No duplicated allowed
+  const formattedEvents = []; // * Each unique events document  => pass to list render
+  const formattedRegistrations = []; // * Each unique events registartion document => pass to list render
+
+  // At this point we will have array of all unique events
+
+  if (typeof events !== "undefined" && events.length) {
+    for (let element of events) {
+      if (!uniqueEventIds.includes(element._id)) {
+        uniqueEventIds.push(element._id);
+
+        formattedEvents.push(element);
+      }
+    }
+  }
+
+  if (typeof registrations !== "undefined" && registrations.length) {
+    for (let element of registrations) {
+      if (!uniqueEventRegistrations.includes(element.bookedForEventId)) {
+        uniqueEventRegistrations.push(element.bookedForEventId);
+
+        formattedRegistrations.push(element);
+      }
+    }
+  }
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUserRegisteredEvents());
+    dispatch(getUserRegistrations())
   }, [dispatch]);
 
   if (isLoading) {
@@ -59,10 +90,6 @@ const UserAccountHomeMainBody = () => {
       </div>
     );
   } else if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     return dispatch(errorTrackerForRegisteredEvents());
   } else if (Array.isArray(events) && events.length) {
     <div
@@ -83,8 +110,11 @@ const UserAccountHomeMainBody = () => {
           Your Upcoming Events
         </DashboardSectionHeading>
 
-        {typeof events !== "undefined" && events.length > 0 ? (
-          <EventCardsGrid>{renderRegisteredEvents(events)}</EventCardsGrid>
+        {typeof formattedEvents !== "undefined" &&
+        formattedEvents.length > 0 ? (
+          <EventCardsGrid>
+            {renderRegisteredEvents(formattedEvents, formattedRegistrations)}
+          </EventCardsGrid>
         ) : (
           <div
             style={{ width: "100%", height: "70vh" }}

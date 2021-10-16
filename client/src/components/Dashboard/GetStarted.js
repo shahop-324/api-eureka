@@ -192,7 +192,7 @@ class DemoCarousel extends React.Component {
 const GetStarted = () => {
   return (
     <>
-      <div className="me-3">
+      <div className="hide-scrollbar scroll-hide me-3">
         <div
           className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 mb-3"
           style={{ minWidth: "1138px" }}

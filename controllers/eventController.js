@@ -106,6 +106,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     socialMediaHandles: communityGettingEvent.socialMediaHandles,
     Timezone: req.body.timezone,
     communityName: communityGettingEvent.name,
+    communityLogo: communityGettingEvent.image,
     organisedBy: communityGettingEvent.name,
     communityId: communityGettingEvent._id,
     numberOfTablesInLounge: req.body.numberOfTablesInLounge,

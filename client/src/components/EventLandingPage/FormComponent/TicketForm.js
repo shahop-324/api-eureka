@@ -33,7 +33,7 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({ eventId, tickets, coupon }) => {
+const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
   const params = useParams();
   const currentEventId = params.id;
 
@@ -183,6 +183,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
           style={{ width: "100%" }}
         >
           <input
+          disabled={isCommunityTeamMember || alreadyRegistered}
             style={{ textTransform: "uppercase" }}
             className="form-control mr-sm-2"
             type="search"
@@ -193,6 +194,7 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
             onChange={handleCouponChange}
           />
           <button
+          disabled={isCommunityTeamMember || alreadyRegistered}
             className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
             onClick={handleCouponValidation}
           >
@@ -204,7 +206,10 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
       {/* // TODO Remember to show a message that you are already registerd for this event. */}
 
       <div className="reserve-your-spot">
-        {alreadyRegistered === true ? (
+        {isCommunityTeamMember ?  <div className="d-flex flex-row align-items-center justify-content-center">  <button style={{width: "330px"}} className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center">
+              <TodayRoundedIcon className="me-2" />
+              <span>Add to calender</span>
+            </button> </div> :   alreadyRegistered === true ? (
           <TwoButtonsGrid
             className=""
             style={{
@@ -240,10 +245,9 @@ const TicketForm = ({ eventId, tickets, coupon }) => {
             >
               Reserve Your Spot
             </button>
-
-            <div id="paypal-button-container"></div>
           </div>
-        )}
+        )  }
+      
 
         <div className="col" style={{ marginTop: "4%", padding: "0" }}>
           {" "}

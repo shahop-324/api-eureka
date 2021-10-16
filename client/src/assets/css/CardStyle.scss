@@ -1,12 +1,16 @@
 .event-card-main {
   width: 100%;
   max-width: 500px;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.055));
-  background: #ffffff;
-  box-shadow: inset 0px 0px 6px #cccccc29;
+
   border-radius: 20px;
   padding: 0 !important;
 
+  box-shadow: 0 4px 2px 0 rgba(233, 233, 233, 0.609),
+    0 6px 20px 0 rgba(196, 195, 195, 0.746);
+  cursor: pointer;
+  /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.2)); */
+  transition: all 0.2s ease-in-out;
+  
   img {
     transition: all 0.2s ease-in-out;
   }

@@ -40,14 +40,22 @@ const EventDetailCard = ({
 
   // Check if the entering person is a host/ moderator / organiser
 
-  if(moderators.includes(userId)) {
-    role = "moderator";
+  if (moderators) {
+    if (moderators.includes(userId)) {
+      role = "moderator";
+    }
   }
-  if(hosts.includes(userId)) {
-    role = "host";
+
+  if (hosts) {
+    if (hosts.includes(userId)) {
+      role = "host";
+    }
   }
-  if(!moderators.includes(userId) && !hosts.includes(userId)) {
-    role = "organiser";
+
+  if (moderators && hosts) {
+    if (!moderators.includes(userId) && !hosts.includes(userId)) {
+      role = "organiser";
+    }
   }
 
   return (
