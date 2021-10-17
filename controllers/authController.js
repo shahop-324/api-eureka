@@ -12,6 +12,7 @@ const { nanoid } = require("nanoid");
 const LoggedInUsers = require("../models/loggedInUsers");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
 const TeamInvite = require("../models/teamInviteModel");
+const Registration = require("../models/registrationsModel");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -145,6 +146,8 @@ exports.signup = catchAsync(async (req, res) => {
       });
 
       // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+      // * Register this user to events in which he /she is invited as speaker and invitations corresponding registration is still not cancelled or event is not over already
+      // Remember there can be multiple invites as a speaker in multiple events from multiple communities
       // Remember there can be multiple invites in any category on an email
 
       const teamInvites = await TeamInvite.find({
@@ -179,10 +182,61 @@ exports.signup = catchAsync(async (req, res) => {
         element.status = "Accepted";
         await element.save({ new: true, validateModifiedOnly: true });
 
+        // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
+
         // Team invitation accepted
       }
 
-      // At this point we are sure that we have accepted all pending team invitations
+      // * DONE At this point we are sure that we have accepted all pending team invitations
+
+      // Get all speaker registrations that are still pending and not cancelled for this users email
+
+      const speakerRegistrations = await Registration.find({
+        $and: [
+          { type: "Speaker" },
+          { status: "Pending" },
+          { cancelled: false },
+          { userEmail: req.body.email },
+        ],
+      });
+
+      // Now we have all speaker registrations for this user which are still pending and not cancelled
+
+      for (let element of speakerRegistrations) {
+        // For every registration add it to user registered events and push each registration into user document
+        
+        
+
+        const userDoc = newUser;
+
+        userDoc.registeredInEvents.push(element.bookedForEventId);
+        userDoc.registrations.push(element._id);
+
+        // update each registration as completed and fill details like user Id and other user details that are needed
+
+        element.status = "Completed";
+        element.userName = userDoc.firstName + " " + userDoc.lastName;
+        element.userImage = userDoc.image;
+        element.bookedByUser = userDoc._id;
+        element.first_name = userDoc.firstName;
+        element.lastName = userDoc.lastName;
+        element.name = userDoc.firstName + " " + userDoc.lastName;
+        element.organisation = userDoc.organisation;
+        element.designation = userDoc.designation;
+        element.city = userDoc.city;
+        element.country = userDoc.country;
+
+        // Save all updates in userDoc and registration doc.
+        await userDoc.save({ new: true, validateModifiedOnly: true });
+        await element.save({ new: true, validateModifiedOnly: true });
+
+         // TODO For every speaker invitation accepted please send a confirmation mail to user 
+
+        // Speaker invitation accepted
+      }
+
+      // * DONE At this point we are sure that we have accepted all pending speaker invitations
+
 
       // * Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
       // * Register this user in event as a speaker if he / she has any pending event invitation on his / her email
@@ -250,10 +304,61 @@ exports.signup = catchAsync(async (req, res) => {
       element.status = "Accepted";
       await element.save({ new: true, validateModifiedOnly: true });
 
+
+      // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
+
       // Team invitation accepted
     }
 
     // At this point we are sure that we have accepted all pending team invitations
+
+    // Get all speaker registrations that are still pending and not cancelled for this users email
+
+    const speakerRegistrations = await Registration.find({
+      $and: [
+        { type: "Speaker" },
+        { status: "Pending" },
+        { cancelled: false },
+        { userEmail: req.body.email },
+      ],
+    });
+
+    // Now we have all speaker registrations for this user which are still pending and not cancelled
+
+    for (let element of speakerRegistrations) {
+      // For every registration add it to user registered events and push each registration into user document
+      
+      
+
+      const userDoc = newUser;
+
+      userDoc.registeredInEvents.push(element.bookedForEventId);
+      userDoc.registrations.push(element._id);
+
+      // update each registration as completed and fill details like user Id and other user details that are needed
+
+      element.status = "Completed";
+      element.userName = userDoc.firstName + " " + userDoc.lastName;
+      element.userImage = userDoc.image;
+      element.bookedByUser = userDoc._id;
+      element.first_name = userDoc.firstName;
+      element.lastName = userDoc.lastName;
+      element.name = userDoc.firstName + " " + userDoc.lastName;
+      element.organisation = userDoc.organisation;
+      element.designation = userDoc.designation;
+      element.city = userDoc.city;
+      element.country = userDoc.country;
+
+      // Save all updates in userDoc and registration doc.
+      await userDoc.save({ new: true, validateModifiedOnly: true });
+      await element.save({ new: true, validateModifiedOnly: true });
+
+       // TODO For every speaker invitation accepted please send a confirmation mail to user 
+
+      // Speaker invitation accepted
+    }
+
+    // * DONE At this point we are sure that we have accepted all pending speaker invitations
 
     // TODO Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
     // TODO Register this user in event as a speaker if he / she has any pending event invitation on his / her email

@@ -1158,3 +1158,58 @@ exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
     userEmail: userEmail,
   });
 });
+
+exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
+  async (req, res, next) => {
+    const registrationId = req.params.registrationId;
+
+    const registrationDoc = await Registration.findById(registrationId);
+    const eventId = registrationDoc.bookedForEventId;
+    const userRole = registrationDoc.type;
+    const userEmail = registrationDoc.userEmail;
+    const eventDetails = await Event.findById(eventId).populate(
+      "speaker",
+      "firstName lastName image"
+    );
+
+    // Check if user with registered email exists
+
+    const existingUser = await User.findOne({
+      email: registrationDoc.userEmail,
+    });
+
+    if (existingUser) {
+      // User is already on platform => follow normal procedure => send user details along with required event details
+
+      const userEmail = existingUser.email;
+      const userId = existingUser._id;
+
+      // * send userIsOnBluemeet => true
+
+      res.status(200).json({
+        status: "success",
+        data: eventDetails,
+        userId: userId,
+        userRole: userRole,
+        userEmail: userEmail,
+        userIsOnBluemeet: true,
+      });
+    } else {
+      // Send that user is not registered on Bluemeet platform => Send event details
+
+      // * send userIsOnBluemeet => false
+
+      res.status(200).json({
+        status: "success",
+        data: eventDetails,
+        userRole: userRole,
+        userEmail: userEmail,
+        userIsOnBluemeet: false,
+      });
+    }
+  }
+);
+
+//! After user signs up then update their list of registeredEvents, registrations and update each registration doc with their userId and other userData
+
+// Don't allow to edit email of speaker or booth  once added they can just delete previous one and add new with correct email.

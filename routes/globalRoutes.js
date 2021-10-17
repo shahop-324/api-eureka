@@ -178,4 +178,6 @@ router.get(
 
 router.get("/getEventDetailsForMagicLinkPage/:registrationId", globalController.getEventDetailsForMagicLinkPage);
 
+router.get("/getSpeakerRegistrationInfoForMagicLinkPage/:registrationId", globalController.getSpeakerRegistrationInfoForMagicLinkPage);
+
 module.exports = router;

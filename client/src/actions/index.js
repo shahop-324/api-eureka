@@ -9166,9 +9166,9 @@ export const fetchEventForMagicLinkPage =
     }
   };
 
-  export const fetchSpeakerRegistrationInfo = (registrationId) => async(dispatch, getState) => {
-    try{
-
+export const fetchSpeakerRegistrationInfo =
+  (registrationId) => async (dispatch, getState) => {
+    try {
       const res = await fetch(
         `${BaseURL}getSpeakerRegistrationInfoForMagicLinkPage/${registrationId}`,
         {
@@ -9189,20 +9189,74 @@ export const fetchEventForMagicLinkPage =
       }
 
       const result = await res.json();
-      console.log(result);
+      console.log(
+        result,
+        "This is the result of speaker visiting magic link page."
+      );
 
-      // Inside result we get data(eventDetails) and if this speaker is registered on Bluemeet platform as a user or not if he / she is on Bluemeet platform than we will get his / her name, emai, userId 
+      // Check if speaker is registered on Bluemeet or not
 
-      
+      if (result.userIsOnBluemeet) {
+        // user is registered on Bluemeet Platform
 
+        dispatch(
+          magicLinkActions.FetchEventDetails({
+            event: result.data,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserId({
+            userId: result.userId,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserRole({
+            userRole: result.userRole,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserEmail({
+            userEmail: result.userEmail,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserIsOnBluemeet({
+            userIsOnBluemeet: result.userIsOnBluemeet,
+          })
+        );
+      } else {
+        // user is not registered on Bluemeet Platform
 
-    }
-    catch(error) {
+        dispatch(
+          magicLinkActions.FetchEventDetails({
+            event: result.data,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserRole({
+            userRole: result.userRole,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserEmail({
+            userEmail: result.userEmail,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserIsOnBluemeet({
+            userIsOnBluemeet: result.userIsOnBluemeet,
+          })
+        );
+      }
+
+      // Inside result we get data(eventDetails) and if this speaker is registered on Bluemeet platform as a user or not if he / she is on Bluemeet platform than we will get his / her name, emai, userId
+    } catch (error) {
       console.log(error);
 
       dispatch(
         snackbarActions.openSnackBar({
-          message: "Failed to fetch speaker registration info details. Please try again!",
+          message:
+            "Failed to fetch speaker registration info details. Please try again!",
           severity: "error",
         })
       );
@@ -9211,7 +9265,7 @@ export const fetchEventForMagicLinkPage =
         closeSnackbar();
       }, 6000);
     }
-  }
+  };
 
 export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
   try {

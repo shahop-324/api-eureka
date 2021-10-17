@@ -8,6 +8,7 @@ const magicLinkSlice = createSlice({
     userId: null,
     userRole: null,
     userEmail: null,
+    userIsOnBluemeet: false,
     isLoading: false,
     error: false,
   },
@@ -43,6 +44,11 @@ const magicLinkSlice = createSlice({
     // Fetch User email
     FetchUserEmail(state, action) {
       state.userEmail = action.payload.userEmail;
+      state.isLoading = false;
+    },
+    // Fetch User is on Bluemeet
+    FetchUserIsOnBluemeet(state, action) {
+      state.userIsOnBluemeet = action.payload.userIsOnBluemeet;
       state.isLoading = false;
     },
   },
