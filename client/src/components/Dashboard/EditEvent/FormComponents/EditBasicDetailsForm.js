@@ -227,24 +227,27 @@ const EditBasicDetailsForm = ({
   handleClose,
 }) => {
   let moderatorOptions = [];
-  const communityManagers = useSelector((state) => state.community.communityManagers);
+  const communityManagers = useSelector(
+    (state) => state.community.communityManagers
+  );
 
   const { superAdminName, superAdminEmail, superAdmin } = useSelector(
     (state) => state.community.communityDetails
   );
 
-  moderatorOptions = communityManagers.map((el) => {
-    return {
-      value: el._id,
-      label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
-    };
-  });
+  if (communityManagers) {
+    moderatorOptions = communityManagers.map((el) => {
+      return {
+        value: el._id,
+        label: el.firstName + " " + el.lastName + " " + `(${el.email})`,
+      };
+    });
 
-  moderatorOptions.push({
-    value: superAdmin,
-    label: superAdminName + " " + `(${superAdminEmail})`,
-  });
-
+    moderatorOptions.push({
+      value: superAdmin,
+      label: superAdminName + " " + `(${superAdminEmail})`,
+    });
+  }
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -284,8 +287,8 @@ const EditBasicDetailsForm = ({
     ModifiedFormValues.categories = categories;
     ModifiedFormValues.visibility = formValues.visibility;
     ModifiedFormValues.numberOfTablesInLounge =
-    formValues.numberOfTablesInLounge;
-  ModifiedFormValues.moderators = moderators;
+      formValues.numberOfTablesInLounge;
+    ModifiedFormValues.moderators = moderators;
 
     dispatch(editEvent(ModifiedFormValues, id));
     handleClose();
@@ -700,7 +703,11 @@ const mapStateToProps = (state) => ({
         ? state.event.eventDetails.moderators.map((element) => {
             return {
               value: element._id,
-              label: element.firstName + " " + element.lastName + `(${element.email})`,
+              label:
+                element.firstName +
+                " " +
+                element.lastName +
+                `(${element.email})`,
             };
           })
         : null,

@@ -21,19 +21,15 @@ const userSchema = new mongoose.Schema(
     },
     organisation: {
       type: String,
-      default: "Google Inc.", // TODO This needs to fixed
     },
     designation: {
       type: String,
-      default: "Vice President", // TODO This needs to fixed
     },
     city: {
       type: String,
-      default: "Los Angeles", // TODO This needs to fixed
     },
     country: {
       type: String,
-      default: "USA", // TODO This needs to fixed
     },
     headline: {
       type: String,

@@ -88,12 +88,14 @@ const styles = {
     fontFamily: "Ubuntu",
     fontWeight: "500",
     color: "#757575",
+    fontSize: "0.9rem",
   }),
   menu: (base) => ({
     ...base,
     fontFamily: "Ubuntu",
     fontWeight: "500",
     color: "#757575",
+    fontSize: "0.9rem",
   }),
 };
 
@@ -139,6 +141,7 @@ const renderInput = ({
     </div>
   );
 };
+
 const renderTextArea = ({
   input,
   meta: { touched, error, warning },
@@ -192,8 +195,6 @@ const renderReactSelect = ({
 );
 const AddNewSpeaker = ({
   handleSubmit,
-  pristine,
-  submitting,
   handleClose,
   open,
 }) => {

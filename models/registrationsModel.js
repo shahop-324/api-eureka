@@ -7,6 +7,14 @@ const registrationSchema = new mongoose.Schema(
       default: "Attendee",
       enum: ["Attendee", "Speaker", "Booth"],
     },
+    status: {
+      type: String,
+      enum: ["Pending", "Completed"],
+    },
+    cancelled: {
+      type: Boolean,
+      default: false,
+    },
     eventName: {
       type: String,
     },
@@ -50,7 +58,8 @@ const registrationSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    bookedForEventId: { // ! Event Id
+    bookedForEventId: {
+      // ! Event Id
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
@@ -82,6 +91,18 @@ const registrationSchema = new mongoose.Schema(
       type: String,
     },
     name: {
+      type: String,
+    },
+    organisation: {
+      type: String,
+    },
+    designation: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    country: {
       type: String,
     },
     event_name: {

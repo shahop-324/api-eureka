@@ -3,6 +3,10 @@ const validator = require("validator");
 
 const speakerSchema = new mongoose.Schema(
   {
+    registrationId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Registration",
+    },
     status: {
       type: String,
       enum: ["Active", "Inactive", "Deleted"],
