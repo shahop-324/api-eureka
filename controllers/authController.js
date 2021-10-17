@@ -204,8 +204,6 @@ exports.signup = catchAsync(async (req, res) => {
 
       for (let element of speakerRegistrations) {
         // For every registration add it to user registered events and push each registration into user document
-        
-        
 
         const userDoc = newUser;
 
@@ -230,16 +228,56 @@ exports.signup = catchAsync(async (req, res) => {
         await userDoc.save({ new: true, validateModifiedOnly: true });
         await element.save({ new: true, validateModifiedOnly: true });
 
-         // TODO For every speaker invitation accepted please send a confirmation mail to user 
+        // TODO For every speaker invitation accepted please send a confirmation mail to user
 
         // Speaker invitation accepted
       }
 
       // * DONE At this point we are sure that we have accepted all pending speaker invitations
 
+      const boothRegistrations = await Registration.find({
+        $and: [
+          { type: "Exhibitor" },
+          { status: "Pending" },
+          { cancelled: false },
+          { userEmail: req.body.email },
+        ],
+      });
 
-      // * Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
-      // * Register this user in event as a speaker if he / she has any pending event invitation on his / her email
+      // Now we have all booth registrations for this user which are still pending and not cancelled
+
+      for (let element of boothRegistrations) {
+        // For every registration add it to user registered events and push each registration into user document
+
+        const userDoc = newUser;
+
+        userDoc.registeredInEvents.push(element.bookedForEventId);
+        userDoc.registrations.push(element._id);
+
+        // update each registration as completed and fill details like user Id and other user details that are needed
+
+        element.status = "Completed";
+        element.userName = userDoc.firstName + " " + userDoc.lastName;
+        element.userImage = userDoc.image;
+        element.bookedByUser = userDoc._id;
+        element.first_name = userDoc.firstName;
+        element.lastName = userDoc.lastName;
+        element.name = userDoc.firstName + " " + userDoc.lastName;
+        element.organisation = userDoc.organisation;
+        element.designation = userDoc.designation;
+        element.city = userDoc.city;
+        element.country = userDoc.country;
+
+        // Save all updates in userDoc and registration doc.
+        await userDoc.save({ new: true, validateModifiedOnly: true });
+        await element.save({ new: true, validateModifiedOnly: true });
+
+        // TODO For every booth invitation accepted please send a confirmation mail to user
+
+        // Booth invitation accepted
+      }
+
+      // * DONE At this point we are sure that we have accepted all pending booth invitations
 
       createSendToken(newUser, 201, req, res);
     }
@@ -304,13 +342,12 @@ exports.signup = catchAsync(async (req, res) => {
       element.status = "Accepted";
       await element.save({ new: true, validateModifiedOnly: true });
 
-
       // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
 
       // Team invitation accepted
     }
 
-    // At this point we are sure that we have accepted all pending team invitations
+    // * At this point we are sure that we have accepted all pending team invitations
 
     // Get all speaker registrations that are still pending and not cancelled for this users email
 
@@ -327,8 +364,6 @@ exports.signup = catchAsync(async (req, res) => {
 
     for (let element of speakerRegistrations) {
       // For every registration add it to user registered events and push each registration into user document
-      
-      
 
       const userDoc = newUser;
 
@@ -353,15 +388,56 @@ exports.signup = catchAsync(async (req, res) => {
       await userDoc.save({ new: true, validateModifiedOnly: true });
       await element.save({ new: true, validateModifiedOnly: true });
 
-       // TODO For every speaker invitation accepted please send a confirmation mail to user 
+      // TODO For every speaker invitation accepted please send a confirmation mail to user
 
       // Speaker invitation accepted
     }
 
     // * DONE At this point we are sure that we have accepted all pending speaker invitations
 
-    // TODO Register this user in event as a booth exhibitor if he / she has any pending event invitation on his / her email
-    // TODO Register this user in event as a speaker if he / she has any pending event invitation on his / her email
+    const boothRegistrations = await Registration.find({
+      $and: [
+        { type: "Exhibitor" },
+        { status: "Pending" },
+        { cancelled: false },
+        { userEmail: req.body.email },
+      ],
+    });
+
+    // Now we have all booth registrations for this user which are still pending and not cancelled
+
+    for (let element of boothRegistrations) {
+      // For every registration add it to user registered events and push each registration into user document
+
+      const userDoc = newUser;
+
+      userDoc.registeredInEvents.push(element.bookedForEventId);
+      userDoc.registrations.push(element._id);
+
+      // update each registration as completed and fill details like user Id and other user details that are needed
+
+      element.status = "Completed";
+      element.userName = userDoc.firstName + " " + userDoc.lastName;
+      element.userImage = userDoc.image;
+      element.bookedByUser = userDoc._id;
+      element.first_name = userDoc.firstName;
+      element.lastName = userDoc.lastName;
+      element.name = userDoc.firstName + " " + userDoc.lastName;
+      element.organisation = userDoc.organisation;
+      element.designation = userDoc.designation;
+      element.city = userDoc.city;
+      element.country = userDoc.country;
+
+      // Save all updates in userDoc and registration doc.
+      await userDoc.save({ new: true, validateModifiedOnly: true });
+      await element.save({ new: true, validateModifiedOnly: true });
+
+      // TODO For every booth invitation accepted please send a confirmation mail to user
+
+      // Booth invitation accepted
+    }
+
+    // * DONE At this point we are sure that we have accepted all pending booth invitations
 
     createSendToken(newUser, 201, req, res);
   }

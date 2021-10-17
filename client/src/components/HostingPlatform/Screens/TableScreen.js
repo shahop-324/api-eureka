@@ -19,21 +19,18 @@ import AccountBoxOutlinedIcon from "@material-ui/icons/AccountBoxOutlined";
 import ZoomOutMapOutlinedIcon from "@material-ui/icons/ZoomOutMapOutlined";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
-import KeyboardTabRoundedIcon from '@material-ui/icons/KeyboardTabRounded';
+import KeyboardTabRoundedIcon from "@material-ui/icons/KeyboardTabRounded";
 
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { useBeforeunload } from 'react-beforeunload';
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const TableScreenBody = styled.div`
-background-color: #152d35 !important;
-
-
-`
+  background-color: #152d35 !important;
+`;
 
 // ? Local tracks and client are being managed in rtc object
 
@@ -77,8 +74,6 @@ const TableScreen = ({
   closeTableScreen,
   id,
 }) => {
-
-
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -165,45 +160,6 @@ const TableScreen = ({
 
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("xl");
-
-  // rtc.client.on("user-published", async(user, mediaType) => {
-
-  //   // Subscribe to the remote user when the SDK triggers the "user-published" event
-  //   await rtc.client.subscribe(user, mediaType);
-  //   console.log("subscribe success");
-
-  //   // If the remote user publishes a video track.
-  //   if(mediaType === "video") {
-  //     // Call a function which handles remoteVideoTracks
-
-  //   }
-  //   if (mediaType === "audio") {
-  //     // Call a function which handles remoteAudioTracks
-
-  //   }
-  // })
-
-  // Listen for the "user-unpublished" event (NOTE: User has just unpublished audio or video but has not left the channel, understand it)
-
-  // rtc.client.on("user-unpublished", (user) => {
-  //   // Call a function that can handle unpublished remote audio or video track
-  // });
-
-  // const handleRemoteVideoTrack = () => {
-  //   // Here write logic to properly handle remote video track
-  // }
-
-  // const handleRemoteAudioTrack = () => {
-  //   // Here write logic to properly handle remote audio track
-  // }
-
-  // const handleUnpublishedAudioTrack = () => {
-  //   // Here write logic to properly show muted icon when someone mutes their mic
-  // }
-
-  // const handleUnpublishedVideoTrack = () => {
-  //   // Here write logic to properly show Avatar when someone stops their camera feed
-  // }
 
   // Write logic to execute when leave button is pressed
 
@@ -356,7 +312,7 @@ const TableScreen = ({
           margin: "0 auto 0 auto",
         }}
       >
-        <TableScreenBody  className="px-4">
+        <TableScreenBody className="px-4">
           <div className="table-screen-header d-flex flex-row align-items-center justify-content-between pt-3">
             <div className="table-num-and-heading px-2">
               <span
@@ -518,12 +474,17 @@ const TableScreen = ({
                 </div>
               </div>
             </div>
-            <div className="" style={{display: "grid", gridTemplateColumns: "8fr 0.5fr"}}>
+            <div
+              className=""
+              style={{ display: "grid", gridTemplateColumns: "8fr 0.5fr" }}
+            >
               <div className="table-side-drawer"></div>
               <div>
                 <IconButton className="ms-3">
-                <KeyboardTabRoundedIcon style={{ fill: "#D3D3D3", size: "20" }}/>
-                  </IconButton>
+                  <KeyboardTabRoundedIcon
+                    style={{ fill: "#D3D3D3", size: "20" }}
+                  />
+                </IconButton>
               </div>
             </div>
           </div>

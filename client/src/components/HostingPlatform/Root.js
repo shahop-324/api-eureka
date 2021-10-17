@@ -72,11 +72,11 @@ const Root = () => {
     (state) => state.navigation.currentIndexForHostingPlatform
   );
 
-  const speaker = useSelector((state) => {
-    return state.speaker.speakers.find((speaker) => {
-      return speaker.id === id;
-    });
-  });
+  // const speaker = useSelector((state) => {
+  //   return state.speaker.speakers.find((speaker) => {
+  //     return speaker.id === id;
+  //   });
+  // });
 
   // TODO USER OR HOST
 
@@ -86,7 +86,7 @@ const Root = () => {
     });
   });
 
-  console.log(speaker);
+  // console.log(speaker);
   console.log(event);
 
   useEffect(() => {

@@ -176,8 +176,19 @@ router.get(
   globalController.fetchInvitationDetails
 );
 
-router.get("/getEventDetailsForMagicLinkPage/:registrationId", globalController.getEventDetailsForMagicLinkPage);
+router.get(
+  "/getEventDetailsForMagicLinkPage/:registrationId",
+  globalController.getEventDetailsForMagicLinkPage
+);
 
-router.get("/getSpeakerRegistrationInfoForMagicLinkPage/:registrationId", globalController.getSpeakerRegistrationInfoForMagicLinkPage);
+router.get(
+  "/getSpeakerRegistrationInfoForMagicLinkPage/:registrationId",
+  globalController.getSpeakerRegistrationInfoForMagicLinkPage
+);
+
+router.get(
+  "/getExhibitorRegistrationInfoForMagicLinkPage/:registrationId",
+  globalController.getExhibitorRegistrationInfoForMagicLinkPage
+);
 
 module.exports = router;

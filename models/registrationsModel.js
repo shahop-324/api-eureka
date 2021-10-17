@@ -2,10 +2,13 @@ const mongoose = require("mongoose");
 
 const registrationSchema = new mongoose.Schema(
   {
+    boothId: {
+      type: String,
+    },
     type: {
       type: String,
       default: "Attendee",
-      enum: ["Attendee", "Speaker", "Booth"],
+      enum: ["Attendee", "Speaker", "Exhibitor"],
     },
     status: {
       type: String,

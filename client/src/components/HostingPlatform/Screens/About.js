@@ -336,7 +336,9 @@ const About = () => {
   if (eventDetails.highlightedSession) {
     highlightedSessionId = eventDetails.highlightedSession;
   } else {
-    highlightedSessionId = sessions[0]._id;
+    if (sessions[0]) {
+      highlightedSessionId = sessions[0]._id;
+    }
   }
 
   // Now get the document of session that is to be highlighted.
@@ -363,49 +365,77 @@ const About = () => {
             </HostedByCommunityName>
           </div>
         </HostedByLeft>
-        <HostedByRight>
-          <div className="d-flex flex-row align-items-center justify-content-center">
-            <a
-              href={`//${communityDetails.socialMediaHandles.facebook}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <SocialIconWrapper className="me-3">
-                <FacebookIcon style={{ fontSize: "24px", color: "#4267B2" }} />
-              </SocialIconWrapper>
-            </a>
+        {communityDetails.socialMediaHandles ? (
+          <HostedByRight>
+            <div className="d-flex flex-row align-items-center justify-content-center">
+              {communityDetails.socialMediaHandles.facebook ? (
+                <a
+                  href={`//${communityDetails.socialMediaHandles.facebook}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialIconWrapper className="me-3">
+                    <FacebookIcon
+                      style={{ fontSize: "24px", color: "#4267B2" }}
+                    />
+                  </SocialIconWrapper>
+                </a>
+              ) : (
+                <></>
+              )}
 
-            <a
-              href={`//${communityDetails.socialMediaHandles.linkedin}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <SocialIconWrapper className="me-3">
-                <LinkedInIcon style={{ fontSize: "24px", color: "#0077b5" }} />
-              </SocialIconWrapper>
-            </a>
+              {communityDetails.socialMediaHandles.linkedin ? (
+                <a
+                  href={`//${communityDetails.socialMediaHandles.linkedin}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialIconWrapper className="me-3">
+                    <LinkedInIcon
+                      style={{ fontSize: "24px", color: "#0077b5" }}
+                    />
+                  </SocialIconWrapper>
+                </a>
+              ) : (
+                <></>
+              )}
 
-            <a
-              href={`//${communityDetails.socialMediaHandles.twitter}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <SocialIconWrapper className="me-3">
-                <TwitterIcon style={{ fontSize: "24px", color: "#1DA1F2" }} />
-              </SocialIconWrapper>
-            </a>
+              {communityDetails.socialMediaHandles.twitter ? (
+                <a
+                  href={`//${communityDetails.socialMediaHandles.twitter}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialIconWrapper className="me-3">
+                    <TwitterIcon
+                      style={{ fontSize: "24px", color: "#1DA1F2" }}
+                    />
+                  </SocialIconWrapper>
+                </a>
+              ) : (
+                <></>
+              )}
 
-            <a
-              href={`//${communityDetails.socialMediaHandles.website}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <SocialIconWrapper>
-                <LanguageIcon style={{ fontSize: "24px", color: "#152d35" }} />
-              </SocialIconWrapper>
-            </a>
-          </div>
-        </HostedByRight>
+              {communityDetails.socialMediaHandles.website ? (
+                <a
+                  href={`//${communityDetails.socialMediaHandles.website}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialIconWrapper>
+                    <LanguageIcon
+                      style={{ fontSize: "24px", color: "#152d35" }}
+                    />
+                  </SocialIconWrapper>
+                </a>
+              ) : (
+                <></>
+              )}
+            </div>
+          </HostedByRight>
+        ) : (
+          <></>
+        )}
       </HostedByCard>
 
       <WhatsHappeningAndSponsorGrid>

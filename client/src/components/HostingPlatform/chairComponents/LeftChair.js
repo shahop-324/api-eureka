@@ -38,7 +38,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
     userName8 = chair.userName;
     userImage8 = chair.userImage.startsWith("https://lh3.googleusercontent.com")
       ? chair.userImage
-      : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${chair.userImage}`;
+      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chair.userImage}`;
     userCity8 = chair.userCity;
     userCountry8 = chair.userCountry;
     userOrganisation8 = chair.userOrganisation;
@@ -183,7 +183,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
                     style={{ display: displayPopUp }}
                   >
                     <Avatar
-                      alt="Remy Sharp"
+                      alt={userName8}
                       src={preview}
                       variant="rounded"
                       style={{ display: displayPopUp }}

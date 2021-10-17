@@ -226,7 +226,7 @@ const SpeakerMagicLinkDestination = () => {
             ></EventPoster>
             <div className="d-flex flex-row align-items-center">
               <Avatar
-                src={Faker.image.avatar()}
+                src={Faker.image.avatar()} // ! TODO => Fix issue with community image
                 // src={eventDetails.communityLogo.startsWith("https://") ? eventDetails.communityLogo : `https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.communityLogo}` }
                 alt={eventDetails.communityName}
                 variant="rounded"

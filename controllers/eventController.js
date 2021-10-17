@@ -212,6 +212,9 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   const eventId = req.params.id;
 
   const eventGettingBooth = await Event.findById(eventId);
+  const communityGettingBooth = await Community.findById(
+    eventGettingBooth.communityId
+  );
 
   let createdBooth = await Booth.create(
     {
@@ -228,7 +231,6 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
       // save refrence of this booth in its event
       try {
-        let invitationLink = `http://localhost:3001/booth-invitation/${doc._id}`;
         eventGettingBooth.booths.push(doc._id);
         for (let element of req.body.tags) {
           if (!eventGettingBooth.boothTags.includes(element)) {
@@ -237,25 +239,135 @@ exports.createBooth = catchAsync(async (req, res, next) => {
         }
 
         for (let element of req.body.emails) {
-          const msg = {
-            to: element,
-            from: "shreyanshshah242@gmail.com",
-            subject: "Your Event Invitation Link (Booth exhibitor mail)",
-            text: `use this link to join this event as a booth exhibitor. ${invitationLink}`,
-            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
-          };
-
-          sgMail
-            .send(msg)
-            .then(async () => {
-              console.log("Invitation sent to booth exhibitor.");
-            })
-            .catch(async (error) => {
-              console.log("Failed to send invitation to booth exhibitor");
+          // For every mail in booth
+          // Step 1 => check if there is any user with that email already on platform
+          const existingUser = await User.findOne({ email: element });
+          if (existingUser) {
+            // user already have account on Bluemeet
+            // => create exhibitor registration and mark as completed for this email and send magic link to exhibitor mail
+            const newRegistration = await Registration.create({
+              boothId: doc._id,
+              type: "Exhibitor",
+              status: "Completed",
+              cancelled: false,
+              eventName: eventGettingBooth.eventName,
+              userName: existingUser.firstName + " " + existingUser.lastName,
+              userImage: existingUser.image,
+              bookedByUser: existingUser._id,
+              bookedForEventId: eventGettingBooth._id,
+              eventByCommunityId: communityGettingBooth._id,
+              createdAt: Date.now(),
+              email: element,
+              userEmail: element,
+              first_name: existingUser.firstName,
+              last_name: existingUser.lastName,
+              name: existingUser.firstName + " " + existingUser.lastName,
+              organisation: existingUser.organisation,
+              designation: existingUser.designation,
+              city: existingUser.city,
+              country: existingUser.country,
+              event_name: eventGettingBooth.eventName,
+              event_picture: eventGettingBooth.image,
+              community_picture: communityGettingBooth.image,
             });
+
+            // Provide magic_link and invitation link
+            newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+
+            // Add this event in users registered events and push this registration in users resgistrations doc.
+            existingUser.registeredInEvents.push(eventGettingBooth._id);
+            existingUser.registrations.push(newRegistration._id);
+
+            // Save user doc and registration doc
+            await existingUser.save({ new: true, validateModifiedOnly: true });
+            await newRegistration.save({
+              new: true,
+              validateModifiedOnly: true,
+            });
+
+            // Send mail to exhibitor with magic_link
+
+            const msg = {
+              to: element,
+              from: "shreyanshshah242@gmail.com",
+              subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
+              text: `use this link to join this event ${
+                eventGettingBooth.eventName
+              } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            };
+
+            sgMail
+              .send(msg)
+              .then(async () => {
+                console.log("Invitation sent to booth exhibitor.");
+              })
+              .catch(async (error) => {
+                console.log("Failed to send invitation to booth exhibitor");
+              });
+
+            // This case is properly handled.
+          } else {
+            // user does not  have account on Bluemeet
+            // => create exhibitor registration and mark as pending for this email and send magic link to exhibitor mail
+
+            const newRegistration = await Registration.create({
+              boothId: doc._id,
+              type: "Exhibitor",
+              status: "Pending",
+              cancelled: false,
+              eventName: eventGettingBooth.eventName,
+              bookedForEventId: eventGettingBooth._id,
+              eventByCommunityId: communityGettingBooth._id,
+              createdAt: Date.now(),
+              email: element,
+              userEmail: element,
+              event_name: eventGettingBooth.eventName,
+              event_picture: eventGettingBooth.image,
+              community_picture: communityGettingBooth.image,
+            });
+
+            // Provide magic_link and invitation link
+            newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+
+            
+
+            // Save user doc and registration doc
+            await newRegistration.save({
+              new: true,
+              validateModifiedOnly: true,
+            });
+
+            // Send mail to exhibitor with magic_link
+
+            const msg = {
+              to: element,
+              from: "shreyanshshah242@gmail.com",
+              subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
+              text: `use this link to join this event ${
+                eventGettingBooth.eventName
+              } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            };
+
+            sgMail
+              .send(msg)
+              .then(async () => {
+                console.log("Invitation sent to booth exhibitor.");
+              })
+              .catch(async (error) => {
+                console.log("Failed to send invitation to booth exhibitor");
+              });
+
+            // This case is properly handled.
+          }
         }
 
-        (doc.invitationStatus = "Sent"), (doc.invitationLink = invitationLink);
+        doc.invitationStatus = "Sent";
+        doc.invitationLink =
+          "Each exhibitor will have their own unique invitation link.";
         doc.socialMediaHandles = req.body.socialMediaHandles;
         await doc.save({ new: true, validateModifiedOnly: true });
 
@@ -300,13 +412,13 @@ exports.addSponsor = catchAsync(async (req, res, next) => {
 
 // add speaker
 exports.addSpeaker = catchAsync(async (req, res, next) => {
-  try{
+  try {
     const eventId = req.params.eventId;
     const communityId = req.community._id;
     const sessionsMappedByCommunity = req.body.sessions;
     const eventGettingSpeaker = await Event.findById(eventId);
     const allSessionsInThisEvent = eventGettingSpeaker.session;
-  
+
     let processedArray = [];
     const fxn = (allSessionsInThisEvent, sessionsMappedByCommunity) => {
       const processedSessions = [];
@@ -317,30 +429,30 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       });
       return processedSessions;
     };
-  
+
     if (sessionsMappedByCommunity != undefined) {
       processedArray = fxn(allSessionsInThisEvent, sessionsMappedByCommunity);
     }
-  
+
     const communityGettingSpeaker = await Community.findById(communityId);
-  
+
     // Check if any user with provided email exists or not
-  
+
     const userOnPlatform = await User.findOne({ email: req.body.email });
 
     console.log(userOnPlatform);
-  
+
     // case 1.)  if exists then just add them as a speaker, create a speaker registration for them with speaker magic link and add this event in their list of registered events
     // case 2.) if not exists already then create a pending registration on thier name with a magic link and add as a speaker
-  
+
     // when that speaker creates their account on Bluemeet then mark each registration on their name as completed which are not cancelled and add this event in their registered events list
     // Each speaker will have its registration which will have cancelled field and status(pending / completed) field.
-  
+
     if (userOnPlatform) {
       // * Already a Bluemeet user
-  
+
       // TODO => Create a speaker registration with status as completed and cancelled as false.
-  
+
       const newSpeakerRegistration = await Registration.create({
         type: "Speaker",
         status: "Completed",
@@ -364,24 +476,24 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         event_picture: eventGettingSpeaker.image,
         community_picture: eventGettingSpeaker.image,
       });
-  
+
       // Add invitaion and magic link to this registration
-  
+
       newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
       newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-  
+
       await newSpeakerRegistration.save({
         new: true,
         validateModifiedOnly: true,
       });
-  
+
       // Update corresponding user document
-  
+
       userOnPlatform.registeredInEvents.push(eventId);
       userOnPlatform.registrations.push(newSpeakerRegistration._id);
-  
+
       await userOnPlatform.save({ new: true, validateModifiedOnly: true });
-  
+
       const speaker = await Speaker.create({
         registrationId: newSpeakerRegistration._id,
         firstName: req.body.firstName,
@@ -396,9 +508,9 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
         dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
-  
+
       speaker.socialMediaHandles = req.body.socialMediaHandles;
-  
+
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
@@ -407,7 +519,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
       };
-  
+
       if (req.body.sendInvitation) {
         sgMail
           .send(msg)
@@ -427,30 +539,30 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         speaker.invitationStatus = "Not sent";
         await speaker.save({ new: true, validateModifiedOnly: true });
       }
-  
+
       const document = await SpeakersIdsCommunityWise.findById(
         communityGettingSpeaker.speakersDocIdCommunityWise
       );
-  
+
       document.speakersIds.push(speaker._id);
       eventGettingSpeaker.speaker.push(speaker._id);
       await eventGettingSpeaker.save({ validateModifiedOnly: true });
-  
+
       await speaker.save({ new: true, validateModifiedOnly: true });
-  
+
       const populatedSpeaker = await Speaker.findById(speaker.id).populate(
         "sessions"
       );
-  
+
       res.status(200).json({
         status: "success",
         data: populatedSpeaker,
       });
     } else {
       // * Not a Bluemeet user yet
-  
+
       // TODO => Create a speaker registration with status as pending and cancelled as false.
-  
+
       const newSpeakerRegistration = await Registration.create({
         type: "Speaker",
         status: "Pending",
@@ -469,17 +581,17 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         event_picture: eventGettingSpeaker.image,
         community_picture: eventGettingSpeaker.image,
       });
-  
+
       // Add invitaion and magic link to this registration
-  
+
       newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
       newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-  
+
       await newSpeakerRegistration.save({
         new: true,
         validateModifiedOnly: true,
       });
-  
+
       const speaker = await Speaker.create({
         registrationId: newSpeakerRegistration._id,
         firstName: req.body.firstName,
@@ -494,9 +606,9 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
         dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
-  
+
       speaker.socialMediaHandles = req.body.socialMediaHandles;
-  
+
       // 2.) Send new Invitation via mail to speaker
       const msg = {
         to: req.body.email, // Change to your recipient
@@ -505,7 +617,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
       };
-  
+
       if (req.body.sendInvitation) {
         sgMail
           .send(msg)
@@ -525,31 +637,29 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         speaker.invitationStatus = "Not sent";
         await speaker.save({ new: true, validateModifiedOnly: true });
       }
-  
+
       const document = await SpeakersIdsCommunityWise.findById(
         communityGettingSpeaker.speakersDocIdCommunityWise
       );
-  
+
       document.speakersIds.push(speaker._id);
       eventGettingSpeaker.speaker.push(speaker._id);
       await eventGettingSpeaker.save({ validateModifiedOnly: true });
-  
+
       await speaker.save({ new: true, validateModifiedOnly: true });
-  
+
       const populatedSpeaker = await Speaker.findById(speaker.id).populate(
         "sessions"
       );
-  
+
       res.status(200).json({
         status: "success",
         data: populatedSpeaker,
       });
     }
-  }
-  catch(error) {
+  } catch (error) {
     console.log(error);
   }
-  
 });
 
 // added Sessions
