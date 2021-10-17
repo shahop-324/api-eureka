@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
@@ -6,6 +6,9 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import dateFormat from "dateformat";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import AvatarMenu from "./../AvatarMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import {fetchSpeakerRegistrationInfo} from "./../../actions";
 
 const NavBar = styled.div`
   height: 7vh;
@@ -84,12 +87,22 @@ const Announcement = styled.div`
 const SpeakerMagicLinkDestination = () => {
   // Get event details and display on page.
   // Get attendee || speaker || exhibitor logged in and when clicked on join event or waiting room please set event access token.
+  const params = useParams();  
+  const dispatch = useDispatch();
+
+  const registrationId = params.registrationId;
+
+  const { isSignedIn } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(fetchSpeakerRegistrationInfo(registrationId));
+  }, []);
 
   return (
     <>
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
-        <AvatarMenu />
+        {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
 
       <div
@@ -170,4 +183,3 @@ const SpeakerMagicLinkDestination = () => {
 };
 
 export default SpeakerMagicLinkDestination;
-

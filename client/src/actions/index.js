@@ -9166,6 +9166,53 @@ export const fetchEventForMagicLinkPage =
     }
   };
 
+  export const fetchSpeakerRegistrationInfo = (registrationId) => async(dispatch, getState) => {
+    try{
+
+      const res = await fetch(
+        `${BaseURL}getSpeakerRegistrationInfoForMagicLinkPage/${registrationId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      // Inside result we get data(eventDetails) and if this speaker is registered on Bluemeet platform as a user or not if he / she is on Bluemeet platform than we will get his / her name, emai, userId 
+
+      
+
+
+    }
+    catch(error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to fetch speaker registration info details. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  }
+
 export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
   try {
     const res = await fetch(`${BaseURL}users/loginMagicLinkUser/${userId}`, {
