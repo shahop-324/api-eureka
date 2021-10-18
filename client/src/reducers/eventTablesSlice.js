@@ -29,14 +29,15 @@ const eventTablesSlice = createSlice({
     },
 
     FetchEventTable(state, action) {
-        // console.log(action.payload, "this is table details payload");
+        console.log(action.payload, "this is table details payload");
       state.tableDetails = action.payload.eventTable;
       state.isLoading = false;
     },
 
     UpdateEventTable(state, action) {
+      console.log(action.payload.table, "This is the updated table");
       state.eventTables = state.eventTables.map((table) =>
-        table._id === action.payload.table ? action.payload.table : table
+        table._id === action.payload.table._id ? action.payload.table : table
       );
       state.isLoading = false;
     },

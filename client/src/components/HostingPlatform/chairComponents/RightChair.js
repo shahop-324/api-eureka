@@ -104,9 +104,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage4, id).catch((e) => {
-        console.log(
-          "There has been a problem with your fetch operation: " + e.message
-        );
+        // console.log(
+        //   "There has been a problem with your fetch operation: " + e.message
+        // );
       });
     } else {
       document.getElementById(`${id}_chair_4_img_blob`).remove();

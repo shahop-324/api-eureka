@@ -4,7 +4,7 @@ import "./../Styles/rooms.scss";
 import IconButton from "@material-ui/core/IconButton";
 
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
-import Amazon from './../../../assets/images/amazon.png';
+import Amazon from "./../../../assets/images/amazon.png";
 
 import socket from "./../service/socket";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,24 +20,29 @@ import LOWER_7_CHAIR from "../chairComponents/Lower_7_Chair";
 import { roomsActions } from "../../../reducers/roomsSlice";
 import TableScreen from "../Screens/TableScreen";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 import EditTable from "./EditTable";
+import { getEventTable } from "../../../actions";
 
+const RoomTitle = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #ffffff;
+  font-size: 0.83rem;
+`;
 const RoomWraper = styled.div`
-background-color: #345b63 !important;
+  background-color: #345b63 !important;
 
-&:hover {
-  border: 1px solid #dcc7be;
-}
-`
+  &:hover {
+    border: 1px solid #dcc7be;
+  }
+`;
 
 const RoomNumber = styled.div`
-color: #dcc7be;
-`
+  color: #dcc7be;
+`;
 
-
-const Room = ({ id, num }) => {
-
+const Room = ({ id, num, image, title, rawImage, priority }) => {
   const [openEditTable, setOpenEditTable] = React.useState(false);
 
   const [openTableScreen, setOpenTableScreen] = useState(false);
@@ -46,7 +51,7 @@ const Room = ({ id, num }) => {
 
   const handleCloseEditTable = () => {
     setOpenEditTable(false);
-  }
+  };
 
   const launchTableScreen = () => {
     setOpenTableScreen(true);
@@ -59,7 +64,6 @@ const Room = ({ id, num }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
       dispatch(
         roomsActions.FetchNumOfPeopleOnTable({
@@ -67,21 +71,19 @@ const Room = ({ id, num }) => {
         })
       );
     });
-
-  }, [chairArrangement, dispatch ]);
+  }, [chairArrangement, dispatch]);
 
   return (
     <>
-    <RoomWraper className="room-wrapper px-4 py-3">
-
-    <div className="room-num-and-edit-wrapper d-flex flex-row justify-content-between align-items-center">
-          
+      <RoomWraper className="room-wrapper px-4 py-3">
+        <div className="room-num-and-edit-wrapper d-flex flex-row justify-content-between align-items-center">
           <RoomNumber className="room-number">{num}</RoomNumber>
           <IconButton
             aria-label="edit-room-details"
             onClick={() => {
               // TODO Open Table edit form
               setOpenEditTable(true);
+              dispatch(getEventTable(id));
             }}
           >
             <EditRoundedIcon style={{ fontSize: "20", fill: "#ffffff" }} />
@@ -114,7 +116,39 @@ const Room = ({ id, num }) => {
 
           <div className=" room-table px-3 py-4">
             <div className="table-logo-container px-2 py-2">
-              <img src={Amazon} alt="logo" style={{maxWidth: "100%", maxHeight: "100%"}}/>
+              {(() => {
+                switch (priority) {
+                  case "Logo":
+                    return rawImage ? (
+                      <img
+                        src={image}
+                        alt="logo"
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    );
+
+                  case "Title":
+                    return title ? (
+                      <div
+                        className="d-flex flex-row align-items-center justify-content-center"
+                        style={{ height: "100%" }}
+                      >
+                        <RoomTitle>{title}</RoomTitle>
+                      </div>
+                    ) : (
+                      <></>
+                    );
+
+                  default:
+                    break;
+                }
+              })()}
             </div>
           </div>
 
@@ -135,25 +169,29 @@ const Room = ({ id, num }) => {
 
           {/* // LOWER_7_CHAIR */}
           <div className="ms-2">
-          <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} />
+            <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} />
           </div>
         </div>
-      
+      </RoomWraper>
 
-    </RoomWraper>
-      
-       
       {/* Table Screen here */}
 
-      {openTableScreen ? <TableScreen
-        openTableScreen={openTableScreen}
-        launchTableScreen={launchTableScreen}
-        closeTableScreen={closeTableScreen}
-        id={id}
-      /> : ""}
+      {openTableScreen ? (
+        <TableScreen
+          openTableScreen={openTableScreen}
+          launchTableScreen={launchTableScreen}
+          closeTableScreen={closeTableScreen}
+          id={id}
+        />
+      ) : (
+        ""
+      )}
 
-      <EditTable open={openEditTable} handleClose={handleCloseEditTable} tableId={id} />
-      
+      <EditTable
+        open={openEditTable}
+        handleClose={handleCloseEditTable}
+        tableId={id}
+      />
     </>
   );
 };

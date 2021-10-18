@@ -106,9 +106,9 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage6, id).catch((e) => {
-        console.log(
-          "There has been a problem with your fetch operation: " + e.message
-        );
+        // console.log(
+        //   "There has been a problem with your fetch operation: " + e.message
+        // );
       });
     } else {
       document.getElementById(`${id}_chair_6_img_blob`).remove();
@@ -155,7 +155,7 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
 
           // dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
 
-            launchTableScreen();
+          launchTableScreen();
         }}
       >
         <div className="lower-chair chair pt-2">

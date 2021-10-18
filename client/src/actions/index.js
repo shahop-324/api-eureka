@@ -9437,9 +9437,12 @@ export const fetchTableChats = () => async (dispatch, getState) => {
 };
 
 export const editTable =
-  (title, tableId, file) => async (dispatch, getState) => {
+  (title, tableId, file, priority) => async (dispatch, getState) => {
+    console.log(title, tableId, file, priority);
     try {
       const key = `${tableId}/${UUID()}.jpeg`;
+
+      if(file) {
 
       s3.getSignedUrl(
         "putObject",
@@ -9456,39 +9459,76 @@ export const editTable =
           });
 
           console.log(awsRes);
+
+          const res = await fetch(`${BaseURL}editTable/${tableId}`, {
+            method: "POST",
+
+            body: JSON.stringify({
+              title: title,
+              image: key,
+              priority: priority,
+            }),
+
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
+
+          if (!res.ok) {
+            if (!res.message) {
+              throw new Error("Something went wrong");
+            } else {
+              throw new Error(res.message);
+            }
+          }
+
+          const result = await res.json();
+          console.log(result);
+
+          dispatch(
+            eventTablesActions.UpdateEventTable({
+              table: result.data,
+            })
+          );
         }
       );
+    }
 
-      const res = await fetch(`${BaseURL}editTable/${tableId}`, {
-        method: "POST",
+else {
+  const res = await fetch(`${BaseURL}editTable/${tableId}`, {
+    method: "POST",
 
-        body: JSON.stringify({
-          title: title,
-          image: key,
-        }),
+    body: JSON.stringify({
+      title: title,
+      priority: priority,
+    }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      });
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getState().auth.token}`,
+    },
+  });
 
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(res.message);
-        }
-      }
+  if (!res.ok) {
+    if (!res.message) {
+      throw new Error("Something went wrong");
+    } else {
+      throw new Error(res.message);
+    }
+  }
 
-      const result = await res.json();
-      console.log(result);
+  const result = await res.json();
+  console.log(result);
 
-      dispatch(
-        eventTablesActions.UpdateEventTable({
-          table: result.data,
-        })
-      );
+  dispatch(
+    eventTablesActions.UpdateEventTable({
+      table: result.data,
+    })
+  );
+}
+
+
     } catch (error) {
       console.log(error);
 
@@ -9549,6 +9589,7 @@ export const getEventTables = (eventId) => async (dispatch, getState) => {
 };
 
 export const getEventTable = (tableId) => async (dispatch, getState) => {
+  dispatch(eventTablesActions.startLoading());
   try {
     const res = await fetch(`${BaseURL}getTableDetails/${tableId}`, {
       method: "GET",
@@ -9568,7 +9609,7 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
     }
 
     const result = await res.json();
-    console.log(result);
+    // console.log(result);
 
     dispatch(
       eventTablesActions.FetchEventTable({
@@ -9577,6 +9618,7 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
     );
   } catch (error) {
     console.log(error);
+    dispatch(eventTablesActions.hasError("Failed to get table details. Please try again!"));
 
     dispatch(
       snackbarActions.openSnackBar({

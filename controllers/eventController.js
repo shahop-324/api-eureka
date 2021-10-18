@@ -17,6 +17,7 @@ const User = require("./../models/userModel");
 const Mux = require("@mux/mux-node");
 const Vibe = require("./../models/vibeModel");
 const Registration = require("./../models/registrationsModel");
+const RoomTable = require("./../models/roomTableModel");
 const { Video } = new Mux(
   process.env.MUX_TOKEN_ID,
   process.env.MUX_TOKEN_SECRET
@@ -112,6 +113,19 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     communityId: communityGettingEvent._id,
     numberOfTablesInLounge: req.body.numberOfTablesInLounge,
   });
+
+  // Initialise all tables as specified
+
+  for (let i = 0; i < req.body.numberOfTablesInLounge * 1; i++) {
+    
+    // Create tables with tableId as `${eventId}_table_${i}`
+
+    await RoomTable.create({
+      eventId: createdEvent._id,
+      tableId: `${createdEvent._id}_table_${i}`,
+      lastUpdatedAt: Date.now(),
+    });
+  }
 
   // Generate mux stream key --- this needs to be very very private.
 
@@ -331,8 +345,6 @@ exports.createBooth = catchAsync(async (req, res, next) => {
             // Provide magic_link and invitation link
             newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
             newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
-
-            
 
             // Save user doc and registration doc
             await newRegistration.save({

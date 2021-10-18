@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const roomTableSchema = new mongoose.Schema(
   {
+    priority: {
+      type: String,
+      enum: ["Logo", "Title"],
+      default: "Logo",
+    },
     eventId: {
       type: mongoose.Schema.ObjectId,
       ref: "Event",

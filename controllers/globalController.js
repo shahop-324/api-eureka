@@ -1284,8 +1284,12 @@ exports.editTable = catchAsync(async (req, res, next) => {
 
   const tableDoc = await RoomTable.findOne({ tableId: tableId });
 
-  tableDoc.image = req.body.image;
+  if (req.body.image) {
+    tableDoc.image = req.body.image;
+  }
+
   tableDoc.title = req.body.title;
+  tableDoc.priority = req.body.priority;
 
   const updatedTable = await tableDoc.save({
     new: true,

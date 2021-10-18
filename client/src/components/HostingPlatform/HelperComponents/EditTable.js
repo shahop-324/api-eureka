@@ -3,12 +3,17 @@ import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { Avatar, IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles } from "@material-ui/core/styles";
-import {editTable, getEventTable} from "./../../../actions";
+import { editTable, getEventTable } from "./../../../actions";
+import Loader from "./../../Loader";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
 
 const Input = styled.input`
   &:focus {
@@ -109,11 +114,15 @@ const EditTable = ({
 
   const dispatch = useDispatch();
 
+  const { tableDetails, isLoading, error } = useSelector(
+    (state) => state.eventTables
+  );
+
   useEffect(() => {
-    dispatch(getEventTable(tableId));
+    // dispatch(getEventTable(tableId));
   }, []);
 
-  console.log(tableId.slice(31));
+  // console.log(tableId.slice(31));
 
   const TableNum = tableId.slice(31) * 1 + 1;
 
@@ -124,25 +133,22 @@ const EditTable = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    let ModifiedFormValues = {};
-
-    ModifiedFormValues.title = formValues.title;
-
-    dispatch(editTable(formValues.title, tableId, file ));
+    dispatch(editTable(formValues.title, tableId, file, priority));
   };
 
-  let imgUrl;
+  // let imgUrl;
 
-  //   if (imgKey) {
-  //     if (imgKey && !imgKey.startsWith("https://")) {
-  //       imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
-  //     } else {
-  //       imgUrl = imgKey;
-  //     }
+  // if(tableDetails) {
+  //   if(tableDetails.image) {
+  //     imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${tableDetails.image}`;
   //   }
+  // }
 
+  const [priority, setPriority] = React.useState(tableDetails.priority);
   const [file, setFile] = useState(null);
-  const [fileToPreview, setFileToPreview] = useState(imgUrl);
+  const [fileToPreview, setFileToPreview] = useState(
+    `https://bluemeet.s3.us-west-1.amazonaws.com/${tableDetails.image}`
+  );
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -192,7 +198,6 @@ const EditTable = ({
                 onChange={onFileChange}
                 className="form-control"
               />
-
             </div>
             <div className="form-group mb-5">
               <FormLabel htmlFor="communityHeadline">Title</FormLabel>
@@ -207,23 +212,51 @@ const EditTable = ({
                 label="Table title"
               />
             </div>
+            <FormControl component="fieldset" className="mb-4">
+              <FormLabel component="legend">Which one to show ?</FormLabel>
+              <RadioGroup
+                row
+                aria-label="gender"
+                defaultValue={priority}
+                name="radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="Logo"
+                  control={
+                    <Radio
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setPriority("Logo");
+                        }
+                      }}
+                    />
+                  }
+                  label="Logo"
+                />
+                <FormControlLabel
+                  value="Title"
+                  control={
+                    <Radio
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setPriority("Title");
+                        }
+                      }}
+                    />
+                  }
+                  label="Title"
+                />
+              </RadioGroup>
+            </FormControl>
             <div className="row edit-profile-form-row mb-3 d-flex flex-row justify-content-end px-0 mx-0">
-            <button
-              type="submit"
-              className="col-3 btn btn-primary btn-outline-text me-3"
-              style={{ textAlign: "center" }}
-            >
-              Save Changes
-            </button>
-            <button
-              disabled={pristine || submitting}
-              onClick={reset}
-              className="col-3 btn btn-outline-primary btn-outline-text"
-              style={{ textAlign: "center" }}
-            >
-              Discard Changes
-            </button>
-          </div>
+              <button
+                type="submit"
+                className="col-3 btn btn-primary btn-outline-text"
+                style={{ textAlign: "center" }}
+              >
+                Save Changes
+              </button>
+            </div>
           </form>
         </>
       </Dialog>
@@ -233,9 +266,9 @@ const EditTable = ({
 
 const mapStateToProps = (state) => ({
   initialValues: {
-    logo:
-      state.coupon.couponDetails && state.coupon.couponDetails.discountCode
-        ? state.coupon.couponDetails.discountCode
+    title:
+      state.eventTables.tableDetails && state.eventTables.tableDetails.title
+        ? state.eventTables.tableDetails.title
         : "",
   },
 });
