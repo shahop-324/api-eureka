@@ -6,7 +6,7 @@ import styled from "styled-components";
 import VideoCall from "./../../../../assets/images/video-call.svg";
 import Paused from "./../../../../assets/images/paused.svg";
 import Ended from "./../../../../assets/images/ended.svg";
-import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
+import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 
 import {
   renderGalleryView,
@@ -53,21 +53,21 @@ const NotYetStarted = styled.div`
 `;
 
 const ButtonStyled = styled.button`
-font-family: "Ubuntu" !important;
-font-weight: 600 !important;
-color: #ffffff !important;
-font-size: 1.1rem !important;
-padding: 12px 20px !important;
-border-radius: 25px !important;
-`
+  font-family: "Ubuntu" !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  font-size: 1.1rem !important;
+  padding: 12px 20px !important;
+  border-radius: 25px !important;
+`;
 
 const Text = styled.div`
-font-size: 1rem;
-font-weight: 500;
-color: #ffffff;
-font-family: "Ubuntu";
-text-align: center;
-`
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  font-family: "Ubuntu";
+  text-align: center;
+`;
 
 const StreamBody = ({
   handleOpenSideDrawer,
@@ -85,8 +85,7 @@ const StreamBody = ({
   volumeIndicators,
   peopleInThisSession,
 }) => {
-
-  const {sessionDetails} = useSelector((state) => state.session);
+  const { sessionDetails } = useSelector((state) => state.session);
 
   const status = sessionDetails.runningStatus;
 
@@ -201,38 +200,61 @@ const StreamBody = ({
           </div>
         ) : (
           <NotYetStarted>
-
             {(() => {
               switch (status) {
                 case "Not Yet Started":
-                  return <>
-                  
-                  <img src={VideoCall} style={{ height: "300px" }} className="mb-4" alt={"No video"}/>
-            <Text >Uh oh! Seems like this session is not yet started.</Text>
-                  </>
-                  
-                  case "Paused": 
-                  return <>
-                  <img src={Paused} style={{ height: "300px" }} className="mb-4" alt={"No video"}/>
-            <Text >Looks like this session is paused for now.</Text>
-                  </>
-
-                  case "Ended":
-                    return <>
- <img src={Ended} style={{ height: "300px" }} className="mb-4" alt={"No video"}/>
-            <Text className="mb-4">Oops, this session has already ended. But we can still watch together.</Text>
-<ButtonStyled className="btn btn-danger btn-outline-text"> <PlayCircleRoundedIcon className="me-2" />  <span>Let's watch </span></ButtonStyled>
-
-
+                  return (
+                    <>
+                      <img
+                        src={VideoCall}
+                        style={{ height: "300px" }}
+                        className="mb-4"
+                        alt={"No video"}
+                      />
+                      <Text>
+                        Uh oh! Seems like this session is not yet started.
+                      </Text>
                     </>
-              
+                  );
+
+                case "Paused":
+                  return (
+                    <>
+                      <img
+                        src={Paused}
+                        style={{ height: "300px" }}
+                        className="mb-4"
+                        alt={"No video"}
+                      />
+                      <Text>Looks like this session is paused for now.</Text>
+                    </>
+                  );
+
+                case "Ended":
+                  return (
+                    <>
+                      <img
+                        src={Ended}
+                        style={{ height: "300px" }}
+                        className="mb-4"
+                        alt={"No video"}
+                      />
+                      <Text className="mb-4">
+                        Oops, this session has already ended. But we can still
+                        watch together.
+                      </Text>
+                      <ButtonStyled className="btn btn-danger btn-outline-text">
+                        {" "}
+                        <PlayCircleRoundedIcon className="me-2" />{" "}
+                        <span>Let's watch </span>
+                      </ButtonStyled>
+                    </>
+                  );
+
                 default:
                   break;
               }
             })()}
-
-            
-            
           </NotYetStarted>
         )}
       </div>

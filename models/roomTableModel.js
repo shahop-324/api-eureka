@@ -8,10 +8,10 @@ const roomTableSchema = new mongoose.Schema(
     tableId: {
       type: String,
     },
-    tableImage: {
+    image: {
       type: String,
     },
-    tableText: {
+    title: {
       type: String,
     },
     numberOfPeople: {

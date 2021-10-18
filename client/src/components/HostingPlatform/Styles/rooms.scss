@@ -73,6 +73,13 @@
   opacity: 1;
   transform: translateY(8px);
   z-index: 100;
+
+  border-radius: 10px;
+background: #e0e0e0;
+box-shadow: inset -20px -20px 60px #bebebe,
+            inset 20px 20px 60px #ffffff;
+
+
 }
 
 .left-chair {
@@ -83,6 +90,11 @@
   opacity: 1;
   transform: translateX(8px);
   z-index: 100;
+
+  border-radius: 10px;
+background: #e0e0e0;
+box-shadow: inset -20px -20px 60px #bebebe,
+            inset 20px 20px 60px #ffffff;
 }
 
 .right-chair {
@@ -93,6 +105,11 @@
   opacity: 1;
   transform: translateX(-8px);
   z-index: 100;
+
+  border-radius: 10px;
+background: #e0e0e0;
+box-shadow: inset -20px -20px 60px #bebebe,
+            inset 20px 20px 60px #ffffff;
 }
 
 .lower-chair {
@@ -103,11 +120,18 @@
   opacity: 1;
   transform: translateY(-8px);
   z-index: 100;
+
+  border-radius: 10px;
+background: #e0e0e0;
+box-shadow: inset -20px -20px 60px #bebebe,
+            inset 20px 20px 60px #ffffff;
 }
 
 .upper-chair-wrapper {
   border-top: 1px solid rgb(255, 255, 255);
   border-radius: 8px;
+
+  
 }
 
 .left-chair-wrapper {
@@ -126,7 +150,8 @@
 }
 
 .room-table {
-  background: #202020 0% 0% no-repeat padding-box;
+  width: 100%;
+  background: #181818 0% 0% no-repeat padding-box;
   box-shadow: 7px 22px 80px #ffffff29;
   border-radius: 15px;
   opacity: 1;
@@ -243,9 +268,9 @@
 
 .table-side-drawer {
   background: rgba(138, 138, 138, 0.082);
-  box-shadow: 0 8px 32px 0 rgba(80, 80, 80, 0.37);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  // box-shadow: 0 8px 32px 0 rgba(80, 80, 80, 0.37);
+  // backdrop-filter: blur(4px);
+  // -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
 }

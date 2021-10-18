@@ -50,6 +50,7 @@ import { mailActions } from "../reducers/mailSlice";
 import { personalChatActions } from "../reducers/personalChatSlice";
 import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
 import { magicLinkActions } from "./../reducers/magicLinkSlice";
+import { eventTablesActions } from "./../reducers/eventTablesSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -9406,6 +9407,180 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
     dispatch(
       snackbarActions.openSnackBar({
         message: "Failed to log in. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const fetchTableChats = () => async (dispatch, getState) => {
+  try {
+    // Write logic to fetch all table chats for this table
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to log in. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const editTable =
+  (title, tableId, file) => async (dispatch, getState) => {
+    try {
+      const key = `${tableId}/${UUID()}.jpeg`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          const awsRes = await fetch(presignedURL, {
+            method: "PUT",
+
+            body: file,
+
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
+
+          console.log(awsRes);
+        }
+      );
+
+      const res = await fetch(`${BaseURL}editTable/${tableId}`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          title: title,
+          image: key,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        eventTablesActions.UpdateEventTable({
+          table: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update table. Please try again!",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+    }
+  };
+
+export const getEventTables = (eventId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getEventTables/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      eventTablesActions.FetchEventTables({
+        eventTables: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to get tables. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const getEventTable = (tableId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getTableDetails/${tableId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      eventTablesActions.FetchEventTable({
+        eventTable: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to get table details. Please try again!",
         severity: "error",
       })
     );

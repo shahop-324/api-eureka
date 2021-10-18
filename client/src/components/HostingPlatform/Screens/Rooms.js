@@ -10,6 +10,7 @@ import socket from "../service/socket";
 import {
   fetchChairArrangement,
   fetchNumberOfPeopleOnTable,
+  getEventTables,
 } from "../../../actions";
 
 const Rooms = () => {
@@ -22,13 +23,13 @@ const Rooms = () => {
   };
 
   useEffect(() => {
+    dispatch(getEventTables(eventId));
     socket.on("roomChairData", ({ roomChairs }) => {
       console.log(roomChairs);
       dispatch(fetchChairArrangement(roomChairs));
     });
 
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
-      console.log(numberOfPeopleOnTable);
       dispatch(fetchNumberOfPeopleOnTable(numberOfPeopleOnTable));
     });
   }, [dispatch]);
@@ -40,8 +41,6 @@ const Rooms = () => {
 
   return (
     <>
-     
-
       <div className="rooms-grid-layout ">
         {/* {tables} */}
 

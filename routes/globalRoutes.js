@@ -191,4 +191,22 @@ router.get(
   globalController.getExhibitorRegistrationInfoForMagicLinkPage
 );
 
+router.get(
+  "/getEventTables/:eventId",
+  authController.protect,
+  globalController.fetchEventTables
+);
+
+router.post(
+  "/editTable/:tableId",
+  authController.protect,
+  globalController.editTable
+);
+
+router.get(
+  "/getTableDetails/:tableId",
+  authController.protect,
+  globalController.getTableDetails
+);
+
 module.exports = router;

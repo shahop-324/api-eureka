@@ -36,7 +36,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName8 = chair.userName;
-    userImage8 = chair.userImage.startsWith("https://lh3.googleusercontent.com")
+    userImage8 = chair.userImage.startsWith("https://")
       ? chair.userImage
       : `https://bluemeet.s3.us-west-1.amazonaws.com/${chair.userImage}`;
     userCity8 = chair.userCity;
@@ -54,7 +54,6 @@ const LeftChair = ({ id, launchTableScreen }) => {
   const [preview, setPreview] = useState(userImage8);
 
   const params = useParams();
-  // console.log(params);
 
   const eventId = params.eventId;
 

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
-import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import socket from "./../service/socket";
 import "./../../../index.css";
 import "./../Styles/rooms.scss";
-
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded";
@@ -20,16 +20,14 @@ import ZoomOutMapOutlinedIcon from "@material-ui/icons/ZoomOutMapOutlined";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
 import KeyboardTabRoundedIcon from "@material-ui/icons/KeyboardTabRounded";
-
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
-
 import AgoraRTC from "agora-rtc-sdk-ng";
-
 import styled from "styled-components";
+import { fetchTableChats } from "./../../../actions";
 
 const TableScreenBody = styled.div`
-  background-color: #152d35 !important;
+  background-color: #0b1b20 !important;
 `;
 
 // ? Local tracks and client are being managed in rtc object
@@ -290,11 +288,12 @@ const TableScreen = ({
   }
 
   useEffect(() => {
-    // startBasicCall();
+    window.addEventListener("beforeunload", leaveTable);
 
     return () => {
-      alert("I am unloading now");
+      // alert("I am unloading now");
       leaveTable();
+      window.removeEventListener("beforeunload", leaveTable); // remove the event handler for normal unmounting
     };
   }, []);
 
@@ -451,7 +450,6 @@ const TableScreen = ({
                     />
                   </IconButton>
                 </div>
-
                 {/* <div
                   className="btn-filled-h-stage end-session-btn px-3 py-2 ms-4"
                   id="leave-table"
@@ -476,16 +474,16 @@ const TableScreen = ({
             </div>
             <div
               className=""
-              style={{ display: "grid", gridTemplateColumns: "8fr 0.5fr" }}
+              style={{ display: "grid", gridTemplateColumns: "8fr 0.2fr" }}
             >
               <div className="table-side-drawer"></div>
-              <div>
+              {/* <div>
                 <IconButton className="ms-3">
                   <KeyboardTabRoundedIcon
-                    style={{ fill: "#D3D3D3", size: "20" }}
+                    style={{ fill: "#D3D3D3", fontSize: "17px" }}
                   />
                 </IconButton>
-              </div>
+              </div> */}
             </div>
           </div>
         </TableScreenBody>

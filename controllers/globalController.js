@@ -14,6 +14,7 @@ const Session = require("./../models/sessionModel");
 const Speaker = require("./../models/speakerModel");
 const PersonalChat = require("./../models/PersonalChatModel");
 const Registration = require("./../models/registrationsModel");
+const RoomTable = require("../models/roomTableModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1161,7 +1162,6 @@ exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
 
 exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
   async (req, res, next) => {
-    
     const registrationId = req.params.registrationId;
 
     const registrationDoc = await Registration.findById(registrationId);
@@ -1265,3 +1265,46 @@ exports.getExhibitorRegistrationInfoForMagicLinkPage = catchAsync(
 //! After user signs up then update their list of registeredEvents, registrations and update each registration doc with their userId and other userData
 
 // Don't allow to edit email of speaker or booth  once added they can just delete previous one and add new with correct email.
+
+exports.fetchEventTables = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const tables = await RoomTable.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: tables,
+  });
+});
+
+exports.editTable = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const tableDoc = await RoomTable.findOne({ tableId: tableId });
+
+  tableDoc.image = req.body.image;
+  tableDoc.title = req.body.title;
+
+  const updatedTable = await tableDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedTable,
+  });
+});
+
+exports.getTableDetails = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const tableDoc = await RoomTable.findOne({ tableId: tableId });
+
+  res.status(200).json({
+    status: "success",
+    data: tableDoc,
+  });
+});

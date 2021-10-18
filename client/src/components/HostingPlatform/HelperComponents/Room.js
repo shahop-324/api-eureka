@@ -21,6 +21,7 @@ import { roomsActions } from "../../../reducers/roomsSlice";
 import TableScreen from "../Screens/TableScreen";
 
 import styled from 'styled-components';
+import EditTable from "./EditTable";
 
 const RoomWraper = styled.div`
 background-color: #345b63 !important;
@@ -36,9 +37,16 @@ color: #dcc7be;
 
 
 const Room = ({ id, num }) => {
+
+  const [openEditTable, setOpenEditTable] = React.useState(false);
+
   const [openTableScreen, setOpenTableScreen] = useState(false);
 
   const chairArrangement = useSelector((state) => state.rooms.chairs);
+
+  const handleCloseEditTable = () => {
+    setOpenEditTable(false);
+  }
 
   const launchTableScreen = () => {
     setOpenTableScreen(true);
@@ -53,7 +61,6 @@ const Room = ({ id, num }) => {
   useEffect(() => {
 
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
-      console.log(numberOfPeopleOnTable);
       dispatch(
         roomsActions.FetchNumOfPeopleOnTable({
           numberOfPeopleOnTable: numberOfPeopleOnTable,
@@ -74,6 +81,7 @@ const Room = ({ id, num }) => {
             aria-label="edit-room-details"
             onClick={() => {
               // TODO Open Table edit form
+              setOpenEditTable(true);
             }}
           >
             <EditRoundedIcon style={{ fontSize: "20", fill: "#ffffff" }} />
@@ -82,19 +90,19 @@ const Room = ({ id, num }) => {
 
         <div className="upper-chair-row mt-3">
           {/* // Upper_1_Chair */}
-          <div>
+          {/* <div>
             <UPPER_1_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div>
+          </div> */}
 
           {/* // UPPER_2_CHAIR */}
-          {/* <div className="mx-3">
+          <div className="me-2">
             <UPPER_2_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div> */}
+          </div>
 
           {/* // UPPER_3_CHAIR */}
-          {/* <div>
+          <div className="ms-2">
             <UPPER_3_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div> */}
+          </div>
         </div>
 
         <div className="mid-l-r-chair-and-table d-flex flex-row">
@@ -104,9 +112,9 @@ const Room = ({ id, num }) => {
             <LeftChair id={id} launchTableScreen={launchTableScreen} />
           </div>
 
-          <div className="col-6 room-table px-5 py-4">
+          <div className=" room-table px-3 py-4">
             <div className="table-logo-container px-2 py-2">
-              {/* <img src={Amazon} alt="logo" style={{maxWidth: "100%", maxHeight: "100%"}}/> */}
+              <img src={Amazon} alt="logo" style={{maxWidth: "100%", maxHeight: "100%"}}/>
             </div>
           </div>
 
@@ -118,15 +126,17 @@ const Room = ({ id, num }) => {
 
         <div className="lower-chair-row mb-3">
           {/*LOWER_5_CHAIR */}
-          <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} />
+          {/* <LOWER_5_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
 
           {/* // LOWER_6_CHAIR */}
-          {/* <div className="mx-3">
+          <div className="me-2">
             <LOWER_6_CHAIR id={id} launchTableScreen={launchTableScreen} />
-          </div> */}
+          </div>
 
           {/* // LOWER_7_CHAIR */}
-          {/* <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} /> */}
+          <div className="ms-2">
+          <LOWER_7_CHAIR id={id} launchTableScreen={launchTableScreen} />
+          </div>
         </div>
       
 
@@ -141,6 +151,8 @@ const Room = ({ id, num }) => {
         closeTableScreen={closeTableScreen}
         id={id}
       /> : ""}
+
+      <EditTable open={openEditTable} handleClose={handleCloseEditTable} tableId={id} />
       
     </>
   );
