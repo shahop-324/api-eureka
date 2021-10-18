@@ -107,9 +107,7 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage1, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        //   "There has been a problem with your fetch operation."
       });
     } else {
       document.getElementById(`${id}_chair_1_img_blob`).remove();
@@ -157,7 +155,7 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className="upper-chair chair pt-2">
+        <div className={`upper-chair chair pt-2 ${chairIsOccupied ? " " : "upper-chair-hover"}`}>
           {/* <PeopleGridAvatar /> */}
 
           <div style={{ transform: "translateY(-16.5px)" }}>

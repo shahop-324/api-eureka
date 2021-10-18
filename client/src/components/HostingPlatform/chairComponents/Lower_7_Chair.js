@@ -5,6 +5,7 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
+import { getRTCTokenForJoiningTable } from "../../../actions";
 
 const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   const userDetails = useSelector((state) => state.user.userDetails);
 
   const { email } = useSelector((state) => state.eventAccessToken);
-
+  const userId = useSelector((state) => state.user.userDetails._id);
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
   const userImage = userDetails.image ? userDetails.image : " ";
@@ -103,9 +104,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage7, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        //   "There has been a problem with your fetch operation."
       });
     } else {
       document.getElementById(`${id}_chair_7_img_blob`).remove();
@@ -152,12 +151,10 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
             }
           );
 
-          // dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
-
-          launchTableScreen();
+          dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className="lower-chair chair pt-2">
+        <div className={`lower-chair chair pt-2 ${chairIsOccupied ? " " : "lower-chair-hover"}`}>
           <div style={{ transform: "translateY(0)" }}>
             <Popup
               trigger={

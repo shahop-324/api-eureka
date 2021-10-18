@@ -7,7 +7,7 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { fetchTwillioVideoRoomToken } from "../../../actions";
+import { fetchTwillioVideoRoomToken, getRTCTokenForJoiningTable } from "../../../actions";
 
 const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -105,9 +105,7 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage3, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        //   "There has been a problem with your fetch operation."
       });
     } else {
       document.getElementById(`${id}_chair_3_img_blob`).remove();
@@ -152,12 +150,10 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
             }
           );
 
-          // dispatch(fetchTwillioVideoRoomToken(userId, id, launchTableScreen));
-
-          launchTableScreen();
+          dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className="upper-chair chair pt-2">
+        <div className={`upper-chair chair pt-2 ${chairIsOccupied ? " " : "upper-chair-hover"}`}>
           <div style={{ transform: "translateY(-16.5px)" }}>
             <Popup
               trigger={

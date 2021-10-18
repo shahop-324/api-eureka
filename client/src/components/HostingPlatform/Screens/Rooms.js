@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./../Styles/rooms.scss";
-
+import { Popup, Icon } from "semantic-ui-react";
 import Room from "./../HelperComponents/Room";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -60,17 +60,6 @@ const Rooms = () => {
   return (
     <>
       <div className="rooms-grid-layout ">
-        {/* {tables} */}
-
-        {/* {((numberOfTables, eventId) => {
-          let TablesArray = [];
-
-          for (let i = 0; i < numberOfTables; i++) {
-            TablesArray.push(<Room id={`${eventId}_table_${i}`} num={i + 1} />);
-          }
-          return TablesArray;
-        })(numberOfTables, eventId)} */}
-
         {RenderEventTables(eventTables)}
       </div>
     </>

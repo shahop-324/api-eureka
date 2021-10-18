@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import { Popup } from "semantic-ui-react";
+import { Popup, Icon } from "semantic-ui-react";
+
 import socket from "../service/socket";
 import { useParams } from "react-router";
 import { getRTCTokenForJoiningTable } from "../../../actions";
+import Tooltip from "@mui/material/Tooltip";
 
 const LeftChair = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -47,7 +49,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
     // What if chair_1 is not occupied
     chairIsOccupied = false;
 
-    displayPopUp = "none";
+    // displayPopUp = "none";
   }
 
   const params = useParams();
@@ -104,9 +106,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage4, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        //   "There has been a problem with your fetch operation."
       });
     } else {
       document.getElementById(`${id}_chair_4_img_blob`).remove();
@@ -121,10 +121,13 @@ const LeftChair = ({ id, launchTableScreen }) => {
 
   return (
     <>
-      <div
+<span
+        
         className="right-chair-wrapper"
+        style={{ position: "absolute", display: "inline-block" }}
         id={`${id}_chair_4`}
         onClick={() => {
+          if(chairIsOccupied) return;
           console.log(`${id}_chair_4`);
 
           dispatch(
@@ -157,61 +160,52 @@ const LeftChair = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className="right-chair chair pt-2">
-          <div style={{ transform: "translate(8px, -8px)" }}>
-            <Popup
-              trigger={
-                <div
-                  id={`${id}_chair_4_img`}
-                  style={{
-                    position: "relative",
-                    top: "0",
-                    left: "0",
-                    height: "100%",
-                    width: "100%",
-                    borderRadius: "10px",
-                  }}
-                ></div>
-              }
-              position="right center"
-            >
-              <div style={{ display: displayPopUp }}>
-                <div
-                  className="d-flex flex-row align-items-center"
-                  style={{ display: displayPopUp }}
-                >
-                  <Avatar
-                    alt={userName4}
-                    src={userImage4}
-                    variant="rounded"
-                    style={{ display: displayPopUp }}
-                  />
-                  <div className="ms-3" style={{ display: displayPopUp }}>
+
+        <Popup content={<div                
+              >
+                <div className="d-flex flex-row align-items-center">
+                  <Avatar alt={userName4} src={userImage4} variant="rounded" />
+                  <div className="ms-3">
                     <div
                       className="btn-outline-text"
-                      style={{ fontSize: "14px", display: displayPopUp }}
+                      style={{ fontSize: "14px" }}
                     >
                       {userName4}
                     </div>
-                    <div
-                      className="people-headline"
-                      style={{ display: displayPopUp }}
-                    >
+                    <div className="people-headline">
                       {userDesignation4} at {userOrganisation4}
                     </div>
-                    <div
-                      className="people-location"
-                      style={{ display: displayPopUp }}
-                    >
+                    <div className="people-location">
                       {userCity4}, {userCountry4}
                     </div>
                   </div>
                 </div>
-              </div>
-            </Popup>
+              </div>} trigger={<div
+          className={`right-chair chair pt-2 ${
+            chairIsOccupied ? " " : "right-chair-hover"
+          }`}
+        >
+          <div style={{ transform: "translate(8px, -8px)" }}>
+            <span
+              
+              id={`${id}_chair_4_img`}
+              style={{
+                position: "absolute",
+                // position: "relative",
+                top: "0",
+                left: "0",
+                height: "100%",
+                width: "100%",
+                borderRadius: "10px",
+              }}
+            >
+              
+            </span>
           </div>
-        </div>
-      </div>
+        </div>} />
+        
+      </span>
+      
     </>
   );
 };

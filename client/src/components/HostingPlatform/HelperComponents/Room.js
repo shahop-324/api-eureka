@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import "./../Styles/rooms.scss";
 import IconButton from "@material-ui/core/IconButton";
-
+import Tooltip from '@mui/material/Tooltip';
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import Amazon from "./../../../assets/images/amazon.png";
-
+import { Button, Popup } from 'semantic-ui-react'
 import socket from "./../service/socket";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -154,7 +154,9 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
           <div className="col-3 right-chair-row">
             {/* // Right Chair */}
-            <RightChair id={id} launchTableScreen={launchTableScreen} />
+            <Tooltip title="This is the tooltip"><RightChair style={{width: "140px"}} id={id} launchTableScreen={launchTableScreen} /></Tooltip>
+            
+            
           </div>
         </div>
 

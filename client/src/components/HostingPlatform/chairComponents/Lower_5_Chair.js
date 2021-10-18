@@ -101,9 +101,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage5, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        //   "There has been a problem with your fetch operation."
       });
     } else {
       document.getElementById(`${id}_chair_5_img_blob`).remove();
@@ -154,7 +152,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className="lower-chair chair pt-2">
+        <div className={`lower-chair chair pt-2 ${chairIsOccupied ? " " : "lower-chair-hover"}`}>
           <div style={{ transform: "translateY(0)" }}>
             <Popup
               trigger={

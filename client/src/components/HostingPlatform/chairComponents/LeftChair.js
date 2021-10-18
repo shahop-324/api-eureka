@@ -106,9 +106,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage8, id).catch((e) => {
-        // console.log(
-        //   "There has been a problem with your fetch operation: " + e.message
-        // );
+        
+        //   "There has been a problem with your fetch operation."
+        
       });
     } else {
       document.getElementById(`${id}_chair_8_img_blob`).remove();
@@ -156,7 +156,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
             dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
           }}
         >
-          <div className="left-chair chair pt-2">
+          <div className={`left-chair chair pt-2  ${chairIsOccupied ? " " : "left-chair-hover"} `}>
             {/*  */}
 
             <div style={{ transform: "translate(-8px, -8px)" }}>

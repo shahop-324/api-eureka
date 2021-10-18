@@ -158,88 +158,32 @@ box-shadow: inset -20px -20px 60px #bebebe,
   z-index: 10000000;
 }
 
-// @keyframes move-in-left {
-//   100% {
-//     transform: translateX(0px);
-//   }
-// }
-
-// @keyframes move-in-right {
-//   100% {
-//     transform: translateX(0px);
-//   }
-// }
-
-// @keyframes move-in-top {
-//   100% {
-//     transform: translateY(0px);
-//   }
-// }
-
-// @keyframes move-in-bottom {
-//   100% {
-//     transform: translateY(0px);
-//   }
-// }
-
-// .left-chair-wrapper:hover,
-// .upper-chair-wrapper:hover,
-// .right-chair-wrapper:hover,
-// .lower-chair-wrapper:hover {
-//   // animation-name: moveInLeft;
-//   animation-duration: 0.4s;
-//   animation-fill-mode: forwards;
-// }
-
-// .left-chair-wrapper:hover {
-//   animation-name: moveInLeft;
-// }
-// .upper-chair-wrapper:hover {
-//   animation-name: moveInUpwards;
-// }
-// .right-chair-wrapper:hover {
-//   animation-name: moveInRight;
-// }
-// .lower-chair-wrapper:hover {
-//   animation-name: moveInDownwards;
-// }
-
-.left-chair:hover {
+.left-chair-hover:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
-  // transform: translateX(-5px);
-  // animation: move-in-left 0.4s ease-in 0.1s;
   box-shadow: 0 0 1px 1px #ffffff;
   animation-name: moveInLeft;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 }
 
-.right-chair:hover {
+.right-chair-hover:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
-  // transform: translateX(5px);
-  // animation: move-in-right 0.4s ease-in 0.1s;
   box-shadow: 0 0 1px 1px #ffffff;
   animation-name: moveInRight;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 }
 
-.upper-chair:hover {
+.upper-chair-hover:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
-  // transform: translateY(-5px);
-  // animation: move-in-top 0.4s ease-in 0.1s;
-
   box-shadow: 0 0 1px 1px #ffffff;
   animation-name: moveInUpwards;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 }
 
-.lower-chair:hover {
+.lower-chair-hover:hover {
   background: #70a0ff 0% 0% no-repeat padding-box;
-  // transform: translateY(5px);
-  // animation: move-in-bottom 0.4s ease-in 0.1s;
-
   box-shadow: 0 0 1px 1px #ffffff;
   animation-name: moveInDownwards;
   animation-duration: 0.4s;
@@ -247,7 +191,6 @@ box-shadow: inset -20px -20px 60px #bebebe,
 }
 
 .table-logo-container {
-  // border: 1px solid green;
   height: 100%;
   text-align: center;
 }
