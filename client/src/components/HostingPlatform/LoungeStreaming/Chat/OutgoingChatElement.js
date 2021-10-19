@@ -23,6 +23,7 @@ const OutgoingChatMsgElement = ({
   createReplyWidget,
   timestamp,
   chatMsgId,
+  tableId,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -67,7 +68,7 @@ const OutgoingChatMsgElement = ({
               <div
                 style={{
                   fontWeight: "500",
-                  color: "#4B4B4B",
+                  color: "#CECECE",
                   fontSize: "0.7rem",
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
@@ -127,6 +128,7 @@ const OutgoingChatMsgElement = ({
         </div>
       </div>
       <DeleteMsg
+      tableId={tableId}
         name={name}
         image={image}
         msgText={msgText}

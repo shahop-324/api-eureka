@@ -54,6 +54,7 @@ const SelfReplyElement = ({
   orignialMsgId,
   orignialMsgTimestamp,
   forReply,
+  tableId,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -99,7 +100,7 @@ const SelfReplyElement = ({
               <div
                 style={{
                   fontWeight: "500",
-                  color: "#4B4B4B",
+                  color: "#CECECE",
                   fontSize: "0.7rem",
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
@@ -203,6 +204,7 @@ const SelfReplyElement = ({
         </div>
       </div>
       <DeleteMsg
+      tableId={tableId}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}

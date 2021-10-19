@@ -52,6 +52,7 @@ import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
 import { magicLinkActions } from "./../reducers/magicLinkSlice";
 import { eventTablesActions } from "./../reducers/eventTablesSlice";
 import { StreamingActions } from "./../reducers/streamingSlice";
+import { notificationActions } from "../reducers/notificationSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -113,6 +114,14 @@ export const showSnackbar =
       closeSnackbar();
     }, 6000);
   };
+
+export const showNotification = (message) => async (dispatch, getState) => {
+  dispatch(
+    notificationActions.setNotification({
+      message: message,
+    })
+  );
+};
 
 export const signInForSpeaker =
   (id, communityId, eventId) => async (dispatch) => {

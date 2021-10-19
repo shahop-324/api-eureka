@@ -59,8 +59,12 @@ const ChatComponent = ({ tableId }) => {
     dispatch(fetchTableChats(tableId));
 
     socket.on("newTableMsg", ({ chats }) => {
-        dispatch(updateTableChats(chats));
+      dispatch(updateTableChats(chats));
       //   dispatch(fetchEventChats(chats)); // TODO Here we have to dispatch all chats using action creator
+    });
+
+    socket.on("updateTableChats", ({ chats }) => {
+      dispatch(updateTableChats(chats));
     });
   }, [dispatch, tableId]);
 
@@ -78,9 +82,9 @@ const ChatComponent = ({ tableId }) => {
 
         let ModeratorOrHost = false;
 
-if(userRole === "moderator" || userRole === "host") {
-    ModeratorOrHost = true;
-}
+        if (userRole === "moderator" || userRole === "host") {
+          ModeratorOrHost = true;
+        }
 
         // Check if its my own msg then show outgoing chat otherwise incoming
 
@@ -98,13 +102,16 @@ if(userRole === "moderator" || userRole === "host") {
 
             return (
               <SelfReplyElement
+                tableId={tableId}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -113,9 +120,11 @@ if(userRole === "moderator" || userRole === "host") {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -132,11 +141,14 @@ if(userRole === "moderator" || userRole === "host") {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
+                  tableId={tableId}
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -146,14 +158,17 @@ if(userRole === "moderator" || userRole === "host") {
 
             return (
               <OthersReplyElement
-              showDelete={ModeratorOrHost ? true : false} // ! Show delete btn or not => only if role === "host" || role === "moderator"
+                tableId={tableId}
+                showDelete={ModeratorOrHost ? true : false} // ! Show delete btn or not => only if role === "host" || role === "moderator"
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -162,9 +177,11 @@ if(userRole === "moderator" || userRole === "host") {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -186,13 +203,16 @@ if(userRole === "moderator" || userRole === "host") {
 
             return (
               <OutgoingChatElement
+                tableId={tableId}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -207,11 +227,14 @@ if(userRole === "moderator" || userRole === "host") {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
+                  tableId={tableId}
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -220,14 +243,17 @@ if(userRole === "moderator" || userRole === "host") {
               );
             return (
               <IncomingChatMsgElement
-              showDelete={ModeratorOrHost ? true : false} // ! show delete btn or not => only if role === "moderator" || role === "host"
+                tableId={tableId}
+                showDelete={ModeratorOrHost ? true : false} // ! show delete btn or not => only if role === "moderator" || role === "host"
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -245,17 +271,23 @@ if(userRole === "moderator" || userRole === "host") {
     <>
       <div
         className="pt-2 px-2 d-flex flex-column justify-content-between"
-        style={{ height: "65vh !important" }}
+        style={{ maxHeight: "65vh !important", height: "65vh" }}
       >
         <div
-          style={{ height: "55vh" }}
-          className="scrollable-chat-element-container"
+          // className="scrollable-chat-element-container"
+          style={{
+            display: "flex",
+            flexDirection: "column-reverse",
+            overflow: "scroll",
+            height: "auto",
+            maxHeight: "55vh !important",
+          }}
           id="all-chat-msg-container"
         >
           {renderChats(tableChats, role)}
         </div>
         <MsgInput
-        tableId={tableId}
+          tableId={tableId}
           name={name}
           image={image}
           msg={msg}

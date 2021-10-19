@@ -1232,6 +1232,16 @@ io.on("connect", (socket) => {
     ).populate("replyTo");
   });
 
+  socket.on("deleteTableMessage", async ({ msgId, tableId }) => {
+    await TableChats.findByIdAndUpdate(msgId, { deleted: true });
+
+    await TableChats.find({ tableId: tableId }, async (err, doc) => {
+      io.in(tableId).emit("updateTableChats", {
+        chats: doc,
+      });
+    }).populate("replyTo");
+  });
+
   socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
     const sessionUser = removeUserFromSession(userId, sessionId);
 

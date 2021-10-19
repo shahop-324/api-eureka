@@ -1321,7 +1321,7 @@ exports.getTableDetails = catchAsync(async (req, res, next) => {
 exports.getTableChats = catchAsync(async (req, res, next) => {
   const tableId = req.params.tableId;
 
-  const chats = await TableChats.find({ tableId: tableId });
+  const chats = await TableChats.find({ tableId: tableId }).populate("replyTo");
 
   res.status(200).json({
     status: "success",

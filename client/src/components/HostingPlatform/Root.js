@@ -21,6 +21,7 @@ import {
   errorTrackerForFetchingRTCToken,
   fetchEvent,
   fetchEventChats,
+  fetchRegistrationsOfParticularEvent,
   fetchUserAllPersonalData,
   getRTMToken,
   navigationIndexForHostingPlatform,
@@ -110,6 +111,11 @@ const Root = () => {
   // console.log(role, id, email);
 
   useEffect(() => {
+    dispatch(fetchUserAllPersonalData());
+    dispatch(fetchRegistrationsOfParticularEvent(eventId));
+  }, []);
+
+  useEffect(() => {
     socket.on("newEventMsg", ({ newMsg }) => {
       // console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));
@@ -175,12 +181,6 @@ const Root = () => {
         }
       }
     );
-
-    if (role === "speaker") {
-      dispatch(fetchSpeaker(id));
-    } else if (role === "audience" || role === "host") {
-      dispatch(fetchUserAllPersonalData(id));
-    }
   }, [
     dispatch,
     email,
@@ -213,8 +213,6 @@ const Root = () => {
     dispatch(errorTrackerForFetchEvent());
     return null;
   }
-
-
 
   const handleLobbyClick = () => {
     dispatch(navigationIndexForHostingPlatform(0));
@@ -264,8 +262,6 @@ const Root = () => {
     );
   };
 
-  
-
   const handleLogoutClick = () => {
     // write logic for logging out here
   };
@@ -276,7 +272,6 @@ const Root = () => {
 
   return (
     <>
-    
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
@@ -297,7 +292,6 @@ const Root = () => {
         <div style={{ height: "100vh" }}>
           <MidTopNav eventName={eventDetails.eventName} />
           <div className="main-body-content-h">
-            
             {(() => {
               switch (currentIndex) {
                 // case "0":
@@ -320,7 +314,6 @@ const Root = () => {
                   );
                 case "2":
                   return (
-                    
                     <RootBackground style={{ position: "relative" }}>
                       <div
                         className="opaque-layer "
@@ -331,8 +324,6 @@ const Root = () => {
                         className="py-4 px-5"
                       >
                         <SocialSpace />
-                        
-                        
                       </div>
                     </RootBackground>
                   );

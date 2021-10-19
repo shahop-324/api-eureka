@@ -21,54 +21,56 @@ const DeletedOthersMsg = ({
 }) => {
   return (
     <>
-      <div style={{ position: "relative" }}>
-        <div
-          className=" mb-2"
-          style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
-        >
-          <Avatar src={image} alt={name} variant="rounded" />
+      <div>
+        <div style={{ position: "relative" }}>
           <div
-            className="chat-box-name ms-3"
-            style={{
-              textTransform: "capitalize",
-              fontFamily: "Ubuntu",
-              color: "#fff",
-            }}
+            className=" mb-2"
+            style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
           >
-            <div style={{ color: "#212121" }}>{name}</div>
-
+            <Avatar src={image} alt={name} variant="rounded" />
             <div
+              className="chat-box-name ms-3"
               style={{
-                fontWeight: "500",
-                color: "#FFFFFF",
-                fontSize: "0.7rem",
+                textTransform: "capitalize",
+                fontFamily: "Ubuntu",
+                color: "#fff",
               }}
-              className="d-flex flex-row align-items-center justify-content-between"
             >
-              <div style={{ color: "#212121" }}>
-                {designation}, {organisation}
-              </div>
-              <div style={{ color: "#212121" }}>
-                {timeAgo.format(new Date(timestamp), "round")}
+              <div style={{ color: "#CECECE" }}>{name}</div>
+
+              <div
+                style={{
+                  fontWeight: "500",
+                  color: "#FFFFFF",
+                  fontSize: "0.7rem",
+                }}
+                className="d-flex flex-row align-items-center justify-content-between"
+              >
+                <div style={{ color: "#CECECE" }}>
+                  {designation}, {organisation}
+                </div>
+                <div style={{ color: "#CECECE" }}>
+                  {timeAgo.format(new Date(timestamp), "round")}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div
-        className=" mb-2"
-        style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
-      >
-        <div></div>
-        <div style={{ position: "relative" }}>
-          <div
-            className="chat-msg-text ms-3 p-3"
-            style={{ borderTopLeftRadius: "0", color: "#212121" }}
-          >
-            <div>
-              <ErrorRoundedIcon className="me-1" />{" "}
-              <span>This message has been deleted.</span>
+        <div
+          className=" mb-2"
+          style={{ display: "grid", gridTemplateColumns: "1fr 6fr" }}
+        >
+          <div></div>
+          <div style={{ position: "relative" }}>
+            <div
+              className="chat-msg-text ms-3 p-3"
+              style={{ borderTopLeftRadius: "0", color: "#212121" }}
+            >
+              <div>
+                <ErrorRoundedIcon className="me-1" />{" "}
+                <span>This message has been deleted.</span>
+              </div>
             </div>
           </div>
         </div>

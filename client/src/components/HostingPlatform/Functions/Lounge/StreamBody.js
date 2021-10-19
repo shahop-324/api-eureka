@@ -62,7 +62,7 @@ const StreamBody = ({
   const { volumeIndicators } = useSelector((state) => state.streaming);
   return (
     <>
-      <div style={{height: "100%"}}>
+      <div style={{height: "100%", minHeight: "65vh"}}>
         {typeof allStreams !== "undefined" && allStreams.length > 0 ? (
           <div className="">
             {(() => {

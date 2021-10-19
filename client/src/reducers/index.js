@@ -51,6 +51,7 @@ import teamInvitationSlice from "./teamInvitationSlice";
 import magicLinkSlice from "./magicLinkSlice";
 import eventTablesSlice from "./eventTablesSlice";
 import StreamingSlice from "./streamingSlice";
+import notificationSlice from "./notificationSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -104,4 +105,5 @@ export default combineReducers({
   magicLink: magicLinkSlice.reducer,
   eventTables: eventTablesSlice.reducer,
   streaming: StreamingSlice.reducer,
+  notification: notificationSlice.reducer,
 });

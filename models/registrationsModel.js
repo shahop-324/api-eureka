@@ -84,6 +84,9 @@ const registrationSchema = new mongoose.Schema(
       type: String,
       enum: ["Registration", "Invitation"],
     },
+    image: {
+      type: String,
+    },
     email: {
       type: String,
     },
@@ -94,6 +97,10 @@ const registrationSchema = new mongoose.Schema(
       type: String,
     },
     name: {
+      type: String,
+    },
+
+    headline: {
       type: String,
     },
     organisation: {
@@ -108,6 +115,17 @@ const registrationSchema = new mongoose.Schema(
     country: {
       type: String,
     },
+    interests: [
+      {
+        type: String,
+      },
+    ],
+
+    socialMediaHandles: {
+      type: Map,
+      of: String,
+    },
+
     event_name: {
       type: String,
     },
@@ -128,6 +146,18 @@ const registrationSchema = new mongoose.Schema(
     },
     community_picture: {
       type: String,
+    },
+    allowMessageFromConnectionsOnly: {
+      type: Boolean,
+      default: false,
+    },
+    disablePrivateChat: {
+      type: Boolean,
+      default: false,
+    },
+    allowConnectionRequests: {
+      type: Boolean,
+      default: true,
     },
   },
   {

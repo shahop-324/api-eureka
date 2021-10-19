@@ -78,6 +78,7 @@ const MsgInput = (props) => {
   return (
     <>
       <div
+        style={{ height: "auto" }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             console.log("Submit msg form.");
@@ -85,6 +86,7 @@ const MsgInput = (props) => {
             if (!Message) return;
             sendChannelMessage(Message);
             setMessage("");
+            setEmojiMartVisbility("none");
             props.destroyReplyWidget();
           }
         }}
@@ -100,7 +102,7 @@ const MsgInput = (props) => {
               />
             </div>
             <div
-              style={{ backgroundColor: "#E7E7E7", borderRadius: "10px" }}
+              style={{ backgroundColor: "#494949", borderRadius: "10px" }}
               className="p-2"
             >
               <IncomingChatMsgElement
@@ -166,6 +168,7 @@ const MsgInput = (props) => {
               if (!Message) return;
               sendChannelMessage(Message);
               setMessage("");
+              setEmojiMartVisbility("none");
               props.destroyReplyWidget();
             }}
           >

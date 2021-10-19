@@ -42,6 +42,7 @@ const OriginalMsgPaper = styled.div`
 `;
 
 const OthersReplyElement = ({
+  tableId,
   replierName,
   replierImage,
   replierOrganisation,
@@ -103,7 +104,7 @@ const OthersReplyElement = ({
                 color: "#fff",
               }}
             >
-              <div style={{ color: "#212121" }}>{replierName}</div>
+              <div style={{ color: "#CECECE" }}>{replierName}</div>
 
               <div
                 style={{
@@ -113,10 +114,10 @@ const OthersReplyElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div style={{ color: "#212121" }}>
+                <div style={{ color: "#CECECE" }}>
                   {replierDesignation}, {replierOrganisation}
                 </div>
-                <div style={{ color: "#212121" }}>
+                <div style={{ color: "#CECECE" }}>
                   {timeAgo.format(new Date(replierTimestamp), "round")}
                 </div>
               </div>
@@ -233,6 +234,7 @@ const OthersReplyElement = ({
       />
 
       <DeleteMsg
+      tableId={tableId}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}

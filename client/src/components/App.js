@@ -73,6 +73,9 @@ import SpeakerEventInvite from "./RedirectToRegister/SpeakerInvite";
 import BoothEventInvite from "./RedirectToRegister/BoothInvite";
 import CommunityTeamInvite from "./RedirectToRegister/TeamInvite";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const vertical = "top";
 const horizontal = "center";
 
@@ -112,6 +115,13 @@ class App extends React.Component {
       );
     });
   };
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.notificationToggle !== prevProps.notificationToggle) {
+      toast(this.props.notificationMessage);
+    }
+  }
 
   render() {
     const { isSignedIn, open, message, severity } = this.props;
@@ -153,15 +163,27 @@ class App extends React.Component {
 
               {/* Speaker event invite for registering in event */}
 
-              <Route path="/event/invite/speaker/:invitationId" exact component={SpeakerEventInvite} />
+              <Route
+                path="/event/invite/speaker/:invitationId"
+                exact
+                component={SpeakerEventInvite}
+              />
 
               {/* Booth event invite for registering in event */}
 
-              <Route path="/event/invite/booth/:invitationId" exact component={BoothEventInvite} />
+              <Route
+                path="/event/invite/booth/:invitationId"
+                exact
+                component={BoothEventInvite}
+              />
 
               {/* Team invite for joining bluemeet community team */}
 
-              <Route path="/team/invite/:invitationId" exact component={CommunityTeamInvite} />
+              <Route
+                path="/team/invite/:invitationId"
+                exact
+                component={CommunityTeamInvite}
+              />
 
               <Route
                 path="/accept-invite/:inviteId"
@@ -742,6 +764,18 @@ class App extends React.Component {
           </div>
         </Router>
 
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+
         {this.props && this.props.message && this.props.open ? (
           <Snackbar
             anchorOrigin={{ vertical, horizontal }}
@@ -773,6 +807,8 @@ const mapStateToProps = (state, props) => ({
   isSignedIn: state.auth.isSignedIn,
   open: state.snackbar.open,
   severity: state.snackbar.severity,
+  notificationToggle: state.notification.toggle,
+  notificationMessage: state.notification.message,
   message: state.snackbar.message,
   signinForBuyingPlanIntent: state.auth.signinForBuyingPlanIntent,
   signinForEventRegistrationEventId:

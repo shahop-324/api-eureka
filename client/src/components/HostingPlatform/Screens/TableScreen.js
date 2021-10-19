@@ -31,6 +31,8 @@ import Portal from "@mui/core/Portal";
 import ControlReRender from "../HelperComponents/ControlReRender";
 import SideComponent from "../Functions/Lounge/SideComponent";
 
+
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -840,7 +842,7 @@ const TableScreen = ({
 
   return (
     <>
-      <ControlReRender rtc={rtc} />
+      {/* <ControlReRender rtc={rtc} /> */}
       <Dialog
         fullWidth={fullWidth}
         maxWidth={maxWidth}
@@ -905,7 +907,7 @@ const TableScreen = ({
           >
             <div
               className="d-flex flex-column justify-content-between"
-              style={{ width: "100%", height: "100%", minHeight: "65vh" }}
+              style={{ width: "100%", height: "100%", maxHeight: "65vh" }}
             >
               <StreamBody
                 col={col}
@@ -933,14 +935,7 @@ const TableScreen = ({
                 }}
               >
                 <div className="stage-left-controls d-flex flex-row  align-items-center">
-                  {/* <IconButton>
-                    <AppsRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                  </IconButton>
-                  <IconButton>
-                    <ViewCompactRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  </IconButton> */}
+                  
                 </div>
 
                 <div className="" style={{ justifySelf: "center" }}>
@@ -1014,26 +1009,10 @@ const TableScreen = ({
                     />
                   </IconButton>
                 </div>
-                {/* <div
-                  className="btn-filled-h-stage end-session-btn px-3 py-2 ms-4"
-                  id="leave-table"
-                  style={{ maxWidth: "90px", justifySelf: "end" }}
-                  
-                >
-                  Leave
-                </div> */}
+                
                 {/* // TODO Provide a leave button here */}
                 <div className="d-flex flex-row justify-content-end">
-                  {/* <IconButton>
-                    <ChatBubbleOutlineRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  </IconButton>
-                  <IconButton>
-                    <PeopleOutlineRoundedIcon
-                      style={{ fill: "#D3D3D3", size: "24" }}
-                    />
-                  </IconButton> */}
+                  
                 </div>
               </div>
             </div>

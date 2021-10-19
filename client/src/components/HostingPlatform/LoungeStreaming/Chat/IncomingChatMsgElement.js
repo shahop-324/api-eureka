@@ -27,6 +27,7 @@ const IncomingChatMsgElement = ({
   timestamp,
   chatMsgId,
   showDelete,
+  tableId,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -71,7 +72,7 @@ const IncomingChatMsgElement = ({
                 color: "#fff",
               }}
             >
-              <div style={{ color: "#212121" }}>{name}</div>
+              <div style={{ color: "#CECECE" }}>{name}</div>
 
               <div
                 style={{
@@ -81,10 +82,10 @@ const IncomingChatMsgElement = ({
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div style={{ color: "#212121" }}>
+                <div style={{ color: "#CECECE" }}>
                   {designation}, {organisation}
                 </div>
-                <div style={{ color: "#212121" }}>
+                <div style={{ color: "#CECECE" }}>
                   {timeAgo.format(new Date(timestamp), "round")}
                 </div>
               </div>
@@ -166,6 +167,7 @@ const IncomingChatMsgElement = ({
         timestamp={timestamp}
         open={openDelete}
         handleClose={handleCloseDelete}
+        tableId={tableId}
       />
     </>
   );

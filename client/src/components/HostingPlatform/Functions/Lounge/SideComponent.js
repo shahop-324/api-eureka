@@ -5,11 +5,13 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Avatar } from "@material-ui/core";
-import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
-import Faker from "faker";
 import ChatComponent from "./../../LoungeStreaming/ChatComponent";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import PersonProfile from "./../../PersonProfile";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserRoleTag = styled.span`
   text-align: center;
@@ -34,7 +36,14 @@ const PeopleComponent = ({
   role,
   you,
   handleOpen,
+  
 }) => {
+  const [openProfile, setOpenProfile] = React.useState(false);
+
+  const handleCloseProfile = () => {
+    setOpenProfile(false);
+  };
+
   return (
     <>
       <div className="people-list-view-card p-3 mb-4">
@@ -88,17 +97,17 @@ const PeopleComponent = ({
             style={{
               backgroundColor: "#d3d3d3",
               color: "#152d35",
-              width: "48%",
+              width: "100%",
               fontSize: "0.7rem",
             }}
             onClick={() => {
-              handleOpen();
+              setOpenProfile(true);
             }}
           >
             View profile
           </div>
 
-          <div
+          {/* <div
             className="view-full-profile-btn py-1"
             style={{
               backgroundColor: "#d3d3d3",
@@ -107,13 +116,21 @@ const PeopleComponent = ({
               fontSize: "0.7rem",
             }}
             onClick={() => {
-              handleOpen();
+             
             }}
           >
             Message
-          </div>
+          </div> */}
         </div>
       </div>
+      <PersonProfile
+        open={openProfile}
+        handleClose={handleCloseProfile}
+        userImage={image}
+        userName={name}
+        userOrganisation={organisation}
+        userDesignation={designation}
+      />
     </>
   );
 };
@@ -200,9 +217,11 @@ export default function SideComponent({ peopleInThisRoom, tableId }) {
     setValue(newValue);
   };
 
+  
+
   return (
     <>
-      <div className="table-side-drawer">
+      <div className="table-side-drawer" style={{ minHeight: "65vh" }}>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -217,6 +236,7 @@ export default function SideComponent({ peopleInThisRoom, tableId }) {
                 label="Feed"
                 {...a11yProps(0)}
               />
+
               <Tab
                 style={{ color: "#d3d3d3" }}
                 label="People"
@@ -228,7 +248,16 @@ export default function SideComponent({ peopleInThisRoom, tableId }) {
             <ChatComponent tableId={tableId} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <div>{renderPeople(peopleInThisRoom, id, role)}</div>
+            
+            <div
+              style={{
+                maxHeight: "65vh !important",
+                height: "65vh",
+                overflow: "auto",
+              }}
+            >
+              {renderPeople(peopleInThisRoom, id)}
+            </div>
           </TabPanel>
         </Box>
       </div>

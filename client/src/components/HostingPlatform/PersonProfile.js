@@ -197,8 +197,8 @@ const PersonProfile = ({
 
           </div>
           <div className="d-flex flex-row align-items-center justify-content-between">
-            <ButtonFilledDark style={{width: "48%"}}>Start instant meet</ButtonFilledDark>
-            <ButtonOutlinedDark style={{width: "48%"}}>Schedule meet</ButtonOutlinedDark>
+            <ButtonFilledDark style={{width: "100%"}}>Connect</ButtonFilledDark>
+            {/* <ButtonOutlinedDark style={{width: "48%"}}>Schedule meet</ButtonOutlinedDark> */}
             </div>
         </PersonProfileBody>
       </Dialog>

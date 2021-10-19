@@ -87,19 +87,18 @@ const DeleteMsg = ({
   timestamp,
   open,
   handleClose,
+  tableId,
 }) => {
   const params = useParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const eventId = params.eventId;
-
   const deleteMsg = (msgId) => {
     socket.emit(
-      "deleteEventMessage", // !Change this
+      "deleteTableMessage", // !Change this
       {
         msgId: msgId,
-        eventId: eventId,
+        tableId: tableId,
       },
       (error) => {
         if (error) {
@@ -158,6 +157,7 @@ const DeleteMsg = ({
             <button
               onClick={() => {
                 console.log("Delete msg with this Id", msgId);
+                alert(`Delete msg with this Id, ${msgId}`);
                 deleteMsg(msgId);
               }}
               className="btn btn-primary btn-outline-text"
