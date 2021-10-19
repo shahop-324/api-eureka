@@ -92,6 +92,8 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     communityGettingEvent.eventsDocIdCommunityWise
   );
 
+  const eventManagers = Community.findById(communityId).select("eventManagers");
+
   // 1) Create a new event document with required fields
 
   const createdEvent = await Event.create({
@@ -116,10 +118,63 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
   // Initialise all tables as specified
 
-  for (let i = 0; i < req.body.numberOfTablesInLounge * 1; i++) {
-    
-    // Create tables with tableId as `${eventId}_table_${i}`
+  // Register all members of its community into this event
 
+  // Step 1. Get all members of this community
+
+  let members = [];
+
+  members.push(communityGettingEvent.superAdmin);
+
+  for (let element of eventManagers) {
+    members.push(element);
+  }
+
+  // Here we have all team members ids
+
+  for (let element of members) {
+    // Fetch user document for this id and then register in this event
+    await User.findById(element, (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if (doc) {
+          // User document is found. So, now we will just register this person in this event
+
+          await Registration.create({
+            type: "Host",
+            status: "Completed",
+            eventName: req.body.eventName,
+            userName: doc.firstName + " " + doc.lastName,
+            userImage: doc.image,
+            userEmail: doc.email,
+            bookedByUser: doc._id,
+            bookedForEventId: createdEvent._id,
+            eventByCommunityId: communityId,
+            createdAt: Date.now(),
+            image: doc.image,
+            email: doc.email,
+            first_name: doc.firstName,
+            last_name: doc.lastName,
+            name: doc.firstName + " " + doc.lastName,
+            headline: doc.headline,
+            organisation: doc.organisation,
+            designation: doc.designation,
+            city: doc.city,
+            country: doc.country,
+            interests: doc.interests,
+            socialMediaHandles: doc.socialMediaHandles,
+            event_name: req.body.eventName,
+          });
+        }
+      }
+    });
+  }
+
+  // Here we have all team members of this community registered in this event
+
+  for (let i = 0; i < req.body.numberOfTablesInLounge * 1; i++) {
+    // Create tables with tableId as `${eventId}_table_${i}`
     await RoomTable.create({
       eventId: createdEvent._id,
       tableId: `${createdEvent._id}_table_${i}`,

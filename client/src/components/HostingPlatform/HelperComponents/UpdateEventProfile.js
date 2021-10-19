@@ -9,16 +9,12 @@ import { connect, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Select from "react-select";
 import ScheduleOneToOneCallForm from "../SideDrawerComponents/Chat/Sub/ScheduleOneToOneCallForm";
-import Ripple from "../../ActiveStatusRipple";
-
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import Instagram from "@material-ui/icons/Instagram";
 import { Divider } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import LanguageIcon from '@material-ui/icons/Language';
-
+import LanguageIcon from "@material-ui/icons/Language";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -40,10 +36,6 @@ const options = [
   { value: "Crypto", label: "Crypto" },
   { value: "Web Security", label: "Web Security" },
 ];
-
-// const useStyles = makeStyles((theme) => ({
-
-// }));
 
 const renderError = ({ error, touched }) => {
   if (touched && error) {
@@ -146,10 +138,6 @@ const useStyles = makeStyles((theme) => ({
   fullList: {
     width: "auto",
   },
-  paper: {
-    // background: "blue",
-    // color: "blue"
-  },
 }));
 
 const RoyalBlueSwitch = withStyles({
@@ -171,6 +159,8 @@ const UpdateEventProfile = ({
   handleCloseDrawer,
   handleSubmit,
 }) => {
+  const { userDetails } = useSelector((state) => state.user);
+
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
@@ -185,7 +175,6 @@ const UpdateEventProfile = ({
     setChecked(!checked);
   };
 
-  const { userDetails } = useSelector((state) => state.user);
   let imgKey;
   if (userDetails) {
     imgKey = userDetails.image;
@@ -195,14 +184,14 @@ const UpdateEventProfile = ({
 
   if (imgKey) {
     if (imgKey && !imgKey.startsWith("https://")) {
-      imgUrl = `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${imgKey}`;
+      imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
     } else {
       imgUrl = imgKey;
     }
   }
 
   const [file, setFile] = useState(null);
-  const [fileToPreview, setFileToPreview] = useState(Faker.image.avatar());
+  const [fileToPreview, setFileToPreview] = useState(imgUrl);
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -214,16 +203,33 @@ const UpdateEventProfile = ({
     console.log(formValues);
   };
 
+  const renderInterests = (interests) => {
+    return interests.map((interest) => {
+      return (
+        <Chip
+          label={interest}
+          variant="outlined"
+          className="me-2 mb-2"
+          style={{
+            color: "#538BF7",
+            border: "1px solid #538BF7",
+            fontWeight: "500",
+          }}
+        />
+      );
+    });
+  };
+
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -358,7 +364,6 @@ const UpdateEventProfile = ({
                         classes="form-control"
                         component={renderInput}
                         ariadescribedby="emailHelp"
-                        // placeholder="John"
                         label="city"
                       />
                     </div>
@@ -376,7 +381,6 @@ const UpdateEventProfile = ({
                         classes="form-control"
                         component={renderInput}
                         ariadescribedby="emailHelp"
-                        // placeholder="Doe"
                         label="country"
                       />
                     </div>
@@ -399,12 +403,11 @@ const UpdateEventProfile = ({
                       </label>
 
                       <Field
-                        name="city"
+                        name="organisation"
                         type="text"
                         classes="form-control"
                         component={renderInput}
                         ariadescribedby="emailHelp"
-                        // placeholder="John"
                         label="organisation"
                       />
                     </div>
@@ -422,7 +425,6 @@ const UpdateEventProfile = ({
                         classes="form-control"
                         component={renderInput}
                         ariadescribedby="emailHelp"
-                        // placeholder="Doe"
                         label="designation"
                       />
                     </div>
@@ -470,7 +472,7 @@ const UpdateEventProfile = ({
                     </label>
                     <div className="form-group">
                       <Field
-                        name="facebook"
+                        name="linkedin"
                         type="text"
                         classes="form-control"
                         component={renderInput}
@@ -499,25 +501,7 @@ const UpdateEventProfile = ({
                       />
                     </div>
                   </div>
-                  <div className="row edit-profile-form-row mb-3">
-                    <label
-                      for="communityHeadline"
-                      className="form-label ui-form-label"
-                    >
-                      Instagram
-                    </label>
-                    <div className="form-group">
-                      <Field
-                        name="instagram"
-                        type="text"
-                        classes="form-control"
-                        component={renderInput}
-                        ariadescribedby="emailHelp"
-                        placeholder="www.instagram.com/JohnDoe"
-                        label="instagram"
-                      />
-                    </div>
-                  </div>
+
                   <div className="row edit-profile-form-row mb-3">
                     <label
                       for="communityHeadline"
@@ -537,13 +521,17 @@ const UpdateEventProfile = ({
                       />
                     </div>
                   </div>
+
+                  <div className="row d-flex flex-row align-items-center justify-content-end ms-1 me-3">
+                    <button className="btn btn-outline-text btn-primary">
+                      Save
+                    </button>
+                  </div>
                 </form>
               </div>
 
-              {/*  */}
               <div className="vertical-divider"></div>
 
-              {/*  */}
               <div>
                 <div
                   className="people-profile-container"
@@ -559,14 +547,6 @@ const UpdateEventProfile = ({
                     >
                       Profile
                     </span>
-                    {/* <IconButton
-              // onClick={() => {
-              //   handleCloseDrawer();
-              //   handleClose();
-              // }}
-            >
-              <HighlightOffRoundedIcon />
-            </IconButton> */}
                   </div>
 
                   <div>
@@ -584,15 +564,16 @@ const UpdateEventProfile = ({
                         className="mb-3"
                       >
                         <Avatar
-                          alt={Faker.name.findName()}
-                          src={Faker.image.avatar()}
+                          alt={
+                            userDetails.firstName + " " + userDetails.lastName
+                          }
+                          src={imgUrl}
                           className={`${classes.large} mb-3`}
                           variant="rounded"
-                          // style={{ marginLeft: "auto", marginRight: "auto" }}
                         />
                         <div>
                           <div className="btn-outline-text mb-2">
-                            {Faker.name.findName()}
+                            {userDetails.firstName + " " + userDetails.lastName}
                           </div>
 
                           <div
@@ -600,47 +581,24 @@ const UpdateEventProfile = ({
                               fontWeight: "500",
                               color: "#3B3B3B",
                               fontSize: "0.8rem",
-                              // textAlign: "center",
                             }}
                             className="mb-2"
                           >
-                            Product Manager, Evenz
+                            {userDetails.designation},{" "}
+                            {userDetails.organisation}
                           </div>
                           <div
                             style={{
                               fontWeight: "500",
                               color: "#3B3B3B",
                               fontSize: "0.8rem",
-                              // textAlign: "center",
                             }}
                             className="mb-3"
                           >
-                            Mountain View California, USA
-                          </div>
-
-                          <div
-                            className="d-flex flex-row align-items-center event-field-label field-label-value"
-                            style={{
-                              color: "#75BF72",
-                              fontFamily: "Ubuntu",
-                              fontSize: "0.8rem",
-                            }}
-                          >
-                            <Ripple /> Active{" "}
+                            {userDetails.city}, {userDetails.country}
                           </div>
                         </div>
 
-                        {/* <div
-                  style={{
-                    backgroundColor: "#94949436",
-                    width: "fit-content",
-                    borderRadius: "5px",
-                    alignSelf: "center",
-                  }}
-                  className="px-2 py-2"
-                >
-                  <ChatBubbleRoundedIcon className="chat-msg-hover-icon" />
-                </div> */}
                         <div></div>
                       </div>
 
@@ -674,7 +632,7 @@ const UpdateEventProfile = ({
                               fontSize: "0.9rem",
                             }}
                           >
-                            Hi there! I am attending evenz event.
+                            {userDetails.headline}
                           </div>
                         </div>
                         <div></div>
@@ -692,52 +650,49 @@ const UpdateEventProfile = ({
                             Interests
                           </div>
 
-                          <div
-                            style={{
-                              fontWeight: "400",
-                              fontFamily: "Ubuntu",
-                              color: "#4D4D4D",
-                              fontSize: "0.9rem",
-                            }}
-                          >
-                            <Chip
-                              label="Music"
-                              variant="outlined"
-                              className="me-2 mb-2"
+                          {userDetails.interests ? (
+                            <div
                               style={{
-                                color: "#538BF7",
-                                border: "1px solid #538BF7",
+                                fontWeight: "400",
+                                fontFamily: "Ubuntu",
+                                color: "#4D4D4D",
+                                fontSize: "0.9rem",
                               }}
-                            />
-                            <Chip
-                              label="Web Design"
-                              variant="outlined"
-                              className="me-2 mb-2"
-                              style={{
-                                color: "#538BF7",
-                                border: "1px solid #538BF7",
-                              }}
-                            />
-                            <Chip
-                              label="Entreprenuership"
-                              variant="outlined"
-                              className="me-2 mb-2"
-                              style={{
-                                color: "#538BF7",
-                                border: "1px solid #538BF7",
-                              }}
-                            />
-                          </div>
+                            >
+                              {renderInterests(userDetails.interests)}
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </div>
 
                       <div className="d-flex flex-row align-items-center justify-content-center mb-3">
                         <div className="shareon-icon p-3 me-3">
-                          <a
-                            href="https://www.facebook.com/pages/?category=your_pages&ref=bookmarks"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          {userDetails.socialMediaHandles.facebook ? (
+                            <a
+                              href={`//${userDetails.socialMediaHandles.facebook}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <div
+                                style={{
+                                  backgroundColor: "#EBEBEBE8",
+                                  width: "fit-content",
+                                  borderRadius: "5px",
+                                  alignSelf: "center",
+                                }}
+                                className="px-2 py-2"
+                              >
+                                <FacebookIcon
+                                  style={{
+                                    fontSize: "21",
+                                    fill: "#1760A8",
+                                  }}
+                                />
+                              </div>
+                            </a>
+                          ) : (
                             <div
                               style={{
                                 backgroundColor: "#EBEBEBE8",
@@ -748,19 +703,38 @@ const UpdateEventProfile = ({
                               className="px-2 py-2"
                             >
                               <FacebookIcon
-                                style={{ fontSize: "21", fill: "#1760A8" }}
+                                style={{
+                                  fill: "#777777",
+                                }}
                               />
-
-                              {/* <ChatBubbleRoundedIcon className="chat-msg-hover-icon" /> */}
                             </div>
-                          </a>
+                          )}
                         </div>
                         <div className="shareon-icon p-3 me-3">
-                          <a
-                            href="https://www.linkedin.com/company/evenz-in"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          {userDetails.socialMediaHandles.linkedin ? (
+                            <a
+                              href={`//${userDetails.socialMediaHandles.linkedin}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <div
+                                style={{
+                                  backgroundColor: "#EBEBEBE8",
+                                  width: "fit-content",
+                                  borderRadius: "5px",
+                                  alignSelf: "center",
+                                }}
+                                className="px-2 py-2"
+                              >
+                                <LinkedInIcon
+                                  style={{
+                                    fontSize: "21",
+                                    fill: "#2565A5",
+                                  }}
+                                />
+                              </div>
+                            </a>
+                          ) : (
                             <div
                               style={{
                                 backgroundColor: "#EBEBEBE8",
@@ -771,20 +745,40 @@ const UpdateEventProfile = ({
                               className="px-2 py-2"
                             >
                               <LinkedInIcon
-                                style={{ fontSize: "21", fill: "#2565A5" }}
+                                style={{
+                                  fontSize: "21",
+                                  fill: "#777777",
+                                }}
                               />
-
-                              {/* <ChatBubbleRoundedIcon className="chat-msg-hover-icon" /> */}
                             </div>
-                          </a>
+                          )}
                         </div>
 
                         <div className="shareon-icon p-3 me-3">
-                          <a
-                            href="https://twitter.com/EvenzOfficial"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          {userDetails.socialMediaHandles.twitter ? (
+                            <a
+                              href={`//${userDetails.socialMediaHandles.twitter}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <div
+                                style={{
+                                  backgroundColor: "#EBEBEBE8",
+                                  width: "fit-content",
+                                  borderRadius: "5px",
+                                  alignSelf: "center",
+                                }}
+                                className="px-2 py-2"
+                              >
+                                <TwitterIcon
+                                  style={{
+                                    fontSize: "21",
+                                    fill: "#539FF7",
+                                  }}
+                                />
+                              </div>
+                            </a>
+                          ) : (
                             <div
                               style={{
                                 backgroundColor: "#EBEBEBE8",
@@ -795,45 +789,40 @@ const UpdateEventProfile = ({
                               className="px-2 py-2"
                             >
                               <TwitterIcon
-                                style={{ fontSize: "21", fill: "#539FF7" }}
+                                style={{
+                                  fontSize: "21",
+                                  fill: "#777777",
+                                }}
                               />
-
-                              {/* <ChatBubbleRoundedIcon className="chat-msg-hover-icon" /> */}
                             </div>
-                          </a>
+                          )}
                         </div>
 
                         <div className="shareon-icon p-3 me-3">
-                          <a
-                            href="https://www.instagram.com/evenzofficial/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <div
-                              style={{
-                                backgroundColor: "#EBEBEBE8",
-                                width: "fit-content",
-                                borderRadius: "5px",
-                                alignSelf: "center",
-                              }}
-                              className="px-2 py-2"
+                          {userDetails.socialMediaHandles.website ? (
+                            <a
+                              href={`//${userDetails.socialMediaHandles.website}`}
+                              target="_blank"
+                              rel="noreferrer"
                             >
-                              <Instagram
-                                style={{ fontSize: "21", fill: "#841E8D" }}
-                              />
-
-                              {/* <ChatBubbleRoundedIcon className="chat-msg-hover-icon" /> */}
-                            </div>
-                            
-                          </a>
-                        </div>
-
-                        <div className="shareon-icon p-3 me-3">
-                          <a
-                            href="https://www.instagram.com/evenzofficial/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                              <div
+                                style={{
+                                  backgroundColor: "#EBEBEBE8",
+                                  width: "fit-content",
+                                  borderRadius: "5px",
+                                  alignSelf: "center",
+                                }}
+                                className="px-2 py-2"
+                              >
+                                <LanguageIcon
+                                  style={{
+                                    fontSize: "21",
+                                    fill: "#538BF7",
+                                  }}
+                                />
+                              </div>
+                            </a>
+                          ) : (
                             <div
                               style={{
                                 backgroundColor: "#EBEBEBE8",
@@ -844,58 +833,15 @@ const UpdateEventProfile = ({
                               className="px-2 py-2"
                             >
                               <LanguageIcon
-                                style={{ fontSize: "21", fill: "#538BF7" }}
+                                style={{
+                                  fontSize: "21",
+                                  fill: "#777777",
+                                }}
                               />
-
-                              {/* <ChatBubbleRoundedIcon className="chat-msg-hover-icon" /> */}
                             </div>
-                            
-                          </a>
+                          )}
                         </div>
                       </div>
-
-                      {/* <div>
-                <button className="btn btn-outline-primary btn-outline-text me-3">
-                  Schedule a meet
-                </button>
-                <button className="btn btn-primary btn-outline-text">
-                  Start conversation
-                </button>
-              </div> */}
-
-                      {/* <div>
-                  <div
-                    className=""
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gridGap: "20px",
-                    }}
-                  >
-                    
-                    <div className="mb-3">
-                      <button
-                        style={{ width: "100%" }}
-                        className="btn btn-primary btn-outline-text"
-                      >
-                        Start instant meet
-                      </button>
-                    </div>
-
-                    
-                    <div className="mb-3">
-                      <button
-                        onClick={() => {
-                          handleOpen();
-                        }}
-                        style={{ width: "100%" }}
-                        className="btn btn-outline-primary btn-outline-text"
-                      >
-                        Schedule for later
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
 
                       <ScheduleOneToOneCallForm
                         handleCloseDrawer={handleClose}
@@ -913,19 +859,17 @@ const UpdateEventProfile = ({
                       Manage Permissions
                     </div>
                     <div className="setting-tab-sub-text">
-                      Here you can choose to enable/disable private/group meet
-                      and chats.
+                      Here you can choose to enable/disable connection requests
+                      and private messages
                     </div>
                   </div>
 
                   <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                     <div className="hosting-platform-widget-name">
-                      Private chat
+                      Allow message from connections only
                     </div>
 
                     <div className="d-flex flex-column justify-content-center align-items-center">
-                      {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">Disable</div> */}
                       <FormGroup row>
                         <FormControlLabel
                           control={
@@ -944,12 +888,10 @@ const UpdateEventProfile = ({
                   </div>
                   <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                     <div className="hosting-platform-widget-name">
-                      Private Meetings
+                      Allow private messages
                     </div>
 
                     <div>
-                      {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                       <FormGroup row>
                         <FormControlLabel
                           control={
@@ -968,7 +910,7 @@ const UpdateEventProfile = ({
                   </div>
                   <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                     <div className="hosting-platform-widget-name">
-                      Group Meetings
+                      Allow connection requests
                     </div>
 
                     <div className="d-flex flex-column justify-content-center">
@@ -983,8 +925,6 @@ const UpdateEventProfile = ({
                           }
                         />
                       </FormGroup>
-                      {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     </div>
                   </div>
                 </div>
@@ -997,13 +937,10 @@ const UpdateEventProfile = ({
   );
 };
 
-// export default UpdateEventProfile;
-
 const mapStateToProps = (state) => ({
-  // console.log(state.user.userDetails);
   initialValues: {
     imgUrl: state.user.userDetails.image
-      ? `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${state.user.userDetails.image}`
+      ? `https://bluemeet.us-west-1.amazonaws.com/${state.user.userDetails.image}`
       : " #",
     firstName: state.user.userDetails.firstName
       ? state.user.userDetails.firstName
@@ -1011,12 +948,23 @@ const mapStateToProps = (state) => ({
     lastName: state.user.userDetails.lastName
       ? state.user.userDetails.lastName
       : "",
-    email: state.user.userDetails.email ? state.user.userDetails.email : "",
 
     interests: state.user.userDetails.interests
       ? state.user.userDetails.interests.map((interest) => {
           return { value: interest, label: interest };
         })
+      : "",
+
+    city: state.user.userDetails.city ? state.user.userDetails.city : "",
+    country: state.user.userDetails.country
+      ? state.user.userDetails.country
+      : "",
+
+    organisation: state.user.userDetails.organisation
+      ? state.user.userDetails.organisation
+      : "",
+    designation: state.user.userDetails.designation
+      ? state.user.userDetails.designation
       : "",
 
     linkedin:
@@ -1039,9 +987,6 @@ const mapStateToProps = (state) => ({
       state.user.userDetails.socialMediaHandles.website
         ? state.user.userDetails.socialMediaHandles.website
         : "",
-    phoneNumber: state.user.userDetails.phoneNumber
-      ? state.user.userDetails.phoneNumber
-      : "",
 
     headline: state.user.userDetails.headline
       ? state.user.userDetails.headline

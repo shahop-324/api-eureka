@@ -5,6 +5,7 @@ const Community = require("../models/communityModel");
 const User = require("../models/userModel");
 const TeamInviteTemplate = require("../services/email/teamInviteTemplate");
 const sgMail = require("@sendgrid/mail");
+const Registration = require("../models/registrationsModel");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 exports.createNewInvitation = catchAsync(async (req, res, next) => {
@@ -133,6 +134,46 @@ exports.acceptInvitation = catchAsync(async (req, res, next) => {
     });
   } else {
     // accept invitaion
+
+    // TODO => Register this user in all events of this community
+
+    // Step 1 => Get all events of this community
+
+    const eventsByThisCommunity = await Event.find({
+      communityId: communityId,
+    });
+
+    for (let event of eventsByThisCommunity) {
+      // Now just normally register this person (userDoc) in event
+
+      await Registration.create({
+        type: "Host",
+        status: "Completed",
+        eventName: event.eventName,
+        userName: userDoc.firstName + " " + userDoc.lastName,
+        userImage: userDoc.image,
+        userEmail: userDoc.email,
+        bookedByUser: userDoc._id,
+        bookedForEventId: event._id,
+        eventByCommunityId: communityId,
+        createdAt: Date.now(),
+        image: userDoc.image,
+        email: userDoc.email,
+        first_name: userDoc.firstName,
+        last_name: userDoc.lastName,
+        name: userDoc.firstName + " " + userDoc.lastName,
+        headline: userDoc.headline,
+        organisation: userDoc.organisation,
+        designation: userDoc.designation,
+        city: userDoc.city,
+        country: userDoc.country,
+        interests: userDoc.interests,
+        socialMediaHandles: userDoc.socialMediaHandles,
+        event_name: event.eventName,
+      });
+    }
+
+    // At this point this community team member will be registered in all events of this community
 
     // Push this persons userId in eventManagers array in community
     CommunityDoc.eventManagers.push(userDoc._id);

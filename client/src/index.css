@@ -3,6 +3,11 @@
   border: 1px solid transparent;
 }
 
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
 .hide-scrollbar {
   /* this will hide the scrollbar in mozilla based browsers */
   overflow: -moz-scrollbars-none;

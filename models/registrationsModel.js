@@ -8,7 +8,7 @@ const registrationSchema = new mongoose.Schema(
     type: {
       type: String,
       default: "Attendee",
-      enum: ["Attendee", "Speaker", "Exhibitor"],
+      enum: ["Attendee", "Speaker", "Exhibitor", "Host"],
     },
     status: {
       type: String,
@@ -50,7 +50,6 @@ const registrationSchema = new mongoose.Schema(
     orderId: {
       type: String,
     },
-
     paymentStatus: {
       type: String,
     },
@@ -99,7 +98,6 @@ const registrationSchema = new mongoose.Schema(
     name: {
       type: String,
     },
-
     headline: {
       type: String,
     },
