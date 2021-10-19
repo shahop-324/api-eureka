@@ -75,7 +75,9 @@ const GalleryVideoPlayer = ({
   let showWave = false;
 
   if (volumeIndicators) {
-    const [volumeData] = volumeIndicators.filter(
+    //  contains remote audio stream
+    // console.log(volumeIndicators, "This is volume indicators array.");
+    const volumeData = volumeIndicators.find(
       (object) => object.uid === localPlayerId
     );
 
@@ -85,6 +87,8 @@ const GalleryVideoPlayer = ({
   }
 
   if (audioStreamStat) {
+    // Contains our own audio stream
+    // console.log(audioStreamStat, "This is audio stream stat indicators array.");
     const audioStreamData = audioStreamStat.find(
       (element) => element.uid === localPlayerId
     );
@@ -110,13 +114,16 @@ const GalleryVideoPlayer = ({
 
   const roleSuffix = id === localPlayerId ? "(You)" : "";
 
+  // console.log(videoIsEnabled);
+  // console.log(videoStreamStat);
+
   return (
     <>
       <VideoStreamContainer>
         <div id={localPlayerId} className="session-local-video-player">
           <UserRoleTag className="session-role px-3 py-1">{role}</UserRoleTag>
           <div id={`avatar_box_${localPlayerId}`} className="avatar_box">
-            {!videoIsEnabled && (
+            {!videoIsEnabled ? (
               <Avatar
                 variant="rounded"
                 src={userImage}
@@ -124,6 +131,8 @@ const GalleryVideoPlayer = ({
                 style={{ backgroundColor: "#538BF7" }}
                 // sx={{ width: "72px", height: "72px" }}
               />
+            ) : (
+              <></>
             )}
           </div>
           <Popup

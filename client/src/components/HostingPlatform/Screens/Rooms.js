@@ -35,7 +35,7 @@ const Rooms = () => {
   useEffect(() => {
     dispatch(getEventTables(eventId));
     socket.on("roomChairData", ({ roomChairs }) => {
-      console.log(roomChairs);
+      // console.log(roomChairs);
       dispatch(fetchChairArrangement(roomChairs));
     });
 

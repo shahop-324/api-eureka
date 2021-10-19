@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
+const TableChats = require("./models/tableChatsModel");
 process.on("uncaughtException", (err) => {
   console.log(err);
   console.log("UNCAUGHT Exception! Shutting down ...");
@@ -275,6 +276,7 @@ io.on("connect", (socket) => {
         { chairId: chairId },
         {
           status: "Unoccupied",
+          userId: null,
           userName: null,
           userEmail: null,
           userImage: null,
@@ -330,6 +332,8 @@ io.on("connect", (socket) => {
         eventId,
         tableId,
         chairId,
+        userId,
+        userRole,
         userName,
         userEmail,
         userImage,
@@ -371,7 +375,9 @@ io.on("connect", (socket) => {
         eventId,
         tableId,
         chairId,
+        userId,
         userName,
+        userRole,
         userEmail,
         userImage,
         userCity,
@@ -395,7 +401,9 @@ io.on("connect", (socket) => {
                     eventId: eventId,
                     tableId: tableId,
                     chairId: chairId,
+                    userId: userId,
                     userName: userName,
+                    userRole: userRole,
                     userEmail: userEmail,
                     userImage: userImage,
                     userCity: userCity,
@@ -517,8 +525,10 @@ io.on("connect", (socket) => {
                 );
 
                 existingChair.status = "Occupied";
+                existingChair.userId = userId;
                 existingChair.userName = userName;
                 existingChair.userEmail = userEmail;
+                existingChair.userRole = userRole;
                 existingChair.userImage = userImage;
                 existingChair.userCity = userCity;
                 existingChair.userCountry = userCountry;
@@ -546,7 +556,9 @@ io.on("connect", (socket) => {
         tableId: tableId,
         chairId: chairId,
         userName: userName,
+        userId: userId,
         userEmail: userEmail,
+        userRole: userRole,
         userImage: userImage,
         userCity: userCity,
         userCountry: userCountry,
@@ -629,7 +641,6 @@ io.on("connect", (socket) => {
         userCountry,
         userOrganisation,
         userDesignation,
-        
       }) => {
         const existingUser = await UsersInEvent.findOne(
           {
@@ -1064,14 +1075,79 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on("transmitPersonalMessage", async({
-    // Here get all transmitted properties
-    // Recieve Id of both sender and reciever
-  }) => {
-    // Find current socketId of both sender and reciever
-    // Create a new chat message in personal chat document and send newly created msg doc to both sender and reciever
-    // Close the connection => private messaging successful.
-  })
+  socket.on(
+    "transmitPersonalMessage",
+    async (
+      {
+        // Here get all transmitted properties
+        // Recieve Id of both sender and reciever
+      }
+    ) => {
+      // Find current socketId of both sender and reciever
+      // Create a new chat message in personal chat document and send newly created msg doc to both sender and reciever
+      // Close the connection => private messaging successful.
+    }
+  );
+
+  socket.on(
+    "transmitTableMessage",
+    async ({
+      isReply,
+      replyTo,
+      textMessage,
+      eventId,
+      tableId,
+      createdAt,
+      userRole,
+      userName,
+      userEmail,
+      userImage,
+      userOrganisation,
+      userDesignation,
+      userId,
+      reported,
+      numOfTimesReported,
+      visibilityStatus,
+    }) => {
+      await TableChats.create(
+        {
+          isReply,
+          textMessage,
+          eventId,
+          tableId,
+          createdAt,
+          userRole,
+          userName,
+          userEmail,
+          userImage,
+          userOrganisation,
+          userDesignation,
+          userId,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+
+            const populatedChatMsg = await TableChats.find({
+              tableId: tableId,
+            }).populate("replyTo");
+
+            io.in(tableId).emit("newTableMsg", {
+              chats: populatedChatMsg,
+            });
+          }
+        }
+      );
+    }
+  );
 
   socket.on(
     "transmitEventMessage",

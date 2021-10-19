@@ -1,43 +1,28 @@
 import React from "react";
-
+import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
+import socket from "./../../service/socket";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import "./../../../Styles/report.scss";
+import "./../../Styles/report.scss";
 import { Avatar, IconButton } from "@material-ui/core";
-import Select from "react-select";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    fontSize: "0.8rem",
-    color: "#757575",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    fontSize: "0.8rem",
-    color: "#757575",
-  }),
-};
+TimeAgo.addDefaultLocale(en);
 
-const reportOptions = [
-  { value: "Harrasment or hateful", label: "Harrasment or hateful" },
-  { value: "Violence or physical harm", label: "Violence or physical harm" },
-  { value: "Sexual Harrasement", label: "Sexual Harrasement" },
-  {
-    value: "Intellectual property infringement or defamation",
-    label: "Intellectual property infringement or defamation",
-  },
-  { value: "Suspicious or fake", label: "Suspicious or fake" },
-  { value: "Other", label: "Other" },
-];
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
-const MsgElement = ({ name, image, msgText }) => {
+const MsgElement = ({
+  name,
+  image,
+  msgText,
+  organisation,
+  designation,
+  timestamp,
+}) => {
   return (
     <>
       <div
@@ -67,9 +52,11 @@ const MsgElement = ({ name, image, msgText }) => {
                 }}
                 className="d-flex flex-row align-items-center justify-content-between"
               >
-                <div>Product Manager, Evenz</div>
+                <div>
+                  {designation}, {organisation}
+                </div>
 
-                <div>3m ago</div>
+                <div>{timeAgo.format(new Date(timestamp), "round")}</div>
               </div>
             </div>
           </div>
@@ -90,9 +77,37 @@ const MsgElement = ({ name, image, msgText }) => {
   );
 };
 
-const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
+const DeleteMsg = ({
+  name,
+  image,
+  msgText,
+  msgId,
+  organisation,
+  designation,
+  timestamp,
+  open,
+  handleClose,
+}) => {
+  const params = useParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const eventId = params.eventId;
+
+  const deleteMsg = (msgId) => {
+    socket.emit(
+      "deleteEventMessage", // !Change this
+      {
+        msgId: msgId,
+        eventId: eventId,
+      },
+      (error) => {
+        if (error) {
+          alert(error);
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -103,7 +118,7 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
         aria-labelledby="responsive-dialog-title"
       >
         <div className="report-activity-container">
-          <div className="d-flex flex-row align-items-center justify-content-between p-3 mb-3">
+          <div className="d-flex lfex-row align-items-center justify-content-between p-3 mb-3">
             <span
               style={{
                 fontWeight: "600",
@@ -111,7 +126,7 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
                 color: "#212121",
               }}
             >
-              Report this message
+              Are you sure to delete this message ?
             </span>
             <IconButton
               onClick={() => {
@@ -124,38 +139,31 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
 
           {/* <ChatMsgElement /> */}
           <div className="msg-to-report-container p-3 mb-4">
-            <MsgElement name={name} image={image} msgText={msgText} />
-          </div>
-
-          <div
-            className="mb-4 overlay-form-input-row msg-to-report-container"
-            style={{ border: "none" }}
-          >
-            <label
-              Forhtml="eventEndDate"
-              className="form-label form-label-customized"
-              style={{ textTransform: "initial" }}
-            >
-              What's wrong with this ?
-            </label>
-            <Select
-              name="eventName"
-              // placeholder="What's wrong?"
-              styles={styles}
-              menuPlacement="top"
-              options={reportOptions}
+            <MsgElement
+              name={name}
+              image={image}
+              msgText={msgText}
+              organisation={organisation}
+              designation={designation}
+              timestamp={timestamp}
             />
           </div>
+
+          {/* Write warning message here */}
 
           <div
             className="msg-to-report-container mb-3"
             style={{ border: "none" }}
           >
             <button
+              onClick={() => {
+                console.log("Delete msg with this Id", msgId);
+                deleteMsg(msgId);
+              }}
               className="btn btn-primary btn-outline-text"
               style={{ width: "100%" }}
             >
-              Report
+              Delete
             </button>
           </div>
         </div>
@@ -164,4 +172,4 @@ const ReportMsg = ({ name, image, msgText, open, handleClose }) => {
   );
 };
 
-export default ReportMsg;
+export default DeleteMsg;

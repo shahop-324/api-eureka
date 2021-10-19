@@ -51,6 +51,7 @@ import { personalChatActions } from "../reducers/personalChatSlice";
 import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
 import { magicLinkActions } from "./../reducers/magicLinkSlice";
 import { eventTablesActions } from "./../reducers/eventTablesSlice";
+import { StreamingActions } from "./../reducers/streamingSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -5268,6 +5269,14 @@ export const fetchEventChats = (chats) => async (dispatch, getState) => {
   }
 };
 
+export const updateTableChats = (chats) => async (dispatch, getState) => {
+  dispatch(
+    roomsActions.FetchTableChats({
+      chats: chats,
+    })
+  );
+};
+
 export const fetchSessionChats = (chats) => async (dispatch, getState) => {
   dispatch(sessionChatActions.startLoading());
   try {
@@ -9417,15 +9426,41 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
   }
 };
 
-export const fetchTableChats = () => async (dispatch, getState) => {
+export const fetchTableChats = (tableId) => async (dispatch, getState) => {
   try {
     // Write logic to fetch all table chats for this table
+
+    const res = await fetch(`${BaseURL}getTableChats/${tableId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      roomsActions.FetchTableChats({
+        chats: result.data,
+      })
+    );
   } catch (error) {
     console.log(error);
 
     dispatch(
       snackbarActions.openSnackBar({
-        message: "Failed to log in. Please try again!",
+        message: "Failed to fetch chats. Please try again!",
         severity: "error",
       })
     );
@@ -9442,93 +9477,88 @@ export const editTable =
     try {
       const key = `${tableId}/${UUID()}.jpeg`;
 
-      if(file) {
+      if (file) {
+        s3.getSignedUrl(
+          "putObject",
+          { Bucket: "bluemeet", Key: key, ContentType: "image/jpeg" },
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-      s3.getSignedUrl(
-        "putObject",
-        { Bucket: "bluemeet", Key: key, ContentType: "image/jpeg" },
-        async (err, presignedURL) => {
-          const awsRes = await fetch(presignedURL, {
-            method: "PUT",
+              body: file,
 
-            body: file,
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
 
-            headers: {
-              "Content-Type": file.type,
-            },
-          });
+            console.log(awsRes);
 
-          console.log(awsRes);
+            const res = await fetch(`${BaseURL}editTable/${tableId}`, {
+              method: "POST",
 
-          const res = await fetch(`${BaseURL}editTable/${tableId}`, {
-            method: "POST",
+              body: JSON.stringify({
+                title: title,
+                image: key,
+                priority: priority,
+              }),
 
-            body: JSON.stringify({
-              title: title,
-              image: key,
-              priority: priority,
-            }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            });
 
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getState().auth.token}`,
-            },
-          });
-
-          if (!res.ok) {
-            if (!res.message) {
-              throw new Error("Something went wrong");
-            } else {
-              throw new Error(res.message);
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
             }
+
+            const result = await res.json();
+            console.log(result);
+
+            dispatch(
+              eventTablesActions.UpdateEventTable({
+                table: result.data,
+              })
+            );
           }
+        );
+      } else {
+        const res = await fetch(`${BaseURL}editTable/${tableId}`, {
+          method: "POST",
 
-          const result = await res.json();
-          console.log(result);
+          body: JSON.stringify({
+            title: title,
+            priority: priority,
+          }),
 
-          dispatch(
-            eventTablesActions.UpdateEventTable({
-              table: result.data,
-            })
-          );
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
         }
-      );
-    }
 
-else {
-  const res = await fetch(`${BaseURL}editTable/${tableId}`, {
-    method: "POST",
+        const result = await res.json();
+        console.log(result);
 
-    body: JSON.stringify({
-      title: title,
-      priority: priority,
-    }),
-
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getState().auth.token}`,
-    },
-  });
-
-  if (!res.ok) {
-    if (!res.message) {
-      throw new Error("Something went wrong");
-    } else {
-      throw new Error(res.message);
-    }
-  }
-
-  const result = await res.json();
-  console.log(result);
-
-  dispatch(
-    eventTablesActions.UpdateEventTable({
-      table: result.data,
-    })
-  );
-}
-
-
+        dispatch(
+          eventTablesActions.UpdateEventTable({
+            table: result.data,
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
 
@@ -9618,7 +9648,11 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
     );
   } catch (error) {
     console.log(error);
-    dispatch(eventTablesActions.hasError("Failed to get table details. Please try again!"));
+    dispatch(
+      eventTablesActions.hasError(
+        "Failed to get table details. Please try again!"
+      )
+    );
 
     dispatch(
       snackbarActions.openSnackBar({
@@ -9631,4 +9665,26 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
       closeSnackbar();
     }, 6000);
   }
+};
+
+export const fetchVolumeIndicators = (arr) => async (dispatch, getState) => {
+  dispatch(StreamingActions.fetchVolumeIndicators({ volumeIndicators: arr }));
+};
+
+export const updateSpeakingVolumeIndicators =
+  (volume) => async (dispatch, getState) => {
+    dispatch(
+      StreamingActions.updateSpeakingVolumeIndicators({ volume: volume })
+    );
+  };
+
+export const updateNonSpeakingVolumeIndicators =
+  (volume) => async (dispatch, getState) => {
+    dispatch(
+      StreamingActions.updateNonSpeakingVolumeIndicators({ volume: volume })
+    );
+  };
+
+export const setLocalVolumeLevel = (level) => async (dispatch, getState) => {
+  dispatch(StreamingActions.setLocalVolumeLevel({ localVolumeLevel: level }));
 };

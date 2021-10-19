@@ -7,7 +7,6 @@ import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
 import {
-  fetchTwillioVideoRoomToken,
   getRTCTokenForJoiningTable,
 } from "../../../actions";
 
@@ -60,7 +59,7 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email } = useSelector((state) => state.eventAccessToken);
+  const { email, role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
@@ -122,7 +121,8 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
         className="upper-chair-wrapper"
         id={`${id}_chair_1`}
         onClick={() => {
-          console.log(`${id}_chair_1`);
+          // if(chairIsOccupied) return;
+          // console.log(`${id}_chair_1`);
 
           dispatch(
             userActions.EditCurrentlyJoinedChair({
@@ -137,6 +137,8 @@ const UPPER_1_CHAIR = ({ id, launchTableScreen }) => {
               tableId: id,
               chairId: `${id}_chair_1`,
               userName,
+              userId,
+              userRole: role,
               userEmail: email,
               userImage,
               userCity,

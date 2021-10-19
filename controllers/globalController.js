@@ -15,6 +15,7 @@ const Speaker = require("./../models/speakerModel");
 const PersonalChat = require("./../models/PersonalChatModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("../models/roomTableModel");
+const TableChats = require("./../models/tableChatsModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1162,7 +1163,7 @@ exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
 
 exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
   async (req, res, next) => {
-    try{
+    try {
       const registrationId = req.params.registrationId;
 
       const registrationDoc = await Registration.findById(registrationId);
@@ -1173,21 +1174,21 @@ exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
         "speaker",
         "firstName lastName image"
       );
-  
+
       // Check if user with registered email exists
-  
+
       const existingUser = await User.findOne({
         email: registrationDoc.userEmail,
       });
-  
+
       if (existingUser) {
         // User is already on platform => follow normal procedure => send user details along with required event details
-  
+
         const userEmail = existingUser.email;
         const userId = existingUser._id;
-  
+
         // * send userIsOnBluemeet => true
-  
+
         res.status(200).json({
           status: "success",
           data: eventDetails,
@@ -1198,9 +1199,9 @@ exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
         });
       } else {
         // Send that user is not registered on Bluemeet platform => Send event details
-  
+
         // * send userIsOnBluemeet => false
-  
+
         res.status(200).json({
           status: "success",
           data: eventDetails,
@@ -1209,11 +1210,9 @@ exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
           userIsOnBluemeet: false,
         });
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log(error);
     }
-
   }
 );
 
@@ -1316,5 +1315,16 @@ exports.getTableDetails = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: tableDoc,
+  });
+});
+
+exports.getTableChats = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const chats = await TableChats.find({ tableId: tableId });
+
+  res.status(200).json({
+    status: "success",
+    data: chats,
   });
 });

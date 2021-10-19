@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-import { Popup, Icon } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
 
 import socket from "../service/socket";
 import { useParams } from "react-router";
 import { getRTCTokenForJoiningTable } from "../../../actions";
-import Tooltip from "@mui/material/Tooltip";
 
 const LeftChair = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -59,7 +58,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email } = useSelector((state) => state.eventAccessToken);
+  const { email, role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
@@ -127,8 +126,8 @@ const LeftChair = ({ id, launchTableScreen }) => {
         style={{ position: "absolute", display: "inline-block" }}
         id={`${id}_chair_4`}
         onClick={() => {
-          if(chairIsOccupied) return;
-          console.log(`${id}_chair_4`);
+          // if(chairIsOccupied) return;
+          // console.log(`${id}_chair_4`);
 
           dispatch(
             userActions.EditCurrentlyJoinedChair({
@@ -142,7 +141,9 @@ const LeftChair = ({ id, launchTableScreen }) => {
               eventId,
               tableId: id,
               chairId: `${id}_chair_4`,
+              userId,
               userName,
+              userRole: role,
               userEmail: email,
               userImage,
               userCity,

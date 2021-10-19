@@ -12,7 +12,6 @@ import {
   fetchPreviousEventChatMessages,
 } from "../../../../../actions";
 
-import ScrollableFeed from "react-scrollable-feed";
 import SelfReplyElement from "./SelfReplyElement";
 import OthersReplyElement from "./OthersReplyElement";
 import DeletedOwnMsg from "./DeletedOwnMsg";
@@ -26,9 +25,6 @@ const AllChatsComponent = () => {
   const [organisation, setOrganisation] = useState(null);
   const [designation, setDesignation] = useState(null);
   const [chatMsgId, setChatMsgId] = useState(null);
-
-  const [scrolled, setScrolled] = useState(false);
-  const [counter, setCounter] = useState(0);
 
   const createReplyWidget = (
     name,

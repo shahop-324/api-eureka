@@ -57,7 +57,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email } = useSelector((state) => state.eventAccessToken);
+  const { email, role } = useSelector((state) => state.eventAccessToken);
   const userId = useSelector((state) => state.user.userDetails._id);
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
@@ -121,7 +121,8 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
         className="lower-chair-wrapper"
         id={`${id}_chair_7`}
         onClick={() => {
-          console.log(`${id}_chair_7`);
+          // if(chairIsOccupied) return;
+          // console.log(`${id}_chair_7`);
 
           dispatch(
             userActions.EditCurrentlyJoinedChair({
@@ -136,6 +137,8 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
               tableId: id,
               chairId: `${id}_chair_7`,
               userName,
+              userId,
+              userRole: role,
               userEmail: email,
               userImage,
               userCity,

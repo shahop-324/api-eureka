@@ -1,5 +1,5 @@
-import GalleryVideoPlayer from "./../../SessionStreamingComponents.js/GalleryVideoPlayer";
-import ShareScreenPlayer from "./../../SessionStreamingComponents.js/ShareScreenPlayer";
+import GalleryVideoPlayer from "./../../LoungeStreaming/GalleryVideoPlayer";
+import ShareScreenPlayer from "./../../LoungeStreaming/ShareScreenPlayer";
 
 const renderLocalStream = (
   allStreams,

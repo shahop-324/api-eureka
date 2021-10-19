@@ -5,6 +5,7 @@ const roomsSlice = createSlice({
 
   initialState: {
     chairs: [],
+    tableChats: [],
     numberOfPeopleOnTable: 0,
     hasChangedChairs:false
   },
@@ -22,6 +23,9 @@ const roomsSlice = createSlice({
     FetchNumOfPeopleOnTable(state, action) {
       state.numberOfPeopleOnTable = action.payload.numberOfPeopleOnTable;
 
+    },
+    FetchTableChats(state, action) {
+      state.tableChats = action.payload.chats;
     },
   },
 });

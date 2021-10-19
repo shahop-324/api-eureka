@@ -1,10 +1,9 @@
 import React from "react";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import "./../../../Styles/report.scss";
+import "./../../Styles/report.scss";
 import { Avatar, IconButton } from "@material-ui/core";
 import Select from "react-select";
 

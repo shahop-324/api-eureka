@@ -6,16 +6,44 @@ import {
   renderGalleryView,
   renderMainStream,
   renderMiniStreams,
-  renderProminentStream,
   renderScreenShareStream,
-} from "../Stage/renderViewFxns";
+} from "./renderViewFxns";
 
-import {
-  GalleryView,
-  GridView,
-  SpotlightView,
-  GridViewMini,
-} from "../../../SessionStage/Elements";
+const GalleryView = styled.div`
+  min-height: 65vh;
+
+  height: 90%;
+  display: grid;
+  grid-template-columns: ${(props) =>
+    props.col && props.col ? props.col : "1fr 1fr 1fr 1fr"};
+  grid-template-rows: ${(props) =>
+    props.row && props.row ? props.row : "1fr 1fr"};
+  grid-gap: 24px;
+  /* justify-content: center; */
+
+  padding: 8vh 3vw;
+`;
+
+const GridView = styled.div`
+  min-height: 65vh;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 4fr 1.3fr;
+  grid-gap: 24px;
+
+  padding: 8vh 3vw;
+`;
+
+
+const GridViewMini = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 16px;
+
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+`;
 
 const StreamBody = ({
   col,
@@ -28,19 +56,28 @@ const StreamBody = ({
   view,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
+  // volumeIndicators,
   peopleOnThisTable,
 }) => {
+  const { volumeIndicators } = useSelector((state) => state.streaming);
   return (
     <>
-      <div>
+      <div style={{height: "100%"}}>
         {typeof allStreams !== "undefined" && allStreams.length > 0 ? (
           <div className="">
             {(() => {
               switch (view) {
                 case "gallery":
                   return (
-                    <GalleryView col={col} row={row}>
+                    <GalleryView
+                      col={col}
+                      row={row}
+                      style={{
+                        padding: "0",
+                        minHeight: "65vh",
+                        height: "100%",
+                      }}
+                    >
                       {allStreams &&
                         renderGalleryView(
                           allStreams,
@@ -79,19 +116,7 @@ const StreamBody = ({
                     </GridView>
                   );
 
-                case "spotlight":
-                  return (
-                    <SpotlightView>
-                      {prominentStream &&
-                        renderProminentStream(
-                          prominentStream,
-                          audioStreamStat,
-                          videoStreamStat,
-                          volumeIndicators,
-                          peopleOnThisTable
-                        )}
-                    </SpotlightView>
-                  );
+                
                 case "screenShare":
                   return (
                     <GridView>

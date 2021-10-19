@@ -1,13 +1,12 @@
+import React, { useState } from "react";
 import { IconButton } from "@material-ui/core";
 import SendRoundedIcon from "@material-ui/icons/SendRounded";
-import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import socket from "./../../../service/socket";
-import "./../../../Styles/chatComponent.scss";
-import ChatMsgElement from "./ChatMsgElement";
+import socket from "./../../service/socket";
+import "../../Styles/chatComponent.scss";
+import IncomingChatMsgElement from "./IncomingChatMsgElement";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
 import SentimentSatisfiedRoundedIcon from "@material-ui/icons/SentimentSatisfiedRounded";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
@@ -38,34 +37,24 @@ const MsgInput = (props) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
-
-  if (role !== "speaker") {
-    firstName = userDetails.firstName;
-    lastName = userDetails.lastName;
-    email = userDetails.email;
-    image = userDetails.image;
-    organisation = userDetails.organisation;
-    designation = userDetails.designation;
-  } else {
-    firstName = speakerDetails.firstName;
-    lastName = speakerDetails.lastName;
-    email = speakerDetails.email;
-    image = speakerDetails.image;
-    organisation = speakerDetails.organisation;
-    designation = speakerDetails.designation;
-  }
+  firstName = userDetails.firstName;
+  lastName = userDetails.lastName;
+  email = userDetails.email;
+  image = userDetails.image;
+  organisation = userDetails.organisation;
+  designation = userDetails.designation;
 
   const [Message, setMessage] = useState("");
 
   const sendChannelMessage = () => {
     socket.emit(
-      "transmitEventMessage",
+      "transmitTableMessage",
       {
         isReply: props.name && props.image && props.msg ? true : false,
         replyTo: props.chatMsgId,
         textMessage: Message,
         eventId: eventId,
+        tableId: props.tableId,
         createdAt: Date.now(),
         userRole: role,
         userName: firstName + " " + lastName,
@@ -114,7 +103,7 @@ const MsgInput = (props) => {
               style={{ backgroundColor: "#E7E7E7", borderRadius: "10px" }}
               className="p-2"
             >
-              <ChatMsgElement
+              <IncomingChatMsgElement
                 name={props.name}
                 image={props.image}
                 msgText={props.msg}
@@ -151,7 +140,7 @@ const MsgInput = (props) => {
             }}
           />
           <SentimentSatisfiedRoundedIcon
-            style={{ fill: "#4D4D4D" }}
+            style={{ fill: "#BEBEBE" }}
             onClick={() => {
               toggleEmojiMart();
             }}
@@ -165,6 +154,7 @@ const MsgInput = (props) => {
             style={{
               width: "70%",
               border: "none",
+              color: "#d3d3d3",
               backgroundColor: "transparent",
               outline: "none",
             }}
@@ -179,7 +169,10 @@ const MsgInput = (props) => {
               props.destroyReplyWidget();
             }}
           >
-            <SendRoundedIcon className="chat-msg-hover-icon" />
+            <SendRoundedIcon
+              style={{ color: "#d3d3d3" }}
+              className="chat-msg-hover-icon"
+            />
           </IconButton>
         </div>
       </div>

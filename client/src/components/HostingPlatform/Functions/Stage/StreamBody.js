@@ -12,14 +12,12 @@ import {
   renderGalleryView,
   renderMainStream,
   renderMiniStreams,
-  renderProminentStream,
   renderScreenShareStream,
 } from "./renderViewFxns";
 
 import {
   GalleryView,
   GridView,
-  SpotlightView,
   GridViewMini,
 } from "../../../SessionStage/Elements";
 import { useSelector } from "react-redux";
@@ -159,19 +157,7 @@ const StreamBody = ({
                     </GridView>
                   );
 
-                case "spotlight":
-                  return (
-                    <SpotlightView>
-                      {prominentStream &&
-                        renderProminentStream(
-                          prominentStream,
-                          audioStreamStat,
-                          videoStreamStat,
-                          volumeIndicators,
-                          peopleInThisSession
-                        )}
-                    </SpotlightView>
-                  );
+                
                 case "screenShare":
                   return (
                     <GridView>

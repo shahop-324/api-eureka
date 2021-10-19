@@ -209,4 +209,10 @@ router.get(
   globalController.getTableDetails
 );
 
+router.get(
+  "/getTableChats/:tableId",
+  authController.protect,
+  globalController.getTableChats
+);
+
 module.exports = router;

@@ -50,6 +50,7 @@ import personalChatSlice from "./personalChatSlice";
 import teamInvitationSlice from "./teamInvitationSlice";
 import magicLinkSlice from "./magicLinkSlice";
 import eventTablesSlice from "./eventTablesSlice";
+import StreamingSlice from "./streamingSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -102,4 +103,5 @@ export default combineReducers({
   teamInvite: teamInvitationSlice.reducer,
   magicLink: magicLinkSlice.reducer,
   eventTables: eventTablesSlice.reducer,
+  streaming: StreamingSlice.reducer,
 });

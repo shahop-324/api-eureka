@@ -7,7 +7,7 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { fetchTwillioVideoRoomToken, getRTCTokenForJoiningTable } from "../../../actions";
+import { getRTCTokenForJoiningTable } from "../../../actions";
 
 const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -84,7 +84,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email } = useSelector((state) => state.eventAccessToken);
+  const { email, role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
@@ -120,7 +120,8 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
         className="lower-chair-wrapper"
         id={`${id}_chair_5`}
         onClick={() => {
-          console.log(`${id}_chair_5`);
+          // if(chairIsOccupied) return;
+          // console.log(`${id}_chair_5`);
 
           dispatch(
             userActions.EditCurrentlyJoinedChair({
@@ -134,7 +135,9 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
               eventId,
               tableId: id,
               chairId: `${id}_chair_5`,
+              userId,
               userName,
+              userRole: role,
               userEmail: email,
               userImage,
               userCity,

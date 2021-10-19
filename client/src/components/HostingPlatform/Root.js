@@ -50,7 +50,7 @@ const Root = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  console.log(params);
+  // console.log(params);
 
   useEffect(() => {
     dispatch(fetchEvent(eventId));
@@ -87,7 +87,7 @@ const Root = () => {
   });
 
   // console.log(speaker);
-  console.log(event);
+  // console.log(event);
 
   useEffect(() => {
     return () => {
@@ -107,38 +107,38 @@ const Root = () => {
     ? userDetails.designation
     : "Vice President";
 
-  console.log(role, id, email);
+  // console.log(role, id, email);
 
   useEffect(() => {
     socket.on("newEventMsg", ({ newMsg }) => {
-      console.log(newMsg);
+      // console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));
     });
     socket.on("newEventAlert", ({ newAlert }) => {
-      console.log(newAlert);
+      // console.log(newAlert);
       dispatch(createNewEventAlert(newAlert));
     });
     socket.on("newEventPoll", ({ newPoll }) => {
-      console.log(newPoll);
+      // console.log(newPoll);
       dispatch(createNewEventPoll(newPoll));
     });
     socket.on("updatedEventPoll", ({ updatedPoll }) => {
-      console.log(updatedPoll);
+      // console.log(updatedPoll);
       dispatch(updateEventPoll(updatedPoll));
     });
 
     socket.on("newSessionMsg", ({ newMsg }) => {
-      console.log(newMsg);
+      // console.log(newMsg);
       dispatch(createNewSessionMsg(newMsg));
     });
 
     socket.on("previousEventMessages", ({ chats }) => {
-      console.log(chats);
+      // console.log(chats);
       dispatch(fetchEventChats(chats));
     });
 
     socket.on("roomChairData", ({ roomChairs }) => {
-      console.log(roomChairs);
+      // console.log(roomChairs);
       dispatch(
         roomsActions.FetchRoomsChairs({
           chairs: roomChairs,
@@ -147,7 +147,7 @@ const Root = () => {
     });
 
     socket.on("roomSessionData", ({ sessions }) => {
-      console.log(sessions);
+      // console.log(sessions);
       dispatch(
         sessionActions.FetchSessionsStatus({
           sessionsStatus: sessions,
@@ -206,7 +206,7 @@ const Root = () => {
     });
   }, [dispatch]);
 
-  console.log(isEventLoading);
+  // console.log(isEventLoading);
 
   if (eventError) {
     alert(eventError);
@@ -272,10 +272,11 @@ const Root = () => {
 
   currentIndex = currentIndex.toString();
 
-  console.log(currentIndex);
+  // console.log(currentIndex);
 
   return (
     <>
+    
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav

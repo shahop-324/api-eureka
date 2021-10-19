@@ -16,6 +16,12 @@ const roomChairSchema = new mongoose.Schema(
     chairId: {
       type: String,
     },
+    userId: {
+      type: String,
+    },
+    userRole: {
+      type: String,
+    },
     userName: {
       type: String,
     },
