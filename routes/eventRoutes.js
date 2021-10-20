@@ -19,6 +19,12 @@ router.patch(
 );
 
 router.patch(
+  "/:eventId/updateCustomisation",
+  authController.protectCommunity,
+  eventController.updateCustomisationSettings
+);
+
+router.patch(
   "/:eventId/updateRegistrationForm",
   authController.protectCommunity,
   eventController.updateRegistrationForm

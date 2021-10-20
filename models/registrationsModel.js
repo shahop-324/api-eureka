@@ -149,13 +149,53 @@ const registrationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    disablePrivateChat: {
+    allowPrivateChat: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    allowMeetingInvites: {
+      type: Boolean,
+      default: true,
     },
     allowConnectionRequests: {
       type: Boolean,
       default: true,
+    },
+
+    // Notification Settings
+
+    messageNotifications: {
+      type: Boolean,
+      default: true,
+    },
+    alerts: {
+      type: Boolean,
+      default: true,
+    },
+    pollNotification: {
+      type: Boolean,
+      default: true,
+    },
+    notificationSound: {
+      type: Boolean,
+      default: true,
+    },
+    emailNotifications: {
+      type: Boolean,
+      default: true,
+    },
+    sessionReminders: {
+      type: Boolean,
+      default: true,
+    },
+    microphoneId: {
+      type: String,
+    },
+    cameraId: {
+      type: String,
+    },
+    speakerId: {
+      type: String,
     },
   },
   {

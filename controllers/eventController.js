@@ -92,7 +92,13 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     communityGettingEvent.eventsDocIdCommunityWise
   );
 
-  const eventManagers = Community.findById(communityId).select("eventManagers");
+  const communityObject = await Community.findById(communityId).select(
+    "eventManagers"
+  );
+
+  // console.log(eventManagers);
+
+  const eventManagers = communityObject.eventManagers;
 
   // 1) Create a new event document with required fields
 
@@ -134,7 +140,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 
   for (let element of members) {
     // Fetch user document for this id and then register in this event
-    await User.findById(element, (err, doc) => {
+    await User.findById(element, async (err, doc) => {
       if (err) {
         console.log(err);
       } else {
@@ -936,66 +942,126 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 // && !(AlreadyInSessions.includes(el)
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
-  const filteredBody = filterObj(
-    req.body,
-    "whoCanEnterEvent",
-    "eventName",
-    "shortDescription",
-    "startDate",
-    "startTime",
-    "endDate",
-    "endTime",
-    "selectTimeZone",
-    "selectCategories",
-    "visibility",
-    "editingComment",
-    "organisedBy",
-    "publishedStatus",
-    "mailChimpAudienceTag",
-    "mailChimpAudienceListIdForRegistrants",
-    "isMailchimpEnabled",
-    "status",
-    "numberOfTablesInLounge"
-  );
-
-  const eventDoc = await Event.findByIdAndUpdate(req.params.id, filteredBody, {
-    new: true,
-    validateModifiedOnly: true,
-  }).populate("registrationFormId");
-
   try {
-    if (req.body.Timezone) {
-      eventDoc.Timezone = req.body.Timezone;
+    const filteredBody = filterObj(
+      req.body,
+      "whoCanEnterEvent",
+      "eventName",
+      "shortDescription",
+      "startDate",
+      "startTime",
+      "endDate",
+      "endTime",
+      "selectTimeZone",
+      "selectCategories",
+      "visibility",
+      "editingComment",
+      "organisedBy",
+      "publishedStatus",
+      "mailChimpAudienceTag",
+      "mailChimpAudienceListIdForRegistrants",
+      "isMailchimpEnabled",
+      "status",
+      "numberOfTablesInLounge"
+    );
+
+    const eventBeforeUpdate = await Event.findById(req.params.id);
+
+    const tablesBeforeUpdate = eventBeforeUpdate.numberOfTablesInLounge;
+
+    const eventDoc = await Event.findByIdAndUpdate(
+      req.params.id,
+      filteredBody,
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    ).populate("registrationFormId");
+
+    const tablesAfterUpdate = eventDoc.numberOfTablesInLounge;
+
+    try {
+      if (req.body.Timezone) {
+        eventDoc.Timezone = req.body.Timezone;
+      }
+      if (req.body.categories) {
+        eventDoc.categories = req.body.categories;
+      }
+
+      if (req.body.moderators) {
+        eventDoc.moderators = req.body.moderators;
+      }
+
+      await eventDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      // If numberOfTables is updated then please check diff and create required no. of tables for that event
+
+      const diff = tablesAfterUpdate * 1 - tablesBeforeUpdate * 1;
+
+      if (diff > 0) {
+        for (let i = 0; i < diff * 1; i++) {
+          // Create tables with tableId as `${eventId}_table_${i}`
+          await RoomTable.create({
+            eventId: eventDoc._id,
+            tableId: `${eventDoc._id}_table_${i}`,
+            lastUpdatedAt: Date.now(),
+          });
+        }
+      }
+
+      const updatedEvent = await Event.findById(eventDoc._id)
+        .populate("registrationFormId")
+        .populate("moderators", "firstName lastName email");
+
+      res.status(200).json({
+        status: "success",
+        updatedEvent,
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(400).json({
+        status: "error",
+        message: "something was gone wrong. Please try again later!",
+      });
     }
-    if (req.body.categories) {
-      eventDoc.categories = req.body.categories;
-    }
-
-    if (req.body.moderators) {
-      eventDoc.moderators = req.body.moderators;
-    }
-
-    await eventDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    const updatedEvent = await Event.findById(eventDoc._id)
-      .populate("registrationFormId")
-      .populate("moderators", "firstName lastName email");
-
-    res.status(200).json({
-      status: "success",
-      updatedEvent,
-    });
   } catch (error) {
     console.log(error);
-
-    res.status(400).json({
-      status: "error",
-      message: "something was gone wrong. Please try again later!",
-    });
   }
+});
+
+exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(
+    req.body,
+    "theme",
+    "color",
+    "liveChat",
+    "peopleInEvent",
+    "privateMeetings",
+    "privateChat",
+    "qna",
+    "attendeeCount",
+    "emojiReaction",
+    "review"
+  );
+
+  const eventDoc = await Event.findByIdAndUpdate(
+    req.params.eventId,
+    filteredBody,
+    {
+      new: true,
+      validateModifiedOnly: true,
+    }
+  ).populate("registrationFormId");
+
+  res.status(200).json({
+    status: "success",
+    eventDoc,
+  });
+
 });
 
 exports.updateRegistrationForm = catchAsync(async (req, res, next) => {

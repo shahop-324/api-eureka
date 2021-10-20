@@ -586,7 +586,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps)(
   reduxForm({
     form: "editProfile",
-
     validate,
     enableReinitialize: true,
     destroyOnUnmount: false,

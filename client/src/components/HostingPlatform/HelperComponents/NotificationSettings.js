@@ -6,10 +6,12 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { IconButton, Divider } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
-import CreateTheme from "./CreateTheme";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { updateRegistrationSettings } from "./../../../actions";
 
 const RoyalBlueSwitch = withStyles({
   switchBase: {
@@ -26,32 +28,69 @@ const RoyalBlueSwitch = withStyles({
 })(Switch);
 
 const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
-  const [openCreateTheme, setOpenCreateTheme] = useState(false);
+  const dispatch = useDispatch();
+  const params = useParams();
 
-  const [checked, setChecked] = React.useState(false);
+  const { id } = useSelector((state) => state.eventAccessToken);
 
-  const handleChangeToggle = () => {
-    setChecked(!checked);
+  const userId = id;
+
+  const eventId = params.eventId;
+
+  let myRegistration;
+
+  const { registrations } = useSelector((state) => state.registration);
+
+  if (registrations) {
+    myRegistration = registrations.find(
+      (element) =>
+        element.bookedByUser === userId && element.bookedForEventId === eventId
+    );
+  }
+
+  const [messageNotifications, setMessageNotifications] = useState(
+    myRegistration ? myRegistration.messageNotifications : true
+  );
+
+  const [alerts, setAlerts] = useState(
+    myRegistration ? myRegistration.alerts : true
+  );
+
+  const [pollNotification, setPollNotification] = useState(
+    myRegistration ? myRegistration.pollNotification : true
+  );
+
+  const [notificationSound, setNotificationSound] = useState(
+    myRegistration ? myRegistration.notificationSound : true
+  );
+
+  const [emailNotifications, setEmailNotifications] = useState(
+    myRegistration ? myRegistration.emailNotifications : true
+  );
+
+  const [sessionReminders, setSessionReminders] = useState(
+    myRegistration ? myRegistration.sessionReminders : true
+  );
+
+  const formValues = {
+    messageNotifications,
+    alerts,
+    pollNotification,
+    notificationSound,
+    emailNotifications,
+    sessionReminders,
   };
-
-
-
-  const handleCloseTheme = () => {
-    setOpenCreateTheme(false);
-  };
-
-
 
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -86,15 +125,27 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={messageNotifications}
+                            onChange={(e) => {
+                              setMessageNotifications(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.messageNotifications =
+                                e.target.checked;
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="messageNotifications"
                           />
                         }
                       />
@@ -108,15 +159,26 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Alerts</div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={alerts}
+                            onChange={(e) => {
+                              setAlerts(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.alerts = e.target.checked;
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="alerts"
                           />
                         }
                       />
@@ -132,15 +194,26 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={pollNotification}
+                            onChange={(e) => {
+                              setPollNotification(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.pollNotification = e.target.checked;
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="pollNotification"
                           />
                         }
                       />
@@ -156,15 +229,96 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={notificationSound}
+                            onChange={(e) => {
+                              setNotificationSound(e.target.checked);
+                              let newFormValues = { ...formValues };
+                              newFormValues.notificationSound =
+                                e.target.checked;
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="notificationSound"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between pt-2">
+                  <div className="hosting-platform-widget-name">
+                    Email notifications
+                  </div>
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={emailNotifications}
+                            onChange={(e) => {
+                              setEmailNotifications(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.emailNotifications =
+                                e.target.checked;
+
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="emailNotifications"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between pt-2">
+                  <div className="hosting-platform-widget-name">
+                    Session reminders
+                  </div>
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={sessionReminders}
+                            onChange={(e) => {
+                              setSessionReminders(e.target.checked);
+                              let newFormValues = { ...formValues };
+
+                              newFormValues.sessionReminders = e.target.checked;
+                              if (myRegistration) {
+                                dispatch(
+                                  updateRegistrationSettings(
+                                    newFormValues,
+                                    myRegistration._id
+                                  )
+                                );
+                              }
+                            }}
+                            name="sessionReminders"
                           />
                         }
                       />
@@ -176,8 +330,6 @@ const NotificationSettings = ({ openDrawer, handleCloseDrawer }) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
-
-      <CreateTheme open={openCreateTheme} handleClose={handleCloseTheme} />
     </>
   );
 };

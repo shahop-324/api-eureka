@@ -1,4 +1,3 @@
-import React from "react";
 import eureka from "../apis/eureka";
 import { authActions } from "../reducers/authSlice";
 import { eventActions } from "../reducers/eventSlice";
@@ -1069,6 +1068,73 @@ export const editEvent = (formValues, id) => async (dispatch, getState) => {
 export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
+
+export const updateEventCustomisation =
+  (formValues, eventId) => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
+    try {
+      console.log(eventId);
+      console.log(formValues);
+
+      let res = await fetch(
+        `${BaseURL}events/${eventId}/updateCustomisation`,
+
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        eventActions.EditEvent({
+          event: res.eventDoc,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Customisation settings updated successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(eventActions.hasError(error.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update event.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
 
 export const uploadEventImage = (file, id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
@@ -7142,6 +7208,133 @@ export const editRegistrationForm =
       dispatch(
         snackbarActions.openSnackBar({
           message: "Failed to update event.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const updateRegistration =
+  (formValues, registrationId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}registrations/updateRegistration/${registrationId}`,
+
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      // ! Dispatch updated registration
+
+      dispatch(
+        registrationActions.UpdateRegistration({
+          registration: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Permissions update successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update event profile.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  };
+
+export const updateRegistrationSettings =
+  (formValues, registrationId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}registrations/updateRegistrationSettings/${registrationId}`,
+
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+
+      console.log(res);
+
+      // ! Dispatch updated registration
+
+      dispatch(
+        registrationActions.UpdateRegistration({
+          registration: res.data,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Settings updated successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update notification settings.",
           severity: "error",
         })
       );

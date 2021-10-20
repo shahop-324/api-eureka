@@ -11,9 +11,11 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
 import CreateTheme from "./CreateTheme";
-
+import { updateEventCustomisation } from "../../../actions";
 import FormGroup from "@material-ui/core/FormGroup";
 import Switch from "@material-ui/core/Switch";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -40,13 +42,77 @@ const RoyalBlueSwitch = withStyles({
 })(Switch);
 
 const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
-  const [openCreateTheme, setOpenCreateTheme] = useState(false);
+  const params = useParams();
+  const dispatch = useDispatch();
 
-  const [checked, setChecked] = React.useState(false);
+  const eventId = params.eventId;
 
-  const handleChangeToggle = () => {
-    setChecked(!checked);
+  const { eventDetails } = useSelector((state) => state.event);
+
+  // Store these in local state
+
+  // "theme",
+  //   "color",
+  //   "liveChat",
+  //   "peopleInEvent",
+  //   "privateMeetings",
+  //   "privateChat",
+  //   "qna",
+  //   "attendeeCount",
+  //   "emojiReaction",
+  //   "review"
+
+  const [theme, setTheme] = useState(
+    eventDetails && eventDetails.theme ? eventDetails.theme : "dark"
+  );
+  const [liveChat, setLiveChat] = useState(
+    eventDetails && eventDetails.liveChat ? eventDetails.liveChat : true
+  );
+  const [privateChat, setPrivateChat] = useState(
+    eventDetails && eventDetails.privateChat ? eventDetails.privateChat : true
+  );
+  const [peopleInEvent, setPeopleInEvent] = useState(
+    eventDetails && eventDetails.peopleInEvent
+      ? eventDetails.peopleInEvent
+      : true
+  );
+  const [privateMeetings, setPrivateMeetings] = useState(
+    eventDetails && eventDetails.privateMeetings
+      ? eventDetails.privateMeetings
+      : true
+  );
+  const [qna, setQna] = useState(
+    eventDetails && eventDetails.qna ? eventDetails.qna : true
+  );
+  const [attendeeCount, setAttendeeCount] = useState(
+    eventDetails && eventDetails.attendeeCount
+      ? eventDetails.attendeeCount
+      : true
+  );
+  const [emojiReaction, setEmojiReaction] = useState(
+    eventDetails && eventDetails.emojiReaction
+      ? eventDetails.emojiReaction
+      : true
+  );
+  const [review, setReview] = useState(
+    eventDetails && eventDetails.review ? eventDetails.review : true
+  );
+
+  // TODO Create form values out of these properties
+
+  let formValues = {
+    theme,
+    liveChat,
+    privateChat,
+    peopleInEvent,
+    privateMeetings,
+    qna,
+    attendeeCount,
+    emojiReaction,
+    review,
   };
+
+  const [openCreateTheme, setOpenCreateTheme] = useState(false);
 
   const handleOpenTheme = () => {
     setOpenCreateTheme(true);
@@ -56,22 +122,24 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
     setOpenCreateTheme(false);
   };
 
-  const [value, setValue] = React.useState("dark");
-
   const handleChange = (event) => {
-    setValue(event.target.value);
+    setTheme(event.target.value);
+
+    let newFormValues = { ...formValues };
+    newFormValues.theme = event.target.value;
+    dispatch(updateEventCustomisation(newFormValues, eventId));
   };
 
   return (
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -116,9 +184,9 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 style={{ width: "360px" }}
               >
                 <RadioGroup
-                  aria-label="gender"
-                  name="gender1"
-                  value={value}
+                  aria-label="theme"
+                  name="theme"
+                  value={theme}
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 >
@@ -166,15 +234,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Live chat</div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={liveChat}
+                            onChange={(e) => {
+                              setLiveChat(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.liveChat = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="liveChat"
                           />
                         }
                       />
@@ -190,15 +264,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={peopleInEvent}
+                            onChange={(e) => {
+                              setPeopleInEvent(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.peopleInEvent = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="peopleInEvent"
                           />
                         }
                       />
@@ -214,15 +294,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={privateMeetings}
+                            onChange={(e) => {
+                              setPrivateMeetings(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.privateMeetings = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="privateMeetings"
                           />
                         }
                       />
@@ -238,15 +324,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={privateChat}
+                            onChange={(e) => {
+                              setPrivateChat(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.privateChat = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="privateChat"
                           />
                         }
                       />
@@ -260,15 +352,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   <div className="hosting-platform-widget-name">Q & A</div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={qna}
+                            onChange={(e) => {
+                              setQna(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.qna = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="qna"
                           />
                         }
                       />
@@ -284,15 +382,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={attendeeCount}
+                            onChange={(e) => {
+                              setAttendeeCount(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.attendeeCount = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="attendeeCount"
                           />
                         }
                       />
@@ -308,15 +412,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={emojiReaction}
+                            onChange={(e) => {
+                              setEmojiReaction(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.emojiReaction = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="emojiReaction"
                           />
                         }
                       />
@@ -332,15 +442,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                   </div>
 
                   <div>
-                    {/* <VisibilityOffIcon className="icon-btn" />
-                    <div className="show-hide-text">hide</div> */}
                     <FormGroup row>
                       <FormControlLabel
                         control={
                           <RoyalBlueSwitch
-                            checked={checked}
-                            onChange={handleChangeToggle}
-                            name="mailchimpSwitch"
+                            checked={review}
+                            onChange={(e) => {
+                              setReview(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.review = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="review"
                           />
                         }
                       />

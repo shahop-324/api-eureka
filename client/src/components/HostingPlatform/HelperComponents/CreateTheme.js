@@ -4,37 +4,26 @@ import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { IconButton } from "@material-ui/core";
-
 import { TwitterPicker } from "react-color";
-import Select from "react-select";
-
-const fontOptions = [];
-
-const styles = {
-  control: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-    fontSize: "0.85rem",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontFamily: "Ubuntu",
-    fontWeight: "500",
-    color: "#757575",
-    fontSize: "0.85rem",
-  }),
-};
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { updateEventCustomisation, showSnackbar } from "./../../../actions";
 
 const CreateTheme = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [background, setBackground] = useState("#ffffff");
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  const eventId = params.eventId;
+
+  const { eventDetails } = useSelector((state) => state.event);
+
+  const [color, setColor] = useState(eventDetails.color);
 
   const handleChangeComplete = (color) => {
-    setBackground(color.hex);
+    setColor(color.hex);
   };
 
   return (
@@ -54,48 +43,25 @@ const CreateTheme = ({ open, handleClose }) => {
               </IconButton>
             </div>
           </div>
-          <div className="mb-4 overlay-form-input-row">
-            <label for="eventName" className="form-label form-label-customized">
-              Theme name
-            </label>
-            <input
-              name="eventName"
-              type="text"
-              className="form-control"
-              id="themeName"
-              ariadescribedby="themeName"
-              //   component={renderInput}
-            />
-          </div>
-          <div className="mb-4 overlay-form-input-row">
-            <label for="eventName" className="form-label form-label-customized">
-              Font Family
-            </label>
 
-            <Select
-              // defaultValue={defaultValue}
-              styles={styles}
-              menuPlacement={"auto"}
-              name="fontFamily"
-              options={fontOptions}
-              // value={input.value}
-              // onChange={(value) => input.onChange(value)}
-              // onBlur={() => input.onBlur()}
-            />
-          </div>
           <div className="mb-4">
             <label className="form-label form-label-customized">Color</label>
             <div
               className="theme-color-preview mb-3"
-              style={{ backgroundColor: background }}
+              style={{ backgroundColor: color }}
             ></div>
             <TwitterPicker
-              color={background}
+              color={color}
               onChangeComplete={handleChangeComplete}
             />
           </div>
 
           <button
+            onClick={() => {
+              if (!color)
+                dispatch(showSnackbar("warning", "Invalid theme color."));
+              dispatch(updateEventCustomisation({ color: color }, eventId));
+            }}
             className="btn btn-outline-primary btn-outline-text"
             style={{ width: "100%" }}
           >

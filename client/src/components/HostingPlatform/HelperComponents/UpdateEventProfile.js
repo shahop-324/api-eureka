@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./../Styles/UpdateEventProfile.scss";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import Faker from "faker";
 import { Avatar, IconButton, makeStyles } from "@material-ui/core";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Select from "react-select";
 import ScheduleOneToOneCallForm from "../SideDrawerComponents/Chat/Sub/ScheduleOneToOneCallForm";
@@ -19,6 +19,12 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Chip from "@material-ui/core/Chip";
+import {
+  editUser,
+  fetchRegistrationsOfParticularEvent,
+  updateRegistration,
+} from "../../../actions";
+import { useParams } from "react-router-dom";
 
 const options = [
   { value: "Technology", label: "Technology" },
@@ -46,6 +52,7 @@ const renderError = ({ error, touched }) => {
     );
   }
 };
+
 const renderInput = ({
   input,
   meta,
@@ -159,6 +166,47 @@ const UpdateEventProfile = ({
   handleCloseDrawer,
   handleSubmit,
 }) => {
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const { id } = useSelector((state) => state.eventAccessToken);
+
+  const userId = id;
+
+  const eventId = params.eventId;
+
+  let myRegistration;
+
+  const { registrations } = useSelector((state) => state.registration);
+
+  if (registrations) {
+    myRegistration = registrations.find(
+      (element) =>
+        element.bookedByUser === userId && element.bookedForEventId === eventId
+    );
+  }
+
+  const [allowMessageFromConnectionsOnly, setAllowMessageFromConnectionsOnly] =
+    useState(
+      myRegistration ? myRegistration.allowMessageFromConnectionsOnly : false
+    );
+  const [allowPrivateChat, setAllowPrivateChat] = useState(
+    myRegistration ? myRegistration.allowPrivateChat : false
+  );
+  const [allowMeetingInvites, setAllowMeetingInvites] = useState(
+    myRegistration ? myRegistration.allowMeetingInvites : true
+  );
+  const [allowConnectionRequests, setAllowConnectionRequests] = useState(
+    myRegistration ? myRegistration.allowConnectionRequests : true
+  );
+
+  const formValues = {
+    allowMessageFromConnectionsOnly,
+    allowPrivateChat,
+    allowMeetingInvites,
+    allowConnectionRequests,
+  };
+
   const { userDetails } = useSelector((state) => state.user);
 
   const classes = useStyles();
@@ -167,12 +215,6 @@ const UpdateEventProfile = ({
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const [checked, setChecked] = React.useState(false);
-
-  const handleChange = () => {
-    setChecked(!checked);
   };
 
   let imgKey;
@@ -201,6 +243,40 @@ const UpdateEventProfile = ({
 
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    const ModifiedFormValues = {};
+
+    ModifiedFormValues.firstName = formValues.firstName;
+    ModifiedFormValues.lastName = formValues.lastName;
+    ModifiedFormValues.headline = formValues.headline;
+    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
+    ModifiedFormValues.email = formValues.email;
+
+    ModifiedFormValues.organisation = formValues.organisation;
+    ModifiedFormValues.designation = formValues.designation;
+    ModifiedFormValues.city = formValues.city;
+    ModifiedFormValues.country = formValues.country;
+
+    const groupedSocialHandles = {
+      facebook: formValues.facebook,
+      twitter: formValues.twitter,
+      linkedin: formValues.linkedin,
+      website: formValues.website,
+    };
+
+    ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
+
+    const modifiedInterests = [];
+
+    if (formValues.interests) {
+      for (let element of formValues.interests) {
+        modifiedInterests.push(element.value);
+      }
+    }
+
+    ModifiedFormValues.interests = modifiedInterests;
+
+    dispatch(editUser(ModifiedFormValues, file));
   };
 
   const renderInterests = (interests) => {
@@ -874,9 +950,28 @@ const UpdateEventProfile = ({
                         <FormControlLabel
                           control={
                             <RoyalBlueSwitch
-                              checked={checked}
-                              onChange={handleChange}
-                              name="mailchimpSwitch"
+                              checked={allowMessageFromConnectionsOnly}
+                              onChange={(e) => {
+                                console.log(e.target.checked);
+                                setAllowMessageFromConnectionsOnly(
+                                  e.target.checked
+                                );
+
+                                let newFormValues = { ...formValues };
+                                newFormValues.allowMessageFromConnectionsOnly =
+                                  e.target.checked;
+
+                                console.log(newFormValues);
+                                if (myRegistration) {
+                                  dispatch(
+                                    updateRegistration(
+                                      newFormValues,
+                                      myRegistration._id
+                                    )
+                                  );
+                                }
+                              }}
+                              name="allowMessageFromConnectionsOnly"
                             />
                           }
                         />
@@ -896,9 +991,67 @@ const UpdateEventProfile = ({
                         <FormControlLabel
                           control={
                             <RoyalBlueSwitch
-                              checked={checked}
-                              onChange={handleChange}
-                              name="mailchimpSwitch"
+                              checked={allowPrivateChat}
+                              onChange={(e) => {
+                                console.log(e.target.checked);
+                                setAllowPrivateChat(e.target.checked);
+
+                                let newFormValues = { ...formValues };
+                                newFormValues.allowPrivateChat =
+                                  e.target.checked;
+
+                                console.log(newFormValues);
+
+                                if (myRegistration) {
+                                  dispatch(
+                                    updateRegistration(
+                                      newFormValues,
+                                      myRegistration._id
+                                    )
+                                  );
+                                }
+                              }}
+                              name="allowPrivateChat"
+                            />
+                          }
+                        />
+                      </FormGroup>
+                    </div>
+                  </div>
+                  <div className="my-3">
+                    <Divider />
+                  </div>
+                  <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
+                    <div className="hosting-platform-widget-name">
+                      Allow meeting invites
+                    </div>
+
+                    <div>
+                      <FormGroup row>
+                        <FormControlLabel
+                          control={
+                            <RoyalBlueSwitch
+                              checked={allowMeetingInvites}
+                              onChange={(e) => {
+                                console.log(e.target.checked);
+                                setAllowMeetingInvites(e.target.checked);
+
+                                let newFormValues = { ...formValues };
+                                newFormValues.allowMeetingInvites =
+                                  e.target.checked;
+
+                                console.log(newFormValues);
+
+                                if (myRegistration) {
+                                  dispatch(
+                                    updateRegistration(
+                                      newFormValues,
+                                      myRegistration._id
+                                    )
+                                  );
+                                }
+                              }}
+                              name="allowMeetingInvites"
                             />
                           }
                         />
@@ -918,9 +1071,27 @@ const UpdateEventProfile = ({
                         <FormControlLabel
                           control={
                             <RoyalBlueSwitch
-                              checked={checked}
-                              onChange={handleChange}
-                              name="mailchimpSwitch"
+                              checked={allowConnectionRequests}
+                              onChange={(e) => {
+                                console.log(e.target.checked);
+                                setAllowConnectionRequests(e.target.checked);
+
+                                let newFormValues = { ...formValues };
+                                newFormValues.allowConnectionRequests =
+                                  e.target.checked;
+
+                                console.log(newFormValues);
+
+                                if (myRegistration) {
+                                  dispatch(
+                                    updateRegistration(
+                                      newFormValues,
+                                      myRegistration._id
+                                    )
+                                  );
+                                }
+                              }}
+                              name="allowConnectionRequests"
                             />
                           }
                         />
@@ -994,11 +1165,29 @@ const mapStateToProps = (state) => ({
   },
 });
 
+const validate = (values) => {
+  const errors = {};
+
+  if (values.firstName && values.firstName.length > 15) {
+    errors.firstName = "Must be 15 characters or less";
+  }
+  if (values.lastName && values.lastName.length > 15) {
+    errors.lastName = "Must be 15 characters or less";
+  }
+  if (
+    values.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+  ) {
+    errors.email = "Invalid email address";
+  }
+
+  return errors;
+};
+
 export default connect(mapStateToProps)(
   reduxForm({
     form: "updateEventProfile",
-
-    // validate,
+    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(UpdateEventProfile)

@@ -45,6 +45,14 @@ const registrationSlice = createSlice({
       state.registrationDetails = action.payload.registration;
       state.isLoading = false;
     },
+
+    UpdateRegistration(state, action) {
+      const updatedRegistration = action.payload.registration;
+      state.registrations = state.registrations.map((element) =>
+        element._id === updatedRegistration._id ? updatedRegistration : element
+      );
+      state.isLoading = false;
+    },
   },
 });
 export const registrationActions = registrationSlice.actions;

@@ -412,17 +412,14 @@ const eventSchema = new mongoose.Schema(
       ],
       default: "Anyone Registered without using 2FA",
     },
-
     registrationFormId: {
       type: mongoose.Schema.ObjectId,
       ref: "RegistrationForm",
     },
-
     stopTicketSale: {
       type: Boolean,
       default: false,
     },
-
     numberOfTablesInLounge: {
       type: Number,
       default: 24,
@@ -450,7 +447,50 @@ const eventSchema = new mongoose.Schema(
       type: String, // This will be used to show highlighted session in what's happening section.
     },
     hosts: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
-    // TODO I have to do research on how recording will work and where it will be stored.
+
+    theme: {
+      type: String,
+      enum: ["dark", "light"],
+      default: "dark",
+    },
+    color: {
+      type: String,
+      default: "#3567C3",
+    },
+    liveChat: {
+      type: Boolean,
+      default: true,
+    },
+    peopleInEvent: {
+      type: Boolean,
+      default: true,
+    },
+    privateMeetings: {
+      type: Boolean,
+      default: true,
+    },
+    privateChat: {
+      type: Boolean,
+      default: true,
+    },
+    qna: {
+      type: Boolean,
+      default: true,
+    },
+    attendeeCount: {
+      type: Boolean,
+      default: true,
+    },
+    emojiReaction: {
+      type: Boolean,
+      default: true,
+    },
+    review: {
+      type: Boolean,
+      default: true,
+    },
+
+    // * Done I have to do research on how recording will work and where it will be stored.
   },
   {
     toJSON: { virtuals: true },

@@ -1,17 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import Faker from "faker";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { Dialog, IconButton } from "@material-ui/core";
-
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
-
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -21,7 +18,6 @@ const PersonProfileBody = styled.div`
   max-height: 80vh;
   height: 500px;
   padding: 32px 24px;
-
   background-color: #ffffff;
   position: relative;
 `;
@@ -56,7 +52,6 @@ const ProfileDesignationOrg = styled.div`
   font-size: 0.8rem;
   color: #152d35;
   font-family: "Ubuntu";
-
   text-transform: capitalize;
   text-align: center;
 `;
@@ -64,14 +59,11 @@ const ProfileDesignationOrg = styled.div`
 const ButtonFilledDark = styled.div`
   padding: 6px 10px;
   text-align: center;
-
   font-weight: 500;
   font-size: 0.8rem;
   color: #ffffff;
   font-family: "Ubuntu";
-
   background-color: #152d35;
-
   border: 1px solid #152d35;
   border-radius: 5px;
 

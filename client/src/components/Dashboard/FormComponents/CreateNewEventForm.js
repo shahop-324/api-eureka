@@ -225,7 +225,9 @@ const CreateNewEventForm = ({
   hideFormHeading,
 }) => {
   let hostOptions = [];
-  const communityManagers = useSelector((state) => state.community.communityManagers);
+  const communityManagers = useSelector(
+    (state) => state.community.communityManagers
+  );
 
   const { superAdminName, superAdminEmail, superAdmin } = useSelector(
     (state) => state.community.communityDetails
@@ -556,9 +558,16 @@ const CreateNewEventForm = ({
               type="number"
               classes="form-control"
               ariadescribedby="emailHelp"
-              placeholder="24"
+              placeholder="20"
               component={renderInput}
             />
+            <div
+              id="emailHelp"
+              className="form-text"
+              style={{ fontSize: "13px" }}
+            >
+              Note: Tables cannot be decreased later but can be increased.
+            </div>
           </div>
           <div className={showInlineButton === "false" ? "hide" : ""}></div>
           <div
@@ -650,6 +659,12 @@ const validate = (formValues) => {
   }
   if (!formValues.visibility) {
     errors.visibility = "Event visibility is required";
+  }
+
+  if (formValues.numberOfTablesInLounge) {
+    if (formValues.numberOfTablesInLounge < 20) {
+      errors.numberOfTablesInLounge = "Minimum number of tables can be 20.";
+    }
   }
 
   return errors;
