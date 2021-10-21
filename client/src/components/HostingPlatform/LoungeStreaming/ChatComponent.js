@@ -74,6 +74,7 @@ const ChatComponent = ({ tableId }) => {
   const userId = id;
 
   const renderChats = (tableChats, userRole) => {
+    if(!tableChats) return;
     return tableChats
       .slice(0)
       .reverse()

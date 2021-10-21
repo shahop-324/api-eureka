@@ -144,10 +144,10 @@ const EditTable = ({
   //   }
   // }
 
-  const [priority, setPriority] = React.useState(tableDetails.priority);
+  const [priority, setPriority] = React.useState(tableDetails ? tableDetails.priority : "Logo");
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(
-    `https://bluemeet.s3.us-west-1.amazonaws.com/${tableDetails.image}`
+    `https://bluemeet.s3.us-west-1.amazonaws.com/${tableDetails ? tableDetails.image : "#"}`
   );
 
   const onFileChange = (event) => {

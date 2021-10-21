@@ -52,6 +52,7 @@ import { magicLinkActions } from "./../reducers/magicLinkSlice";
 import { eventTablesActions } from "./../reducers/eventTablesSlice";
 import { StreamingActions } from "./../reducers/streamingSlice";
 import { notificationActions } from "../reducers/notificationSlice";
+import { SelectedTabActions } from "../reducers/selectedTabSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -9896,3 +9897,21 @@ export const updateNonSpeakingVolumeIndicators =
 export const setLocalVolumeLevel = (level) => async (dispatch, getState) => {
   dispatch(StreamingActions.setLocalVolumeLevel({ localVolumeLevel: level }));
 };
+
+export const setVenueRightDrawerSelectedTab = (tab) => async(dispatch, getState) => {
+  dispatch(SelectedTabActions.setVenueRightDrawerSelectedTab({
+    tab: tab,
+  }))
+}
+
+export const setChatSelectedTab = (tab) => async(dispatch, getState) => {
+  dispatch(SelectedTabActions.setChatSelectedTab({
+    tab: tab,
+  }))
+}
+
+export const setOpenVenueRightDrawer = (openState) => async(dispatch, getState) => {
+  dispatch(SelectedTabActions.setOpenVenueRightDrawer({
+    openState: openState,
+  }))
+}

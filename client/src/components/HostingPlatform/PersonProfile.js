@@ -11,12 +11,12 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from "@mui/icons-material/Cancel";
+import { useSelector } from "react-redux";
 
 const PersonProfileBody = styled.div`
   width: 360px;
   max-height: 80vh;
-  height: 500px;
   padding: 32px 24px;
   background-color: #ffffff;
   position: relative;
@@ -98,17 +98,39 @@ const ButtonOutlinedDark = styled.div`
   }
 `;
 
+const renderInterests = (interests) => {
+  return interests.map((element) => {
+    return (
+      <Chip
+        label={element}
+        color="primary"
+        variant="outlined"
+        className="me-2 mb-3"
+        style={{ fontWeight: "500" }}
+      />
+    );
+  });
+};
+
 const PersonProfile = ({
   open,
   handleClose,
+  userId,
   userName,
   userImage,
   userOrganisation,
   userDesignation,
 }) => {
-  
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { registrations } = useSelector((state) => state.registration);
+
+  const userRegistrationDetails = registrations.find(
+    (element) => element.bookedByUser === userId
+  );
+
+
 
   return (
     <>
@@ -118,11 +140,22 @@ const PersonProfile = ({
         aria-labelledby="responsive-dialog-title"
       >
         <PersonProfileBody>
-            <IconButton className="icon-btn" style={{position: 'absolute', top: "16px", right: "16px", zIndex: "1"}}>
-            <CancelIcon style={{color: "inherit"}} onClick={() => {
-                handleClose()
-            }}/>
-            </IconButton>
+          <IconButton
+            className="icon-btn"
+            style={{
+              position: "absolute",
+              top: "16px",
+              right: "16px",
+              zIndex: "1",
+            }}
+          >
+            <CancelIcon
+              style={{ color: "inherit" }}
+              onClick={() => {
+                handleClose();
+              }}
+            />
+          </IconButton>
           <div className="d-flex flex-row align-items-center justify-content-center mb-4">
             <Avatar
               src={userImage}
@@ -134,64 +167,126 @@ const PersonProfile = ({
           <ProfileName className="mb-2">{userName}</ProfileName>
           <ProfileDesignationOrg className="mb-5">{`${userOrganisation}, ${userDesignation}`}</ProfileDesignationOrg>
 
-          <div className="d-flex flex-row align-items-center justify-content-center mb-4">
-            <FacebookIcon
-              style={{ fontSize: "28px", color: "#4267B2" }}
-              className="me-4"
-            />
-            <LinkedInIcon
-              style={{ fontSize: "28px", color: "#0077b5" }}
-              className="me-4"
-            />
-            <TwitterIcon
-              style={{ fontSize: "28px", color: "#1DA1F2" }}
-              className="me-4"
-            />
-            <InstagramIcon
-              style={{ fontSize: "28px", color: "#DD2A7B" }}
-              className="me-4"
-            />
-            <LanguageIcon style={{ fontSize: "32px", color: "#152d35" }} />
-          </div>
+{userRegistrationDetails ? <div className="d-flex flex-row align-items-center justify-content-center mb-4">
+            {userRegistrationDetails.socialMediaHandles ? (
+              userRegistrationDetails.socialMediaHandles.facebook ? (
+                <a
+                  href={`//${userRegistrationDetails.socialMediaHandles.facebook}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FacebookIcon
+                    style={{ fontSize: "28px", color: "#4267B2" }}
+                    className="me-4"
+                  />
+                </a>
+              ) : (
+                <FacebookIcon
+                  style={{ fontSize: "28px", color: "#C3C3C3" }}
+                  className="me-4"
+                />
+              )
+            ) : (
+              <></>
+            )}
+
+            {userRegistrationDetails.socialMediaHandles ? (
+              userRegistrationDetails.socialMediaHandles.linkedin ? (
+                <a
+                  href={`//${userRegistrationDetails.socialMediaHandles.linkedin}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <LinkedInIcon
+                    style={{ fontSize: "28px", color: "#0077b5" }}
+                    className="me-4"
+                  />
+                </a>
+              ) : (
+                <LinkedInIcon
+                  style={{ fontSize: "28px", color: "#C3C3C3" }}
+                  className="me-4"
+                />
+              )
+            ) : (
+              <></>
+            )}
+
+            {userRegistrationDetails.socialMediaHandles ? (
+              userRegistrationDetails.socialMediaHandles.twitter ? (
+                <a
+                  href={`//${userRegistrationDetails.socialMediaHandles.twitter}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {" "}
+                  <TwitterIcon
+                    style={{ fontSize: "28px", color: "#1DA1F2" }}
+                    className="me-4"
+                  />{" "}
+                </a>
+              ) : (
+                <TwitterIcon
+                  style={{ fontSize: "28px", color: "#C3C3C3" }}
+                  className="me-4"
+                />
+              )
+            ) : (
+              <></>
+            )}
+
+            {userRegistrationDetails.socialMediaHandles ? (
+              userRegistrationDetails.socialMediaHandles.website ? (
+                <a
+                  href={`//${userRegistrationDetails.socialMediaHandles.website}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {" "}
+                  <LanguageIcon
+                    style={{ fontSize: "32px", color: "#152d35" }}
+                  />{" "}
+                </a>
+              ) : (
+                <LanguageIcon style={{ fontSize: "32px", color: "#C3C3C3" }} />
+              )
+            ) : (
+              <></>
+            )}
+          </div> : <></> }
+          
 
           {/* <BtnOutlined></BtnOutlined> */}
-          <div className="mb-3">
-            <ProfileSmallText className="mb-1">Headline</ProfileSmallText>
-            <ProfileMediumText>
-              Introduce yourself to others in few words.
-            </ProfileMediumText>
-          </div>
-          <div className="mb-5">
-            <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
-            {/* <ProfileMediumText>
-              Introduce yourself to others in few words.
-            </ProfileMediumText> */}
-            <div>
-              <Chip
-                label="Technology"
-                color="primary"
-                variant="outlined"
-                className="me-2"
-              />
-              <Chip
-                label="E-commerce"
-                color="primary"
-                variant="outlined"
-                className="me-2"
-              />
-              <Chip
-                label="Sass"
-                color="primary"
-                variant="outlined"
-                className="me-2"
-              />
-            </div>
+          {userRegistrationDetails ? <div className="mb-3">
+            {userRegistrationDetails.headline ? (
+              <>
+                {" "}
+                <ProfileSmallText className="mb-1">Headline</ProfileSmallText>
+                <ProfileMediumText>
+                  {userRegistrationDetails.headline}
+                </ProfileMediumText>{" "}
+              </>
+            ) : (
+              <></>
+            )}
+          </div> : <></> }
+          
+          {userRegistrationDetails ? userRegistrationDetails.interests ? (
+            <div className="mb-4">
+              <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
 
-          </div>
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            <ButtonFilledDark style={{width: "100%"}}>Connect</ButtonFilledDark>
-            {/* <ButtonOutlinedDark style={{width: "48%"}}>Schedule meet</ButtonOutlinedDark> */}
+              <div>{renderInterests(userRegistrationDetails.interests)}</div>
             </div>
+          ) : (
+            <></>
+          ) : <></>}
+
+          <div className="d-flex flex-row align-items-center justify-content-between">
+            <ButtonFilledDark style={{ width: "100%" }}>
+              Connect
+            </ButtonFilledDark>
+            {/* <ButtonOutlinedDark style={{width: "48%"}}>Schedule meet</ButtonOutlinedDark> */}
+          </div>
         </PersonProfileBody>
       </Dialog>
     </>

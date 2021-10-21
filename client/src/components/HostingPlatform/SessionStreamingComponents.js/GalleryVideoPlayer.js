@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./../Styles/sessionStreaming.scss";
 import { useSelector } from "react-redux";
-
+// import 'semantic-ui-css/semantic.min.css'
 import {
   UserRoleTag,
   VideoStreamContainer,
@@ -13,9 +13,7 @@ import {
 } from "../../SessionStage/Elements";
 
 import Avatar from "@mui/material/Avatar";
-
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
-
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
@@ -142,7 +140,6 @@ const GalleryVideoPlayer = ({
                 <div
                   style={{
                     display: "grid",
-
                     gridTemplateColumns: "0.75fr 4fr 1fr",
                     gridGap: "16px",
                   }}

@@ -121,7 +121,7 @@ const PollsMainComponent = (props) => {
           <div
             onClick={() => {
               props.resetSelectedTab();
-              props.setOpenDrawer(false);
+              props.openAndCloseDrawer(false);
             }}
           >
             <IconButton aria-label="close-drawer">

@@ -12,14 +12,7 @@ import { useSelector } from "react-redux";
 import PeopleList from "./helper/PeopleList";
 
 const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown
-    // text="Grid"
-    icon={`${view} layout`}
-    // floating
-    // labeled
-    button
-    className="icon"
-  >
+  <Dropdown icon={`${view} layout`} button className="icon">
     <Dropdown.Menu style={{ right: "0", left: "auto" }}>
       <Dropdown.Item
         icon="list layout"
@@ -53,9 +46,9 @@ const MainPeopleComponent = (props) => {
       return (
         <PeopleGridAvatar
           image={
-            person.userImage.startsWith("https://lh3.googleusercontent.com")
+            person.userImage.startsWith("https://")
               ? person.userImage
-              : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${person.userImage}`
+              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.userImage}`
           }
           name={person.userName}
           designation={person.userDesignation}
@@ -83,7 +76,7 @@ const MainPeopleComponent = (props) => {
           <div
             onClick={() => {
               props.resetSelectedTab();
-              props.setOpenDrawer(false);
+              props.openAndCloseDrawer(false);
             }}
           >
             <IconButton aria-label="close-drawer">

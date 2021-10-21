@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./../Styles/root.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GroupIcon from "@material-ui/icons/Group";
 import styled from "styled-components";
 import DashboardIcon from "@material-ui/icons/Dashboard";
@@ -14,26 +14,25 @@ import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainCompone
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
 import SettingsDrawer from "./SettingsDrawer";
-import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
-import { setPersonalChatConfig } from "../../../actions";
+import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import {
+  setPersonalChatConfig,
+  setVenueRightDrawerSelectedTab,
+  setOpenVenueRightDrawer,
+} from "../../../actions";
 
 const DrawerBackground = styled.div`
   background-color: #ffffff;
 `;
 
 const RightContent = () => {
-
   const dispatch = useDispatch();
-  
-  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const { venueRightDrawerSelectedTab, openVenueRightDrawer } = useSelector(
+    (state) => state.selectedTab
+  );
 
   const [openSettings, setOpenSettings] = useState(false);
-
-  const [selectedTab, setSelectedTab] = useState("");
-
-  const resetSelectedTab = () => {
-    setSelectedTab("");
-  };
 
   const handleOpenSettings = () => {
     setOpenSettings(true);
@@ -43,12 +42,24 @@ const RightContent = () => {
     setOpenSettings(false);
   };
 
+  const setSelectedTab = (tab) => {
+    dispatch(setVenueRightDrawerSelectedTab(tab));
+  };
+
+  const openAndCloseDrawer = (openState) => {
+    dispatch(setOpenVenueRightDrawer(openState));
+  };
+
+  const resetSelectedTab = () => {
+    dispatch(setVenueRightDrawerSelectedTab(null));
+  };
+
   return (
     <>
       <div>
         <div
           className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4"
-          style={{ width: "28rem" }}
+          // style={{ width: "28rem" }}
         >
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
@@ -60,19 +71,25 @@ const RightContent = () => {
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "feed" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "feed"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <SettingsRoundedIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "feed" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "feed"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "feed" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "feed"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               Settings
@@ -82,25 +99,31 @@ const RightContent = () => {
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
               setSelectedTab("feed");
-              setOpenDrawer(true);
+              openAndCloseDrawer(true);
               dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "feed" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "feed"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <DashboardIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "feed" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "feed"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "feed" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "feed"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               Feed
@@ -111,25 +134,31 @@ const RightContent = () => {
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
               setSelectedTab("people");
-              setOpenDrawer(true);
+              openAndCloseDrawer(true);
               dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "people" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "people"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <GroupIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "people" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "people"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "people" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "people"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               People
@@ -140,25 +169,31 @@ const RightContent = () => {
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
               setSelectedTab("alerts");
-              setOpenDrawer(true);
+              openAndCloseDrawer(true);
               dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "alerts" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "alerts"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <NotificationsRoundedIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "alerts" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "alerts"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "alerts" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "alerts"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               Alerts
@@ -169,25 +204,31 @@ const RightContent = () => {
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
               setSelectedTab("polls");
-              setOpenDrawer(true);
+              openAndCloseDrawer(true);
               dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "polls" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "polls"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <AssessmentRoundedIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "polls" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "polls"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "polls" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "polls"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               Polls
@@ -198,25 +239,31 @@ const RightContent = () => {
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center"
             onClick={() => {
               setSelectedTab("moderation");
-              setOpenDrawer(true);
+              openAndCloseDrawer(true);
               dispatch(setPersonalChatConfig(null));
             }}
           >
             <div
               className={`icon-wrapper ${
-                selectedTab === "moderation" ? "active-wrapper-h" : " "
+                venueRightDrawerSelectedTab === "moderation"
+                  ? "active-wrapper-h"
+                  : " "
               } py-2 px-3 mb-1`}
             >
               <SecurityIcon
                 className={`icon-btn-venue ${
-                  selectedTab === "moderation" ? "icon-btn-active-h" : " "
+                  venueRightDrawerSelectedTab === "moderation"
+                    ? "icon-btn-active-h"
+                    : " "
                 }`}
                 style={{ fontSize: "19" }}
               />
             </div>
             <div
               className={`icon-btn-text-venue ${
-                selectedTab === "moderation" ? "icon-btn-text-active-h" : " "
+                venueRightDrawerSelectedTab === "moderation"
+                  ? "icon-btn-text-active-h"
+                  : " "
               }`}
             >
               Moderation
@@ -226,7 +273,6 @@ const RightContent = () => {
       </div>
 
       <React.Fragment key="right">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
         <SwipeableDrawer
           onOpen={() => {
             console.log("Side nav was opended");
@@ -235,7 +281,7 @@ const RightContent = () => {
             console.log("Side nav was closed");
           }}
           anchor="right"
-          open={openDrawer}
+          open={openVenueRightDrawer}
           disableBackdropTransition={true}
         >
           <DrawerBackground className="event-platform-right-drawer px-4 py-1">
@@ -244,24 +290,30 @@ const RightContent = () => {
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
                 onClick={() => {
                   setSelectedTab("feed");
-                  setOpenDrawer(true);
+                  openAndCloseDrawer(true);
                 }}
               >
                 <div
                   className={`icon-wrapper ${
-                    selectedTab === "feed" ? "active-wrapper-h" : " "
+                    venueRightDrawerSelectedTab === "feed"
+                      ? "active-wrapper-h"
+                      : " "
                   } py-2 px-3 mb-1`}
                 >
                   <DashboardIcon
                     className={`icon-btn-h ${
-                      selectedTab === "feed" ? "icon-btn-active-h" : " "
+                      venueRightDrawerSelectedTab === "feed"
+                        ? "icon-btn-active-h"
+                        : " "
                     }`}
                     style={{ fontSize: "19" }}
                   />
                 </div>
                 <div
                   className={`icon-btn-text ${
-                    selectedTab === "feed" ? "icon-btn-text-active-h" : " "
+                    venueRightDrawerSelectedTab === "feed"
+                      ? "icon-btn-text-active-h"
+                      : " "
                   }`}
                 >
                   Feed
@@ -272,24 +324,30 @@ const RightContent = () => {
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
                 onClick={() => {
                   setSelectedTab("people");
-                  setOpenDrawer(true);
+                  openAndCloseDrawer(true);
                 }}
               >
                 <div
                   className={`icon-wrapper ${
-                    selectedTab === "people" ? "active-wrapper-h" : " "
+                    venueRightDrawerSelectedTab === "people"
+                      ? "active-wrapper-h"
+                      : " "
                   } py-2 px-3 mb-1`}
                 >
                   <GroupIcon
                     className={`icon-btn-h ${
-                      selectedTab === "people" ? "icon-btn-active-h" : " "
+                      venueRightDrawerSelectedTab === "people"
+                        ? "icon-btn-active-h"
+                        : " "
                     }`}
                     style={{ fontSize: "19" }}
                   />
                 </div>
                 <div
                   className={`icon-btn-text ${
-                    selectedTab === "people" ? "icon-btn-text-active-h" : " "
+                    venueRightDrawerSelectedTab === "people"
+                      ? "icon-btn-text-active-h"
+                      : " "
                   }`}
                 >
                   People
@@ -300,24 +358,30 @@ const RightContent = () => {
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
                 onClick={() => {
                   setSelectedTab("alerts");
-                  setOpenDrawer(true);
+                  openAndCloseDrawer(true);
                 }}
               >
                 <div
                   className={`icon-wrapper ${
-                    selectedTab === "alerts" ? "active-wrapper-h" : " "
+                    venueRightDrawerSelectedTab === "alerts"
+                      ? "active-wrapper-h"
+                      : " "
                   } py-2 px-3 mb-1`}
                 >
                   <NotificationsRoundedIcon
                     className={`icon-btn-h ${
-                      selectedTab === "alerts" ? "icon-btn-active-h" : " "
+                      venueRightDrawerSelectedTab === "alerts"
+                        ? "icon-btn-active-h"
+                        : " "
                     }`}
                     style={{ fontSize: "19" }}
                   />
                 </div>
                 <div
                   className={`icon-btn-text ${
-                    selectedTab === "alerts" ? "icon-btn-text-active-h" : " "
+                    venueRightDrawerSelectedTab === "alerts"
+                      ? "icon-btn-text-active-h"
+                      : " "
                   }`}
                 >
                   Alerts
@@ -328,24 +392,30 @@ const RightContent = () => {
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
                 onClick={() => {
                   setSelectedTab("polls");
-                  setOpenDrawer(true);
+                  openAndCloseDrawer(true);
                 }}
               >
                 <div
                   className={`icon-wrapper ${
-                    selectedTab === "polls" ? "active-wrapper-h" : " "
+                    venueRightDrawerSelectedTab === "polls"
+                      ? "active-wrapper-h"
+                      : " "
                   } py-2 px-3 mb-1`}
                 >
                   <AssessmentRoundedIcon
                     className={`icon-btn-h ${
-                      selectedTab === "polls" ? "icon-btn-active-h" : " "
+                      venueRightDrawerSelectedTab === "polls"
+                        ? "icon-btn-active-h"
+                        : " "
                     }`}
                     style={{ fontSize: "19" }}
                   />
                 </div>
                 <div
                   className={`icon-btn-text ${
-                    selectedTab === "polls" ? "icon-btn-text-active-h" : " "
+                    venueRightDrawerSelectedTab === "polls"
+                      ? "icon-btn-text-active-h"
+                      : " "
                   }`}
                 >
                   Polls
@@ -356,24 +426,28 @@ const RightContent = () => {
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center"
                 onClick={() => {
                   setSelectedTab("moderation");
-                  setOpenDrawer(true);
+                  openAndCloseDrawer(true);
                 }}
               >
                 <div
                   className={`icon-wrapper ${
-                    selectedTab === "moderation" ? "active-wrapper-h" : " "
+                    venueRightDrawerSelectedTab === "moderation"
+                      ? "active-wrapper-h"
+                      : " "
                   } py-2 px-3 mb-1`}
                 >
                   <SecurityIcon
                     className={`icon-btn-h ${
-                      selectedTab === "moderation" ? "icon-btn-active-h" : " "
+                      venueRightDrawerSelectedTab === "moderation"
+                        ? "icon-btn-active-h"
+                        : " "
                     }`}
                     style={{ fontSize: "19" }}
                   />
                 </div>
                 <div
                   className={`icon-btn-text ${
-                    selectedTab === "moderation"
+                    venueRightDrawerSelectedTab === "moderation"
                       ? "icon-btn-text-active-h"
                       : " "
                   }`}
@@ -389,11 +463,11 @@ const RightContent = () => {
             {/* Here Main Components will be rendered conditionally based on currently selected tab */}
 
             {(() => {
-              switch (selectedTab) {
+              switch (venueRightDrawerSelectedTab) {
                 case "feed":
                   return (
                     <MainChatComponent
-                      setOpenDrawer={setOpenDrawer}
+                      openAndCloseDrawer={openAndCloseDrawer}
                       resetSelectedTab={resetSelectedTab}
                     />
                   );
@@ -401,7 +475,7 @@ const RightContent = () => {
                 case "people":
                   return (
                     <MainPeopleComponent
-                      setOpenDrawer={setOpenDrawer}
+                      openAndCloseDrawer={openAndCloseDrawer}
                       resetSelectedTab={resetSelectedTab}
                     />
                   );
@@ -409,7 +483,7 @@ const RightContent = () => {
                 case "alerts":
                   return (
                     <AlertMainComponent
-                      setOpenDrawer={setOpenDrawer}
+                      openAndCloseDrawer={openAndCloseDrawer}
                       resetSelectedTab={resetSelectedTab}
                     />
                   );
@@ -417,7 +491,7 @@ const RightContent = () => {
                 case "polls":
                   return (
                     <PollsMainComponent
-                      setOpenDrawer={setOpenDrawer}
+                      openAndCloseDrawer={openAndCloseDrawer}
                       resetSelectedTab={resetSelectedTab}
                     />
                   );
@@ -425,7 +499,7 @@ const RightContent = () => {
                 case "moderation":
                   return (
                     <ModerationMainComponent
-                      setOpenDrawer={setOpenDrawer}
+                      openAndCloseDrawer={openAndCloseDrawer}
                       resetSelectedTab={resetSelectedTab}
                     />
                   );

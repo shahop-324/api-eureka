@@ -6,12 +6,16 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Avatar } from "@material-ui/core";
 import ChatComponent from "./../../LoungeStreaming/ChatComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import PersonProfile from "./../../PersonProfile";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {
+  setVenueRightDrawerSelectedTab,
+  setOpenVenueRightDrawer,
+  setChatSelectedTab,
+  setPersonalChatConfig,
+} from "./../../../../actions";
 
 const UserRoleTag = styled.span`
   text-align: center;
@@ -36,9 +40,12 @@ const PeopleComponent = ({
   role,
   you,
   handleOpen,
-  
 }) => {
   const [openProfile, setOpenProfile] = React.useState(false);
+
+  const dispatch = useDispatch();
+
+  let currentUserId = useSelector((state) => state.eventAccessToken.id);
 
   const handleCloseProfile = () => {
     setOpenProfile(false);
@@ -97,7 +104,7 @@ const PeopleComponent = ({
             style={{
               backgroundColor: "#d3d3d3",
               color: "#152d35",
-              width: "100%",
+              width: "48%",
               fontSize: "0.7rem",
             }}
             onClick={() => {
@@ -107,7 +114,7 @@ const PeopleComponent = ({
             View profile
           </div>
 
-          {/* <div
+          <div
             className="view-full-profile-btn py-1"
             style={{
               backgroundColor: "#d3d3d3",
@@ -116,15 +123,21 @@ const PeopleComponent = ({
               fontSize: "0.7rem",
             }}
             onClick={() => {
-             
+              if (id === currentUserId) return;
+              dispatch(setVenueRightDrawerSelectedTab("feed"));
+
+              dispatch(setChatSelectedTab("private"));
+              dispatch(setPersonalChatConfig(id));
+              dispatch(setOpenVenueRightDrawer(true));
             }}
           >
             Message
-          </div> */}
+          </div>
         </div>
       </div>
       <PersonProfile
         open={openProfile}
+        userId={id}
         handleClose={handleCloseProfile}
         userImage={image}
         userName={name}
@@ -217,8 +230,6 @@ export default function SideComponent({ peopleInThisRoom, tableId }) {
     setValue(newValue);
   };
 
-  
-
   return (
     <>
       <div className="table-side-drawer" style={{ minHeight: "65vh" }}>
@@ -248,7 +259,6 @@ export default function SideComponent({ peopleInThisRoom, tableId }) {
             <ChatComponent tableId={tableId} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            
             <div
               style={{
                 maxHeight: "65vh !important",

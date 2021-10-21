@@ -31,8 +31,6 @@ import Portal from "@mui/core/Portal";
 import ControlReRender from "../HelperComponents/ControlReRender";
 import SideComponent from "../Functions/Lounge/SideComponent";
 
-
-
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -560,9 +558,13 @@ const TableScreen = ({
 
           handleVideoIsEnabledChange(uid, true);
 
-          setSnackMessage(`${personWhoJoined.userName} joined this room.`);
-          setSeverity("info");
-          setOpenSnackbar(true);
+          if (personWhoJoined) {
+            if (personWhoJoined.userName) {
+              setSnackMessage(`${personWhoJoined.userName} joined this room.`);
+              setSeverity("info");
+              setOpenSnackbar(true);
+            }
+          }
         }
       }
 
@@ -686,111 +688,6 @@ const TableScreen = ({
       .catch((err) => {
         // console.log(err);
       });
-
-    // * Enable audioVolume indicator
-
-    // rtc.client.enableAudioVolumeIndicator();
-
-    // * Find active speakers
-
-    // rtc.client.on("volume-indicator", (volumes) => {
-    //   let arr = [];
-
-    //   volumeIndicators.forEach((element) => {
-    //     arr.push({
-    //       uid: element.uid,
-    //       volume: element.volume,
-    //       isSpeaking: false,
-    //     });
-    //   });
-
-    //   setVolumeIndicators(arr);
-
-    //   volumes.forEach((volume) => {
-    //     if (volume.level > 5) {
-    //       // volume.uid.toString() is speaking
-    //       setVolumeIndicators((prev) => {
-    //         const filtered = prev.filter(
-    //           (object) => object.uid !== volume.uid.toString()
-    //         );
-
-    //         filtered.push({
-    //           uid: volume.uid.toString(),
-    //           volume: volume.level,
-    //           isSpeaking: true,
-    //         });
-
-    //         return filtered;
-    //       });
-    //     } else if (volume.level < 5) {
-    //       // volume.uid.toString() is not speaking
-
-    //       setVolumeIndicators((prev) => {
-    //         const filtered = prev.filter(
-    //           (object) => object.uid !== volume.uid.toString()
-    //         );
-
-    //         filtered.push({
-    //           uid: volume.uid.toString(),
-    //           volume: volume.level,
-    //           isSpeaking: false,
-    //         });
-
-    //         return filtered;
-    //       });
-    //     }
-    //   });
-
-    //   // Find who is loudest
-
-    //   if (!volumes[0]) return;
-
-    //   let loudest = volumes[0].level;
-    //   let loudestUID = volumes[0].uid;
-
-    //   for (let i = 0; i < volumes.length; i++) {
-    //     if (loudest < volumes[i].level) {
-    //       loudest = volumes[i].level;
-    //       loudestUID = volumes[i].uid;
-    //     }
-    //   }
-
-    //   // Get loudest person with this UID from allStreams
-
-    //   const [LoudestPerson] = allStreams.filter(
-    //     (object) => object.uid === loudestUID
-    //   );
-
-    //   // LoudestPerson is an object {stream: (video stream) | uid: uid (user identifier)}
-
-    //   // Set this as prominentStream Now
-
-    //   // Now we will get to know who is loudest every 2 seconds and we will update the ui accordingly
-
-    //   if (LoudestPerson) {
-    //     if (LoudestPerson.stream && LoudestPerson.uid) {
-    //       handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
-    //     }
-    //   }
-
-    //   // Now set all except prominent in nonProminent streams
-
-    //   // nonProminent is an array of all except prominent
-
-    //   const nonProminent = allStreams.filter(
-    //     (object) => object.uid !== loudestUID
-    //   );
-
-    //   setNonProminent(nonProminent);
-
-    //   // Now we can just use prominent and non prominent to render spotlight view and non screen share and not pinned view of grid mode
-    // });
-
-    // setInterval(() => {
-    //   if (!rtc.localAudioTrack) return;
-    //   const level = rtc.localAudioTrack.getVolumeLevel();
-    //   setLocalVolumeLevel(level * 100);
-    // }, 2000);
 
     document.getElementById("leave-table").onclick = async function () {
       // Emit a message to socket about user leaving this table
@@ -934,9 +831,7 @@ const TableScreen = ({
                   alignItems: "center",
                 }}
               >
-                <div className="stage-left-controls d-flex flex-row  align-items-center">
-                  
-                </div>
+                <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
 
                 <div className="" style={{ justifySelf: "center" }}>
                   <IconButton
@@ -1009,11 +904,9 @@ const TableScreen = ({
                     />
                   </IconButton>
                 </div>
-                
+
                 {/* // TODO Provide a leave button here */}
-                <div className="d-flex flex-row justify-content-end">
-                  
-                </div>
+                <div className="d-flex flex-row justify-content-end"></div>
               </div>
             </div>
             <div

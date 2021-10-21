@@ -6,13 +6,19 @@ import "./../../Styles/root.scss";
 import AllChatsComponent from "./helper/AllChatsComponent";
 import "./../../../../index.css";
 import PrivateChat from "./helper/PrivateChat";
-import { useDispatch } from "react-redux";
-import { setPersonalChatConfig } from "../../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { setChatSelectedTab, setPersonalChatConfig } from "../../../../actions";
 
 const MainChatComponent = (props) => {
-  const [selectedTab, setSelectedTab] = useState("all");
+  // const [selectedTab, setSelectedTab] = useState("all");
+
+  const { chatSelectedTab } = useSelector((state) => state.selectedTab);
 
   const dispatch = useDispatch();
+
+  const setSelectedTab = (tab) => {
+    dispatch(setChatSelectedTab(tab));
+  };
 
   return (
     <>
@@ -22,11 +28,10 @@ const MainChatComponent = (props) => {
             <div className="event-platform-side-drawer-heading">Messages</div>
             <div className="setting-tab-sub-text">Event wide Messages</div>
           </div>
-
           <div
             onClick={() => {
               props.resetSelectedTab();
-              props.setOpenDrawer(false);
+              props.openAndCloseDrawer(false);
               dispatch(setPersonalChatConfig(null));
             }}
           >
@@ -37,14 +42,13 @@ const MainChatComponent = (props) => {
             </IconButton>
           </div>
         </div>
-
         <div className="slider-nav-event-platform d-flex flex-row justify-content-between align-items-center py-1 px-2 mb-3">
           <div
             onClick={() => {
               setSelectedTab("all");
             }}
             className={`slider-nav-btn ${
-              selectedTab === "all" ? "slider-btn-active" : " "
+              chatSelectedTab === "all" ? "slider-btn-active" : " "
             } d-flex flex-row align-items-center justify-content-center`}
           >
             All
@@ -54,7 +58,7 @@ const MainChatComponent = (props) => {
               setSelectedTab("private");
             }}
             className={`slider-nav-btn ${
-              selectedTab === "private" ? "slider-btn-active" : " "
+              chatSelectedTab === "private" ? "slider-btn-active" : " "
             } d-flex flex-row align-items-center justify-content-center`}
           >
             Private
@@ -62,7 +66,7 @@ const MainChatComponent = (props) => {
         </div>
 
         {(() => {
-          switch (selectedTab) {
+          switch (chatSelectedTab) {
             case "all":
               return <AllChatsComponent />;
 
