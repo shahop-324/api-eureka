@@ -5496,7 +5496,6 @@ export const fetchPreviousEventAlerts =
 
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${getState().auth.token}`,
         },
       });
       if (!res.ok) {

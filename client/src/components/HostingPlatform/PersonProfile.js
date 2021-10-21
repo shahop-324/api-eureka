@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -10,7 +10,10 @@ import LanguageIcon from "@mui/icons-material/Language";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import socket from "./service/socket";
+import ScheduleMeeting from "./Screens/Sub/ScheduleMeeting";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -119,14 +122,28 @@ const PersonProfile = ({
   userOrganisation,
   userDesignation,
 }) => {
+  const [openScheduleMeet, setOpenScheduleMeet] = useState(false);
+
+  const handleScheduleMeet = () => {
+    setOpenScheduleMeet(false);
+  }
+
+  const dispatch = useDispatch();
   const theme = useTheme();
+  const params = useParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { id } = useSelector((state) => state.eventAccessToken);
 
   const { registrations } = useSelector((state) => state.registration);
 
   const userRegistrationDetails = registrations.find(
     (element) => element.bookedByUser === userId
   );
+
+  const receiverId = userId;
+  const senderId = id;
+  const eventId = params.eventId;
 
   return (
     <>
@@ -162,7 +179,6 @@ const PersonProfile = ({
           </div>
           <ProfileName className="mb-2">{userName}</ProfileName>
           <ProfileDesignationOrg className="mb-5">{`${userOrganisation}, ${userDesignation}`}</ProfileDesignationOrg>
-
           {userRegistrationDetails ? (
             <div className="d-flex flex-row align-items-center justify-content-center mb-4">
               {userRegistrationDetails.socialMediaHandles ? (
@@ -256,8 +272,6 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-
-          {/* <BtnOutlined></BtnOutlined> */}
           {userRegistrationDetails ? (
             <div className="mb-3">
               {userRegistrationDetails.headline ? (
@@ -275,7 +289,6 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-
           {userRegistrationDetails ? (
             userRegistrationDetails.interests ? (
               <div className="mb-4">
@@ -289,15 +302,39 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-
           <div className="d-flex flex-row align-items-center justify-content-between">
-            <ButtonFilledDark style={{ width: "100%" }}>
+            <ButtonFilledDark
+              style={{ width: "48%" }}
+              onClick={() => {
+                socket.emit(
+                  "submitConnectionRequest",
+                  {
+                    senderId,
+                    receiverId,
+                    eventId,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+            >
               Connect
             </ButtonFilledDark>
-            {/* <ButtonOutlinedDark style={{width: "48%"}}>Schedule meet</ButtonOutlinedDark> */}
+            <ButtonOutlinedDark
+              onClick={() => {
+                setOpenScheduleMeet(true);
+              }}
+              style={{ width: "48%" }}
+            >
+              Schedule meet
+            </ButtonOutlinedDark>
           </div>
         </PersonProfileBody>
       </Dialog>
+      <ScheduleMeeting openDrawer={openScheduleMeet} handleCloseDrawer={handleScheduleMeet} userId={userId}/>
     </>
   );
 };

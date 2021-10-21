@@ -12,9 +12,7 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  errorTrackerForDeleteBooth,
-} from "../../../../../actions";
+import { errorTrackerForDeleteBooth } from "../../../../../actions";
 import Loader from "../../../../Loader";
 
 function Alert(props) {
@@ -23,8 +21,6 @@ function Alert(props) {
 
 const DeleteAlert = ({ openDeleteAlert, handleCloseDeleteAlert }) => {
   const dispatch = useDispatch();
-
-  const { error, isLoading } = useSelector((state) => state.booth);
 
   const [state, setState] = React.useState({
     open: false,
@@ -41,24 +37,6 @@ const DeleteAlert = ({ openDeleteAlert, handleCloseDeleteAlert }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (isLoading) {
-    return (
-      <div
-        className="d-flex flex-row align-items-center justify-content-center"
-        style={{ width: "100%", height: "80vh" }}
-      >
-        {" "}
-        <Loader />{" "}
-      </div>
-    );
-  }
-
-  if (error) {
-    dispatch(errorTrackerForDeleteBooth());
-    alert(error);
-    return;
-  }
-
   return (
     <>
       <Dialog
@@ -71,7 +49,7 @@ const DeleteAlert = ({ openDeleteAlert, handleCloseDeleteAlert }) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            No one will be able to see this alert anymore. Are you sure ?
+            This alert won't be visible to anyone after this. Are you sure ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -80,8 +58,6 @@ const DeleteAlert = ({ openDeleteAlert, handleCloseDeleteAlert }) => {
           </Button>
           <Button
             onClick={() => {
-              //   dispatch(deleteBooth(props.id));
-              //   props.handleCloseDeleteBooth();
               setState({ open: true, vertical: "top", horizontal: "center" });
             }}
             style={{ color: "#538BF7" }}

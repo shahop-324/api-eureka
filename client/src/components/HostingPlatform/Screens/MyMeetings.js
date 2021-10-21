@@ -4,7 +4,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 
 import { Dropdown } from "semantic-ui-react";
-import ScheduleGroupMeeting from "./Sub/ScheduleGroupMeeting";
+import ScheduleMeeting from "./Sub/ScheduleMeeting";
 import MyMeetingsFilter from "./Sub/MyMeetingsFilter";
 
 import styled from "styled-components";
@@ -163,7 +163,7 @@ const MyMeetings = () => {
 
       {/* <MyMeetingCard /> */}
 
-      <ScheduleGroupMeeting
+      <ScheduleMeeting
         openDrawer={open}
         handleCloseDrawer={handleCloseDrawer}
       />

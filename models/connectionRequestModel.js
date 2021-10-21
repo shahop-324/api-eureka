@@ -28,13 +28,6 @@ const connectionRequestSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  website: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
 });
 
 const ConnectionRequest = mongoose.model(

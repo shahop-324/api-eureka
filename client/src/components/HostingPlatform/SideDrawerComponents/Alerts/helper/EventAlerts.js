@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Avatar, makeStyles } from "@material-ui/core";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteOutlineRoundedIcon from "@material-ui/icons/DeleteOutlineRounded";
-
-import Loader from "./../../../../Loader";
-
 import "./../../../Styles/root.scss";
 import CreateNewAlertForm from "./../helper/CreateNewAlertForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -117,7 +114,13 @@ const EventAlerts = (props) => {
             </div>
             <div className="p-2 d-flex flex-row align-items-center mb-2">
               <Avatar
-                src={alert.hostImage}
+                src={
+                  alert.hostImage
+                    ? alert.hostImage.startsWith("https://")
+                      ? alert.hostImage
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${alert.hostImage}`
+                    : "#"
+                }
                 alt={alert.hostFirstName}
                 variant="rounded"
                 className={classes.large}
@@ -137,9 +140,6 @@ const EventAlerts = (props) => {
       });
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
   if (error) {
     alert(error);
     dispatch(errorTrackerForFetchPreviousEventAlerts());
@@ -150,13 +150,10 @@ const EventAlerts = (props) => {
     <>
       <div>
         <div className="people-container pt-2 px-2" style={{ height: "69vh" }}>
-          {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
-
           <div
             className="scrollable-chat-element-container mb-3"
             style={{ height: "69vh" }}
           >
-            {/* {isLoading ? :} */}
             {renderAlertsList(eventAlerts)}
           </div>
 
@@ -177,7 +174,10 @@ const EventAlerts = (props) => {
 
       <CreateNewAlertForm open={open} handleClose={handleClose} />
       <EditAlertForm open={openEdit} handleClose={handleCloseEdit} />
-      <DeleteAlert openDeleteAlert={openDelete} handleCloseDeleteAlert={handleCloseDelete}/>
+      <DeleteAlert
+        openDeleteAlert={openDelete}
+        handleCloseDeleteAlert={handleCloseDelete}
+      />
     </>
   );
 };

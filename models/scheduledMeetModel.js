@@ -2,24 +2,24 @@
 const mongoose = require("mongoose");
 
 const scheduledMeetSchema = new mongoose.Schema({
-  meetId: {
-    type: String, // randomly generated unique number string
-    // This will be used as agora channel number
+  // This documents Id will be used as unique Id for this meeting room.
+  eventId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Event",
   },
   createdBy: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
-  participants: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "User", // Participants other than the creator itself
-    },
-  ],
-  startsAt: {
-    type: Date,
+  participantIsAttending: {
+    type: Boolean, // This will let us know if the other person is attending
+    default: false,
   },
-  endsAt: {
+  participant: { 
+    type: mongoose.Schema.ObjectId,
+    ref: "User", // Participant other than the creator itself
+  },
+  startsAt: {
     type: Date,
   },
   title: {
@@ -27,10 +27,6 @@ const scheduledMeetSchema = new mongoose.Schema({
   },
   shortDescription: {
     type: String,
-  },
-  allowOthersToInvite: {
-    type: Boolean,
-    default: false,
   },
   createdAt: {
     type: Date,
