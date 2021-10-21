@@ -238,18 +238,6 @@ const AllChatsComponent = () => {
     });
   };
 
-  // const updateScroll = () => {
-  //   if (scrolled) return;
-  //   if (!scrolled) {
-  //     var elem = document.getElementById("all-chat-msg-container");
-  //     if (!elem) return;
-  //     elem.scrollTop = elem.scrollHeight;
-  //   }
-  // };
-
-  // // Once a second
-  // setInterval(updateScroll, 1000);
-
   return (
     <>
       <div className="chat-msg-container pt-2 px-2 d-flex flex-column justify-content-between">

@@ -347,6 +347,10 @@ const About = () => {
     (session) => session._id === highlightedSessionId
   );
 
+  if (!communityDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <HostedByCard className="mb-5">

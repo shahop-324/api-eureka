@@ -9227,6 +9227,12 @@ export const getMyAllPersonalMessages =
     }
   };
 
+  export const createNewPersonalMessage = (chat) => async(dispatch, getState) => {
+    dispatch(personalChatActions.UpdateChats({
+      chat: chat,
+    }))
+  }
+
 export const fetchInvitationDetails =
   (invitationId) => async (dispatch, getState) => {
     try {

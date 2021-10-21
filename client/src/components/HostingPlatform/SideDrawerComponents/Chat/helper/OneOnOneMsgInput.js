@@ -30,6 +30,8 @@ const OneOnOneMsgInput = (props) => {
   const { role, id } = useSelector((state) => state.eventAccessToken);
   const recieverId = useSelector((state) => state.personalChat.id);
 
+  const receiverId = recieverId;
+
   let firstName; // Sender first name
   let lastName; // Sender last name
   let email; // Sender email
@@ -66,7 +68,7 @@ const OneOnOneMsgInput = (props) => {
         reported: false,
         visibilityStatus: "Active",
         senderId: id, // Access it from event access token in redux store
-        recieverId: recieverId, // Access it from personal chat in redux store
+        receiverId: receiverId, // Access it from personal chat in redux store
       },
       (error) => {
         if (error) {

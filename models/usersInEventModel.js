@@ -8,7 +8,7 @@ const usersInEventSchema = new mongoose.Schema(
       type: String,
       default: "Active",
     },
-    room: {
+    room: { // ! This is the event Id
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },

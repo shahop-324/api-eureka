@@ -3,15 +3,12 @@ import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import styled from "styled-components";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
 import { communitySignIn, errorTrackerForCommunitySignIn } from "../../actions";
 import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
 import maleMascot from "./../../assets/images/winkingPerson.png";
-import { useSnackbar } from "notistack";
 
 const SideNavPaper = styled.div`
   width: 100%;
@@ -96,22 +93,16 @@ const ProfileEmail = styled.div`
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { error, isCommunityLoading } = useSelector((state) => state.community);
 
   const { id } = useSelector((state) => state.user.userDetails);
 
   const userId = id;
   const onClickCommunityTab = () => {
-    // dispatch(fetchCommunity(props.communityId));
     dispatch(communitySignIn(props.communityId, userId));
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForCommunitySignIn());
   }
 

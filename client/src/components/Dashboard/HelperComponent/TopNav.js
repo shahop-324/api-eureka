@@ -137,37 +137,14 @@ const Topnav = ({
   }
 
   let imgUrl;
-  if (imgKey && !imgKey.startsWith("https://lh3.googleusercontent.com")) {
+  if (imgKey && !imgKey.startsWith("https://")) {
     imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
   } else {
     imgUrl = imgKey;
   }
 
   const onSubmit = (formValues) => {
-    // setEditProfileClicked(true);
-    // console.log(formValues);
-    // const ModifiedFormValues = {};
-    // ModifiedFormValues.firstName = formValues.firstName;
-    // ModifiedFormValues.lastName = formValues.lastName;
-    // ModifiedFormValues.headline = formValues.headline;
-    // ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-    // ModifiedFormValues.email = formValues.email;
-    // const groupedSocialHandles = {
-    //   facebook: formValues.facebook,
-    //   twitter: formValues.twitter,
-    //   linkedin: formValues.linkedin,
-    // };
-    // ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
-    // const modifiedInterests = [];
-    // if (formValues.interests) {
-    //   for (let element of formValues.interests) {
-    //     modifiedInterests.push(element.value);
-    //   }
-    // }
-    // ModifiedFormValues.interests = modifiedInterests;
-    // console.log(ModifiedFormValues);
-    // console.log(file);
-    // dispatch(editUser(ModifiedFormValues, file));
+    console.log(formValues);
   };
 
   return (
@@ -178,14 +155,7 @@ const Topnav = ({
             className="brand-logo-text d-flex flex-row align-items-center"
             style={{ fontFamily: "Inter" }}
           >
-            {/* <div className="me-3 dash-root-menu">
-              <MenuRoundedIcon
-                onClick={() => {
-                  setOpenDrawer(true);
-                }}
-                // style={{display: "none"}}
-              />
-            </div> */}
+            
             <a
               href="https://www.bluemeet.in/home"
               style={{ textDecoration: "none", color: "#538BF7" }}
@@ -220,14 +190,14 @@ const Topnav = ({
               style={{ padding: "0" }}
             >
               <AvatarMenu />
-              {/* <Avatar alt="Travis Howard" src={Faker.image.avatar()} /> */}
+              
             </div>
           </div>
         </div>
       </div>
 
       <React.Fragment key="left">
-        {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
+        
         <SwipeableDrawer
           anchor="left"
           open={openDrawer}

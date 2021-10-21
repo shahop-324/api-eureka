@@ -13,8 +13,10 @@ import OutgoingChatMsgElement from "./OutgoingChatElement";
 import { setPersonalChatConfig } from "../../../../../actions";
 import Loader from "./../../../../Loader";
 
-const renderMessages = (chats, receiverId) => {
-  if(!chats) return;
+const renderMessages = (chats, receiverId, createReplyWidget) => {
+  console.log(chats);
+  console.log(receiverId);
+  if (!chats) return;
   //  Filter out all chats in which receiverId matches with reciver or sender
   let filteredChats;
 
@@ -22,35 +24,57 @@ const renderMessages = (chats, receiverId) => {
     (chat) => chat.senderId === receiverId || chat.receiverId === receiverId
   );
 
-  return filteredChats.map((chat) => {
-    // Determine incoming and outgoing message
-    if (chat.recieverId === receiverId) {
-      // This is an outgoing msg
-      return (
-        <OutgoingChatMsgElement
-          msgText={"Hi, how you have been?"}
-          timestamp={Date.now()}
-        />
-      );
-    } else {
-      // This is an incoming message
-      return (
-        <ChatMsgElement
-          name={Faker.name.findName()}
-          image={Faker.image.avatar()}
-          msgText={"Hi there"}
-          organisation={"Google"}
-          designation={"SDE"}
-          timestamp={Date.now()} // timestamp of chat msg
-          chatMsgId={"901skk"} // Id of chat msg we will provide it when looping over all chats in render method
-        />
-      );
-    }
-  });
+  console.log(filteredChats);
+
+  return filteredChats
+    .slice(0)
+    .reverse()
+    .map((chat) => {
+      // Determine incoming and outgoing message
+      if (chat.recieverId === receiverId) {
+        console.log("This is an outgoing msg");
+        // This is an outgoing msg
+        return (
+          <OutgoingChatMsgElement
+            name={chat.senderName}
+            image={
+              chat.senderImage && chat.senderImage.startsWith("https://")
+                ? chat.senderImage
+                : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.senderImage}`
+            }
+            msgText={chat.textMessage}
+            organisation={chat.senderOrganisation}
+            designation={chat.senderDesignation}
+            timestamp={chat.createdAt} // timestamp of chat msg
+            chatMsgId={chat._id} // Id of chat msg we will provide it when looping over all chats in render method
+            createReplyWidget={createReplyWidget}
+          />
+        );
+      } else {
+        console.log("This is an incoming message");
+        // This is an incoming message
+        console.log(chat);
+        return (
+          <ChatMsgElement
+            createReplyWidget={createReplyWidget}
+            name={chat.senderName}
+            image={
+              chat.senderImage && chat.senderImage.startsWith("https://")
+                ? chat.senderImage
+                : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.senderImage}`
+            }
+            msgText={chat.textMessage}
+            organisation={chat.senderOrganisation}
+            designation={chat.senderDesignation}
+            timestamp={chat.createdAt} // timestamp of chat msg
+            chatMsgId={chat._id} // Id of chat msg we will provide it when looping over all chats in render method
+          />
+        );
+      }
+    });
 };
 
 const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
-
   const { id, chats } = useSelector((state) => state.personalChat);
 
   const { peopleInThisEvent } = useSelector((state) => state.user);
@@ -215,7 +239,7 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
           >
             {/* // TODO Here render list of all personal chat msg */}
 
-            {renderMessages(chats)}
+            {renderMessages(chats, id, createReplyWidget)}
             {/* {renderChats(eventChats)} */}
           </div>
 

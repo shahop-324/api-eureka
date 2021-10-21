@@ -40,21 +40,14 @@ const MsgInput = (props) => {
 
   const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
 
-  if (role !== "speaker") {
+  
     firstName = userDetails.firstName;
     lastName = userDetails.lastName;
     email = userDetails.email;
     image = userDetails.image;
     organisation = userDetails.organisation;
     designation = userDetails.designation;
-  } else {
-    firstName = speakerDetails.firstName;
-    lastName = speakerDetails.lastName;
-    email = speakerDetails.email;
-    image = speakerDetails.image;
-    organisation = speakerDetails.organisation;
-    designation = speakerDetails.designation;
-  }
+  
 
   const [Message, setMessage] = useState("");
 
@@ -97,6 +90,7 @@ const MsgInput = (props) => {
             sendChannelMessage(Message);
             setMessage("");
             props.destroyReplyWidget();
+            setEmojiMartVisbility("none");
           }
         }}
       >
@@ -177,6 +171,7 @@ const MsgInput = (props) => {
               sendChannelMessage(Message);
               setMessage("");
               props.destroyReplyWidget();
+              setEmojiMartVisbility("none");
             }}
           >
             <SendRoundedIcon className="chat-msg-hover-icon" />

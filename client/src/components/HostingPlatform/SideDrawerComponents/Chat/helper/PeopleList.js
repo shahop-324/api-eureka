@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 import "./../../../Styles/PeopleList.scss";
 import { Avatar, IconButton } from "@material-ui/core";
+import Chip from '@mui/material/Chip';
 import { useParams } from "react-router";
 import {
   getPeopleInEvent,
@@ -21,6 +22,7 @@ const PeopleComponent = ({
   socketId,
   userId,
   tag,
+  self,
 }) => {
   const dispatch = useDispatch();
   return (
@@ -48,13 +50,17 @@ const PeopleComponent = ({
               {designation}, {organisation}
             </div>
 
-            <div
-              onClick={() => {
-                dispatch(setPersonalChatConfig(userId));
-              }}
-            >
-              <ChatBubbleOutlineRoundedIcon className="chat-msg-hover-icon" />
-            </div>
+            {self ? (
+              <Chip label="You" color="primary" variant="outlined" style={{fontWeight: "500"}} />
+            ) : (
+              <div
+                onClick={() => {
+                  dispatch(setPersonalChatConfig(userId));
+                }}
+              >
+                <ChatBubbleOutlineRoundedIcon className="chat-msg-hover-icon" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -68,6 +74,8 @@ const PeopleList = ({ open, handleClose }) => {
 
   const { peopleInThisEvent } = useSelector((state) => state.user);
 
+  const { id, role } = useSelector((state) => state.eventAccessToken);
+
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -78,7 +86,7 @@ const PeopleList = ({ open, handleClose }) => {
     dispatch(getPeopleInEvent(eventId));
   }, []);
 
-  const renderPeople = (people) => {
+  const renderPeople = (people, userId) => {
     return people.map((person) => {
       return (
         <PeopleComponent
@@ -94,6 +102,7 @@ const PeopleList = ({ open, handleClose }) => {
           userId={person.userId}
           key={person._id}
           tag={person.tag}
+          self={person.userId === userId ? true : false}
         />
       );
     });
@@ -141,7 +150,7 @@ const PeopleList = ({ open, handleClose }) => {
           </div>
           {/* Here goes list of people */}
 
-          {renderPeople(peopleInThisEvent)}
+          {renderPeople(peopleInThisEvent, id)}
         </div>
       </Dialog>
     </>

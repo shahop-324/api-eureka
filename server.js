@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
 const TableChats = require("./models/tableChatsModel");
+const PersonalChat = require("./models/PersonalChatModel");
+
 process.on("uncaughtException", (err) => {
   console.log(err);
   console.log("UNCAUGHT Exception! Shutting down ...");
@@ -689,6 +691,7 @@ io.on("connect", (socket) => {
                 }
               );
             } else {
+              console.log("This is an existing user.");
               await UsersInEvent.findOneAndUpdate(
                 {
                   $and: [
@@ -696,7 +699,7 @@ io.on("connect", (socket) => {
                     { room: mongoose.Types.ObjectId(eventId) },
                   ],
                 },
-                { status: "Active" },
+                { status: "Active", socketId: id }, // Mark as active and update socket Id
                 { new: true },
                 (err, doc) => {
                   if (err) {
@@ -1077,14 +1080,85 @@ io.on("connect", (socket) => {
 
   socket.on(
     "transmitPersonalMessage",
-    async (
-      {
-        // Here get all transmitted properties
-        // Recieve Id of both sender and reciever
-      }
-    ) => {
-      // Find current socketId of both sender and reciever
-      // Create a new chat message in personal chat document and send newly created msg doc to both sender and reciever
+    async ({
+      // Here get all transmitted properties
+      // Recieve Id of both sender and reciever
+      isReply,
+      replyTo,
+      textMessage,
+      eventId,
+      createdAt,
+      senderRole,
+      senderName,
+      senderEmail,
+      senderImage,
+      senderOrganisation,
+      senderDesignation,
+      reported,
+      visibilityStatus,
+      senderId, // * Sender Id
+      receiverId, // * Reciever Id
+    }) => {
+      console.log(receiverId);
+      // * Find current socketId of both sender and reciever
+
+      // Step 1. ) Find sender
+
+      const SenderDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(senderId) },
+        ],
+      });
+
+      const senderSocket = SenderDoc.socketId; // ! Socket Id of sender
+
+      // Step 2. ) Find reciever
+
+      const RecieverDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(receiverId) },
+        ],
+      });
+
+      const recieverSoket = RecieverDoc.socketId; // ! Socket Id of reciver
+
+      // * Create a new chat message in personal chat document for both sender and reciever and send newly created msg doc to both sender and reciever
+
+      // Step 3.) Create new personal message for sender & reciever => Yes there will be only one msg as it includes both of them
+
+      const newChat = await PersonalChat.create({
+        textMessage,
+        isReply,
+        replyTo,
+        eventId,
+        visibilityStatus,
+        createdAt: Date.now(),
+        senderId: senderId,
+        receiverId,
+        senderRole,
+        senderName,
+        senderEmail,
+        senderImage,
+        senderOrganisation,
+        senderDesignation,
+        reported,
+      });
+
+      // * Send Newly created chats to both sender and reciever socket
+
+      // Step 4.) Send message to sender
+
+      io.to(senderSocket).emit("newPersonalMessage", {
+        newChat: newChat,
+      });
+
+      // Step 5.) Send message to reciever
+
+      io.to(recieverSoket).emit("newPersonalMessage", {
+        newChat: newChat,
+      });
       // Close the connection => private messaging successful.
     }
   );

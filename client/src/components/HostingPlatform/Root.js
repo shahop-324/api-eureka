@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-
+import MsgTone from "./../../assets/msg_tone.mp3";
 import SideNav from "./HelperComponents/SideNav";
 import MidTopNav from "./HelperComponents/MidTopNav";
 
@@ -16,6 +16,7 @@ import {
   createNewEventAlert,
   createNewEventMsg,
   createNewEventPoll,
+  createNewPersonalMessage,
   createNewSessionMsg,
   errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
@@ -25,6 +26,7 @@ import {
   fetchUserAllPersonalData,
   getRTMToken,
   navigationIndexForHostingPlatform,
+  showNotification,
   updateEventPoll,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
@@ -56,6 +58,8 @@ const Root = () => {
   useEffect(() => {
     dispatch(fetchEvent(eventId));
   }, []);
+
+  const currentSenderId = useSelector((state) => state.personalChat.id);
 
   const eventId = params.eventId;
   const communityId = params.communityId;
@@ -197,6 +201,21 @@ const Root = () => {
   ]);
 
   useEffect(() => {
+    socket.on("newPersonalMessage", ({ newChat }) => {
+      if (
+        newChat.senderId !== currentSenderId &&
+        newChat.receiverId === userId
+      ) {
+        const audio = new Audio(MsgTone);
+        audio.addEventListener("canplaythrough", (event) => {
+          // the audio is now playable; play it if permissions allow
+          audio.play();
+        });
+        dispatch(showNotification(`New message from ${newChat.senderName}`));
+      }
+      dispatch(createNewPersonalMessage(newChat));
+    });
+
     socket.on("roomData", ({ users }) => {
       dispatch(
         userActions.FetchPeopleInEvent({
@@ -270,13 +289,25 @@ const Root = () => {
 
   // console.log(currentIndex);
 
+  if (!eventDetails) {
+    return (
+      <>
+        <div>Loading...</div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
-          communityLogo={`https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.createdBy.image}`}
-          communityName={eventDetails.createdBy.name}
+          communityLogo={`https://bluemeet.s3.us-west-1.amazonaws.com/${
+            eventDetails.createdBy ? eventDetails.createdBy.image : "#"
+          }`}
+          communityName={
+            eventDetails.createdBy ? eventDetails.createdBy.name : ""
+          }
           socket={socket}
           activeIndex={currentIndex}
           handleLobbyClick={handleLobbyClick}

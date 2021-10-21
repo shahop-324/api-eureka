@@ -1112,7 +1112,7 @@ exports.getMyAllPersonalChatMsg = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
 
   const personalChats = await PersonalChat.find({
-    $or: [{ recieverId: userId }, { senderId: userId }],
+    $or: [{ receiverId: userId }, { senderId: userId }],
   }).populate("replyTo");
 
   res.status(200).json({

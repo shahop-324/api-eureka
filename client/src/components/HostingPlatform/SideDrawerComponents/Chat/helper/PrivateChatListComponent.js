@@ -5,11 +5,19 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import PeopleList from "./PeopleList";
 import { Avatar } from "@material-ui/core";
-import Badge from "@material-ui/core/Badge";
-import Faker from "faker";
 import PeopleProfile from "../../People/helper/PeopleProfile";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyAllPersonalMessages } from "../../../../../actions";
+import {
+  getMyAllPersonalMessages,
+  setPersonalChatConfig,
+} from "../../../../../actions";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,20 +34,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IndividualChatSummary = ({ open, handleClose, enterPersonalChat }) => {
+const IndividualChatSummary = ({
+  userId,
+  name,
+  image, // Its Just raw image key or maybe complete source
+  org,
+  des,
+  lastMsg,
+  lastTimeAgo,
+}) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  let imgUrl = image
+    ? image.startsWith("https://")
+      ? image
+      : `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`
+    : "#";
+
   return (
     <>
       <div
         className="mb-4 chat-summary py-2"
         onClick={() => {
-          enterPersonalChat();
+          // Dispatch so user can see personal chat interface
+          dispatch(setPersonalChatConfig(userId));
         }}
       >
         <div className="individual-chat-summary-container mb-2 px-3 ">
           <Avatar
-            src={Faker.image.avatar()}
-            alt={Faker.name.findName()}
+            src={imgUrl}
+            alt={name}
             className={classes.large}
             variant="rounded"
           />
@@ -48,25 +73,32 @@ const IndividualChatSummary = ({ open, handleClose, enterPersonalChat }) => {
               className="chat-box-name"
               style={{ textTransform: "capitalize", fontFamily: "Ubuntu" }}
             >
-              {Faker.name.findName()}
+              {name}
             </div>
-            <div
-              style={{
-                fontWeight: "500",
-                color: "#4B4B4B",
-                fontSize: "0.75rem",
-              }}
-            >
-              Product Manager, Evenz
-            </div>
+            {org && des ? (
+              <div
+                style={{
+                  fontWeight: "500",
+                  color: "#4B4B4B",
+                  fontSize: "0.75rem",
+                }}
+              >
+                {des}, {org}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
 
-          <div style={{ justifySelf: "end" }}>
-            <Badge
-              badgeContent={3}
-              color="primary"
-              // style={{ fill: "#538BF7" }}
-            ></Badge>
+          <div
+            style={{
+              justifySelf: "end",
+              fontWeight: "500",
+              color: "#4B4B4B",
+              fontSize: "0.7rem",
+            }}
+          >
+            {timeAgo.format(new Date(lastTimeAgo), "round")}
           </div>
         </div>
 
@@ -82,7 +114,7 @@ const IndividualChatSummary = ({ open, handleClose, enterPersonalChat }) => {
               color: "#616161",
             }}
           >
-            {"Hi there, there is a message"}
+            {lastMsg}
           </div>
         </div>
       </div>
@@ -96,11 +128,12 @@ const renderIndividualChatSummary = (
   peopleInThisEvent,
   userId
 ) => {
+  console.log(personalChats, peopleInThisEvent, userId);
   // We have to render cards for each receiver with his/her name/image/organisation/designation and last message
 
   let IndividualChats = []; // array of objects {userId, name, image, org, des, lastMsg, lastTimeAgo}
 
-  let persons = []; // array of other person than current user
+  let persons = []; // array of other persons than current user
 
   for (let element of personalChats) {
     // first check ki sender is me or other person
@@ -108,8 +141,8 @@ const renderIndividualChatSummary = (
     if (element.senderId === userId) {
       // I am sender
       // Now check if persons array has reciver Id => if not push it
-      if (!persons.includes(element.recevierId)) {
-        persons.push(element.recevierId);
+      if (!persons.includes(element.receiverId)) {
+        persons.push(element.receiverId);
       }
     } else {
       // I am reciever
@@ -119,44 +152,58 @@ const renderIndividualChatSummary = (
       }
     }
 
+    console.log(persons);
+
     // Now at this point persons array will have unique contacts userIds
 
     // Now map over every contact and find their doc in peopleInThisEvent and also get their last msg from personal chats and make a object out of these details and push it into Individual chats
+  }
 
-    for (let element of persons) {
-      let last_message_of_this_contact;
-      let last_message_time_ago;
-      const contactDetails = peopleInThisEvent.find(
-        (el) => el.userId === element
-      );
+  for (let element of persons) {
+    let last_message_of_this_contact;
+    let last_message_time_ago;
+    const contactDetails = peopleInThisEvent.find(
+      (el) => el.userId === element
+    );
 
-      for (let item of personalChats) {
-        if (item.senderId === element || item.receiverId === element) {
-          last_message_of_this_contact = item.textMessage;
-          last_message_time_ago = item.createdAt;
-        }
+    for (let item of personalChats) {
+      if (item.senderId === element || item.receiverId === element) {
+        last_message_of_this_contact = item.textMessage;
+        last_message_time_ago = item.createdAt;
       }
-
-      // Now at this point we will get details of each unique contact and their last message and last time ago so make an object and push it into individual chats
-
-      IndividualChats.push({
-        userId: contactDetails.userId,
-        name: contactDetails.userName,
-        image: contactDetails.userImage,
-        org: contactDetails.userOrganisation,
-        des: contactDetails.userDesignation,
-        lastMsg: last_message_of_this_contact,
-        lastTimeAgo: last_message_time_ago,
-      });
-
-      // {userId, name, image, org, des, lastMsg, lastTimeAgo}
     }
+
+    console.log(contactDetails);
+
+    // Now at this point we will get details of each unique contact and their last message and last time ago so make an object and push it into individual chats
+
+    IndividualChats.push({
+      userId: contactDetails.userId,
+      name: contactDetails.userName,
+      image: contactDetails.userImage,
+      org: contactDetails.userOrganisation,
+      des: contactDetails.userDesignation,
+      lastMsg: last_message_of_this_contact,
+      lastTimeAgo: last_message_time_ago,
+    });
+
+    // {userId, name, image, org, des, lastMsg, lastTimeAgo}
   }
 
   // here we have an array of individual chats to be rendered with userId, userName, userImg, userOrg, userDes, lastMsg, lastTimeAgo
 
   return IndividualChats.map((item) => {
-    return <IndividualChatSummary />;
+    return (
+      <IndividualChatSummary
+        userId={item.userId}
+        name={item.name}
+        image={item.image}
+        org={item.org}
+        des={item.des}
+        lastMsg={item.lastMsg}
+        lastTimeAgo={item.lastTimeAgo}
+      />
+    );
   });
 };
 

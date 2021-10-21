@@ -15,9 +15,12 @@ import { useParams } from "react-router";
 import { signOut } from "../../../actions";
 import socket from "../service/socket";
 import { Link } from "react-router-dom";
+import SwitchCommunity from "../../Dashboard/HelperComponent/SwitchCommunity";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
   const [openAudioAndVideo, setOpenAudioAndVideo] = useState(false);
+
+  const [openSwitchCommunity, setOpenSwitchCommunity] = useState(false);
 
   const [openCustomise, setOpenCustomise] = useState(false);
 
@@ -34,6 +37,14 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
   const eventId = params.eventId;
 
   const dispatch = useDispatch();
+
+  const handleOpenSwitchCommunity = () => {
+    setOpenSwitchCommunity(true);
+  };
+
+  const handleCloseSwitchCommunity = () => {
+    setOpenSwitchCommunity(false);
+  };
 
   const handleOpenAudioAndVideo = () => {
     setOpenAudioAndVideo(true);
@@ -71,12 +82,12 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
     <>
       <React.Fragment key="right">
         <SwipeableDrawer
-        onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
           anchor="right"
           open={openDrawer}
           disableBackdropTransition={true}
@@ -169,20 +180,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            {/* <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
-              <div>
-                <div className="setting-tab-text mb-1">
-                  Security & Privacy
-                </div>
-                <div className="setting-tab-sub-text">
-                  Manage your profile visbility & block <br/> list for a  better experience
-                </div>
-              </div>
 
-              <IconButton>
-                <ArrowForwardIosRoundedIcon className="icon-btn" />
-              </IconButton>
-            </div> */}
             <div
               className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between"
               onClick={() => {
@@ -200,7 +198,12 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
                 <ArrowForwardIosRoundedIcon className="icon-btn" />
               </IconButton>
             </div>
-            <div className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between">
+            <div
+              onClick={() => {
+                handleOpenSwitchCommunity();
+              }}
+              className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between"
+            >
               <div>
                 <div className="setting-tab-text mb-1">Community dashboard</div>
                 <div className="setting-tab-sub-text">
@@ -215,16 +218,12 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
 
             <div>
               <Link
-              to="/home"
-               onClick={() => {
-                // history.push("/signin");
-                socket.emit(
-                  "disconnectUser",
-                  { userId, eventId },
-                  () => {}
-                );
-                dispatch(signOut());
-              }}
+                to="/home"
+                onClick={() => {
+                  // history.push("/signin");
+                  socket.emit("disconnectUser", { userId, eventId }, () => {});
+                  dispatch(signOut());
+                }}
                 className="btn btn-outline-danger btn-outline-text"
                 style={{ width: "100%", textDecoration: "none" }}
               >
@@ -251,6 +250,10 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
       <CameraAndMic
         open={openAudioAndVideo}
         handleClose={handleCloseAudioAndVideo}
+      />
+      <SwitchCommunity
+        open={openSwitchCommunity}
+        handleClose={handleCloseSwitchCommunity}
       />
     </>
   );
