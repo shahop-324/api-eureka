@@ -1,13 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import Faker from "faker";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { Dialog, IconButton } from "@material-ui/core";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
 import LanguageIcon from "@mui/icons-material/Language";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
@@ -130,8 +128,6 @@ const PersonProfile = ({
     (element) => element.bookedByUser === userId
   );
 
-
-
   return (
     <>
       <Dialog
@@ -159,7 +155,7 @@ const PersonProfile = ({
           <div className="d-flex flex-row align-items-center justify-content-center mb-4">
             <Avatar
               src={userImage}
-              alt={Faker.name.findName()}
+              alt={userName}
               variant="rounded"
               style={{ width: "72px", height: "72px" }}
             />
@@ -167,119 +163,132 @@ const PersonProfile = ({
           <ProfileName className="mb-2">{userName}</ProfileName>
           <ProfileDesignationOrg className="mb-5">{`${userOrganisation}, ${userDesignation}`}</ProfileDesignationOrg>
 
-{userRegistrationDetails ? <div className="d-flex flex-row align-items-center justify-content-center mb-4">
-            {userRegistrationDetails.socialMediaHandles ? (
-              userRegistrationDetails.socialMediaHandles.facebook ? (
-                <a
-                  href={`//${userRegistrationDetails.socialMediaHandles.facebook}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+          {userRegistrationDetails ? (
+            <div className="d-flex flex-row align-items-center justify-content-center mb-4">
+              {userRegistrationDetails.socialMediaHandles ? (
+                userRegistrationDetails.socialMediaHandles.facebook ? (
+                  <a
+                    href={`//${userRegistrationDetails.socialMediaHandles.facebook}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FacebookIcon
+                      style={{ fontSize: "28px", color: "#4267B2" }}
+                      className="me-4"
+                    />
+                  </a>
+                ) : (
                   <FacebookIcon
-                    style={{ fontSize: "28px", color: "#4267B2" }}
+                    style={{ fontSize: "28px", color: "#C3C3C3" }}
                     className="me-4"
                   />
-                </a>
+                )
               ) : (
-                <FacebookIcon
-                  style={{ fontSize: "28px", color: "#C3C3C3" }}
-                  className="me-4"
-                />
-              )
-            ) : (
-              <></>
-            )}
+                <></>
+              )}
 
-            {userRegistrationDetails.socialMediaHandles ? (
-              userRegistrationDetails.socialMediaHandles.linkedin ? (
-                <a
-                  href={`//${userRegistrationDetails.socialMediaHandles.linkedin}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+              {userRegistrationDetails.socialMediaHandles ? (
+                userRegistrationDetails.socialMediaHandles.linkedin ? (
+                  <a
+                    href={`//${userRegistrationDetails.socialMediaHandles.linkedin}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <LinkedInIcon
+                      style={{ fontSize: "28px", color: "#0077b5" }}
+                      className="me-4"
+                    />
+                  </a>
+                ) : (
                   <LinkedInIcon
-                    style={{ fontSize: "28px", color: "#0077b5" }}
+                    style={{ fontSize: "28px", color: "#C3C3C3" }}
                     className="me-4"
                   />
-                </a>
+                )
               ) : (
-                <LinkedInIcon
-                  style={{ fontSize: "28px", color: "#C3C3C3" }}
-                  className="me-4"
-                />
-              )
-            ) : (
-              <></>
-            )}
+                <></>
+              )}
 
-            {userRegistrationDetails.socialMediaHandles ? (
-              userRegistrationDetails.socialMediaHandles.twitter ? (
-                <a
-                  href={`//${userRegistrationDetails.socialMediaHandles.twitter}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {" "}
+              {userRegistrationDetails.socialMediaHandles ? (
+                userRegistrationDetails.socialMediaHandles.twitter ? (
+                  <a
+                    href={`//${userRegistrationDetails.socialMediaHandles.twitter}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    <TwitterIcon
+                      style={{ fontSize: "28px", color: "#1DA1F2" }}
+                      className="me-4"
+                    />{" "}
+                  </a>
+                ) : (
                   <TwitterIcon
-                    style={{ fontSize: "28px", color: "#1DA1F2" }}
+                    style={{ fontSize: "28px", color: "#C3C3C3" }}
                     className="me-4"
-                  />{" "}
-                </a>
+                  />
+                )
               ) : (
-                <TwitterIcon
-                  style={{ fontSize: "28px", color: "#C3C3C3" }}
-                  className="me-4"
-                />
-              )
-            ) : (
-              <></>
-            )}
+                <></>
+              )}
 
-            {userRegistrationDetails.socialMediaHandles ? (
-              userRegistrationDetails.socialMediaHandles.website ? (
-                <a
-                  href={`//${userRegistrationDetails.socialMediaHandles.website}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {" "}
+              {userRegistrationDetails.socialMediaHandles ? (
+                userRegistrationDetails.socialMediaHandles.website ? (
+                  <a
+                    href={`//${userRegistrationDetails.socialMediaHandles.website}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    <LanguageIcon
+                      style={{ fontSize: "32px", color: "#152d35" }}
+                    />{" "}
+                  </a>
+                ) : (
                   <LanguageIcon
-                    style={{ fontSize: "32px", color: "#152d35" }}
-                  />{" "}
-                </a>
+                    style={{ fontSize: "32px", color: "#C3C3C3" }}
+                  />
+                )
               ) : (
-                <LanguageIcon style={{ fontSize: "32px", color: "#C3C3C3" }} />
-              )
-            ) : (
-              <></>
-            )}
-          </div> : <></> }
-          
-
-          {/* <BtnOutlined></BtnOutlined> */}
-          {userRegistrationDetails ? <div className="mb-3">
-            {userRegistrationDetails.headline ? (
-              <>
-                {" "}
-                <ProfileSmallText className="mb-1">Headline</ProfileSmallText>
-                <ProfileMediumText>
-                  {userRegistrationDetails.headline}
-                </ProfileMediumText>{" "}
-              </>
-            ) : (
-              <></>
-            )}
-          </div> : <></> }
-          
-          {userRegistrationDetails ? userRegistrationDetails.interests ? (
-            <div className="mb-4">
-              <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
-
-              <div>{renderInterests(userRegistrationDetails.interests)}</div>
+                <></>
+              )}
             </div>
           ) : (
             <></>
-          ) : <></>}
+          )}
+
+          {/* <BtnOutlined></BtnOutlined> */}
+          {userRegistrationDetails ? (
+            <div className="mb-3">
+              {userRegistrationDetails.headline ? (
+                <>
+                  {" "}
+                  <ProfileSmallText className="mb-1">Headline</ProfileSmallText>
+                  <ProfileMediumText>
+                    {userRegistrationDetails.headline}
+                  </ProfileMediumText>{" "}
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {userRegistrationDetails ? (
+            userRegistrationDetails.interests ? (
+              <div className="mb-4">
+                <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
+
+                <div>{renderInterests(userRegistrationDetails.interests)}</div>
+              </div>
+            ) : (
+              <></>
+            )
+          ) : (
+            <></>
+          )}
 
           <div className="d-flex flex-row align-items-center justify-content-between">
             <ButtonFilledDark style={{ width: "100%" }}>
