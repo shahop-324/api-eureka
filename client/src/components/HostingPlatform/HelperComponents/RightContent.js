@@ -57,10 +57,7 @@ const RightContent = () => {
   return (
     <>
       <div>
-        <div
-          className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4"
-          // style={{ width: "28rem" }}
-        >
+        <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
             onClick={() => {

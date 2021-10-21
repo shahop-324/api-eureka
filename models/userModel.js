@@ -223,22 +223,40 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    connections: [
+      // Id of persons who are contacts
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    pendingConnections: [
+      // Id of persons who are not contacts but have requested to follow this person.
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
+    pendingRequests: [
+      // Id of persons that this user has requested to follow but are not accepted yet
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      }
+    ],
+    blockedPersons: [
+      // Id of persons who are blocked by this user
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
-
-// userSchema.pre(/^find/, function (next) {
-//   // this points to the current query
-
-//   this.populate({ path: "communities.communityId", select: "name" });
-//   this.populate({
-//     path: "registredInEvents",
-//   });
-//   next();
-// });
 
 userSchema.pre("save", async function (next) {
   //Only run this function  if password was actually modified
