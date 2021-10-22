@@ -121,11 +121,15 @@ const renderInterests = (interests) => {
 
 const NetworkingConfirmation = () => {
   const theme = useTheme();
+  const params = useParams();
   const dispatch = useDispatch();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const { openConfirmation, matchedWith } = useSelector(
+  const { openConfirmation, matchedWith, networkingRoom } = useSelector(
     (state) => state.networking
   );
+
+  const { id } = useSelector((state) => state.eventAccessToken);
+  const eventId = params.eventId;
 
   let userName;
   let userImage;
@@ -155,7 +159,7 @@ const NetworkingConfirmation = () => {
     userHeadline = headline;
     userInterests = interests;
   }
-  
+
   return (
     <>
       <Dialog
@@ -220,9 +224,22 @@ const NetworkingConfirmation = () => {
                 <ButtonFilledDark
                   onClick={() => {
                     // dispatch
-                    // TODO emit using socket to join this room
+                    // emit using socket to join this room
                     // setOpenNetworkingConfirmation => false
                     // setOpenNetworkingRoom => true
+                    socket.emit(
+                      "joinNetworking",
+                      {
+                        room: networkingRoom,
+                        userId: id,
+                        eventId: eventId,
+                      },
+                      (error) => {
+                        if (error) {
+                          alert(error);
+                        }
+                      }
+                    );
                     dispatch(setOpenConfirmation(false));
                     dispatch(setOpenNetworkingTable(true));
                   }}

@@ -86,12 +86,12 @@ io.on("connect", (socket) => {
 
     // Find socket Id of this user
 
-    const {socketId} = await UsersInEvent.findOne({
+    const { socketId } = await UsersInEvent.findOne({
       $and: [
         { room: mongoose.Types.ObjectId(eventId) },
         { userId: mongoose.Types.ObjectId(userId) },
       ],
-    }).select('socketId');
+    }).select("socketId");
 
     // Send chat messages for this room to person who just joined (if any)
 
@@ -102,7 +102,7 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
+  socket.on("leaveNetworking", async ({ eventId, userId, room }, callback) => {
     // Remove this user from available for networking people in this event
 
     console.log(eventId, userId);
@@ -121,7 +121,93 @@ io.on("connect", (socket) => {
         await AvailableForNetworking.findByIdAndDelete(doc._id);
       }
     }
+
+    if (room) {
+      socket.leave(room);
+    }
   });
+
+  socket.on(
+    "transmitNetworkingMessage",
+    async (
+      {
+        isReply,
+        replyTo,
+        textMessage,
+        roomId,
+        eventId,
+        createdAt,
+        userRole,
+        userName,
+        userEmail,
+        userId,
+        userImage,
+        userOrganisation,
+        userDesignation,
+        reported,
+        numOfTimesReported,
+        visibilityStatus,
+      },
+      callback
+    ) => {
+      await NetworkingRoomChats.create(
+        {
+          isReply,
+          textMessage,
+          roomId,
+          eventId,
+          createdAt,
+          userRole,
+          userName,
+          userEmail,
+          userId,
+          userImage,
+          userOrganisation,
+          userDesignation,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+
+            const populatedChatMsg = await NetworkingRoomChats.findById(
+              chatMsgDoc._id
+            ).populate("replyTo");
+
+            io.in(roomId).emit("newNetworkingMsg", {
+              newMsg: populatedChatMsg,
+            });
+          }
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "deleteNetworkingMessage",
+    async ({ eventId, roomId, msgId }, callback) => {
+      await NetworkingRoomChats.findByIdAndUpdate(
+        msgId,
+        { deleted: true },
+        (err, deletedMsg) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.in(roomId).emit("deletedNetworkingMsg", {
+              deletedMsg: deletedMsg,
+            });
+          }
+        }
+      ).populate("replyTo");
+    }
+  );
 
   socket.on(
     "startNetworking",

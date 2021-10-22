@@ -31,8 +31,6 @@ const DeletedOwnMsg = ({
               className="d-flex flex-row align-items-center justify-content-between"
             >
               <div></div>
-
-              {/* <div>{timeAgo.format(new Date(timestamp), "round")}</div> */}
             </div>
           </div>
         </div>

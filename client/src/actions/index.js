@@ -10050,3 +10050,21 @@ export const setNetworkingChats =
       })
     );
   };
+
+export const createNewNetworkingMsg =
+  (newMsg) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.CreateNewNetworkingMsg({
+        newMsg: newMsg,
+      })
+    );
+  };
+
+export const deleteNetworkingMsg =
+  (deletedMsg) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.DeleteNetworkingMsg({
+        deletedMsg: deletedMsg,
+      })
+    );
+  };

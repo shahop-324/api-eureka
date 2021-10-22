@@ -35,6 +35,9 @@ import {
   setNetworkingRoom,
   setMatchedWith,
   setOpenMatching,
+  setNetworkingChats,
+  deleteNetworkingMsg,
+  createNewNetworkingMsg,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -126,6 +129,23 @@ const Root = () => {
       dispatch(setOpenMatching(false));
       // Open confirmation portal
       dispatch(setOpenConfirmation(true));
+    });
+
+    socket.on("networkingChat", ({ chats }) => {
+      console.log(chats);
+      dispatch(setNetworkingChats(chats));
+    });
+
+    socket.on("newNetworkingMsg", ({ newMsg }) => {
+      console.log(newMsg);
+      dispatch(createNewNetworkingMsg(newMsg))
+      // ! Dispatch it to action creator
+    });
+
+    socket.on("deletedNetworkingMsg", ({ deletedMsg }) => {
+      console.log(deletedMsg);
+      dispatch(deleteNetworkingMsg(deletedMsg))
+      // ! Dispatch it to action creator
     });
 
     socket.on("myMeetings", ({ meetings }) => {

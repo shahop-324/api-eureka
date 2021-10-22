@@ -56,6 +56,18 @@ const networkingSlice = createSlice({
     SetNetworkingChats(state, action) {
       state.networkingChats = action.payload.networkingChats;
     },
+
+    CreateNewNetworkingMsg(state, action) {
+      state.networkingChats.push(action.payload.newMsg);
+    },
+
+    DeleteNetworkingMsg(state, action) {
+      state.networkingChats = state.networkingChats.map((chat) =>
+        chat._id === action.payload.deletedMsg._id
+          ? action.payload.deletedMsg
+          : chat
+      );
+    },
   },
 });
 export const networkingActions = networkingSlice.actions;
