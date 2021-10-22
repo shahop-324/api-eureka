@@ -874,3 +874,38 @@ exports.removeFromFavouriteEvents = catchAsync(async (req, res, next) => {
     data: event,
   });
 });
+
+exports.getUserConnections = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const { connections, pendingConnections, pendingRequests } =
+    await User.findById(userId)
+      .select("connections pendingConnections pendingRequests")
+      .populate({
+        path: "connections",
+        populate: {
+          path: "requestedByUser requestedToUser",
+        },
+      })
+      .populate({
+        path: "pendingConnections",
+        populate: {
+          path: "requestedByUser requestedToUser",
+        },
+      })
+      .populate({
+        path: "pendingRequests",
+        populate: {
+          path: "requestedByUser requestedToUser",
+        },
+      });
+
+  const allConnections = connections
+    .concat(pendingConnections)
+    .concat(pendingRequests);
+
+  res.status(200).json({
+    status: "success",
+    data: allConnections,
+  });
+});

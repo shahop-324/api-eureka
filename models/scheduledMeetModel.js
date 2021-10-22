@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 
 const scheduledMeetSchema = new mongoose.Schema({
   // This documents Id will be used as unique Id for this meeting room.
+  cancelled: {
+    type: Boolean,
+    default: false,
+  },
   eventId: {
     type: mongoose.Schema.ObjectId,
     ref: "Event",
@@ -15,7 +19,7 @@ const scheduledMeetSchema = new mongoose.Schema({
     type: Boolean, // This will let us know if the other person is attending
     default: false,
   },
-  participant: { 
+  participant: {
     type: mongoose.Schema.ObjectId,
     ref: "User", // Participant other than the creator itself
   },

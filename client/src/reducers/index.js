@@ -53,6 +53,8 @@ import eventTablesSlice from "./eventTablesSlice";
 import StreamingSlice from "./streamingSlice";
 import notificationSlice from "./notificationSlice";
 import SelectedTabSlice from "./selectedTabSlice";
+import connectionsSlice from "./connectionsSlice";
+import scheduledMeetSlice from "./scheduledMeetSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -108,4 +110,6 @@ export default combineReducers({
   streaming: StreamingSlice.reducer,
   notification: notificationSlice.reducer,
   selectedTab: SelectedTabSlice.reducer,
+  scheduledMeets: scheduledMeetSlice.reducer,
+  connections: connectionsSlice.reducer,
 });

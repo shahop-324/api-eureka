@@ -227,22 +227,22 @@ const userSchema = new mongoose.Schema(
       // Id of persons who are contacts
       {
         type: mongoose.Schema.ObjectId,
-        ref: "User",
+        ref: "ConnectionRequest",
       },
     ],
     pendingConnections: [
       // Id of persons who are not contacts but have requested to follow this person.
       {
         type: mongoose.Schema.ObjectId,
-        ref: "User",
+        ref: "ConnectionRequest",
       },
     ],
     pendingRequests: [
-      // Id of persons that this user has requested to follow but are not accepted yet
+      // Id of persons that this User has requested to follow but are not accepted yet
       {
         type: mongoose.Schema.ObjectId,
-        ref: "User",
-      }
+        ref: "ConnectionRequest",
+      },
     ],
     blockedPersons: [
       // Id of persons who are blocked by this user

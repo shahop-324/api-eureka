@@ -196,11 +196,18 @@ const registrationSchema = new mongoose.Schema(
     },
     speakerId: {
       type: String,
-    },notifications: [
+    },
+    notifications: [
       {
-        //  ! We need to store event notifications in every registration document 
-      }
-    ]
+        //  ! We need to store event notifications in every registration document
+      },
+    ],
+    scheduledMeets: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "ScheduledMeet",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

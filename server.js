@@ -5,6 +5,9 @@ const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
 const TableChats = require("./models/tableChatsModel");
 const PersonalChat = require("./models/PersonalChatModel");
+const ScheduledMeet = require("./models/scheduledMeetModel");
+const Registration = require("./models/registrationsModel");
+const ConnectionRequest = require("./models/connectionRequestModel");
 
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -248,6 +251,196 @@ io.on("connect", (socket) => {
       );
     }
   );
+
+  socket.on(
+    "scheduleMeet",
+    async (
+      {
+        title,
+        shortDescription,
+        startsAt,
+        eventId,
+        createdBy,
+        participantIsAttending,
+        participant,
+        createdAt,
+      },
+      callback
+    ) => {
+      // create a schedule meet document and add it to the registration documents of both sender and reciever
+
+      const scheduledMeet = await ScheduledMeet.create({
+        title,
+        shortDescription,
+        createdAt,
+        startsAt,
+        participant,
+        eventId,
+        createdBy,
+        participantIsAttending,
+      });
+
+      const populatedScheduledMeet = await ScheduledMeet.findById(
+        scheduledMeet._id
+      )
+        .populate("createdBy")
+        .populate("participant");
+
+      // Find and Update both sender and recivers registration documents and update with this scheduledMeet
+
+      const senderRegistration = await Registration.findOne({
+        $and: [
+          { bookedForEventId: mongoose.Types.ObjectId(eventId) },
+          { bookedByUser: mongoose.Types.ObjectId(createdBy) },
+        ],
+      });
+
+      senderRegistration.scheduledMeets.push(scheduledMeet._id);
+
+      await senderRegistration.save({ new: true, validateModifiedOnly: true });
+
+      const receiverRegistration = await Registration.findOne({
+        $and: [
+          { bookedForEventId: mongoose.Types.ObjectId(eventId) },
+          { bookedByUser: mongoose.Types.ObjectId(participant) },
+        ],
+      });
+
+      receiverRegistration.scheduledMeets.push(scheduledMeet._id);
+
+      await receiverRegistration.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      // Step 1. ) Find sender
+
+      const SenderDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(createdBy) },
+        ],
+      });
+
+      const senderSocket = SenderDoc.socketId; // ! Socket Id of sender
+
+      // Step 2. ) Find reciever
+
+      const RecieverDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(participant) },
+        ],
+      });
+
+      const receiverSocket = RecieverDoc.socketId; // ! Socket Id of receiver
+
+      // Send notification to both sender and receiver and send this scheduled meet document back on thier current socket Ids
+
+      io.to(senderSocket).emit("meetingScheduled", {
+        scheduledMeet: populatedScheduledMeet,
+      });
+
+      io.to(receiverSocket).emit("newMeetingInvite", {
+        scheduledMeet: populatedScheduledMeet,
+      });
+    }
+  );
+
+  socket.on(
+    "submitConnectionRequest",
+    async ({ senderId, receiverId, eventId }, callback) => {
+      // create a connection request document
+      const newConnetionRequest = await ConnectionRequest.create({
+        requestedByUser: senderId,
+        requestedToUser: receiverId,
+        eventId: eventId,
+        status: "Pending",
+        cancelled: false,
+        createdAt: Date.now(),
+      });
+
+      const populatedConnectionRequest = await ConnectionRequest.findById(
+        newConnetionRequest._id
+      )
+        .populate("requestedByUser")
+        .populate("requestedToUser");
+
+      // Add newly created connection request to sender's pending requests
+
+      const senderDoc = await User.findById(senderId);
+
+      senderDoc.pendingRequests.push(newConnetionRequest._id);
+
+      await senderDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Add newly created connection request to receiver's pending connections
+
+      const receiverDoc = await User.findById(senderId);
+
+      receiverDoc.pendingConnections.push(newConnetionRequest._id);
+
+      await receiverDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Step 1. ) Find sender
+
+      const SenderDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(senderId) },
+        ],
+      });
+
+      const senderSocket = SenderDoc.socketId; // ! Socket Id of sender
+
+      // Step 2. ) Find reciever
+
+      const RecieverDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(receiverId) },
+        ],
+      });
+
+      const receiverSocket = RecieverDoc.socketId; // ! Socket Id of receiver
+
+      // Send "connectionRequestSubmitted" event to senders socket with newly created connection request object
+
+      io.to(senderSocket).emit("connectionRequestSubmitted", {
+        newConnetionRequest: populatedConnectionRequest,
+      });
+
+      // Send "newConnectionRequest" event to receiver's socket with newly created connection request object
+
+      io.to(receiverSocket).emit("newConnectionRequest", {
+        newConnetionRequest: populatedConnectionRequest,
+      });
+    }
+  );
+
+  socket.on("getMyMeetings", async({ userId, eventId }, callback) => {
+    const { scheduledMeets } = await Registration.findOne({
+      $and: [
+        { bookedForEventId: mongoose.Types.ObjectId(eventId) },
+        { bookedByUser: mongoose.Types.ObjectId(userId) },
+      ],
+    })
+      .select("scheduledMeets")
+      .populate({ path: "scheduledMeets", populate: { path: "createdBy" } });
+
+    // Find socket Id of user who requested his scheduled meets
+
+    const userDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = userDoc.socketId; // ! Socket Id of user
+
+    io.to(userSocket).emit("myMeetings", { meetings: scheduledMeets });
+  });
 
   socket.on("leaveChair", ({ chairId, eventId, tableId }, callback) => {
     fetchCurrentRoomChairs = async () => {
@@ -1122,7 +1315,7 @@ io.on("connect", (socket) => {
         ],
       });
 
-      const recieverSoket = RecieverDoc.socketId; // ! Socket Id of reciver
+      const recieverSocket = RecieverDoc.socketId; // ! Socket Id of reciver
 
       // * Create a new chat message in personal chat document for both sender and reciever and send newly created msg doc to both sender and reciever
 
@@ -1156,7 +1349,7 @@ io.on("connect", (socket) => {
 
       // Step 5.) Send message to reciever
 
-      io.to(recieverSoket).emit("newPersonalMessage", {
+      io.to(recieverSocket).emit("newPersonalMessage", {
         newChat: newChat,
       });
       // Close the connection => private messaging successful.

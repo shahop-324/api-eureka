@@ -53,6 +53,8 @@ import { eventTablesActions } from "./../reducers/eventTablesSlice";
 import { StreamingActions } from "./../reducers/streamingSlice";
 import { notificationActions } from "../reducers/notificationSlice";
 import { SelectedTabActions } from "../reducers/selectedTabSlice";
+import { connectionsActions } from "../reducers/connectionsSlice";
+import { scheduledMeetActions } from "../reducers/scheduledMeetSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -9227,11 +9229,14 @@ export const getMyAllPersonalMessages =
     }
   };
 
-  export const createNewPersonalMessage = (chat) => async(dispatch, getState) => {
-    dispatch(personalChatActions.UpdateChats({
-      chat: chat,
-    }))
-  }
+export const createNewPersonalMessage =
+  (chat) => async (dispatch, getState) => {
+    dispatch(
+      personalChatActions.UpdateChats({
+        chat: chat,
+      })
+    );
+  };
 
 export const fetchInvitationDetails =
   (invitationId) => async (dispatch, getState) => {
@@ -9897,20 +9902,100 @@ export const setLocalVolumeLevel = (level) => async (dispatch, getState) => {
   dispatch(StreamingActions.setLocalVolumeLevel({ localVolumeLevel: level }));
 };
 
-export const setVenueRightDrawerSelectedTab = (tab) => async(dispatch, getState) => {
-  dispatch(SelectedTabActions.setVenueRightDrawerSelectedTab({
-    tab: tab,
-  }))
-}
+export const setVenueRightDrawerSelectedTab =
+  (tab) => async (dispatch, getState) => {
+    dispatch(
+      SelectedTabActions.setVenueRightDrawerSelectedTab({
+        tab: tab,
+      })
+    );
+  };
 
-export const setChatSelectedTab = (tab) => async(dispatch, getState) => {
-  dispatch(SelectedTabActions.setChatSelectedTab({
-    tab: tab,
-  }))
-}
+export const setChatSelectedTab = (tab) => async (dispatch, getState) => {
+  dispatch(
+    SelectedTabActions.setChatSelectedTab({
+      tab: tab,
+    })
+  );
+};
 
-export const setOpenVenueRightDrawer = (openState) => async(dispatch, getState) => {
-  dispatch(SelectedTabActions.setOpenVenueRightDrawer({
-    openState: openState,
-  }))
-}
+export const setOpenVenueRightDrawer =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      SelectedTabActions.setOpenVenueRightDrawer({
+        openState: openState,
+      })
+    );
+  };
+
+export const createNewConnectionRequest =
+  (newConnetionRequest) => async (dispatch, getState) => {
+    dispatch(
+      connectionsActions.AddToConnection({
+        connection: newConnetionRequest,
+      })
+    );
+  };
+
+export const createNewScheduledMeet =
+  (scheduledMeet) => async (dispatch, getState) => {
+    dispatch(
+      scheduledMeetActions.AddScheduledMeet({
+        scheduledMeet: scheduledMeet,
+      })
+    );
+  };
+
+export const fetchMyConnections = () => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}users/fetchConnections`,
+
+      {
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+
+    console.log(res);
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("fetching user connections failed");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      connectionsActions.FetchConnections({
+        connections: res.data,
+      })
+    );
+  } catch (error) {
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch connections. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const fetchMyMeetings = (meetings) => async (dispatch, getState) => {
+  console.log(meetings, "These are my meeting")
+  dispatch(
+    scheduledMeetActions.FetchScheduledMeets({
+      scheduledMeets: meetings,
+    })
+  );
+};

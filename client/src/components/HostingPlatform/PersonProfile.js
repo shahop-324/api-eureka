@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import socket from "./service/socket";
 import ScheduleMeeting from "./Screens/Sub/ScheduleMeeting";
+import { fetchMyConnections } from "./../../actions";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -122,11 +123,9 @@ const PersonProfile = ({
   userOrganisation,
   userDesignation,
 }) => {
-  const [openScheduleMeet, setOpenScheduleMeet] = useState(false);
-
-  const handleScheduleMeet = () => {
-    setOpenScheduleMeet(false);
-  }
+  let myConnections = [];
+  let thisPersonIsInMyConnections = false;
+  let connectionStatusToThisPerson;
 
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -134,8 +133,19 @@ const PersonProfile = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { id } = useSelector((state) => state.eventAccessToken);
+  const { connections } = useSelector((state) => state.connections);
 
   const { registrations } = useSelector((state) => state.registration);
+
+  const [openScheduleMeet, setOpenScheduleMeet] = useState(false);
+
+  const handleScheduleMeet = () => {
+    setOpenScheduleMeet(false);
+  };
+
+  useEffect(() => {
+    dispatch(fetchMyConnections());
+  }, []);
 
   const userRegistrationDetails = registrations.find(
     (element) => element.bookedByUser === userId
@@ -144,6 +154,46 @@ const PersonProfile = ({
   const receiverId = userId;
   const senderId = id;
   const eventId = params.eventId;
+
+  if (connections) {
+    for (let element of connections) {
+      // Check if I sent this connection request to me or I sent this to someone
+
+      if (element.requestedByUser._id === id) {
+        // I requested to make to have this connection
+        // * Collect info from requestedToUser
+
+        if (!myConnections.includes(element.requestedToUser._id)) {
+          myConnections.push({
+            connectionId: element.requestedToUser._id,
+            status: element.status,
+          });
+        }
+      }
+      if (element.requestedToUser._id === id) {
+        // Someone else requested to connect with me
+        // * Collect info from requestedByUser
+
+        if (!myConnections.includes(element.requestedByUser._id)) {
+          myConnections.push({
+            connectionId: element.requestedByUser._id,
+            status: element.status,
+          });
+        }
+      }
+    }
+  }
+
+  // At this point we have all of current browsing user's connection in myConnections array with their id and status
+
+  for (let element of myConnections) {
+    if (!thisPersonIsInMyConnections) {
+      if (element.connectionId === userId) {
+        thisPersonIsInMyConnections = true;
+        connectionStatusToThisPerson = element.status;
+      }
+    }
+  }
 
   return (
     <>
@@ -303,26 +353,83 @@ const PersonProfile = ({
             <></>
           )}
           <div className="d-flex flex-row align-items-center justify-content-between">
-            <ButtonFilledDark
-              style={{ width: "48%" }}
-              onClick={() => {
-                socket.emit(
-                  "submitConnectionRequest",
-                  {
-                    senderId,
-                    receiverId,
-                    eventId,
-                  },
-                  (error) => {
-                    if (error) {
-                      alert(error);
+            {thisPersonIsInMyConnections ? (
+              (() => {
+                switch (connectionStatusToThisPerson) {
+                  case "Pending":
+                    return (
+                      <ButtonFilledDark
+                        style={{ width: "48%" }}
+                        onClick={() => {
+                          socket.emit(
+                            "submitConnectionRequest",
+                            {
+                              senderId,
+                              receiverId,
+                              eventId,
+                            },
+                            (error) => {
+                              if (error) {
+                                alert(error);
+                              }
+                            }
+                          );
+                        }}
+                      >
+                        Request sent
+                      </ButtonFilledDark>
+                    );
+                  case "Accepted":
+                    return (
+                      <ButtonFilledDark
+                        style={{ width: "48%" }}
+                        onClick={() => {
+                          socket.emit(
+                            "submitConnectionRequest",
+                            {
+                              senderId,
+                              receiverId,
+                              eventId,
+                            },
+                            (error) => {
+                              if (error) {
+                                alert(error);
+                              }
+                            }
+                          );
+                        }}
+                      >
+                        Connected
+                      </ButtonFilledDark>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+            ) : (
+              <ButtonFilledDark
+                style={{ width: "48%" }}
+                onClick={() => {
+                  socket.emit(
+                    "submitConnectionRequest",
+                    {
+                      senderId,
+                      receiverId,
+                      eventId,
+                    },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
                     }
-                  }
-                );
-              }}
-            >
-              Connect
-            </ButtonFilledDark>
+                  );
+                }}
+              >
+                Disconnect
+              </ButtonFilledDark>
+            )}
+
             <ButtonOutlinedDark
               onClick={() => {
                 setOpenScheduleMeet(true);
@@ -334,7 +441,11 @@ const PersonProfile = ({
           </div>
         </PersonProfileBody>
       </Dialog>
-      <ScheduleMeeting openDrawer={openScheduleMeet} handleCloseDrawer={handleScheduleMeet} userId={userId}/>
+      <ScheduleMeeting
+        openDrawer={openScheduleMeet}
+        handleCloseDrawer={handleScheduleMeet}
+        userId={userId}
+      />
     </>
   );
 };

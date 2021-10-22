@@ -23,6 +23,7 @@ const connectionRequestSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["Accepted", "Rejected", "Pending"],
+    default: "Pending",
   },
   createdAt: {
     type: Date,

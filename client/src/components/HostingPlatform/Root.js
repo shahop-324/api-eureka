@@ -28,6 +28,9 @@ import {
   navigationIndexForHostingPlatform,
   showNotification,
   updateEventPoll,
+  createNewConnectionRequest,
+  createNewScheduledMeet,
+  fetchMyMeetings,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,12 +80,6 @@ const Root = () => {
     (state) => state.navigation.currentIndexForHostingPlatform
   );
 
-  // const speaker = useSelector((state) => {
-  //   return state.speaker.speakers.find((speaker) => {
-  //     return speaker.id === id;
-  //   });
-  // });
-
   // TODO USER OR HOST
 
   const event = useSelector((state) => {
@@ -90,9 +87,6 @@ const Root = () => {
       return event.id === eventId;
     });
   });
-
-  // console.log(speaker);
-  // console.log(event);
 
   useEffect(() => {
     return () => {
@@ -112,14 +106,60 @@ const Root = () => {
     ? userDetails.designation
     : "Vice President";
 
-  // console.log(role, id, email);
-
   useEffect(() => {
     dispatch(fetchUserAllPersonalData());
     dispatch(fetchRegistrationsOfParticularEvent(eventId));
   }, []);
 
   useEffect(() => {
+
+    socket.on("myMeetings", ({meetings}) => {
+      console.log(meetings);
+
+      dispatch(fetchMyMeetings(meetings));
+    })
+
+    socket.on("connectionRequestSubmitted", ({ newConnetionRequest }) => {
+      console.log(newConnetionRequest);
+
+      dispatch(createNewConnectionRequest(newConnetionRequest));
+
+      // Show notification that your connection request has been submitted successfully
+      dispatch(
+        showNotification("Your connection request is submitted successfully.")
+      );
+    });
+
+    socket.on("newConnectionRequest", ({ newConnetionRequest }) => {
+      console.log(newConnetionRequest);
+
+      dispatch(createNewConnectionRequest(newConnetionRequest));
+
+      // Show that you have got new connection request
+      dispatch(showNotification("You have got a new connection request."));
+    });
+
+    socket.on("meetingScheduled", ({ scheduledMeet }) => {
+      console.log(scheduledMeet);
+
+      dispatch(createNewScheduledMeet(scheduledMeet));
+
+      // Show notification that new meeting has been scheduled
+      dispatch(
+        showNotification("Your meeting has been scheduled successfully!")
+      );
+    });
+
+    socket.on("newMeetingInvite", ({ scheduledMeet }) => {
+      console.log(scheduledMeet);
+
+      dispatch(createNewScheduledMeet(scheduledMeet));
+
+      // Show notification that you have been new meeting invite
+
+      dispatch(showNotification("You have got a new meeting invite."));
+    });
+
     socket.on("newEventMsg", ({ newMsg }) => {
       // console.log(newMsg);
       dispatch(createNewEventMsg(newMsg));

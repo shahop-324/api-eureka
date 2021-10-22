@@ -23,11 +23,11 @@ router.use((req, res, next) => {
   if (req.user != undefined) {
     return next();
   } else {
-    console.log("hello from 32 userRoutes");
     return authController.protect(req, res, next);
   }
 });
 
+router.get("/fetchConnections", userController.getUserConnections);
 router.get("/registeredEvents", userController.getAllRegisteredEvents);
 router.get("/getUserRegistrations", userController.getUserRegistrations); // TODO
 router.get("/personalData", userController.getAllPersonalData);
