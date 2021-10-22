@@ -155,34 +155,42 @@ const PersonProfile = ({
   const senderId = id;
   const eventId = params.eventId;
 
-  if (connections) {
-    for (let element of connections) {
-      // Check if I sent this connection request to me or I sent this to someone
+  const processing = () => {
+    if (connections) {
+      for (let element of connections) {
+        // Return if any of requestedToUser or requestedByUser is not present
 
-      if (element.requestedByUser._id === id) {
-        // I requested to make to have this connection
-        // * Collect info from requestedToUser
+        if (!element.requestedToUser || !element.requestedByUser) return;
 
-        if (!myConnections.includes(element.requestedToUser._id)) {
-          myConnections.push({
-            connectionId: element.requestedToUser._id,
-            status: element.status,
-          });
+        // Check if I sent this connection request to me or I sent this to someone
+
+        if (element.requestedByUser._id === id) {
+          // I requested to make to have this connection
+          // * Collect info from requestedToUser
+
+          if (!myConnections.includes(element.requestedToUser._id)) {
+            myConnections.push({
+              connectionId: element.requestedToUser._id,
+              status: element.status,
+            });
+          }
         }
-      }
-      if (element.requestedToUser._id === id) {
-        // Someone else requested to connect with me
-        // * Collect info from requestedByUser
+        if (element.requestedToUser._id === id) {
+          // Someone else requested to connect with me
+          // * Collect info from requestedByUser
 
-        if (!myConnections.includes(element.requestedByUser._id)) {
-          myConnections.push({
-            connectionId: element.requestedByUser._id,
-            status: element.status,
-          });
+          if (!myConnections.includes(element.requestedByUser._id)) {
+            myConnections.push({
+              connectionId: element.requestedByUser._id,
+              status: element.status,
+            });
+          }
         }
       }
     }
-  }
+  };
+
+  processing();
 
   // At this point we have all of current browsing user's connection in myConnections array with their id and status
 
@@ -426,7 +434,7 @@ const PersonProfile = ({
                   );
                 }}
               >
-                Disconnect
+                Connect
               </ButtonFilledDark>
             )}
 
