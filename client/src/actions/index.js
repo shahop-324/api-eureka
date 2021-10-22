@@ -9992,10 +9992,61 @@ export const fetchMyConnections = () => async (dispatch, getState) => {
 };
 
 export const fetchMyMeetings = (meetings) => async (dispatch, getState) => {
-  console.log(meetings, "These are my meeting")
+  console.log(meetings, "These are my meeting");
   dispatch(
     scheduledMeetActions.FetchScheduledMeets({
       scheduledMeets: meetings,
     })
   );
 };
+
+export const setOpenMatching = (openState) => async (dispatch, getState) => {
+  dispatch(
+    networkingActions.SetOpenMatching({
+      openState: openState,
+    })
+  );
+};
+
+export const setOpenConfirmation =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.SetOpenConfirmation({
+        openState: openState,
+      })
+    );
+  };
+
+export const setOpenNetworkingTable =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.SetOpenNetworkingTable({
+        openState: openState,
+      })
+    );
+  };
+
+export const setNetworkingRoom = (roomId) => async (dispatch, getState) => {
+  dispatch(
+    networkingActions.SetNetworkingRoom({
+      networkingRoom: roomId,
+    })
+  );
+};
+
+export const setMatchedWith = (matchedWith) => async (dispatch, getState) => {
+  dispatch(
+    networkingActions.SetMatchedWith({
+      matchedWith: matchedWith,
+    })
+  );
+};
+
+export const setNetworkingChats =
+  (networkingChats) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.SetNetworkingChats({
+        networkingChats: networkingChats,
+      })
+    );
+  };

@@ -31,6 +31,10 @@ import {
   createNewConnectionRequest,
   createNewScheduledMeet,
   fetchMyMeetings,
+  setOpenConfirmation,
+  setNetworkingRoom,
+  setMatchedWith,
+  setOpenMatching,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,12 +116,23 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
+    socket.on("newMatch", ({ room, matchedWith }) => {
+      dispatch(showNotification("New match detected"));
+      console.log(room);
+      dispatch(setNetworkingRoom(room));
+      console.log(matchedWith);
+      dispatch(setMatchedWith(matchedWith));
+      // Close matching portal
+      dispatch(setOpenMatching(false));
+      // Open confirmation portal
+      dispatch(setOpenConfirmation(true));
+    });
 
-    socket.on("myMeetings", ({meetings}) => {
+    socket.on("myMeetings", ({ meetings }) => {
       console.log(meetings);
 
       dispatch(fetchMyMeetings(meetings));
-    })
+    });
 
     socket.on("connectionRequestSubmitted", ({ newConnetionRequest }) => {
       console.log(newConnetionRequest);

@@ -8,6 +8,8 @@ const PersonalChat = require("./models/PersonalChatModel");
 const ScheduledMeet = require("./models/scheduledMeetModel");
 const Registration = require("./models/registrationsModel");
 const ConnectionRequest = require("./models/connectionRequestModel");
+const NetworkingRoomChats = require("./models/networkingRoomChatsModel");
+const { v4: uuidv4 } = require("uuid");
 
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -78,120 +80,155 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
-  socket.on("joinNetworking", async ({ eventId, userId }, callback) => {
-    await Event.findById(eventId, async (err, eventDoc) => {
-      if (err) {
-        console.log(err);
-      } else {
-        eventDoc.currentlyInNetworking.push(userId);
+  socket.on("joinNetworking", async ({ room, userId, eventId }, callback) => {
+    // Join the room
+    socket.join(room); // User has joined the networking room
 
-        eventDoc.save(
-          { validateModifiedOnly: true },
-          async (err, updatedDoc) => {
-            if (err) {
-              console.log("There was an error while updating event document.");
-            } else {
-              console.log("Event doc updated successfully.");
-            }
-          }
-        );
-      }
+    // Find socket Id of this user
+
+    const {socketId} = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    }).select('socketId');
+
+    // Send chat messages for this room to person who just joined (if any)
+
+    const chats = await NetworkingRoomChats.find({ roomId: room });
+
+    io.to(socketId).emit("networkingChat", {
+      chats: chats,
     });
-    callback();
   });
 
   socket.on("leaveNetworking", async ({ eventId, userId }, callback) => {
-    await Event.findById(eventId, async (err, eventDoc) => {
-      if (err) {
-        console.log(err);
-      } else {
-        eventDoc.currentlyInNetworking;
+    // Remove this user from available for networking people in this event
 
-        const index = eventDoc.currentlyInNetworking.indexOf(userId);
-        if (index > -1) {
-          eventDoc.currentlyInNetworking.splice(index, 1);
-        }
+    console.log(eventId, userId);
 
-        eventDoc.save(
-          { validateModifiedOnly: true },
-          async (err, updatedDoc) => {
-            if (err) {
-              console.log("There was an error while updating event document.");
-            } else {
-              console.log(
-                "User Successfully left networking zone. Event doc updated successfully."
-              );
-            }
-          }
-        );
-      }
+    console.log("leave networking function was invoked.");
+
+    const doc = await AvailableForNetworking.findOne({
+      $and: [
+        { eventId: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
     });
-    callback();
+
+    if (doc) {
+      if (doc._id) {
+        await AvailableForNetworking.findByIdAndDelete(doc._id);
+      }
+    }
   });
 
   socket.on(
     "startNetworking",
     async ({ eventId, userId, userName, image, socketId }, callback) => {
-      const sendAllAvailableForNetworking = async ({ eventId, socketId }) => {
-        const availableInThisEvent = await AvailableForNetworking.find({
-          $and: [{ eventId: eventId }, { status: "Available" }],
+      // Make this person available for networking
+
+      // Check if already available then just update his / her document otherwise create new document
+
+      const existingUser = await AvailableForNetworking.findOne({
+        $and: [
+          { eventId: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      if (existingUser) {
+        existingUser.socketId = socketId;
+        await existingUser.save({ new: true, validateModifiedOnly: true });
+      } else {
+        const newUserForNetworking = await AvailableForNetworking.create({
+          userId: userId,
+          userName: userName,
+          image: image,
+          eventId: eventId,
+          socketId: socketId,
+          status: "Available",
+        });
+      }
+
+      // Match with any random person from available users other than this user itself
+
+      const availableForNetworking = await AvailableForNetworking.find({
+        $and: [
+          { eventId: mongoose.Types.ObjectId(eventId) },
+          { userId: { $ne: mongoose.Types.ObjectId(userId) } },
+        ],
+      });
+
+      if (availableForNetworking.length * 1 > 0) {
+        let matchedPerson =
+          availableForNetworking[
+            Math.floor(Math.random() * availableForNetworking.length)
+          ];
+
+        const matchedPersonUserId = matchedPerson.userId;
+
+        // Create a random room for both of them and send this room, person they are matched with
+
+        let room = uuidv4();
+
+        // Find socket Id of both sender and receiver
+
+        // Step 1. ) Find sender
+
+        const SenderDoc = await UsersInEvent.findOne({
+          $and: [
+            { room: mongoose.Types.ObjectId(eventId) },
+            { userId: mongoose.Types.ObjectId(userId) },
+          ],
         });
 
-        io.in(eventId).emit("listOfAvailablePeopleInNetworking", {
-          availableForNetworking: availableInThisEvent,
+        const senderSocket = SenderDoc.socketId; // ! Socket Id of sender
+
+        // Step 2. ) Find reciever
+
+        const RecieverDoc = await UsersInEvent.findOne({
+          $and: [
+            { room: mongoose.Types.ObjectId(eventId) },
+            { userId: mongoose.Types.ObjectId(matchedPersonUserId) },
+          ],
         });
-      };
 
-      await AvailableForNetworking.findOne(
-        { $and: [{ eventId: eventId }, { userId: userId }] },
-        async (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(doc);
-            if (doc) {
-              // Already existing
-              doc.status = "Available";
-              doc.socketId = socketId;
+        const recieverSocket = RecieverDoc.socketId; // ! Socket Id of reciver
 
-              doc.save({ validateModifiedOnly: true }, (err, updatedDoc) => {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log("Updated status to available.");
+        // Find user document of both sender and receiver
 
-                  // Send list of all available participants at this time in this event
+        const senderUserDoc = await User.findById(userId); // Sender user document
+        const receiverUserDoc = await User.findById(matchedPersonUserId); // Receiver user document
 
-                  sendAllAvailableForNetworking(eventId, socketId);
-                }
-              });
-            } else {
-              // Not Existing before, create new document
-              await AvailableForNetworking.create(
-                {
-                  userId: userId,
-                  userName: userName,
-                  image: image,
-                  eventId: eventId,
-                  socketId: socketId,
-                  status: "Available",
-                },
-                async (err, newAvailableUser) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    console.log("created new available user");
+        // Send matched with and room id to both sender and reciever
 
-                    // Send list of all available participants at this time in this event
-                    sendAllAvailableForNetworking(eventId, socketId);
-                  }
-                }
-              );
-            }
-          }
-        }
-      );
-      // callback();
+        io.in(senderSocket).emit("newMatch", {
+          room: room,
+          matchedWith: receiverUserDoc,
+        });
+
+        io.in(recieverSocket).emit("newMatch", {
+          room: room,
+          matchedWith: senderUserDoc,
+        });
+
+        // Mark both sender and reciever as not available for networking
+
+        await AvailableForNetworking.findOneAndDelete({
+          $and: [
+            { eventId: mongoose.Types.ObjectId(eventId) },
+            { userId: mongoose.Types.ObjectId(userId) },
+          ],
+        }); // Delete sender
+
+        await AvailableForNetworking.findOneAndDelete({
+          $and: [
+            { eventId: mongoose.Types.ObjectId(eventId) },
+            { userId: mongoose.Types.ObjectId(matchedPersonUserId) },
+          ],
+        }); // Delete receiver
+      }
     }
   );
 
@@ -418,7 +455,7 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on("getMyMeetings", async({ userId, eventId }, callback) => {
+  socket.on("getMyMeetings", async ({ userId, eventId }, callback) => {
     const { scheduledMeets } = await Registration.findOne({
       $and: [
         { bookedForEventId: mongoose.Types.ObjectId(eventId) },

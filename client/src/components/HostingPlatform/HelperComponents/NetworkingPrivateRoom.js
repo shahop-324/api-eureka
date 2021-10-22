@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
   const [audioIsEnabled, setAudioIsEnabled] = useState(true);
 
@@ -81,8 +79,6 @@ const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
     row = "1fr 1fr";
   }
 
-
-
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("lg");
 
@@ -91,7 +87,7 @@ const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
       <Dialog
         fullWidth={fullWidth}
         maxWidth={maxWidth}
-        open={open} // TODO Change it to dynamic
+        open={openPrivateRoom} // TODO Change it to dynamic
         aria-labelledby="customized-dialog-title"
       >
         <div
@@ -188,7 +184,7 @@ const NetworkingPrivateRoom = ({ openPrivateRoom, handleClosePrivateRoom }) => {
                 id="leave-table"
                 style={{ maxWidth: "90px", justifySelf: "end" }}
                 onClick={() => {
-                    setOpen(false);
+                  handleClosePrivateRoom();
                   //   socket.emit(
                   //     "leaveChair",
                   //     { chairId: currentChairId, eventId, tableId: id },

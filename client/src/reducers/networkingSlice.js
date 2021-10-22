@@ -5,6 +5,12 @@ const networkingSlice = createSlice({
 
   initialState: {
     networkingSettings: null,
+    openMatching: false, // this will open matching portal
+    openConfirmation: false, // This will open confirmation portal
+    openNetworkingTable: false, // This will open networking table
+    networkingRoom: null, // This will keep id of networking room
+    matchedWith: null, // This will keep user document with whom user has been matched
+    networkingChats: [], // This will keep chats of this networking room
     isLoading: false,
     error: false,
   },
@@ -13,7 +19,6 @@ const networkingSlice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
     hasError(state, action) {
       console.log("Has error detected");
       state.error = action.payload;
@@ -31,6 +36,25 @@ const networkingSlice = createSlice({
     EditNetworking(state, action) {
       state.networkingSettings = action.payload.settings;
       state.isLoading = false;
+    },
+
+    SetOpenMatching(state, action) {
+      state.openMatching = action.payload.openState;
+    },
+    SetOpenConfirmation(state, action) {
+      state.openConfirmation = action.payload.openState;
+    },
+    SetOpenNetworkingTable(state, action) {
+      state.openNetworkingTable = action.payload.openState;
+    },
+    SetNetworkingRoom(state, action) {
+      state.networkingRoom = action.payload.networkingRoom;
+    },
+    SetMatchedWith(state, action) {
+      state.matchedWith = action.payload.matchedWith;
+    },
+    SetNetworkingChats(state, action) {
+      state.networkingChats = action.payload.networkingChats;
     },
   },
 });

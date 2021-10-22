@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const availableForNetworkingSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
     },
     userName: {
       type: String,
@@ -12,13 +13,15 @@ const availableForNetworkingSchema = new mongoose.Schema(
       type: String,
     },
     eventId: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
+      ref: "Event",
     },
     socketId: {
       type: String,
     },
     status: {
       type: String,
+      enum: ["Not Available", "Available"],
       default: "Available",
       // Available, Occupied
     },

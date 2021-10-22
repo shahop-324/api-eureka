@@ -1,49 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Avatar, Dialog } from "@material-ui/core";
-import Faker from "faker";
-
-import { makeStyles } from "@material-ui/core/styles";
+import socket from "./../service/socket";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { fetchAvailableForNetworking } from "../../../actions";
-import NetworkingPrivateRoom from "./NetworkingPrivateRoom";
+import { setOpenMatching } from "../../../actions";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  large: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}));
-
-const Matching = ({ openMatching, handleCloseMatching }) => {
+const Matching = () => {
   const dispatch = useDispatch();
-
-  const [openPrivateNetworkingRoom, setOpenPrivateNetworkingRoom] =
-    useState(false);
-
-  const handleClosePrivateRoom = () => {
-    setOpenPrivateNetworkingRoom(false);
-  };
+  const { openMatching } = useSelector((state) => state.networking);
 
   const params = useParams();
 
   const eventId = params.eventId;
-
-  const [img, setImg] = useState("");
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -52,22 +24,7 @@ const Matching = ({ openMatching, handleCloseMatching }) => {
     (state) => state.user.userDetails
   );
 
-  const classes = useStyles();
-
-  useEffect(() => {
-    // Fetch list of all people in this event who are currently available for networking
-    dispatch(fetchAvailableForNetworking(eventId, id));
-  }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setImg(Faker.image.avatar());
-    }, 1500);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  const userId = useSelector((state) => state.eventAccessToken.id);
 
   return (
     <>
@@ -82,10 +39,34 @@ const Matching = ({ openMatching, handleCloseMatching }) => {
             Finding your best match...
           </div>
           <div className="matching-card d-flex flex-row align-items-center justify-content-center mb-4">
-            <Avatar
-              src={img}
-              className={`${classes.large} slider-avatar-matching`}
-            />
+            <div className="sonar-emitter" style={{ position: "relative" }}>
+              <Avatar
+                className="slider-avatar-matching"
+                alt={firstName}
+                src={
+                  image
+                    ? image.startsWith("https")
+                      ? image
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`
+                    : " "
+                }
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  height: "9rem",
+                  width: "9rem",
+                  border: "2px solid #538BF7",
+                }}
+              />
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+              <div className="sonar-wave"></div>
+            </div>
           </div>
           <div>
             <div
@@ -98,10 +79,12 @@ const Matching = ({ openMatching, handleCloseMatching }) => {
               }}
               onClick={() => {
                 console.log("Cancel speed networking was just clicked!");
-                handleCloseMatching();
-                setOpenPrivateNetworkingRoom(true);
+                socket.emit("leaveNetworking", {
+                  eventId,
+                  userId: userId,
+                });
 
-                // TODO   Emit a message to put this user in available for networking and cancel matching him/her.
+                dispatch(setOpenMatching(false));
               }}
             >
               Stop
@@ -109,10 +92,6 @@ const Matching = ({ openMatching, handleCloseMatching }) => {
           </div>
         </div>
       </Dialog>
-      <NetworkingPrivateRoom
-        openPrivateRoom={openPrivateNetworkingRoom}
-        handleClosePrivateRoom={handleClosePrivateRoom}
-      />
     </>
   );
 };

@@ -3,14 +3,17 @@ import { Avatar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
 import "./../Styles/networking.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import socket from "./../service/socket";
-
+import { setOpenMatching } from "./../../../actions";
 import { useParams } from "react-router-dom";
 import Matching from "../HelperComponents/Matching";
+import NetworkingConfirmation from "./../Screens/Sub/NetworkingConfirmation";
+import NetworkingScreen from "./../Screens/NetworkingScreen";
 
 const Networking = () => {
   const params = useParams();
+  const dispatch = useDispatch();
 
   const eventId = params.eventId;
 
@@ -25,23 +28,7 @@ const Networking = () => {
   );
 
   useEffect(() => {
-    socket.on("listOfAvailablePeopleInNetworking", (list) => {
-      console.log(list);
-      // dispatch(fetchEventChats(chats));
-    });
-
-    socket.emit("joinNetworking", { eventId: eventId, userId: id }, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
-
-    // Emit a signal to join network zone when mounting this component and automatically.
-  }, []);
-
-  useEffect(() => {
     return () => {
-      
       socket.emit(
         "leaveNetworking",
         { eventId: eventId, userId: id },
@@ -67,11 +54,13 @@ const Networking = () => {
           <div className="sonar-wrapper">
             <div className="sonar-emitter" style={{ position: "relative" }}>
               <Avatar
-              alt={firstName}
+                alt={firstName}
                 src={
-                  image ? image.startsWith("https")
-                    ? image
-                    : `https://evenz-img-234.s3.ap-south-1.amazonaws.com/${image}` : " "
+                  image
+                    ? image.startsWith("https")
+                      ? image
+                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`
+                    : " "
                 }
                 style={{
                   position: "absolute",
@@ -99,14 +88,18 @@ const Networking = () => {
           className="btn-filled-h px-5 py-3 start-networking-btn"
           onClick={() => {
             console.log("speed networking was just clicked!");
-            socket.emit("startNetworking", {
-              eventId,
-              userId: id,
-              userName: firstName + " " + lastName,
-              image,
-              socketId: socket.id,
-            });
-            setOpen(true);
+
+            setTimeout(() => {
+              socket.emit("startNetworking", {
+                eventId,
+                userId: id,
+                userName: firstName + " " + lastName,
+                image,
+                socketId: socket.id,
+              });
+            }, 3000);
+            dispatch(setOpenMatching(true));
+
             // TODO   Emit a message to put this user in available for networking and start matching him/her to others who are also avialable.
           }}
         >
@@ -114,7 +107,9 @@ const Networking = () => {
         </div>
       </div>
 
-      <Matching openMatching={open} handleCloseMatching={handleCloseMatching} />
+      <Matching />
+      <NetworkingConfirmation />
+      <NetworkingScreen />
     </>
   );
 };
