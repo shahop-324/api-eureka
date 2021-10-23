@@ -3,7 +3,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { StageBody } from "./../../../components/SessionStage/Elements";
-import PhotoBooth from "../../Elements/PhotoBooth";
 import StageNavComponent from "../../SessionStage/StageNavComponent";
 import StageControlsComponent from "../../SessionStage/StageControlsComponent";
 import StageSideDrawerComponent from "../../SessionStage/StageSideDrawer";
@@ -30,10 +29,32 @@ let rtc = {
 };
 
 const SessionStage = () => {
+  const [subscribed, setSubscribed] = React.useState(false);
+  const params = useParams();
+  const sessionId = params.sessionId;
+  const eventId = params.eventId;
+  const communityId = params.communityId;
 
-  const {sessionDetails} = useSelector((state) => state.session);
+  useEffect(() => {
+    if(!subscribed) {
+      socket.emit(
+        "subscribeSession",
+        {
+          sessionId: sessionId,
+        },
+        (error) => {
+          if (error) {
+            alert(error);
+          }
+        }
+      );
+      setSubscribed(true);
+    }
+    
+  }, []);
   
-  const [volumeIndicators, setVolumeIndicators] = useState([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
+
+  const { sessionDetails } = useSelector((state) => state.session);
 
   const [audioStreamStat, setAudioStreamStat] = useState([]); // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
 
@@ -51,11 +72,7 @@ const SessionStage = () => {
 
   const [screenStream, setScreenStream] = useState(null);
 
-  const [nonProminent, setNonProminent] = useState([]);
-
   const [localStream, setLocalStream] = useState(null); // This is to keep track of local video track
-
-  const [remoteStreams, setRemoteStreams] = useState([]);
 
   const handleAudioIsEnabledChange = (uid, bool) => {
     setAudioStreamStat((prevArr) => {
@@ -112,68 +129,8 @@ const SessionStage = () => {
     });
   };
 
-  const handleChangeMainStream = (stream, uid) => {
-    setMainStream({ stream: stream, uid: uid });
-  };
-
-  const handleAddToMiniStreams = (stream, uid) => {
-    setMiniStreams((prevMiniStreams) =>
-      prevMiniStreams.push({ stream: stream, uid: uid })
-    );
-  };
-
-  const handleRemoveFromMiniStreams = (uid) => {
-    setMiniStreams((prevStreams) => {
-      return prevStreams.filter((object) => object.uid !== uid);
-    });
-  };
-
-  const handleChangeProminentStream = (stream, uid) => {
-    setProminentStream({ stream: stream, uid: uid });
-  };
-
   const handleChangeLocalStream = (stream, uid) => {
     setLocalStream({ stream: stream, uid: uid });
-  };
-
-  const handleAddToRemoteStreams = (stream, uid) => {
-    setRemoteStreams((prevStreams) => {
-      return prevStreams.push({ stream: stream, uid: uid });
-    });
-  };
-
-  const handleRemoveFromRemoteStreams = (uid) => {
-    setRemoteStreams((prevStreams) => {
-      return prevStreams.filter((object) => object.uid !== uid);
-    });
-  };
-
-  const handleSwitchToGridView = () => {
-    const [firstStream] = allStreams;
-
-    // Set first stream from all streams as main stream
-
-    handleChangeMainStream(firstStream.stream, firstStream.uid);
-
-    // Set rest of streams from all streams as mini streams
-
-    allStreams.forEach((element, index) => {
-      if (index !== 0) {
-        miniStreams.push(element);
-      }
-    });
-
-    // Set view as grid now
-
-    setView("grid");
-  };
-
-  const handleSwitchToGalleryView = () => {
-    setView("gallery");
-  };
-
-  const handleSwitchToSpotlightView = () => {
-    setView("spotlight");
   };
 
   const [videoIsEnabled, setVideoIsEnabled] = useState(true);
@@ -218,30 +175,10 @@ const SessionStage = () => {
 
   const dispatch = useDispatch();
 
-  const params = useParams();
-
-  const sessionId = params.sessionId;
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
-
-  const [openPhotoBooth, setOpenPhotoBooth] = useState(false);
-
-  const [uplinkStat, setUplinkStat] = useState("");
-  const [downlinkStat, setDownLinkStat] = useState("");
-  const [localVolumeLevel, setLocalVolumeLevel] = useState("");
 
   const handleOpenSideDrawer = () => {
     setSideDrawerOpen(!sideDrawerOpen);
-  };
-
-  const handleOpenPhotoBooth = () => {
-    setOpenPhotoBooth(true);
-  };
-
-  const handleClosePhotoBooth = () => {
-    setOpenPhotoBooth(false);
   };
 
   const handleStopScreenShare = async () => {
@@ -259,19 +196,22 @@ const SessionStage = () => {
 
   const agoraRole = sessionRole === "host" ? "host" : "audience";
 
-        // ? if session is ended then take everyone to mainstage and replay session recording
-       // ? if session is started or resumed then take everyone to mainstage
-      // ? if agoraRole is anything except host then take user to mainstage
-     // ? if agoraRole is host and session is paused or not started then take user to backstage 
+  // ? if session is ended then take everyone to mainstage and replay session recording
+  // ? if session is started or resumed then take everyone to mainstage
+  // ? if agoraRole is anything except host then take user to mainstage
+  // ? if agoraRole is host and session is paused or not started then take user to backstage
 
-   let avenue = 'mainstage'; // avenue can be either backstage or mainstage
+  let avenue = "mainstage"; // avenue can be either backstage or mainstage
 
-   if(sessionDetails.runningStatus === "Paused" || sessionDetails.runningStatus === "Not Yet Started") {
-     if(agoraRole === "host") {
+  if (
+    sessionDetails.runningStatus === "Paused" ||
+    sessionDetails.runningStatus === "Not Yet Started"
+  ) {
+    if (agoraRole === "host") {
       // take to backstage
-      avenue = 'backstage'
-     }
-   }
+      avenue = "backstage";
+    }
+  }
 
   //  alert(avenue);
 
@@ -406,14 +346,6 @@ const SessionStage = () => {
 
     // Set client role
     rtc.client.setClientRole(options.role);
-
-    // TODO Important => Get local downlink and Uplink stat and show it to users that what is your network condition.
-    // Get client network quality
-    // rtc.client.on("network-quality", (stats) => {
-    //   setDownLinkStat(stats.downlinkNetworkQuality);
-    //   setUplinkStat(stats.uplinkNetworkQuality);
-    // });
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Listen for event "user-published" explanation: Some kind of audio or video stream is published
     rtc.client.on("user-published", async (user, mediaType) => {
@@ -576,9 +508,9 @@ const SessionStage = () => {
         }
       });
 
-       // * DONE Enable dual stream mode
+    // * DONE Enable dual stream mode
 
-      rtc.client
+    rtc.client
       .enableDualStream()
       .then(() => {
         console.log("Enable Dual stream success!");
@@ -586,111 +518,6 @@ const SessionStage = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    // * Enable audioVolume indicator
-
-    rtc.client.enableAudioVolumeIndicator();
-
-    // * Find active speakers
-
-    rtc.client.on("volume-indicator", (volumes) => {
-      let arr = [];
-
-      volumeIndicators.forEach((element) => {
-        arr.push({
-          uid: element.uid,
-          volume: element.volume,
-          isSpeaking: false,
-        });
-      });
-
-      setVolumeIndicators(arr);
-
-      volumes.forEach((volume) => {
-        if (volume.level > 5) {
-          // volume.uid.toString() is speaking
-          setVolumeIndicators((prev) => {
-            const filtered = prev.filter(
-              (object) => object.uid !== volume.uid.toString()
-            );
-
-            filtered.push({
-              uid: volume.uid.toString(),
-              volume: volume.level,
-              isSpeaking: true,
-            });
-
-            return filtered;
-          });
-        } else if (volume.level < 5) {
-          // volume.uid.toString() is not speaking
-
-          setVolumeIndicators((prev) => {
-            const filtered = prev.filter(
-              (object) => object.uid !== volume.uid.toString()
-            );
-
-            filtered.push({
-              uid: volume.uid.toString(),
-              volume: volume.level,
-              isSpeaking: false,
-            });
-
-            return filtered;
-          });
-        }
-      });
-
-      // Find who is loudest
-
-      if (!volumes[0]) return;
-
-      let loudest = volumes[0].level;
-      let loudestUID = volumes[0].uid;
-
-      for (let i = 0; i < volumes.length; i++) {
-        if (loudest < volumes[i].level) {
-          loudest = volumes[i].level;
-          loudestUID = volumes[i].uid;
-        }
-      }
-
-      // Get loudest person with this UID from allStreams
-
-      const [LoudestPerson] = allStreams.filter(
-        (object) => object.uid === loudestUID
-      );
-
-      // LoudestPerson is an object {stream: (video stream) | uid: uid (user identifier)}
-
-      // Set this as prominentStream Now
-
-      // Now we will get to know who is loudest every 2 seconds and we will update the ui accordingly
-
-      if (LoudestPerson) {
-        if (LoudestPerson.stream && LoudestPerson.uid) {
-          handleChangeProminentStream(LoudestPerson.stream, LoudestPerson.uid);
-        }
-      }
-
-      // Now set all except prominent in nonProminent streams
-
-      // nonProminent is an array of all except prominent
-
-      const nonProminent = allStreams.filter(
-        (object) => object.uid !== loudestUID
-      );
-
-      setNonProminent(nonProminent);
-
-      // Now we can just use prominent and non prominent to render spotlight view and non screen share and not pinned view of grid mode
-    });
-
-    setInterval(() => {
-      if (!rtc.localAudioTrack) return;
-      const level = rtc.localAudioTrack.getVolumeLevel();
-      setLocalVolumeLevel(level * 100);
-    }, 2000);
 
     document.getElementById("leave-session").onclick = async function () {
       if (agoraRole === "host") {
@@ -773,25 +600,23 @@ const SessionStage = () => {
           className="d-flex flex-column align-items-center"
           style={{ height: "100%" }}
         >
-          
           <StageBody openSideDrawer={sideDrawerOpen}>
             {/* Stream body goes here */}
-             <StreamBody
-            handleOpenSideDrawer={handleOpenSideDrawer}
-            sideDrawerOpen={sideDrawerOpen}
-            col={col}
-            row={row}
-            allStreams={allStreams}
-            screenStream={screenStream}
-            prominentStream={prominentStream}
-            mainStream={mainStream}
-            miniStreams={miniStreams}
-            view={view}
-            audioStreamStat={audioStreamStat}
-            videoStreamStat={videoStreamStat}
-            volumeIndicators={volumeIndicators}
-            peopleInThisSession={peopleInThisSession}
-          /> 
+            <StreamBody
+              handleOpenSideDrawer={handleOpenSideDrawer}
+              sideDrawerOpen={sideDrawerOpen}
+              col={col}
+              row={row}
+              allStreams={allStreams}
+              screenStream={screenStream}
+              prominentStream={prominentStream}
+              mainStream={mainStream}
+              miniStreams={miniStreams}
+              view={view}
+              audioStreamStat={audioStreamStat}
+              videoStreamStat={videoStreamStat}
+              peopleInThisSession={peopleInThisSession}
+            />
             {/* Stage side drawer component goes here */}
             {sideDrawerOpen && <StageSideDrawerComponent />}
           </StageBody>
@@ -799,10 +624,6 @@ const SessionStage = () => {
           {/* Stage Controls components */}
           <StageControlsComponent
             handleStopScreenShare={handleStopScreenShare}
-            handleSwitchToGalleryView={handleSwitchToGalleryView}
-            handleSwitchToGridView={handleSwitchToGridView}
-            handleSwitchToSpotlightView={handleSwitchToSpotlightView}
-            handleOpenPhotoBooth={handleOpenPhotoBooth}
             videoIsEnabled={videoIsEnabled}
             turnOffVideo={turnOffVideo}
             turnOnVideo={turnOnVideo}
@@ -816,8 +637,6 @@ const SessionStage = () => {
           />
         </div>
       </div>
-
-      <PhotoBooth open={openPhotoBooth} handleClose={handleClosePhotoBooth} />
       <ReactTooltip place="top" type="light" effect="float" />
     </>
   );

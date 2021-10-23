@@ -8,6 +8,11 @@ a.disabled {
   cursor: default;
 }
 
+video{
+  border-radius: 15px;
+  background-color: #ffffff00;
+}
+
 .hide-scrollbar {
   /* this will hide the scrollbar in mozilla based browsers */
   overflow: -moz-scrollbars-none;

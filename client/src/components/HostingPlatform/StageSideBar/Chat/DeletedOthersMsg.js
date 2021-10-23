@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
-import "./../../../../Styles/root.scss";
-import "./../../../../Styles/chatComponent.scss";
+import "./../../Styles/root.scss";
+import "./../../Styles/chatComponent.scss";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
@@ -34,7 +34,7 @@ const DeletedOthersMsg = ({
               color: "#fff",
             }}
           >
-            <div style={{ color: "#d3d3d3" }}>{name}</div>
+            <div style={{ color: "#212121" }}>{name}</div>
 
             <div
               style={{
@@ -44,10 +44,10 @@ const DeletedOthersMsg = ({
               }}
               className="d-flex flex-row align-items-center justify-content-between"
             >
-              <div style={{ color: "#d3d3d3" }}>
+              <div style={{ color: "#212121" }}>
                 {designation}, {organisation}
               </div>
-              <div style={{ color: "#d3d3d3" }}>
+              <div style={{ color: "#212121" }}>
                 {timeAgo.format(new Date(timestamp), "round")}
               </div>
             </div>

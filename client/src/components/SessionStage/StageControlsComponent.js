@@ -1,20 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-
-import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
-import ViewCompactRoundedIcon from "@material-ui/icons/ViewCompactRounded";
-import AccountBoxOutlinedIcon from "@material-ui/icons/AccountBoxOutlined";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
-// import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded"; // Tools Icon
 import WidgetsIcon from "@mui/icons-material/Widgets"; // Tools Icon
-
 import { BtnDanger, StageControl, IconButton } from "./Elements";
-
 import history from "../../history";
 import { useParams } from "react-router";
 import ReactTooltip from "react-tooltip";
@@ -97,10 +89,6 @@ const IOSSwitch = withStyles((theme) => ({
 
 const StageControlsComponent = ({
   handleStopScreenShare,
-  handleSwitchToGalleryView,
-  handleSwitchToGridView,
-  handleSwitchToSpotlightView,
-  handleOpenPhotoBooth,
   videoIsEnabled,
   audioIsEnabled,
   turnOffAudio,
@@ -114,7 +102,7 @@ const StageControlsComponent = ({
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
 
-  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+  const { sessionRole } = useSelector((state) => state.eventAccessToken);
 
   const [openSettings, setOpenSettings] = useState(false);
 
@@ -158,8 +146,6 @@ const StageControlsComponent = ({
     setState({ ...state, [event.target.name]: event.target.checked });
 
     if (event.target.checked) {
-      // startCloudRecording();
-      // Aks if you are sure to start recording ?
       setStartRecording(true);
     } else {
       setStopRecording(true);
@@ -182,44 +168,7 @@ const StageControlsComponent = ({
             Leave
           </BtnDanger>
 
-          <div className="stage-left-controls d-flex flex-row  align-items-center">
-            {/* <div className="room-no-text">Table 1</div> */}
-            <a
-              onClick={() => {
-                handleSwitchToGalleryView();
-              }}
-              data-tip={"Gallery view"}
-              className=""
-            >
-              <IconButton className="me-3">
-                <AppsRoundedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-            </a>
-
-            <a
-              onClick={() => {
-                handleSwitchToGridView();
-              }}
-              data-tip={"Grid view"}
-              className=""
-            >
-              <IconButton className="me-3">
-                <ViewCompactRoundedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-            </a>
-
-            <a
-              onClick={() => {
-                handleSwitchToSpotlightView();
-              }}
-              data-tip={"Spotlight view"}
-              className=""
-            >
-              <IconButton className="me-3">
-                <AccountBoxOutlinedIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-            </a>
-          </div>
+          <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-center">
@@ -338,59 +287,46 @@ const StageControlsComponent = ({
             </IconButton>
           )}
 
+          
           {sessionRole === "host" ? (
-            <a data-tip={"Open photo booth"} className="">
-              <IconButton
-                onClick={() => {
-                  handleOpenPhotoBooth();
-                }}
-                className="me-4"
-              >
-                <PhotoCameraIcon style={{ fontSize: "20px" }} />
-              </IconButton>
-            </a>
+            <></>
           ) : (
-            <IconButton style={{ padding: "3px" }} className="me-3">
-              <img
-                src={Love}
-                alt="love-reaction"
-                style={{ maxWidth: "24px" }}
-                className="m-2"
-              />
+            <IconButton style={{ padding: "12px" }} className="me-3">
+              <PanToolRoundedIcon style={{ fontSize: "20px" }} />
             </IconButton>
           )}
-
-<IconButton style={{padding: "12px"}} className="me-3">
-  <PanToolRoundedIcon style={{ fontSize: "20px" }} />
-</IconButton>
-
-
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-end">
-          {sessionRole === "host" ? <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
-            <FormControlLabel
-              control={
-                <IOSSwitch
-                  checked={state.checkedB}
-                  onChange={handleChange}
-                  name="checkedB"
-                />
-              }
-            />
-            <div className="rec-label-text">REC</div>
-          </div> : <></> }
-          
-          {sessionRole === "host" ? <IconButton
-            className="me-4"
-            onClick={() => {
-              setShowTools(true);
-            }}
-          >
-            <WidgetsIcon style={{ fontSize: "20px" }} />
-          </IconButton> : <></> }
+          {sessionRole === "host" ? (
+            <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
+              <FormControlLabel
+                control={
+                  <IOSSwitch
+                    checked={state.checkedB}
+                    onChange={handleChange}
+                    name="checkedB"
+                  />
+                }
+              />
+              <div className="rec-label-text">REC</div>
+            </div>
+          ) : (
+            <></>
+          )}
 
-          
+          {sessionRole === "host" ? (
+            <IconButton
+              className="me-4"
+              onClick={() => {
+                setShowTools(true);
+              }}
+            >
+              <WidgetsIcon style={{ fontSize: "20px" }} />
+            </IconButton>
+          ) : (
+            <></>
+          )}
 
           <IconButton
             onClick={() => {

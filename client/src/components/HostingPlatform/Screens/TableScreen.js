@@ -67,10 +67,6 @@ const TableScreen = ({
   let vertical = "bottom";
   let horizontal = "left";
 
-  // const handleClick = () => {
-  //   setOpenSnackbar(true);
-  // };
-
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -84,8 +80,6 @@ const TableScreen = ({
   let currentTable = eventTables.find((table) => table.tableId === id);
 
   const dispatch = useDispatch();
-
-  // const [volumeIndicators, setVolumeIndicators] = useState([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 
   const [audioStreamStat, setAudioStreamStat] = useState([]); // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
 
@@ -350,8 +344,6 @@ const TableScreen = ({
     (state) => state.user.currentlyJoinedChair
   );
 
-  // const [localVolumeLevel, setLocalVolumeLevel] = useState("");
-
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("xl");
 
@@ -461,14 +453,6 @@ const TableScreen = ({
 
     // Set client role
     rtc.client.setClientRole(options.role);
-
-    // TODO Important => Get local downlink and Uplink stat and show it to users that what is your network condition. Its just an improvement to current version
-    // Get client network quality
-    // rtc.client.on("network-quality", (stats) => {
-    //   setDownLinkStat(stats.downlinkNetworkQuality);
-    //   setUplinkStat(stats.uplinkNetworkQuality);
-    // });
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Listen for event "user-published" explanation: Some kind of audio or video stream is published
     rtc.client.on("user-published", async (user, mediaType) => {

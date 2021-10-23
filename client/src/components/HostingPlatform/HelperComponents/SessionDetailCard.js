@@ -9,8 +9,7 @@ import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneO
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
-  getRTCToken,
-  getRTCTokenForNonUser,
+  getRTCTokenAndSession,
   setSessionRoleAndJoinSession,
 } from "../../../actions";
 
@@ -181,16 +180,13 @@ const SessionDetailCard = ({
 
   let roleToBeDisplayed = role;
 
-  if(role === "audience") {
+  if (role === "audience") {
     roleToBeDisplayed = "audience";
-  }
-  else if(role === 'speaker') {
+  } else if (role === "speaker") {
     roleToBeDisplayed = "speaker";
-  }
-  else if (sessionRole === "host" ) {
+  } else if (sessionRole === "host") {
     roleToBeDisplayed = "host";
-  }
-  else {
+  } else {
     roleToBeDisplayed = "organiser";
   }
 
@@ -245,57 +241,22 @@ const SessionDetailCard = ({
             </IconButton>
             <Link
               onClick={() => {
-                
-
-               if(role === "speaker" || role === "audience") {
-                  // Speaker or audience in event => does not have a userDoc
-
-                  // Get a RTC token
-
-                  dispatch(
-                    getRTCTokenForNonUser(
-                      id,
-                      sessionRole,
-                      eventId,
-                      communityId,
-                      userId
-                    )
-                  );
-
-                  // Join session channel
-
-                  socket.emit(
-                    "joinSession",
-                    {
-                      sessionId: id,
-                      userId: userId,
-                      sessionRole: sessionRole,
-                      userName:
-                        speakerDetails.firstName +
-                        " " +
-                        speakerDetails.lastName,
-                      userEmail: speakerDetails.email,
-                      userImage: `https://bluemeet.s3.us-west-1.amazonaws.com/${speakerDetails.image}`,
-                      userCity: userCity,
-                      userCountry: userCountry,
-                      userOrganisation: userOrganisation,
-                      userDesignation: userDesignation,
-                      roleToBeDisplayed: roleToBeDisplayed,
-                    },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
-               } 
-               else if(role === "moderator" || role === "organiser" || role === "host") {
-                // have userDoc
-
                 // Get a RTC token
-                dispatch(getRTCToken(id, sessionRole, eventId, communityId));
+                dispatch(getRTCTokenAndSession(id, sessionRole, eventId, communityId));
 
                 // Join session channel
+
+                socket.emit(
+                  "subscribeSession",
+                  {
+                    sessionId: id,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
 
                 socket.emit(
                   "joinSession",
@@ -318,8 +279,7 @@ const SessionDetailCard = ({
                     }
                   }
                 );
-               }
-              
+
                 dispatch(
                   setSessionRoleAndJoinSession(
                     sessionRole,

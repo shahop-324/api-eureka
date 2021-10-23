@@ -5,7 +5,6 @@ const renderLocalStream = (
   allStreams,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
   peopleInThisSession
 ) => {
   if (!allStreams) return;
@@ -31,7 +30,6 @@ const renderLocalStream = (
     <GalleryVideoPlayer
       audioStreamStat={audioStreamStat}
       videoStreamStat={videoStreamStat}
-      volumeIndicators={volumeIndicators}
       localStream={stream}
       role={sessionRole}
       localPlayerId={uid}
@@ -47,7 +45,6 @@ const renderGalleryView = (
   allStreams,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
   peopleInThisSession
 ) => {
   if (!allStreams) return;
@@ -83,7 +80,6 @@ const renderGalleryView = (
       <GalleryVideoPlayer
         audioStreamStat={audioStreamStat}
         videoStreamStat={videoStreamStat}
-        volumeIndicators={volumeIndicators}
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
@@ -100,7 +96,6 @@ const renderMainStream = (
   mainStream,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
   peopleInThisSession
 ) => {
   if (!mainStream) return;
@@ -126,7 +121,6 @@ const renderMainStream = (
     <GalleryVideoPlayer
       audioStreamStat={audioStreamStat}
       videoStreamStat={videoStreamStat}
-      volumeIndicators={volumeIndicators}
       localStream={stream}
       role={sessionRole}
       localPlayerId={uid}
@@ -142,7 +136,7 @@ const renderMiniStreams = (
   miniStreams,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
+ 
   peopleInThisSession
 ) => {
   if (!miniStreams) return;
@@ -167,7 +161,7 @@ const renderMiniStreams = (
       <GalleryVideoPlayer
         audioStreamStat={audioStreamStat}
         videoStreamStat={videoStreamStat}
-        volumeIndicators={volumeIndicators}
+        
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}

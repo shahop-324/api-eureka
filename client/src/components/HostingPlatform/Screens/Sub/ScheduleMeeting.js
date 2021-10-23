@@ -6,7 +6,7 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import socket from "../../service/socket";
-import { showSnackbar } from "../../../../actions";
+import { showSnackbar, setOpenScheduleMeeting } from "../../../../actions";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -120,16 +120,15 @@ const renderTextArea = ({
   );
 };
 
-const ScheduleMeeting = ({
-  openDrawer,
-  handleCloseDrawer,
-  handleSubmit,
-  userId,
-}) => {
+const ScheduleMeeting = ({ handleSubmit }) => {
   const dispatch = useDispatch();
   const params = useParams();
   const eventId = params.eventId;
   const { id } = useSelector((state) => state.eventAccessToken);
+
+  const { scheduleMeetingUserId, openScheduleMeeting } = useSelector(
+    (state) => state.selectedTab
+  );
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -155,7 +154,7 @@ const ScheduleMeeting = ({
         eventId: eventId,
         createdBy: id,
         participantIsAttending: false,
-        participant: userId,
+        participant: scheduleMeetingUserId,
         createdAt: Date.now(),
       },
       (error) => {
@@ -177,7 +176,7 @@ const ScheduleMeeting = ({
             console.log("Side nav was closed");
           }}
           anchor="right"
-          open={openDrawer}
+          open={openScheduleMeeting}
           disableBackdropTransition={true}
         >
           <HeaderFooter className="mb-4 py-3 px-4">
@@ -194,7 +193,7 @@ const ScheduleMeeting = ({
                   className="chat-msg-hover-icon"
                   style={{ fontSize: "18px" }}
                   onClick={() => {
-                    handleCloseDrawer();
+                    dispatch(setOpenScheduleMeeting(false));
                   }}
                 />
               </div>

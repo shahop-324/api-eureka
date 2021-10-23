@@ -5460,7 +5460,7 @@ export const fetchPreviousSessionChatMessages =
 
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${getState().auth.token}`,
+          Authorization: `Bearer ${getState().auth.token}`,
         },
       });
       if (!res.ok) {
@@ -5475,7 +5475,7 @@ export const fetchPreviousSessionChatMessages =
 
       dispatch(
         sessionChatActions.FetchSessionChats({
-          sessionChats: res.data.chatMessages,
+          sessionChats: res.data,
         })
       );
     } catch (err) {
@@ -5524,12 +5524,12 @@ export const errorTrackerForFetchPreviousEventAlerts =
     dispatch(eventAlertActions.disabledError());
   };
 
-export const getRTCToken =
+export const getRTCTokenAndSession =
   (sessionId, role, eventId, communityId) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
-      let res = await fetch(`${BaseURL}getLiveStreamingToken`, {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenAndSession`, {
         method: "POST",
         body: JSON.stringify({
           sessionId: sessionId,
@@ -5562,9 +5562,15 @@ export const getRTCToken =
         })
       );
 
-      history.push(
-        `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+      dispatch(
+        sessionActions.FetchSession({
+          session: res.session,
+        })
       );
+
+      window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+
+      
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
@@ -5612,6 +5618,64 @@ export const getRTCTokenForJoiningTable =
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
+export const getRTCTokenForNetworking =
+  (handleOpen, setRenderScreen) => async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+
+    try {
+      let res = await fetch(`${BaseURL}getLiveStreamingTokenForNetworking`, {
+        method: "POST",
+        body: JSON.stringify({
+          roomId: getState().networking.networkingRoom,
+          userId: getState().eventAccessToken.id,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      handleOpen();
+
+      dispatch(
+        networkingActions.SetOpenConfirmation({
+          openState: false,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(RTCActions.hasError(error.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to join networking. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
     }
   };
 
@@ -10065,6 +10129,33 @@ export const deleteNetworkingMsg =
     dispatch(
       networkingActions.DeleteNetworkingMsg({
         deletedMsg: deletedMsg,
+      })
+    );
+  };
+
+export const setOpenAudioVideoSettings =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      SelectedTabActions.setOpenAudioAndVideoSettings({
+        openState: openState,
+      })
+    );
+  };
+
+export const setOpenScheduleMeeting =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      SelectedTabActions.setOpenScheduleMeeting({
+        openState: openState,
+      })
+    );
+  };
+
+export const setScheduleMeetingUserId =
+  (userId) => async (dispatch, getState) => {
+    dispatch(
+      SelectedTabActions.setScheduleMeetingUserId({
+        userId: userId,
       })
     );
   };

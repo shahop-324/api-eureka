@@ -4,20 +4,35 @@ const sessionChatMessageSchema = new mongoose.Schema({
   textMessage: {
     type: String,
   },
-  sessionId: {
+  isReply: {
+    type: Boolean,
+  },
+  replyTo: {
+    type: mongoose.Schema.ObjectId,
+    ref: "SessionChatMessage",
+  },
+  eventId: {
     type: mongoose.Schema.ObjectId,
     ref: "Event",
+  },
+  sessionId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Session",
   },
   visibilityStatus: {
     type: String,
     enum: ["Active", "Removed"],
     default: "Active",
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
-  sessionRole: {
+  userRole: {
     type: String,
   },
   userName: {
@@ -27,6 +42,12 @@ const sessionChatMessageSchema = new mongoose.Schema({
     type: String,
   },
   userImage: {
+    type: String,
+  },
+  userOrganisation: {
+    type: String,
+  },
+  userDesignation: {
     type: String,
   },
   userId: {

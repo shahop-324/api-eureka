@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { setOpenMatching } from "../../../actions";
+import NetworkingConfirmation from "./../Screens/Sub/NetworkingConfirmation";
 
 const Matching = () => {
   const dispatch = useDispatch();
@@ -92,6 +93,7 @@ const Matching = () => {
           </div>
         </div>
       </Dialog>
+      <NetworkingConfirmation />
     </>
   );
 };

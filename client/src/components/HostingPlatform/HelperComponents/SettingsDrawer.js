@@ -12,13 +12,13 @@ import history from "../../../history";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
-import { signOut } from "../../../actions";
+import { signOut, setOpenAudioVideoSettings } from "../../../actions";
 import socket from "../service/socket";
 import { Link } from "react-router-dom";
 import SwitchCommunity from "../../Dashboard/HelperComponent/SwitchCommunity";
 
 const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
-  const [openAudioAndVideo, setOpenAudioAndVideo] = useState(false);
+  
 
   const [openSwitchCommunity, setOpenSwitchCommunity] = useState(false);
 
@@ -46,9 +46,6 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
     setOpenSwitchCommunity(false);
   };
 
-  const handleOpenAudioAndVideo = () => {
-    setOpenAudioAndVideo(true);
-  };
 
   const handleOpenNotificationSettings = () => {
     setOpenNotificationSettings(true);
@@ -58,9 +55,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
     setOpenNotificationSettings(false);
   };
 
-  const handleCloseAudioAndVideo = () => {
-    setOpenAudioAndVideo(false);
-  };
+
 
   const handleOpenUpdateProfile = () => {
     setOpenUpdateProfile(true);
@@ -144,7 +139,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
             </div>
             <div
               onClick={() => {
-                handleOpenAudioAndVideo();
+                dispatch(setOpenAudioVideoSettings(true));
               }}
               className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between"
             >
@@ -248,8 +243,6 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
         handleCloseDrawer={handleCloseUpdateProfile}
       />
       <CameraAndMic
-        open={openAudioAndVideo}
-        handleClose={handleCloseAudioAndVideo}
       />
       <SwitchCommunity
         open={openSwitchCommunity}

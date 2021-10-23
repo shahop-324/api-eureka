@@ -8,8 +8,6 @@ import socket from "./../service/socket";
 import { setOpenMatching } from "./../../../actions";
 import { useParams } from "react-router-dom";
 import Matching from "../HelperComponents/Matching";
-import NetworkingConfirmation from "./../Screens/Sub/NetworkingConfirmation";
-import NetworkingScreen from "./../Screens/NetworkingScreen";
 
 const Networking = () => {
   const params = useParams();
@@ -108,8 +106,8 @@ const Networking = () => {
       </div>
 
       <Matching />
-      <NetworkingConfirmation />
-      <NetworkingScreen />
+      
+      
     </>
   );
 };

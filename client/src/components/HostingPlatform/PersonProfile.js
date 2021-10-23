@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import socket from "./service/socket";
 import ScheduleMeeting from "./Screens/Sub/ScheduleMeeting";
-import { fetchMyConnections } from "./../../actions";
+import { fetchMyConnections, setOpenScheduleMeeting, setScheduleMeetingUserId } from "./../../actions";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -137,11 +137,7 @@ const PersonProfile = ({
 
   const { registrations } = useSelector((state) => state.registration);
 
-  const [openScheduleMeet, setOpenScheduleMeet] = useState(false);
-
-  const handleScheduleMeet = () => {
-    setOpenScheduleMeet(false);
-  };
+ 
 
   useEffect(() => {
     dispatch(fetchMyConnections());
@@ -440,7 +436,9 @@ const PersonProfile = ({
 
             <ButtonOutlinedDark
               onClick={() => {
-                setOpenScheduleMeet(true);
+                // setOpenScheduleMeet(true);
+                dispatch(setScheduleMeetingUserId(userId))
+                dispatch(setOpenScheduleMeeting(true))
               }}
               style={{ width: "48%" }}
             >
@@ -450,9 +448,7 @@ const PersonProfile = ({
         </PersonProfileBody>
       </Dialog>
       <ScheduleMeeting
-        openDrawer={openScheduleMeet}
-        handleCloseDrawer={handleScheduleMeet}
-        userId={userId}
+       
       />
     </>
   );

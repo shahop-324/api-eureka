@@ -88,7 +88,7 @@ router.post(
 );
 
 router.post(
-  "/getLiveStreamingToken",
+  "/getLiveStreamingTokenAndSession",
   authController.protect,
   globalController.generateTokenForLiveStreaming
 );
@@ -97,6 +97,8 @@ router.post(
   "/getLiveStreamingTokenForJoiningTable",
   globalController.generateLiveStreamingTokenForJoiningTable
 );
+
+router.post("/getLiveStreamingTokenForNetworking", globalController.getLiveStreamingTokenForNetworking);
 
 router.post(
   "/getLiveStreamingTokenForNonUser",

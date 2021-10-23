@@ -11,7 +11,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Tring from "./../../../assets/tring_tring.mp3";
-import { updateRegistrationSettings } from "../../../actions";
+import { updateRegistrationSettings, setOpenAudioVideoSettings } from "../../../actions";
 
 const styles = {
   control: (base) => ({
@@ -58,11 +58,12 @@ const SubHeading = styled.div`
   font-size: 0.95rem;
 `;
 
-const CameraAndMic = ({ open, handleClose }) => {
+const CameraAndMic = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
   const { id } = useSelector((state) => state.eventAccessToken);
+  const {audioVideoSettings} = useSelector((state) => state.selectedTab);
 
   const userId = id;
 
@@ -247,14 +248,16 @@ const CameraAndMic = ({ open, handleClose }) => {
       <Dialog
         fullScreen={fullScreen}
         maxWidth={"998px"}
-        open={open}
+        open={audioVideoSettings}
         aria-labelledby="responsive-dialog-title"
       >
         <Paper className="p-4">
           <div className="d-flex flex-row align-items-center justify-content-between mb-4">
             <Heading>Camera & Mic settings</Heading>
 
-            <IconButton onClick={handleClose}>
+            <IconButton onClick={() => {
+              dispatch(setOpenAudioVideoSettings(false))
+            }}>
               <CancelRoundedIcon />
             </IconButton>
           </div>

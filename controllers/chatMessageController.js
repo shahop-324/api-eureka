@@ -1,6 +1,8 @@
 const catchAsync = require("../utils/catchAsync");
 const Event = require("../models/eventModel");
 const Session = require("../models/sessionModel");
+const SessionChatMessage = require("./../models/sessionChatMessageModel");
+const mongoose = require("mongoose");
 
 exports.getPreviousEventChatMessage = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
@@ -21,14 +23,20 @@ exports.getPreviousEventChatMessage = catchAsync(async (req, res, next) => {
 });
 
 exports.getPreviousSessionChatMessage = catchAsync(async (req, res, next) => {
-  const sessionId = req.params.sessionId;
+  try {
+    const sessionId = req.params.sessionId;
 
-  const sessionChatMessages = await Session.findById(sessionId)
-    .select("chatMessages")
-    .populate("chatMessages");
-
-  res.status(200).json({
-    status: "success",
-    data: sessionChatMessages,
-  });
+    const sessionChatMessages = await SessionChatMessage.find({
+      sessionId: mongoose.Types.ObjectId(sessionId),
+    }).populate("replyTo");
+  
+    res.status(200).json({
+      status: "success",
+      data: sessionChatMessages,
+    });
+  }
+  catch(error) {
+console.log(error);
+  }
+  
 });

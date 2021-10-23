@@ -9,7 +9,7 @@ const ScheduledMeet = require("./models/scheduledMeetModel");
 const Registration = require("./models/registrationsModel");
 const ConnectionRequest = require("./models/connectionRequestModel");
 const NetworkingRoomChats = require("./models/networkingRoomChatsModel");
-const { v4: uuidv4 } = require("uuid");
+const { nanoid } = require("nanoid");
 
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -196,16 +196,30 @@ io.on("connect", (socket) => {
       await NetworkingRoomChats.findByIdAndUpdate(
         msgId,
         { deleted: true },
-        (err, deletedMsg) => {
+        async (err, deletedMsg) => {
           if (err) {
             console.log(err);
           } else {
-            io.in(roomId).emit("deletedNetworkingMsg", {
-              deletedMsg: deletedMsg,
-            });
+            await NetworkingRoomChats.find(
+              {
+                $and: [
+                  { roomId: roomId },
+                  { eventId: mongoose.Types.ObjectId(eventId) },
+                ],
+              },
+              (err, doc) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  io.in(roomId).emit("networkingRoomMsgs", {
+                    chats: doc,
+                  });
+                }
+              }
+            ).populate("replyTo");
           }
         }
-      ).populate("replyTo");
+      );
     }
   );
 
@@ -256,7 +270,7 @@ io.on("connect", (socket) => {
 
         // Create a random room for both of them and send this room, person they are matched with
 
-        let room = uuidv4();
+        let room = nanoid(16);
 
         // Find socket Id of both sender and receiver
 
@@ -318,31 +332,45 @@ io.on("connect", (socket) => {
     }
   );
 
+  socket.on("subscribeSession", async ({ sessionId }, callback) => {
+    console.log("Subscribe session was called");
+    socket.join(sessionId);
+    console.log("Subscribe session successful.");
+  });
+
   socket.on(
     "transmitSessionMessage",
     async ({
+      isReply,
+      replyTo,
       textMessage,
+      eventId,
       sessionId,
       createdAt,
-      sessionRole,
+      userRole,
       userName,
       userEmail,
-      userImage,
       userId,
+      userImage,
+      userOrganisation,
+      userDesignation,
       reported,
       numOfTimesReported,
       visibilityStatus,
     }) => {
-      console.log("I Reached in transmit session message.");
       await SessionChatMessage.create(
         {
+          isReply,
           textMessage,
+          eventId,
           sessionId,
           createdAt,
-          sessionRole,
+          userRole,
           userName,
           userEmail,
           userImage,
+          userOrganisation,
+          userDesignation,
           userId,
           reported,
           numOfTimesReported,
@@ -352,22 +380,19 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            await Session.findById(sessionId, async (err, sessionDoc) => {
-              if (err) {
-                console.log(err);
-              } else {
-                sessionDoc.chatMessages.push(chatMsgDoc._id);
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+            console.log("Created new message");
+            console.log(sessionId);
+            console.log(eventId);
+            const populatedChatMsg = await SessionChatMessage.findById(
+              chatMsgDoc._id
+            ).populate("replyTo");
 
-                sessionDoc.save({ validateModifiedOnly: true }, (err, data) => {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    io.in(sessionId).emit("newSessionMsg", {
-                      newMsg: chatMsgDoc,
-                    });
-                  }
-                });
-              }
+            io.in(sessionId).emit("newSessionMsg", {
+              newMsg: populatedChatMsg,
             });
           }
         }
@@ -1069,8 +1094,10 @@ io.on("connect", (socket) => {
       },
       callback
     ) => {
-      socket.join(sessionId);
+      console.log("This is join session.")
 
+      socket.join(sessionId);
+console.log("We have subscribed to this session.")
       const fetchCurrentMessages = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
           if (err) {

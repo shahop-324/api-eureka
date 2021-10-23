@@ -74,13 +74,11 @@ const StreamBody = ({
   row,
   allStreams,
   screenStream,
-  prominentStream,
   mainStream,
   miniStreams,
   view,
   audioStreamStat,
   videoStreamStat,
-  volumeIndicators,
   peopleInThisSession,
 }) => {
   const { sessionDetails } = useSelector((state) => state.session);
@@ -92,11 +90,6 @@ const StreamBody = ({
       <div>
         <a
           onClick={handleOpenSideDrawer}
-          // data-tip={
-          //   sideDrawerOpen
-          //     ? "Close session activity"
-          //     : "Open session activity"
-          // }
           className=""
           style={{
             padding: "8px",
@@ -124,7 +117,6 @@ const StreamBody = ({
                           allStreams,
                           audioStreamStat,
                           videoStreamStat,
-                          volumeIndicators,
                           peopleInThisSession
                         )}
                     </GalleryView>
@@ -139,7 +131,6 @@ const StreamBody = ({
                           mainStream,
                           audioStreamStat,
                           videoStreamStat,
-                          volumeIndicators,
                           peopleInThisSession
                         )}
                       <GridViewMini>
@@ -149,7 +140,6 @@ const StreamBody = ({
                             miniStreams,
                             audioStreamStat,
                             videoStreamStat,
-                            volumeIndicators,
                             peopleInThisSession
                           )}
                         {/* Render mini views here */}
@@ -172,7 +162,6 @@ const StreamBody = ({
                             allStreams,
                             audioStreamStat,
                             videoStreamStat,
-                            volumeIndicators,
                             peopleInThisSession
                           )}
                       </GridViewMini>

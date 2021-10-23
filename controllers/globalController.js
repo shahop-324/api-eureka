@@ -291,6 +291,10 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
 
   const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
+  // Find session document
+
+  const SessionDoc = await Session.findById(req.body.sessionId);
+
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
   // Build token with uid
@@ -306,6 +310,7 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token: token,
+    session: SessionDoc,
   });
 });
 
@@ -343,6 +348,51 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
       status: "success",
       token: token,
     });
+  }
+);
+
+exports.getLiveStreamingTokenForNetworking = catchAsync(
+  async (req, res, next) => {
+    try {
+      const roomId = req.body.roomId;
+      const userId = req.body.userId;
+
+      console.log(roomId, userId);
+
+      const appID = "702d57c3092c4fd389eb7ea5a505d471";
+      const appCertificate = "d8311f38cf434445805478cb8c93a334";
+
+      const channelName = roomId;
+      const uid = userId;
+      const role = RtcRole.PUBLISHER;
+
+      const expirationTimeInSeconds = 3600;
+
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+
+      const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+      // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+      // Build token with uid
+      const token = RtcTokenBuilder.buildTokenWithUid(
+        appID,
+        appCertificate,
+        channelName,
+        uid,
+        role,
+        privilegeExpiredTs
+      );
+
+      console.log(token);
+
+      res.status(200).json({
+        status: "success",
+        token: token,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 

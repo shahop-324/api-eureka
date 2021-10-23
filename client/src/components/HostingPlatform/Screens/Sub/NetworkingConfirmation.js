@@ -11,9 +11,11 @@ import {
   setOpenNetworkingTable,
   setNetworkingRoom,
   setMatchedWith,
+  getRTCTokenForNetworking,
 } from "../../../../actions";
 import Chip from "@mui/material/Chip";
 import Loader from "./../../../Loader";
+import NetworkingScreen from "./../NetworkingScreen";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -128,6 +130,16 @@ const NetworkingConfirmation = () => {
     (state) => state.networking
   );
 
+  const [open, setOpen] = React.useState(false);
+  const [renderScreen, setRenderScreen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const { id } = useSelector((state) => state.eventAccessToken);
   const eventId = params.eventId;
 
@@ -240,8 +252,10 @@ const NetworkingConfirmation = () => {
                         }
                       }
                     );
-                    dispatch(setOpenConfirmation(false));
-                    dispatch(setOpenNetworkingTable(true));
+
+                    dispatch(getRTCTokenForNetworking(handleOpen));
+
+                    // set open networking table only after token has been arrived
                   }}
                   style={{ width: "48%" }}
                 >
@@ -250,9 +264,11 @@ const NetworkingConfirmation = () => {
                 <ButtonOutlinedDark
                   onClick={() => {
                     // dispatch
+
                     dispatch(setOpenConfirmation(false));
                     dispatch(setNetworkingRoom(null));
                     dispatch(setMatchedWith(null));
+                    handleClose();
                     // setOpenConfirmation => false
                     // set networkingRoom to null
                     // set matchedWith null
@@ -266,6 +282,8 @@ const NetworkingConfirmation = () => {
           </div>
         </div>
       </Dialog>
+
+      <NetworkingScreen open={open} handleClose={handleClose} />
     </>
   );
 };

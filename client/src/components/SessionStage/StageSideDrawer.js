@@ -32,6 +32,7 @@ import { makeStyles } from "@material-ui/core";
 import Poll from "./../Elements/Poll";
 import QnA from "../Elements/Q&A";
 import { useSelector } from "react-redux";
+import MainChatComponent from "../HostingPlatform/StageSideBar/Chat/MainChatComponent";
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown
@@ -178,7 +179,7 @@ const StageSideDrawerComponent = () => {
                         case "chat":
                           return (
                             <div className="d-flex flex-column align-items-center justify-content-between">
-                            
+                            <MainChatComponent />
                             
                             </div>
                           );

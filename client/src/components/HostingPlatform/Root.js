@@ -17,7 +17,6 @@ import {
   createNewEventMsg,
   createNewEventPoll,
   createNewPersonalMessage,
-  createNewSessionMsg,
   errorTrackerForFetchEvent,
   errorTrackerForFetchingRTCToken,
   fetchEvent,
@@ -38,6 +37,8 @@ import {
   setNetworkingChats,
   deleteNetworkingMsg,
   createNewNetworkingMsg,
+  fetchSessionChats,
+  createNewSessionMsg,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,6 +74,7 @@ const Root = () => {
 
   const eventId = params.eventId;
   const communityId = params.communityId;
+  const sessionId = params.sessionId;
 
   const isEventLoading = useSelector((state) => state.event.isLoading);
   const eventError = useSelector((state) => state.event.error);
@@ -119,6 +121,16 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
+
+    socket.on("newSessionMsg", ({ newMsg }) => {
+      dispatch(createNewSessionMsg(newMsg));
+    });
+
+    socket.on("previousSessionMessages", ({ chats }) => {
+      dispatch(fetchSessionChats(chats));
+    });
+   
+
     socket.on("newMatch", ({ room, matchedWith }) => {
       dispatch(showNotification("New match detected"));
       console.log(room);
@@ -131,6 +143,11 @@ const Root = () => {
       dispatch(setOpenConfirmation(true));
     });
 
+    socket.on("networkingRoomMsgs", ({ chats }) => {
+      console.log(chats);
+      dispatch(setNetworkingChats(chats));
+    });
+
     socket.on("networkingChat", ({ chats }) => {
       console.log(chats);
       dispatch(setNetworkingChats(chats));
@@ -138,19 +155,11 @@ const Root = () => {
 
     socket.on("newNetworkingMsg", ({ newMsg }) => {
       console.log(newMsg);
-      dispatch(createNewNetworkingMsg(newMsg))
-      // ! Dispatch it to action creator
-    });
-
-    socket.on("deletedNetworkingMsg", ({ deletedMsg }) => {
-      console.log(deletedMsg);
-      dispatch(deleteNetworkingMsg(deletedMsg))
-      // ! Dispatch it to action creator
+      dispatch(createNewNetworkingMsg(newMsg));
     });
 
     socket.on("myMeetings", ({ meetings }) => {
       console.log(meetings);
-
       dispatch(fetchMyMeetings(meetings));
     });
 
@@ -212,10 +221,7 @@ const Root = () => {
       dispatch(updateEventPoll(updatedPoll));
     });
 
-    socket.on("newSessionMsg", ({ newMsg }) => {
-      // console.log(newMsg);
-      dispatch(createNewSessionMsg(newMsg));
-    });
+    
 
     socket.on("previousEventMessages", ({ chats }) => {
       // console.log(chats);

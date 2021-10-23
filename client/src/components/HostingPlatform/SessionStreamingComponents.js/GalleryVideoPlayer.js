@@ -58,7 +58,6 @@ const GalleryVideoPlayer = ({
   userImage,
   userOrganisation,
   userDesignation,
-  volumeIndicators, // array of these objects => {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -72,17 +71,7 @@ const GalleryVideoPlayer = ({
 
   let showWave = false;
 
-  if (volumeIndicators) {
-    //  contains remote audio stream
-    // console.log(volumeIndicators, "This is volume indicators array.");
-    const volumeData = volumeIndicators.find(
-      (object) => object.uid === localPlayerId
-    );
 
-    if (volumeData) {
-      showWave = volumeData.isSpeaking;
-    }
-  }
 
   if (audioStreamStat) {
     // Contains our own audio stream
