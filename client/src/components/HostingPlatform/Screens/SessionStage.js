@@ -16,7 +16,7 @@ import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPla
 import AgoraRTC from "agora-rtc-sdk-ng";
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
-import {showNotification, fetchSessionQnA, createSessionQnA} from "./../../../actions";
+import {showNotification, fetchSessionQnA, createSessionQnA, updateSessionQnA} from "./../../../actions";
 
 import {
   fetchSessionForSessionStage,
@@ -65,10 +65,13 @@ const SessionStage = () => {
     });
 
     socket.on("newQnA", ({ newQnA }) => {
-      dispatch(showNotification("There is a new QnA"));
-      console.log(newQnA);
+  
+      
       dispatch(createSessionQnA(newQnA));
-      // TODO => dispatch
+    });
+
+    socket.on("upvotedQnA", ({upvotedQnA}) => {
+      dispatch(updateSessionQnA(upvotedQnA));
     });
 
     socket.on("deletedMsg", ({ deletedMsg }) => {

@@ -10219,3 +10219,9 @@ export const createSessionQnA = (qna) => async(dispatch, getState) => {
     qna: qna,
   }))
 }
+
+export const updateSessionQnA = (qna) => async(dispatch, getState) => {
+  dispatch(sessionQnAActions.UpdateSessionQnA({
+    qna: qna,
+  }))
+}

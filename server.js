@@ -489,8 +489,15 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("upvoteQnA", async ({}, callback) => {
-    const upvotedQnA = await SessionQnA.findByIdAndUpdate();
+  socket.on("upvoteQnA", async ({qnaId, userId, sessionId}, callback) => {
+    const qna = await SessionQnA.findById(qnaId);
+
+    qna.upvotes = qna.upvotes + 1;
+    qna.upvotedBy.push(userId);
+
+   await qna.save({new: true, validateModifiedOnly: true});
+
+   const upvotedQnA = SessionQnA.findById(qnaId).populate('askedBy').populate('answeredBy');
 
     // Send this back to everyone in this session
 

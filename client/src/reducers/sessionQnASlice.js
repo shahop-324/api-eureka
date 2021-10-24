@@ -30,6 +30,11 @@ const sessionQnASlice = createSlice({
       state.sessionQnAs.push(action.payload.qna);
       state.isLoading = false;
     },
+    UpdateSessionQnA(state, action) {
+      state.sessionQnAs = state.sessionQnAs.map((element) =>
+        element._id === action.payload.qna._id ? action.payload.qna : element
+      );
+    },
     // DeleteSessionChats(state, action) {
     //   state.sessionChats = state.sessionChats.map((element) =>
     //     element._id === action.payload.chat._id ? action.payload.chat : element
