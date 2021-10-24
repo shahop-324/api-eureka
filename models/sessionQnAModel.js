@@ -1,16 +1,12 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
 const sessionQnASchema = new mongoose.Schema(
   {
     question: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Registration",
+      type: String,
     },
     answer: {
       type: String,
-      enum: ["Active", "Inactive", "Deleted"],
-      default: "Active",
     },
     showOnStage: {
       type: Boolean,

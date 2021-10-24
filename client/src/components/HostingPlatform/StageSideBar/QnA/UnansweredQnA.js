@@ -1,7 +1,6 @@
 import { Avatar, IconButton } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
-import Faker from "faker";
 import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DeleteQnA from "./DeleteQnA";
@@ -101,7 +100,14 @@ const StyledOutlineButton = styled.button`
   }
 `;
 
-const UnansweredQnA = () => {
+const UnansweredQnA = ({
+  question,
+  upvotes,
+  askedByName,
+  askedByImage,
+  askedByOrganisation,
+  askedByDesignation,
+}) => {
   const [openDelete, setOpenDelete] = React.useState(false);
 
   const handleOpenDelete = () => {
@@ -117,26 +123,28 @@ const UnansweredQnA = () => {
         <div className="d-flex flex-row mb-4 justify-content-between">
           <div className="d-flex flex-row">
             <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
+              src={askedByImage}
+              alt={askedByName}
               variant="rounded"
               className="me-3"
             />
             <div>
-              <PersonName>{Faker.name.findName()}</PersonName>
-              <PersonName>{"Product manager, Bluemeet"}</PersonName>
+              <PersonName>{askedByName}</PersonName>
+              <PersonName>
+                {(askedByDesignation, askedByOrganisation)}
+              </PersonName>
             </div>
           </div>
 
-          <UserRoleTag>Host</UserRoleTag>
+          {/* <UserRoleTag>Host</UserRoleTag> */}
         </div>
 
         <div className="d-flex flex-row align-items-center mb-3">
           <UpvoteWidget className="me-3">
             <ExpandLessRoundedIcon />
-            <div>48</div>
+            <div>{upvotes}</div>
           </UpvoteWidget>
-          <QuesText>how about investing money in crypto or NFTs ?</QuesText>
+          <QuesText>{question}</QuesText>
         </div>
         <TextAreaWidget className="mb-2"></TextAreaWidget>
         <div className="d-flex flex-row align-items-center justify-content-between">

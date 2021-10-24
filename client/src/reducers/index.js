@@ -55,6 +55,7 @@ import notificationSlice from "./notificationSlice";
 import SelectedTabSlice from "./selectedTabSlice";
 import connectionsSlice from "./connectionsSlice";
 import scheduledMeetSlice from "./scheduledMeetSlice";
+import sessionQnASlice from "./sessionQnASlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -112,4 +113,5 @@ export default combineReducers({
   selectedTab: SelectedTabSlice.reducer,
   scheduledMeets: scheduledMeetSlice.reducer,
   connections: connectionsSlice.reducer,
+  sessionQnAs: sessionQnASlice.reducer,
 });

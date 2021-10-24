@@ -9,6 +9,7 @@ const ScheduledMeet = require("./models/scheduledMeetModel");
 const Registration = require("./models/registrationsModel");
 const ConnectionRequest = require("./models/connectionRequestModel");
 const NetworkingRoomChats = require("./models/networkingRoomChatsModel");
+const SessionQnA = require("./models/sessionQnAModel");
 const { nanoid } = require("nanoid");
 
 process.on("uncaughtException", (err) => {
@@ -397,6 +398,22 @@ io.on("connect", (socket) => {
     }
   );
 
+  socket.on("deleteSessionMessage", async ({ msgId, eventId, sessionId }) => {
+    const deletedMsg = await SessionChatMessage.findByIdAndUpdate(
+      msgId,
+      { deleted: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    const populatedMsg = await SessionChatMessage.findById(msgId).populate(
+      "replyTo"
+    );
+
+    io.in(sessionId).emit("deletedMsg", {
+      deletedMsg: populatedMsg,
+    });
+  });
+
   socket.on(
     "showMsgOnStage",
     async ({ msgId, sessionId, eventId }, callback) => {
@@ -446,10 +463,12 @@ io.on("connect", (socket) => {
         sessionId,
       });
 
+      const populatedQnA = await SessionQnA.findById(newQnA._id).populate('askedBy').populate('answeredBy');
+
       // Send this back to everyone in this session
 
       io.in(sessionId).emit("newQnA", {
-        newQnA: newQnA,
+        newQnA: populatedQnA,
       });
     }
   );

@@ -55,6 +55,7 @@ import { notificationActions } from "../reducers/notificationSlice";
 import { SelectedTabActions } from "../reducers/selectedTabSlice";
 import { connectionsActions } from "../reducers/connectionsSlice";
 import { scheduledMeetActions } from "../reducers/scheduledMeetSlice";
+import { sessionQnAActions } from "../reducers/sessionQnASlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -5368,6 +5369,14 @@ export const fetchSessionChats = (chats) => async (dispatch, getState) => {
   }
 };
 
+export const deleteSessionChat = (chat) => async (dispatch, getState) => {
+  dispatch(
+    sessionChatActions.DeleteSessionChats({
+      chat: chat,
+    })
+  );
+};
+
 export const errorTrackerForfetchEventChats =
   () => async (dispatch, getState) => {
     dispatch(eventChatActions.disabledError());
@@ -5568,9 +5577,7 @@ export const getRTCTokenAndSession =
         })
       );
 
-      window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
-
-      
+      window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`;
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
@@ -10159,3 +10166,56 @@ export const setScheduleMeetingUserId =
       })
     );
   };
+
+export const fetchSessionQnA = (sessionId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}getSessionQnA/${sessionId}`,
+
+      {
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+
+    console.log(res);
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("fetching session QnA failed");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      sessionQnAActions.FetchSessionQnAs({
+        qnas: res.data,
+      })
+    );
+  } catch (err) {
+    console.log(err);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch QnAs. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const createSessionQnA = (qna) => async(dispatch, getState) => {
+  dispatch(sessionQnAActions.CreateSessionQnA({
+    qna: qna,
+  }))
+}

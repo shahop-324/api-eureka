@@ -16,8 +16,13 @@ import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPla
 import AgoraRTC from "agora-rtc-sdk-ng";
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
+import {showNotification, fetchSessionQnA, createSessionQnA} from "./../../../actions";
 
-import { fetchSessionForSessionStage, createNewSessionMsg } from "../../../actions";
+import {
+  fetchSessionForSessionStage,
+  createNewSessionMsg,
+  deleteSessionChat,
+} from "../../../actions";
 import StreamBody from "../Functions/Stage/StreamBody";
 
 let rtc = {
@@ -35,6 +40,9 @@ const SessionStage = () => {
   const communityId = params.communityId;
 
   useEffect(() => {
+
+    dispatch(fetchSessionQnA(sessionId));
+
     socket.emit(
       "subscribeSession",
       {
@@ -51,19 +59,22 @@ const SessionStage = () => {
       dispatch(createNewSessionMsg(newMsg));
     });
 
-    socket.on("sessionMessages", ({msgs}) => {
+    socket.on("sessionMessages", ({ msgs }) => {
       console.log(msgs);
-      // TODO => dispatch
-    })
-
-    socket.on("newQnA", ({newQnA}) => {
-      console.log(newQnA);
       // TODO => dispatch
     });
 
+    socket.on("newQnA", ({ newQnA }) => {
+      dispatch(showNotification("There is a new QnA"));
+      console.log(newQnA);
+      dispatch(createSessionQnA(newQnA));
+      // TODO => dispatch
+    });
 
-
-    
+    socket.on("deletedMsg", ({ deletedMsg }) => {
+      console.log(deletedMsg);
+      dispatch(deleteSessionChat(deletedMsg));
+    });
   }, []);
 
   const { sessionDetails } = useSelector((state) => state.session);

@@ -98,7 +98,10 @@ router.post(
   globalController.generateLiveStreamingTokenForJoiningTable
 );
 
-router.post("/getLiveStreamingTokenForNetworking", globalController.getLiveStreamingTokenForNetworking);
+router.post(
+  "/getLiveStreamingTokenForNetworking",
+  globalController.getLiveStreamingTokenForNetworking
+);
 
 router.post(
   "/getLiveStreamingTokenForNonUser",
@@ -215,6 +218,12 @@ router.get(
   "/getTableChats/:tableId",
   authController.protect,
   globalController.getTableChats
+);
+
+router.get(
+  "/getSessionQnA/:sessionId",
+  authController.protect,
+  globalController.fetchSessionQnA
 );
 
 module.exports = router;

@@ -30,6 +30,11 @@ const sessionChatSlice = createSlice({
       state.sessionChats.push(action.payload.chat);
       state.isLoading = false;
     },
+    DeleteSessionChats(state, action) {
+      state.sessionChats = state.sessionChats.map((element) =>
+        element._id === action.payload.chat._id ? action.payload.chat : element
+      );
+    },
   },
 });
 export const sessionChatActions = sessionChatSlice.actions;

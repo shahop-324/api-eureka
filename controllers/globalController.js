@@ -16,6 +16,7 @@ const PersonalChat = require("./../models/PersonalChatModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("../models/roomTableModel");
 const TableChats = require("./../models/tableChatsModel");
+const SessionQnA = require("./../models/sessionQnAModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1376,5 +1377,20 @@ exports.getTableChats = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: chats,
+  });
+});
+
+exports.fetchSessionQnA = catchAsync(async (req, res, next) => {
+  const sessionId = req.params.sessionId;
+
+  const qnas = await SessionQnA.find({
+    sessionId: mongoose.Types.ObjectId(sessionId),
+  })
+    .populate("askedBy")
+    .populate("answeredBy");
+
+  res.status(200).json({
+    status: "success",
+    data: qnas,
   });
 });
