@@ -33,6 +33,8 @@ import Poll from "./../Elements/Poll";
 import QnA from "../Elements/Q&A";
 import { useSelector } from "react-redux";
 import MainChatComponent from "../HostingPlatform/StageSideBar/Chat/MainChatComponent";
+import MainQnAComponent from "../HostingPlatform/StageSideBar/QnA/MainQnAComponent";
+import MainPollComponent from "../HostingPlatform/StageSideBar/Poll/MainPollComponent";
 
 const DropdownIcon = ({ switchView, view }) => (
   <Dropdown
@@ -82,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 const StageSideDrawerComponent = () => {
   const [activeLinkTab, setActiveLinkTab] = useState("chat");
 
-  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+  const { sessionRole } = useSelector((state) => state.eventAccessToken);
 
   const [activeTab, setActiveTab] = useState("activity");
 
@@ -194,7 +196,8 @@ const StageSideDrawerComponent = () => {
                                 className="py-3 px-3"
                               >
                                 {/* <SessionQnAComponent /> */}
-                                <QnA />
+                                {/* <QnA /> */}
+                                <MainQnAComponent />
                               </div>
                             </div>
                           );
@@ -208,7 +211,8 @@ const StageSideDrawerComponent = () => {
                                 style={{ height: "69vh" }}
                                 className="py-3 px-3"
                               >
-                                <Poll />
+                                {/* <Poll /> */}
+                                <MainPollComponent />
                               </div>
                             </div>
                           );

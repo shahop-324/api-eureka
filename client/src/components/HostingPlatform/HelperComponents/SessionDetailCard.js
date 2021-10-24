@@ -69,7 +69,7 @@ const renderSpeakerList = (speakers) => {
       <SessionSpeakerCard
         image={
           speaker.image &&
-          speaker.image.startsWith("https://lh3.googleusercontent.com")
+          speaker.image.startsWith("https://")
             ? speaker.image
             : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
@@ -246,17 +246,8 @@ const SessionDetailCard = ({
 
                 // Join session channel
 
-                socket.emit(
-                  "subscribeSession",
-                  {
-                    sessionId: id,
-                  },
-                  (error) => {
-                    if (error) {
-                      alert(error);
-                    }
-                  }
-                );
+                
+                
 
                 socket.emit(
                   "joinSession",

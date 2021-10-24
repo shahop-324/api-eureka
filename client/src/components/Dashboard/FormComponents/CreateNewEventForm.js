@@ -24,6 +24,7 @@ const FormLabel = styled.label`
   font-weight: 500 !important;
   color: #727272 !important;
 `;
+
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;

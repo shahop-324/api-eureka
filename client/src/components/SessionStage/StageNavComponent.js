@@ -1,13 +1,11 @@
 import React from "react";
-import { Avatar } from "@material-ui/core";
 import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
 import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded"; // Watching group
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded"; // Live Stage
-import SecurityIcon from "@mui/icons-material/Security"; // Moderation
 import RssFeedRoundedIcon from "@mui/icons-material/RssFeedRounded"; // Live stream
 import styled from "styled-components";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
 
 import {
   BrandLogo,
@@ -112,24 +110,42 @@ const StageNavComponent = () => {
             Annual Founder Q&A with community
           </SessionName>
           {/* <Chip label="Live" color="secondary" /> */}
-          
+
           {(() => {
             switch (status) {
               case "Not Yet Started":
-                return  <Chip label="Not yet started" color="secondary" style={{fontWeight: "500"}}/>
-                
+                return (
+                  <Chip
+                    label="Not yet started"
+                    color="secondary"
+                    style={{ fontWeight: "500" }}
+                  />
+                );
+
               case "Started":
-                return <ChipModified>Live</ChipModified>
+                return <ChipModified>Live</ChipModified>;
 
               case "Resumed":
-                return <ChipModified>Live</ChipModified>
+                return <ChipModified>Live</ChipModified>;
 
               case "Paused":
-                return <Chip label="Paused" color="primary" style={{fontWeight: "500"}}/>
+                return (
+                  <Chip
+                    label="Paused"
+                    color="primary"
+                    style={{ fontWeight: "500" }}
+                  />
+                );
 
               case "Ended":
-                return <Chip label="Ended" color="warning" style={{fontWeight: "500"}}/>
-            
+                return (
+                  <Chip
+                    label="Ended"
+                    color="warning"
+                    style={{ fontWeight: "500" }}
+                  />
+                );
+
               default:
                 break;
             }
@@ -204,14 +220,6 @@ const StageNavComponent = () => {
           <IconButtonStatic className="ms-3">
             <RssFeedRoundedIcon style={{ color: "red" }} />
           </IconButtonStatic>
-
-          {sessionRole === "host" || sessionRole === "organiser" ? (
-            <IconButton className="ms-3">
-              <SecurityIcon />
-            </IconButton>
-          ) : (
-            <></>
-          )}
         </div>
       </StageNav>
     </>

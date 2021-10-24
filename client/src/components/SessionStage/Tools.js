@@ -7,9 +7,13 @@ import { Dialog } from "@material-ui/core";
 
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded";
-import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
-import SponsorShoutout from "./Icon/sponsor_shoutout.svg";
+import SponsorShoutoutIcon from "./Icon/sponsor_shoutout.svg";
 import Announcement from "./Icon/announcement.png";
+import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import CreatePoll from "../HostingPlatform/StageSideBar/Poll/CreatePoll";
+import SponsorShoutout from "../HostingPlatform/StageSideBar/Tools/SponsorShoutout";
+import PlayVideofromURL from "../HostingPlatform/StageSideBar/Tools/PlayVideoFromURL";
+import InsertLink from "../HostingPlatform/StageSideBar/Tools/InsertLink";
 
 const StageToolsContainer = styled.div`
   width: 360px;
@@ -94,6 +98,27 @@ const Tools = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [openCreatePoll, setOpenCreatePoll] = React.useState(false);
+  const [openSponsorShoutout, setOpenSponsorShoutout] = React.useState(false);
+  const [openPlayVideo, setOpenPlayVideo] = React.useState(false);
+  const [openInsertLink, setOpenInsertLink] = React.useState(false);
+
+  const handleCloseSponsorShoutout = () => {
+    setOpenSponsorShoutout(false);
+  };
+
+  const handleCloseInsertLink = () => {
+    setOpenInsertLink(false);
+  };
+
+  const handleClosePlayVideo = () => {
+    setOpenPlayVideo(false);
+  };
+
+  const handleCloseCreatePoll = () => {
+    setOpenCreatePoll(false);
+  };
+
   return (
     <>
       <Dialog
@@ -107,37 +132,57 @@ const Tools = ({ open, handleClose }) => {
           <div></div>
         </HeadlineWithCloseIcon>
         <StageToolsContainer className="p-4">
-          <ToolButton>
+          <ToolButton
+            onClick={() => {
+              setOpenInsertLink(true);
+              handleClose();
+            }}
+          >
             <InsertLinkRoundedIcon
               style={{ fontSize: "48px" }}
               className="mb-3"
             />
             <div>Insert Link</div>
           </ToolButton>
-          <ToolButton>
+          <ToolButton
+            onClick={() => {
+              setOpenSponsorShoutout(true);
+              handleClose();
+            }}
+          >
             <img
-              src={SponsorShoutout}
+              src={SponsorShoutoutIcon}
               style={{ height: "36px", width: "36px" }}
               alt={"sponsor shoutout"}
               className="mb-3"
             />
             <div>Sponsor shoutout</div>
           </ToolButton>
-          <ToolButton>
+          <ToolButton
+            onClick={() => {
+              setOpenPlayVideo(true);
+              handleClose();
+            }}
+          >
             <OndemandVideoRoundedIcon
               style={{ fontSize: "48px" }}
               className="mb-3"
             />
             <div>Play video from url</div>
           </ToolButton>
-          <ToolButton>
-            <SecurityRoundedIcon
+          <ToolButton
+            onClick={() => {
+              setOpenCreatePoll(true);
+              handleClose();
+            }}
+          >
+            <AssessmentRoundedIcon
               style={{ fontSize: "48px" }}
               className="mb-3"
             />
-            <div>Moderation</div>
+            <div>Create Poll</div>
           </ToolButton>
-          <ToolButton
+          {/* <ToolButton
             style={{
               gridColumnStart: "1",
               gridColumnEnd: "3",
@@ -151,13 +196,24 @@ const Tools = ({ open, handleClose }) => {
               alt={"announcement"}
               className="mb-3"
             />
-            <div>Announcement</div>
-          </ToolButton>
+            <div>Make Announcement</div>
+          </ToolButton> */}
         </StageToolsContainer>
         <div className="px-3 py-2" onClick={handleClose}>
           <ButtonOutlinedDark>Close</ButtonOutlinedDark>
         </div>
       </Dialog>
+
+      <CreatePoll open={openCreatePoll} handleClose={handleCloseCreatePoll} />
+      <SponsorShoutout
+        open={openSponsorShoutout}
+        handleClose={handleCloseSponsorShoutout}
+      />
+      <PlayVideofromURL
+        open={openPlayVideo}
+        handleClose={handleClosePlayVideo}
+      />
+      <InsertLink open={openInsertLink} handleClose={handleCloseInsertLink} />
     </>
   );
 };

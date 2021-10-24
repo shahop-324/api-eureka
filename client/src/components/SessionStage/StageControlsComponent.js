@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
@@ -33,6 +33,8 @@ import Like from "./../../assets/images/like.png";
 import Clapping from "./../../assets/images/clapping.png";
 import Love from "./../../assets/images/love.png";
 import Smile from "./../../assets/images/Smile.png";
+
+import Speakers from "./Speakers";
 
 const IOSSwitch = withStyles((theme) => ({
   root: {
@@ -100,6 +102,9 @@ const StageControlsComponent = ({
   startScreenCall,
   setScreenSharingIsEnabled,
 }) => {
+
+  const [openSpeakers, setOpenSpeakers] = React.useState(false);
+
   const [fullScreen, setFullScreen] = useState(false);
 
   const { sessionRole } = useSelector((state) => state.eventAccessToken);
@@ -111,6 +116,10 @@ const StageControlsComponent = ({
   const [startRecording, setStartRecording] = useState(false);
 
   const [stopRecording, setStopRecording] = useState(false);
+
+  const handleCloseSpeakers = () => {
+    setOpenSpeakers(false);
+  }
 
   const handleCloseStopRecording = () => {
     setStopRecording(false);
@@ -167,6 +176,13 @@ const StageControlsComponent = ({
           >
             Leave
           </BtnDanger>
+
+          <button onClick={() => {
+            setOpenSpeakers(true);
+          }} className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center">
+            {" "}
+            <PersonRoundedIcon className="me-2" /> <span>Speakers</span>
+          </button>
 
           <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
         </div>
@@ -287,7 +303,6 @@ const StageControlsComponent = ({
             </IconButton>
           )}
 
-          
           {sessionRole === "host" ? (
             <></>
           ) : (
@@ -375,6 +390,7 @@ const StageControlsComponent = ({
         open={stopRecording}
         handleClose={handleCloseStopRecording}
       />
+      <Speakers open={openSpeakers} handleClose={handleCloseSpeakers} />
     </>
   );
 };

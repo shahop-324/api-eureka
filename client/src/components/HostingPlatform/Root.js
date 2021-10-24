@@ -122,9 +122,7 @@ const Root = () => {
 
   useEffect(() => {
 
-    socket.on("newSessionMsg", ({ newMsg }) => {
-      dispatch(createNewSessionMsg(newMsg));
-    });
+    
 
     socket.on("previousSessionMessages", ({ chats }) => {
       dispatch(fetchSessionChats(chats));
@@ -220,8 +218,6 @@ const Root = () => {
       // console.log(updatedPoll);
       dispatch(updateEventPoll(updatedPoll));
     });
-
-    
 
     socket.on("previousEventMessages", ({ chats }) => {
       // console.log(chats);

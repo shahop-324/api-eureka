@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const sessionChatMessageSchema = new mongoose.Schema({
+  showOnStage: {
+    type: Boolean,
+    default: false,
+  },
   textMessage: {
     type: String,
   },

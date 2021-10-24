@@ -17,7 +17,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
 
-import { fetchSessionForSessionStage } from "../../../actions";
+import { fetchSessionForSessionStage, createNewSessionMsg } from "../../../actions";
 import StreamBody from "../Functions/Stage/StreamBody";
 
 let rtc = {
@@ -29,30 +29,42 @@ let rtc = {
 };
 
 const SessionStage = () => {
-  const [subscribed, setSubscribed] = React.useState(false);
   const params = useParams();
   const sessionId = params.sessionId;
   const eventId = params.eventId;
   const communityId = params.communityId;
 
   useEffect(() => {
-    if(!subscribed) {
-      socket.emit(
-        "subscribeSession",
-        {
-          sessionId: sessionId,
-        },
-        (error) => {
-          if (error) {
-            alert(error);
-          }
+    socket.emit(
+      "subscribeSession",
+      {
+        sessionId: sessionId,
+      },
+      (error) => {
+        if (error) {
+          alert(error);
         }
-      );
-      setSubscribed(true);
-    }
+      }
+    );
+
+    socket.on("newSessionMsg", ({ newMsg }) => {
+      dispatch(createNewSessionMsg(newMsg));
+    });
+
+    socket.on("sessionMessages", ({msgs}) => {
+      console.log(msgs);
+      // TODO => dispatch
+    })
+
+    socket.on("newQnA", ({newQnA}) => {
+      console.log(newQnA);
+      // TODO => dispatch
+    });
+
+
+
     
   }, []);
-  
 
   const { sessionDetails } = useSelector((state) => state.session);
 

@@ -384,9 +384,6 @@ io.on("connect", (socket) => {
               chatMsgDoc.replyTo = replyTo;
               await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
             }
-            console.log("Created new message");
-            console.log(sessionId);
-            console.log(eventId);
             const populatedChatMsg = await SessionChatMessage.findById(
               chatMsgDoc._id
             ).populate("replyTo");
@@ -397,6 +394,932 @@ io.on("connect", (socket) => {
           }
         }
       );
+    }
+  );
+
+  socket.on(
+    "showMsgOnStage",
+    async ({ msgId, sessionId, eventId }, callback) => {
+      // Set the requested msg as show on stage and all msgs back to everyone in this session
+
+      await SessionChatMessage.findByIdAndUpdate(
+        msgId,
+        { showOnStage: true },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      let otherMsgs = await SessionChatMessage.find({
+        $and: [
+          { sessionId: sessionId },
+          { eventId: eventId },
+          { _id: { $ne: msgId } },
+        ],
+      });
+
+      for (let element of otherMsgs) {
+        element.showOnStage = false;
+        await element.save({ new: true, validateModifiedOnly: true });
+      }
+
+      const msgs = await SessionChatMessage.find({
+        $and: [{ sessionId: sessionId }, { eventId: eventId }],
+      });
+
+      // Send all msgs back to everyone in this session
+
+      io.in(sessionId).emit("sessionMessages", {
+        msgs: msgs,
+      });
+    }
+  );
+
+  socket.on(
+    "transmitSessionQnA",
+    async ({ question, createdAt, askedBy, eventId, sessionId }, callback) => {
+      // Create a new qnA doc in sessionQnA Model and send it to everyone in this session
+
+      const newQnA = await SessionQnA.create({
+        question,
+        createdAt,
+        askedBy,
+        eventId,
+        sessionId,
+      });
+
+      // Send this back to everyone in this session
+
+      io.in(sessionId).emit("newQnA", {
+        newQnA: newQnA,
+      });
+    }
+  );
+
+  socket.on("deleteSessionQnA", async ({}, callback) => {
+    // Mark the requested QnA as deleted and send it back to everyone in this session
+
+    const deletedQnA = await SessionQnA.findByIdAndUpdate(
+      qnaId,
+      { deleted: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    // Send this back to everyone in this session
+
+    io.in(sessionId).emit("deletedQnA", {
+      deletedQnA: deletedQnA,
+    });
+  });
+
+  socket.on("upvoteQnA", async ({}, callback) => {
+    const upvotedQnA = await SessionQnA.findByIdAndUpdate();
+
+    // Send this back to everyone in this session
+
+    io.in(sessionId).emit("upvotedQnA", {
+      upvotedQnA: upvotedQnA,
+    });
+  });
+
+  socket.on("downvoteQnA", async ({}, callback) => {
+    const downvotedQnA = await SessionQnA.findByIdAndUpdate();
+
+    // Send this back to everyone in this session
+
+    io.in(sessionId).emit("downvotedQnA", {
+      downvotedQnA: downvotedQnA,
+    });
+  });
+
+  socket.on("answerQnA", async ({}, callback) => {
+    const qna = await SessionQnA.findById();
+
+    qna.answer = answer;
+    qna.answeredBy = answeredBy;
+
+    const answeredQnA = await qna.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("answeredQnA", {
+      answeredQnA: answeredQnA,
+    });
+  });
+
+  socket.on("showQnAOnStage", async ({}, callback) => {
+    // Mark the requested QnA as shownOnStage => true and all other QnA of this as showOnStage as false and send all Qna back to everyone in this session
+
+    await SessionQnA.findByIdAndUpdate(
+      qnaId,
+      { showOnStage: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    // Find all other QnAs of this session and mark them as showOnStage => false
+
+    const otherQnAs = await SessionQnA.find({
+      $and: [
+        { sessionId: sessionId },
+        { eventId: eventId },
+        { _id: { $ne: { qnaId } } },
+      ],
+    });
+
+    for (let element of otherQnAs) {
+      element.showOnStage = false;
+      await element.save({ new: true, validateModifiedOnly: true });
+    }
+
+    sessionQnAs = SessionQnA.find({
+      $and: [{ sessionId: sessionId }, { eventId: eventId }],
+    });
+
+    // Send back all QnAs of this session to everyone in this session
+
+    io.in(sessionId).emit("sessionQnAs", {
+      sessionQnAs: sessionQnAs,
+    });
+  });
+
+  socket.on("hideQnAFromStage", async ({}, callback) => {
+    // Mark the requested QnA as showOnStage => false and send back all QnAs of this session to everyone in this session
+
+    await SessionQnA.findByIdAndUpdate(
+      qnaId,
+      { showOnStage: false },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    sessionQnAs = SessionQnA.find({
+      $and: [{ sessionId: sessionId }, { eventId: eventId }],
+    });
+
+    // Send back all QnAs of this session to everyone in this session
+
+    io.in(sessionId).emit("sessionQnAs", {
+      sessionQnAs: sessionQnAs,
+    });
+  });
+
+  socket.on(
+    "createSessionPoll",
+    async (
+      {
+        question,
+        eventId,
+        sessionId,
+        createdBy,
+        options,
+        expiresAt,
+        type,
+        whoCanSeeAnswers,
+        createdAt,
+      },
+      callback
+    ) => {
+      // Create requested poll and send it back to everyone in this session
+
+      const newPoll = await SessionPoll.create({
+        question,
+        eventId,
+        sessionId,
+        createdBy,
+        expiresAt,
+        type,
+        whoCanSeeAnswers,
+        createdAt,
+      });
+
+      for (let element of options) {
+        newPoll.options.push(element);
+      }
+
+      const createdPoll = await newPoll.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      // Send this poll to everyone in this session
+
+      io.in(sessionId).emit("newPoll", {
+        createdPoll: createdPoll,
+      });
+    }
+  );
+
+  socket.on(
+    "deleteSessionPoll",
+    async ({ pollId, sessionId, eventId }, callback) => {
+      // mark the requested session poll as deleted and send it back to everyone in this session
+
+      const deletedPoll = await SessionPoll.findByIdAndUpdate(
+        pollId,
+        { deleted: true },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      io.in(sessionId).emit("deletedPoll", {
+        deletedPoll: deletedPoll,
+      });
+    }
+  );
+
+  socket.on("showSessionPollOnStage", async ({}, callback) => {
+    // Mark the requested session poll as showOnStage => true and all other polls of this session as showOnStage => false and send back all polls of this session to everyone in this session
+
+    await SessionPoll.findByIdAndUpdate(
+      pollId,
+      { showOnStage: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    // Mark all other session polls to showOnStage as false
+
+    const otherPolls = await SessionPoll.find({
+      $and: [
+        { sessionId: mongoose.Types.ObjectId(sessionId) },
+        { eventId: mongoose.Types.ObjectId(eventId) },
+        { _id: { $ne: { pollId } } },
+      ],
+    });
+
+    for (let element of otherPolls) {
+      element.showOnStage = false;
+      await element.save({ new: true, validateModifiedOnly: true });
+    }
+
+    // Now get all polls of this session and send it to everyone in this session
+
+    const polls = await SessionPoll.find({
+      $and: [
+        { sessionId: mongoose.Types.ObjectId(sessionId) },
+        { eventId: mongoose.Types.ObjectId(eventId) },
+      ],
+    });
+
+    io.in(sessionId).emit("sessionPolls", {
+      polls: polls,
+    });
+  });
+
+  socket.on("hideSessionPollFromStage", async ({}, callback) => {
+    // Mark the requested session poll as showOnStage => false and send back all polls of this session back to everyone in this session
+
+    const updatedPoll = await SessionPoll.findByIdAndUpdate(
+      pollId,
+      { showOnStage: false },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    io.in(sessionId).emit("updatedPoll", {
+      updatedPoll: updatedPoll,
+    });
+  });
+
+  socket.on(
+    "submitSessionPollAns",
+    async ({ pollId, optionsId, voter }, callback) => {
+      // Update the requested poll with answer and send it back to everyone in this session
+
+      // Get Poll by poll Id
+
+      const pollToUpdate = await SessionPoll.findById(pollId);
+
+      // Loop over all options and update the required options
+
+      for (let element of pollToUpdate.options) {
+        for (let item of optionsId) {
+          if (element._id === item) {
+            element.numberOfVotes = element.numberOfVotes + 1;
+            element.votedBy.push(voter);
+            // * Remember voter is the userId of person who is voting for this option
+          }
+        }
+      }
+
+      pollToUpdate.votedBy.push(voter);
+
+      // save the whole poll doc
+
+      const updatedPoll = await pollToUpdate.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      // Send back this updated poll to everyone in this session
+
+      io.in(sessionId).emit("updatedPoll", {
+        updatedPoll: updatedPoll,
+      });
+    }
+  );
+
+  socket.on("raiseHand", async ({ userId, sessionId, eventId }, callback) => {
+    // Add attendee to raised hands ordered queue and send it back to everyone in this session
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (!sessionDoc.raisedHands.includes(userId)) {
+      sessionDoc.raisedHands.push(userId);
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on("unRaisehand", async ({ userId, sessionId }, callback) => {
+    // Remove attendee from raised hands ordered queue and send it back to everyone in this session
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (sessionDoc.raisedHands.includes(userId)) {
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (element) => element.toString() !== userId.toString()
+      );
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on("promoteToStage", async ({}, callback) => {
+    // Change this attendees role to host and send it back to everyone and attendee who is promoted to stage
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (!sessionDoc.attendeeOnStage.includes(userId)) {
+      sessionDoc.attendeeOnStage.push(userId);
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // Find attendee socket id and emit event "promotedToStage"
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("promotedToStage");
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on("removeFromStage", async ({}, callback) => {
+    // Change attendees role back to audience and send it back to everyone in session and attendee who is removed from stage
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (sessionDoc.attendeeOnStage.includes(userId)) {
+      sessionDoc.attendeeOnStage = sessionDoc.attendeeOnStage.filter(
+        (element) => element !== userId
+      );
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // Find attendee socket id and emit event "promotedToStage"
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("removeFromStage");
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on("inviteToStage", async ({}, callback) => {
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (!sessionDoc.invitedToStage.includes(userId)) {
+      sessionDoc.invitedToStage.push(userId);
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // Find attendee socket id and emit event "promotedToStage"
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("invitedToStage");
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on("acceptStageInvitation", async ({}, callback) => {
+    const sessionDoc = await Session.findById(sessionId);
+
+    if (!sessionDoc.attendeeOnStage.includes(userId)) {
+      sessionDoc.attendeeOnStage.push(userId);
+    }
+
+    if (sessionDoc.invitedToStage.includes(userId)) {
+      sessionDoc.invitedToStage = sessionDoc.invitedToStage.filter(
+        (element) => element !== userId
+      );
+    }
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // Find attendee socket id and emit event "promotedToStage"
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("promotedToStage");
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on(
+    "playUploadedVideoOnStage",
+    async ({ sessionId, eventId, videoURL }, callback) => {
+      // Find session doc and update videoLink
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.videoLink = videoURL;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+
+      // send this updated session doc to everyone in this session
+
+      io.in(sessionId).emit("playUploadedVideoOnStage", {
+        videoURL: videoURL,
+      });
+    }
+  );
+
+  socket.on(
+    "stopUploadedVideoOnStage",
+    async ({ sessionId, eventId }, callback) => {
+      // Remove video in playUploadedVideoOnStage in this session and send it back to everyone in this session
+
+      // Find session doc and update videoLink
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.videoLink = null;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+
+      // send this updated session doc to everyone in this session
+
+      io.in(sessionId).emit("stopUploadedVideoOnStage");
+    }
+  );
+
+  socket.on("muteMic", async ({ userId, sessionId, eventId }, callback) => {
+    // Send mute mic command to requested person
+
+    // Find speaker in this session socket id and emit event "muteMic"
+
+    const UserDoc = await UsersInSession.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(sessionId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("muteMic");
+  });
+
+  socket.on(
+    "confirmMicMuted",
+    async ({ userId, sessionId, eventId }, callback) => {
+      // Send confirmation to everyone in this session that requested person's mic has been muted
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      for (let element of sessionDoc.speakersOnStage) {
+        if (userId === element.userId) {
+          element.mic = Disabled;
+        }
+      }
+
+      // save this session document
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+    }
+  );
+
+  socket.on("muteVideo", async ({}, callback) => {
+    // Send mute video command to requested person socket
+
+    // Find speaker in this session socket id and emit event "muteCamera"
+
+    const UserDoc = await UsersInSession.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(sessionId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("muteCamera");
+  });
+
+  socket.on("confirmVideoMuted", async ({}, callback) => {
+    // Send confirmation to everyone in this session that the required person's video has been muted
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    for (let element of sessionDoc.speakersOnStage) {
+      if (userId === element.userId) {
+        element.camera = Disabled;
+      }
+    }
+
+    // save this session document
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("muteScreenShare", async ({}, callback) => {
+    // Send mute screen share command to requested persons socket
+
+    // Find speaker in this session socket id and emit event "stopScreenShare"
+
+    const UserDoc = await UsersInSession.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(sessionId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
+
+    io.to(userSocket).emit("stopScreenShare");
+  });
+
+  socket.on("confirmScreenShareMuted", async ({}, callback) => {
+    // Send confirmation to everyone in this session that the required person's screen share has been muted
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    for (let element of sessionDoc.speakersOnStage) {
+      if (userId === element.userId) {
+        element.shareScreen = Disabled;
+      }
+    }
+
+    // save this session document
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on(
+    "insertLink",
+    async (
+      { sessionId, eventId, link, title, description, createdBy },
+      callback
+    ) => {
+      // Add this link to sessions shared link and send it back to everyone in this session
+
+      const newInsertedLink = await SessionInsertedLink.create({
+        sessionId,
+        eventId,
+        link,
+        title,
+        description,
+        createdBy,
+        createdAt: Date.now(),
+      });
+
+      io.in(sessionId).emit("newInsertedLink", {
+        newInsertedLink: newInsertedLink,
+      });
+    }
+  );
+
+  socket.on(
+    "sponsorShoutout",
+    async (
+      { sesionId, eventId, sponsorId, description, link, createdBy },
+      callback
+    ) => {
+      // Add this sponsor to list of shoutouts and send it back to everyone in this session
+
+      const newSponsorShoutout = await SessionSponsorShoutout.create({
+        sesionId,
+        eventId,
+        sponsorId,
+        description,
+        link,
+        createdBy,
+        createdAt: Date.now(),
+      });
+
+      io.in(sessionId).emit("newSponsorShoutout", {
+        newSponsorShoutout: newSponsorShoutout,
+      });
+    }
+  );
+
+  socket.on(
+    "playVideoFromURL",
+    async ({ sessionId, eventId, videoURL }, callback) => {
+      // Send this Link to everyone in this session with its title and description and save it to list of external videos played in this session
+
+      // Find session doc and update videoLink
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.videoLink = videoURL;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+
+      // send this updated session doc to everyone in this session
+
+      io.in(sessionId).emit("playVideoFromURL", {
+        videoURL: videoURL,
+      });
+    }
+  );
+
+  socket.on(
+    "stopPlayVideoFromURL",
+    async ({ sessionId, eventId }, callback) => {
+      // Remove video in playUploadedVideoOnStage in this session and send it back to everyone in this session
+
+      // Find session doc and update videoLink
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.videoLink = null;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+
+      // send this updated session doc to everyone in this session
+
+      io.in(sessionId).emit("stopPlayVideoFromURL");
+    }
+  );
+
+  socket.on("startSession", async ({ sessionId }, callback) => {
+    // Send start notification to everyone in this session and start 10 sec countdown
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.status = "Started";
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("sessionStarted", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("pauseSession", async ({ sessionId }, callback) => {
+    // Send pause session event to everyone and take to live stage and backstage as is appropriate
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.status = "Paused";
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("sessionPaused", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("resumeSession", async ({ sessionId }, callback) => {
+    // Send resume session event to everyone and take everyone to liveStage after 10 sec countdown
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.status = "Resumed";
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("sessionResumed", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("endSession", async ({ sessionId }, callback) => {
+    // Send end this session event to everyone in this session and show appropriate screens
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.status = "Ended";
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("sessionEnded", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("changeSessionColor", async ({ sessionId, color }, callback) => {
+    // Set session color to newly allocated color and send this event back to everyone in this session
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.color = color;
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("restoreDefaultSessionColor", async ({ sessionId }, callback) => {
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.color = null;
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("changeSessionVibe", async ({ sessionId, vibeURL }, callback) => {
+    // Set newly allocated vibe image url and this event back to everyone in this session
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.vibeURL = vibeURL;
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on("removeSessionVibe", async ({ sessionId }, callback) => {
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.vibeURL = null;
+
+    const updatedSession = await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    io.in(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+  });
+
+  socket.on(
+    "customizeSessionWidget",
+    async ({ sessionId, widgets }, callback) => {
+      // Set new session widgets preference and send it back to eveyone in this session
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.widgets = widgets;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+    }
+  );
+
+  socket.on(
+    "changeSessionLiveStreamSetting",
+    async ({ sessionId, streamDestinations }, callback) => {
+      // start or stop sending stream to other destinations as per session live stream settings
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.streamDestinations = streamDestinations;
+
+      const updatedSession = await sessionDoc.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
     }
   );
 
@@ -1094,10 +2017,8 @@ io.on("connect", (socket) => {
       },
       callback
     ) => {
-      console.log("This is join session.")
-
       socket.join(sessionId);
-console.log("We have subscribed to this session.")
+      console.log("We have subscribed to this session.");
       const fetchCurrentMessages = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
           if (err) {

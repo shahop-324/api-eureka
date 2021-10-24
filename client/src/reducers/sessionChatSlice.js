@@ -13,7 +13,6 @@ const sessionChatSlice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
@@ -27,9 +26,10 @@ const sessionChatSlice = createSlice({
       state.isLoading = false;
     },
     CreateSessionChat(state, action) {
+      console.log(action.payload.chat, "I need to check this out.");
       state.sessionChats.push(action.payload.chat);
       state.isLoading = false;
-    }
+    },
   },
 });
 export const sessionChatActions = sessionChatSlice.actions;
