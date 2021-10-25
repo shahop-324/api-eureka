@@ -17,15 +17,10 @@ const pollOptionSchema = new mongoose.Schema({
 });
 
 const sessionPollSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ["Single select", "Multi select"],
-    default: "Single select",
-  },
   whoCanSeeAnswers: {
     type: String,
-    enum: ["Host only", "Host and speakers", "Everyone"],
-    default: "Everyone",
+    enum: ["Organiser only", "Organiser and speakers", "Everyone"],
+    default: "Organiser only",
   },
   question: {
     type: String,

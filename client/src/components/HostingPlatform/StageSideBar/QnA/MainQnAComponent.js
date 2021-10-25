@@ -25,8 +25,11 @@ const renderQnA = (QnAs) => {
       // This question is unanswered
       return (
         <UnansweredQnA
+          key={element._id}
+          id={element._id}
           question={element.question}
           upvotes={element.upvotes}
+          upvotedBy={element.upvotedBy}
           askedByName={
             element.askedBy.firstName + " " + element.askedBy.lastName
           }
@@ -39,11 +42,43 @@ const renderQnA = (QnAs) => {
           }
           askedByOrganisation={element.askedBy.organisation}
           askedByDesignation={element.askedBy.designation}
+          createdAt={element.createdAt}
+          showOnStage={element.showOnStage}
         />
       );
-    }
-    else {
-      return <AnsweredQnA />;
+    } else {
+      return (
+        <AnsweredQnA
+          key={element._id}
+          id={element._id}
+          question={element.question}
+          upvotes={element.upvotes}
+          upvotedBy={element.upvotedBy}
+          askedByName={
+            element.askedBy.firstName + " " + element.askedBy.lastName
+          }
+          askedByImage={
+            element.askedBy.image
+              ? element.askedBy.image.startsWith("https://")
+                ? element.askedBy.image
+                : `https://bluemeet.s3.us-west-1.amazonaws.com/${element.askedBy.image}`
+              : "#"
+          }
+          askedByOrganisation={element.askedBy.organisation}
+          askedByDesignation={element.askedBy.designation}
+          answeredByName={element.answeredBy.firstName + " " + element.answeredBy.lastName}
+          answeredByImage={
+            element.answeredBy.image
+              ? element.answeredBy.image.startsWith("https://")
+                ? element.answeredBy.image
+                : `https://bluemeet.s3.us-west-1.amazonaws.com/${element.answeredBy.image}`
+              : "#"
+          }
+          answer={element.answer}
+          createdAt={element.createdAt}
+          showOnStage={element.showOnStage}
+        />
+      );
     }
   });
 };
@@ -57,7 +92,6 @@ const MainQnAComponent = () => {
         <Scrollable className="mb-3">
           {/* Render QnA List Here */}
           {renderQnA(sessionQnAs)}
-          
         </Scrollable>
         {/* Render QnA input here */}
         <QnAInput />

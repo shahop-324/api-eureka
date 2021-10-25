@@ -4,6 +4,17 @@ import styled from "styled-components";
 import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DeleteQnA from "./DeleteQnA";
+import socket from "./../../service/socket";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { showSnackbar } from "./../../../../actions";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const QnABody = styled.div`
   width: 100%;
@@ -26,7 +37,7 @@ const PersonName = styled.div`
 `;
 
 const UserRoleTag = styled.div`
-  background-color: #152d35;
+  /* background-color: #152d35; */
   height: max-content;
   border-radius: 5px;
 
@@ -64,9 +75,6 @@ const UpvoteWidget = styled.div`
   border: 1px solid #152d35;
 
   &:hover {
-    border: 1px solid transparent;
-    background-color: #152d35;
-    color: #ffffff;
     cursor: pointer;
   }
 `;
@@ -101,14 +109,29 @@ const StyledOutlineButton = styled.button`
 `;
 
 const UnansweredQnA = ({
+  id,
   question,
   upvotes,
+  upvotedBy,
   askedByName,
   askedByImage,
   askedByOrganisation,
   askedByDesignation,
+  createdAt,
+  showOnStage,
 }) => {
+  const dispatch = useDispatch();
+
+  let upvotedByMe = false;
+
+  const [answer, setAnswer] = React.useState(null);
+
+  const params = useParams();
   const [openDelete, setOpenDelete] = React.useState(false);
+
+  const sessionId = params.sessionId;
+  const eventId = params.eventId;
+  const userId = useSelector((state) => state.eventAccessToken.id);
 
   const handleOpenDelete = () => {
     setOpenDelete(true);
@@ -116,6 +139,12 @@ const UnansweredQnA = ({
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
+
+  // Check if this user has upvoted this question
+
+  if (upvotedBy.includes(userId)) {
+    upvotedByMe = true;
+  }
 
   return (
     <>
@@ -136,23 +165,137 @@ const UnansweredQnA = ({
             </div>
           </div>
 
-          {/* <UserRoleTag>Host</UserRoleTag> */}
+          <UserRoleTag>
+            {timeAgo.format(new Date(createdAt), "round")}
+          </UserRoleTag>
         </div>
 
         <div className="d-flex flex-row align-items-center mb-3">
-          <UpvoteWidget className="me-3">
-            <ExpandLessRoundedIcon />
-            <div>{upvotes}</div>
-          </UpvoteWidget>
+          {upvotedByMe ? (
+            <UpvoteWidget
+              style={{ backgroundColor: "#152d35", color: "#ffffff" }}
+              onClick={() => {
+                socket.emit(
+                  "downvoteQnA",
+                  {
+                    qnaId: id,
+                    sessionId,
+                    userId,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="me-3"
+            >
+              <ExpandLessRoundedIcon />
+              <div>{upvotes}</div>
+            </UpvoteWidget>
+          ) : (
+            <UpvoteWidget
+              onClick={() => {
+                socket.emit(
+                  "upvoteQnA",
+                  {
+                    qnaId: id,
+                    sessionId,
+                    userId,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="me-3"
+            >
+              <ExpandLessRoundedIcon />
+              <div>{upvotes}</div>
+            </UpvoteWidget>
+          )}
+
           <QuesText>{question}</QuesText>
         </div>
-        <TextAreaWidget className="mb-2"></TextAreaWidget>
+        <TextAreaWidget
+          value={answer}
+          onChange={(e) => {
+            setAnswer(e.target.value);
+          }}
+          className="mb-2"
+        ></TextAreaWidget>
         <div className="d-flex flex-row align-items-center justify-content-between">
-          <StyledOutlineButton className="btn btn-outline-text btn-outline-primary">
+          <StyledOutlineButton
+            onClick={() => {
+              if (!answer) {
+                dispatch(
+                  showSnackbar("info", "Please reply with a valid answer.")
+                );
+                return;
+              }
+
+              socket.emit(
+                "answerQnA",
+                {
+                  answer,
+                  qnaId: id,
+                  answeredAt: Date.now(),
+                  sessionId,
+                  answeredBy: userId,
+                },
+                (error) => {
+                  if (error) {
+                    alert(error);
+                  }
+                }
+              );
+
+              setAnswer(null);
+            }}
+            className="btn btn-outline-text btn-outline-primary"
+          >
             Submit
           </StyledOutlineButton>
 
           <div className="d-flex flex-row align-items-center justify-content-end">
+            {showOnStage ? (
+              <button
+                onClick={() => {
+                  socket.emit(
+                    "hideQnAFromStage",
+                    { qnaId: id, sessionId, eventId },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
+                    }
+                  );
+                }}
+                className="btn btn-outline-text btn-dark me-3"
+              >
+                Hide from stage
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  socket.emit(
+                    "showQnAOnStage",
+                    { qnaId: id, sessionId, eventId },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
+                    }
+                  );
+                }}
+                className="btn btn-outline-text btn-outline-dark me-3"
+              >
+                Show on stage
+              </button>
+            )}
             <IconButton
               onClick={() => {
                 handleOpenDelete();
@@ -163,7 +306,17 @@ const UnansweredQnA = ({
           </div>
         </div>
       </QnABody>
-      <DeleteQnA open={openDelete} handleClose={handleCloseDelete} />
+      <DeleteQnA
+        id={id}
+        question={question}
+        askedByName={askedByName}
+        askedByImage={askedByImage}
+        askedByOrganisation={askedByOrganisation}
+        askedByDesignation={askedByDesignation}
+        createdAt={createdAt}
+        open={openDelete}
+        handleClose={handleCloseDelete}
+      />
     </>
   );
 };

@@ -9,6 +9,7 @@ const ScheduledMeet = require("./models/scheduledMeetModel");
 const Registration = require("./models/registrationsModel");
 const ConnectionRequest = require("./models/connectionRequestModel");
 const NetworkingRoomChats = require("./models/networkingRoomChatsModel");
+const SessionPoll = require("./models/sessionPollModel");
 const SessionQnA = require("./models/sessionQnAModel");
 const { nanoid } = require("nanoid");
 
@@ -463,7 +464,9 @@ io.on("connect", (socket) => {
         sessionId,
       });
 
-      const populatedQnA = await SessionQnA.findById(newQnA._id).populate('askedBy').populate('answeredBy');
+      const populatedQnA = await SessionQnA.findById(newQnA._id)
+        .populate("askedBy")
+        .populate("answeredBy");
 
       // Send this back to everyone in this session
 
@@ -473,14 +476,16 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on("deleteSessionQnA", async ({}, callback) => {
+  socket.on("deleteSessionQnA", async ({ qnaId, sessionId }, callback) => {
     // Mark the requested QnA as deleted and send it back to everyone in this session
 
     const deletedQnA = await SessionQnA.findByIdAndUpdate(
       qnaId,
       { deleted: true },
       { new: true, validateModifiedOnly: true }
-    );
+    )
+      .populate("askedBy")
+      .populate("answeredBy");
 
     // Send this back to everyone in this session
 
@@ -489,15 +494,17 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("upvoteQnA", async ({qnaId, userId, sessionId}, callback) => {
+  socket.on("upvoteQnA", async ({ qnaId, userId, sessionId }, callback) => {
     const qna = await SessionQnA.findById(qnaId);
 
     qna.upvotes = qna.upvotes + 1;
     qna.upvotedBy.push(userId);
 
-   await qna.save({new: true, validateModifiedOnly: true});
+    await qna.save({ new: true, validateModifiedOnly: true });
 
-   const upvotedQnA = SessionQnA.findById(qnaId).populate('askedBy').populate('answeredBy');
+    const upvotedQnA = await SessionQnA.findById(qnaId)
+      .populate("askedBy")
+      .populate("answeredBy");
 
     // Send this back to everyone in this session
 
@@ -506,8 +513,17 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("downvoteQnA", async ({}, callback) => {
-    const downvotedQnA = await SessionQnA.findByIdAndUpdate();
+  socket.on("downvoteQnA", async ({ qnaId, userId, sessionId }, callback) => {
+    const qna = await SessionQnA.findById(qnaId);
+
+    qna.upvotes = qna.upvotes - 1;
+    qna.upvotedBy = qna.upvotedBy.filter((element) => element !== userId);
+
+    await qna.save({ new: true, validateModifiedOnly: true });
+
+    const downvotedQnA = await SessionQnA.findById(qnaId)
+      .populate("askedBy")
+      .populate("answeredBy");
 
     // Send this back to everyone in this session
 
@@ -516,76 +532,108 @@ io.on("connect", (socket) => {
     });
   });
 
-  socket.on("answerQnA", async ({}, callback) => {
-    const qna = await SessionQnA.findById();
+  socket.on(
+    "answerQnA",
+    async ({ answer, qnaId, answeredAt, sessionId, answeredBy }, callback) => {
+      const qna = await SessionQnA.findById(qnaId);
 
-    qna.answer = answer;
-    qna.answeredBy = answeredBy;
+      qna.answer = answer;
+      qna.answeredBy = answeredBy;
+      qna.answeredAt = answeredAt;
 
-    const answeredQnA = await qna.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
+      await qna.save({
+        new: true,
+        validateModifiedOnly: true,
+      });
 
-    io.in(sessionId).emit("answeredQnA", {
-      answeredQnA: answeredQnA,
-    });
-  });
+      const answeredQnA = await SessionQnA.findById(qnaId)
+        .populate("askedBy")
+        .populate("answeredBy");
 
-  socket.on("showQnAOnStage", async ({}, callback) => {
-    // Mark the requested QnA as shownOnStage => true and all other QnA of this as showOnStage as false and send all Qna back to everyone in this session
-
-    await SessionQnA.findByIdAndUpdate(
-      qnaId,
-      { showOnStage: true },
-      { new: true, validateModifiedOnly: true }
-    );
-
-    // Find all other QnAs of this session and mark them as showOnStage => false
-
-    const otherQnAs = await SessionQnA.find({
-      $and: [
-        { sessionId: sessionId },
-        { eventId: eventId },
-        { _id: { $ne: { qnaId } } },
-      ],
-    });
-
-    for (let element of otherQnAs) {
-      element.showOnStage = false;
-      await element.save({ new: true, validateModifiedOnly: true });
+      io.in(sessionId).emit("answeredQnA", {
+        answeredQnA: answeredQnA,
+      });
     }
+  );
 
-    sessionQnAs = SessionQnA.find({
-      $and: [{ sessionId: sessionId }, { eventId: eventId }],
-    });
+  socket.on(
+    "showQnAOnStage",
+    async ({ qnaId, sessionId, eventId }, callback) => {
+      // Mark the requested QnA as shownOnStage => true and all other QnA of this session as showOnStage as false and send all Qna back to everyone in this session
 
-    // Send back all QnAs of this session to everyone in this session
+      await SessionQnA.findByIdAndUpdate(
+        qnaId,
+        { showOnStage: true },
+        { new: true, validateModifiedOnly: true }
+      );
 
-    io.in(sessionId).emit("sessionQnAs", {
-      sessionQnAs: sessionQnAs,
-    });
-  });
+      // Find all other QnAs of this session and mark them as showOnStage => false
 
-  socket.on("hideQnAFromStage", async ({}, callback) => {
-    // Mark the requested QnA as showOnStage => false and send back all QnAs of this session to everyone in this session
+      let otherQnAs = [];
 
-    await SessionQnA.findByIdAndUpdate(
-      qnaId,
-      { showOnStage: false },
-      { new: true, validateModifiedOnly: true }
-    );
+      await SessionQnA.find(
+        {
+          $and: [{ sessionId: sessionId }, { eventId: eventId }],
+        },
+        (err, doc) => {
+          otherQnAs = doc.filter(
+            (element) => element._id.toString() !== qnaId.toString()
+          );
+        }
+      );
 
-    sessionQnAs = SessionQnA.find({
-      $and: [{ sessionId: sessionId }, { eventId: eventId }],
-    });
+      // console.log(otherQnAs);
 
-    // Send back all QnAs of this session to everyone in this session
+      for (let element of otherQnAs) {
+        element.showOnStage = false;
+        const updated = await element.save({
+          new: true,
+          validateModifiedOnly: true,
+        });
+        //  console.log(updated);
+      }
 
-    io.in(sessionId).emit("sessionQnAs", {
-      sessionQnAs: sessionQnAs,
-    });
-  });
+      const sessionQnAs = await SessionQnA.find({
+        $and: [{ sessionId: sessionId }, { eventId: eventId }],
+      })
+        .populate("askedBy")
+        .populate("answeredBy");
+
+      // Send back all QnAs of this session to everyone in this session
+
+      io.in(sessionId).emit("sessionQnAs", {
+        sessionQnAs: sessionQnAs,
+      });
+    }
+  );
+
+  socket.on(
+    "hideQnAFromStage",
+    async ({ qnaId, sessionId, eventId }, callback) => {
+      // Mark the requested QnA as showOnStage => false and send back all QnAs of this session to everyone in this session
+
+      await SessionQnA.findByIdAndUpdate(
+        qnaId,
+        { showOnStage: false },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      const sessionQnAs = await SessionQnA.find({
+        $and: [
+          { sessionId: mongoose.Types.ObjectId(sessionId) },
+          { eventId: mongoose.Types.ObjectId(eventId) },
+        ],
+      })
+        .populate("askedBy")
+        .populate("answeredBy");
+
+      // Send back all QnAs of this session to everyone in this session
+
+      io.in(sessionId).emit("hideQnAFromStage", {
+        sessionQnAs: sessionQnAs,
+      });
+    }
+  );
 
   socket.on(
     "createSessionPoll",
@@ -597,7 +645,7 @@ io.on("connect", (socket) => {
         createdBy,
         options,
         expiresAt,
-        type,
+
         whoCanSeeAnswers,
         createdAt,
       },
@@ -610,25 +658,31 @@ io.on("connect", (socket) => {
         eventId,
         sessionId,
         createdBy,
-        expiresAt,
-        type,
+
         whoCanSeeAnswers,
         createdAt,
       });
+
+      if (expiresAt) {
+        newPoll.expiresAt = expiresAt;
+      }
 
       for (let element of options) {
         newPoll.options.push(element);
       }
 
-      const createdPoll = await newPoll.save({
+      await newPoll.save({
         new: true,
         validateModifiedOnly: true,
       });
 
+      const populatedPoll = await SessionPoll.findById(newPoll._id).populate(
+        "createdBy"
+      );
       // Send this poll to everyone in this session
 
       io.in(sessionId).emit("newPoll", {
-        createdPoll: createdPoll,
+        createdPoll: populatedPoll,
       });
     }
   );
@@ -650,61 +704,89 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on("showSessionPollOnStage", async ({}, callback) => {
-    // Mark the requested session poll as showOnStage => true and all other polls of this session as showOnStage => false and send back all polls of this session to everyone in this session
+  socket.on(
+    "showSessionPollOnStage",
+    async ({ pollId, sessionId, eventId }, callback) => {
+      console.log(pollId, sessionId, eventId);
+      // Mark the requested session poll as showOnStage => true and all other polls of this session as showOnStage => false and send back all polls of this session to everyone in this session
 
-    await SessionPoll.findByIdAndUpdate(
-      pollId,
-      { showOnStage: true },
-      { new: true, validateModifiedOnly: true }
-    );
+      await SessionPoll.findByIdAndUpdate(
+        pollId,
+        { showOnStage: true },
+        { new: true, validateModifiedOnly: true }
+      );
 
-    // Mark all other session polls to showOnStage as false
+      // Mark all other session polls to showOnStage as false
 
-    const otherPolls = await SessionPoll.find({
-      $and: [
-        { sessionId: mongoose.Types.ObjectId(sessionId) },
-        { eventId: mongoose.Types.ObjectId(eventId) },
-        { _id: { $ne: { pollId } } },
-      ],
-    });
+      let otherPolls = [];
 
-    for (let element of otherPolls) {
-      element.showOnStage = false;
-      await element.save({ new: true, validateModifiedOnly: true });
+      await SessionPoll.find(
+        {
+          $and: [
+            { sessionId: mongoose.Types.ObjectId(sessionId) },
+            { eventId: mongoose.Types.ObjectId(eventId) },
+          ],
+        },
+        (err, doc) => {
+          for (let element of doc) {
+            if (element._id.toString() !== pollId.toString()) {
+              otherPolls.push(element);
+            }
+          }
+        }
+      );
+
+      for (let element of otherPolls) {
+        element.showOnStage = false;
+        const result = await element.save({
+          new: true,
+          validateModifiedOnly: true,
+        });
+        console.log(result);
+      }
+
+      // Now get all polls of this session and send it to everyone in this session
+
+      const polls = await SessionPoll.find({
+        $and: [
+          { sessionId: mongoose.Types.ObjectId(sessionId) },
+          { eventId: mongoose.Types.ObjectId(eventId) },
+        ],
+      }).populate("createdBy");
+
+      io.in(sessionId).emit("sessionPolls", {
+        polls: polls,
+      });
     }
+  );
 
-    // Now get all polls of this session and send it to everyone in this session
+  socket.on(
+    "hideSessionPollFromStage",
+    async ({ pollId, sessionId, eventId }, callback) => {
+      // Mark the requested session poll as showOnStage => false and send back all polls of this session back to everyone in this session
 
-    const polls = await SessionPoll.find({
-      $and: [
-        { sessionId: mongoose.Types.ObjectId(sessionId) },
-        { eventId: mongoose.Types.ObjectId(eventId) },
-      ],
-    });
+      const updatedPoll = await SessionPoll.findByIdAndUpdate(
+        pollId,
+        { showOnStage: false },
+        { new: true, validateModifiedOnly: true }
+      );
 
-    io.in(sessionId).emit("sessionPolls", {
-      polls: polls,
-    });
-  });
+      const polls = await SessionPoll.find({
+        $and: [
+          { sessionId: mongoose.Types.ObjectId(sessionId) },
+          { eventId: mongoose.Types.ObjectId(eventId) },
+        ],
+      }).populate("createdBy");
 
-  socket.on("hideSessionPollFromStage", async ({}, callback) => {
-    // Mark the requested session poll as showOnStage => false and send back all polls of this session back to everyone in this session
-
-    const updatedPoll = await SessionPoll.findByIdAndUpdate(
-      pollId,
-      { showOnStage: false },
-      { new: true, validateModifiedOnly: true }
-    );
-
-    io.in(sessionId).emit("updatedPoll", {
-      updatedPoll: updatedPoll,
-    });
-  });
+      io.in(sessionId).emit("hidePollFromStage", {
+        polls: polls,
+      });
+    }
+  );
 
   socket.on(
     "submitSessionPollAns",
-    async ({ pollId, optionsId, voter }, callback) => {
+    async ({ pollId, optionId, voter, sessionId }, callback) => {
       // Update the requested poll with answer and send it back to everyone in this session
 
       // Get Poll by poll Id
@@ -714,13 +796,11 @@ io.on("connect", (socket) => {
       // Loop over all options and update the required options
 
       for (let element of pollToUpdate.options) {
-        for (let item of optionsId) {
-          if (element._id === item) {
-            element.numberOfVotes = element.numberOfVotes + 1;
-            element.votedBy.push(voter);
-            // * Remember voter is the userId of person who is voting for this option
-          }
+        if (element._id.toString() === optionId.toString()) {
+          element.numberOfVotes = element.numberOfVotes + 1;
+          element.votedBy.push(voter);
         }
+        // * Remember voter is the userId of person who is voting for this option
       }
 
       pollToUpdate.votedBy.push(voter);
@@ -732,10 +812,14 @@ io.on("connect", (socket) => {
         validateModifiedOnly: true,
       });
 
+      const populatedPoll = await SessionPoll.findById(pollId).populate(
+        "createdBy"
+      );
+
       // Send back this updated poll to everyone in this session
 
       io.in(sessionId).emit("updatedPoll", {
-        updatedPoll: updatedPoll,
+        updatedPoll: populatedPoll,
       });
     }
   );

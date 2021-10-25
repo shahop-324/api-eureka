@@ -69,6 +69,8 @@ const QnAInput = () => {
                 }
               }
             );
+
+            setQues(null);
           }}
           className="icon-btn"
         >

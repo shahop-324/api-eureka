@@ -56,6 +56,7 @@ import { SelectedTabActions } from "../reducers/selectedTabSlice";
 import { connectionsActions } from "../reducers/connectionsSlice";
 import { scheduledMeetActions } from "../reducers/scheduledMeetSlice";
 import { sessionQnAActions } from "../reducers/sessionQnASlice";
+import { sessionPollActions } from "./../reducers/sessionPollSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -10214,14 +10215,98 @@ export const fetchSessionQnA = (sessionId) => async (dispatch, getState) => {
   }
 };
 
-export const createSessionQnA = (qna) => async(dispatch, getState) => {
-  dispatch(sessionQnAActions.CreateSessionQnA({
-    qna: qna,
-  }))
-}
+export const createSessionQnA = (qna) => async (dispatch, getState) => {
+  dispatch(
+    sessionQnAActions.CreateSessionQnA({
+      qna: qna,
+    })
+  );
+};
 
-export const updateSessionQnA = (qna) => async(dispatch, getState) => {
-  dispatch(sessionQnAActions.UpdateSessionQnA({
-    qna: qna,
-  }))
-}
+export const updateSessionQnA = (qna) => async (dispatch, getState) => {
+  dispatch(
+    sessionQnAActions.UpdateSessionQnA({
+      qna: qna,
+    })
+  );
+};
+
+export const fetchSessionQnAs = (qnas) => async (dispatch, getState) => {
+  dispatch(
+    sessionQnAActions.FetchSessionQnAs({
+      qnas: qnas,
+    })
+  );
+};
+
+export const fetchSessionPolls = (sessionId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}getSessionPolls/${sessionId}`,
+
+      {
+        method: "GET",
+
+        headers: {
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+
+    console.log(res);
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("fetching session QnA failed");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      sessionPollActions.FetchSessionPolls({
+        polls: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      snackbarActions.openSnackBar({
+        message: "Failed to fetch Polls. Please try again!",
+        severity: "error",
+      })
+    );
+
+    setTimeout(function () {
+      closeSnackbar();
+    }, 6000);
+  }
+};
+
+export const createSessionPoll = (poll) => async (dispatch, getState) => {
+  dispatch(
+    sessionPollActions.CreateSessionPolls({
+      poll: poll,
+    })
+  );
+};
+
+export const updateSessionPoll = (poll) => async (dispatch, getState) => {
+  dispatch(
+    sessionPollActions.UpdateSessionPoll({
+      poll: poll,
+    })
+  );
+};
+
+export const fetchUpdatedSessionPolls =
+  (polls) => async (dispatch, getState) => {
+    dispatch(
+      sessionPollActions.FetchSessionPolls({
+        polls: polls,
+      })
+    );
+  };

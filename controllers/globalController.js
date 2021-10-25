@@ -17,6 +17,7 @@ const Registration = require("./../models/registrationsModel");
 const RoomTable = require("../models/roomTableModel");
 const TableChats = require("./../models/tableChatsModel");
 const SessionQnA = require("./../models/sessionQnAModel");
+const SessionPoll = require("./../models/sessionPollModel");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1392,5 +1393,18 @@ exports.fetchSessionQnA = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: qnas,
+  });
+});
+
+exports.fetchSessionPoll = catchAsync(async (req, res, next) => {
+  const sessionId = req.params.sessionId;
+
+  const polls = await SessionPoll.find({
+    sessionId: mongoose.Types.ObjectId(sessionId),
+  }).populate("createdBy");
+
+  res.status(200).json({
+    status: "success",
+    data: polls,
   });
 });

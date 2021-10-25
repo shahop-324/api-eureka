@@ -98,6 +98,8 @@ const Tools = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+
+
   const [openCreatePoll, setOpenCreatePoll] = React.useState(false);
   const [openSponsorShoutout, setOpenSponsorShoutout] = React.useState(false);
   const [openPlayVideo, setOpenPlayVideo] = React.useState(false);
@@ -204,7 +206,10 @@ const Tools = ({ open, handleClose }) => {
         </div>
       </Dialog>
 
-      <CreatePoll open={openCreatePoll} handleClose={handleCloseCreatePoll} />
+      <CreatePoll
+        open={openCreatePoll}
+        handleClose={handleCloseCreatePoll}
+      />
       <SponsorShoutout
         open={openSponsorShoutout}
         handleClose={handleCloseSponsorShoutout}

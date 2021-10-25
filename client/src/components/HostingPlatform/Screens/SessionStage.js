@@ -16,7 +16,17 @@ import GalleryVideoPlayer from "../SessionStreamingComponents.js/GalleryVideoPla
 import AgoraRTC from "agora-rtc-sdk-ng";
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
-import {showNotification, fetchSessionQnA, createSessionQnA, updateSessionQnA} from "./../../../actions";
+import {
+  showNotification,
+  fetchSessionQnA,
+  createSessionQnA,
+  updateSessionQnA,
+  fetchSessionQnAs,
+  createSessionPoll,
+  fetchSessionPolls,
+  updateSessionPoll,
+  fetchUpdatedSessionPolls,
+} from "./../../../actions";
 
 import {
   fetchSessionForSessionStage,
@@ -40,8 +50,8 @@ const SessionStage = () => {
   const communityId = params.communityId;
 
   useEffect(() => {
-
     dispatch(fetchSessionQnA(sessionId));
+    dispatch(fetchSessionPolls(sessionId));
 
     socket.emit(
       "subscribeSession",
@@ -65,13 +75,56 @@ const SessionStage = () => {
     });
 
     socket.on("newQnA", ({ newQnA }) => {
-  
-      
       dispatch(createSessionQnA(newQnA));
     });
 
-    socket.on("upvotedQnA", ({upvotedQnA}) => {
+    socket.on("upvotedQnA", ({ upvotedQnA }) => {
       dispatch(updateSessionQnA(upvotedQnA));
+    });
+
+    socket.on("downvotedQnA", ({ downvotedQnA }) => {
+      dispatch(updateSessionQnA(downvotedQnA));
+    });
+
+    socket.on("answeredQnA", ({ answeredQnA }) => {
+      dispatch(updateSessionQnA(answeredQnA));
+    });
+
+    socket.on("deletedQnA", ({ deletedQnA }) => {
+      dispatch(showNotification("QnA has been deleted successfully!"));
+      dispatch(updateSessionQnA(deletedQnA));
+    });
+
+    socket.on("sessionQnAs", ({ sessionQnAs }) => {
+      dispatch(showNotification("QnA is shown on stage!"));
+      dispatch(fetchSessionQnAs(sessionQnAs));
+    });
+
+    socket.on("hideQnAFromStage", ({ sessionQnAs }) => {
+      dispatch(showNotification("QnA has been hidden from stage!"));
+      dispatch(fetchSessionQnAs(sessionQnAs));
+    });
+
+    socket.on("newPoll", ({ createdPoll }) => {
+      dispatch(showNotification("New poll created successfully!"));
+      console.log(createdPoll);
+      dispatch(createSessionPoll(createdPoll));
+    });
+
+    socket.on("updatedPoll", ({ updatedPoll }) => {
+      dispatch(showNotification("Poll was updated successfully!"));
+      console.log(updatedPoll);
+      dispatch(updateSessionPoll(updatedPoll));
+    });
+
+    socket.on("sessionPolls", ({ polls }) => {
+      dispatch(showNotification("Poll is shown on stage!"));
+      dispatch(fetchUpdatedSessionPolls(polls));
+    });
+
+    socket.on("hidePollFromStage", ({ polls }) => {
+      dispatch(showNotification("Poll has been hidden from stage!"));
+      dispatch(fetchUpdatedSessionPolls(polls));
     });
 
     socket.on("deletedMsg", ({ deletedMsg }) => {

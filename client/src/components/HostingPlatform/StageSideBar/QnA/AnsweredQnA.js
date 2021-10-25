@@ -1,10 +1,19 @@
 import { Avatar, IconButton } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
-import Faker from "faker";
 import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DeleteQnA from "./DeleteQnA";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import socket from "./../../service/socket";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const QnABody = styled.div`
   width: 100%;
@@ -27,7 +36,7 @@ const PersonName = styled.div`
 `;
 
 const UserRoleTag = styled.div`
-  background-color: #152d35;
+  /* background-color: #152d35; */
   height: max-content;
   border-radius: 5px;
 
@@ -71,14 +80,35 @@ const UpvoteWidget = styled.div`
   border: 1px solid #152d35;
 
   &:hover {
-    border: 1px solid transparent;
-    background-color: #152d35;
-    color: #ffffff;
     cursor: pointer;
   }
 `;
 
-const AnsweredQnA = () => {
+const AnsweredQnA = ({
+  id,
+  question,
+  upvotes,
+  upvotedBy,
+  askedByName,
+  askedByImage,
+  askedByOrganisation,
+  askedByDesignation,
+  answeredByName,
+  answeredByImage,
+  answer,
+  createdAt,
+  showOnStage,
+}) => {
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  let upvotedByMe = false;
+
+  const sessionId = params.sessionId;
+  const eventId = params.eventId;
+
+  const userId = useSelector((state) => state.eventAccessToken.id);
+
   const [openDelete, setOpenDelete] = React.useState(false);
 
   const handleOpenDelete = () => {
@@ -88,54 +118,134 @@ const AnsweredQnA = () => {
     setOpenDelete(false);
   };
 
+  // Check if this user has upvoted this question
+
+  if (upvotedBy.includes(userId)) {
+    upvotedByMe = true;
+  }
+
   return (
     <>
-      <QnABody>
+      <QnABody className="mb-3">
         <div className="d-flex flex-row mb-4 justify-content-between">
           <div className="d-flex flex-row">
             <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
+              src={askedByImage}
+              alt={askedByName}
               variant="rounded"
               className="me-3"
             />
             <div>
-              <PersonName>{Faker.name.findName()}</PersonName>
-              <PersonName>{"Product manager, Bluemeet"}</PersonName>
+              <PersonName>{askedByName}</PersonName>
+              <PersonName>
+                {(askedByDesignation, askedByOrganisation)}
+              </PersonName>
             </div>
           </div>
 
-          <UserRoleTag>Host</UserRoleTag>
+          <UserRoleTag>
+            {timeAgo.format(new Date(createdAt), "round")}
+          </UserRoleTag>
         </div>
 
         <div className="d-flex flex-row align-items-center mb-4">
-          <UpvoteWidget className="me-3">
-            <ExpandLessRoundedIcon />
-            <div>48</div>
-          </UpvoteWidget>
-          <QuesText>how about investing money in crypto or NFTs ?</QuesText>
+          {upvotedByMe ? (
+            <UpvoteWidget
+              style={{ backgroundColor: "#152d35", color: "#ffffff" }}
+              onClick={() => {
+                socket.emit(
+                  "downvoteQnA",
+                  {
+                    qnaId: id,
+                    sessionId,
+                    userId,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="me-3"
+            >
+              <ExpandLessRoundedIcon />
+              <div>{upvotes}</div>
+            </UpvoteWidget>
+          ) : (
+            <UpvoteWidget
+              onClick={() => {
+                socket.emit(
+                  "upvoteQnA",
+                  {
+                    qnaId: id,
+                    sessionId,
+                    userId,
+                  },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="me-3"
+            >
+              <ExpandLessRoundedIcon />
+              <div>{upvotes}</div>
+            </UpvoteWidget>
+          )}
+          <QuesText>{question}</QuesText>
         </div>
 
         {/* Here we will have answered by */}
 
         <div className="d-flex flex-row  mb-3">
           <Avatar
-            src={Faker.image.avatar()}
+            src={answeredByImage}
             variant="rounded"
-            alt={Faker.name.findName()}
+            alt={answeredByName}
             className="me-3"
           />
-          <AnswerText>
-            Well, its great if you can bet your money with responsibility and
-            take an action based on your understanding of it and not just
-            because its hot nowadays.
-          </AnswerText>
+          <AnswerText>{answer}</AnswerText>
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-between">
           <div></div>
 
           <div className="d-flex flex-row align-items-center justify-content-end">
+            {showOnStage ?   <button
+              onClick={() => {
+                socket.emit(
+                  "hideQnAFromStage",
+                  { qnaId: id, sessionId, eventId },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="btn btn-outline-text btn-dark me-3"
+            >
+              Hide from stage
+            </button> :   <button
+              onClick={() => {
+                socket.emit(
+                  "showQnAOnStage",
+                  { qnaId: id, sessionId, eventId },
+                  (error) => {
+                    if (error) {
+                      alert(error);
+                    }
+                  }
+                );
+              }}
+              className="btn btn-outline-text btn-outline-dark me-3"
+            >
+              Show on stage
+            </button> }
+           
             <IconButton
               onClick={() => {
                 handleOpenDelete();
@@ -146,7 +256,17 @@ const AnsweredQnA = () => {
           </div>
         </div>
       </QnABody>
-      <DeleteQnA open={openDelete} handleClose={handleCloseDelete} />
+      <DeleteQnA
+        id={id}
+        question={question}
+        askedByName={askedByName}
+        askedByImage={askedByImage}
+        askedByOrganisation={askedByOrganisation}
+        askedByDesignation={askedByDesignation}
+        createdAt={createdAt}
+        open={openDelete}
+        handleClose={handleCloseDelete}
+      />
     </>
   );
 };

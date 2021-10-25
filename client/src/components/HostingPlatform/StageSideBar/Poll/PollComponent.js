@@ -4,8 +4,21 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { Avatar } from "@material-ui/core";
-import Faker from "faker";
+import { Avatar, IconButton } from "@material-ui/core";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import { useTimer } from "react-timer-hook";
+import Chip from "@mui/material/Chip";
+import Checkbox from "@mui/material/Checkbox";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import socket from "./../../service/socket";
+
+TimeAgo.addDefaultLocale(en);
+
+// Create formatter (English).
+const timeAgo = new TimeAgo("en-US");
 
 const PollBody = styled.div`
   width: 100%;
@@ -95,6 +108,28 @@ const PollFill = styled.div`
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
+  border: 1px solid #ffffff00;
+
+  color: #ffffff;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 3px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #152d35;
+
+  &:hover {
+    border: 1px solid #345b63;
+    background-color: #ffffff00;
+    cursor: pointer;
+  }
+`;
+const BtnSubmitted = styled.div`
+  padding: 5px 8px;
+  background-color: transparent;
   border: 1px solid #345b63;
 
   color: #ffffff;
@@ -108,111 +143,268 @@ const BtnOutlined = styled.div`
   align-items: center;
 `;
 
-const PollComponent = () => {
-  const [value, setValue] = React.useState("female");
+function MyTimer({ expiryTimestamp, setExpired }) {
+  const { seconds, minutes } = useTimer({
+    expiryTimestamp,
+    onExpire: () => {
+      console.warn("onExpire called");
+      setExpired(true);
+    },
+  });
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div
+        className=" py-2 px-2"
+        style={{ fontSize: "0.8rem", fontFamily: "Ubuntu" }}
+      >
+        <span className="mx-1">{minutes}</span> m
+        <span className="mx-1">{seconds}</span>s
+      </div>
+    </div>
+  );
+}
+
+const renderPollOptions = (
+  options,
+  totalVotes,
+  expired,
+  votedByMe,
+  votedOption
+) => {
+  return options.map((element) => {
+    let percent = 0;
+
+    if (!totalVotes * 1 === 0) {
+      percent = ((element.votedBy.length * 1) / totalVotes) * 1 * 100;
+    }
+
+    return (
+      <PollOption className="mb-3">
+        <PollFill
+          width={totalVotes * 1 === 0 ? "0%" : `${percent.toFixed(1)}%`}
+        />
+        <div>
+          <FormControlLabel
+            value={element._id}
+            control={
+              <Radio
+                // checked={votedOption.toString() === element._id.toString()}
+                disabled={expired || votedByMe ? true : false}
+              />
+            }
+          />
+        </div>
+        {element.option}
+        <IndividualPollCount className="ms-2">
+          {element.votedBy.length * 1 === 0 ? <></> : element.votedBy.length}{" "}
+        </IndividualPollCount>
+      </PollOption>
+    );
+  });
+};
+
+const PollComponent = ({
+  question,
+  options,
+  askedByName,
+  askedByImage,
+  askedByOrganisation,
+  askedByDesignation,
+  id,
+  createdAt,
+  expiresAt,
+  showOnStage,
+  votedBy,
+}) => {
+  let totalVotes = 0;
+  let neverExpires = false;
+  let votedByMe = false;
+  let votedOption;
+
+  const params = useParams();
+
+  const sessionId = params.sessionId;
+  const eventId = params.eventId;
+
+  const userId = useSelector((state) => state.eventAccessToken.id);
+
+  const [value, setValue] = React.useState(votedByMe ? votedOption : null); // This needs to be initialised with the selected options id and if no option is selected then just show no option as selected
+
+  const [expired, setExpired] = React.useState(false);
 
   const handleChange = (event) => {
     setValue(event.target.value);
+    console.log(event.target.value, "This is the selected options Id");
   };
+
+  if (!expiresAt) {
+    neverExpires = true;
+  }
+
+  for (let element of options) {
+    totalVotes = totalVotes + element.votedBy.length;
+  }
+
+  if (votedBy.includes(userId)) {
+    votedByMe = true;
+  }
+
+  if (votedByMe) {
+    for (let element of options) {
+      if (element.votedBy.includes(userId)) {
+        votedOption = element._id;
+        console.log(votedOption);
+      }
+    }
+  }
+
+  const handleSubmit = () => {
+    socket.emit(
+      "submitSessionPollAns",
+      { pollId: id, optionId: value, voter: userId, sessionId: sessionId },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   return (
     <>
       <PollBody className="mb-3">
         <div className="d-flex flex-row mb-4 justify-content-between">
           <div className="d-flex flex-row">
             <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
+              src={askedByImage}
+              alt={askedByName}
               variant="rounded"
               className="me-3"
             />
             <div>
-              <PersonName>{Faker.name.findName()}</PersonName>
-              <PersonName>{"Product manager, Bluemeet"}</PersonName>
+              <PersonName>{askedByName}</PersonName>
+              <PersonName>
+                {(askedByDesignation, askedByOrganisation)}
+              </PersonName>
             </div>
           </div>
 
-          <UserRoleTag>Host</UserRoleTag>
+          {/* <UserRoleTag>Host</UserRoleTag> */}
+          <UserRoleTag>
+            {timeAgo.format(new Date(createdAt), "round")}
+          </UserRoleTag>
         </div>
 
-        <PollQues className="mb-3">
-          Are you satisfied with quality of event?
-        </PollQues>
+        <PollQues className="mb-3">{question}</PollQues>
 
-        <PollOption className="mb-3">
-          <PollFill width={"12%"} />
-          <div>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="gender"
-                name="gender1"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel value="female" control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          Pretty good & interesting conversation
-          <IndividualPollCount className="ms-2">124 </IndividualPollCount>
-        </PollOption>
-        <PollOption className="mb-3">
-          <PollFill width={"65%"} />
-          <div>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="gender"
-                name="gender1"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel value="option-2" control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          Having a blast! This is awesome 😍
-          <IndividualPollCount className="ms-2">3,245 </IndividualPollCount>
-        </PollOption>
-        <PollOption className="mb-3">
-          <PollFill width={"8%"} />
-          <div>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="gender"
-                name="gender1"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel value="option-3" control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          There is a small room for improvement
-          <IndividualPollCount className="ms-2">12 </IndividualPollCount>
-        </PollOption>
-        <PollOption className="mb-3">
-          <PollFill width={"0.1%"} />
-          <div>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="gender"
-                name="gender1"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel value="option-4" control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </div>
-          Could be a lot better
-          <IndividualPollCount className="ms-2">2 </IndividualPollCount>
-        </PollOption>
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="gender"
+            name="gender1"
+            defaultValue={votedOption} //
+            onChange={handleChange}
+          >
+            {renderPollOptions(
+              options,
+              totalVotes,
+              expired,
+              votedByMe,
+              votedOption
+            )}
+          </RadioGroup>
+        </FormControl>
+
         <div className="d-flex flex-row align-items-center justify-content-between mb-3">
-          <TotalPollVotes>3562 votes total</TotalPollVotes>
-          <TimeLeft>Time left 3:02 min</TimeLeft>
+          {totalVotes * 1 === 0 ? (
+            <Chip
+              label="No votes yet"
+              variant="outlined"
+              style={{ fontWeight: "500" }}
+            />
+          ) : (
+            <TotalPollVotes>{totalVotes} votes total</TotalPollVotes>
+          )}
+
+          {/* */}
+          {neverExpires ? (
+            <></>
+          ) : expired ? (
+            <Chip label="Expired" color="error" style={{ fontWeight: "500" }} />
+          ) : (
+            <Chip
+              label={
+                <MyTimer
+                  expiryTimestamp={expiresAt * 1}
+                  setExpired={setExpired}
+                />
+              }
+              color="success"
+              style={{ fontWeight: "500" }}
+            />
+          )}
         </div>
 
-        <div className="d-flex flex-row align-items-center justify-content-end">
-          <BtnOutlined>Submitted</BtnOutlined>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.5fr 1fr",
+            gridGap: "24px",
+            alignItems: "center",
+          }}
+        >
+          <div className="d-flex flex-row align-items-center">
+            <IconButton
+              className="me-1"
+              onClick={() => {
+                // handleOpenDelete();
+              }}
+            >
+              <DeleteRoundedIcon />
+            </IconButton>
+            {showOnStage ? (
+              <button
+                onClick={() => {
+                  socket.emit(
+                    "hideSessionPollFromStage",
+                    { pollId: id, sessionId, eventId },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
+                    }
+                  );
+                }}
+                className="btn btn-outline-text btn-dark me-3"
+              >
+                Hide from stage
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  socket.emit(
+                    "showSessionPollOnStage",
+                    { pollId: id, sessionId, eventId },
+                    (error) => {
+                      if (error) {
+                        alert(error);
+                      }
+                    }
+                  );
+                }}
+                className="btn btn-outline-text btn-outline-dark me-3"
+              >
+                Show on stage
+              </button>
+            )}
+          </div>
+          <div className="d-flex flex-row align-items-center justify-content-end">
+            {votedByMe ? (
+              <BtnSubmitted>Submitted</BtnSubmitted>
+            ) : expired ? (
+              <></>
+            ) : (
+              <BtnOutlined onClick={handleSubmit}>Submit</BtnOutlined>
+            )}
+          </div>
         </div>
       </PollBody>
     </>

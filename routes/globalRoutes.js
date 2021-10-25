@@ -226,4 +226,10 @@ router.get(
   globalController.fetchSessionQnA
 );
 
+router.get(
+  "/getSessionPolls/:sessionId",
+  authController.protect,
+  globalController.fetchSessionPoll
+);
+
 module.exports = router;

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-import Faker from "faker";
 import styled from "styled-components";
 import socket from "./../../service/socket";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
@@ -11,7 +10,6 @@ import "./../../Styles/root.scss";
 import { Avatar, IconButton } from "@material-ui/core";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import UnansweredQnA from "./UnansweredQnA";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -39,14 +37,14 @@ const PersonName = styled.div`
 `;
 
 const UserRoleTag = styled.div`
-  background-color: #152d35;
+  /* background-color: #152d35; */
   height: max-content;
   border-radius: 5px;
 
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.7rem;
-  color: #ffffff;
+  color: #353535;
 
   padding: 4px 8px;
 `;
@@ -55,7 +53,7 @@ const QuesText = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.85rem;
-  color: #5F5F5F;
+  color: #5f5f5f;
 `;
 
 const UpvoteWidget = styled.div`
@@ -113,37 +111,58 @@ const StyledOutlineButton = styled.button`
   }
 `;
 
-const QnAComponent = () => {
+const QnAComponent = ({
+  id,
+  question,
+  askedByName,
+  askedByImage,
+  askedByOrganisation,
+  askedByDesignation,
+  createdAt,
+}) => {
   return (
     <>
       <QnABody className="">
         <div className="d-flex flex-row mb-4 justify-content-between">
           <div className="d-flex flex-row">
             <Avatar
-              src={Faker.image.avatar()}
-              alt={Faker.name.findName()}
+              src={askedByImage}
+              alt={askedByName}
               variant="rounded"
               className="me-3"
             />
             <div>
-              <PersonName>{Faker.name.findName()}</PersonName>
-              <PersonName>{"Product manager, Bluemeet"}</PersonName>
+              <PersonName>{askedByName}</PersonName>
+              <PersonName>
+                {(askedByDesignation, askedByOrganisation)}
+              </PersonName>
             </div>
           </div>
 
-          <UserRoleTag>Host</UserRoleTag>
+          {/* {console.log(createdAt, "This is the time when this question was asked.")} // Its coming undefined rn */}
+
+          {/* <UserRoleTag>{timeAgo.format(new Date(createdAt) , "round")}</UserRoleTag>  */}
         </div>
 
         <div className="d-flex flex-row align-items-center mb-3">
           <div className="me-3"></div>
-          <QuesText>how about investing money in crypto or NFTs ?</QuesText>
+          <QuesText>{question}</QuesText>
         </div>
       </QnABody>
     </>
   );
 };
 
-const DeleteQnA = ({ open, handleClose }) => {
+const DeleteQnA = ({
+  open,
+  handleClose,
+  id,
+  question,
+  askedByName,
+  askedByImage,
+  askedByOrganisation,
+  askedByDesignation,
+}) => {
   const params = useParams();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -151,21 +170,21 @@ const DeleteQnA = ({ open, handleClose }) => {
   const eventId = params.eventId;
   const sessionId = params.sessionId;
 
-  //   const deleteMsg = (msgId) => {
-  //     socket.emit(
-  //       "deleteSessionMessage", // !change this to deleteSessionMessage
-  //       {
-  //         msgId: msgId,
-  //         eventId: eventId,
-  //         sessionId: sessionId,
-  //       },
-  //       (error) => {
-  //         if (error) {
-  //           alert(error);
-  //         }
-  //       }
-  //     );
-  //   };
+  const deleteQnA = () => {
+    socket.emit(
+      "deleteSessionQnA",
+      {
+        qnaId: id,
+        eventId: eventId,
+        sessionId: sessionId,
+      },
+      (error) => {
+        if (error) {
+          alert(error);
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -198,7 +217,14 @@ const DeleteQnA = ({ open, handleClose }) => {
           {/* <ChatMsgElement /> */}
           <div className="msg-to-report-container p-3 mb-4">
             {/* Here goes QnA element */}
-            <QnAComponent />
+            <QnAComponent
+              id={id}
+              question={question}
+              askedByName={askedByName}
+              askedByImage={askedByImage}
+              askedByOrganisation={askedByOrganisation}
+              askedByDesignation={askedByDesignation}
+            />
           </div>
 
           {/* Write warning message here */}
@@ -208,10 +234,9 @@ const DeleteQnA = ({ open, handleClose }) => {
             style={{ border: "none" }}
           >
             <button
-              //   onClick={() => {
-              //     console.log("Delete msg with this Id", msgId);
-              //     deleteMsg(msgId);
-              //   }}
+              onClick={() => {
+                deleteQnA();
+              }}
               className="btn btn-primary btn-outline-text"
               style={{ width: "100%" }}
             >
