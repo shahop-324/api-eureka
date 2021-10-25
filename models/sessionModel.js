@@ -5,9 +5,6 @@ const onStagePeopleSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
-  email: {
-    type: String,
-  },
   hidden: {
     type: Boolean,
     default: false,

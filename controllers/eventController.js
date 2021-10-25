@@ -777,19 +777,15 @@ exports.addSession = catchAsync(async (req, res, next) => {
 
   try {
     for (let element of req.body.host) {
-      const user = await User.findById(element);
-        session.onStagePeople.push({ user: element, email: user.email });
-      }
-    
-      for (let element of processedArray) {
-       const user = await User.findById(element);
-        session.onStagePeople.push({ user: element, email: user.email });
-      }
-  }
-  catch(error) {
+      session.onStagePeople.push({ user: element });
+    }
+
+    for (let element of processedArray) {
+      session.onStagePeople.push({ user: element });
+    }
+  } catch (error) {
     console.log(error);
   }
-  
 
   // For each
 
