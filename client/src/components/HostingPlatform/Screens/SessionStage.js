@@ -127,6 +127,11 @@ const SessionStage = () => {
       dispatch(fetchUpdatedSessionPolls(polls));
     });
 
+    socket.on("deletedPoll", ({ deletedPoll }) => {
+      console.log(deletedPoll);
+      dispatch(updateSessionPoll(deletedPoll));
+    });
+
     socket.on("deletedMsg", ({ deletedMsg }) => {
       console.log(deletedMsg);
       dispatch(deleteSessionChat(deletedMsg));

@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import socket from "./../../service/socket";
+import DeletePoll from "./DeletePoll";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -233,6 +234,12 @@ const PollComponent = ({
 
   const [expired, setExpired] = React.useState(false);
 
+  const [openDeletePoll, setOpenDeletePoll] = React.useState(false);
+
+  const handleCloseDeletePoll = () => {
+    setOpenDeletePoll(false);
+  };
+
   const handleChange = (event) => {
     setValue(event.target.value);
     console.log(event.target.value, "This is the selected options Id");
@@ -355,7 +362,7 @@ const PollComponent = ({
             <IconButton
               className="me-1"
               onClick={() => {
-                // handleOpenDelete();
+                setOpenDeletePoll(true);
               }}
             >
               <DeleteRoundedIcon />
@@ -407,6 +414,17 @@ const PollComponent = ({
           </div>
         </div>
       </PollBody>
+      <DeletePoll
+        open={openDeletePoll}
+        handleClose={handleCloseDeletePoll}
+        id={id}
+        question={question}
+        askedByName={askedByName}
+        askedByImage={askedByImage}
+        askedByOrganisation={askedByOrganisation}
+        askedByDesignation={askedByDesignation}
+        createdAt={createdAt}
+      />
     </>
   );
 };

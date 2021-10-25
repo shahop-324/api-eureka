@@ -742,7 +742,7 @@ io.on("connect", (socket) => {
           new: true,
           validateModifiedOnly: true,
         });
-        console.log(result);
+        // console.log(result);
       }
 
       // Now get all polls of this session and send it to everyone in this session
