@@ -127,12 +127,12 @@ const EventManagement = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(term);
+  
 
     const timeoutId = setTimeout(() => {
       dispatch(fetchEventsOfParticularCommunity(term, page, limit));
     }, 500);
-    console.log(limit);
+   
     history.push(
       `/user/${userId}/community/event-management/${communityId}/?limit=${limit}&page=${page}`
     );
@@ -170,9 +170,9 @@ const EventManagement = () => {
           registrationsRecieved,
           status,
           moderators,
-          host
+          hosts
         } = communityEvent;
-        console.log(id);
+       
         let imgUrl = " #";
         const imgKey = communityEvent.image;
         if (imgKey) {
@@ -192,7 +192,7 @@ const EventManagement = () => {
             communityId={communityId}
             id={id}
             moderators={moderators}
-            hosts={host}
+            hosts={hosts}
           />
         );
       });

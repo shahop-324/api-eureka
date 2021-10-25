@@ -1969,9 +1969,6 @@ io.on("connect", (socket) => {
       socket.join(eventId);
 
       const fetchCurrentMessages = async (eventId) => {
-        console.log(
-          "This is a flag for fetching pervious messages of this event"
-        );
         const populatedEventChats = await EventChatMessage.find(
           { eventId: mongoose.Types.ObjectId(eventId) },
           (err, doc) => {
@@ -1990,20 +1987,12 @@ io.on("connect", (socket) => {
       fetchCurrentMessages(eventId);
 
       const fetchCurrentUsers = async (eventId) => {
-        await Event.findById(eventId, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(eventId).emit("roomData", { users: doc.currentlyInEvent });
+        await UsersInEvent.find(
+          { room: mongoose.Types.ObjectId(eventId) },
+          (err, doc) => {
+            io.in(eventId).emit("roomData", { users: doc });
           }
-        })
-          .select("currentlyInEvent")
-          .populate({
-            path: "currentlyInEvent",
-            options: {
-              match: { status: "Active" },
-            },
-          });
+        );
       };
 
       const addUser = async ({
@@ -2048,24 +2037,11 @@ io.on("connect", (socket) => {
                   console.log("error: ", err);
 
                   if (!existingUser) {
-                    const eventDoc = await Event.findById(room);
-                    eventDoc.currentlyInEvent.push(doc._id);
-
-                    await eventDoc.save(
-                      { validateModifiedOnly: true },
-                      (err, doc) => {
-                        if (err) {
-                          console.log(err);
-                        } else {
-                          fetchCurrentUsers(eventId);
-                        }
-                      }
-                    );
+                    fetchCurrentUsers(eventId);
                   }
                 }
               );
             } else {
-              console.log("This is an existing user.");
               await UsersInEvent.findOneAndUpdate(
                 {
                   $and: [
@@ -2073,7 +2049,17 @@ io.on("connect", (socket) => {
                     { room: mongoose.Types.ObjectId(eventId) },
                   ],
                 },
-                { status: "Active", socketId: id }, // Mark as active and update socket Id
+                {
+                  status: "Active",
+                  socketId: id,
+                  userEmail: email,
+                  userName: userName,
+                  userImage: userImage,
+                  userCity: userCity,
+                  userCountry: userCountry,
+                  userOrganisation: userOrganisation,
+                  userDesignation: userDesignation,
+                }, // Mark as active and update socket Id
                 { new: true },
                 (err, doc) => {
                   if (err) {
@@ -2128,7 +2114,7 @@ io.on("connect", (socket) => {
       callback
     ) => {
       socket.join(sessionId);
-      console.log("We have subscribed to this session.");
+
       const fetchCurrentMessages = async (sessionId) => {
         await Session.findById(sessionId, (err, doc) => {
           if (err) {
@@ -2146,22 +2132,14 @@ io.on("connect", (socket) => {
       fetchCurrentMessages(sessionId);
 
       const fetchCurrentUsersInSession = async (sessionId) => {
-        await Session.findById(sessionId, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(sessionId).emit("sessionRoomData", {
-              sessionUsers: doc.currentlyInSession,
+        await UsersInSession.find(
+          { room: mongoose.Types.ObjectId(sessionId) },
+          (err, doc) => {
+            io.to(sessionId).emit("usersInSession", {
+              users: doc,
             });
           }
-        })
-          .select("currentlyInSession")
-          .populate({
-            path: "currentlyInSession",
-            options: {
-              match: { status: "Active" },
-            },
-          });
+        );
       };
 
       const addUserInSession = async ({
@@ -2189,10 +2167,9 @@ io.on("connect", (socket) => {
             if (err) {
               console.log(err);
             }
-            let mongoUser;
 
             if (!existingUser) {
-              mongoUser = await UsersInSession.create(
+              await UsersInSession.create(
                 {
                   room: room,
                   socketId: id,
@@ -2210,20 +2187,9 @@ io.on("connect", (socket) => {
                 async (err, doc) => {
                   if (err) {
                     console.log(err);
+                  } else {
+                    fetchCurrentUsersInSession(sessionId);
                   }
-                  const sessionDoc = await Session.findById(room);
-                  sessionDoc.currentlyInSession.push(doc._id);
-
-                  await sessionDoc.save(
-                    { validateModifiedOnly: true },
-                    (err, doc) => {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        fetchCurrentUsersInSession(sessionId);
-                      }
-                    }
-                  );
                 }
               );
             } else {
@@ -2234,7 +2200,20 @@ io.on("connect", (socket) => {
                     { room: mongoose.Types.ObjectId(sessionId) },
                   ],
                 },
-                { status: "Active" },
+                {
+                  status: "Active",
+                  socketId: id,
+                  sessionRole: sessionRole,
+                  userId: userId,
+                  userEmail: userEmail,
+                  userName: userName,
+                  userImage: userImage,
+                  userCity: userCity,
+                  userCountry: userCountry,
+                  userOrganisation: userOrganisation,
+                  userDesignation: userDesignation,
+                  roleToBeDisplayed: roleToBeDisplayed,
+                },
                 { new: true },
                 (err, doc) => {
                   if (err) {
@@ -2690,31 +2669,53 @@ io.on("connect", (socket) => {
     }).populate("replyTo");
   });
 
-  socket.on("disconnectUserFromSession", ({ userId, sessionId }) => {
-    const sessionUser = removeUserFromSession(userId, sessionId);
+  socket.on("leaveSession", async ({ userId, sessionId }) => {
+    socket.leave(sessionId);
+    await UsersInSession.findOneAndUpdate(
+      {
+        $and: [
+          { room: mongoose.Types.ObjectId(sessionId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      },
+      { status: "Inactive", socketId: null },
+      { new: true, validateModifiedOnly: true }
+    );
 
-    const fetchCurrentUsersInSession = async (sessionId) => {
-      await Session.findById(sessionId, (err, doc) => {
-        if (err) {
-          console.log(err);
-        } else {
-          io.to(sessionId).emit("sessionRoomData", {
-            sessionUsers: doc.currentlyInSession,
-          });
-        }
-        // TODO Here we also have to send stage members data
-      })
-        .select("currentlyInSession")
-        .populate({
-          path: "currentlyInSession",
-          options: {
-            match: { status: "Active" },
-          },
+    // Find all users in this session and send this list of updated users to everyone in this session
+
+    await UsersInSession.find(
+      { room: mongoose.Types.ObjectId(sessionId) },
+      (err, doc) => {
+        io.in(sessionId).emit("usersInSession", {
+          users: doc,
         });
-    };
+      }
+    );
+  });
 
-    fetchCurrentUsersInSession(sessionId);
-    // socket.leave(sessionId);
+  socket.on("leaveEvent", async ({ userId, eventId }) => {
+    socket.leave(eventId);
+
+    await UsersInEvent.findOneAndUpdate(
+      {
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      },
+      { status: "Inactive" },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    await UsersInEvent.find(
+      { room: mongoose.Types.ObjectId(eventId) },
+      (err, doc) => {
+        io.in(eventId).emit("roomData", {
+          users: doc,
+        });
+      }
+    );
   });
 
   socket.on("disconnectUser", ({ userId, eventId }) => {

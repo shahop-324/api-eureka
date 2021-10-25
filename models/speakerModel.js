@@ -12,7 +12,10 @@ const speakerSchema = new mongoose.Schema(
       enum: ["Active", "Inactive", "Deleted"],
       default: "Active",
     },
-    
+    userId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
     firstName: {
       type: String,
       trim: true,
@@ -82,7 +85,6 @@ const speakerSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-   
   },
   {
     toJSON: { virtuals: true },

@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import styled from "styled-components";
 import Chip from "@mui/material/Chip";
 
 const EventDetailCard = ({
@@ -31,12 +30,10 @@ const EventDetailCard = ({
   let role = "organiser"; // default role is organiser
   const dispatch = useDispatch();
   const eventId = id;
-  console.log(eventId);
 
   const params = useParams();
   const userId = params.userId;
   const email = useSelector((state) => state.user.userDetails.email);
-  console.log(userId);
 
   // Check if the entering person is a host/ moderator / organiser
 
@@ -49,12 +46,6 @@ const EventDetailCard = ({
   if (hosts) {
     if (hosts.includes(userId)) {
       role = "host";
-    }
-  }
-
-  if (moderators && hosts) {
-    if (!moderators.includes(userId) && !hosts.includes(userId)) {
-      role = "organiser";
     }
   }
 
@@ -269,8 +260,6 @@ const EventDetailCard = ({
                         userId,
                         email,
                         role, // organiser ||  moderator ||  host
-                        eventId,
-                        communityId
                       )
                     );
                   }}

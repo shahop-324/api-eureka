@@ -37,12 +37,11 @@ const userSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
-
     disableSucceded(state, action) {
       state.succeded = false;
     },
     FetchPeopleInSession(state, action) {
-      state.peopleInThisSession = action.payload.peopleInThisSession;
+      state.peopleInThisSession = action.payload.users;
       state.isLoading = false;
     },
     FetchPeopleInEvent(state, action) {

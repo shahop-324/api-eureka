@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router";
 
 const Paper = styled.div`
   width: 380px;
@@ -49,36 +50,45 @@ const CommunityName = styled.div`
 
   text-decoration: none !important;
   text-decoration-thickness: 0px;
- text-decoration-color: transparent;
+  text-decoration-color: transparent;
 `;
 
 const renderCommunities = (communities, userId) => {
   return communities.map((community) => {
     return (
-      
-<CommunityTabGrid onClick={() => {
-  window.location.href= `/user/${userId}/community/getting-started/${community._id}`
-}} className="p-3 mb-3">
-    <Avatar
-      src={community.image.startsWith("https://") ? community.image : `https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}` }
-      alt={community.name}
-      variant="rounded"
-    />
-    <CommunityName style={{textDecoration: "none !important"}}>{community.name}</CommunityName>
-    <IconButton>
-      <KeyboardArrowRightRoundedIcon />
-    </IconButton>
-  </CommunityTabGrid>
-     
+      <CommunityTabGrid
+        onClick={() => {
+          window.location.href = `/user/${userId}/community/getting-started/${community._id}`;
+        }}
+        className="p-3 mb-3"
+      >
+        <Avatar
+          src={
+            community.image.startsWith("https://")
+              ? community.image
+              : `https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`
+          }
+          alt={community.name}
+          variant="rounded"
+        />
+        <CommunityName style={{ textDecoration: "none !important" }}>
+          {community.name}
+        </CommunityName>
+        <IconButton>
+          <KeyboardArrowRightRoundedIcon />
+        </IconButton>
+      </CommunityTabGrid>
     );
-  })
-}
+  });
+};
 
 const SwitchCommunity = ({ open, handleClose }) => {
+  const params = useParams();
+  const eventId = params.eventId;
 
-  const {communities} = useSelector((state) => state.community);
+  const { communities } = useSelector((state) => state.community);
 
-  const {userDetails} = useSelector((state) => state.user);
+  const { userDetails } = useSelector((state) => state.user);
 
   const userId = userDetails._id;
 
@@ -99,8 +109,7 @@ const SwitchCommunity = ({ open, handleClose }) => {
             <Heading> Switch community </Heading>
           </HeaderFooter>
           <div className="px-4 py-3">
-           {renderCommunities(communities, userId)}
-           
+            {renderCommunities(communities, userId)}
           </div>
           <HeaderFooter className="px-4 py-3 d-flex flex-row align-items-center justify-content-end">
             <button

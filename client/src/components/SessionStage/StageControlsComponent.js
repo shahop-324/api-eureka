@@ -13,7 +13,7 @@ import ReactTooltip from "react-tooltip";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
-
+import socket from "./../HostingPlatform/service/socket";
 import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
 import { useDispatch, useSelector } from "react-redux";
 import { getRTCTokenForScreenShare } from "../../actions";
@@ -102,7 +102,6 @@ const StageControlsComponent = ({
   startScreenCall,
   setScreenSharingIsEnabled,
 }) => {
-
   const [openSpeakers, setOpenSpeakers] = React.useState(false);
 
   const [fullScreen, setFullScreen] = useState(false);
@@ -119,7 +118,7 @@ const StageControlsComponent = ({
 
   const handleCloseSpeakers = () => {
     setOpenSpeakers(false);
-  }
+  };
 
   const handleCloseStopRecording = () => {
     setStopRecording(false);
@@ -169,17 +168,21 @@ const StageControlsComponent = ({
             id="leave-session"
             className="me-3"
             onClick={() => {
-              history.push(
-                `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
-              );
+              socket.emit("leaveSession", { sessionId, userId }, (error) => {
+                console.log(error);
+              });
+              window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/lobby`;
             }}
           >
             Leave
           </BtnDanger>
 
-          <button onClick={() => {
-            setOpenSpeakers(true);
-          }} className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center">
+          <button
+            onClick={() => {
+              setOpenSpeakers(true);
+            }}
+            className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center"
+          >
             {" "}
             <PersonRoundedIcon className="me-2" /> <span>Speakers</span>
           </button>

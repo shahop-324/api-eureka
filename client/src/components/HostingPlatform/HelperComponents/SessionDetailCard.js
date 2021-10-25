@@ -68,8 +68,7 @@ const renderSpeakerList = (speakers) => {
     return (
       <SessionSpeakerCard
         image={
-          speaker.image &&
-          speaker.image.startsWith("https://")
+          speaker.image && speaker.image.startsWith("https://")
             ? speaker.image
             : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
@@ -93,6 +92,10 @@ const SessionDetailCard = ({
   const [openPriority, setOpenPriority] = useState(false);
 
   const [openReminder, setOpenReminder] = useState(false);
+
+  const userEmail = useSelector((state) => state.user.userDetails.email);
+
+  const speakerEmails = speakers.map((element) => element.email);
 
   const handleClosePriority = () => {
     setOpenPriority(false);
@@ -118,23 +121,11 @@ const SessionDetailCard = ({
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
-  const userImage = userDetails.image ? userDetails.image : " ";
-  const userCity = userDetails.city ? userDetails.city : "Los Angeles";
-  const userCountry = userDetails.country ? userDetails.country : "USA";
-  const userOrganisation = userDetails.organisation
-    ? userDetails.organisation
-    : "Google Inc.";
-  const userDesignation = userDetails.designation
-    ? userDetails.designation
-    : "Vice President";
-
-  const speaker = useSelector((state) => {
-    return state.speaker.speakers.find((speaker) => {
-      return speaker.id === userId;
-    });
-  });
-
-  const speakerDetails = useSelector((state) => state.speaker.speakerDetails);
+  const userImage = userDetails.image;
+  const userCity = userDetails.city;
+  const userCountry = userDetails.country;
+  const userOrganisation = userDetails.organisation;
+  const userDesignation = userDetails.designation;
 
   const day = dateFormat(new Date(startTime), "ddd");
   const date = dateFormat(new Date(startTime), "dS mmm");
@@ -144,50 +135,21 @@ const SessionDetailCard = ({
   let btnText = "Join";
   let bgColor = "#538BF7d8";
 
-  if (role === "audience") {
-    sessionRole = "audience";
-  } else if (role === "host") {
-    // Check if he's a host for this session or not
-    if (hosts.includes(userId)) {
-      sessionRole = "host";
-    } else {
-      sessionRole = "organiser";
-    }
-    // sessionRole = "host";
-  } else if (role === "moderator") {
-    // Check if he's a host in this session
-    if (hosts.includes(userId)) {
-      sessionRole = "host";
-    } else {
-      sessionRole = "organiser";
-    }
-  }
-  if (role === "organiser") {
-    sessionRole = "organiser"; // We are sure that organiser is the one who is in community team but not host in any session and not a moderator as well.
-  } else if (role === "speaker") {
-    const bool = speakers.includes(userId); // Flag which indicates if this speaker is a speaker in this session or not
-    if (bool) {
-      sessionRole = "host";
-    } else {
-      sessionRole = "speaker";
-    }
-  }
+ 
 
+  if (role === "host" || role === "speaker") {
+    if (hosts.includes(userId) || speakerEmails.includes(userEmail)) {
+      // Set role as host for this session
+      sessionRole = "host";
+    } else {
+      sessionRole = "audience";
+    }
+  } else {
+    sessionRole = "audience";
+  }
   if (sessionRole === "host") {
     btnText = "Backstage";
     bgColor = "#538BF7";
-  }
-
-  let roleToBeDisplayed = role;
-
-  if (role === "audience") {
-    roleToBeDisplayed = "audience";
-  } else if (role === "speaker") {
-    roleToBeDisplayed = "speaker";
-  } else if (sessionRole === "host") {
-    roleToBeDisplayed = "host";
-  } else {
-    roleToBeDisplayed = "organiser";
   }
 
   return (
@@ -242,12 +204,11 @@ const SessionDetailCard = ({
             <Link
               onClick={() => {
                 // Get a RTC token
-                dispatch(getRTCTokenAndSession(id, sessionRole, eventId, communityId));
+                dispatch(
+                  getRTCTokenAndSession(id, sessionRole, eventId, communityId)
+                );
 
                 // Join session channel
-
-                
-                
 
                 socket.emit(
                   "joinSession",
@@ -262,7 +223,7 @@ const SessionDetailCard = ({
                     userCountry: userCountry,
                     userOrganisation: userOrganisation,
                     userDesignation: userDesignation,
-                    roleToBeDisplayed: roleToBeDisplayed,
+                    roleToBeDisplayed: role,
                   },
                   (error) => {
                     if (error) {
@@ -271,14 +232,7 @@ const SessionDetailCard = ({
                   }
                 );
 
-                dispatch(
-                  setSessionRoleAndJoinSession(
-                    sessionRole,
-                    id,
-                    eventId,
-                    communityId
-                  )
-                );
+                dispatch(setSessionRoleAndJoinSession(sessionRole));
               }}
               style={{ textDecoration: "none" }}
             >

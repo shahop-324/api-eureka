@@ -312,8 +312,6 @@ const BoothMagicLinkDestination = () => {
                                     userId,
                                     userEmail,
                                     "exhibitor", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                                    eventDetails._id,
-                                    eventDetails.communityId
                                   )
                                 );
                               }}

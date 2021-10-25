@@ -13,6 +13,7 @@ const LoggedInUsers = require("../models/loggedInUsers");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
 const TeamInvite = require("../models/teamInviteModel");
 const Registration = require("../models/registrationsModel");
+const Speaker = require("./../models/speakerModel");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -199,6 +200,13 @@ exports.signup = catchAsync(async (req, res) => {
           { userEmail: req.body.email },
         ],
       });
+
+      const speakers = await Speaker.find({ email: req.body.email });
+
+      for (let element of speakers) {
+        element.userId = userDoc._id;
+        await element.save({ new: true, validateModifiedOnly: true });
+      }
 
       // Now we have all speaker registrations for this user which are still pending and not cancelled
 

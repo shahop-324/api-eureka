@@ -26,6 +26,7 @@ import {
   fetchSessionPolls,
   updateSessionPoll,
   fetchUpdatedSessionPolls,
+  updateUsersInSession,
 } from "./../../../actions";
 
 import {
@@ -64,6 +65,9 @@ const SessionStage = () => {
         }
       }
     );
+    socket.on("usersInSession", ({users}) => {
+      dispatch(updateUsersInSession(users));
+    })
 
     socket.on("newSessionMsg", ({ newMsg }) => {
       dispatch(createNewSessionMsg(newMsg));

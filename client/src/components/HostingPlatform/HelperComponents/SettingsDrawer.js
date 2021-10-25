@@ -179,6 +179,7 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
             <div
               className="setting-tab px-3 py-2 mb-4 d-flex flex-row align-items-center justify-content-between"
               onClick={() => {
+                socket.emit("leaveEvent", { userId, eventId }, (error) => {console.log(error)});
                 history.push("/user/home");
               }}
             >
@@ -215,8 +216,8 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
               <Link
                 to="/home"
                 onClick={() => {
-                  // history.push("/signin");
-                  socket.emit("disconnectUser", { userId, eventId }, () => {});
+                  
+                  socket.emit("leaveEvent", { userId, eventId }, (error) => {console.log(error)});
                   dispatch(signOut());
                 }}
                 className="btn btn-outline-danger btn-outline-text"

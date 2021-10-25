@@ -569,6 +569,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
       const speaker = await Speaker.create({
         registrationId: newSpeakerRegistration._id,
+        userId: userOnPlatform._id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,

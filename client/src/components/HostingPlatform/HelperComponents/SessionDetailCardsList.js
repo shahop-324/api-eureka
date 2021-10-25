@@ -11,12 +11,11 @@ const SessionDetailCardsList = ({
   eventId,
   communityId,
 }) => {
-  console.log(sessions);
+  
 
   const renderSessionList = (sessions, socket) => {
     return sessions.map((session) => {
       const duration = new Date(session.endTime) - new Date(session.startTime);
-      console.log(duration);
       return (
         <SessionDetailCard
         socket={socket}

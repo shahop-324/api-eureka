@@ -271,8 +271,6 @@ const AttendeeMagicLinkDestination = () => {
                                   userId,
                                   userEmail,
                                   "attendee", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                                  eventDetails._id,
-                                  eventDetails.communityId
                                 )
                               );
                             }}

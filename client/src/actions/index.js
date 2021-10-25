@@ -5110,10 +5110,8 @@ export const createNewInvitation =
   };
 
 export const generateEventAccessToken =
-  (id, email, role, eventId, communityId) => async (dispatch, getState) => {
+  (id, email, role) => async (dispatch, getState) => {
     try {
-      console.log(id, role, eventId);
-
       dispatch(
         eventAccessActions.CreateEventAccess({
           role: role,
@@ -10310,3 +10308,11 @@ export const fetchUpdatedSessionPolls =
       })
     );
   };
+
+export const updateUsersInSession = (users) => async (dispatch, getState) => {
+  dispatch(
+    userActions.FetchPeopleInSession({
+      users: users,
+    })
+  );
+};
