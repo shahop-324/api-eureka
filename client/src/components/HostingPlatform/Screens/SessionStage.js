@@ -284,27 +284,6 @@ const SessionStage = () => {
 
   const agoraRole = sessionRole === "host" ? "host" : "audience";
 
-  // ? if session is ended then take everyone to mainstage and replay session recording
-  // ? if session is started or resumed then take everyone to mainstage
-  // ? if agoraRole is anything except host then take user to mainstage
-  // ? if agoraRole is host and session is paused or not started then take user to backstage
-
-  let avenue = "mainstage"; // avenue can be either backstage or mainstage
-
-  if (
-    sessionDetails.runningStatus === "Paused" ||
-    sessionDetails.runningStatus === "Not Yet Started"
-  ) {
-    if (agoraRole === "host") {
-      // take to backstage
-      avenue = "backstage";
-    }
-  }
-
-  //  alert(avenue);
-
-  // Defined options for connecting to Agora RTC server
-
   let options = {
     // Pass your app ID here.
     appId: "702d57c3092c4fd389eb7ea5a505d471",
