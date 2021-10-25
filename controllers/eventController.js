@@ -772,6 +772,27 @@ exports.addSession = catchAsync(async (req, res, next) => {
     eventId: eventGettingSessions.id,
   });
 
+  console.log(processedArray); // array of speaker Ids
+  console.log(req.body.host);
+
+  try {
+    for (let element of req.body.host) {
+      const user = await User.findById(element);
+        session.onStagePeople.push({ user: element, email: user.email });
+      }
+    
+      for (let element of processedArray) {
+       const user = await User.findById(element);
+        session.onStagePeople.push({ user: element, email: user.email });
+      }
+  }
+  catch(error) {
+    console.log(error);
+  }
+  
+
+  // For each
+
   session.host = req.body.host; // Save all host to whole event document as well
   session.tags = req.body.tags; // Save all tags to whole event document as well
 
@@ -1062,7 +1083,6 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
     status: "success",
     eventDoc,
   });
-
 });
 
 exports.updateRegistrationForm = catchAsync(async (req, res, next) => {

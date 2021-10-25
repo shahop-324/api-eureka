@@ -67,11 +67,6 @@ const MainChatComponent = () => {
   const eventId = params.eventId;
   const sessionId = params.sessionId;
 
-  useEffect(() => {
-    dispatch(fetchPreviousSessionChatMessages(sessionId));
-
-  }, [dispatch, eventId]);
-
   const { sessionChats } = useSelector((state) => state.sessionChats);
   const userDetails = useSelector((state) => state.user);
 

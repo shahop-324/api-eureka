@@ -2115,22 +2115,6 @@ io.on("connect", (socket) => {
     ) => {
       socket.join(sessionId);
 
-      const fetchCurrentMessages = async (sessionId) => {
-        await Session.findById(sessionId, (err, doc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(sessionId).emit("previousSessionMessages", {
-              chats: doc.chatMessages,
-            });
-          }
-        })
-          .select("chatMessages")
-          .populate("chatMessages");
-      };
-
-      fetchCurrentMessages(sessionId);
-
       const fetchCurrentUsersInSession = async (sessionId) => {
         await UsersInSession.find(
           { room: mongoose.Types.ObjectId(sessionId) },

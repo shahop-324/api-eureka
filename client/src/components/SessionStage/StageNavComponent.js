@@ -93,7 +93,7 @@ const StageNavComponent = () => {
 
   const { sessionDetails } = useSelector((state) => state.session);
 
-  const status = sessionDetails.runningStatus;
+  const status = sessionDetails ? sessionDetails.runningStatus : "Not Yet Started";
 
   const img = userDetails.image
     ? userDetails.image.startsWith("https://")

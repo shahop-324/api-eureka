@@ -3,8 +3,6 @@ import ShareScreenPlayer from "./../../SessionStreamingComponents.js/ShareScreen
 
 const renderLocalStream = (
   allStreams,
-  audioStreamStat,
-  videoStreamStat,
   peopleInThisSession
 ) => {
   if (!allStreams) return;
@@ -28,8 +26,6 @@ const renderLocalStream = (
 
   return (
     <GalleryVideoPlayer
-      audioStreamStat={audioStreamStat}
-      videoStreamStat={videoStreamStat}
       localStream={stream}
       role={sessionRole}
       localPlayerId={uid}
@@ -41,12 +37,7 @@ const renderLocalStream = (
   );
 };
 
-const renderGalleryView = (
-  allStreams,
-  audioStreamStat,
-  videoStreamStat,
-  peopleInThisSession
-) => {
+const renderGalleryView = (allStreams, peopleInThisSession) => {
   if (!allStreams) return;
 
   return allStreams.map((OneStream) => {
@@ -78,8 +69,6 @@ const renderGalleryView = (
 
     return (
       <GalleryVideoPlayer
-        audioStreamStat={audioStreamStat}
-        videoStreamStat={videoStreamStat}
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
@@ -92,12 +81,7 @@ const renderGalleryView = (
   });
 };
 
-const renderMainStream = (
-  mainStream,
-  audioStreamStat,
-  videoStreamStat,
-  peopleInThisSession
-) => {
+const renderMainStream = (mainStream, peopleInThisSession) => {
   if (!mainStream) return;
   const { stream, uid } = mainStream;
 
@@ -119,8 +103,6 @@ const renderMainStream = (
 
   return (
     <GalleryVideoPlayer
-      audioStreamStat={audioStreamStat}
-      videoStreamStat={videoStreamStat}
       localStream={stream}
       role={sessionRole}
       localPlayerId={uid}
@@ -132,13 +114,7 @@ const renderMainStream = (
   );
 };
 
-const renderMiniStreams = (
-  miniStreams,
-  audioStreamStat,
-  videoStreamStat,
- 
-  peopleInThisSession
-) => {
+const renderMiniStreams = (miniStreams, peopleInThisSession) => {
   if (!miniStreams) return;
 
   return miniStreams.map((OneStream) => {
@@ -159,9 +135,6 @@ const renderMiniStreams = (
 
     return (
       <GalleryVideoPlayer
-        audioStreamStat={audioStreamStat}
-        videoStreamStat={videoStreamStat}
-        
         localStream={stream}
         role={sessionRole}
         localPlayerId={uid}
@@ -173,8 +146,6 @@ const renderMiniStreams = (
     );
   });
 };
-
-
 
 const renderScreenShareStream = (screenStream, peopleInThisSession) => {
   if (!screenStream) return;

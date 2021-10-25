@@ -77,8 +77,6 @@ const StreamBody = ({
   mainStream,
   miniStreams,
   view,
-  audioStreamStat,
-  videoStreamStat,
   peopleInThisSession,
 }) => {
   const { sessionDetails } = useSelector((state) => state.session);
@@ -115,8 +113,6 @@ const StreamBody = ({
                       {allStreams &&
                         renderGalleryView(
                           allStreams,
-                          audioStreamStat,
-                          videoStreamStat,
                           peopleInThisSession
                         )}
                     </GalleryView>
@@ -124,13 +120,9 @@ const StreamBody = ({
                 case "grid":
                   return (
                     <GridView>
-                      {/* Render main stream here */}
-                      {/* <VideoStreamContainer /> */}
                       {mainStream &&
                         renderMainStream(
                           mainStream,
-                          audioStreamStat,
-                          videoStreamStat,
                           peopleInThisSession
                         )}
                       <GridViewMini>
@@ -138,8 +130,6 @@ const StreamBody = ({
                         {miniStreams &&
                           renderMiniStreams(
                             miniStreams,
-                            audioStreamStat,
-                            videoStreamStat,
                             peopleInThisSession
                           )}
                         {/* Render mini views here */}
@@ -160,8 +150,6 @@ const StreamBody = ({
                         {allStreams &&
                           renderMiniStreams(
                             allStreams,
-                            audioStreamStat,
-                            videoStreamStat,
                             peopleInThisSession
                           )}
                       </GridViewMini>

@@ -1,5 +1,35 @@
 const mongoose = require("mongoose");
 
+const onStagePeopleSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
+  email: {
+    type: String,
+  },
+  hidden: {
+    type: Boolean,
+    default: false,
+  },
+  camera: {
+    type: Boolean,
+    default: false,
+  },
+  microphone: {
+    type: Boolean,
+    default: false,
+  },
+  screen: {
+    type: Boolean,
+    default: false,
+  },
+  available: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const sessionSchema = new mongoose.Schema(
   {
     type: {
@@ -107,6 +137,8 @@ const sessionSchema = new mongoose.Schema(
     sid: {
       type: String,
     },
+
+    onStagePeople: [onStagePeopleSchema],
   },
   {
     toJSON: { virtuals: true },
