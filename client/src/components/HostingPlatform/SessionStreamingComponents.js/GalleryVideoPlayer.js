@@ -50,8 +50,6 @@ const StillSoundWave = () => {
 };
 
 const GalleryVideoPlayer = ({
-  audioStreamStat, // Its an array of objects {uid: uid, audioIsEnabled: Boolean (true | false)}
-  videoStreamStat, // Its an array of objects {uid: uid, videoIsEnabled: Boolean (true | false)}
   role,
   localPlayerId,
   userName,
@@ -70,30 +68,6 @@ const GalleryVideoPlayer = ({
   let videoIsEnabled = true;
 
   let showWave = false;
-
-
-
-  if (audioStreamStat) {
-    // Contains our own audio stream
-    // console.log(audioStreamStat, "This is audio stream stat indicators array.");
-    const audioStreamData = audioStreamStat.find(
-      (element) => element.uid === localPlayerId
-    );
-
-    if (audioStreamData) {
-      audioIsEnabled = audioStreamData.audioIsEnabled;
-    }
-  }
-
-  if (videoStreamStat) {
-    const videoStreamData = videoStreamStat.find(
-      (element) => element.uid === localPlayerId
-    );
-
-    if (videoStreamData) {
-      videoIsEnabled = videoStreamData.videoIsEnabled;
-    }
-  }
 
   // Now show muted icon if !audioIsEnabled & avatar if !videoIsEnabled
 
