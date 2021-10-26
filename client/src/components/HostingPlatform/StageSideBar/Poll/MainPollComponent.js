@@ -16,11 +16,19 @@ const Scrollable = styled.div`
   flex-direction: column;
 `;
 
-const renderSessionPolls = (sessionPolls) => {
+const renderSessionPolls = (
+  sessionPolls,
+  currentUserIsAHost,
+  runningStatus,
+  currentUserIsASpeaker,
+) => {
   return sessionPolls.map((poll) => {
     if (poll.deleted) return;
     return (
       <PollComponent
+        currentUserIsAHost={currentUserIsAHost}
+        currentUserIsASpeaker={currentUserIsASpeaker}
+        runningStatus={runningStatus}
         question={poll.question}
         options={poll.options}
         askedByName={poll.createdBy.firstName + " " + poll.createdBy.lastName}
@@ -38,12 +46,13 @@ const renderSessionPolls = (sessionPolls) => {
         expiresAt={poll.expiresAt}
         showOnStage={poll.showOnStage}
         votedBy={poll.votedBy}
+        whoCanSeeAnswers={poll.whoCanSeeAnswers}
       />
     );
   });
 };
 
-const MainPollComponent = () => {
+const MainPollComponent = ({ currentUserIsAHost, runningStatus, currentUserIsASpeaker }) => {
   const userId = useSelector((state) => state.eventAccessToken.id);
   const { sessionPolls } = useSelector((state) => state.sessionPolls);
 
@@ -51,7 +60,7 @@ const MainPollComponent = () => {
     <>
       <MainPollContainer>
         <Scrollable className="mb-3">
-          {renderSessionPolls(sessionPolls)}
+          {renderSessionPolls(sessionPolls, currentUserIsAHost, runningStatus, currentUserIsASpeaker)}
         </Scrollable>
       </MainPollContainer>
     </>

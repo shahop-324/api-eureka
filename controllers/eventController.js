@@ -781,7 +781,8 @@ exports.addSession = catchAsync(async (req, res, next) => {
     }
 
     for (let element of processedArray) {
-      session.onStagePeople.push({ user: element });
+      const speaker = await Speaker.findById(element);
+      session.onStagePeople.push({ user: speaker.registrationId });
     }
   } catch (error) {
     console.log(error);

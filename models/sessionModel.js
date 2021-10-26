@@ -136,6 +136,11 @@ const sessionSchema = new mongoose.Schema(
     },
 
     onStagePeople: [onStagePeopleSchema],
+
+    streamingLive: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },

@@ -58,6 +58,7 @@ const OthersReplyElement = ({
   orignialMsgId,
   orignialMsgTimestamp,
   forReply,
+  currentUserIsAHost,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -154,13 +155,17 @@ const OthersReplyElement = ({
                   className="chat-msg-hover-icon me-2"
                   style={{ display: visibility, fontSize: "18px" }}
                 />
-                <DeleteOutlineRoundedIcon
-                  onClick={() => {
-                    setOpenDelete(true);
-                  }}
-                  className="chat-msg-hover-icon"
-                  style={{ display: visibility, fontSize: "18px" }}
-                />
+                {currentUserIsAHost ? (
+                  <DeleteOutlineRoundedIcon
+                    onClick={() => {
+                      setOpenDelete(true);
+                    }}
+                    className="chat-msg-hover-icon"
+                    style={{ display: visibility, fontSize: "18px" }}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
               <div
                 className="chat-msg-text ms-3 p-3"
@@ -243,5 +248,3 @@ const OthersReplyElement = ({
 };
 
 export default OthersReplyElement;
-
-

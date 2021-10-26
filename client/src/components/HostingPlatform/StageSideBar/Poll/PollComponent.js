@@ -171,7 +171,10 @@ const renderPollOptions = (
   totalVotes,
   expired,
   votedByMe,
-  votedOption
+  votedOption,
+  currentUserIsAHost,
+  currentUserIsASpeaker,
+  whoCanSeeAnswers
 ) => {
   return options.map((element) => {
     let percent = 0;
@@ -182,9 +185,44 @@ const renderPollOptions = (
 
     return (
       <PollOption className="mb-3">
-        <PollFill
-          width={totalVotes * 1 === 0 ? "0%" : `${percent.toFixed(1)}%`}
-        />
+        {(() => {
+          switch (whoCanSeeAnswers) {
+            case "Organiser only":
+              if (currentUserIsAHost) {
+                return (
+                  <PollFill
+                    width={
+                      totalVotes * 1 === 0 ? "0%" : `${percent.toFixed(1)}%`
+                    }
+                  />
+                );
+              }
+              break;
+
+            case "Everyone":
+              return (
+                <PollFill
+                  width={totalVotes * 1 === 0 ? "0%" : `${percent.toFixed(1)}%`}
+                />
+              );
+
+            case "Organiser and speakers":
+              if (currentUserIsAHost || currentUserIsASpeaker) {
+                return (
+                  <PollFill
+                    width={
+                      totalVotes * 1 === 0 ? "0%" : `${percent.toFixed(1)}%`
+                    }
+                  />
+                );
+              }
+              return;
+
+            default:
+              break;
+          }
+        })()}
+
         <div>
           <FormControlLabel
             value={element._id}
@@ -197,9 +235,51 @@ const renderPollOptions = (
           />
         </div>
         {element.option}
-        <IndividualPollCount className="ms-2">
-          {element.votedBy.length * 1 === 0 ? <></> : element.votedBy.length}{" "}
-        </IndividualPollCount>
+        {(() => {
+          switch (whoCanSeeAnswers) {
+            case "Organiser only":
+              if (currentUserIsAHost) {
+                return (
+                  <IndividualPollCount className="ms-2">
+                    {element.votedBy.length * 1 === 0 ? (
+                      <></>
+                    ) : (
+                      element.votedBy.length
+                    )}{" "}
+                  </IndividualPollCount>
+                );
+              }
+              break;
+
+            case "Everyone":
+              return (
+                <IndividualPollCount className="ms-2">
+                  {element.votedBy.length * 1 === 0 ? (
+                    <></>
+                  ) : (
+                    element.votedBy.length
+                  )}{" "}
+                </IndividualPollCount>
+              );
+
+            case "Organiser and speakers":
+              if (currentUserIsAHost || currentUserIsASpeaker) {
+                return (
+                  <IndividualPollCount className="ms-2">
+                    {element.votedBy.length * 1 === 0 ? (
+                      <></>
+                    ) : (
+                      element.votedBy.length
+                    )}{" "}
+                  </IndividualPollCount>
+                );
+              }
+              return;
+
+            default:
+              break;
+          }
+        })()}
       </PollOption>
     );
   });
@@ -217,6 +297,10 @@ const PollComponent = ({
   expiresAt,
   showOnStage,
   votedBy,
+  currentUserIsAHost,
+  currentUserIsASpeaker,
+  runningStatus,
+  whoCanSeeAnswers,
 }) => {
   let totalVotes = 0;
   let neverExpires = false;
@@ -315,7 +399,10 @@ const PollComponent = ({
               totalVotes,
               expired,
               votedByMe,
-              votedOption
+              votedOption,
+              currentUserIsAHost,
+              currentUserIsASpeaker,
+              whoCanSeeAnswers
             )}
           </RadioGroup>
         </FormControl>
@@ -358,51 +445,60 @@ const PollComponent = ({
             alignItems: "center",
           }}
         >
-          <div className="d-flex flex-row align-items-center">
-            <IconButton
-              className="me-1"
-              onClick={() => {
-                setOpenDeletePoll(true);
-              }}
-            >
-              <DeleteRoundedIcon />
-            </IconButton>
-            {showOnStage ? (
-              <button
+          {currentUserIsAHost ? (
+            <div className="d-flex flex-row align-items-center">
+              <IconButton
+                className="me-1"
                 onClick={() => {
-                  socket.emit(
-                    "hideSessionPollFromStage",
-                    { pollId: id, sessionId, eventId },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
+                  setOpenDeletePoll(true);
                 }}
-                className="btn btn-outline-text btn-dark me-3"
               >
-                Hide from stage
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  socket.emit(
-                    "showSessionPollOnStage",
-                    { pollId: id, sessionId, eventId },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
-                }}
-                className="btn btn-outline-text btn-outline-dark me-3"
-              >
-                Show on stage
-              </button>
-            )}
-          </div>
+                <DeleteRoundedIcon />
+              </IconButton>
+              {runningStatus === "Started" || runningStatus === "Resumed" ? (
+                showOnStage ? (
+                  <button
+                    onClick={() => {
+                      socket.emit(
+                        "hideSessionPollFromStage",
+                        { pollId: id, sessionId, eventId },
+                        (error) => {
+                          if (error) {
+                            alert(error);
+                          }
+                        }
+                      );
+                    }}
+                    className="btn btn-outline-text btn-dark me-3"
+                  >
+                    Hide from stage
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      socket.emit(
+                        "showSessionPollOnStage",
+                        { pollId: id, sessionId, eventId },
+                        (error) => {
+                          if (error) {
+                            alert(error);
+                          }
+                        }
+                      );
+                    }}
+                    className="btn btn-outline-text btn-outline-dark me-3"
+                  >
+                    Show on stage
+                  </button>
+                )
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <div></div>
+          )}
+
           <div className="d-flex flex-row align-items-center justify-content-end">
             {votedByMe ? (
               <BtnSubmitted>Submitted</BtnSubmitted>

@@ -26,6 +26,7 @@ const IncomingChatMsgElement = ({
   showOptions,
   timestamp,
   chatMsgId,
+  currentUserIsAHost,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -112,16 +113,17 @@ const IncomingChatMsgElement = ({
                 onClick={() => {
                   setOpen(true);
                 }}
-                className="chat-msg-hover-icon me-2"
-                style={{ display: visibility, fontSize: "18px" }}
-              />
-              <DeleteOutlineRoundedIcon
-                onClick={() => {
-                  setOpenDelete(true);
-                }}
                 className="chat-msg-hover-icon"
                 style={{ display: visibility, fontSize: "18px" }}
               />
+              {currentUserIsAHost ? <DeleteOutlineRoundedIcon
+                onClick={() => {
+                  setOpenDelete(true);
+                }}
+                className="chat-msg-hover-icon ms-2"
+                style={{ display: visibility, fontSize: "18px" }}
+              /> : <></> }
+              
             </div>
             <div
               className="chat-msg-text ms-3 p-3"

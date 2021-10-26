@@ -119,6 +119,8 @@ const UnansweredQnA = ({
   askedByDesignation,
   createdAt,
   showOnStage,
+  runningStatus,
+  currentUserIsAHost,
 }) => {
   const dispatch = useDispatch();
 
@@ -260,50 +262,59 @@ const UnansweredQnA = ({
             Submit
           </StyledOutlineButton>
 
-          <div className="d-flex flex-row align-items-center justify-content-end">
-            {showOnStage ? (
-              <button
+          {currentUserIsAHost ? (
+            <div className="d-flex flex-row align-items-center justify-content-end">
+              {runningStatus === "Started" || runningStatus === "Resumed" ? (
+                showOnStage ? (
+                  <button
+                    onClick={() => {
+                      socket.emit(
+                        "hideQnAFromStage",
+                        { qnaId: id, sessionId, eventId },
+                        (error) => {
+                          if (error) {
+                            alert(error);
+                          }
+                        }
+                      );
+                    }}
+                    className="btn btn-outline-text btn-dark me-3"
+                  >
+                    Hide from stage
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      socket.emit(
+                        "showQnAOnStage",
+                        { qnaId: id, sessionId, eventId },
+                        (error) => {
+                          if (error) {
+                            alert(error);
+                          }
+                        }
+                      );
+                    }}
+                    className="btn btn-outline-text btn-outline-dark me-3"
+                  >
+                    Show on stage
+                  </button>
+                )
+              ) : (
+                <></>
+              )}
+
+              <IconButton
                 onClick={() => {
-                  socket.emit(
-                    "hideQnAFromStage",
-                    { qnaId: id, sessionId, eventId },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
+                  handleOpenDelete();
                 }}
-                className="btn btn-outline-text btn-dark me-3"
               >
-                Hide from stage
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  socket.emit(
-                    "showQnAOnStage",
-                    { qnaId: id, sessionId, eventId },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
-                }}
-                className="btn btn-outline-text btn-outline-dark me-3"
-              >
-                Show on stage
-              </button>
-            )}
-            <IconButton
-              onClick={() => {
-                handleOpenDelete();
-              }}
-            >
-              <DeleteRoundedIcon />
-            </IconButton>
-          </div>
+                <DeleteRoundedIcon />
+              </IconButton>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </QnABody>
       <DeleteQnA

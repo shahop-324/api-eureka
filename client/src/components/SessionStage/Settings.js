@@ -19,8 +19,6 @@ import SessionCustomisation from "./SubComponent/SessionCustomisation";
 import EnableDisableLiveStreaming from "./SubComponent/EnableDisableLiveStreaming";
 import { useSelector } from "react-redux";
 
-
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -54,10 +52,42 @@ function a11yProps(index) {
   };
 }
 
-function VerticalTabs() {
+function VerticalTabs({ canPublishStream }) {
+  let currentUserIsAHost = false;
+  let currentUserIsASpeaker = false;
+  let currentUserIsAnAttendeeOnStage = false;
+  let currentUserIsAnAttendee = false;
+
   const [value, setValue] = React.useState(0);
 
-  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+  const { userDetails } = useSelector((state) => state.user);
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const userId = userDetails._id;
+  const userEmail = userDetails.email;
+
+  const hosts = sessionDetails.host; // Hosts for this session
+  const speakers = sessionDetails.speaker; // Speakers for this session
+
+  const hostIds = hosts.map((el) => el._id);
+  const speakerEmails = speakers.map((el) => el.email);
+
+  if (hostIds.includes(userId)) {
+    //This user is a host
+    currentUserIsAHost = true;
+  } else if (speakerEmails.includes(userEmail)) {
+    // This user is a speaker
+    currentUserIsASpeaker = true;
+  } else if (
+    canPublishStream &&
+    !hostIds.includes(userId) &&
+    !speakerEmails.includes(userEmail)
+  ) {
+    // This user is an attendee invited on stage
+    currentUserIsAnAttendeeOnStage = true;
+  } else {
+    currentUserIsAnAttendee = true;
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -78,7 +108,7 @@ function VerticalTabs() {
           {...a11yProps(0)}
           className="custom-mui-tab"
         />
-        {sessionRole === "host" || sessionRole === "organiser" ? (
+        {currentUserIsAHost ? (
           <Tab
             label="Customisation"
             {...a11yProps(1)}
@@ -88,7 +118,7 @@ function VerticalTabs() {
           <></>
         )}
 
-        {sessionRole === "host" || sessionRole === "organiser" ? (
+        {currentUserIsAHost ? (
           <Tab
             label="Live streaming"
             {...a11yProps(2)}
@@ -132,7 +162,7 @@ const WidgetHeadlineWithClose = styled.div`
   border-bottom: 1px solid #152d35;
 `;
 
-const SessionSettings = ({ open, handleClose }) => {
+const SessionSettings = ({ open, handleClose, canPublishStream }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -157,7 +187,7 @@ const SessionSettings = ({ open, handleClose }) => {
               </IconButton>
             </div>
           </WidgetHeadlineWithClose>
-          <VerticalTabs />
+          <VerticalTabs canPublishStream={canPublishStream} />
         </SessionSettingsBody>
       </Dialog>
     </>

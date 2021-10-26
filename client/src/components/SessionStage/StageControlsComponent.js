@@ -7,7 +7,6 @@ import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
 import WidgetsIcon from "@mui/icons-material/Widgets"; // Tools Icon
 import { BtnDanger, StageControl, IconButton } from "./Elements";
-import history from "../../history";
 import { useParams } from "react-router";
 import ReactTooltip from "react-tooltip";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
@@ -35,6 +34,7 @@ import Love from "./../../assets/images/love.png";
 import Smile from "./../../assets/images/Smile.png";
 
 import Speakers from "./Speakers";
+import SpeakerInfoTab from "./SpeakersInfoTab";
 
 const IOSSwitch = withStyles((theme) => ({
   root: {
@@ -101,12 +101,22 @@ const StageControlsComponent = ({
   screenSharingIsEnabled,
   startScreenCall,
   setScreenSharingIsEnabled,
+  runningStatus,
+  canPublishStream,
 }) => {
+  // {/* // ! Caution don't show stage controls if session has ended */}
+
+  let sessionHasEnded = false;
+
+  let currentUserIsAHost = false;
+  let currentUserIsASpeaker = false;
+  let currentUserIsAnAttendeeOnStage = false;
+  let currentUserIsAnAttendee = false;
+
   const [openSpeakers, setOpenSpeakers] = React.useState(false);
+  const [openSpeakersInfo, setOpenSpeakersInfo] = useState(false);
 
   const [fullScreen, setFullScreen] = useState(false);
-
-  const { sessionRole } = useSelector((state) => state.eventAccessToken);
 
   const [openSettings, setOpenSettings] = useState(false);
 
@@ -115,6 +125,10 @@ const StageControlsComponent = ({
   const [startRecording, setStartRecording] = useState(false);
 
   const [stopRecording, setStopRecording] = useState(false);
+
+  const handleCloseSpeakerInfoTab = () => {
+    setOpenSpeakersInfo(false);
+  };
 
   const handleCloseSpeakers = () => {
     setOpenSpeakers(false);
@@ -144,8 +158,6 @@ const StageControlsComponent = ({
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  const userId = useSelector((state) => state.eventAccessToken.id);
-
   const [state, setState] = React.useState({
     checkedB: false,
   });
@@ -160,6 +172,41 @@ const StageControlsComponent = ({
     }
   };
 
+  // Determine if the current user is a host and place restrictions based on that
+
+  const { userDetails } = useSelector((state) => state.user);
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const userId = userDetails._id;
+  const userEmail = userDetails.email;
+
+  const hosts = sessionDetails.host; // Hosts for this session
+  const speakers = sessionDetails.speaker; // Speakers for this session
+
+  const hostIds = hosts.map((el) => el._id);
+  const speakerEmails = speakers.map((el) => el.email);
+
+  if (hostIds.includes(userId)) {
+    //This user is a host
+    currentUserIsAHost = true;
+  } else if (speakerEmails.includes(userEmail)) {
+    // This user is a speaker
+    currentUserIsASpeaker = true;
+  } else if (
+    canPublishStream &&
+    !hostIds.includes(userId) &&
+    !speakerEmails.includes(userEmail)
+  ) {
+    // This user is an attendee invited on stage
+    currentUserIsAnAttendeeOnStage = true;
+  } else {
+    currentUserIsAnAttendee = true;
+  }
+
+  if (runningStatus === "Ended") {
+    sessionHasEnded = true;
+  }
+
   return (
     <>
       <StageControl className="px-3 py-1">
@@ -167,6 +214,7 @@ const StageControlsComponent = ({
           <BtnDanger
             id="leave-session"
             className="me-3"
+            // ! If host leaves this session in live state then mark this session as Paused and show this warning to the host when leaving session in live state
             onClick={() => {
               socket.emit("leaveSession", { sessionId, userId }, (error) => {
                 console.log(error);
@@ -177,9 +225,20 @@ const StageControlsComponent = ({
             Leave
           </BtnDanger>
 
+          {/* Show speaker managemenet widget if its session host and speaker details widget if its an audience */}
+          {/* This widget will be shown throughout the lifecycle of a session (i.e., in ay running state) */}
+          {/* But show only speaker details widget if session has ended */}
           <button
             onClick={() => {
-              setOpenSpeakers(true);
+              if (currentUserIsAHost && !sessionHasEnded) {
+                setOpenSpeakers(true);
+              }
+              if (!currentUserIsAHost) {
+                setOpenSpeakersInfo(true);
+              }
+              if (currentUserIsAHost && sessionHasEnded) {
+                setOpenSpeakersInfo(true);
+              }
             }}
             className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center"
           >
@@ -187,161 +246,314 @@ const StageControlsComponent = ({
             <PersonRoundedIcon className="me-2" /> <span>Speakers</span>
           </button>
 
-          <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
+          <div className="stage-left-controls d-flex flex-row  align-items-center">
+            {/* Here we just need to give an option to switch layouts */}
+            {/* // Layout will be last priority <button className="btn btn-outline-text btn-light ms-3">Layout</button> */}
+          </div>
         </div>
 
-        <div className="d-flex flex-row align-items-center justify-content-center">
-          {sessionRole === "host" ? (
-            <a
-              data-tip={videoIsEnabled ? "Turn off camera" : "Turn on camera"}
-              className=""
-            >
-              <IconButton
-                onClick={() => {
-                  videoIsEnabled
-                    ? turnOffVideo(options.uid)
-                    : turnOnVideo(options.uid);
-                }}
-                className="me-4"
+        {!sessionHasEnded ? (
+          <div className="d-flex flex-row align-items-center justify-content-center">
+            {canPublishStream ? (
+              <a
+                data-tip={videoIsEnabled ? "Turn off camera" : "Turn on camera"}
+                className=""
               >
-                {videoIsEnabled ? (
-                  <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <VideocamOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-            </a>
-          ) : (
-            <IconButton style={{ padding: "4px" }} className="me-3">
-              <img
-                src={Like}
-                alt="like-reaction"
-                style={{ maxWidth: "20px" }}
-                className="m-2"
-              />
-            </IconButton>
-          )}
+                <IconButton
+                  onClick={() => {
+                    videoIsEnabled
+                      ? turnOffVideo(options.uid)
+                      : turnOnVideo(options.uid);
+                  }}
+                  className="me-4"
+                >
+                  {videoIsEnabled ? (
+                    <VideocamRoundedIcon style={{ fontSize: "20px" }} />
+                  ) : (
+                    <VideocamOffOutlinedIcon
+                      style={{ fontSize: "20px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </IconButton>
+              </a>
+            ) : (
+              <></>
+            )}
 
-          {sessionRole === "host" ? (
-            <a
-              data-tip={
-                audioIsEnabled ? "Turn off microphone" : "Turn on microphone"
-              }
-              className=""
-            >
-              <IconButton
-                onClick={() => {
-                  audioIsEnabled
-                    ? turnOffAudio(options.uid)
-                    : turnOnAudio(options.uid);
-                }}
-                className="me-4"
-              >
-                {audioIsEnabled ? (
-                  <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <MicOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-            </a>
-          ) : (
-            <IconButton style={{ padding: "3px" }} className="me-3">
-              <img
-                src={Smile}
-                alt="smile-reaction"
-                style={{ maxWidth: "24px" }}
-                className="m-2"
-              />
-            </IconButton>
-          )}
-
-          {sessionRole === "host" ? (
-            <a
-              data-tip={
-                screenSharingIsEnabled
-                  ? "Stop screen share"
-                  : "Start screen share"
-              }
-              className=""
-            >
-              <IconButton
-                onClick={() => {
-                  if (screenSharingIsEnabled) {
-                    handleStopScreenShare();
-                    setScreenSharingIsEnabled(false);
-                  } else {
-                    dispatch(
-                      getRTCTokenForScreenShare(
-                        sessionId,
-                        userId,
-                        startScreenCall
-                      )
+            {!canPublishStream ? (
+              (() => {
+                switch (runningStatus) {
+                  case "Started":
+                    return (
+                      <IconButton style={{ padding: "4px" }} className="me-3">
+                        <img
+                          src={Like}
+                          alt="like-reaction"
+                          style={{ maxWidth: "20px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
                     );
-                    setScreenSharingIsEnabled(true);
-                  }
-                }}
-                className="me-4"
-              >
-                {screenSharingIsEnabled ? (
-                  <CancelPresentationOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                ) : (
-                  <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                )}
-              </IconButton>
-            </a>
-          ) : (
-            <IconButton style={{ padding: "3px" }} className="me-3">
-              <img
-                src={Clapping}
-                alt="clapping-reaction"
-                style={{ maxWidth: "24px" }}
-                className="m-2"
-              />
-            </IconButton>
-          )}
+                  case "Resumed":
+                    return (
+                      <IconButton style={{ padding: "4px" }} className="me-3">
+                        <img
+                          src={Like}
+                          alt="like-reaction"
+                          style={{ maxWidth: "20px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
+                    );
 
-          {sessionRole === "host" ? (
-            <></>
-          ) : (
-            <IconButton style={{ padding: "12px" }} className="me-3">
-              <PanToolRoundedIcon style={{ fontSize: "20px" }} />
-            </IconButton>
-          )}
-        </div>
+                  default:
+                    break;
+                }
+              })()
+            ) : (
+              <></>
+            )}
+
+            {canPublishStream ? (
+              <a
+                data-tip={
+                  audioIsEnabled ? "Turn off microphone" : "Turn on microphone"
+                }
+                className=""
+              >
+                <IconButton
+                  onClick={() => {
+                    audioIsEnabled
+                      ? turnOffAudio(options.uid)
+                      : turnOnAudio(options.uid);
+                  }}
+                  className="me-4"
+                >
+                  {audioIsEnabled ? (
+                    <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
+                  ) : (
+                    <MicOffOutlinedIcon
+                      style={{ fontSize: "20px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </IconButton>
+              </a>
+            ) : (
+              <></>
+            )}
+
+            {!canPublishStream ? (
+              (() => {
+                switch (runningStatus) {
+                  case "Started":
+                    return (
+                      <IconButton style={{ padding: "3px" }} className="me-3">
+                        <img
+                          src={Smile}
+                          alt="smile-reaction"
+                          style={{ maxWidth: "24px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
+                    );
+
+                  case "Resumed":
+                    return (
+                      <IconButton style={{ padding: "3px" }} className="me-3">
+                        <img
+                          src={Smile}
+                          alt="smile-reaction"
+                          style={{ maxWidth: "24px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+            ) : (
+              <></>
+            )}
+
+            {canPublishStream ? (
+              <a
+                data-tip={
+                  screenSharingIsEnabled
+                    ? "Stop screen share"
+                    : "Start screen share"
+                }
+                className=""
+              >
+                <IconButton
+                  onClick={() => {
+                    if (screenSharingIsEnabled) {
+                      handleStopScreenShare();
+                      setScreenSharingIsEnabled(false);
+                    } else {
+                      dispatch(
+                        getRTCTokenForScreenShare(
+                          sessionId,
+                          userId,
+                          startScreenCall
+                        )
+                      );
+                      setScreenSharingIsEnabled(true);
+                    }
+                  }}
+                  className="me-4"
+                >
+                  {screenSharingIsEnabled ? (
+                    <CancelPresentationOutlinedIcon
+                      style={{ fontSize: "20px", color: "#BE1D1D" }}
+                    />
+                  ) : (
+                    <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
+                  )}
+                </IconButton>
+              </a>
+            ) : (
+              <></>
+            )}
+
+            {!canPublishStream ? (
+              (() => {
+                switch (runningStatus) {
+                  case "Started":
+                    return (
+                      <IconButton style={{ padding: "3px" }} className="me-3">
+                        <img
+                          src={Clapping}
+                          alt="clapping-reaction"
+                          style={{ maxWidth: "24px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
+                    );
+
+                  case "Resumed":
+                    return (
+                      <IconButton style={{ padding: "3px" }} className="me-3">
+                        <img
+                          src={Clapping}
+                          alt="clapping-reaction"
+                          style={{ maxWidth: "24px" }}
+                          className="m-2"
+                        />
+                      </IconButton>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+            ) : (
+              <></>
+            )}
+
+            {!canPublishStream ? (
+              (() => {
+                switch (runningStatus) {
+                  case "Started":
+                    return (
+                      <IconButton style={{ padding: "12px" }} className="me-3">
+                        <PanToolRoundedIcon style={{ fontSize: "20px" }} />
+                      </IconButton>
+                    );
+                  case "Resumed":
+                    return (
+                      <IconButton style={{ padding: "12px" }} className="me-3">
+                        <PanToolRoundedIcon style={{ fontSize: "20px" }} />
+                      </IconButton>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <div></div>
+        )}
 
         <div className="d-flex flex-row align-items-center justify-content-end">
-          {sessionRole === "host" ? (
-            <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
-              <FormControlLabel
-                control={
-                  <IOSSwitch
-                    checked={state.checkedB}
-                    onChange={handleChange}
-                    name="checkedB"
-                  />
-                }
-              />
-              <div className="rec-label-text">REC</div>
-            </div>
+          {canPublishStream && currentUserIsAHost && !sessionHasEnded ? (
+            (() => {
+              switch (runningStatus) {
+                case "Started":
+                  return (
+                    <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
+                      <FormControlLabel
+                        control={
+                          <IOSSwitch
+                            checked={state.checkedB}
+                            onChange={handleChange}
+                            name="checkedB"
+                          />
+                        }
+                      />
+                      <div className="rec-label-text">REC</div>
+                    </div>
+                  );
+
+                case "Resumed":
+                  return (
+                    <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
+                      <FormControlLabel
+                        control={
+                          <IOSSwitch
+                            checked={state.checkedB}
+                            onChange={handleChange}
+                            name="checkedB"
+                          />
+                        }
+                      />
+                      <div className="rec-label-text">REC</div>
+                    </div>
+                  );
+
+                default:
+                  break;
+              }
+            })()
           ) : (
             <></>
           )}
+          {canPublishStream && currentUserIsAHost && !sessionHasEnded ? (
+            (() => {
+              switch (runningStatus) {
+                case "Started":
+                  return (
+                    <IconButton
+                      className="me-4"
+                      onClick={() => {
+                        setShowTools(true);
+                      }}
+                    >
+                      <WidgetsIcon style={{ fontSize: "20px" }} />
+                    </IconButton>
+                  );
 
-          {sessionRole === "host" ? (
-            <IconButton
-              className="me-4"
-              onClick={() => {
-                setShowTools(true);
-              }}
-            >
-              <WidgetsIcon style={{ fontSize: "20px" }} />
-            </IconButton>
+                case "Resumed":
+                  return (
+                    <IconButton
+                      className="me-4"
+                      onClick={() => {
+                        setShowTools(true);
+                      }}
+                    >
+                      <WidgetsIcon style={{ fontSize: "20px" }} />
+                    </IconButton>
+                  );
+
+                default:
+                  break;
+              }
+            })()
           ) : (
             <></>
           )}
@@ -366,18 +578,24 @@ const StageControlsComponent = ({
                 elem.requestFullscreen();
               }
             }}
-            className="me-4"
+            className=""
           >
             <FullscreenRoundedIcon style={{ fontSize: "20px" }} />
           </IconButton>
 
-          <IconButton
-            onClick={() => {
-              setOpenSettings(true);
-            }}
-          >
-            <SettingsRoundedIcon style={{ fontSize: "20px" }} />
-          </IconButton>
+          {!sessionHasEnded ? (
+            <IconButton
+              className="ms-4"
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+            >
+              <SettingsRoundedIcon style={{ fontSize: "20px" }} />
+              {/* Settings are shown differently based on host and other person */}
+            </IconButton>
+          ) : (
+            <></>
+          )}
         </div>
       </StageControl>
 
@@ -394,6 +612,10 @@ const StageControlsComponent = ({
         handleClose={handleCloseStopRecording}
       />
       <Speakers open={openSpeakers} handleClose={handleCloseSpeakers} />
+      <SpeakerInfoTab
+        open={openSpeakersInfo}
+        handleClose={handleCloseSpeakerInfoTab}
+      />
     </>
   );
 };

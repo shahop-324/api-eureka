@@ -1,25 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import IncomingChatMsgElement from "./IncomingChatMsgElement";
 import OutgoingChatElement from "./OutgoingChatElement";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import MsgInput from "./MsgInput";
 import "./../../Styles/chatComponent.scss";
-import socket from "../../service/socket";
-import {
-  fetchPreviousSessionChatMessages,
-  fetchSessionChats,
-  showNotification,
-  createNewSessionMsg,
-} from "../../../../actions";
-
 import SelfReplyElement from "./SelfReplyElement";
 import OthersReplyElement from "./OthersReplyElement";
 import DeletedOwnMsg from "./DeletedOwnMsg";
 import DeletedOthersMsg from "./DeletedOthersMsg";
 
-const MainChatComponent = () => {
+const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
   const [msg, setMsg] = useState(null);
@@ -60,13 +51,6 @@ const MainChatComponent = () => {
 
   // create and pass a function as props to Chat Msg Element which can set value of name, image and msg when clicked on reply icon.
 
-  const dispatch = useDispatch();
-
-  const params = useParams();
-
-  const eventId = params.eventId;
-  const sessionId = params.sessionId;
-
   const { sessionChats } = useSelector((state) => state.sessionChats);
   const userDetails = useSelector((state) => state.user);
 
@@ -95,6 +79,7 @@ const MainChatComponent = () => {
               return <DeletedOwnMsg timestamp={chat.createdAt} />;
             return (
               <SelfReplyElement
+                currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
@@ -142,6 +127,7 @@ const MainChatComponent = () => {
               );
             return (
               <OthersReplyElement
+              currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
@@ -215,6 +201,7 @@ const MainChatComponent = () => {
               );
             return (
               <IncomingChatMsgElement
+                currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}

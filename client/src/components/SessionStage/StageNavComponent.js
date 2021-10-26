@@ -86,20 +86,75 @@ const IconButtonStatic = styled.div`
   border: 1px solid #ffffff;
 `;
 
-const StageNavComponent = () => {
-  const { userDetails } = useSelector((state) => state.user);
+const StageNavComponent = ({ runningStatus, canPublishStream }) => {
+  // Hosts and speakers can go to backstage anytime they want by clicking on switch to backstage button and come back to live stage if the session is in running state
 
-  const { sessionRole, role } = useSelector((state) => state.eventAccessToken);
+  let sessionHasEnded = false;
+
+  let currentUserIsAHost = false;
+  let currentUserIsASpeaker = false;
+  let currentUserIsAnAttendeeOnStage = false;
+  let currentUserIsAnAttendee = false;
+
+  const { userDetails } = useSelector((state) => state.user);
 
   const { sessionDetails } = useSelector((state) => state.session);
 
-  const status = sessionDetails ? sessionDetails.runningStatus : "Not Yet Started";
+  const status = sessionDetails
+    ? sessionDetails.runningStatus
+    : "Not Yet Started";
+
+  const streamingLive = sessionDetails.streamingLive;
 
   const img = userDetails.image
     ? userDetails.image.startsWith("https://")
       ? userDetails.image
       : `https://bluemeet.s3.us-west-1.amazonaws.com/${userDetails.image}`
     : "#";
+
+  // Show live tag only if its in resumed or started state => handled
+
+  // Show mid control live stage or backstage only when canPublishStream => handled
+
+  // TODO Host access needs to be restricted (who can start, pause, resume or end session)
+
+  // Show number of users watching only if its in live state
+
+  // Show rss feed icon only when session is streamed live to other destinations
+
+  // ! Determine if the current user is a host and place restrictions based on that
+  //if the userCanPublishStream => then determine if he / she is host speaker or   attendee
+  // We won't allow attendee on stage to visit backstage => only host and speakers can visit backstage.
+
+  const userId = userDetails._id;
+  const userEmail = userDetails.email;
+
+  const hosts = sessionDetails.host; // Hosts for this session
+  const speakers = sessionDetails.speaker; // Speakers for this session
+
+  const hostIds = hosts.map((el) => el._id);
+  const speakerEmails = speakers.map((el) => el.email);
+
+  if (hostIds.includes(userId)) {
+    //This user is a host
+    currentUserIsAHost = true;
+  } else if (speakerEmails.includes(userEmail)) {
+    // This user is a speaker
+    currentUserIsASpeaker = true;
+  } else if (
+    canPublishStream &&
+    !hostIds.includes(userId) &&
+    !speakerEmails.includes(userEmail)
+  ) {
+    // This user is an attendee invited on stage
+    currentUserIsAnAttendeeOnStage = true;
+  } else {
+    currentUserIsAnAttendee = true;
+  }
+
+  if (runningStatus === "Ended") {
+    sessionHasEnded = true;
+  }
 
   return (
     <>
@@ -109,7 +164,6 @@ const StageNavComponent = () => {
           <SessionName className="me-3">
             Annual Founder Q&A with community
           </SessionName>
-          {/* <Chip label="Live" color="secondary" /> */}
 
           {(() => {
             switch (status) {
@@ -152,74 +206,127 @@ const StageNavComponent = () => {
           })()}
         </div>
 
-        {sessionRole === "host" ? (
-          <div className="d-flex flex-row align-items-center justify-content-center">
-            {status === "Not Yet Started" ? (
-              <BtnOutlined className="me-3">
-                <PauseRoundedIcon
-                  className="me-2"
-                  style={{ fontSize: "20px" }}
-                />
-                Start session
-              </BtnOutlined>
-            ) : (
-              <></>
-            )}
+        <div className="d-flex flex-row align-items-center justify-content-center">
+          {currentUserIsAHost ? (
+            (() => {
+              switch (status) {
+                case "Not Yet Started":
+                  return (
+                    <BtnOutlined className="me-3">
+                      <PauseRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      Start session
+                    </BtnOutlined>
+                  );
 
-            {status === "Paused" ? (
-              <BtnOutlined className="me-3">
-                <PauseRoundedIcon
-                  className="me-2"
-                  style={{ fontSize: "20px" }}
-                />
-                Resume
-              </BtnOutlined>
-            ) : (
-              <></>
-            )}
+                case "Paused":
+                  return (
+                    <BtnOutlined className="me-3">
+                      <PauseRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      Resume
+                    </BtnOutlined>
+                  );
 
-            {status === "Started" || status === "Resumed" ? (
-              <BtnOutlined className="me-3">
-                <PauseRoundedIcon
-                  className="me-2"
-                  style={{ fontSize: "20px" }}
-                />
-                Take break
-              </BtnOutlined>
-            ) : (
-              <></>
-            )}
+                case "Started":
+                  return (
+                    <BtnOutlined className="me-3">
+                      <PauseRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      Take break
+                    </BtnOutlined>
+                  );
 
+                case "Resumed":
+                  return (
+                    <BtnOutlined className="me-3">
+                      <PauseRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      Take break
+                    </BtnOutlined>
+                  );
+
+                default:
+                  break;
+              }
+            })()
+          ) : (
+            <></>
+          )}
+
+          {canPublishStream &&
+          (currentUserIsAHost || currentUserIsASpeaker) &&
+          !sessionHasEnded ? (
             <BtnFilled className="me-3">
               <HomeRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              Live stage
+              You are on Live stage
             </BtnFilled>
+          ) : (
+            <></>
+          )}
 
-            {status === "Started" || status === "Resumed" ? (
-              <BtnOutlined>
-                <StopRoundedIcon
-                  className="me-2"
-                  style={{ fontSize: "20px" }}
-                />
-                End session
-              </BtnOutlined>
-            ) : (
-              <></>
-            )}
-          </div>
-        ) : (
-          <div></div>
-        )}
+          {currentUserIsAHost ? (
+            (() => {
+              switch (status) {
+                case "Started":
+                  return (
+                    <BtnOutlined>
+                      <StopRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      End session
+                    </BtnOutlined>
+                  );
+
+                case "Resumed":
+                  return (
+                    <BtnOutlined>
+                      <StopRoundedIcon
+                        className="me-2"
+                        style={{ fontSize: "20px" }}
+                      />
+                      End session
+                    </BtnOutlined>
+                  );
+
+                default:
+                  break;
+              }
+            })()
+          ) : (
+            <></>
+          )}
+        </div>
 
         <div className="d-flex flex-row align-items-center justify-content-end">
-          <PeopleWatching>
-            <PeopleOutlineRoundedIcon className="me-2" />
-            2,340 watching
-          </PeopleWatching>
+          {status === "Started" || status === "Resumed" ? (
+            <PeopleWatching>
+              <PeopleOutlineRoundedIcon className="me-2" />
+              2,340 watching
+              {/* This will be the total number of active users in this session currently */}
+            </PeopleWatching>
+          ) : (
+            <></>
+          )}
 
-          <IconButtonStatic className="ms-3">
-            <RssFeedRoundedIcon style={{ color: "red" }} />
-          </IconButtonStatic>
+          {/* // This streaming live variable will indicate if session is being live streamed */}
+
+          {streamingLive ? (
+            <IconButtonStatic className="ms-3">
+              <RssFeedRoundedIcon style={{ color: "red" }} />
+            </IconButtonStatic>
+          ) : (
+            <></>
+          )}
         </div>
       </StageNav>
     </>

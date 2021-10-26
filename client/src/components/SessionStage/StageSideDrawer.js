@@ -28,23 +28,13 @@ import {
 } from "./Elements";
 
 import { makeStyles } from "@material-ui/core";
-
-import Poll from "./../Elements/Poll";
-import QnA from "../Elements/Q&A";
 import { useSelector } from "react-redux";
 import MainChatComponent from "../HostingPlatform/StageSideBar/Chat/MainChatComponent";
 import MainQnAComponent from "../HostingPlatform/StageSideBar/QnA/MainQnAComponent";
 import MainPollComponent from "../HostingPlatform/StageSideBar/Poll/MainPollComponent";
 
 const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown
-    // text="Grid"
-    icon={`${view} layout`}
-    // floating
-    // labeled
-    button
-    className="icon"
-  >
+  <Dropdown icon={`${view} layout`} button className="icon">
     <Dropdown.Menu style={{ right: "0", left: "auto" }}>
       <Dropdown.Item
         icon="list layout"
@@ -81,10 +71,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StageSideDrawerComponent = () => {
-  const [activeLinkTab, setActiveLinkTab] = useState("chat");
+const StageSideDrawerComponent = ({ runningStatus, canPublishStream }) => {
+  // We need to know the current running state and if this user is a host or not in all of this side drawer component
 
-  const { sessionRole } = useSelector((state) => state.eventAccessToken);
+  let sessionHasEnded = false;
+
+  let currentUserIsAHost = false;
+  let currentUserIsASpeaker = false;
+  let currentUserIsAnAttendeeOnStage = false;
+  let currentUserIsAnAttendee = false;
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const [activeLinkTab, setActiveLinkTab] = useState("chat");
 
   const [activeTab, setActiveTab] = useState("activity");
 
@@ -94,15 +95,51 @@ const StageSideDrawerComponent = () => {
     setView(view);
   };
 
+  const userId = userDetails._id;
+  const userEmail = userDetails.email;
+
+  const hosts = sessionDetails.host; // Hosts for this session
+  const speakers = sessionDetails.speaker; // Speakers for this session
+
+  const hostIds = hosts.map((el) => el._id);
+  const speakerEmails = speakers.map((el) => el.email);
+
+  if (hostIds.includes(userId)) {
+    //This user is a host
+    currentUserIsAHost = true;
+  } else if (speakerEmails.includes(userEmail)) {
+    // This user is a speaker
+    currentUserIsASpeaker = true;
+  } else if (
+    canPublishStream &&
+    !hostIds.includes(userId) &&
+    !speakerEmails.includes(userEmail)
+  ) {
+    // This user is an attendee invited on stage
+    currentUserIsAnAttendeeOnStage = true;
+  } else {
+    currentUserIsAnAttendee = true;
+  }
+
+  if (runningStatus === "Ended") {
+    sessionHasEnded = true;
+  }
+
   const classes = useStyles();
 
   return (
     <>
       <SessionSideDrawer>
-        <SessionSideIconBtnNav style={{gridTemplateColumns: sessionRole === "host" || sessionRole === "organiser"  ? "1fr 1fr 1fr 1fr" : "1fr 1fr"}}>
+        <SessionSideIconBtnNav
+          style={{
+            gridTemplateColumns: currentUserIsAHost
+              ? "1fr 1fr 1fr 1fr"
+              : "1fr 1fr",
+          }}
+        >
           <TabButton
-          className=""
-          style={{paddingTop: "10px", paddingBottom: "10px"}}
+            className=""
+            style={{ paddingTop: "10px", paddingBottom: "10px" }}
             active={activeTab === "activity" ? true : false}
             onClick={() => {
               setActiveTab("activity");
@@ -118,23 +155,29 @@ const StageSideDrawerComponent = () => {
           >
             People
           </TabButton>
-          {sessionRole === "host" || sessionRole === "organiser" ? <> <TabButton
-            active={activeTab === "raisedHands" ? true : false}
-            onClick={() => {
-              setActiveTab("raisedHands");
-            }}
-          >
-            Raised hands
-          </TabButton>
-          <TabButton
-            active={activeTab === "videos" ? true : false}
-            onClick={() => {
-              setActiveTab("videos");
-            }}
-          >
-            Videos
-          </TabButton> </> : <></>}
-          
+          {currentUserIsAHost && !sessionHasEnded ? (
+            <>
+              {" "}
+              <TabButton
+                active={activeTab === "raisedHands" ? true : false}
+                onClick={() => {
+                  setActiveTab("raisedHands");
+                }}
+              >
+                Raised hands
+              </TabButton>
+              <TabButton
+                active={activeTab === "videos" ? true : false}
+                onClick={() => {
+                  setActiveTab("videos");
+                }}
+              >
+                Videos
+              </TabButton>{" "}
+            </>
+          ) : (
+            <></>
+          )}
         </SessionSideIconBtnNav>
 
         {/* <MainChatComponent /> */}
@@ -181,8 +224,10 @@ const StageSideDrawerComponent = () => {
                         case "chat":
                           return (
                             <div className="d-flex flex-column align-items-center justify-content-between">
-                            <MainChatComponent />
-                            
+                              <MainChatComponent
+                                currentUserIsAHost={currentUserIsAHost}
+                                runningStatus={runningStatus}
+                              />
                             </div>
                           );
                         case "q&a":
@@ -195,9 +240,10 @@ const StageSideDrawerComponent = () => {
                                 style={{ height: "69vh" }}
                                 className="py-3 px-3"
                               >
-                                {/* <SessionQnAComponent /> */}
-                                {/* <QnA /> */}
-                                <MainQnAComponent />
+                                <MainQnAComponent
+                                  currentUserIsAHost={currentUserIsAHost}
+                                  runningStatus={runningStatus}
+                                />
                               </div>
                             </div>
                           );
@@ -211,8 +257,11 @@ const StageSideDrawerComponent = () => {
                                 style={{ height: "69vh" }}
                                 className="py-3 px-3"
                               >
-                                {/* <Poll /> */}
-                                <MainPollComponent />
+                                <MainPollComponent
+                                  currentUserIsAHost={currentUserIsAHost}
+                                  currentUserIsASpeaker={currentUserIsASpeaker}
+                                  runningStatus={runningStatus}
+                                />
                               </div>
                             </div>
                           );
@@ -230,7 +279,10 @@ const StageSideDrawerComponent = () => {
                 <div>
                   <div className=" pt-2 px-2">
                     <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3">
-                      <div className="ui icon input me-3" style={{ width: "100%" }}>
+                      <div
+                        className="ui icon input me-3"
+                        style={{ width: "100%" }}
+                      >
                         <input
                           type="text"
                           placeholder="Search people..."

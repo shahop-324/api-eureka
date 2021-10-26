@@ -78,6 +78,8 @@ const StreamBody = ({
   miniStreams,
   view,
   peopleInThisSession,
+  canPublishStream,
+  runningStatus,
 }) => {
   const { sessionDetails } = useSelector((state) => state.session);
 
@@ -103,123 +105,477 @@ const StreamBody = ({
           {sideDrawerOpen ? <LastPageRoundedIcon /> : <FirstPageRoundedIcon />}
         </a>
 
-        {typeof allStreams !== "undefined" && allStreams.length > 0 ? (
-          <div className="">
-            {(() => {
-              switch (view) {
-                case "gallery":
-                  return (
-                    <GalleryView col={col} row={row}>
-                      {allStreams &&
-                        renderGalleryView(
-                          allStreams,
-                          peopleInThisSession
-                        )}
-                    </GalleryView>
-                  );
-                case "grid":
-                  return (
-                    <GridView>
-                      {mainStream &&
-                        renderMainStream(
-                          mainStream,
-                          peopleInThisSession
-                        )}
-                      <GridViewMini>
-                        {/* <VideoStreamContainer /> */}
-                        {miniStreams &&
-                          renderMiniStreams(
-                            miniStreams,
-                            peopleInThisSession
-                          )}
-                        {/* Render mini views here */}
-                      </GridViewMini>
-                    </GridView>
-                  );
+        {
+          canPublishStream
+            ? (() => {
+                // NOTE: They will be automatically taken to live or backstage based on channel they join sessionId_live or sessionId_back => Take care of this in stage nav and controls component
+                switch (runningStatus) {
+                  case "Paused":
+                    // Take to back
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
 
-                
-                case "screenShare":
-                  return (
-                    <GridView>
-                      {screenStream &&
-                        renderScreenShareStream(
-                          screenStream,
-                          peopleInThisSession
-                        )}
-                      <GridViewMini>
-                        {allStreams &&
-                          renderMiniStreams(
-                            allStreams,
-                            peopleInThisSession
-                          )}
-                      </GridViewMini>
-                    </GridView>
-                  );
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
 
-                default:
-                  break;
-              }
-            })()}
-          </div>
-        ) : (
-          <NotYetStarted>
-            {(() => {
-              switch (status) {
-                case "Not Yet Started":
-                  return (
-                    <>
-                      <img
-                        src={VideoCall}
-                        style={{ height: "300px" }}
-                        className="mb-4"
-                        alt={"No video"}
-                      />
-                      <Text>
-                        Uh oh! Seems like this session is not yet started.
-                      </Text>
-                    </>
-                  );
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
 
-                case "Paused":
-                  return (
-                    <>
-                      <img
-                        src={Paused}
-                        style={{ height: "300px" }}
-                        className="mb-4"
-                        alt={"No video"}
-                      />
-                      <Text>Looks like this session is paused for now.</Text>
-                    </>
-                  );
+                  case "Not Yet Started":
+                    // Take to back
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
 
-                case "Ended":
-                  return (
-                    <>
-                      <img
-                        src={Ended}
-                        style={{ height: "300px" }}
-                        className="mb-4"
-                        alt={"No video"}
-                      />
-                      <Text className="mb-4">
-                        Oops, this session has already ended. But we can still
-                        watch together.
-                      </Text>
-                      <ButtonStyled className="btn btn-danger btn-outline-text">
-                        {" "}
-                        <PlayCircleRoundedIcon className="me-2" />{" "}
-                        <span>Let's watch </span>
-                      </ButtonStyled>
-                    </>
-                  );
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
 
-                default:
-                  break;
-              }
-            })()}
-          </NotYetStarted>
-        )}
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
+
+                  case "Started":
+                    // Take to live
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
+
+                  case "Resumed":
+                    // Take to live
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
+
+                  case "Ended":
+                    // Show Ended screen
+                    return (
+                      <>
+                        <img
+                          src={Ended}
+                          style={{ height: "300px" }}
+                          className="mb-4"
+                          alt={"No video"}
+                        />
+                        <Text className="mb-4">
+                          Oops, this session has already ended. But we can still
+                          watch together.
+                        </Text>
+                        <ButtonStyled className="btn btn-danger btn-outline-text">
+                          {" "}
+                          <PlayCircleRoundedIcon className="me-2" />{" "}
+                          <span>Let's watch </span>
+                        </ButtonStyled>
+                      </>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+            : (() => {
+                switch (runningStatus) {
+                  case "Started":
+                    // Take to live
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
+
+                  case "Resumed":
+                    // Take to live
+
+                    return typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
+
+                  case "Paused":
+                    // Show paused screen
+                    return (
+                      <NotYetStarted>
+                        <img
+                          src={Paused}
+                          style={{ height: "300px" }}
+                          className="mb-4"
+                          alt={"No video"}
+                        />
+                        <Text>Looks like this session is paused for now.</Text>
+                      </NotYetStarted>
+                    );
+
+                  case "Not Yet Started":
+                    // Show not yet Started screen
+                    return (
+                      <NotYetStarted>
+                        <>
+                          <img
+                            src={VideoCall}
+                            style={{ height: "300px" }}
+                            className="mb-4"
+                            alt={"No video"}
+                          />
+                          <Text>
+                            Uh oh! Seems like this session is not yet started.
+                          </Text>
+                        </>
+                      </NotYetStarted>
+                    );
+
+                  case "Ended":
+                    // Show ended screen
+                    return (
+                      <>
+                        <img
+                          src={Ended}
+                          style={{ height: "300px" }}
+                          className="mb-4"
+                          alt={"No video"}
+                        />
+                        <Text className="mb-4">
+                          Oops, this session has already ended. But we can still
+                          watch together.
+                        </Text>
+                        <ButtonStyled className="btn btn-danger btn-outline-text">
+                          {" "}
+                          <PlayCircleRoundedIcon className="me-2" />{" "}
+                          <span>Let's watch </span>
+                        </ButtonStyled>
+                      </>
+                    );
+
+                  default:
+                    break;
+                }
+              })()
+
+          // if cannot publish stream and session has ended then show session ended screen
+          // if cannot publish stream and session has not ended then take to live stage => if (Started || Resumed) show videos || if(Paused or Not Yet Started) show illustration
+          // if can publish and session is not live than backstage
+          // if can publish and session live than livestage
+          // if can publish and session has ended then show ended screen
+        }
       </div>
     </>
   );

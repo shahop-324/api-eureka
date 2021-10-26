@@ -18,13 +18,15 @@ const Scrollable = styled.div`
   flex-direction: column;
 `;
 
-const renderQnA = (QnAs) => {
+const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
   return QnAs.map((element) => {
     if (element.deleted) return;
     if (!element.answeredBy) {
       // This question is unanswered
       return (
         <UnansweredQnA
+        currentUserIsAHost={currentUserIsAHost}
+        runningStatus={runningStatus}
           key={element._id}
           id={element._id}
           question={element.question}
@@ -49,6 +51,8 @@ const renderQnA = (QnAs) => {
     } else {
       return (
         <AnsweredQnA
+        runningStatus={runningStatus}
+        currentUserIsAHost={currentUserIsAHost}
           key={element._id}
           id={element._id}
           question={element.question}
@@ -83,7 +87,7 @@ const renderQnA = (QnAs) => {
   });
 };
 
-const MainQnAComponent = () => {
+const MainQnAComponent = ({currentUserIsAHost, runningStatus}) => {
   const { sessionQnAs } = useSelector((state) => state.sessionQnAs);
 
   return (
@@ -91,10 +95,25 @@ const MainQnAComponent = () => {
       <QnAContainer>
         <Scrollable className="mb-3">
           {/* Render QnA List Here */}
-          {renderQnA(sessionQnAs)}
+          {renderQnA(sessionQnAs, currentUserIsAHost, runningStatus)}
         </Scrollable>
         {/* Render QnA input here */}
-        <QnAInput />
+        {/* QnA can only be asked when session is live */}
+        {(() => {
+          switch (runningStatus) {
+            case "Started":
+              return <QnAInput /> 
+
+              
+
+              case "Resumed":
+                return <QnAInput />
+          
+            default:
+              break;
+          }
+        })()}
+        
       </QnAContainer>
     </>
   );
