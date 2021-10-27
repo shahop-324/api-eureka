@@ -277,9 +277,11 @@ exports.generateRTMTokenForSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
-  const channel = req.body.sessionId;
+  const channel = req.body.channelId;
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
+
+  console.log(channel);
 
   const appID = "702d57c3092c4fd389eb7ea5a505d471";
   const appCertificate = "d8311f38cf434445805478cb8c93a334";
@@ -300,6 +302,7 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
   // Build token with uid
+
   const token = RtcTokenBuilder.buildTokenWithUid(
     appID,
     appCertificate,
@@ -307,6 +310,16 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
     uid,
     role,
     privilegeExpiredTs
+  );
+
+  console.log(
+    appID,
+    appCertificate,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs,
+    token
   );
 
   res.status(200).json({

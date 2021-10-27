@@ -92,6 +92,7 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
+try{
   const query = Session.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   }).populate("speaker").populate('currentlyInSession');
@@ -105,4 +106,9 @@ exports.getAllSessionsForUser = catchAsync(async (req, res, next) => {
       sessions,
     },
   });
+}
+catch(error) {
+  console.log(error);
+}
+  
 });

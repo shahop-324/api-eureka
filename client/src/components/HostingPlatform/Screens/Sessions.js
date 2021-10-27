@@ -96,17 +96,12 @@ const Sessions = () => {
     );
   }
 
-  if (error) {
-    dispatch(errorTrackerForFetchSessionsForUser());
-    alert(error);
-    return;
-  }
+
 
   return (
     <>
       <div className="sessions-heading-and-search-box-wrapper-grid d-flex flex-row mb-5">
-        <div className="col-3">
-        </div>
+        <div className="col-3"></div>
         <div className="sessions-and-networking-body-heading col-6">
           Select Session to enter
         </div>

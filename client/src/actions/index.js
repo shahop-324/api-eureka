@@ -5533,13 +5533,15 @@ export const errorTrackerForFetchPreviousEventAlerts =
   };
 
 export const getRTCTokenAndSession =
-  (sessionId, role, eventId, communityId) => async (dispatch, getState) => {
+  (sessionId, channel, role, eventId, communityId) =>
+  async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenAndSession`, {
         method: "POST",
         body: JSON.stringify({
+          channelId: channel,
           sessionId: sessionId,
           role: role,
         }),
@@ -5562,8 +5564,7 @@ export const getRTCTokenAndSession =
     };
     try {
       let res = await fetchingRTCToken();
-      console.log(res);
-
+      
       dispatch(
         RTCActions.fetchRTCToken({
           token: res.token,
@@ -5575,8 +5576,10 @@ export const getRTCTokenAndSession =
           session: res.session,
         })
       );
-
-      window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`;
+      history.push(
+        `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
+      );
+      // window.location.href = ;
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));

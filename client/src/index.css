@@ -1,4 +1,10 @@
 /* rest of app styles */
+*{
+  font-family: "Ubuntu" !important;
+}
+
+
+
 .email-list-group {
   border: 1px solid transparent;
 }

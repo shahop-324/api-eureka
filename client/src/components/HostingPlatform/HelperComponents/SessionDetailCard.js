@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./../../../index.css";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
@@ -88,10 +88,12 @@ const SessionDetailCard = ({
   duration,
   speakers,
   hosts,
+  runningStatus,
 }) => {
   const [openPriority, setOpenPriority] = useState(false);
 
   const [openReminder, setOpenReminder] = useState(false);
+  const [channel, setChannel] = useState(`${id}-live`);
 
   const userEmail = useSelector((state) => state.user.userDetails.email);
 
@@ -152,6 +154,38 @@ const SessionDetailCard = ({
     bgColor = "#538BF7";
   }
 
+  const agoraRole = sessionRole === "host" ? "host" : "audience";
+
+  useEffect(() => {
+    if (agoraRole === "host") {
+      if (runningStatus === "Started" || runningStatus === "Resumed") {
+        // alert(1)
+        // Session is live
+        setChannel(`${id}-live`);
+      }
+      if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
+        // Session is not live
+        setChannel(`${id}-back`);
+        // alert(2)
+      }
+      if (runningStatus === "Ended") {
+        // Session has already ended
+        // No channel will be needed in this case as user won't join any agora channel here
+        // alert(3)
+      }
+    } else {
+      if (runningStatus !== "Ended") {
+        // take to live stage
+        setChannel(`${id}-live`);
+        // alert(4)
+      }
+      if (runningStatus === "Ended") {
+        // No channel will be needed in this case as user won't join any agora channel here
+        // alert(5)
+      }
+    }
+  }, []);
+
   return (
     <>
       <div className="session-detail-card mb-3 px-4 py-5">
@@ -204,8 +238,11 @@ const SessionDetailCard = ({
             <Link
               onClick={() => {
                 // Get a RTC token
+
+                // alert(channel)
+;
                 dispatch(
-                  getRTCTokenAndSession(id, sessionRole, eventId, communityId)
+                  getRTCTokenAndSession(id, channel, sessionRole, eventId, communityId)
                 );
 
                 // Join session channel

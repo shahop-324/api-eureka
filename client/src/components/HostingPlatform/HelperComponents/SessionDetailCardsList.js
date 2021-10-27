@@ -27,6 +27,7 @@ const SessionDetailCardsList = ({
           duration={duration}
           startTime={session.startTime}
           hosts={session.host}
+          runningStatus={session.runningStatus}
         />
       );
     });

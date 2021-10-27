@@ -5,9 +5,9 @@ const onStagePeopleSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
-  hidden: {
-    type: Boolean,
-    default: false,
+  userRole: {
+    type: String,
+    enum: ["Host", "Speaker", "Attendee"],
   },
   camera: {
     type: Boolean,

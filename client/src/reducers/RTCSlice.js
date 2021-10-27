@@ -26,6 +26,7 @@ const RTCSlice = createSlice({
       state.isLoading = false;
     },
     fetchRTCToken(state, action) {
+      console.log(action.payload.token)
       state.token = action.payload.token;
       state.isLoading = false;
     },

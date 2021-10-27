@@ -96,9 +96,36 @@ const SessionStage = () => {
   const eventId = params.eventId;
   const communityId = params.communityId;
 
+  let userRole = "Attendee";
+
+  // Determine if the current user is a host and place restrictions based on that
+
+  const { userDetails } = useSelector((state) => state.user);
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const userId = userDetails._id;
+  const userEmail = userDetails.email;
+
+  const hosts = sessionDetails.host; // Hosts for this session
+  const speakers = sessionDetails.speaker; // Speakers for this session
+
+  const hostIds = hosts.map((el) => el._id);
+  const speakerEmails = speakers.map((el) => el.email);
+
+  if (hostIds.includes(userId)) {
+    //This user is a host
+    userRole = "Host";
+  } else if (speakerEmails.includes(userEmail)) {
+    // This user is a speaker
+    userRole = "Speaker";
+  } else if (!hostIds.includes(userId) && !speakerEmails.includes(userEmail)) {
+    // This user is an attendee
+    userRole = "Attendee";
+  }
+
   const [state, setState] = useState("live"); // State can be live or back. It will be determined in useEffect
 
-  const [channel, setChannel] = useState(`${sessionId}_live`); // This will be the room used to join agora channel , It can be sessionId_live or sessionId_back depanding on whether user joins livestage or backstage
+  const [channel, setChannel] = useState(`${sessionId}-live`); // This will be the room used to join agora channel , It can be sessionIdlive or sessionIdback depanding on whether user joins livestage or backstage
 
   const volumeIndicators = useRef([]); // Its an array of objects {uid: uid, volume: [0-100], isSpeaking: Boolean(true | False)}
 
@@ -287,8 +314,6 @@ const SessionStage = () => {
     setView("spotlight");
   };
 
-  const { sessionDetails } = useSelector((state) => state.session);
-
   const runningStatus = sessionDetails.runningStatus; // Can be Started, Paused, Resumed, Ended, Not Yet Started
 
   const { peopleInThisSession } = useSelector((state) => state.user);
@@ -300,8 +325,6 @@ const SessionStage = () => {
   const handleOpenSideDrawer = () => {
     setSideDrawerOpen(!sideDrawerOpen);
   };
-
-  const userId = useSelector((state) => state.eventAccessToken.id);
 
   const { token, screenToken } = useSelector((state) => state.RTC);
 
@@ -387,44 +410,6 @@ const SessionStage = () => {
     );
   };
 
-  useEffect(() => {
-    // startAdvancedLiveStreaming();
-
-    if (agoraRole === "host") {
-      setCanPublishStream(true); // We will manipulate this variable to allow audience to come on stage
-
-      if (runningStatus === "Started" || runningStatus === "Resumed") {
-        // Session is live
-        setState("live");
-        setChannel(`${sessionId}_live`);
-      }
-      if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
-        // Session is not not live
-        setState("back");
-        setChannel(`${sessionId}_back`);
-      }
-      if (runningStatus === "Ended") {
-        // Session has already ended
-        setState("ended");
-        // No channel will be needed in this case as user won't join any agora channel here
-      }
-    } else {
-      if (runningStatus !== "Ended") {
-        // take to live stage
-        setState("live");
-        setChannel(`${sessionId}_live`);
-      }
-      if (runningStatus === "Ended") {
-        setState("ended");
-        // No channel will be needed in this case as user won't join any agora channel here
-      }
-    }
-
-    if (runningStatus !== "Ended") {
-      startLiveStream();
-    }
-  }, []);
-
   // navigator.mediaDevices.getUserMedia(..).then((stream) => {..});
 
   // navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
@@ -433,7 +418,34 @@ const SessionStage = () => {
   //   };
   // });
 
-  const startLiveStream = async () => {
+  const startLiveStream = async (localChannel) => {
+    // alert(canPublishStream);
+    if (agoraRole === "host") {
+      // Only here we need to emit event markAsAvailableInSession via socket
+
+      // alert("yes, I can publish stream");
+
+      socket.emit(
+        "markAsAvailableInSession",
+        {
+          userId,
+          sessionId,
+          eventId,
+          userRole,
+          microphone: false,
+          camera: false,
+          screen: false,
+          available: true,
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      // In this case we don't need to do anything
+      // alert("No, I can't publish stream");
+    }
+
     AgoraRTC.setLogLevel(0);
 
     // Created client object using Agora SDK
@@ -471,6 +483,30 @@ const SessionStage = () => {
 
       // ! Call Remove from all streams
     });
+    console.log(options.appId, localChannel, options.token, options.uid);
+    await rtc.client
+      .join(options.appId, localChannel, options.token, options.uid)
+      .then(async () => {
+        console.log("Bluemeet: Joined RTC Channel.");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // * Enable dual stream mode
+
+    rtc.client
+      .enableDualStream()
+      .then(() => {
+        console.log("Enable Dual stream success!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // Everyone will join channel and will have listners set to listen for other events in stream
+
+    // Allow to publish media stream if permitted
 
     // * Find active speakers
 
@@ -553,35 +589,6 @@ const SessionStage = () => {
 
       // Now we can just use prominent and non prominent to render spotlight view and non screen share and not pinned view of grid mode
     });
-
-    await rtc.client
-      .join(options.appId, options.channel, options.token, options.uid)
-      .then(async () => {
-        console.log("Bluemeet: Joined RTC Channel.");
-      });
-
-    // * Enable dual stream mode
-
-    rtc.client
-      .enableDualStream()
-      .then(() => {
-        console.log("Enable Dual stream success!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // Everyone will join channel and will have listners set to listen for other events in stream
-
-    // Allow to publish media stream if permitted
-
-    if (canPublishStream) {
-      // Only here we need to emit event markAsAvailableInSession via socket
-
-      socket.emit("markAsAvailableInSession", { userId, sessionId, eventId });
-    } else {
-      // In this case we don't need to do anything
-    }
   };
 
   const unMuteMyVideo = async () => {
@@ -661,6 +668,50 @@ const SessionStage = () => {
     const level = rtc.localAudioTrack.getVolumeLevel();
     localVolumeLevel.current(level * 100);
   }, 1000);
+
+  useEffect(() => {
+    // startAdvancedLiveStreaming();
+    let localChannel = `${sessionId}-live`;
+
+    if (agoraRole === "host") {
+      setCanPublishStream(true); // We will manipulate this variable to allow audience to come on stage
+
+      if (runningStatus === "Started" || runningStatus === "Resumed") {
+        // Session is live
+        setState("live");
+        setChannel(`${sessionId}-live`);
+
+      }
+      if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
+        // Session is not not live
+        setState("back");
+        setChannel(`${sessionId}-back`);
+        localChannel = `${sessionId}-back`
+        // alert("We have setted channel as backstage");
+      }
+      if (runningStatus === "Ended") {
+        // Session has already ended
+        setState("ended");
+        // No channel will be needed in this case as user won't join any agora channel here
+      }
+    } else {
+      if (runningStatus !== "Ended") {
+        // take to live stage
+        setState("live");
+        setChannel(`${sessionId}-live`);
+      }
+      if (runningStatus === "Ended") {
+        setState("ended");
+        // No channel will be needed in this case as user won't join any agora channel here
+      }
+    }
+
+    if (runningStatus !== "Ended") {
+      startLiveStream(localChannel);
+    }
+
+    // startLiveStream();
+  }, []);
 
   return (
     <>

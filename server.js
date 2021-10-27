@@ -452,6 +452,44 @@ io.on("connect", (socket) => {
   );
 
   socket.on(
+    "markAsAvailableInSession",
+    async ({
+      userId,
+      sessionId,
+      eventId,
+      userRole,
+      microphone,
+      camera,
+      screen,
+      available,
+    }) => {
+      // Find session and make this user available in people onstage array
+      // Then send updated session to all users in this session
+      
+      console.log(
+        sessionId,
+        eventId,
+        userRole,
+        microphone,
+        camera,
+        screen,
+        available
+      );
+    }
+  );
+
+  socket.on("updateMeOnSessionStage", async({}, callback) => {
+    // Update user on session stage and send updated session to all users in this session
+
+  })
+
+  socket.on("removeMeFromSessionStage", async({}, callback) => {
+    // Mark user as unavailable if he / she is a speaker 
+    // Remove user if he/she is an attendee
+    // send updated session doc to everyone in event
+  });
+
+  socket.on(
     "transmitSessionQnA",
     async ({ question, createdAt, askedBy, eventId, sessionId }, callback) => {
       // Create a new qnA doc in sessionQnA Model and send it to everyone in this session
