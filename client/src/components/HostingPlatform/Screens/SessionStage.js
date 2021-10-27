@@ -13,7 +13,6 @@ import socket from "../service/socket";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import history from "../../../history";
 import ReactTooltip from "react-tooltip";
-import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 import {
   showNotification,
   fetchSessionQnA,
@@ -29,13 +28,14 @@ import {
   fetchSessionForSessionStage,
   createNewSessionMsg,
   deleteSessionChat,
+  updateSession,
+  deleteBackstageChat,
+  fetchPreviousBackstageChatMessages,
+  createNewBackstageMsg,
 } from "./../../../actions";
 
 import StreamBody from "../Functions/Stage/StreamBody";
-
-import VideoCall from "./../../../assets/images/video-call.svg";
-import Paused from "./../../../assets/images/paused.svg";
-import Ended from "./../../../assets/images/ended.svg";
+import StartingSessionCounter from "../../SessionStage/SubComponent/StartingSessionCounter";
 
 let rtc = {
   localAudioTrack: null,
@@ -106,6 +106,14 @@ const SessionStage = () => {
   const userId = userDetails._id;
   const userEmail = userDetails.email;
 
+  const { registrations } = useSelector((state) => state.registration);
+
+  const myRegistration = registrations.find(
+    (element) => element.bookedByUser.toString() === userId
+  );
+
+  const registrationId = myRegistration._id;
+
   const hosts = sessionDetails.host; // Hosts for this session
   const speakers = sessionDetails.speaker; // Speakers for this session
 
@@ -114,12 +122,15 @@ const SessionStage = () => {
 
   if (hostIds.includes(userId)) {
     //This user is a host
+    // alert("This user is a host")
     userRole = "Host";
   } else if (speakerEmails.includes(userEmail)) {
     // This user is a speaker
+    // alert("This user is a speaker")
     userRole = "Speaker";
   } else if (!hostIds.includes(userId) && !speakerEmails.includes(userEmail)) {
     // This user is an attendee
+    // alert("This user is an attendee")
     userRole = "Attendee";
   }
 
@@ -161,6 +172,8 @@ const SessionStage = () => {
 
     dispatch(fetchPreviousSessionChatMessages(sessionId));
 
+    dispatch(fetchPreviousBackstageChatMessages(sessionId));
+
     socket.emit(
       "subscribeSession",
       {
@@ -172,6 +185,11 @@ const SessionStage = () => {
         }
       }
     );
+
+    socket.on("updatedSession", ({ session }) => {
+      dispatch(updateSession(session));
+    });
+
     socket.on("usersInSession", ({ users }) => {
       dispatch(updateUsersInSession(users));
     });
@@ -179,6 +197,10 @@ const SessionStage = () => {
     socket.on("newSessionMsg", ({ newMsg }) => {
       dispatch(createNewSessionMsg(newMsg));
     });
+
+    socket.on("newBackstageMsg", ({newMsg}) => {
+      dispatch(createNewBackstageMsg(newMsg));
+    })
 
     socket.on("newQnA", ({ newQnA }) => {
       dispatch(createSessionQnA(newQnA));
@@ -239,13 +261,34 @@ const SessionStage = () => {
     });
 
     socket.on("deletedMsg", ({ deletedMsg }) => {
-      console.log(deletedMsg);
       dispatch(deleteSessionChat(deletedMsg));
     });
+
+    socket.on("deleteBackstageMsg", ({deletedMsg}) => {
+      dispatch(deleteBackstageChat(deletedMsg));
+    })
 
     window.addEventListener("beforeunload", leaveStreaming);
 
     return () => {
+      socket.emit(
+        "removeMeFromSessionStage",
+        {
+          userId,
+          userEmail,
+          registrationId,
+          sessionId,
+          eventId,
+          microphone: false,
+          camera: false,
+          screen: false,
+          available: false,
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
       leaveStreaming();
     };
   }, []);
@@ -254,7 +297,18 @@ const SessionStage = () => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(false);
 
-    // ! Here we nee to emit event updateMeOnStage
+    socket.emit(
+      "updateMyCameraOnSessionStage",
+      {
+        userId,
+        registrationId,
+        sessionId,
+        camera: false,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
     setVideoIsEnabled(false);
   };
@@ -262,7 +316,18 @@ const SessionStage = () => {
     if (!rtc.localVideoTrack) return;
     await rtc.localVideoTrack.setEnabled(true);
 
-    // ! Here we need to emit event updateMeOnStage
+    socket.emit(
+      "updateMyCameraOnSessionStage",
+      {
+        userId,
+        registrationId,
+        sessionId,
+        camera: true,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
     setVideoIsEnabled(true);
   };
@@ -271,7 +336,18 @@ const SessionStage = () => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(false);
 
-    // ! Here we need to emit event updateMeOnStage
+    socket.emit(
+      "updateMyMicOnSessionStage",
+      {
+        userId,
+        registrationId,
+        sessionId,
+        microphone: false,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
     setAudioIsEnabled(false);
   };
@@ -279,7 +355,18 @@ const SessionStage = () => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(true);
 
-    // ! Here we need to emit event updateMeOnStage
+    socket.emit(
+      "updateMyMicOnSessionStage",
+      {
+        userId,
+        registrationId,
+        sessionId,
+        microphone: true,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 
     setAudioIsEnabled(true);
   };
@@ -383,6 +470,24 @@ const SessionStage = () => {
   const leaveStreaming = async () => {
     // ! Emit mark me as leaved from session streaming if (I was able to publish stream to this channel)
 
+    socket.emit(
+      "removeMeFromSessionStage",
+      {
+        userId,
+        userEmail,
+        registrationId,
+        sessionId,
+        eventId,
+        microphone: false,
+        camera: false,
+        screen: false,
+        available: false,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
     if (agoraRole === "host") {
       rtc.localAudioTrack && rtc.localAudioTrack.close();
       rtc.localVideoTrack && rtc.localVideoTrack.close();
@@ -429,9 +534,10 @@ const SessionStage = () => {
         "markAsAvailableInSession",
         {
           userId,
+          userEmail,
+          registrationId,
           sessionId,
           eventId,
-          userRole,
           microphone: false,
           camera: false,
           screen: false,
@@ -606,6 +712,19 @@ const SessionStage = () => {
 
     await rtc.client.publish([rtc.localVideoTrack]).then(() => {
       console.info("Video track published successfully!");
+
+      socket.emit(
+        "updateMyCameraOnSessionStage",
+        {
+          userId,
+          registrationId,
+          sessionId,
+          camera: true,
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     });
 
     setAllStreams((prev) => [
@@ -635,6 +754,19 @@ const SessionStage = () => {
 
     await rtc.client.publish([rtc.localAudioTrack]).then(() => {
       console.log("Audio published successfully!");
+
+      socket.emit(
+        "updateMyMicOnSessionStage",
+        {
+          userId,
+          registrationId,
+          sessionId,
+          microphone: true,
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     });
   };
 
@@ -680,13 +812,23 @@ const SessionStage = () => {
         // Session is live
         setState("live");
         setChannel(`${sessionId}-live`);
-
       }
       if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
         // Session is not not live
+        socket.emit( // ! Subscribe to session backstage
+          "subscribeBackstage",
+          {
+            sessionId: sessionId,
+          },
+          (error) => {
+            if (error) {
+              alert(error);
+            }
+          }
+        );
         setState("back");
         setChannel(`${sessionId}-back`);
-        localChannel = `${sessionId}-back`
+        localChannel = `${sessionId}-back`;
         // alert("We have setted channel as backstage");
       }
       if (runningStatus === "Ended") {
@@ -715,9 +857,11 @@ const SessionStage = () => {
 
   return (
     <>
-      <div>
+      <div style={{position: "relative"}}>
+        {/* <StartingSessionCounter /> */}
         {/* Stage Nav Goes here */}
         <StageNavComponent
+        state={state}
           runningStatus={runningStatus}
           canPublishStream={canPublishStream}
         />
@@ -742,6 +886,7 @@ const SessionStage = () => {
             {/* Stage side drawer component goes here */}
             {sideDrawerOpen && (
               <StageSideDrawerComponent
+              state={state}
                 runningStatus={runningStatus}
                 canPublishStream={canPublishStream}
               />
@@ -750,6 +895,7 @@ const SessionStage = () => {
 
           {/* Stage Controls components */}
           <StageControlsComponent
+            leaveStreaming={leaveStreaming}
             runningStatus={runningStatus}
             canPublishStream={canPublishStream}
           />

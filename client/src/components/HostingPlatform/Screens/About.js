@@ -251,7 +251,6 @@ const renderSpeakers = (speakers) => {
 };
 
 const renderAttendees = (attendees) => {
-  console.log(attendees, "This is attendees array.");
   return attendees.map((attendee) => {
     if (attendee.status !== "Active") return;
     return (

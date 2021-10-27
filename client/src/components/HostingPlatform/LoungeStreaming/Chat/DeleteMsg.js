@@ -156,8 +156,7 @@ const DeleteMsg = ({
           >
             <button
               onClick={() => {
-                console.log("Delete msg with this Id", msgId);
-                alert(`Delete msg with this Id, ${msgId}`);
+                
                 deleteMsg(msgId);
               }}
               className="btn btn-primary btn-outline-text"

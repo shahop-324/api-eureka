@@ -104,7 +104,6 @@ const PollsMainComponent = (props) => {
     return <Loader />;
   }
   if (error) {
-    alert(error);
     dispatch(errorTrackerForFetchPreviousEventPolls());
     return null;
   }

@@ -29,7 +29,7 @@ const Rooms = () => {
   const { eventTables } = useSelector((state) => state.eventTables);
 
   window.onbeforeunload = () => {
-    window.alert("closing now.....");
+    // window.alert("closing now.....");
   };
 
   useEffect(() => {

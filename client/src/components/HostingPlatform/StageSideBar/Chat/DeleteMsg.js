@@ -78,6 +78,7 @@ const MsgElement = ({
 };
 
 const DeleteMsg = ({
+  state,
   name,
   image,
   msgText,
@@ -96,19 +97,39 @@ const DeleteMsg = ({
   const sessionId = params.sessionId;
 
   const deleteMsg = (msgId) => {
-    socket.emit(
-      "deleteSessionMessage", // !change this to deleteSessionMessage
-      {
-        msgId: msgId,
-        eventId: eventId,
-        sessionId: sessionId,
-      },
-      (error) => {
-        if (error) {
-          alert(error);
+
+    if(state === "live") {
+      socket.emit(
+        "deleteSessionMessage", // !change this to deleteSessionMessage
+        {
+          msgId: msgId,
+          eventId: eventId,
+          sessionId: sessionId,
+        },
+        (error) => {
+          if (error) {
+            alert(error);
+          }
         }
-      }
-    );
+      );
+    }
+    if(state === "back") {
+      socket.emit(
+        "deleteBackstageMessage", // !change this to deleteBackstageMessage
+        {
+          msgId: msgId,
+          eventId: eventId,
+          sessionId: sessionId,
+        },
+        (error) => {
+          if (error) {
+            alert(error);
+          }
+        }
+      );
+    }
+
+    
   };
 
   return (

@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StageSideDrawerComponent = ({ runningStatus, canPublishStream }) => {
+const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) => {
   // We need to know the current running state and if this user is a host or not in all of this side drawer component
 
   let sessionHasEnded = false;
@@ -225,6 +225,7 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream }) => {
                           return (
                             <div className="d-flex flex-column align-items-center justify-content-between">
                               <MainChatComponent
+                              state={state}
                                 currentUserIsAHost={currentUserIsAHost}
                                 runningStatus={runningStatus}
                               />

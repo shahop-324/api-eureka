@@ -58,9 +58,7 @@ const CreateNewAlert = (props) => {
   const { id, email, firstName, lastName, image, organisation, designation } =
     useSelector((state) => state.user.userDetails);
 
-  const showResults = (formValues) => {
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+  
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -81,8 +79,6 @@ const CreateNewAlert = (props) => {
     ModifiedFormValues.designation = designation;
 
     // id, email, firstName, lastName, image, organisation, designation
-
-    showResults(ModifiedFormValues);
 
     socket.emit("transmitEventAlert", { ...ModifiedFormValues }, (error) => {
       if (error) {

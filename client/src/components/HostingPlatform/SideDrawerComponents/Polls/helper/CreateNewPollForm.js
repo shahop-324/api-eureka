@@ -55,10 +55,7 @@ const CreateNewPoll = (props) => {
   const { id, firstName, lastName, email, image, organisation, designation } =
     useSelector((state) => state.user.userDetails);
 
-  const showResults = (formValues) => {
-    // await sleep(500); // simulate server latency
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
+ 
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -99,8 +96,7 @@ const CreateNewPoll = (props) => {
         alert(error);
       }
     });
-
-    showResults(ModifiedFormValues);
+    
     props.handleClose();
   };
 

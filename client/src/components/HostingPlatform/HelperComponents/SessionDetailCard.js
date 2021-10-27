@@ -110,7 +110,7 @@ const SessionDetailCard = ({
   const dispatch = useDispatch();
 
   const params = useParams();
-  console.log(params);
+  
 
   const eventId = params.eventId;
   const communityId = params.communityId;

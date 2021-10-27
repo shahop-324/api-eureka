@@ -141,7 +141,6 @@ const EventAlerts = (props) => {
   };
 
   if (error) {
-    alert(error);
     dispatch(errorTrackerForFetchPreviousEventAlerts());
     return null;
   }

@@ -96,9 +96,6 @@ const DeviceTest = ({ handleBack, handleNext, handleStateChange }) => {
   //     </div>
   //   );
   // }
-  if (error) {
-    return alert(error);
-  }
   const image = user.userDetails.image;
 
   let imgURL;

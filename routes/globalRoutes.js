@@ -66,6 +66,8 @@ router.get(
   chatMessagesController.getPreviousSessionChatMessage
 );
 
+router.get("/getPreviousBackstageMsg/:sessionId", chatMessagesController.getPreviousBackstageChatMessage);
+
 router.get(
   "/getPreviousEventAlert/:eventId",
   eventAlertController.getPreviousEventAlert

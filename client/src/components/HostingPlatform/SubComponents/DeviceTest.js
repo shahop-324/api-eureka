@@ -93,9 +93,6 @@ const DeviceTest = ({ handleBack, handleNext }) => {
       </div>
     );
   }
-  if (error) {
-    return alert(error);
-  }
 
   const renderVideoDevices = () => {
     return videoDevices.map((device) => {

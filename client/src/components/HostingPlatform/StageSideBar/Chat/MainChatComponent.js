@@ -10,7 +10,9 @@ import OthersReplyElement from "./OthersReplyElement";
 import DeletedOwnMsg from "./DeletedOwnMsg";
 import DeletedOthersMsg from "./DeletedOthersMsg";
 
-const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
+const MainChatComponent = ({ currentUserIsAHost, runningStatus, state }) => {
+  console.log(state); // State will tell us if we are on live stage or on back stage
+  // state can be live or back
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
   const [msg, setMsg] = useState(null);
@@ -51,12 +53,14 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
 
   // create and pass a function as props to Chat Msg Element which can set value of name, image and msg when clicked on reply icon.
 
-  const { sessionChats } = useSelector((state) => state.sessionChats);
+  const { sessionChats, backstageChats } = useSelector(
+    (state) => state.sessionChats
+  );
   const userDetails = useSelector((state) => state.user);
 
   const userId = userDetails._id;
 
-  const renderChats = (chats) => {
+  const renderChats = (chats, state) => {
     return chats
       .slice(0)
       .reverse()
@@ -79,6 +83,7 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               return <DeletedOwnMsg timestamp={chat.createdAt} />;
             return (
               <SelfReplyElement
+              state={state}
                 currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
@@ -114,6 +119,7 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
+                state={state}
                   name={chat.userName}
                   image={
                     chat.userImage.startsWith("https://")
@@ -127,7 +133,8 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               );
             return (
               <OthersReplyElement
-              currentUserIsAHost={currentUserIsAHost}
+              state={state}
+                currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
@@ -163,10 +170,11 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             // Its an outgoing msg
             // check if its deleted => if yes then don't return but show that it has been deleted like whatsapp
             if (chat.deleted === true)
-              return <DeletedOwnMsg timestamp={chat.createdAt} />;
+              return <DeletedOwnMsg state={state} timestamp={chat.createdAt} />;
 
             return (
               <OutgoingChatElement
+              state={state}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
@@ -188,6 +196,7 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
+                state={state}
                   name={chat.userName}
                   image={
                     chat.userImage.startsWith("https://")
@@ -201,6 +210,7 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               );
             return (
               <IncomingChatMsgElement
+              state={state}
                 currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
@@ -232,9 +242,12 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
           className="scrollable-chat-element-container"
           id="all-chat-msg-container"
         >
-          {renderChats(sessionChats)}
+          {state === "live"
+            ? renderChats(sessionChats, state)
+            : renderChats(backstageChats, state)}
         </div>
         <MsgInput
+        state={state}
           name={name}
           image={image}
           msg={msg}

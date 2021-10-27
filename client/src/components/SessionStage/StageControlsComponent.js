@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
+import styled from 'styled-components';
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
 import WidgetsIcon from "@mui/icons-material/Widgets"; // Tools Icon
-import { BtnDanger, StageControl, IconButton } from "./Elements";
+import { BtnDanger, StageControl } from "./Elements";
 import { useParams } from "react-router";
 import ReactTooltip from "react-tooltip";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
@@ -35,6 +36,28 @@ import Smile from "./../../assets/images/Smile.png";
 
 import Speakers from "./Speakers";
 import SpeakerInfoTab from "./SpeakersInfoTab";
+
+const IconButton = styled.div`
+  max-width: fit-content;
+  padding: 7px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #1f545e;
+  color: #1f545e;
+  background-color: #ffffffa9;
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #ffffffa9;
+    background-color: #ffffffa9;
+    color: #1f545e;
+  }
+`;
 
 const IOSSwitch = withStyles((theme) => ({
   root: {
@@ -103,11 +126,11 @@ const StageControlsComponent = ({
   setScreenSharingIsEnabled,
   runningStatus,
   canPublishStream,
+  leaveStreaming,
 }) => {
   // {/* // ! Caution don't show stage controls if session has ended */}
 
   let sessionHasEnded = false;
-
   let currentUserIsAHost = false;
   let currentUserIsASpeaker = false;
   let currentUserIsAnAttendeeOnStage = false;
@@ -216,6 +239,7 @@ const StageControlsComponent = ({
             className="me-3"
             // ! If host leaves this session in live state then mark this session as Paused and show this warning to the host when leaving session in live state
             onClick={() => {
+              leaveStreaming();
               socket.emit("leaveSession", { sessionId, userId }, (error) => {
                 console.log(error);
               });

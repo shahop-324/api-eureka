@@ -66,14 +66,11 @@ const sessionSlice = createSlice({
     },
 
     EditSession(state, action) {
-      console.log(state);
-      console.log(action.payload.session);
       const sessionsArr = state.sessions.map((session) =>
         session.id === action.payload.session.id
           ? action.payload.session
           : session
       );
-      console.log(sessionsArr);
       state.sessions = sessionsArr;
       state.sessionDetails = action.payload.session;
       state.isLoadingDetail = false;

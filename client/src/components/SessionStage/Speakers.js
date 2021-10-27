@@ -74,7 +74,6 @@ const SpeakerComponent = ({
   mic,
   screen,
 }) => {
-  console.log(organisation);
   return (
     <>
       <PeopleListWidget className="mb-3">

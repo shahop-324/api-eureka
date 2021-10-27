@@ -50,6 +50,7 @@ const RoomChair = require("./models/roomChairModel");
 const RoomTable = require("./models/roomTableModel");
 const EventChatMessage = require("./models/eventChatMessageModel");
 const SessionChatMessage = require("./models/sessionChatMessageModel");
+const SessionBackstageMessage = require("./models/sessionBackstageModel");
 const EventAlert = require("./models/eventAlertsModel");
 const EventPoll = require("./models/eventPollModel");
 const AvailableForNetworking = require("./models/availableForNetworking");
@@ -335,9 +336,95 @@ io.on("connect", (socket) => {
   );
 
   socket.on("subscribeSession", async ({ sessionId }, callback) => {
-    console.log("Subscribe session was called");
     socket.join(sessionId);
-    console.log("Subscribe session successful.");
+  });
+
+  socket.on("subscribeBackstage", async ({ sessionId }, callback) => {
+    socket.join(`${sessionId}-back`); // Call this while joining backstage
+  });
+
+  socket.on("unsubscribeBackstage", async ({ sessionId }, callback) => {
+    socket.leave(`${sessionId}-back`); // Call this while leaving backstage
+  });
+
+  socket.on(
+    "transmitBackstageMessage",
+    async ({
+      isReply,
+      replyTo,
+      textMessage,
+      eventId,
+      sessionId,
+      createdAt,
+      userRole,
+      userName,
+      userEmail,
+      userId,
+      userImage,
+      userOrganisation,
+      userDesignation,
+      reported,
+      numOfTimesReported,
+      visibilityStatus,
+      // isBackStageMessage => true
+    }) => {
+      // Here process incoming backstage message
+
+      await SessionBackstageMessage.create(
+        {
+          isReply,
+          textMessage,
+          eventId,
+          sessionId,
+          createdAt,
+          userRole,
+          userName,
+          userEmail,
+          userImage,
+          userOrganisation,
+          userDesignation,
+          userId,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+            const populatedChatMsg = await SessionBackstageMessage.findById(
+              chatMsgDoc._id
+            ).populate("replyTo");
+
+            io.in(`${sessionId}-back`).emit("newBackstageMsg", {
+              newMsg: populatedChatMsg,
+            });
+          }
+        }
+      );
+    }
+  );
+
+  socket.on("deleteBackstageMessage", async ({ msgId, eventId, sessionId }) => {
+    // Here process deleting backstage message
+
+    const deletedMsg = await SessionBackstageMessage.findByIdAndUpdate(
+      msgId,
+      { deleted: true },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    const populatedMsg = await SessionBackstageMessage.findById(msgId).populate(
+      "replyTo"
+    );
+
+    io.in(`${sessionId}-back`).emit("deleteBackstageMsg", {
+      deletedMsg: populatedMsg,
+    });
   });
 
   socket.on(
@@ -455,39 +542,271 @@ io.on("connect", (socket) => {
     "markAsAvailableInSession",
     async ({
       userId,
+      userEmail,
+      registrationId,
       sessionId,
       eventId,
-      userRole,
       microphone,
       camera,
       screen,
       available,
     }) => {
+      let userRole;
       // Find session and make this user available in people onstage array
       // Then send updated session to all users in this session
-      
-      console.log(
-        sessionId,
-        eventId,
-        userRole,
-        microphone,
-        camera,
-        screen,
-        available
+
+      const sessionDoc = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker"); // This is the session doc we need to update
+
+      const hosts = sessionDoc.host; // Hosts for this session
+      const speakers = sessionDoc.speaker; // Speakers for this session
+
+      const hostIds = hosts.map((el) => el._id);
+      const speakerEmails = speakers.map((el) => el.email);
+
+      if (hostIds.includes(userId)) {
+        //This user is a host
+
+        userRole = "Host";
+      } else if (speakerEmails.includes(userEmail)) {
+        // This user is a speaker
+
+        userRole = "Speaker";
+      } else if (
+        !hostIds.includes(userId) &&
+        !speakerEmails.includes(userEmail)
+      ) {
+        // This user is an attendee
+
+        userRole = "Attendee";
+      }
+
+      const onStagePeople = sessionDoc.onStagePeople;
+
+      // Find if current user exists already using registration Id, userId  comparing with field user
+
+      const existingUser = onStagePeople.find(
+        (element) =>
+          element.user.toString() === userId.toString() ||
+          element.user.toString() === registrationId.toString()
       );
+
+      if (existingUser) {
+        // update existing user and save sessionDoc
+        existingUser.user = userId;
+        existingUser.userRole = userRole;
+        existingUser.camera = camera;
+        existingUser.microphone = microphone;
+        existingUser.screen = screen;
+        existingUser.available = available;
+
+        await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      } else {
+        // Create new user
+
+        let newUserOnStage = {
+          user: userId,
+          userRole: userRole,
+          camera: camera,
+          microphone: microphone,
+          screen: screen,
+          available: available,
+        };
+
+        sessionDoc.onStagePeople.push(newUserOnStage);
+        await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      }
+
+      // Send updated user to everyone in this session
+
+      const session = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker");
+
+      io.in(sessionId).emit("updatedSession", { session: session });
+
+      // console.log(
+      //   sessionId,
+      //   eventId,
+      //   userRole,
+      //   microphone,
+      //   camera,
+      //   screen,
+      //   available
+      // );
     }
   );
 
-  socket.on("updateMeOnSessionStage", async({}, callback) => {
-    // Update user on session stage and send updated session to all users in this session
+  socket.on(
+    "updateMyMicOnSessionStage",
+    async ({ userId, registrationId, sessionId, camera }, callback) => {
+      // Update user camera
 
-  })
+      // 1.) Find session doc
 
-  socket.on("removeMeFromSessionStage", async({}, callback) => {
-    // Mark user as unavailable if he / she is a speaker 
-    // Remove user if he/she is an attendee
-    // send updated session doc to everyone in event
-  });
+      const sessionDoc = await Session.findById(sessionId);
+
+      // 2.) Find and update user on stage
+
+      const thisUserOnStage = sessionDoc.onStagePeople.find(
+        (element) =>
+          element.user.toString() === userId ||
+          element.user.toString() === registrationId
+      );
+
+      thisUserOnStage.camera = camera;
+
+      // 3.) save session doc
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker");
+
+      // 4.) Send updated session doc to everyone in this session.
+
+      io.in(sessionId).emit("updatedSession", {
+        session: updatedSession,
+      });
+    }
+  );
+
+  socket.on(
+    "updateMyCameraOnSessionStage",
+    async ({ userId, registrationId, sessionId, microphone }, callback) => {
+      // Update user mic
+      // 1.) Find session doc
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      // 2.) Find and update user on stage
+
+      const thisUserOnStage = sessionDoc.onStagePeople.find(
+        (element) =>
+          element.user.toString() === userId ||
+          element.user.toString() === registrationId
+      );
+
+      thisUserOnStage.microphone = microphone;
+
+      // 3.) save session doc
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker");
+
+      // 4.) Send updated session doc to everyone in this session.
+
+      io.in(sessionId).emit("updatedSession", {
+        session: updatedSession,
+      });
+    }
+  );
+
+  socket.on(
+    "removeMeFromSessionStage",
+    async (
+      {
+        userId,
+        userEmail,
+        registrationId,
+        sessionId,
+        eventId,
+        microphone,
+        camera,
+        screen,
+        available,
+      },
+      callback
+    ) => {
+      // Mark user as unavailable if he / she is a speaker or host
+      // Remove user if he/she is an attendee
+      // send updated session doc to everyone in event
+
+      const sessionDoc = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker"); // This is the session doc we need to update
+
+      const hosts = sessionDoc.host; // Hosts for this session
+      const speakers = sessionDoc.speaker; // Speakers for this session
+
+      const hostIds = hosts.map((el) => el._id);
+      const speakerEmails = speakers.map((el) => el.email);
+
+      if (hostIds.includes(userId)) {
+        //This user is a host
+
+        userRole = "Host";
+      } else if (speakerEmails.includes(userEmail)) {
+        // This user is a speaker
+
+        userRole = "Speaker";
+      } else if (
+        !hostIds.includes(userId) &&
+        !speakerEmails.includes(userEmail)
+      ) {
+        // This user is an attendee
+
+        userRole = "Attendee";
+      }
+
+      const onStagePeople = sessionDoc.onStagePeople;
+
+      const userOnStage = onStagePeople.find(
+        (element) =>
+          element.user.toString() === userId.toString() ||
+          element.user.toString() === registrationId.toString()
+      );
+
+      if (userOnStage) {
+        if (userRole === "Host" || userRole === "Speaker") {
+          // Mark as unavailable and turn off mic, camera, and screen
+          userOnStage.user = userId;
+          userOnStage.userRole = userRole;
+          userOnStage.camera = camera;
+          userOnStage.microphone = microphone;
+          userOnStage.screen = screen;
+          userOnStage.available = available;
+
+          // Save session doc
+
+          await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send updated user to everyone in this session
+
+          const session = await Session.findById(sessionId)
+            .populate("host")
+            .populate("speaker");
+
+          io.in(sessionId).emit("updatedSession", { session: session });
+
+          // Send fully updated session dooc to everyone in this session
+        }
+        if (userRole === "Attendee") {
+          // Remove user from people on stage in this session
+          sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
+            (element) => element.user.toString() !== userId
+          );
+
+          // Save session doc
+
+          await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+          // Send updated user to everyone in this session
+
+          const session = await Session.findById(sessionId)
+            .populate("host")
+            .populate("speaker");
+
+          io.in(sessionId).emit("updatedSession", { session: session });
+
+          // Send fully updated session dooc to everyone in this session
+        }
+      }
+    }
+  );
 
   socket.on(
     "transmitSessionQnA",

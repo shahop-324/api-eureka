@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
 import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded"; // Watching group
@@ -6,6 +6,12 @@ import HomeRoundedIcon from "@material-ui/icons/HomeRounded"; // Live Stage
 import RssFeedRoundedIcon from "@mui/icons-material/RssFeedRounded"; // Live stream
 import styled from "styled-components";
 import Chip from "@mui/material/Chip";
+import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import ConfirmStart from "./LifecycleSwitch/ConfirmStart";
+import ConfirmPause from "./LifecycleSwitch/ConfirmPause";
+import ConfirmResume from "./LifecycleSwitch/ConfirmResume";
+import ConfirmEnd from "./LifecycleSwitch/ConfirmEnd";
 
 import {
   BrandLogo,
@@ -14,6 +20,7 @@ import {
   PeopleWatching,
   StageNav,
 } from "./Elements";
+
 import { useSelector } from "react-redux";
 
 const BtnFilled = styled.div`
@@ -30,6 +37,23 @@ const BtnFilled = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  border: 1px solid transparent;
+
+  -webkit-border-radius: 46px;
+  border-radius: 46px;
+
+  &:hover {
+    background-color: transparent;
+    cursor: pointer;
+    border: 1px solid #345b63;
+
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 46px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
 `;
 
 const BtnOutlined = styled.div`
@@ -86,8 +110,30 @@ const IconButtonStatic = styled.div`
   border: 1px solid #ffffff;
 `;
 
-const StageNavComponent = ({ runningStatus, canPublishStream }) => {
+const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
+  // NOTICE : State can be live, back or ended
   // Hosts and speakers can go to backstage anytime they want by clicking on switch to backstage button and come back to live stage if the session is in running state
+
+  const [openConfirmStart, setOpenConfirmStart] = useState(false);
+  const [openConfirmPause, setOpenConfirmPause] = useState(false);
+  const [openConfirmResume, setOpenConfirmResume] = useState(false);
+  const [openConfirmEnd, setOpenConfirmEnd] = useState(false);
+
+  const handleCloseConfirmStart = () => {
+    setOpenConfirmStart(false);
+  };
+
+  const handleCloseConfirmPause = () => {
+    setOpenConfirmPause(false);
+  };
+
+  const handleCloseConfirmResume = () => {
+    setOpenConfirmResume(false);
+  };
+
+  const handleCloseConfirmEnd = () => {
+    setOpenConfirmEnd(false);
+  };
 
   let sessionHasEnded = false;
 
@@ -212,8 +258,13 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
               switch (status) {
                 case "Not Yet Started":
                   return (
-                    <BtnOutlined className="me-3">
-                      <PauseRoundedIcon
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmStart(true);
+                      }}
+                      className="me-3"
+                    >
+                      <CircleRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
                       />
@@ -224,7 +275,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
                 case "Paused":
                   return (
                     <BtnOutlined className="me-3">
-                      <PauseRoundedIcon
+                      <PlayArrowRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
                       />
@@ -265,10 +316,27 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
           {canPublishStream &&
           (currentUserIsAHost || currentUserIsASpeaker) &&
           !sessionHasEnded ? (
-            <BtnFilled className="me-3">
-              <HomeRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-              You are on Live stage
-            </BtnFilled>
+            (() => {
+              switch (state) {
+                case "live":
+                  return (
+                    <BtnFilled className="me-3">
+                      You are on Live stage
+                    </BtnFilled>
+                  );
+
+                case "back":
+                  return (
+                    <BtnFilled className="me-3">You are on Backstage</BtnFilled>
+                  );
+
+                case "ended":
+                  break;
+
+                default:
+                  break;
+              }
+            })()
           ) : (
             <></>
           )}
@@ -329,6 +397,19 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
           )}
         </div>
       </StageNav>
+      <ConfirmStart
+        open={openConfirmStart}
+        handleClose={handleCloseConfirmStart}
+      />
+      <ConfirmPause
+        open={openConfirmPause}
+        handleClose={handleCloseConfirmPause}
+      />
+      <ConfirmResume
+        open={openConfirmResume}
+        handleClose={handleCloseConfirmResume}
+      />
+      <ConfirmEnd open={openConfirmEnd} handleClose={handleCloseConfirmEnd} />
     </>
   );
 };

@@ -587,7 +587,6 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
   };
   try {
     const res = await fetchData();
-    console.log(res);
 
     let allCommuities = [];
 
@@ -3958,8 +3957,7 @@ export const fetchSessionsForUser =
       }
 
       res = await res.json();
-      console.log(res);
-      console.log(res.data.sessions);
+
       dispatch(
         sessionActions.FetchSessions({
           sessions: res.data.sessions,
@@ -5019,7 +5017,6 @@ export const fetchRegistrationsOfParticularEvent =
       }
 
       res = await res.json();
-      console.log(res);
 
       return res;
     };
@@ -5368,9 +5365,30 @@ export const fetchSessionChats = (chats) => async (dispatch, getState) => {
   }
 };
 
+export const fetchBackstageChats = (chats) => async (dispatch, getState) => {
+  dispatch(sessionChatActions.startLoading());
+  try {
+    dispatch(
+      sessionChatActions.FetchBackstageChats({
+        backstageChats: chats,
+      })
+    );
+  } catch (error) {
+    dispatch(sessionChatActions.hasError(error.message));
+  }
+};
+
 export const deleteSessionChat = (chat) => async (dispatch, getState) => {
   dispatch(
     sessionChatActions.DeleteSessionChats({
+      chat: chat,
+    })
+  );
+};
+
+export const deleteBackstageChat = (chat) => async (dispatch, getState) => {
+  dispatch(
+    sessionChatActions.DeleteBackstageChats({
       chat: chat,
     })
   );
@@ -5455,6 +5473,39 @@ export const fetchPreviousEventPolls =
 export const errorTrackerForFetchPreviousEventPolls =
   () => async (dispatch, getState) => {
     dispatch(eventPollActions.disabledError());
+  };
+
+export const fetchPreviousBackstageChatMessages =
+  (sessionId) => async (dispatch, getState) => {
+    try {
+      console.log(sessionId);
+
+      let res = await fetch(`${BaseURL}getPreviousBackstageMsg/${sessionId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        sessionChatActions.FetchBackstageChats({
+          backstageChats: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 export const fetchPreviousSessionChatMessages =
@@ -5564,7 +5615,7 @@ export const getRTCTokenAndSession =
     };
     try {
       let res = await fetchingRTCToken();
-      
+
       dispatch(
         RTCActions.fetchRTCToken({
           token: res.token,
@@ -6319,6 +6370,14 @@ export const updateEventPoll = (poll) => async (dispatch, getState) => {
 export const createNewSessionMsg = (newMsg) => async (dispatch, getState) => {
   dispatch(
     sessionChatActions.CreateSessionChat({
+      chat: newMsg,
+    })
+  );
+};
+
+export const createNewBackstageMsg = (newMsg) => async (dispatch, getState) => {
+  dispatch(
+    sessionChatActions.CreateBackstageChat({
       chat: newMsg,
     })
   );
@@ -10316,6 +10375,14 @@ export const updateUsersInSession = (users) => async (dispatch, getState) => {
   dispatch(
     userActions.FetchPeopleInSession({
       users: users,
+    })
+  );
+};
+
+export const updateSession = (session) => async (dispatch, getState) => {
+  dispatch(
+    sessionActions.EditSession({
+      session: session,
     })
   );
 };

@@ -168,7 +168,7 @@ const Schedule = () => {
   }
 
   if (error) {
-    alert(error);
+    // alert(error);
     dispatch(errorTrackerForFetchSessionsForUser());
     return;
   }

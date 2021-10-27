@@ -67,8 +67,6 @@ const LobbyAgenda = () => {
     (state) => state.event.eventDetails
   );
 
-  console.log(sessions);
-
   return (
     <>
       <EventBanner

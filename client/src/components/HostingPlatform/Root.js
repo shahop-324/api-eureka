@@ -305,7 +305,6 @@ const Root = () => {
   // console.log(isEventLoading);
 
   if (eventError) {
-    alert(eventError);
     dispatch(errorTrackerForFetchEvent());
     return null;
   }

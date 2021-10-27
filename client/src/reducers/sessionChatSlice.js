@@ -5,6 +5,7 @@ const sessionChatSlice = createSlice({
 
   initialState: {
     sessionChats: [],
+    backstageChats: [],
     isLoading: true,
     error: false,
   },
@@ -25,13 +26,25 @@ const sessionChatSlice = createSlice({
       state.sessionChats = action.payload.sessionChats;
       state.isLoading = false;
     },
+    FetchBackstageChats(state, action) {
+      state.backstageChats = action.payload.backstageChats;
+      state.isLoading = false;
+    },
     CreateSessionChat(state, action) {
-      console.log(action.payload.chat, "I need to check this out.");
       state.sessionChats.push(action.payload.chat);
+      state.isLoading = false;
+    },
+    CreateBackstageChat(state, action) {
+      state.backstageChats.push(action.payload.chat);
       state.isLoading = false;
     },
     DeleteSessionChats(state, action) {
       state.sessionChats = state.sessionChats.map((element) =>
+        element._id === action.payload.chat._id ? action.payload.chat : element
+      );
+    },
+    DeleteBackstageChats(state, action) {
+      state.backstageChats = state.backstageChats.map((element) =>
         element._id === action.payload.chat._id ? action.payload.chat : element
       );
     },

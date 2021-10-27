@@ -46,12 +46,10 @@ else {
     );
   }
   if (error) {
-    alert(error);
     dispatch(errorTrackerForFetchEvent());
     return;
   }
   if(errorRTM) {
-    alert(error);
     dispatch(errorTrackerForgetRTMToken());
     return;
   }
