@@ -377,7 +377,7 @@ const renderSpeakersOnStage = (speakers) => {
           person.image
             ? person.image.startsWith("https://")
               ? person.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
             : "#"
         }
         organisation={person.organisation}
@@ -425,7 +425,7 @@ const renderHostsOnStage = (
           person.image
             ? person.image.startsWith("https://")
               ? person.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
             : "#"
         }
         organisation={person.organisation}
@@ -450,7 +450,7 @@ const renderAttendeesOnStage = (attendees) => {
           person.image
             ? person.image.startsWith("https://")
               ? person.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
             : "#"
         }
         organisation={person.organisation}

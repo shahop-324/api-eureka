@@ -79,7 +79,7 @@ const renderHosts = (hosts) => {
     return (
       <HostCardComponent
         name={host.firstName + " " + host.lastName}
-        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${host.image}`}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${host.image}`}
         organisation={host.organisation}
         designation={host.designation}
       />

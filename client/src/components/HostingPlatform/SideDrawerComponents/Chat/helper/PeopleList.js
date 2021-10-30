@@ -94,7 +94,7 @@ const PeopleList = ({ open, handleClose }) => {
           image={
             person.userImage && person.userImage.startsWith("https://")
               ? person.userImage
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.userImage}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}`
           }
           organisation={person.userOrganisation}
           designation={person.userDesignation}

@@ -24,7 +24,7 @@ const renderRegisteredEvents = (events, registrations) => {
 
     return (
       <EventCard
-        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
         key={event.id}
         eventName={event.eventName}
         minPrice={event.minTicketPrice}

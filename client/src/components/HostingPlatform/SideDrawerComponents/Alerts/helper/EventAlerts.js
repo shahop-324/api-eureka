@@ -118,7 +118,7 @@ const EventAlerts = (props) => {
                   alert.hostImage
                     ? alert.hostImage.startsWith("https://")
                       ? alert.hostImage
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${alert.hostImage}`
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${alert.hostImage}`
                     : "#"
                 }
                 alt={alert.hostFirstName}

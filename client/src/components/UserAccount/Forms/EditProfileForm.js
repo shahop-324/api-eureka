@@ -199,7 +199,7 @@ let EditProfileForm = (props) => {
 
   if (imgKey) {
     if (imgKey && !imgKey.startsWith("https://")) {
-      imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+      imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
     } else {
       imgUrl = imgKey;
     }
@@ -528,7 +528,7 @@ const mapStateToProps = (state) => ({
   // console.log(state.user.userDetails);
   initialValues: {
     imgUrl: state.user.userDetails.image
-      ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.user.userDetails.image}`
+      ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.user.userDetails.image}`
       : " #",
     firstName: state.user.userDetails.firstName
       ? state.user.userDetails.firstName

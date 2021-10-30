@@ -70,7 +70,7 @@ const renderSpeakerList = (speakers) => {
         image={
           speaker.image && speaker.image.startsWith("https://")
             ? speaker.image
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
+            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
         name={`${speaker.firstName} ${speaker.lastName}`}
         headline={speaker.headline}

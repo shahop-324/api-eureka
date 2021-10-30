@@ -123,7 +123,7 @@ const CommunityTeamInvite = () => {
       invitationDetails.communityImage &&
       invitationDetails.communityImage.startsWith("https://")
         ? invitationDetails.communityImage
-        : `https://bluemeet.s3.us-west-1.amazonaws.com/${invitationDetails.communityImage}`;
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${invitationDetails.communityImage}`;
     invitedUserEmail = invitationDetails.invitedUserEmail;
     invitationStatus = invitationDetails.status;
   }

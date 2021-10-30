@@ -197,7 +197,7 @@ const Booths = () => {
         if (!booth) return <div></div>;
         return (
           <BoothDetailsCard
-            url={`https://bluemeet.s3.us-west-1.amazonaws.com/${booth.image}`}
+            url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${booth.image}`}
             key={booth._id}
             id={booth._id}
             name={booth.name}

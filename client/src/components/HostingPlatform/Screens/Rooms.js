@@ -17,7 +17,7 @@ import {
 const RenderEventTables = (tables) => {
   if (!tables) return;
   return tables.map((table, index) => {
-    return <Room id={table.tableId} num={index + 1} image={`https://bluemeet.s3.us-west-1.amazonaws.com/${table.image}`} title={table.title} rawImage={table.image} priority={table.priority} />;
+    return <Room id={table.tableId} num={index + 1} image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${table.image}`} title={table.title} rawImage={table.image} priority={table.priority} />;
   });
 };
 

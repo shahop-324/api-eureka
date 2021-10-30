@@ -15,7 +15,7 @@ exports.uploadImg = catchAsync((req, res, next) => {
   s3.getSignedUrl(
     "putObject",
     {
-      Bucket: "bluemeet",
+      Bucket: "bluemeet-inc",
       Key: key,
       ContentType: "image/jpeg",
     },
@@ -32,7 +32,7 @@ exports.uploadVideo = catchAsync((req, res, next) => {
   s3.getSignedUrl(
     "putObject",
     {
-      Bucket: "bluemeet",
+      Bucket: "bluemeet-inc",
       Key: key,
       ContentType: "video/mp4",
     },

@@ -368,7 +368,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
                           matchedWith.image
                             ? matchedWith.image.startsWith("https://")
                               ? matchedWith.image
-                              : `https://bluemeet.s3.us-west-1.amazonaws.com/${matchedWith.image}`
+                              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${matchedWith.image}`
                             : "#"
                         }
                         style={{
@@ -423,7 +423,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
                           userDetails.image
                             ? userDetails.image.startsWith("https://")
                               ? userDetails.image
-                              : `https://bluemeet.s3.us-west-1.amazonaws.com/${userDetails.image}`
+                              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userDetails.image}`
                             : "#"
                         }
                         style={{

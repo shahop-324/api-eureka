@@ -36,7 +36,7 @@ const renderSpeakers = (speakers) => {
         src={
           speaker.image.startsWith("https://")
             ? speaker.image
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
+            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
       />
     );

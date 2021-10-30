@@ -39,7 +39,7 @@ const UPPER_3_CHAIR = ({ id, launchTableScreen }) => {
     userName3 = chair.userName;
     userImage3 = chair.userImage.startsWith("https://")
       ? chair.userImage
-      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
     userCity3 = chair.userCity;
     userCountry3 = chair.userCountry;
     userOrganisation3 = chair.userOrganisation;

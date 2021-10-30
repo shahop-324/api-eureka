@@ -28,7 +28,7 @@ const UserBookedTickets = () => {
 
         return (
           <EventCard
-            image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
+            image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
             key={event.id}
             date={formatedDate}
             eventName={event.eventName}

@@ -156,7 +156,7 @@ const renderAssignedToGroupAvatar = (members) => {
         src={
           member.image.startsWith("https://")
             ? member.image
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${member.image}`
+            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${member.image}`
         }
       />
     );

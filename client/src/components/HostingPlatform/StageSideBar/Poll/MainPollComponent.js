@@ -36,7 +36,7 @@ const renderSessionPolls = (
           poll.createdBy.image
             ? poll.createdBy.image.startsWith("https://")
               ? poll.createdBy.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${poll.createdBy.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${poll.createdBy.image}`
             : "#"
         }
         askedByOrganisation={poll.createdBy.organisation}

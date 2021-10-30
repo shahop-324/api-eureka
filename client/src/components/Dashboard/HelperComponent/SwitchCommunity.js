@@ -66,7 +66,7 @@ const renderCommunities = (communities, userId) => {
           src={
             community.image.startsWith("https://")
               ? community.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`
           }
           alt={community.name}
           variant="rounded"

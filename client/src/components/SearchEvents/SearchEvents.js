@@ -235,7 +235,7 @@ const SearchEvents = () => {
 
       return (
         <EventCard
-          image={`https://bluemeet.s3.us-west-1.amazonaws.com/${event.image}`}
+          image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
           date={formatedDate}
           endDate={formatedEndDate}
           id={event.id}

@@ -147,7 +147,7 @@ const renderVibes = (vibes, handleOpenPreview, handleOpenDelete, setVibeId) => {
               <IconButton
                 onClick={() => {
                   handleOpenPreview(
-                    `https://bluemeet.s3.us-west-1.amazonaws.com/${vibe.key}`
+                    `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${vibe.key}`
                   );
                 }}
               >
@@ -160,7 +160,7 @@ const renderVibes = (vibes, handleOpenPreview, handleOpenDelete, setVibeId) => {
             style={{
               height: "230px",
               width: "100%",
-              backgroundImage: `${`url(${`https://bluemeet.s3.us-west-1.amazonaws.com/${vibe.key}`})`}`,
+              backgroundImage: `${`url(${`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${vibe.key}`})`}`,
               backgroundSize: "100%",
               backgroundRepeat: "no-repeat",
               borderRadius: "15px",

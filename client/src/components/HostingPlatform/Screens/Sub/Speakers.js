@@ -98,7 +98,7 @@ const renderSpeakers = (speakers) => {
     return (
       <SpeakerCardComponent
         name={speaker.firstName + " " + speaker.lastName}
-        image={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
         organisation={speaker.organisation}
         designation={speaker.designation}
       />

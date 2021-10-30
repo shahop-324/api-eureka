@@ -334,7 +334,7 @@ const Pricing = (props) => {
       name: "Bluemeet",
       description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
       image:
-        "https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png",
+        "https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png",
 
       order_id: order.data.id,
       handler: function (response) {
@@ -392,8 +392,8 @@ const Pricing = (props) => {
   const renderCommunitiesList = (communities) => {
     return communities.map((community) => {
       const name = community.name;
-      const image = `https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`;
-// https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png
+      const image = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`;
+// https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png
       return (
         <div
           className="ticket-card mb-2 px-3 py-4"

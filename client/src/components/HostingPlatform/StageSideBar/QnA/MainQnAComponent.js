@@ -39,7 +39,7 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
             element.askedBy.image
               ? element.askedBy.image.startsWith("https://")
                 ? element.askedBy.image
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${element.askedBy.image}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${element.askedBy.image}`
               : "#"
           }
           askedByOrganisation={element.askedBy.organisation}
@@ -65,7 +65,7 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
             element.askedBy.image
               ? element.askedBy.image.startsWith("https://")
                 ? element.askedBy.image
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${element.askedBy.image}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${element.askedBy.image}`
               : "#"
           }
           askedByOrganisation={element.askedBy.organisation}
@@ -75,7 +75,7 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
             element.answeredBy.image
               ? element.answeredBy.image.startsWith("https://")
                 ? element.answeredBy.image
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${element.answeredBy.image}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${element.answeredBy.image}`
               : "#"
           }
           answer={element.answer}

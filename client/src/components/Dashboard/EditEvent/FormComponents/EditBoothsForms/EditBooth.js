@@ -181,7 +181,7 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
 
   let imgUrl = "#";
   if (imgKey) {
-    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
   const dispatch = useDispatch();
 
@@ -483,7 +483,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.booth.boothDetails && state.booth.boothDetails.image
-        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.booth.boothDetails.image}`
+        ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.booth.boothDetails.image}`
         : " #",
     name:
       state.booth.boothDetails && state.booth.boothDetails.name

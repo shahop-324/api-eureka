@@ -103,7 +103,7 @@ const MainChatComponent = () => {
                 replierImage={
                   chat.userImage.startsWith("https://")
                     ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -114,7 +114,7 @@ const MainChatComponent = () => {
                 originalImage={
                   chat.replyTo.userImage.startsWith("https://")
                     ? chat.replyTo.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -135,7 +135,7 @@ const MainChatComponent = () => {
                   image={
                     chat.userImage.startsWith("https://")
                       ? chat.userImage
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -150,7 +150,7 @@ const MainChatComponent = () => {
                 replierImage={
                   chat.userImage.startsWith("https://")
                     ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -161,7 +161,7 @@ const MainChatComponent = () => {
                 originalImage={
                   chat.replyTo.userImage.startsWith("https://")
                     ? chat.replyTo.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -189,7 +189,7 @@ const MainChatComponent = () => {
                 image={
                   chat.userImage.startsWith("https://")
                     ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -208,7 +208,7 @@ const MainChatComponent = () => {
                   image={
                     chat.userImage.startsWith("https://")
                       ? chat.userImage
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -223,7 +223,7 @@ const MainChatComponent = () => {
                 image={
                   chat.userImage.startsWith("https://")
                     ? chat.userImage
-                    : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}

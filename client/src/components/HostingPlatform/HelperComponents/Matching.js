@@ -48,7 +48,7 @@ const Matching = () => {
                   image
                     ? image.startsWith("https")
                       ? image
-                      : `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`
                     : " "
                 }
                 style={{

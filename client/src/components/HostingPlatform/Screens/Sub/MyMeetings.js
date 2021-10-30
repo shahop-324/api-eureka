@@ -39,7 +39,7 @@ const MyMeetings = () => {
               meet.createdBy.image
                 ? meet.createdBy.image.startsWith("https://")
                   ? meet.createdBy.image
-                  : `https://bluemeet.s3.us-west-1.amazonaws.com/${meet.createdBy.image}`
+                  : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${meet.createdBy.image}`
                 : "#"
             }
             startsAt={meet.startsAt}

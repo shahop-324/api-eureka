@@ -48,7 +48,7 @@ const MainPeopleComponent = (props) => {
           image={
             person.userImage.startsWith("https://")
               ? person.userImage
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${person.userImage}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}`
           }
           name={person.userName}
           designation={person.userDesignation}

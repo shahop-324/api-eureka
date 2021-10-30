@@ -64,8 +64,8 @@ const UUID = require("uuid/v1");
 const s3 = new AWS.S3({
   signatureVersion: "v4",
   region: "us-west-1",
-  accessKeyId: "AKIA476PXBEVI6FHBGWC",
-  secretAccessKey: "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",
+  accessKeyId: "AKIA4IKLDA4AOO7PPOCJ",
+  secretAccessKey: "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",
 });
 
 const { REACT_APP_MY_ENV } = process.env;
@@ -358,7 +358,7 @@ export const createCommunity =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -1148,7 +1148,7 @@ export const uploadEventImage = (file, id) => async (dispatch, getState) => {
   s3.getSignedUrl(
     "putObject",
     {
-      Bucket: "bluemeet",
+      Bucket: "bluemeet-inc",
       Key: key,
       ContentType: "image/jpeg",
     },
@@ -1302,7 +1302,7 @@ export const createSpeaker =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -1640,7 +1640,7 @@ export const editSpeaker =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -1864,7 +1864,7 @@ export const createBooth =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -2140,7 +2140,7 @@ export const editBooth =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -2345,7 +2345,7 @@ export const createSponsor =
         s3.getSignedUrl(
           "putObject",
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -2611,7 +2611,7 @@ export const editSponsor =
           "putObject",
 
           {
-            Bucket: "bluemeet",
+            Bucket: "bluemeet-inc",
             Key: key,
             ContentType: "image/jpeg",
           },
@@ -3333,7 +3333,7 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       s3.getSignedUrl(
         "putObject",
         {
-          Bucket: "bluemeet",
+          Bucket: "bluemeet-inc",
           Key: key,
           ContentType: "image/jpeg",
         },
@@ -6999,7 +6999,7 @@ export const uploadVideoForCommunity =
       s3.getSignedUrl(
         "putObject",
         {
-          Bucket: "bluemeet",
+          Bucket: "bluemeet-inc",
           Key: key,
           ContentType: "video/mp4",
         },
@@ -7207,7 +7207,7 @@ export const updateCommunity =
       s3.getSignedUrl(
         "putObject",
         {
-          Bucket: "bluemeet",
+          Bucket: "bluemeet-inc",
           Key: key,
           ContentType: "image/jpeg",
         },
@@ -7971,7 +7971,7 @@ export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
     s3.getSignedUrl(
       "putObject",
       {
-        Bucket: "bluemeet",
+        Bucket: "bluemeet-inc",
         Key: key,
         ContentType: "image/jpeg",
       },
@@ -9876,7 +9876,7 @@ export const editTable =
       if (file) {
         s3.getSignedUrl(
           "putObject",
-          { Bucket: "bluemeet", Key: key, ContentType: "image/jpeg" },
+          { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
           async (err, presignedURL) => {
             const awsRes = await fetch(presignedURL, {
               method: "PUT",

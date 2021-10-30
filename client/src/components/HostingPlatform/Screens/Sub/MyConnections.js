@@ -51,7 +51,7 @@ const MyConnections = () => {
           connectionImage = connection.requestedToUser.image
             ? connection.requestedToUser.image.startsWith("https://")
               ? connection.requestedToUser.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${connection.requestedToUser.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${connection.requestedToUser.image}`
             : "#";
 
           connectionOrganisation = connection.requestedToUser.organisation;
@@ -68,7 +68,7 @@ const MyConnections = () => {
           connectionImage = connection.requestedByUser.image
             ? connection.requestedByUser.image.startsWith("https://")
               ? connection.requestedByUser.image
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${connection.requestedByUser.image}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${connection.requestedByUser.image}`
             : "#";
 
           connectionOrganisation = connection.requestedByUser.organisation;

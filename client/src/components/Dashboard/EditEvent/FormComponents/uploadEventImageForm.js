@@ -52,7 +52,7 @@ const UploadEventImageForm = (props) => {
   if (event) {
     imgKey = event.image;
     if (imgKey) {
-      imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+      imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
     }
   }
 
@@ -146,7 +146,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.event.eventDetails && state.event.eventDetails.image
-        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.event.eventDetails.image}`
+        ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.event.eventDetails.image}`
         : " #",
   },
 });

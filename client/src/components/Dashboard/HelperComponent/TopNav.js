@@ -138,7 +138,7 @@ const Topnav = ({
 
   let imgUrl;
   if (imgKey && !imgKey.startsWith("https://")) {
-    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
   } else {
     imgUrl = imgKey;
   }

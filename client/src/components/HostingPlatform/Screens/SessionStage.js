@@ -1226,7 +1226,7 @@ const SessionStage = () => {
           image: item.userImage
             ? item.userImage.startsWith("https://")
               ? item.userImage
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${item.userImage}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
             : "#",
           camera: element.camera,
           mic: element.microphone,
@@ -1246,7 +1246,7 @@ const SessionStage = () => {
           image: item.userImage
             ? item.userImage.startsWith("https://")
               ? item.userImage
-              : `https://bluemeet.s3.us-west-1.amazonaws.com/${item.userImage}`
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
             : "#",
           camera: element.camera,
           mic: element.microphone,

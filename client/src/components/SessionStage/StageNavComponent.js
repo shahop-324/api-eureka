@@ -155,7 +155,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
   const img = userDetails.image
     ? userDetails.image.startsWith("https://")
       ? userDetails.image
-      : `https://bluemeet.s3.us-west-1.amazonaws.com/${userDetails.image}`
+      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userDetails.image}`
     : "#";
 
   // Show live tag only if its in resumed or started state => handled

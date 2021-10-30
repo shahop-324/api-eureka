@@ -152,7 +152,7 @@ const renderSpeakers = (speakers) => {
         src={
           speaker.image.startsWith("https://")
             ? speaker.image
-            : `https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`
+            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
       />
     );
@@ -221,13 +221,13 @@ const SpeakerMagicLinkDestination = () => {
               src={
                 eventDetails.image.startsWith("https://")
                   ? eventDetails.image
-                  : `https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.image}`
+                  : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.image}`
               }
             ></EventPoster>
             <div className="d-flex flex-row align-items-center">
               <Avatar
                 src={Faker.image.avatar()} // ! TODO => Fix issue with community image
-                // src={eventDetails.communityLogo.startsWith("https://") ? eventDetails.communityLogo : `https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.communityLogo}` }
+                // src={eventDetails.communityLogo.startsWith("https://") ? eventDetails.communityLogo : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.communityLogo}` }
                 alt={eventDetails.communityName}
                 variant="rounded"
                 className="me-3"

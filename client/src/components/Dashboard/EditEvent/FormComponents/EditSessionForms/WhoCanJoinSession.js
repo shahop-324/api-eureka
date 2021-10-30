@@ -153,7 +153,7 @@ const renderPeopleList = (registrations, setSelectedPeople, selectedPeople) => {
             src={
               registration.userImage.startsWith("https://")
                 ? registration.userImage
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${registration.userImage}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${registration.userImage}`
             }
           />
           {registration.userName}

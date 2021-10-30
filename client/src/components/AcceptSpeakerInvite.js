@@ -95,8 +95,8 @@ const AcceptSpeakerInvite = () => {
               <img
                 style={{ maxWidth: "768px", maxHeight: "500px" }}
                 className="event-landing-poster"
-                src={`https://bluemeet.s3.us-west-1.amazonaws.com/${eventDetails.image}`}
-                // https://bluemeet.s3.us-west-1.amazonaws.com/company-logo.png
+                src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.image}`}
+                // https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png
                 alt="event-landing-hero"
               />
             )}
@@ -109,7 +109,7 @@ const AcceptSpeakerInvite = () => {
           ) : (
             <div className="hosted-by-community-grid mb-4 d-flex flex-row align-items-center">
               <img
-                src={`https://bluemeet.s3.us-west-1.amazonaws.com/${communityDetails.image}`}
+                src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${communityDetails.image}`}
                 className="hosted-by-community-logo"
                 alt={communityDetails.name}
               />

@@ -142,7 +142,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
     if (image.startsWith("https://")) {
       imgURL = image;
     } else {
-      imgURL = `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`;
+      imgURL = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`;
     }
   }
 

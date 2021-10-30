@@ -383,7 +383,7 @@ const Root = () => {
       <div className="root-container-grid">
         {/* SideNav */}
         <SideNav
-          communityLogo={`https://bluemeet.s3.us-west-1.amazonaws.com/${
+          communityLogo={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${
             eventDetails.createdBy ? eventDetails.createdBy.image : "#"
           }`}
           communityName={

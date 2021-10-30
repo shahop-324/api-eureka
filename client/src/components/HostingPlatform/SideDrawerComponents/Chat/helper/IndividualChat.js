@@ -40,7 +40,7 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
             image={
               chat.senderImage && chat.senderImage.startsWith("https://")
                 ? chat.senderImage
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.senderImage}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.senderImage}`
             }
             msgText={chat.textMessage}
             organisation={chat.senderOrganisation}
@@ -61,7 +61,7 @@ const renderMessages = (chats, receiverId, createReplyWidget) => {
             image={
               chat.senderImage && chat.senderImage.startsWith("https://")
                 ? chat.senderImage
-                : `https://bluemeet.s3.us-west-1.amazonaws.com/${chat.senderImage}`
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.senderImage}`
             }
             msgText={chat.textMessage}
             organisation={chat.senderOrganisation}
@@ -127,7 +127,7 @@ const IndividualChat = ({ handleOpen, handleOpenVideoOptions }) => {
   const profileName = requiredPerson.userName;
   const profileImage = requiredPerson.userImage.startsWith("https://")
     ? requiredPerson.userImage
-    : `https://bluemeet.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
+    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredPerson.userImage}`;
   const profileOrganisation = requiredPerson.userOrganisation;
   const profileDesigantion = requiredPerson.userDesignation;
   const profileStatus = requiredPerson.status;

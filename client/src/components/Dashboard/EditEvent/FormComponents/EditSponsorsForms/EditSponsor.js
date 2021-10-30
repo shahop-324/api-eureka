@@ -182,7 +182,7 @@ const EditSponosor = ({
 
   let imgUrl = " #";
   if (imgKey) {
-    imgUrl = `https://bluemeet.s3.us-west-1.amazonaws.com/${imgKey}`;
+    imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
   }
   const dispatch = useDispatch();
 
@@ -365,7 +365,7 @@ const mapStateToProps = (state) => ({
   initialValues: {
     imgUrl:
       state.sponsor.sponsorDetails && state.sponsor.sponsorDetails.image
-        ? `https://bluemeet.s3.us-west-1.amazonaws.com/${state.sponsor.sponsorDetails.image}`
+        ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.sponsor.sponsorDetails.image}`
         : " #",
     organisationName:
       state.sponsor.sponsorDetails &&

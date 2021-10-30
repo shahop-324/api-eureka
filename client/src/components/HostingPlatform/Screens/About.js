@@ -244,7 +244,7 @@ const renderSpeakers = (speakers) => {
     return (
       <Avatar
         alt={speaker.name}
-        src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
       />
     );
   });
@@ -256,7 +256,7 @@ const renderAttendees = (attendees) => {
     return (
       <Avatar
         alt={attendee.userName}
-        src={`https://bluemeet.s3.us-west-1.amazonaws.com/${attendee.userImage}`}
+        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${attendee.userImage}`}
       />
     );
   });
@@ -270,7 +270,7 @@ const PlatinumSponsors = (sponsors) => {
     return (
       <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
         <SponsorCard
-          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
         />
       </a>
     );
@@ -282,7 +282,7 @@ const DiamondSponsors = (sponsors) => {
     return (
       <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
         <SponsorCard
-          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
         />
       </a>
     );
@@ -294,7 +294,7 @@ const GoldSponsors = (sponsors) => {
     return (
       <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
         <SponsorCard
-          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
         />
       </a>
     );
@@ -306,7 +306,7 @@ const BronzeSponsors = (sponsors) => {
     return (
       <a href={`//${sponsor.website}`} target="_blank" rel="noreferrer">
         <SponsorCard
-          src={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
         />
       </a>
     );
@@ -356,7 +356,7 @@ const About = () => {
         <HostedByLeft>
           <CommunityLogo className="me-3">
             <Avatar
-              src={`https://bluemeet.s3.us-west-1.amazonaws.com/${communityDetails.image}`}
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${communityDetails.image}`}
               variant="rounded"
               style={{ height: "3rem", width: "3rem" }}
             />
@@ -465,7 +465,7 @@ const About = () => {
                     }}
                   />
                   <img
-                    src={`https://bluemeet.s3.us-west-1.amazonaws.com/${requiredSession.previewImage}`}
+                    src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${requiredSession.previewImage}`}
                     alt="session-playback-preview"
                   />
                 </div>

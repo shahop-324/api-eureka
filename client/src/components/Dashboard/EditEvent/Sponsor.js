@@ -165,7 +165,7 @@ const Sponsors = () => {
       .map((sponsor) => {
         return (
           <SponsorDetailsCard
-            url={`https://bluemeet.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+            url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
             key={sponsor._id}
             id={sponsor._id}
             organisationName={sponsor.organisationName}

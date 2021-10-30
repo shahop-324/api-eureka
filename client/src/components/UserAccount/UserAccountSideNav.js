@@ -191,7 +191,7 @@ const UserAccountSideNav = () => {
             // TODO ALLOW COMMUNITY TO UPLOAD AND EDIT ITS LOGO
             communityId={community._id}
             key={community._id}
-            communityImage={`https://bluemeet.s3.us-west-1.amazonaws.com/${community.image}`}
+            communityImage={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`}
           />
         );
       });
@@ -204,7 +204,7 @@ const UserAccountSideNav = () => {
     if (image.startsWith("https://")) {
       userImageURL = image;
     } else {
-      userImageURL = `https://bluemeet.s3.us-west-1.amazonaws.com/${image}`;
+      userImageURL = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${image}`;
     }
   }
 

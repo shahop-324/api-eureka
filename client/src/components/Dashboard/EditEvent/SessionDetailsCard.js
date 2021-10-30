@@ -68,7 +68,7 @@ const SessionDetailCard = ({
        
           <Avatar
             alt={speaker.name}
-            src={`https://bluemeet.s3.us-west-1.amazonaws.com/${speaker.image}`}
+            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
           />
        
       );
