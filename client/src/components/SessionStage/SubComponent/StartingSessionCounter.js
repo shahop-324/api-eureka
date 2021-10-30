@@ -24,7 +24,7 @@ const TimerPaper = styled.div`
   bottom: 30px;
 `;
 
-const UrgeWithPleasureComponent = () => (
+const UrgeWithPleasureComponent = ({afterCountdownCompletes}) => (
   <CountdownCircleTimer
     size={130}
     isPlaying
@@ -36,7 +36,8 @@ const UrgeWithPleasureComponent = () => (
     ]}
     onComplete={() => {
         // do your stuff here
-        return [true, 1500] // repeat animation in 1.5 seconds
+        afterCountdownCompletes();
+        // return [true, 1500] // repeat animation in 1.5 seconds
       }}
   >
     {({ remainingTime }) => remainingTime}
@@ -57,18 +58,18 @@ font-size: 0.95rem;
 color: #E9E9E9;
 `
 
-const StartingSessionCounter = () => {
+const StartingSessionCounter = ({heading, timerSubHeading, afterCountdownCompletes}) => {
   return (
     <>
       <Paper className="px-4 py-3">
         <TimerPaper className="d-flex flex-row align-items-center justify-content-center">
           <div style={{ height: "130px", width: "130px" }}>
-            <UrgeWithPleasureComponent></UrgeWithPleasureComponent>
+            <UrgeWithPleasureComponent afterCountdownCompletes={afterCountdownCompletes} ></UrgeWithPleasureComponent>
           </div>
         </TimerPaper>
         <div style={{position: "absolute", left: "260px"}}>
-<MainHeading className="mb-3">Starting session</MainHeading>
-<SubHeading>Please wait while we are starting this session...</SubHeading>
+<MainHeading className="mb-3">{heading}</MainHeading>
+<SubHeading>{timerSubHeading}</SubHeading>
 </div>
 
 

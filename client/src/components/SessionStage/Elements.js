@@ -224,6 +224,7 @@ const VideoStreamContainer = styled.div`
 
   overflow: hidden;
   border-radius: 10px;
+  width: 100px;
 
   /* video {
     object-fit: contain !important;

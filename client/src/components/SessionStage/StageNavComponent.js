@@ -274,7 +274,9 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Paused":
                   return (
-                    <BtnOutlined className="me-3">
+                    <BtnOutlined onClick={() => {
+                      setOpenConfirmResume(true);
+                    }} className="me-3">
                       <PlayArrowRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -285,7 +287,9 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Started":
                   return (
-                    <BtnOutlined className="me-3">
+                    <BtnOutlined onClick={() => {
+                      setOpenConfirmPause(true);
+                    }} className="me-3">
                       <PauseRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -296,7 +300,9 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Resumed":
                   return (
-                    <BtnOutlined className="me-3">
+                    <BtnOutlined onClick={() => {
+                      setOpenConfirmPause(true);
+                    }} className="me-3">
                       <PauseRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -346,7 +352,9 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
               switch (status) {
                 case "Started":
                   return (
-                    <BtnOutlined>
+                    <BtnOutlined onClick={() => {
+                      setOpenConfirmEnd(true);
+                    }}>
                       <StopRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -357,7 +365,9 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Resumed":
                   return (
-                    <BtnOutlined>
+                    <BtnOutlined onClick={() => {
+                      setOpenConfirmEnd(true);
+                    }}>
                       <StopRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}

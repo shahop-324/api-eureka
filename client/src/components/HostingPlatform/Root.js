@@ -39,6 +39,7 @@ import {
   createNewNetworkingMsg,
   fetchSessionChats,
   createNewSessionMsg,
+  updateSession,
 } from "../../actions/index";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -200,6 +201,10 @@ const Root = () => {
       // Show notification that you have been new meeting invite
 
       dispatch(showNotification("You have got a new meeting invite."));
+    });
+
+    socket.on("updatedSession", ({ session }) => {
+      dispatch(updateSession(session));
     });
 
     socket.on("newEventMsg", ({ newMsg }) => {

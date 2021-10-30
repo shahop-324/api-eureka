@@ -3,8 +3,6 @@
   font-family: "Ubuntu" !important;
 }
 
-
-
 .email-list-group {
   border: 1px solid transparent;
 }
@@ -14,10 +12,10 @@ a.disabled {
   cursor: default;
 }
 
-video{
+/* video{
   border-radius: 15px;
   background-color: #ffffff00;
-}
+} */
 
 .hide-scrollbar {
   /* this will hide the scrollbar in mozilla based browsers */

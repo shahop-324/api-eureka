@@ -50,30 +50,30 @@ const StillSoundWave = () => {
 };
 
 const GalleryVideoPlayer = ({
-  role,
-  localPlayerId,
-  userName,
-  userImage,
-  userOrganisation,
-  userDesignation,
+  camera,
+        mic,
+        name,
+        image,
+        uid,
+        stream,
 }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  const handleCloseProfile = () => {
-    setOpen(false);
-  };
+  // const handleCloseProfile = () => {
+  //   setOpen(false);
+  // };
 
-  let audioIsEnabled = true;
+  // let audioIsEnabled = true;
 
-  let videoIsEnabled = true;
+  // let videoIsEnabled = true;
 
-  let showWave = false;
+  // let showWave = false;
 
-  // Now show muted icon if !audioIsEnabled & avatar if !videoIsEnabled
+  // // Now show muted icon if !audioIsEnabled & avatar if !videoIsEnabled
 
-  const { id } = useSelector((state) => state.eventAccessToken);
+  // const { id } = useSelector((state) => state.eventAccessToken);
 
-  const roleSuffix = id === localPlayerId ? "(You)" : "";
+  // const roleSuffix = id === localPlayerId ? "(You)" : "";
 
   // console.log(videoIsEnabled);
   // console.log(videoStreamStat);
@@ -81,7 +81,7 @@ const GalleryVideoPlayer = ({
   return (
     <>
       <VideoStreamContainer>
-        <div id={localPlayerId} className="session-local-video-player">
+        {/* <div id={localPlayerId} className="session-local-video-player">
           <UserRoleTag className="session-role px-3 py-1">{role}</UserRoleTag>
           <div id={`avatar_box_${localPlayerId}`} className="avatar_box">
             {!videoIsEnabled ? (
@@ -175,16 +175,16 @@ const GalleryVideoPlayer = ({
               </div>
             }
           />
-        </div>
+        </div> */}
       </VideoStreamContainer>
-      <PersonProfile
+      {/* <PersonProfile
         open={open}
         handleClose={handleCloseProfile}
         userImage={userImage}
         userName={userName}
         userOrganisation={userOrganisation}
         userDesignation={userDesignation}
-      />
+      /> */}
     </>
   );
 };

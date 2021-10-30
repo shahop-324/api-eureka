@@ -5032,6 +5032,39 @@ export const fetchRegistrationsOfParticularEvent =
       console.log(err);
     }
   };
+
+export const fetchEventRegistrations =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}getEventRegistrations/${eventId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        registrationActions.FetchRegistrations({
+          registrations: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 export const errorTrackerForFetchRegistrationsOfParticularEvent =
   () => async (dispatch, getState) => {
     dispatch(registrationActions.disabledError());
@@ -5637,6 +5670,112 @@ export const getRTCTokenAndSession =
     }
   };
 
+export const fetchLiveStageTokenAndStartStreaming =
+  (
+    userId,
+    channel,
+    sessionId,
+    startLiveStream,
+    setShowTimer,
+    resetPreviousStateRef
+  ) =>
+  async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}getLiveStageToken`, {
+        method: "POST",
+        body: JSON.stringify({
+          channelId: channel,
+          sessionId: sessionId,
+          role: "host",
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      console.log(res.token);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      dispatch(
+        sessionActions.FetchSession({
+          session: res.session,
+        })
+      );
+
+      // Do cleanup and start live stage stream
+
+      setShowTimer(false);
+
+      resetPreviousStateRef();
+
+      startLiveStream(channel, res.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchBackstageTokenAndStartStreaming =
+  (userId, channel, sessionId, startLiveStream, setShowPauseTimer) =>
+  async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}getBackstageToken`, {
+        method: "POST",
+        body: JSON.stringify({
+          channelId: channel,
+          sessionId: sessionId,
+          role: "host",
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      console.log(res.token);
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+
+      dispatch(
+        sessionActions.FetchSession({
+          session: res.session,
+        })
+      );
+
+      setShowPauseTimer(false);
+      startLiveStream(channel, res.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 export const getRTCTokenForJoiningTable =
   (tableId, userId, launchTableScreen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
@@ -5740,15 +5879,19 @@ export const getRTCTokenForNetworking =
   };
 
 export const getRTCTokenForScreenShare =
-  (sessionId, uid, startScreenCall) => async (dispatch, getState) => {
+  (sessionId, uid, startPresenting, currentState) =>
+  async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
+    let channelName =
+      currentState === "back" ? `${sessionId}-back` : `${sessionId}-live`;
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenForScreenShare`, {
         method: "POST",
         body: JSON.stringify({
+          channel: channelName,
           sessionId: sessionId,
-          uid: `screen_${uid}`,
+          uid: `screen-${uid}`,
         }),
 
         headers: {
@@ -5776,7 +5919,7 @@ export const getRTCTokenForScreenShare =
         })
       );
 
-      startScreenCall();
+      startPresenting(channelName, res.token, `screen-${uid}`);
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
@@ -5961,94 +6104,9 @@ export const errorTrackerForContactUs = () => async (dispatch, getState) => {
   dispatch(contactUsActions.disabledError());
 };
 
-// export const fetchRoomVideoCallToken =
-//   (userId, tableId, openTableScreen) => async (dispatch, getState) => {
-//     dispatch(twillioActions.startLoading());
-//     try {
-//       let res = await fetch(
-//         `${BaseURL}getRTCVideoCallToken`
-//         ,
-//       {
-//         method: "POST",
-
-//         body: JSON.stringify({
-//           tableId,
-//           userId
-//         }),
-
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${getState().auth.token}`,
-
-//         },
-//       }
-
-//       );
-//       if (!res.ok) {
-//         if (!res.message) {
-//           throw new Error("Something went wrong");
-//         } else {
-//           throw new Error(res.message);
-//         }
-//       }
-//       res = await res.json();
-//       console.log(res.accessToken);
-
-//       dispatch(
-//         twillioActions.FetchVideoRoomToken({
-//           videoRoomToken: res.accessToken,
-//         })
-//       );
-//       openTableScreen();
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-// export const errorTrackerForFetchTwillioVideoRoomToken =
-//   () => async (dispatch, getState) => {
-//     dispatch(twillioActions.disabledError());
-//   };
-
-export const fetchVideoCallToken =
-  (userId, tableId, openTableScreen) => async (dispatch, getState) => {
-    dispatch(RTCActions.startLoading());
-    try {
-      let res = await fetch(
-        `https://token-service-1443-dev.twil.io/token?identity=${userId}&room=${tableId}`
-      );
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(res.message);
-        }
-      }
-      res = await res.json();
-      console.log(res.token);
-
-      dispatch(
-        RTCActions.fetchRTCToken({
-          token: res.token,
-        })
-      );
-      openTableScreen();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-export const errorTrackerForFetchVideoCallToken =
-  () => async (dispatch, getState) => {
-    dispatch(RTCActions.disabledError());
-  };
-
 export const generatePayoutLink =
   ({ communityId, communityName, phoneNumber, email, amount }) =>
   async (dispatch) => {
-    console.log(communityId, phoneNumber, email, amount);
-    // dispatch(eventActions.startLoading());
-
-    // https://api.razorpay.com/v1/payout-links
-
     const reqBody = {
       account_number: "HbV3YvH7Zo0cDj",
       contact: {
@@ -6096,13 +6154,11 @@ export const generatePayoutLink =
       console.log(res.token);
     } catch (e) {
       console.log(e);
-      // dispatch(eventActions.hasError(e.message));
     }
   };
 
 export const fundTransferRequest =
   (formValues) => async (dispatch, getState) => {
-    // dispatch(contactUsActions.startLoading());
     try {
       let res = await fetch(`${BaseURL}fund/transferRequest`, {
         method: "POST",
@@ -6129,15 +6185,12 @@ export const fundTransferRequest =
       alert(
         "Your fund transfer request is recieved successfully! Please check your email."
       );
-      // dispatch(contactUsActions.ContactUs());
     } catch (err) {
-      // dispatch(contactUsActions.hasError(err.message));
       console.log(err);
     }
   };
 
 export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
-  // dispatch(contactUsActions.startLoading());
   try {
     let res = await fetch(`${BaseURL}communityPlan/switchToFree`, {
       method: "POST",
@@ -6162,9 +6215,7 @@ export const switchToFreePlan = (communityId) => async (dispatch, getState) => {
     console.log(res.data);
 
     alert("Successfully switched to free plan!");
-    // dispatch(contactUsActions.ContactUs());
   } catch (err) {
-    // dispatch(contactUsActions.hasError(err.message));
     console.log(err);
   }
 };
@@ -10386,3 +10437,52 @@ export const updateSession = (session) => async (dispatch, getState) => {
     })
   );
 };
+
+export const sendStageReminder =
+  (sessionId, userId, msg, setMsg, handleClose) =>
+  async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}sendStageReminder/${sessionId}/${userId}/${msg}`,
+
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            sessionId: sessionId,
+            userId: userId,
+            msg: msg,
+          }),
+
+          headers: {
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      console.log(res);
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Failed to send reminder. Please try again.");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      console.log(res);
+      dispatch(showSnackbar("success", "Reminder sent successfully!"));
+      handleClose();
+      setMsg("");
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to send reminder. Please try again.")
+      );
+    }
+  };
+
+export const switchOffMediaBeforeTransition =
+  () => async (dispatch, getState) => {
+    dispatch(sessionActions.SwitchOffMedia());
+  };

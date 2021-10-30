@@ -65,6 +65,24 @@ const sessionSlice = createSlice({
       state.isLoadingDetail = false;
     },
 
+    SwitchOffMedia(state, action) {
+      const updatedPeopleOnStage = state.sessionDetails.onStagePeople.map(
+        (el) => {
+          return {
+            camera: false,
+            microphone: false,
+            screen: false,
+            available: el.available,
+            _id: el._id,
+            user: el.user,
+            userRole: el.userRole,
+          };
+        }
+      );
+
+      state.sessionDetails.onStagePeople = updatedPeopleOnStage;
+    },
+
     EditSession(state, action) {
       const sessionsArr = state.sessions.map((session) =>
         session.id === action.payload.session.id

@@ -1,10 +1,7 @@
 import GalleryVideoPlayer from "./../../SessionStreamingComponents.js/GalleryVideoPlayer";
 import ShareScreenPlayer from "./../../SessionStreamingComponents.js/ShareScreenPlayer";
 
-const renderLocalStream = (
-  allStreams,
-  peopleInThisSession
-) => {
+const renderLocalStream = (allStreams, peopleInThisSession) => {
   if (!allStreams) return;
   const { stream, uid } = allStreams;
 
@@ -37,45 +34,16 @@ const renderLocalStream = (
   );
 };
 
-const renderGalleryView = (allStreams, peopleInThisSession) => {
-  if (!allStreams) return;
-
-  return allStreams.map((OneStream) => {
-    const { stream, uid } = OneStream;
-
-    let userUID = uid;
-
-    if (document.getElementById(uid)) {
-      OneStream.stream.play(uid);
-    }
-
-    // console.log(peopleInThisSession, userUID);
-
-    let person = peopleInThisSession.find(
-      (people) => people.userId === userUID
-    );
-
-    // console.log(person);
-
-    if (!person) return;
-
-    const {
-      userName,
-      userImage,
-      userOrganisation,
-      userDesignation,
-      sessionRole,
-    } = person;
-
+const renderGalleryView = (galleryViewInput) => {
+  return galleryViewInput.map((input) => {
     return (
       <GalleryVideoPlayer
-        localStream={stream}
-        role={sessionRole}
-        localPlayerId={uid}
-        userName={userName}
-        userImage={userImage}
-        userOrganisation={userOrganisation}
-        userDesignation={userDesignation}
+        camera={input.camera}
+        mic={input.mic}
+        name={input.name}
+        image={input.image}
+        uid={input.uid}
+        stream={input.stream}
       />
     );
   });

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
@@ -113,17 +113,19 @@ const IOSSwitch = withStyles((theme) => ({
 });
 
 const StageControlsComponent = ({
+  unMuteMyAudio,
+  unMuteMyVideo,
+  localUserState,
+  userHasUnmutedAudio,
+  userHasUnmutedVideo,
+  currentState,
   handleStopScreenShare,
-  videoIsEnabled,
-  audioIsEnabled,
   turnOffAudio,
   turnOnAudio,
   turnOffVideo,
   turnOnVideo,
-  options,
-  screenSharingIsEnabled,
-  startScreenCall,
-  setScreenSharingIsEnabled,
+  stopPresenting,
+  startPresenting,
   runningStatus,
   canPublishStream,
   leaveStreaming,
@@ -252,23 +254,35 @@ const StageControlsComponent = ({
           {/* Show speaker managemenet widget if its session host and speaker details widget if its an audience */}
           {/* This widget will be shown throughout the lifecycle of a session (i.e., in ay running state) */}
           {/* But show only speaker details widget if session has ended */}
-          <button
-            onClick={() => {
-              if (currentUserIsAHost && !sessionHasEnded) {
-                setOpenSpeakers(true);
-              }
-              if (!currentUserIsAHost) {
-                setOpenSpeakersInfo(true);
-              }
-              if (currentUserIsAHost && sessionHasEnded) {
-                setOpenSpeakersInfo(true);
-              }
-            }}
-            className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center"
-          >
-            {" "}
-            <PersonRoundedIcon className="me-2" /> <span>Speakers</span>
-          </button>
+
+          {currentState !== "back" ? (
+            <button
+              onClick={() => {
+                if (currentUserIsAHost && !sessionHasEnded) {
+                  setOpenSpeakers(true);
+                }
+                if (!currentUserIsAHost) {
+                  setOpenSpeakersInfo(true);
+                }
+                if (currentUserIsAHost && sessionHasEnded) {
+                  setOpenSpeakersInfo(true);
+                }
+              }}
+              className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center"
+            >
+              {" "}
+              <PersonRoundedIcon className="me-2" />{" "}
+              {runningStatus === "Ended" ? (
+                <span>Speakers</span>
+              ) : currentUserIsAHost ? (
+                <span>Manage stage</span>
+              ) : (
+                <span>Speakers</span>
+              )}
+            </button>
+          ) : (
+            <></>
+          )}
 
           <div className="stage-left-controls d-flex flex-row  align-items-center">
             {/* Here we just need to give an option to switch layouts */}
@@ -279,27 +293,24 @@ const StageControlsComponent = ({
         {!sessionHasEnded ? (
           <div className="d-flex flex-row align-items-center justify-content-center">
             {canPublishStream ? (
-              <a
-                data-tip={videoIsEnabled ? "Turn off camera" : "Turn on camera"}
-                className=""
+              <IconButton
+                onClick={() => {
+                  localUserState.camera
+                    ? turnOffVideo()
+                    : userHasUnmutedVideo.current
+                    ? turnOnVideo()
+                    : unMuteMyVideo();
+                }}
+                className="me-4"
               >
-                <IconButton
-                  onClick={() => {
-                    videoIsEnabled
-                      ? turnOffVideo(options.uid)
-                      : turnOnVideo(options.uid);
-                  }}
-                  className="me-4"
-                >
-                  {videoIsEnabled ? (
-                    <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                  ) : (
-                    <VideocamOffOutlinedIcon
-                      style={{ fontSize: "20px", color: "#BE1D1D" }}
-                    />
-                  )}
-                </IconButton>
-              </a>
+                {localUserState.camera ? (
+                  <VideocamRoundedIcon style={{ fontSize: "20px" }} />
+                ) : (
+                  <VideocamOffOutlinedIcon
+                    style={{ fontSize: "20px", color: "#BE1D1D" }}
+                  />
+                )}
+              </IconButton>
             ) : (
               <></>
             )}
@@ -339,29 +350,24 @@ const StageControlsComponent = ({
             )}
 
             {canPublishStream ? (
-              <a
-                data-tip={
-                  audioIsEnabled ? "Turn off microphone" : "Turn on microphone"
-                }
-                className=""
+              <IconButton
+                onClick={() => {
+                  localUserState.mic
+                    ? turnOffAudio()
+                    : userHasUnmutedAudio.current
+                    ? turnOnAudio()
+                    : unMuteMyAudio();
+                }}
+                className="me-4"
               >
-                <IconButton
-                  onClick={() => {
-                    audioIsEnabled
-                      ? turnOffAudio(options.uid)
-                      : turnOnAudio(options.uid);
-                  }}
-                  className="me-4"
-                >
-                  {audioIsEnabled ? (
-                    <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                  ) : (
-                    <MicOffOutlinedIcon
-                      style={{ fontSize: "20px", color: "#BE1D1D" }}
-                    />
-                  )}
-                </IconButton>
-              </a>
+                {localUserState.mic ? (
+                  <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
+                ) : (
+                  <MicOffOutlinedIcon
+                    style={{ fontSize: "20px", color: "#BE1D1D" }}
+                  />
+                )}
+              </IconButton>
             ) : (
               <></>
             )}
@@ -402,41 +408,29 @@ const StageControlsComponent = ({
             )}
 
             {canPublishStream ? (
-              <a
-                data-tip={
-                  screenSharingIsEnabled
-                    ? "Stop screen share"
-                    : "Start screen share"
-                }
-                className=""
-              >
-                <IconButton
-                  onClick={() => {
-                    if (screenSharingIsEnabled) {
-                      handleStopScreenShare();
-                      setScreenSharingIsEnabled(false);
-                    } else {
-                      dispatch(
+              <IconButton
+                onClick={() => {
+                  localUserState.screen
+                    ? stopPresenting()
+                    : dispatch(
                         getRTCTokenForScreenShare(
                           sessionId,
                           userId,
-                          startScreenCall
-                        )
+                          startPresenting,
+                          currentState,
+                        ) // We will use this fxn to request a token and start screen sharing
                       );
-                      setScreenSharingIsEnabled(true);
-                    }
-                  }}
-                  className="me-4"
-                >
-                  {screenSharingIsEnabled ? (
-                    <CancelPresentationOutlinedIcon
-                      style={{ fontSize: "20px", color: "#BE1D1D" }}
-                    />
-                  ) : (
-                    <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                  )}
-                </IconButton>
-              </a>
+                }}
+                className="me-4"
+              >
+                {localUserState.screen ? (
+                  <CancelPresentationOutlinedIcon
+                    style={{ fontSize: "20px", color: "#1D5BBE" }}
+                  />
+                ) : (
+                  <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
+                )}
+              </IconButton>
             ) : (
               <></>
             )}
@@ -635,7 +629,20 @@ const StageControlsComponent = ({
         open={stopRecording}
         handleClose={handleCloseStopRecording}
       />
-      <Speakers open={openSpeakers} handleClose={handleCloseSpeakers} />
+      <Speakers
+        open={openSpeakers}
+        handleClose={handleCloseSpeakers}
+        stopPresenting={stopPresenting}
+        startPresenting={startPresenting}
+        turnOnAudio={turnOnAudio}
+        turnOffAudio={turnOffAudio}
+        turnOnVideo={turnOnVideo}
+        turnOffVideo={turnOffVideo}
+        userHasUnmutedVideo={userHasUnmutedVideo}
+        userHasUnmutedAudio={userHasUnmutedAudio}
+        unMuteMyVideo={unMuteMyVideo}
+        unMuteMyAudio={unMuteMyAudio}
+      />
       <SpeakerInfoTab
         open={openSpeakersInfo}
         handleClose={handleCloseSpeakerInfoTab}

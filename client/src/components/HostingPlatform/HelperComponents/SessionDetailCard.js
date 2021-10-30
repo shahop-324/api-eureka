@@ -235,7 +235,7 @@ const SessionDetailCard = ({
             >
               <NotificationsNoneOutlinedIcon />
             </IconButton>
-            <Link
+            <div
               onClick={() => {
                 // Get a RTC token
 
@@ -276,7 +276,7 @@ const SessionDetailCard = ({
               <ThemedBackgroundButton className="btn-filled-h px-4 py-3 ms-3 join-session-btn">
                 {btnText}
               </ThemedBackgroundButton>
-            </Link>
+            </div>
           </div>
         </div>
       </div>

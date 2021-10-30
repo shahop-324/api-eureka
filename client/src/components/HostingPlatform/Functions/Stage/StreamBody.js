@@ -21,6 +21,8 @@ import {
   GridViewMini,
 } from "../../../SessionStage/Elements";
 import { useSelector } from "react-redux";
+import VideoPlayer from "./VideoPlayer";
+import ScreenTrackPlayer from "./ScreenTrackPlayer";
 
 const NotYetStarted = styled.div`
   min-height: 80vh;
@@ -68,22 +70,92 @@ const Text = styled.div`
 `;
 
 const StreamBody = ({
+  screenTracks,
   handleOpenSideDrawer,
   sideDrawerOpen,
-  col,
-  row,
-  allStreams,
-  screenStream,
-  mainStream,
-  miniStreams,
-  view,
-  peopleInThisSession,
+  galleryViewInput,
   canPublishStream,
   runningStatus,
 }) => {
+  let view = "gallery";
+
+  console.log(screenTracks);
+
+  let uniqueScreenUid = [];
+  let processedScreenTracks = [];
+
+  for (let element of screenTracks) {
+    if (!uniqueScreenUid.includes(element.uid)) {
+      processedScreenTracks.push(element);
+      uniqueScreenUid.push(element.uid);
+    }
+  }
+
+  console.log(processedScreenTracks);
+
   const { sessionDetails } = useSelector((state) => state.session);
 
+  // Decide which view we will render (There can be three views gallery, presentation mode and video mode)
+
+  typeof processedScreenTracks !== "undefined" &&
+  processedScreenTracks.length > 0
+    ? (view = "presentation")
+    : (view = "gallery");
+
+  // if view is gallery => render all streams in grid
+  // if view is presentation => render allStreams in stack and screen tracks in grid
+
   const status = sessionDetails.runningStatus;
+
+  let rows = "1fr 1fr";
+  let columns = "1fr 1fr 1fr";
+
+  let screenRows = "1fr";
+  let screenColumns = "1fr";
+
+  switch (processedScreenTracks.length * 1) {
+    case 0:
+      screenRows = "1fr";
+      screenColumns = "1fr";
+
+      break;
+
+    case 1:
+      screenRows = "1fr";
+      screenColumns = "1fr";
+
+      break;
+
+    case 2:
+      screenRows = "1fr";
+      screenColumns = "1fr 1fr";
+
+      break;
+
+    case 3:
+      screenRows = "1fr 1fr";
+      screenColumns = "1fr 1fr";
+
+      break;
+
+    default:
+      break;
+  }
+
+  switch (galleryViewInput.length * 1) {
+    case 1:
+      rows = "1fr";
+      columns = "1fr";
+      break;
+
+    case 2:
+      rows = "1fr";
+      columns = "1fr 1fr";
+      break;
+
+    default:
+      break;
+  }
 
   return (
     <>
@@ -108,260 +180,335 @@ const StreamBody = ({
         {
           canPublishStream
             ? (() => {
-                // NOTE: They will be automatically taken to live or backstage based on channel they join sessionId_live or sessionId_back => Take care of this in stage nav and controls component
+                // NOTE: They will be automatically taken to live or backstage based on channel they join sessionId-live or sessionId-back => Take care of this in stage nav and controls component
                 switch (runningStatus) {
                   case "Paused":
-                    // Take to back
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Not Yet Started":
                     // Take to back
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Started":
                     // Take to live
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Resumed":
                     // Take to live
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Ended":
                     // Show Ended screen
                     return (
-                      <>
+                      <NotYetStarted>
                         <img
                           src={Ended}
                           style={{ height: "300px" }}
@@ -377,7 +524,7 @@ const StreamBody = ({
                           <PlayCircleRoundedIcon className="me-2" />{" "}
                           <span>Let's watch </span>
                         </ButtonStyled>
-                      </>
+                      </NotYetStarted>
                     );
 
                   default:
@@ -388,128 +535,166 @@ const StreamBody = ({
                 switch (runningStatus) {
                   case "Started":
                     // Take to live
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Resumed":
                     // Take to live
 
-                    return typeof allStreams !== "undefined" &&
-                      allStreams.length > 0 ? (
-                      <div className="">
-                        {(() => {
-                          switch (view) {
-                            case "gallery":
+                    if (view === "gallery") {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: columns,
+                              gridTemplateRows: rows,
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {galleryViewInput.map((el) => {
                               return (
-                                <GalleryView col={col} row={row}>
-                                  {allStreams &&
-                                    renderGalleryView(
-                                      allStreams,
-                                      peopleInThisSession
-                                    )}
-                                </GalleryView>
+                                <VideoPlayer
+                                  name={el.name}
+                                  image={el.image}
+                                  userId={el.userId}
+                                  camera={el.camera}
+                                  mic={el.mic}
+                                />
                               );
-                            case "grid":
-                              return (
-                                <GridView>
-                                  {mainStream &&
-                                    renderMainStream(
-                                      mainStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {miniStreams &&
-                                      renderMiniStreams(
-                                        miniStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            })}
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "presentation") {
+                      // Here we will make presentation mode grid
+                      return (
+                        <>
+                          <div
+                            style={{
+                              height: "72vh",
+                              display: "grid",
+                              gridTemplateColumns: "4fr 1fr",
+                              gridGap: "24px",
+                              margin: "50px 65px",
+                            }}
+                          >
+                            {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            case "screenShare":
-                              return (
-                                <GridView>
-                                  {screenStream &&
-                                    renderScreenShareStream(
-                                      screenStream,
-                                      peopleInThisSession
-                                    )}
-                                  <GridViewMini>
-                                    {allStreams &&
-                                      renderMiniStreams(
-                                        allStreams,
-                                        peopleInThisSession
-                                      )}
-                                  </GridViewMini>
-                                </GridView>
-                              );
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: screenColumns,
+                                gridTemplateRows: screenRows,
+                                gridGap: "24px",
+                              }}
+                            >
+                              {processedScreenTracks.map((el) => {
+                                return <ScreenTrackPlayer userId={el.uid} />;
+                              })}
+                            </div>
+                            <div style={{ height: "72vh", overflow: "auto" }}>
+                              {galleryViewInput.map((el) => {
+                                return (
+                                  <VideoPlayer
+                                    height={"23vh"}
+                                    name={el.name}
+                                    image={el.image}
+                                    userId={el.userId}
+                                    camera={el.camera}
+                                    mic={el.mic}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }
+                    if (view === "video") {
+                      // here we will make video mode grid
+                    }
 
-                            default:
-                              break;
-                          }
-                        })()}
-                      </div>
-                    ) : (
-                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
-                    );
+                    break;
 
                   case "Paused":
                     // Show paused screen
@@ -546,7 +731,7 @@ const StreamBody = ({
                   case "Ended":
                     // Show ended screen
                     return (
-                      <>
+                      <NotYetStarted>
                         <img
                           src={Ended}
                           style={{ height: "300px" }}
@@ -562,7 +747,7 @@ const StreamBody = ({
                           <PlayCircleRoundedIcon className="me-2" />{" "}
                           <span>Let's watch </span>
                         </ButtonStyled>
-                      </>
+                      </NotYetStarted>
                     );
 
                   default:

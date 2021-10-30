@@ -7,7 +7,7 @@ const onStagePeopleSchema = new mongoose.Schema({
   },
   userRole: {
     type: String,
-    enum: ["Host", "Speaker", "Attendee"],
+    enum: ["Host", "Speaker", "Attendee"], // Can be Host Speaker or Attendee
   },
   camera: {
     type: Boolean,

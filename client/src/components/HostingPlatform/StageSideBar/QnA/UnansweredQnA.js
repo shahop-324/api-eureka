@@ -177,19 +177,26 @@ const UnansweredQnA = ({
             <UpvoteWidget
               style={{ backgroundColor: "#152d35", color: "#ffffff" }}
               onClick={() => {
-                socket.emit(
-                  "downvoteQnA",
-                  {
-                    qnaId: id,
-                    sessionId,
-                    userId,
-                  },
-                  (error) => {
-                    if (error) {
-                      alert(error);
-                    }
-                  }
-                );
+                runningStatus === "Ended"
+                  ? dispatch(
+                      showSnackbar(
+                        "info",
+                        "You can only upvote a question when session is live."
+                      )
+                    )
+                  : socket.emit(
+                      "downvoteQnA",
+                      {
+                        qnaId: id,
+                        sessionId,
+                        userId,
+                      },
+                      (error) => {
+                        if (error) {
+                          alert(error);
+                        }
+                      }
+                    );
               }}
               className="me-3"
             >
@@ -223,6 +230,11 @@ const UnansweredQnA = ({
           <QuesText>{question}</QuesText>
         </div>
         <TextAreaWidget
+          disabled={
+            runningStatus === "Started" || runningStatus === "Resumed"
+              ? false
+              : true
+          }
           value={answer}
           onChange={(e) => {
             setAnswer(e.target.value);

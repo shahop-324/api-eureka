@@ -66,7 +66,10 @@ router.get(
   chatMessagesController.getPreviousSessionChatMessage
 );
 
-router.get("/getPreviousBackstageMsg/:sessionId", chatMessagesController.getPreviousBackstageChatMessage);
+router.get(
+  "/getPreviousBackstageMsg/:sessionId",
+  chatMessagesController.getPreviousBackstageChatMessage
+);
 
 router.get(
   "/getPreviousEventAlert/:eventId",
@@ -93,6 +96,18 @@ router.post(
   "/getLiveStreamingTokenAndSession",
   authController.protect,
   globalController.generateTokenForLiveStreaming
+);
+
+router.post(
+  "/getLiveStageToken",
+  authController.protect,
+  globalController.getLiveStageToken
+);
+
+router.post(
+  "/getBackstageToken",
+  authController.protect,
+  globalController.getBackstageToken
 );
 
 router.post(
@@ -233,5 +248,13 @@ router.get(
   authController.protect,
   globalController.fetchSessionPoll
 );
+
+router.post(
+  "/sendStageReminder/:sessionId/:userId/:msg",
+  authController.protect,
+  globalController.sendStageReminder
+);
+
+router.get("/getEventRegistrations/:eventId", authController.protect, globalController.getEventRegistrations);
 
 module.exports = router;

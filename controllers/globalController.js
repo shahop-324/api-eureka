@@ -281,8 +281,6 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const isPublisher = req.body.role === "host" ? true : false;
 
-  console.log(channel);
-
   const appID = "702d57c3092c4fd389eb7ea5a505d471";
   const appCertificate = "d8311f38cf434445805478cb8c93a334";
   const channelName = channel;
@@ -297,7 +295,7 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
 
   // Find session document
 
-  const SessionDoc = await Session.findById(req.body.sessionId);
+  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
 
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
@@ -312,21 +310,103 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
     privilegeExpiredTs
   );
 
-  console.log(
-    appID,
-    appCertificate,
-    channelName,
-    uid,
-    role,
-    privilegeExpiredTs,
-    token
-  );
-
   res.status(200).json({
     status: "success",
     token: token,
     session: SessionDoc,
   });
+});
+
+exports.getLiveStageToken = catchAsync(async (req, res, next) => {
+  try {
+    const channel = `${req.body.sessionId}-live`;
+    const userId = req.user._id;
+
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const channelName = channel;
+    const uid = userId;
+    const role = RtcRole.PUBLISHER;
+
+    const expirationTimeInSeconds = 3600;
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    // Find session document
+
+  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
+
+    // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+    // Build token with uid
+
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      uid,
+      role,
+      privilegeExpiredTs
+    );
+
+    console.log(token);
+
+    res.status(200).json({
+      status: "success",
+      token: token,
+      session: SessionDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getBackstageToken = catchAsync(async (req, res, next) => {
+  try {
+    const channel = `${req.body.sessionId}-back`;
+    const userId = req.user._id;
+
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const channelName = channel;
+    const uid = userId;
+    const role = RtcRole.PUBLISHER;
+
+    const expirationTimeInSeconds = 3600;
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    // Find session document
+
+  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
+
+    // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+    // Build token with uid
+
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      uid,
+      role,
+      privilegeExpiredTs
+    );
+
+    console.log(token);
+
+    res.status(200).json({
+      status: "success",
+      token: token,
+      session: SessionDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
@@ -451,7 +531,7 @@ exports.generateTokenForLiveStreamingForNonUser = catchAsync(
 
 exports.generateTokenForLiveStreamingForScreenShare = catchAsync(
   async (req, res, next) => {
-    const channel = req.body.sessionId;
+    const channel = req.body.channel;
     const myUID = req.body.uid;
 
     const appID = "702d57c3092c4fd389eb7ea5a505d471";
@@ -1419,5 +1499,61 @@ exports.fetchSessionPoll = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: polls,
+  });
+});
+
+exports.sendStageReminder = catchAsync(async (req, res, next) => {
+  const sessionId = req.params.sessionId;
+  const userId = req.params.userId;
+  const msgToUser = req.params.msg;
+
+  console.log(sessionId, userId, msgToUser);
+
+  // Find user Document and
+
+  const user = await User.findById(userId);
+
+  // Find session Doc
+
+  const session = await Session.findById(sessionId);
+
+  // Subject => Reminder to join session name (Happening now)
+
+  let Subject = `Reminder to attend ${session.name} (Happening now)`;
+
+  const msg = {
+    to: user.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: Subject,
+    text: msgToUser,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      res.status(200).json({
+        status: "success",
+        message: "Reminder sent successfully!",
+      });
+    })
+    .catch(async (error) => {
+      res.status(400).json({
+        status: "error",
+        message: "Failed to send reminder. Please try again.",
+      });
+    });
+});
+
+exports.getEventRegistrations = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const registrations = await Registration.find({
+    bookedForEventId: mongoose.Types.ObjectId(eventId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: registrations,
   });
 });

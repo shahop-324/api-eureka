@@ -127,14 +127,21 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) =>
 
   const classes = useStyles();
 
+  let gridColumns = "1fr 1fr";
+
+  if(currentUserIsAHost) {
+    gridColumns = "1fr 1fr 1fr 1fr"
+  }
+  if(runningStatus === "Ended") {
+    gridColumns = "1fr 1fr"
+  }
+
   return (
     <>
       <SessionSideDrawer>
         <SessionSideIconBtnNav
           style={{
-            gridTemplateColumns: currentUserIsAHost
-              ? "1fr 1fr 1fr 1fr"
-              : "1fr 1fr",
+            gridTemplateColumns: gridColumns,
           }}
         >
           <TabButton

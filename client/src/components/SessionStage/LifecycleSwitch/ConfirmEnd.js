@@ -1,5 +1,5 @@
 import React from "react";
-
+import socket from "./../../HostingPlatform/service/socket";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -7,6 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const HeaderFooter = styled.div`
@@ -22,6 +23,9 @@ const FormHeading = styled.div`
 
 const ConfirmEnd = ({ id, open, handleClose }) => {
   const dispatch = useDispatch();
+  const params = useParams();
+
+  const sessionId = params.sessionId;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -51,7 +55,9 @@ const ConfirmEnd = ({ id, open, handleClose }) => {
           <button
             className="btn btn-outline-text btn-primary"
             onClick={() => {
-              //   dispatch(deleteCoupon(id));
+              socket.emit("endSession", { sessionId }, (error) => {
+                console.log(error);
+              });
               handleClose();
             }}
           >

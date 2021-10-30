@@ -77,3 +77,64 @@ WORKOS
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+typeof allStreams !== "undefined" &&
+                      allStreams.length > 0 ? (
+                      <div className="">
+                        {(() => {
+                          switch (view) {
+                            case "gallery":
+                              return (
+                                <GalleryView col={col} row={row}>
+                                  {allStreams &&
+                                    renderGalleryView(
+                                      allStreams,
+                                      peopleInThisSession
+                                    )}
+                                </GalleryView>
+                              );
+                            case "grid":
+                              return (
+                                <GridView>
+                                  {mainStream &&
+                                    renderMainStream(
+                                      mainStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {miniStreams &&
+                                      renderMiniStreams(
+                                        miniStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            case "screenShare":
+                              return (
+                                <GridView>
+                                  {screenStream &&
+                                    renderScreenShareStream(
+                                      screenStream,
+                                      peopleInThisSession
+                                    )}
+                                  <GridViewMini>
+                                    {allStreams &&
+                                      renderMiniStreams(
+                                        allStreams,
+                                        peopleInThisSession
+                                      )}
+                                  </GridViewMini>
+                                </GridView>
+                              );
+
+                            default:
+                              break;
+                          }
+                        })()}
+                      </div>
+                    ) : (
+                      <NotYetStarted>{/* Render loader here */}</NotYetStarted>
+                    );
