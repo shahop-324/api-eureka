@@ -85,7 +85,7 @@ class GoogleAuth extends React.Component {
                     className="spinner-border text-danger ms-3 spinner-border-md"
                     role="status"
                   >
-                    <span className="sr-only">Loading...</span>
+                    {/* <span className="sr-only">Loading...</span> */}
                   </div>
                 ) : (
                   <img
@@ -103,10 +103,6 @@ class GoogleAuth extends React.Component {
           </div>
         </div>
       </>
-      // <button onClick={this.onSignInClick} className="ui red google button">
-      //   <i className="google icon" />
-      //   Sign In with Google
-      // </button>
     );
   }
   render() {

@@ -93,7 +93,7 @@ const ProfileEmail = styled.div`
 const CommunityProfileTab = (props) => {
   const dispatch = useDispatch();
 
-  const { error, isCommunityLoading } = useSelector((state) => state.community);
+  const { error } = useSelector((state) => state.community);
 
   const { id } = useSelector((state) => state.user.userDetails);
 
@@ -103,6 +103,7 @@ const CommunityProfileTab = (props) => {
   };
 
   if (error) {
+    console.log(error);
     return dispatch(errorTrackerForCommunitySignIn());
   }
 
@@ -147,7 +148,7 @@ class UserProfileTab extends React.Component {
 }
 
 const UserAccountSideNav = () => {
-  const { isLoading, error } = useSelector((state) => state.user);
+  const { isLoading } = useSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
 
   const { isCommunityLoading } = useSelector((state) => state.community);
@@ -173,10 +174,7 @@ const UserAccountSideNav = () => {
       </div>
     );
   }
-  if (error) {
-    throw new Error(error);
-  }
-
+  
   const { firstName, lastName, email, image } = userDetails;
 
   const name = `${firstName} ${lastName}`;

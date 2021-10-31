@@ -75,6 +75,9 @@ import CommunityTeamInvite from "./RedirectToRegister/TeamInvite";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ConfirmUserAccountMail from "./UserAccount/Helper/ConfirmUserAccountMail";
+import UserVerificationExpired from "./UserAccount/Helper/UserVerificationExpired";
+import CommunityVerificationExpired from "./UserAccount/Helper/CommunityVerificationExpired";
 
 const vertical = "top";
 const horizontal = "center";
@@ -124,13 +127,28 @@ class App extends React.Component {
   }
 
   render() {
-    const { isSignedIn, open, message, severity } = this.props;
+    const { isSignedIn } = this.props;
 
     return (
       <>
         <Router history={history}>
           <div>
             <Switch>
+              <Route
+                path="/verifying-account/:id"
+                exact
+                component={UserVerificationExpired}
+              />
+              <Route
+                path="/verifying-community/:id"
+                exact
+                component={CommunityVerificationExpired}
+              />
+              <Route
+                path="/verify-account"
+                exact
+                component={ConfirmUserAccountMail}
+              />
               <Route path="/bluemeet/redirect" exact component={Blank} />
               <Route
                 path="/bluemeet/salesforce/redirect"
@@ -293,7 +311,7 @@ class App extends React.Component {
               )}
               {isSignedIn && (
                 <Route
-                  path="/user/recordings"
+                  path="/user/connections"
                   exact
                   component={UserAccountHome}
                 />

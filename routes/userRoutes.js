@@ -73,6 +73,8 @@ router.delete("/Me", userController.deleteMe);
 // reset Password
 router.patch("/updatePassword", authController.updatePassword);
 
+router.patch("/deactivateMe/:userId", userController.deactivateMe);
+
 router.get("/myFavouriteEvents", userController.getFavouriteEvents);
 
 router.post(

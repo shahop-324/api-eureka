@@ -5,6 +5,7 @@ import { errorTrackerForMadeJustForYou, madeJustForYou } from "../../actions";
 import dateFormat from "dateformat";
 import Loader from "../Loader";
 import EventCard from "./../EventCard";
+import NoNewEvents from "./Images/NoNewEvents.png";
 
 import { DashboardSectionHeading } from "./Elements";
 
@@ -81,10 +82,11 @@ const UserAccountEventsMainBody = () => {
           ) : (
             <div
               className="d-flex flex-row align-items-center justify-content-center"
-              style={{ height: "100%" }}
+              style={{ width: "100%", height: "70vh" }}
             >
               <YouHaveNoEventComing
-                msgText="Looks like there are no great matches for you"
+                img={NoNewEvents}
+                msgText="Looks like there are no great matches for you right now"
                 style={{ maxWidth: "400px" }}
               />
             </div>

@@ -1,20 +1,11 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
 import "./../../assets/css/googleBtn.scss";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LoginPNG from "./../../assets/images/Saly-3.png";
 import { useDispatch } from "react-redux";
-import {
-  errorTrackerForSignIn,
-  resetAuthError,
-  MailChimpAuth,
-} from "../../actions/index";
-// import TiSocialFacebookCircular from "react-icons/lib/ti/social-facebook-circular";
+import { errorTrackerForSignIn, resetAuthError } from "../../actions/index";
 import LinkedinAuth from "../LinkedinAuth";
-// import FacebookLogin from "react-facebook-login";
 import GoogleAuth from "../GoogleAuth";
 
 import { reduxForm, Field } from "redux-form";
@@ -24,14 +15,26 @@ import Footer from "../Footer";
 import { linkedinSignIn } from "../../actions";
 import Loader from "../Loader";
 import "material-react-toastify/dist/ReactToastify.css";
-import { useSnackbar } from "notistack";
 import socket from "../HostingPlatform/service/socket";
+import styled from "styled-components";
 let formIsvalidated = false;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInput = ({
   input,
-
-  
   type,
   ariadescribedby,
   classes,
@@ -51,20 +54,8 @@ const renderInput = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "400" }}
-            >
-              {warning}
-            </div>
-          )))}
-      {/* {renderError(meta)} */}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -73,8 +64,6 @@ const renderInput = ({
 };
 
 const Signin = (props) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { error, signOutSucceded } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
   const { handleSubmit } = props;
@@ -89,8 +78,6 @@ const Signin = (props) => {
 
   useEffect(() => {
     console.log(params.code);
-    // dispatch(MailChimpAuth(params.code));
-
     if (params.code) {
       dispatch(linkedinSignIn(params.code));
     }
@@ -106,22 +93,7 @@ const Signin = (props) => {
       email: formValues.email,
       password: formValues.password,
     });
-    //dispatch(signIn(formValues));
   };
-  // const responseFacebook = (response) => {
-  //   console.log(response);
-  // };
-
-  // render() {
-  //   return (
-  //     <FacebookLogin
-  //       appId="1088597931155576"
-  //       autoLoad={true}
-  //       fields="name,email,picture"
-  //       callback={this.responseFacebook}
-  //     />
-  //   )
-  // }
 
   if (isSending) {
     return (
@@ -132,9 +104,6 @@ const Signin = (props) => {
   }
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     setSigninClicked(false);
     return dispatch(errorTrackerForSignIn());
   }
@@ -171,7 +140,9 @@ const Signin = (props) => {
             className="d-flex flex-row align-items-center justify-content-center"
             style={{ height: "100vh" }}
           >
-            <Loader />
+            <div class="spinner-border text-light" role="status">
+              {/* <span class="sr-only">Loading...</span> */}
+            </div>
           </div>
         </div>
       )}
@@ -208,37 +179,17 @@ const Signin = (props) => {
           <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
             <div className="col signin-form">
               <div className="container">
-                <div className="row sign-in-heading px-2">Sign in to Bluemeet</div>
+                <div className="row sign-in-heading px-2">
+                  Sign in to Bluemeet
+                </div>
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>
-                {/* <div className="d-flex flex-row align-items-center justify-content-center"> */}
-
                 <GoogleAuth />
 
                 <div className="mb-3">
                   <LinkedinAuth />
                 </div>
-                {/* <div className="mb-3">
-                 
-                </div> */}
-                {/* <FacebookLogin
-                  appId="878344546151410"
-                  autoLoad={true}
-                  fields="name,email,picture"
-                  callback={responseFacebook}
-                  cssClass="my-facebook-button-class"
-                  icon="fa-facebook"
-                /> */}
-                {/* <FacebookLogin
-                  appId="878344546151410"
-                  autoLoad={true}
-                  fields="name,email,picture"
-                  callback={responseFacebook}
-                  cssClass="my-facebook-button-class"
-                  icon={<TiSocialFacebookCircular />}
-                /> */}
-
                 <div
                   className="row d-flex"
                   style={{ alignItems: "center", marginBottom: "6%" }}
@@ -302,22 +253,7 @@ const Signin = (props) => {
                     className="row mb-3 d-flex"
                     style={{ padding: "0 0%", alignItems: "center" }}
                   >
-                    <div className="col">
-                      {/* <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckChecked"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckChecked"
-                        >
-                          Remember Me
-                        </label>
-                      </div> */}
-                    </div>
+                    <div className="col"></div>
 
                     <div
                       className="col"
@@ -353,7 +289,7 @@ const Signin = (props) => {
                             className="spinner-border text-light spinner-border-sm"
                             role="status"
                           >
-                            <span className="sr-only">Loading...</span>
+                            {/* <span className="sr-only">Loading...</span> */}
                           </div>
                         ) : (
                           <div></div>
@@ -404,9 +340,6 @@ const validate = (formValues) => {
       : undefined;
   if (!formValues.password) {
     errors.password = "Password is required";
-  }
-  if (formValues.password && formValues.password.length < 8) {
-    errors.password = "Password length must be greater than 8";
   }
 
   return errors;

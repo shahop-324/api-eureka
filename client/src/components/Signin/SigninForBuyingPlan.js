@@ -321,7 +321,7 @@ const Signin = (props) => {
                             className="spinner-border text-light spinner-border-sm"
                             role="status"
                           >
-                            <span className="sr-only">Loading...</span>
+                            {/* <span className="sr-only">Loading...</span> */}
                           </div>
                         ) : (
                           <div></div>

@@ -1,19 +1,13 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-// import { reset } from "redux-form";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import { makeStyles } from "@material-ui/core/styles";
-
 import { useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
-
 import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
 
 import {
   createCommunity,
@@ -23,17 +17,14 @@ import {
 import { IconButton } from "@material-ui/core";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
-import { useSnackbar } from "notistack";
 import styled from "styled-components";
 
 import {
   FormLabel,
   ConsentText,
   Input,
-  FormValidationFailed,
-  FormValidationWarning,
 } from "./../Elements";
+import ConfirmCommunityMail from "../Helper/ConfirmCommunityMail";
 
 const FormHeading = styled.div`
   text-align: center !important;
@@ -48,6 +39,20 @@ const FormSubheading = styled.div`
   font-family: "Ubuntu";
   font-size: 0.9rem;
   color: #212121;
+`;
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
 `;
 
 let formIsvalidated = false;
@@ -95,14 +100,8 @@ const renderInputName = ({
         {label}
       </label>
       {touched &&
-        ((error && (
-          <FormValidationFailed className="my-1">{error}</FormValidationFailed>
-        )) ||
-          (warning && (
-            <FormValidationWarning className="my-1">
-              {warning}
-            </FormValidationWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -136,16 +135,8 @@ const renderInput = ({
         {label}
       </ConsentText>
       {touched &&
-        ((error && (
-          <FormValidationFailed className="my-1">
-            {error}
-          </FormValidationFailed>
-        )) ||
-          (warning && (
-            <FormValidationWarning className="my-1">
-              {warning}
-            </FormValidationWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -175,7 +166,6 @@ const renderInputCheckbox = ({
         className={classes}
         placeholder={placeholder}
         id={id}
-        // required
       />
       <ConsentText class={labelClass} for={labelFor}>
         {label}
@@ -208,14 +198,8 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <FormValidationFailed className="my-1">{error}</FormValidationFailed>
-        )) ||
-          (warning && (
-            <FormValidationWarning className="my-1">
-              {warning}
-            </FormValidationWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
 
       {!error && !warning
         ? (formIsvalidated = true)
@@ -224,8 +208,6 @@ const renderTextArea = ({
   );
 };
 const CreateNewCommunityForm = (props) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { error } = useSelector((state) => state.community);
   const [file, setFile] = useState(null);
   const [fileToPreview, setFileToPreview] = useState(null);
@@ -248,10 +230,6 @@ const CreateNewCommunityForm = (props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth, setMaxWidth] = React.useState("md");
 
-  const showResults = (formValues) => {
-    window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-  };
-
   const onSubmit = (formValues) => {
     setCreateCommunityClicked(true);
     dispatch(createCommunity(formValues, file, userId));
@@ -263,9 +241,6 @@ const CreateNewCommunityForm = (props) => {
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForCreateCommunity());
   }
 
@@ -405,13 +380,8 @@ const CreateNewCommunityForm = (props) => {
                 type="submit"
                 class="btn btn-outline-primary btn-outline-text form-control"
                 disabled={
-                  // createCommunityClicked &&
-                  // formIsvalidated &&
-                  // !error &&
                   pristine || submitting || !valid
                 }
-                //onClick={props.closeHandler}
-                //disabled={pristine || submitting || !valid}
               >
                 Create New Community
                 {createCommunityClicked && formIsvalidated && !error ? (
@@ -419,7 +389,6 @@ const CreateNewCommunityForm = (props) => {
                     class="spinner-border text-primary spinner-border-sm ms-3"
                     role="status"
                   >
-                    <span class="sr-only">Loading...</span>
                   </div>
                 ) : (
                   <div></div>
@@ -429,6 +398,7 @@ const CreateNewCommunityForm = (props) => {
           </div>
         </form>
       </Dialog>
+      
     </>
   );
 };
@@ -465,5 +435,4 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "newCreatedCommunity",
   validate,
-  //destoryOnUnmount: true,
 })(CreateNewCommunityForm);

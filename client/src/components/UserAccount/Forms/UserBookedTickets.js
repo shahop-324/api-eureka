@@ -11,11 +11,6 @@ const UserBookedTickets = () => {
   const renderThisMonthRegisteredEvents = () => {
     if (registeredInEvents.length !== 0) {
       return registeredInEvents.map((event) => {
-        // var date = new Date(event.startDate);
-        // console.log(date);
-        // var newDate = new Date(date.setMonth(date.getMonth() + 1));
-        // console.log(newDate);
-
         const end = new Date(event.endDate);
         const formatedEndDate = dateFormat(end,  "mmm dS, h:MM TT");
 

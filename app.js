@@ -164,8 +164,9 @@ app.use(mongosanitize());
 
 app.use(xss());
 
-app.get("/api-eureka/getUserCredentials", (req, res) => {
+app.get("/api-eureka/getUserCredentials", (req, res, next) => {
   const code = req.query.code;
+  console.log(code);
   let userProfile = {};
 
   let accessToken = null;
@@ -179,9 +180,10 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:3001/signin"
         : "https://bluemeet.in/signin",
-    client_id: process.env.LINKEDIN_CLIENT_ID,
-    client_secret: process.env.LINKEDIN_CLIENT_SECRET,
+    client_id: "7761igbj4li3f2",
+    client_secret: "aitQmTG7uYvSkaRZ",
   };
+  console.log(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
   axios
     .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
     .then((response) => {
@@ -215,6 +217,7 @@ app.get("/api-eureka/getUserCredentials", (req, res) => {
         .catch((error) => next(error));
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 });

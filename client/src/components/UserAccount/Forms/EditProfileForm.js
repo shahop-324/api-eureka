@@ -17,8 +17,6 @@ import {
 
 import { useState } from "react";
 import { reduxForm, Field } from "redux-form";
-import { useSnackbar } from "notistack";
-
 import { FormLabel, Input } from "./../Elements";
 
 const options = [
@@ -116,7 +114,7 @@ const renderTextArea = ({
   const className = `field ${meta.error && meta.touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <Input
+      <textarea
         rows="3"
         type={type}
         {...input}
@@ -183,8 +181,6 @@ const renderEventPreferences = ({
 let EditProfileForm = (props) => {
   const { handleSubmit, pristine, reset, submitting } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { error, succeded } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -225,6 +221,7 @@ let EditProfileForm = (props) => {
     ModifiedFormValues.firstName = formValues.firstName;
     ModifiedFormValues.lastName = formValues.lastName;
     ModifiedFormValues.headline = formValues.headline;
+    ModifiedFormValues.bio = formValues.bio;
     ModifiedFormValues.phoneNumber = formValues.phoneNumber;
     ModifiedFormValues.email = formValues.email;
 
@@ -237,7 +234,7 @@ let EditProfileForm = (props) => {
       facebook: formValues.facebook,
       twitter: formValues.twitter,
       linkedin: formValues.linkedin,
-      website: formValues.website
+      website: formValues.website,
     };
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
@@ -330,10 +327,24 @@ let EditProfileForm = (props) => {
                 name="headline"
                 type="text"
                 classes="form-control"
-                component={renderTextArea}
+                component={renderInput}
                 aria-describedby="emailHelp"
                 placeholder="Hi there! "
                 label="Headline"
+              />
+            </div>
+          </div>
+
+          <div className="row edit-profile-form-row mb-3">
+            <div className="form-group">
+              <FormLabel for="communityHeadline">Bio</FormLabel>
+              <Field
+                name="bio"
+                classes="form-control"
+                component={renderTextArea}
+                aria-describedby="emailHelp"
+                placeholder="Write about yourself in brief so that others can know about you when you participate in events."
+                label="bio"
               />
             </div>
           </div>
@@ -578,6 +589,7 @@ const mapStateToProps = (state) => ({
       ? state.user.userDetails.phoneNumber
       : "",
 
+    bio: state.user.userDetails.bio ? state.user.userDetails.bio : "",
     headline: state.user.userDetails.headline
       ? state.user.userDetails.headline
       : "",

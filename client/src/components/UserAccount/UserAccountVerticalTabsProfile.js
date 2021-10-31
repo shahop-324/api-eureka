@@ -81,10 +81,10 @@ export default function VerticalTabsProfile() {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        <Tab label="Edit Profile" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(0)} />
-        <Tab label="Notifications" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(1)} />
-        <Tab label="Booked Ticket" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(2)} />
-        <Tab label="Password & Security" style={{fontWeight: "500", fontFamily: "Inter", textTransform: "capitalize"}} {...a11yProps(3)} />
+        <Tab label="Edit Profile" style={{fontWeight: "500", textTransform: "capitalize"}} {...a11yProps(0)} />
+        <Tab label="Notifications" style={{fontWeight: "500", textTransform: "capitalize"}} {...a11yProps(1)} />
+        <Tab label="Booked Ticket" style={{fontWeight: "500", textTransform: "capitalize"}} {...a11yProps(2)} />
+        <Tab label="Password & Security" style={{fontWeight: "500", textTransform: "capitalize"}} {...a11yProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <EditProfileForm />
@@ -93,7 +93,6 @@ export default function VerticalTabsProfile() {
         <EditNotificationSettings />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {/* <YouHaveNoEventComing msgText="You have no event coming up this month" /> */}
         <UserBookedTickets />
       </TabPanel>
       <TabPanel value={value} index={3}>

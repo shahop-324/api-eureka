@@ -24,7 +24,6 @@ const MailchimpConnect = () => {
         />
         <div className="d-flex flex-row align-items-center mt-4">
           <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
           </div>
           <div
             className="ms-3"

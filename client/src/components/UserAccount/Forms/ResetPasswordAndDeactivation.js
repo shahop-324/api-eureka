@@ -1,13 +1,31 @@
 import React from "react";
+import styled from 'styled-components';
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { editUserPassword, errorTrackerForEditUser } from "../../../actions";
 import { Link } from "react-router-dom";
-import { useSnackbar } from "notistack";
 
-import {DashboardSectionHeading, FormLabel, Input,FormValidationFailed,
-  FormValidationWarning,} from "./../Elements";
+import {
+  DashboardSectionHeading,
+  Input,
+  FormValidationFailed,
+  FormValidationWarning,
+} from "./../Elements";
 
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInputOldPass = ({
   type,
@@ -29,16 +47,12 @@ const renderInputOldPass = ({
       />
       {touched &&
         ((error && (
-          <FormValidationFailed className="my-1">
-            {error}
-          </FormValidationFailed>
+          <FormError className="my-1">{error}</FormError>
         )) ||
           (warning && (
-            <FormValidationWarning
-              className="my-1"
-            >
+            <FormWarning className="my-1">
               {warning}
-            </FormValidationWarning>
+            </FormWarning>
           )))}
     </div>
   );
@@ -62,27 +76,27 @@ const renderInput = ({
       />
       {touched &&
         ((error && (
-          <FormValidationFailed style={{ color: "red", fontWeight: "400" }} className="my-1">
+          <FormError
+            style={{ color: "red", fontWeight: "400" }}
+            className="my-1"
+          >
             {error}
-          </FormValidationFailed>
+          </FormError>
         )) ||
           (warning && (
-            <FormValidationWarning
+            <FormWarning
               className="my-1"
               style={{ color: "#8B780D", fontWeight: "400" }}
             >
               {warning}
-            </FormValidationWarning>
+            </FormWarning>
           )))}
     </div>
   );
 };
 
 const ResetPasswordAndDeactivation = (props) => {
-
   const { error } = useSelector((state) => state.user);
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { pristine, valid, submitting, handleSubmit } = props;
 
@@ -92,9 +106,6 @@ const ResetPasswordAndDeactivation = (props) => {
   };
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForEditUser());
   }
 
@@ -103,7 +114,9 @@ const ResetPasswordAndDeactivation = (props) => {
       <div className="user-account-edit-profile px-2 py-2">
         <form onSubmit={handleSubmit(onSubmit)} className="ui form error">
           <div className="mb-5">
-            <DashboardSectionHeading className=" mb-3">Change Password</DashboardSectionHeading>
+            <DashboardSectionHeading className=" mb-3">
+              Change Password
+            </DashboardSectionHeading>
             <div className="form-group mb-4">
               <Field
                 name="oldPass"
@@ -152,8 +165,7 @@ const ResetPasswordAndDeactivation = (props) => {
             <div className="row edit-profile-form-row my-3 d-flex flex-row justify-content-end">
               <button
                 type="submit"
-                className="col-3 btn btn-primary"
-                style={{ textAlign: "center", backgroundColor: "#538BF7" }}
+                className="col-3 btn btn-primary btn-outline-text"
                 disabled={!valid || pristine || submitting}
               >
                 Save changes
@@ -161,16 +173,6 @@ const ResetPasswordAndDeactivation = (props) => {
             </div>
           </div>
         </form>
-        {/* <div>
-          <h3 className="mb-3">Account Deactivation</h3>
-          <div className="d-flex flex-row mb-3">
-            <div className="me-3">Current Status </div>
-            <div className="d-flex flex-row align-items-center">
-              <Ripple /> Active{" "}
-            </div>
-          </div>
-          <ToggleSwitch />
-        </div> */}
       </div>
     </>
   );

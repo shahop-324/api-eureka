@@ -3326,10 +3326,10 @@ export const errorTrackerForFetchuser = () => async (dispatch, getState) => {
 
 export const editUser = (formValues, file) => async (dispatch, getState) => {
   dispatch(userActions.startLoading());
-  const editingUser = async () => {
-    const key = `${UUID()}.jpeg`;
+  const key = `${UUID()}.jpeg`;
 
-    if (file) {
+  if (file) {
+    try {
       s3.getSignedUrl(
         "putObject",
         {
@@ -3352,8 +3352,6 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
           console.log(awsRes);
 
           if (awsRes.status === 200) {
-            dispatch(communityActions.startLoading());
-
             try {
               const res = await fetch(`${BaseURL}users/updateMe`, {
                 method: "PATCH",
@@ -3378,13 +3376,28 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
 
               const result = await res.json();
 
-              return result;
+              dispatch(
+                userActions.EditUser({
+                  user: result.data.userData,
+                })
+              );
+
+              dispatch(
+                snackbarActions.openSnackBar({
+                  message: "User profile updated successfully",
+                  severity: "success",
+                })
+              );
+
+              setTimeout(function () {
+                dispatch(snackbarActions.closeSnackBar());
+              }, 6000);
             } catch (err) {
               dispatch(communityActions.hasError(err.message));
 
               dispatch(
                 snackbarActions.openSnackBar({
-                  message: "Failed to update community.",
+                  message: "Failed to update profile. Please try again later",
                   severity: "error",
                 })
               );
@@ -3395,7 +3408,23 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
           }
         }
       );
-    } else {
+    } catch (error) {
+      dispatch(userActions.hasError(error.message));
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update profile. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
+  } else {
+    try {
       const res = await fetch(`${BaseURL}users/updateMe`, {
         method: "PATCH",
         body: JSON.stringify({
@@ -3417,44 +3446,38 @@ export const editUser = (formValues, file) => async (dispatch, getState) => {
       }
 
       const result = await res.json();
-      return result;
+
+      dispatch(
+        userActions.EditUser({
+          user: result.data.userData,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "User profile updated successfully",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (error) {
+      dispatch(userActions.hasError(error.message));
+      console.log(error);
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update profile. Please try again later.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
     }
-  };
-  try {
-    const result = await editingUser();
-    console.log(result);
-    // console.warn(xhr.responseText)
-    console.log(result.data.userData);
-    dispatch(
-      userActions.EditUser({
-        user: result.data.userData,
-      })
-    );
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "User profile updated successfully",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
-  } catch (err) {
-    dispatch(userActions.hasError(err.message));
-    console.log(err);
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to update profile. Please try again later.",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 
@@ -10485,4 +10508,52 @@ export const sendStageReminder =
 export const switchOffMediaBeforeTransition =
   () => async (dispatch, getState) => {
     dispatch(sessionActions.SwitchOffMedia());
+  };
+
+export const deactivateUser = (userId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}users/deactivateMe/${userId}`, {
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    dispatch(
+      showSnackbar(
+        "success",
+        "Your account has been successfully deactivated. Please check your mail for more deatils."
+      )
+    );
+
+    window.location.href = `/home`;
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to deactivate profile. Please try again later."
+      )
+    );
+  }
+};
+
+export const setOpenCommunityVerificationNotice =
+  (openState) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetCommunityVerificationOpenState({
+        openState: openState,
+      })
+    );
   };

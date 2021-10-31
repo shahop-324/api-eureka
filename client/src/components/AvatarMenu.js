@@ -217,7 +217,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                     </MenuItem>
                     <MenuItem
                       onClick={(event) => {
-                        dispatch(navigationIndex(2));
+                        dispatch(navigationIndex(3));
                         history.push("/user/profile");
                         handleClose(event);
                       }}

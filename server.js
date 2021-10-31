@@ -759,7 +759,6 @@ io.on("connect", (socket) => {
         // console.log(registrations);
         for (let element of sessionDoc.onStagePeople) {
           for (let item of registrations) {
-            
             if (element.user.toString() === item.bookedByUser.toString()) {
               // Find socketId
               console.log("We reached here");
@@ -3314,7 +3313,7 @@ io.on("connect", (socket) => {
     async ({ ModifiedFormValues }) => {
       const { googleId, firstName, lastName, image, email, referralCode } =
         ModifiedFormValues;
-      const user = await User.findOne({ googleId: googleId });
+      const user = await User.findOne({ email: email });
       if (user) {
         const isUserLoggedInAlready = await LoggedInUsers.find({
           userId: user._id,
@@ -3396,6 +3395,7 @@ io.on("connect", (socket) => {
             name: name,
             email: email,
           });
+          
           await LoggedInUsers.create({
             userId: user._id,
           });

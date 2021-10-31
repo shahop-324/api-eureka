@@ -177,16 +177,19 @@ const renderIndividualChatSummary = (
 
     // Now at this point we will get details of each unique contact and their last message and last time ago so make an object and push it into individual chats
 
-    IndividualChats.push({
-      userId: contactDetails.userId,
-      name: contactDetails.userName,
-      image: contactDetails.userImage,
-      org: contactDetails.userOrganisation,
-      des: contactDetails.userDesignation,
-      lastMsg: last_message_of_this_contact,
-      lastTimeAgo: last_message_time_ago,
-    });
-
+    if(contactDetails) {
+      IndividualChats.push({
+        userId: contactDetails.userId,
+        name: contactDetails.userName,
+        image: contactDetails.userImage,
+        org: contactDetails.userOrganisation,
+        des: contactDetails.userDesignation,
+        lastMsg: last_message_of_this_contact,
+        lastTimeAgo: last_message_time_ago,
+      });
+  
+    }
+    
     // {userId, name, image, org, des, lastMsg, lastTimeAgo}
   }
 

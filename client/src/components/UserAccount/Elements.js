@@ -112,7 +112,7 @@ const CustomHorizontalTabWarpper = styled.div`
 const CustomTabButton = styled.div`
   font-family: "Ubuntu";
   font-weight: 500;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: ${(props) => (props.active && props.active ? "#FFFFFF" : "#152d35")};
   align-self: center;
 

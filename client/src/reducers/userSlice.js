@@ -14,6 +14,7 @@ const userSlice = createSlice({
     error: false,
     referredId: null,
     succeded: false,
+    openCommunityVerificationNotice: false,
   },
 
   reducers: {
@@ -28,7 +29,6 @@ const userSlice = createSlice({
       state.isLoading = true;
       state.isLoading = false;
     },
-
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
@@ -56,24 +56,20 @@ const userSlice = createSlice({
       state.currentlyJoinedChair = action.payload.chairId;
       state.isLoading = false;
     },
-
     FetchUsers(state, action) {
       state.users = action.payload.users;
       state.isLoading = false;
     },
-
     FetchUser(state, action) {
       state.users.push(action.payload.user);
       state.isLoading = false;
     },
-
     DeleteUser(state, action) {
       state.users = state.users.filter(
         (user) => user.id !== action.payload.user.id
       );
       state.isLoading = false;
     },
-
     EditUser(state, action) {
       state.users = state.users.map((user) =>
         user.id === action.payload.user.id ? action.payload.user : user
@@ -82,6 +78,9 @@ const userSlice = createSlice({
       state.userDetails = action.payload.user;
       state.isLoading = false;
       state.succeded = true;
+    },
+    SetCommunityVerificationOpenState(state, action) {
+      state.openCommunityVerificationNotice = action.payload.openState;
     },
   },
 });

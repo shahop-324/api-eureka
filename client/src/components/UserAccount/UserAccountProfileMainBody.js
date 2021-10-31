@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import dateFormat from "dateformat";
 
 import Loader from "./../Loader";
+import AccountDeactivationForm from "./Forms/AccountDeactivationForm";
 
 const renderFavouriteEvents = (events) => {
   return events.map((event) => {
@@ -79,7 +80,6 @@ const UserAccountProfileMainBody = () => {
         className="user-account-main-body-home-content pt-3 px-4"
         style={{ overflow: "auto", height: "85vh", width: "100% !important" }}
       >
-        {/* <VerticalTabsProfile /> */}
         <CustomHorizontalTabWarpper
           className=" mb-4"
           style={{ maxWidth: "500px", gridTemplateColumns: "1fr 1fr" }}
@@ -125,6 +125,7 @@ const UserAccountProfileMainBody = () => {
                     >
                       <EditNotificationSettings />
                       <ResetPasswordAndDeactivation />
+                      <AccountDeactivationForm />
                     </div>
                   </>
                 );

@@ -7,6 +7,7 @@ import CenteredTabs from "./UserAccountCenteredTabBar";
 import UserAccountSideNav from "./UserAccountSideNav";
 import UserAccountHomeMainBody from "./UserAccountHomeMainBodyComponent";
 import UserAccountEventsMainBody from "./UserAccountEventsMainBody";
+import UserAccountConnections from "./UserAccountConnections";
 import UserAccountProfileMainBody from "./UserAccountProfileMainBody";
 import { fetchUserAllPersonalData } from "../../actions/index";
 import { navigationIndex } from "../../actions/index";
@@ -17,8 +18,15 @@ import Loader from "../Loader";
 import AvatarMenu from "./../AvatarMenu";
 import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
+import ConfirmCommunityMail from "./Helper/ConfirmCommunityMail";
 
 const UserAccountHome = () => {
+  const dispatch = useDispatch();
+
+  const { openCommunityVerificationNotice } = useSelector(
+    (state) => state.user
+  );
+
   const { isLoading } = useSelector((state) => state.user);
 
   const [openHelp, setOpenHelp] = useState(false);
@@ -33,7 +41,6 @@ const UserAccountHome = () => {
     setOpenHelp(false);
   };
 
-  const dispatch = useDispatch();
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
   useEffect(() => {
@@ -43,7 +50,6 @@ const UserAccountHome = () => {
 
   useEffect(() => {
     return () => {
-      console.log("cleaned up");
       dispatch(navigationIndex(0));
     };
   }, [dispatch]);
@@ -60,7 +66,7 @@ const UserAccountHome = () => {
         break;
       }
       case 2: {
-        history.push("/user/recordings");
+        history.push("/user/connections");
         break;
       }
       case 3: {
@@ -76,7 +82,6 @@ const UserAccountHome = () => {
         break;
       }
       default: {
-        // history.push("/user/home");
         break;
       }
     }
@@ -134,7 +139,11 @@ const UserAccountHome = () => {
                     return <UserAccountHomeMainBody />;
                   case 1:
                     return <UserAccountEventsMainBody />;
+
                   case 2:
+                    return <UserAccountConnections />;
+
+                  case 3:
                     return <UserAccountProfileMainBody />;
 
                   default:
@@ -150,6 +159,7 @@ const UserAccountHome = () => {
         openWhatsNew={openWhatsNew}
         handleCloseWhatsNew={handleCloseWhatsNew}
       />
+      <ConfirmCommunityMail open={openCommunityVerificationNotice} />
     </>
   );
 };

@@ -18,8 +18,6 @@ const Blank = () => {
 
   useEffect(() => {
     dispatch(connectMailchimp(query.code, communityDetails._id, userDetails._id));
-    //   history.push(`/user/${userDetails._id}/community/integrations/${communityDetails._id}`)
-    // window.location.href = ;
   }, []);
 
   return (
@@ -29,7 +27,6 @@ const Blank = () => {
         className="d-flex flex-row align-items-center justify-content-center"
       >
         <div class="spinner-border text-primary" role="status">
-          <span class="sr-only">Loading...</span>
         </div>
       </div>
     </>

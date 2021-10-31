@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    bio: {
+      type: String,
+      trim: true,
+    },
     phoneNumber: {
       type: String,
       trim: true,
@@ -73,6 +77,10 @@ const userSchema = new mongoose.Schema(
         },
         message: "Passwords are not the same!",
       },
+    },
+
+    dateForDeactivation: {
+      type: Date,
     },
 
     googleId: {
@@ -144,7 +152,6 @@ const userSchema = new mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
-      select: false,
     },
     communities: [
       {

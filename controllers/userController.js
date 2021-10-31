@@ -557,9 +557,67 @@ exports.getMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateMe = catchAsync(async (req, res, next) => {
-  // const key = req.body.key;
+exports.deactivateMe = catchAsync(async (req, res, next) => {
+ try{
+  const userId = req.user.id;
+  if (req.params.userId.toString() === userId.toString()) {
+    // Deactivate this user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        active: false,
+        dateForDeactivation: Date.now() + 30 * 24 * 60 * 60 * 1000,
+      },
+      { new: true, validateModifiedOnly: true }
+    );
 
+    // Send mail that account has been deactivated and how we are going to delete their data and how they can get back thier account within 1 month of deactivation.
+
+    const msg = {
+      to: updatedUser.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: "Bluemeet account deactivated.",
+      text: `Hi, ${
+        updatedUser.firstName + " " + updatedUser.lastName
+      } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
+      // html: ForgotPasswordTemplate(user, resetURL),
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(200).json({
+          status: "success",
+          message: "Token sent to email!",
+        });
+      })
+      .catch((error) => {});
+
+    // Send response with status code 200
+    res.status(200).json({
+      status: "success",
+      message: "Account deactivated successfully!",
+      data: updatedUser,
+    });
+  }
+
+  else {
+// Send response with status code 400
+res.status(400).json({
+  status: "error",
+  message: "Failed to deactivate account.",
+});
+  }
+ }
+ catch(error) {
+   console.log(error);
+ }
+  
+
+  
+});
+
+exports.updateMe = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const filteredBody = filterObj(
     req.body,
@@ -567,6 +625,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "firstName",
     "lastName",
     "headline",
+    "bio",
     "email",
     "photo",
     "interests",

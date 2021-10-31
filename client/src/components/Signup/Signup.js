@@ -1,21 +1,30 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./../../assets/css/style.css";
+import styled from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
-import {
-  errorTrackerForSignUp,
-  googleLinkClicked,
-  resetAuthError,
-} from "../../actions/index";
+import { errorTrackerForSignUp, resetAuthError } from "../../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { reduxForm, Field } from "redux-form";
 import GoogleAuth from "../GoogleAuth";
-import LinkedIn from "@material-ui/icons/LinkedIn";
 import LinkedinAuth from "../LinkedinAuth";
+
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 let formIsvalidated = false;
 
@@ -38,20 +47,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "400" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "400" }}
-            >
-              {warning}
-            </div>
-          )))}
-      {/* {renderError(meta)} */}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -67,7 +64,6 @@ const renderInputCheckbox = ({
   placeholder,
   meta: { touched, error, warning },
 }) => {
-  // const className = `field ${meta.error && meta.touched ? "error" : ""}`;
   return (
     <div>
       <input
@@ -84,6 +80,7 @@ const renderInputCheckbox = ({
     </div>
   );
 };
+
 const Signup = (props) => {
   const { error } = useSelector((state) => state.auth);
 
@@ -114,13 +111,8 @@ const Signup = (props) => {
     }
   };
 
-  // const onClickHandle = () => {
-  //   dispatch(googleLinkClicked());
-  // };
-
   if (error) {
     dispatch(errorTrackerForSignUp());
-    alert(error);
     return;
   }
 
@@ -140,7 +132,7 @@ const Signup = (props) => {
                   className="companyName"
                   style={{ textDecoration: "none", color: "#538BF7" }}
                 >
-                Bluemeet
+                  Bluemeet
                 </a>
                 <div className="welcome-message mb-5">
                   Let's create your account.
@@ -160,9 +152,7 @@ const Signup = (props) => {
                 <div className="row sign-in-sub-heading px-2">
                   Free forever. No credit card needed.
                 </div>
-
                 <GoogleAuth />
-
                 <div className="mb-3">
                   <LinkedinAuth />
                 </div>
@@ -226,10 +216,7 @@ const Signup = (props) => {
                             id="lastName"
                             name="lastName"
                             ariadescribedby="Enter Last Name"
-                            // value={this.state.lastName}
                             placeholder="Doe"
-                            //required
-                            // onChange={this.onLastNameChange}
                           />
                         </div>
                       </div>
@@ -253,9 +240,6 @@ const Signup = (props) => {
                           ariadescribedby="Enter Email Address"
                           placeholder="Enter Email"
                           component={renderInput}
-                          // value={this.state.email}
-                          // onChange={this.onEmailAddressChange}
-                          //required
                         />
                       </div>
                     </div>
@@ -356,9 +340,7 @@ const Signup = (props) => {
                           <div
                             className="spinner-border text-light spinner-border-sm ms-3"
                             role="status"
-                          >
-                            <span className="sr-only">Loading...</span>
-                          </div>
+                          ></div>
                         ) : (
                           <div></div>
                         )}
@@ -402,20 +384,13 @@ const validate = (formValues) => {
   const errors = {};
 
   if (!formValues.firstName) {
-    errors.firstName = "required";
-  }
-  if (formValues.firstName && formValues.firstName.length > 10) {
-    errors.firstName = "max 10 characters allowed";
+    errors.firstName = "First name is required";
   }
   if (!formValues.lastName) {
-    errors.lastName = "required";
+    errors.lastName = "Last name is required";
   }
-  if (formValues.lastName && formValues.lastName.length > 10) {
-    errors.lastName = "max 10 characters allowed";
-  }
-
   if (!formValues.email) {
-    errors.email = "email is required";
+    errors.email = "Email is required";
   }
 
   errors.email =
