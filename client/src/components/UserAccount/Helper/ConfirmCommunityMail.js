@@ -5,8 +5,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DialogContent from "@material-ui/core/DialogContent";
 import MailSent from "./../Images/MailSent.png";
-import { useDispatch } from "react-redux";
-import { setOpenCommunityVerificationNotice } from "./../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenCommunityVerificationNotice, resendCommunityVerificationMail } from "./../../../actions";
 
 const Heading = styled.div`
   font-size: 1.1rem;
@@ -38,6 +38,8 @@ const ConfirmCommunityMail = ({ open }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { communityVerificationEmail, communityVerificationId } = useSelector((state) => state.user);
+
   return (
     <>
       <Dialog
@@ -56,8 +58,12 @@ const ConfirmCommunityMail = ({ open }) => {
             <div className="mb-3">
               <FormLabel className="mb-2">
                 <span>
-                  Please check your mail (test@mail.com) and click on the verify
-                  button to verify your new community.
+                  Please check your mail{" "}
+                  <span>
+                    {" "}
+                    <strong>{communityVerificationEmail}</strong>{" "}
+                  </span>{" "}
+                  and click on the verify button to verify your new community.
                 </span>
               </FormLabel>
             </div>
@@ -66,9 +72,18 @@ const ConfirmCommunityMail = ({ open }) => {
           <div className="d-flex flex-row align-items-center justify-content-end px-4 pb-4">
             <button
               onClick={() => {
+                dispatch(resendCommunityVerificationMail(communityVerificationId));
+                // dispatch(setOpenCommunityVerificationNotice(false));
+              }}
+              className="btn btn-outline-text btn-primary me-3"
+            >
+              Resend mail
+            </button>
+            <button
+              onClick={() => {
                 dispatch(setOpenCommunityVerificationNotice(false));
               }}
-              className="btn btn-outline-text btn-outline-dark me-3"
+              className="btn btn-outline-text btn-outline-dark"
             >
               Okay
             </button>

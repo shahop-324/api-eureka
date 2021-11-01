@@ -192,16 +192,138 @@ export const fetchReferralCode =
     dispatch(userActions.FetchReferralCode({ referredUserId }));
   };
 
+export const createUserAccountRequest =
+  (formValues, intent, eventId, setSignupClicked) =>
+  async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}createUserAccountRequest`,
+
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            ...formValues,
+            intent: intent,
+            eventId: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Failed to verify community. Please try again.");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      if (res.alreadyUsedEmail) {
+        dispatch(
+          showSnackbar(
+            "error",
+            "This email is already in use. Please sign up using another email."
+          )
+        );
+
+        setSignupClicked(false);
+      } else {
+        dispatch(
+          userActions.SetUserVerificationEmail({
+            email: res.email,
+          })
+        );
+
+        history.push(`/verify-account/${res.id}`);
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to create account. Please try again.")
+      );
+      setSignupClicked(false);
+    }
+  };
+
+export const verifyUserEmailAndSignup = (id) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}users/verifyUserEmailAndSignup/${id}`,
+
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Failed to verify community. Please try again.");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    if (res.expired) {
+      // Link has expired
+      dispatch(
+        userActions.SetUserVerificationLinkExpired({
+          userVerificationLinkStatus: true,
+        })
+      );
+    } else {
+      dispatch(
+        authActions.SignIn({
+          token: res.token,
+          referralCode: res.referralCode,
+        })
+      );
+      dispatch(
+        userActions.CreateUser({
+          user: res.user,
+        })
+      );
+
+      if (res.intent === "eventRegistration") {
+        history.push(`/event-landing-page/${res.eventId}`);
+      } else if (res.intent === "buyPlan") {
+        history.push("/pricing");
+        dispatch(fetchUserAllPersonalData());
+      } else {
+        history.push("/user/home");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to verify user identity. Please try to sign in."
+      )
+    );
+  }
+};
+
 export const signUp = (formValues, intent, eventId) => async (dispatch) => {
   try {
     const res = await eureka.post("/eureka/v1/users/signup", {
       ...formValues,
     });
-    console.log(res.data.data.user);
+
     dispatch(
       authActions.SignIn({
         token: res.data.token,
-
         referralCode: res.data.data.user.referralCode,
       })
     );
@@ -345,8 +467,8 @@ export const signOut = () => async (dispatch, getState) => {
   //TODO Home page
 };
 
-export const createCommunity =
-  (formValues, file, userId) => async (dispatch, getState) => {
+export const createCommunityRequest =
+  (formValues, file, userId, handleClose) => async (dispatch, getState) => {
     console.log(formValues);
 
     const key = `${userId}/${UUID()}.jpeg`;
@@ -379,7 +501,7 @@ export const createCommunity =
 
         const communityCreating = async () => {
           let res = await fetch(
-            `${BaseURL}users/newCommunity`,
+            `${BaseURL}users/newCommunityRequest`,
 
             {
               method: "POST",
@@ -396,7 +518,7 @@ export const createCommunity =
           );
           if (!res.ok) {
             if (!res.message) {
-              throw new Error("creating community failed");
+              throw new Error("Creating community failed");
             } else {
               throw new Error(res.message);
             }
@@ -404,30 +526,42 @@ export const createCommunity =
           res = await res.json();
           return res;
         };
-        // console.log(res);
+
         try {
           let res = await communityCreating();
 
-          dispatch(
-            communityAuthActions.CommunitySignIn({
-              token: res.token,
-            })
-          );
-          dispatch(
-            communityActions.CreateCommunity({
-              community: res.communityDoc,
-            })
-          );
+          if (res.alreadyUsedEmail) {
+            dispatch(
+              showSnackbar(
+                "error",
+                "This email is already used by another community."
+              )
+            );
+          } else {
+            handleClose();
 
-          history.push(
-            `/user/${userId}/community/getting-started/${res.communityDoc.id}`
-          );
+            dispatch(
+              communityActions.CreateCommunityRequest({
+                community: res.data,
+              })
+            );
+            dispatch(
+              userActions.SetCommunityVerificationEmail({
+                email: res.email,
+              })
+            );
+            dispatch(
+              userActions.SetCommunityVerificationOpenState({
+                openState: true,
+              })
+            );
+          }
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
         }
       } else {
         const communityCreating = async () => {
-          let res = await fetch(`${BaseURL}users/newCommunity`, {
+          let res = await fetch(`${BaseURL}users/newCommunityRequest`, {
             method: "POST",
             body: JSON.stringify({
               ...formValues,
@@ -454,20 +588,37 @@ export const createCommunity =
         try {
           let res = await communityCreating();
 
-          dispatch(
-            communityAuthActions.CommunitySignIn({
-              token: res.token,
-            })
-          );
-          dispatch(
-            communityActions.CreateCommunity({
-              community: res.communityDoc,
-            })
-          );
+          if (res.alreadyUsedEmail) {
+            dispatch(
+              showSnackbar(
+                "error",
+                "This email is already used by another community."
+              )
+            );
+          } else {
+            handleClose();
 
-          history.push(
-            `/user/${userId}/community/overview/${res.communityDoc.id}`
-          );
+            dispatch(
+              communityActions.CreateCommunityRequest({
+                community: res.data,
+              })
+            );
+            dispatch(
+              userActions.SetCommunityVerificationEmail({
+                email: res.email,
+              })
+            );
+            dispatch(
+              userActions.SetCommunityVerificationId({
+                id: res.data._id,
+              })
+            );
+            dispatch(
+              userActions.SetCommunityVerificationOpenState({
+                openState: true,
+              })
+            );
+          }
         } catch (e) {
           dispatch(communityActions.hasError(e.message));
         }
@@ -606,6 +757,12 @@ export const fetchUserAllPersonalData = () => async (dispatch, getState) => {
     dispatch(
       communityActions.FetchCommunities({
         communities: allCommuities,
+      })
+    );
+
+    dispatch(
+      communityActions.FetchCommunityRequests({
+        communityRequests: res.communityRequests,
       })
     );
 
@@ -10483,7 +10640,6 @@ export const sendStageReminder =
         }
       );
 
-      console.log(res);
       if (!res.ok) {
         if (!res.message) {
           throw new Error("Failed to send reminder. Please try again.");
@@ -10493,7 +10649,7 @@ export const sendStageReminder =
       }
 
       res = await res.json();
-      console.log(res);
+
       dispatch(showSnackbar("success", "Reminder sent successfully!"));
       handleClose();
       setMsg("");
@@ -10557,3 +10713,172 @@ export const setOpenCommunityVerificationNotice =
       })
     );
   };
+
+export const setCommunityVerificationId =
+  (id) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetCommunityVerificationId({
+        id: id,
+      })
+    );
+  };
+
+export const setCommunityVerificationEmail =
+  (email) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetCommunityVerificationEmail({
+        email: email,
+      })
+    );
+  };
+
+export const setUserVerificationEmail =
+  (email) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetUserVerificationEmail({
+        email: email,
+      })
+    );
+  };
+
+export const setCommunityVerificationLinkExpired =
+  (status) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetCommunityVerificationLinkExpired({
+        communityVerificationLinkStatus: status,
+      })
+    );
+  };
+
+export const setUserVerificationLinkExpired =
+  (status) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetUserVerificationLinkExpired({
+        userVerificationLinkStatus: status,
+      })
+    );
+  };
+
+export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}users/verifyAndCreateCommunity/${id}`,
+
+      {
+        method: "POST",
+      }
+    );
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Failed to verify community. Please try again.");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    if (res.expired) {
+      // It has already expired
+      dispatch(setCommunityVerificationLinkExpired(true));
+    } else {
+      // Community is verified and created => Please dispatch
+
+      dispatch(
+        communityActions.FetchCommunityRequests({
+          communityRequests: res.communityAccountRequests,
+        })
+      );
+
+      dispatch(
+        communityAuthActions.CommunitySignIn({
+          token: res.token,
+        })
+      );
+      dispatch(
+        communityActions.CreateCommunity({
+          community: res.communityDoc,
+        })
+      );
+
+      dispatch(navigationIndexForCommunityDash(0));
+
+      history.push(
+        `/user/${res.userId}/community/overview/${res.communityDoc.id}`
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to verify community. Please try again.")
+    );
+  }
+};
+
+export const resendCommunityVerificationMail =
+  (id) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}resendCommunityVerificationMail/${id}`,
+
+        {
+          method: "POST",
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(
+            "Failed to send community verification mail. Please try again."
+          );
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(showSnackbar("success", "Verification mail sent successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to send email, please try again.")
+      );
+    }
+  };
+
+export const resendUserVerificationEmail =
+  (id) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}resendUserVerificationEmail/${id}`,
+
+        {
+          method: "POST",
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(
+            "Failed to send user verification mail. Please try again."
+          );
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(showSnackbar("success", "verification mail sent successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to send email, please try again.")
+      );
+    }
+  };
+
+export const verifyAndCreateUserAccount =
+  (id) => async (dispatch, getState) => {};

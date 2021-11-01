@@ -7,13 +7,13 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError.js");
 const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
-const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
 const LoggedInUsers = require("../models/loggedInUsers");
 const CommunityCredentials = require("../models/CommunityCredentialsModel");
 const TeamInvite = require("../models/teamInviteModel");
 const Registration = require("../models/registrationsModel");
 const Speaker = require("./../models/speakerModel");
+const UserAccountRequest = require("../models/UserAccountRequest");
 // this function will return you jwt token
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 
@@ -100,355 +100,412 @@ const createSendTokenForCommunityLogin = async (
   });
 };
 
-// this function is signup function for users
+exports.signup = catchAsync(async (req, res, next) => {
+  // Find this users account request doc and check if its expired or not
 
-exports.signup = catchAsync(async (req, res) => {
-  // Create new referral code
-  const MyReferralCode = nanoid(10);
-
-  // check if someone referred this new user
-
-  let referrer;
-
-  if (req.body.referralCode) {
-    referrer = await User.findOneAndUpdate(
-      { referralCode: req.body.referralCode },
-
-      { $inc: { signupUsingReferral: 1 } },
-
-      {
-        new: true,
-        validateModifiedOnly: true,
-      }
+  try{
+    const userAccountrequestDoc = await UserAccountRequest.findById(
+      req.params.id
     );
-
-    if (referrer) {
-      const newUser = await User.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        initialisedAt: Date.now(),
-        password: req.body.password,
-
-        policySigned: req.body.policySigned,
-        referralCode: MyReferralCode,
-        referrer: referrer._id,
-        signupUsingReferral: 0,
-        upgrades: 0,
-        credit: 0,
+  
+    if (userAccountrequestDoc.expired) {
+      // This link has already expired
+      res.status(200).json({
+        status: "Already expired.",
+        expired: true,
       });
-      const name = `${req.body.firstName} ${req.body.lastName}`;
-      await MailList.create({
-        name: name,
-        email: req.body.email,
-      });
-      await LoggedInUsers.create({
-        userId: newUser._id,
-      });
-
-      // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
-      // * Register this user to events in which he /she is invited as speaker and invitations corresponding registration is still not cancelled or event is not over already
-      // Remember there can be multiple invites as a speaker in multiple events from multiple communities
-      // Remember there can be multiple invites in any category on an email
-
-      const teamInvites = await TeamInvite.find({
-        invitedUserEmail: req.body.email,
-      });
-
-      for (let element of teamInvites) {
-        const status = element.status;
-
-        const userEmail = element.invitedUserEmail;
-
-        const communityId = element.communityId;
-
-        const userDoc = newUser;
-
-        const CommunityDoc = await Community.findById(communityId).populate(
-          "eventManagers",
-          "email"
+    } else {
+      // Process normally => This email is now verified by this user
+  
+      // Create new referral code
+      const MyReferralCode = nanoid(10);
+  
+      // check if someone referred this new user
+      let referrer;
+  
+      if (userAccountrequestDoc.referralCode) {
+        referrer = await User.findOneAndUpdate(
+          { referralCode: userAccountrequestDoc.referralCode },
+  
+          { $inc: { signupUsingReferral: 1 } },
+  
+          {
+            new: true,
+            validateModifiedOnly: true,
+          }
         );
-
-        // accept team invitaion
-
-        // Push this persons userId in eventManagers array in community
-        CommunityDoc.eventManagers.push(userDoc._id);
-        await CommunityDoc.save({ new: true, validateModifiedOnly: true });
-
-        // add this community in this users doc in invited communities array
-        userDoc.invitedCommunities.push(communityId);
-        await userDoc.save({ new: true, validateModifiedOnly: true });
-
-        // Mark this invitation document status as accepted
-        element.status = "Accepted";
-        await element.save({ new: true, validateModifiedOnly: true });
-
-        // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
-
-        // Team invitation accepted
+  
+        if (referrer) {
+          const newUser = await User.create({
+            firstName: userAccountrequestDoc.firstName,
+            lastName: userAccountrequestDoc.lastName,
+            email: userAccountrequestDoc.email,
+            initialisedAt: Date.now(),
+            password: userAccountrequestDoc.password,
+            policySigned: true,
+            referralCode: MyReferralCode,
+            referrer: referrer._id,
+            signupUsingReferral: 0,
+            upgrades: 0,
+            credit: 0,
+          });
+          const name = `${userAccountrequestDoc.firstName} ${userAccountrequestDoc.lastName}`;
+          await MailList.create({
+            name: name,
+            email: userAccountrequestDoc.email,
+          });
+          await LoggedInUsers.create({
+            userId: newUser._id,
+          });
+  
+          // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+          // * Register this user to events in which he /she is invited as speaker and invitations corresponding registration is still not cancelled or event is not over already
+          // Remember there can be multiple invites as a speaker in multiple events from multiple communities
+          // Remember there can be multiple invites in any category on an email
+  
+          const teamInvites = await TeamInvite.find({
+            invitedUserEmail: userAccountrequestDoc.email,
+          });
+  
+          for (let element of teamInvites) {
+            const status = element.status;
+  
+            const userEmail = element.invitedUserEmail;
+  
+            const communityId = element.communityId;
+  
+            const userDoc = newUser;
+  
+            const CommunityDoc = await Community.findById(communityId).populate(
+              "eventManagers",
+              "email"
+            );
+  
+            // accept team invitaion
+  
+            // Push this persons userId in eventManagers array in community
+            CommunityDoc.eventManagers.push(userDoc._id);
+            await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+  
+            // add this community in this users doc in invited communities array
+            userDoc.invitedCommunities.push(communityId);
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+  
+            // Mark this invitation document status as accepted
+            element.status = "Accepted";
+            await element.save({ new: true, validateModifiedOnly: true });
+  
+            // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
+  
+            // Team invitation accepted
+          }
+  
+          // * DONE At this point we are sure that we have accepted all pending team invitations
+  
+          // Get all speaker registrations that are still pending and not cancelled for this users email
+  
+          const speakerRegistrations = await Registration.find({
+            $and: [
+              { type: "Speaker" },
+              { status: "Pending" },
+              { cancelled: false },
+              { userEmail: userAccountrequestDoc.email },
+            ],
+          });
+  
+          const speakers = await Speaker.find({
+            email: userAccountrequestDoc.email,
+          });
+  
+          for (let element of speakers) {
+            element.userId = userDoc._id;
+            await element.save({ new: true, validateModifiedOnly: true });
+          }
+  
+          // Now we have all speaker registrations for this user which are still pending and not cancelled
+  
+          for (let element of speakerRegistrations) {
+            // For every registration add it to user registered events and push each registration into user document
+  
+            const userDoc = newUser;
+  
+            userDoc.registeredInEvents.push(element.bookedForEventId);
+            userDoc.registrations.push(element._id);
+  
+            // update each registration as completed and fill details like user Id and other user details that are needed
+  
+            element.status = "Completed";
+            element.userName = userDoc.firstName + " " + userDoc.lastName;
+            element.userImage = userDoc.image;
+            element.bookedByUser = userDoc._id;
+            element.first_name = userDoc.firstName;
+            element.lastName = userDoc.lastName;
+            element.name = userDoc.firstName + " " + userDoc.lastName;
+            element.organisation = userDoc.organisation;
+            element.designation = userDoc.designation;
+            element.city = userDoc.city;
+            element.country = userDoc.country;
+  
+            // Save all updates in userDoc and registration doc.
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+            await element.save({ new: true, validateModifiedOnly: true });
+  
+            // TODO For every speaker invitation accepted please send a confirmation mail to user
+  
+            // Speaker invitation accepted
+          }
+  
+          // * DONE At this point we are sure that we have accepted all pending speaker invitations
+  
+          const boothRegistrations = await Registration.find({
+            $and: [
+              { type: "Exhibitor" },
+              { status: "Pending" },
+              { cancelled: false },
+              { userEmail: userAccountrequestDoc.email },
+            ],
+          });
+  
+          // Now we have all booth registrations for this user which are still pending and not cancelled
+  
+          for (let element of boothRegistrations) {
+            // For every registration add it to user registered events and push each registration into user document
+  
+            const userDoc = newUser;
+  
+            userDoc.registeredInEvents.push(element.bookedForEventId);
+            userDoc.registrations.push(element._id);
+  
+            // update each registration as completed and fill details like user Id and other user details that are needed
+  
+            element.status = "Completed";
+            element.userName = userDoc.firstName + " " + userDoc.lastName;
+            element.userImage = userDoc.image;
+            element.bookedByUser = userDoc._id;
+            element.first_name = userDoc.firstName;
+            element.lastName = userDoc.lastName;
+            element.name = userDoc.firstName + " " + userDoc.lastName;
+            element.organisation = userDoc.organisation;
+            element.designation = userDoc.designation;
+            element.city = userDoc.city;
+            element.country = userDoc.country;
+  
+            // Save all updates in userDoc and registration doc.
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+            await element.save({ new: true, validateModifiedOnly: true });
+  
+            // TODO For every booth invitation accepted please send a confirmation mail to user
+  
+            // Booth invitation accepted
+          }
+  
+          // * DONE At this point we are sure that we have accepted all pending booth invitations
+  
+          // Make sure to mark all userAccountRequests with this email as expired
+  
+         const allUserAccountRequestsWithThisMail = await UserAccountRequest.find({email: userAccountrequestDoc.email});
+  
+          for (let element of allUserAccountRequestsWithThisMail) {
+            element.expired = true;
+            await element.save({new: true, validateModifiedOnly: true});
+          }
+  
+          const token = signToken(newUser._id);
+  
+          res.status(200).json({
+            status: "success",
+            token,
+            user: newUser,
+            referralCode: MyReferralCode,
+            intent: userAccountrequestDoc.intent,
+            eventId: userAccountrequestDoc.eventId,
+          });
+        }
+      } else {
+        const newUser = await User.create({
+          firstName: userAccountrequestDoc.firstName,
+          lastName: userAccountrequestDoc.lastName,
+          email: userAccountrequestDoc.email,
+          initialisedAt: Date.now(),
+          password: userAccountrequestDoc.password,
+  
+          policySigned: true,
+          referralCode: MyReferralCode,
+  
+          signupUsingReferral: 0,
+          upgrades: 0,
+          credit: 0,
+        });
+        const name = `${userAccountrequestDoc.firstName} ${userAccountrequestDoc.lastName}`;
+        await MailList.create({
+          name: name,
+          email: userAccountrequestDoc.email,
+        });
+        await LoggedInUsers.create({
+          userId: newUser._id,
+        });
+  
+        // TODO Add this user to communities in which he / she is invited if there is any pending team invite on his email
+  
+        // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
+        // Remember there can be multiple invites in any category on an email
+  
+        const teamInvites = await TeamInvite.find({
+          invitedUserEmail: userAccountrequestDoc.email,
+        });
+  
+        for (let element of teamInvites) {
+          const status = element.status;
+  
+          const userEmail = element.invitedUserEmail;
+  
+          const communityId = element.communityId;
+  
+          const userDoc = newUser;
+  
+          const CommunityDoc = await Community.findById(communityId).populate(
+            "eventManagers",
+            "email"
+          );
+  
+          // accept team invitaion
+  
+          // Push this persons userId in eventManagers array in community
+          CommunityDoc.eventManagers.push(userDoc._id);
+          await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+  
+          // add this community in this users doc in invited communities array
+          userDoc.invitedCommunities.push(communityId);
+          await userDoc.save({ new: true, validateModifiedOnly: true });
+  
+          // Mark this invitation document status as accepted
+          element.status = "Accepted";
+          await element.save({ new: true, validateModifiedOnly: true });
+  
+          // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
+  
+          // Team invitation accepted
+        }
+  
+        // * At this point we are sure that we have accepted all pending team invitations
+  
+        // Get all speaker registrations that are still pending and not cancelled for this users email
+  
+        const speakerRegistrations = await Registration.find({
+          $and: [
+            { type: "Speaker" },
+            { status: "Pending" },
+            { cancelled: false },
+            { userEmail: userAccountrequestDoc.email },
+          ],
+        });
+  
+        // Now we have all speaker registrations for this user which are still pending and not cancelled
+  
+        for (let element of speakerRegistrations) {
+          // For every registration add it to user registered events and push each registration into user document
+  
+          const userDoc = newUser;
+  
+          userDoc.registeredInEvents.push(element.bookedForEventId);
+          userDoc.registrations.push(element._id);
+  
+          // update each registration as completed and fill details like user Id and other user details that are needed
+  
+          element.status = "Completed";
+          element.userName = userDoc.firstName + " " + userDoc.lastName;
+          element.userImage = userDoc.image;
+          element.bookedByUser = userDoc._id;
+          element.first_name = userDoc.firstName;
+          element.lastName = userDoc.lastName;
+          element.name = userDoc.firstName + " " + userDoc.lastName;
+          element.organisation = userDoc.organisation;
+          element.designation = userDoc.designation;
+          element.city = userDoc.city;
+          element.country = userDoc.country;
+  
+          // Save all updates in userDoc and registration doc.
+          await userDoc.save({ new: true, validateModifiedOnly: true });
+          await element.save({ new: true, validateModifiedOnly: true });
+  
+          // TODO For every speaker invitation accepted please send a confirmation mail to user
+  
+          // Speaker invitation accepted
+        }
+  
+        // * DONE At this point we are sure that we have accepted all pending speaker invitations
+  
+        const boothRegistrations = await Registration.find({
+          $and: [
+            { type: "Exhibitor" },
+            { status: "Pending" },
+            { cancelled: false },
+            { userEmail: userAccountrequestDoc.email },
+          ],
+        });
+  
+        // Now we have all booth registrations for this user which are still pending and not cancelled
+  
+        for (let element of boothRegistrations) {
+          // For every registration add it to user registered events and push each registration into user document
+  
+          const userDoc = newUser;
+  
+          userDoc.registeredInEvents.push(element.bookedForEventId);
+          userDoc.registrations.push(element._id);
+  
+          // update each registration as completed and fill details like user Id and other user details that are needed
+  
+          element.status = "Completed";
+          element.userName = userDoc.firstName + " " + userDoc.lastName;
+          element.userImage = userDoc.image;
+          element.bookedByUser = userDoc._id;
+          element.first_name = userDoc.firstName;
+          element.lastName = userDoc.lastName;
+          element.name = userDoc.firstName + " " + userDoc.lastName;
+          element.organisation = userDoc.organisation;
+          element.designation = userDoc.designation;
+          element.city = userDoc.city;
+          element.country = userDoc.country;
+  
+          // Save all updates in userDoc and registration doc.
+          await userDoc.save({ new: true, validateModifiedOnly: true });
+          await element.save({ new: true, validateModifiedOnly: true });
+  
+          // TODO For every booth invitation accepted please send a confirmation mail to user
+  
+          // Booth invitation accepted
+        }
+  
+        // * DONE At this point we are sure that we have accepted all pending booth invitations
+  
+        // Make sure to mark all userAccountRequests with this email as expired
+  
+        const allUserAccountRequestsWithThisMail = await UserAccountRequest.find({email: userAccountrequestDoc.email});
+  
+        for (let element of allUserAccountRequestsWithThisMail) {
+          element.expired = true;
+          await element.save({new: true, validateModifiedOnly: true});
+        }
+  
+        const token = signToken(newUser._id);
+  
+        res.status(200).json({
+          status: "success",
+          token,
+          user: newUser,
+          referralCode: MyReferralCode,
+          intent: userAccountrequestDoc.intent,
+          eventId: userAccountrequestDoc.eventId,
+        });
       }
-
-      // * DONE At this point we are sure that we have accepted all pending team invitations
-
-      // Get all speaker registrations that are still pending and not cancelled for this users email
-
-      const speakerRegistrations = await Registration.find({
-        $and: [
-          { type: "Speaker" },
-          { status: "Pending" },
-          { cancelled: false },
-          { userEmail: req.body.email },
-        ],
-      });
-
-      const speakers = await Speaker.find({ email: req.body.email });
-
-      for (let element of speakers) {
-        element.userId = userDoc._id;
-        await element.save({ new: true, validateModifiedOnly: true });
-      }
-
-      // Now we have all speaker registrations for this user which are still pending and not cancelled
-
-      for (let element of speakerRegistrations) {
-        // For every registration add it to user registered events and push each registration into user document
-
-        const userDoc = newUser;
-
-        userDoc.registeredInEvents.push(element.bookedForEventId);
-        userDoc.registrations.push(element._id);
-
-        // update each registration as completed and fill details like user Id and other user details that are needed
-
-        element.status = "Completed";
-        element.userName = userDoc.firstName + " " + userDoc.lastName;
-        element.userImage = userDoc.image;
-        element.bookedByUser = userDoc._id;
-        element.first_name = userDoc.firstName;
-        element.lastName = userDoc.lastName;
-        element.name = userDoc.firstName + " " + userDoc.lastName;
-        element.organisation = userDoc.organisation;
-        element.designation = userDoc.designation;
-        element.city = userDoc.city;
-        element.country = userDoc.country;
-
-        // Save all updates in userDoc and registration doc.
-        await userDoc.save({ new: true, validateModifiedOnly: true });
-        await element.save({ new: true, validateModifiedOnly: true });
-
-        // TODO For every speaker invitation accepted please send a confirmation mail to user
-
-        // Speaker invitation accepted
-      }
-
-      // * DONE At this point we are sure that we have accepted all pending speaker invitations
-
-      const boothRegistrations = await Registration.find({
-        $and: [
-          { type: "Exhibitor" },
-          { status: "Pending" },
-          { cancelled: false },
-          { userEmail: req.body.email },
-        ],
-      });
-
-      // Now we have all booth registrations for this user which are still pending and not cancelled
-
-      for (let element of boothRegistrations) {
-        // For every registration add it to user registered events and push each registration into user document
-
-        const userDoc = newUser;
-
-        userDoc.registeredInEvents.push(element.bookedForEventId);
-        userDoc.registrations.push(element._id);
-
-        // update each registration as completed and fill details like user Id and other user details that are needed
-
-        element.status = "Completed";
-        element.userName = userDoc.firstName + " " + userDoc.lastName;
-        element.userImage = userDoc.image;
-        element.bookedByUser = userDoc._id;
-        element.first_name = userDoc.firstName;
-        element.lastName = userDoc.lastName;
-        element.name = userDoc.firstName + " " + userDoc.lastName;
-        element.organisation = userDoc.organisation;
-        element.designation = userDoc.designation;
-        element.city = userDoc.city;
-        element.country = userDoc.country;
-
-        // Save all updates in userDoc and registration doc.
-        await userDoc.save({ new: true, validateModifiedOnly: true });
-        await element.save({ new: true, validateModifiedOnly: true });
-
-        // TODO For every booth invitation accepted please send a confirmation mail to user
-
-        // Booth invitation accepted
-      }
-
-      // * DONE At this point we are sure that we have accepted all pending booth invitations
-
-      createSendToken(newUser, 201, req, res);
     }
-  } else {
-    const newUser = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      initialisedAt: Date.now(),
-      password: req.body.password,
-
-      policySigned: req.body.policySigned,
-      referralCode: MyReferralCode,
-
-      signupUsingReferral: 0,
-      upgrades: 0,
-      credit: 0,
-    });
-    const name = `${req.body.firstName} ${req.body.lastName}`;
-    await MailList.create({
-      name: name,
-      email: req.body.email,
-    });
-    await LoggedInUsers.create({
-      userId: newUser._id,
-    });
-
-    // TODO Add this user to communities in which he / she is invited if there is any pending team invite on his email
-
-    // * Add this user to communities in which he / she is invited if there is any pending team invite on his email
-    // Remember there can be multiple invites in any category on an email
-
-    const teamInvites = await TeamInvite.find({
-      invitedUserEmail: req.body.email,
-    });
-
-    for (let element of teamInvites) {
-      const status = element.status;
-
-      const userEmail = element.invitedUserEmail;
-
-      const communityId = element.communityId;
-
-      const userDoc = newUser;
-
-      const CommunityDoc = await Community.findById(communityId).populate(
-        "eventManagers",
-        "email"
-      );
-
-      // accept team invitaion
-
-      // Push this persons userId in eventManagers array in community
-      CommunityDoc.eventManagers.push(userDoc._id);
-      await CommunityDoc.save({ new: true, validateModifiedOnly: true });
-
-      // add this community in this users doc in invited communities array
-      userDoc.invitedCommunities.push(communityId);
-      await userDoc.save({ new: true, validateModifiedOnly: true });
-
-      // Mark this invitation document status as accepted
-      element.status = "Accepted";
-      await element.save({ new: true, validateModifiedOnly: true });
-
-      // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
-
-      // Team invitation accepted
-    }
-
-    // * At this point we are sure that we have accepted all pending team invitations
-
-    // Get all speaker registrations that are still pending and not cancelled for this users email
-
-    const speakerRegistrations = await Registration.find({
-      $and: [
-        { type: "Speaker" },
-        { status: "Pending" },
-        { cancelled: false },
-        { userEmail: req.body.email },
-      ],
-    });
-
-    // Now we have all speaker registrations for this user which are still pending and not cancelled
-
-    for (let element of speakerRegistrations) {
-      // For every registration add it to user registered events and push each registration into user document
-
-      const userDoc = newUser;
-
-      userDoc.registeredInEvents.push(element.bookedForEventId);
-      userDoc.registrations.push(element._id);
-
-      // update each registration as completed and fill details like user Id and other user details that are needed
-
-      element.status = "Completed";
-      element.userName = userDoc.firstName + " " + userDoc.lastName;
-      element.userImage = userDoc.image;
-      element.bookedByUser = userDoc._id;
-      element.first_name = userDoc.firstName;
-      element.lastName = userDoc.lastName;
-      element.name = userDoc.firstName + " " + userDoc.lastName;
-      element.organisation = userDoc.organisation;
-      element.designation = userDoc.designation;
-      element.city = userDoc.city;
-      element.country = userDoc.country;
-
-      // Save all updates in userDoc and registration doc.
-      await userDoc.save({ new: true, validateModifiedOnly: true });
-      await element.save({ new: true, validateModifiedOnly: true });
-
-      // TODO For every speaker invitation accepted please send a confirmation mail to user
-
-      // Speaker invitation accepted
-    }
-
-    // * DONE At this point we are sure that we have accepted all pending speaker invitations
-
-    const boothRegistrations = await Registration.find({
-      $and: [
-        { type: "Exhibitor" },
-        { status: "Pending" },
-        { cancelled: false },
-        { userEmail: req.body.email },
-      ],
-    });
-
-    // Now we have all booth registrations for this user which are still pending and not cancelled
-
-    for (let element of boothRegistrations) {
-      // For every registration add it to user registered events and push each registration into user document
-
-      const userDoc = newUser;
-
-      userDoc.registeredInEvents.push(element.bookedForEventId);
-      userDoc.registrations.push(element._id);
-
-      // update each registration as completed and fill details like user Id and other user details that are needed
-
-      element.status = "Completed";
-      element.userName = userDoc.firstName + " " + userDoc.lastName;
-      element.userImage = userDoc.image;
-      element.bookedByUser = userDoc._id;
-      element.first_name = userDoc.firstName;
-      element.lastName = userDoc.lastName;
-      element.name = userDoc.firstName + " " + userDoc.lastName;
-      element.organisation = userDoc.organisation;
-      element.designation = userDoc.designation;
-      element.city = userDoc.city;
-      element.country = userDoc.country;
-
-      // Save all updates in userDoc and registration doc.
-      await userDoc.save({ new: true, validateModifiedOnly: true });
-      await element.save({ new: true, validateModifiedOnly: true });
-
-      // TODO For every booth invitation accepted please send a confirmation mail to user
-
-      // Booth invitation accepted
-    }
-
-    // * DONE At this point we are sure that we have accepted all pending booth invitations
-
-    createSendToken(newUser, 201, req, res);
   }
+  catch(error) {
+    console.log(error);
+  }
+
+  
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

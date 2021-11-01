@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const CommunityAccountRequest = require("./../models/CommunityAccountRequestModel");
 const AppError = require("../utils/appError");
 const Community = require("../models/communityModel");
 const CommunityMailList = require("../models/communityMailListModel");
@@ -51,8 +52,8 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
-    .populate("communities", "name image")
-    .populate("invitedCommunities", "name image")
+    .populate("communities", "name image email")
+    .populate("invitedCommunities", "name image email")
     .populate({
       path: "registeredInEvents",
       populate: {
@@ -60,29 +61,22 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
       },
     });
 
+  const allNonExpiredCommunityRequests = await CommunityAccountRequest.find({
+    $and: [
+      { expired: false },
+      { createdBy: mongoose.Types.ObjectId(req.user.id) },
+    ],
+  });
+
   res.status(200).json({
     status: "SUCCESSS",
     data: {
       personalData,
     },
+    communityRequests: allNonExpiredCommunityRequests,
   });
 });
-// exports.getAllRegisteredEvents=catchAsync(async(req,res,next)=>{
 
-//   const registeredInEventsList=await User.findById(req.user.id).select('registeredInEvents').populate('registeredInEvents')
-//   res.status(200).json({
-// status:"SUCCESSS",
-// data:{
-
-//   registeredInEventsList
-// }
-
-//   })
-
-// }
-// )
-// .populate({path: 'spells', options: { sort: [['damages', 'asc']] }})
-// Post.find().sort(['updatedAt', 1]);
 exports.getParticularEvent = catchAsync(async (req, res) => {
   const response = await Event.findById(req.params.id, (err, data) => {})
     .populate({
@@ -558,63 +552,57 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deactivateMe = catchAsync(async (req, res, next) => {
- try{
-  const userId = req.user.id;
-  if (req.params.userId.toString() === userId.toString()) {
-    // Deactivate this user
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        active: false,
-        dateForDeactivation: Date.now() + 30 * 24 * 60 * 60 * 1000,
-      },
-      { new: true, validateModifiedOnly: true }
-    );
+  try {
+    const userId = req.user.id;
+    if (req.params.userId.toString() === userId.toString()) {
+      // Deactivate this user
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          active: false,
+          dateForDeactivation: Date.now() + 30 * 24 * 60 * 60 * 1000,
+        },
+        { new: true, validateModifiedOnly: true }
+      );
 
-    // Send mail that account has been deactivated and how we are going to delete their data and how they can get back thier account within 1 month of deactivation.
+      // Send mail that account has been deactivated and how we are going to delete their data and how they can get back thier account within 1 month of deactivation.
 
-    const msg = {
-      to: updatedUser.email, // Change to your recipient
-      from: "shreyanshshah242@gmail.com", // Change to your verified sender
-      subject: "Bluemeet account deactivated.",
-      text: `Hi, ${
-        updatedUser.firstName + " " + updatedUser.lastName
-      } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
-      // html: ForgotPasswordTemplate(user, resetURL),
-    };
+      const msg = {
+        to: updatedUser.email, // Change to your recipient
+        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        subject: "Bluemeet account deactivated.",
+        text: `Hi, ${
+          updatedUser.firstName + " " + updatedUser.lastName
+        } we have successfully deactivated your Bluemeet account as requested. You can still get back access to your account by logging in before ${Date.now()}. After that your account data will be deleted from Bluemeet permanently and cannot be restored in any way. Hope you enjoyed your journey with us. Looking forward to see you again. `,
+        // html: ForgotPasswordTemplate(user, resetURL),
+      };
 
-    sgMail
-      .send(msg)
-      .then(() => {
-        res.status(200).json({
-          status: "success",
-          message: "Token sent to email!",
-        });
-      })
-      .catch((error) => {});
+      sgMail
+        .send(msg)
+        .then(() => {
+          res.status(200).json({
+            status: "success",
+            message: "Token sent to email!",
+          });
+        })
+        .catch((error) => {});
 
-    // Send response with status code 200
-    res.status(200).json({
-      status: "success",
-      message: "Account deactivated successfully!",
-      data: updatedUser,
-    });
+      // Send response with status code 200
+      res.status(200).json({
+        status: "success",
+        message: "Account deactivated successfully!",
+        data: updatedUser,
+      });
+    } else {
+      // Send response with status code 400
+      res.status(400).json({
+        status: "error",
+        message: "Failed to deactivate account.",
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
-
-  else {
-// Send response with status code 400
-res.status(400).json({
-  status: "error",
-  message: "Failed to deactivate account.",
-});
-  }
- }
- catch(error) {
-   console.log(error);
- }
-  
-
-  
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -754,92 +742,227 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-// TODO
-exports.createNewCommunity = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const userCreatingCommunity = await User.findById(userId);
-  const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const eventTransactionIdsDocument =
-    await EventTransactionIdsCommunityWise.create({
-      initialisedAt: Date.now(),
+exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
+  // Firstly check if some community with the same email exists or not
+
+  const existingCommunity = await Community.findOne({ email: req.body.email });
+
+  if (existingCommunity) {
+    res.status(200).json({
+      status: "Not allowed",
+      message: "There is already a verified community with this email.",
+      alreadyUsedEmail: true,
     });
-  const reviewsIdsDocument = await ReviewsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const eventsIdsDocument = await EventsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const queriesIdsDocument = await QueriesIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  const registrationsIdsDocument = await RegistrationsIdsCommunityWise.create({
-    initialisedAt: Date.now(),
-  });
-  // 1) Create a new community and store id of loggedIn user as superAdmin in community
-  const createdCommunity = await Community.create({
-    name: req.body.name,
-    superAdmin: req.user.id,
-    email: req.body.email,
-    image: req.body.image,
-    payPalEmail: req.body.email,
-    headline: req.body.headline,
-    policySigned: req.body.policySigned,
-    subscribedToCommunityMailList: req.body.subscribedToCommunityMailList,
-    queriesDocIdCommunityWise: queriesIdsDocument._id,
-    eventsDocIdCommunityWise: eventsIdsDocument._id,
-    reviewsDocIdCommunityWise: reviewsIdsDocument._id,
-    speakersDocIdCommunityWise: speakersIdsDocument._id,
-    registrationsDocIdCommunityWise: registrationsIdsDocument._id,
-    eventTransactionDocIdCommunityWise: eventTransactionIdsDocument._id,
-    superAdmin: req.user.id,
-    superAdminName: `${req.user.firstName} ${req.user.lastName}`,
-    superAdminEmail: req.user.email,
-    superAdminImage: req.user.image,
-    paypalTrackingId: UUID(),
-  });
+  } else {
+    const userId = req.user.id;
 
-  userCreatingCommunity.communities.push(createdCommunity.id);
-  await userCreatingCommunity.save({ validateModifiedOnly: true });
+    console.log(req.body.image);
 
-  if (req.body.subscribedToCommunityMailList === true) {
-    await CommunityMailList.create({
+    const user = await User.findById(userId);
+
+    const accountRequest = await CommunityAccountRequest.create({
+      status: "Not Yet Claimed",
+      expired: false,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 14 * 24 * 60 * 60 * 1000,
+      createdBy: userId,
+      logo: req.body.image,
       name: req.body.name,
       email: req.body.email,
+      headline: req.body.headline,
+    });
+
+    // Send mail for this new community
+
+    const msg = {
+      to: req.body.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `Verify your community mail.`,
+      text: `Hi ${user.firstName} ${
+        user.lastName
+      }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${accountRequest._id}`}`,
+      // html: ForgotPasswordTemplate(user, resetURL),
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(200).json({
+          status: "success",
+          message: "verify community email sent successfully!",
+          data: accountRequest,
+          email: req.body.email,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({
+          status: "success",
+          message: "Failed to send verify community email.",
+          data: accountRequest,
+          email: req.body.email,
+        });
+      });
+  }
+});
+
+exports.createNewCommunity = catchAsync(async (req, res, next) => {
+  try {
+    const communityAccountRequestId = req.params.id;
+
+    const communityAccountRequestDoc = await CommunityAccountRequest.findById(
+      communityAccountRequestId
+    );
+
+    const userId = communityAccountRequestDoc.createdBy;
+
+    const userDoc = await User.findById(userId);
+
+    const userCreatingCommunity = await User.findById(userId);
+    const speakersIdsDocument = await SpeakersIdsCommunityWise.create({
+      initialisedAt: Date.now(),
+    });
+    const eventTransactionIdsDocument =
+      await EventTransactionIdsCommunityWise.create({
+        initialisedAt: Date.now(),
+      });
+    const reviewsIdsDocument = await ReviewsIdsCommunityWise.create({
+      initialisedAt: Date.now(),
+    });
+    const eventsIdsDocument = await EventsIdsCommunityWise.create({
+      initialisedAt: Date.now(),
+    });
+    const queriesIdsDocument = await QueriesIdsCommunityWise.create({
+      initialisedAt: Date.now(),
+    });
+    const registrationsIdsDocument = await RegistrationsIdsCommunityWise.create(
+      {
+        initialisedAt: Date.now(),
+      }
+    );
+
+    if (communityAccountRequestDoc) {
+      if (!communityAccountRequestDoc.expired) {
+        // Not yet expired
+
+        // 1.) Create community
+
+        const createdCommunity = await Community.create({
+          name: communityAccountRequestDoc.name,
+          email: communityAccountRequestDoc.email,
+          image: communityAccountRequestDoc.logo,
+          headline: communityAccountRequestDoc.headline,
+          policySigned: true,
+          subscribedToCommunityMailList: true,
+          queriesDocIdCommunityWise: queriesIdsDocument._id,
+          eventsDocIdCommunityWise: eventsIdsDocument._id,
+          reviewsDocIdCommunityWise: reviewsIdsDocument._id,
+          speakersDocIdCommunityWise: speakersIdsDocument._id,
+          registrationsDocIdCommunityWise: registrationsIdsDocument._id,
+          eventTransactionDocIdCommunityWise: eventTransactionIdsDocument._id,
+          superAdmin: userDoc.id,
+          superAdminName: `${userDoc.firstName} ${userDoc.lastName}`,
+          superAdminEmail: userDoc.email,
+          superAdminImage: userDoc.image,
+        });
+
+        userCreatingCommunity.communities.push(createdCommunity.id);
+        await userCreatingCommunity.save({ validateModifiedOnly: true });
+
+        await CommunityMailList.create({
+          name: req.body.name,
+          email: req.body.email,
+        });
+
+        // 2.) Set all community requests with this email as expired
+
+        const allCommunityAccountRequestWithThisEmail =
+          await CommunityAccountRequest.find({
+            email: communityAccountRequestDoc.email,
+          });
+
+        for (let element of allCommunityAccountRequestWithThisEmail) {
+          element.expired = true;
+          await element.save({ new: true, validateModifiedOnly: true });
+        }
+
+        // 4.) Send email to community super admin and on community email
+
+        // Send mail for this new community
+
+        const msgToSuperAdmin = {
+          to: userDoc.email, // Mail to super admin
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: `Welcome to ${req.body.name}`,
+          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
+          // html: ForgotPasswordTemplate(user, resetURL),
+        };
+
+        const msgToCommunity = {
+          to: communityAccountRequestDoc.email, // Mail to community
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: `Welcome to ${req.body.name}`,
+          text: `Hi ${userDoc.firstName} ${userDoc.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
+          // html: ForgotPasswordTemplate(user, resetURL),
+        };
+
+        sgMail
+          .send(msgToSuperAdmin)
+          .then(() => {
+            console.log("New community creation email sent to super admin!");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        sgMail
+          .send(msgToCommunity)
+          .then(() => {
+            console.log(
+              "New community creation email sent to community email!"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // 3.) Send community login token, communityDoc and list of all nonExpired community account requests
+
+        const allNonExpiredCommunityAccountRequests =
+          await CommunityAccountRequest.find({
+            $and: [
+              { expired: false },
+              { createdBy: mongoose.Types.ObjectId(userId) },
+            ],
+          });
+
+        const token = signTokenForCommunityLogin(userId, createdCommunity._id);
+
+        res.status(200).json({
+          status: "success",
+          communityDoc: createdCommunity,
+          token: token,
+          communityAccountRequests: allNonExpiredCommunityAccountRequests,
+          userId: userId,
+        });
+      } else {
+        // expired
+        res.status(200).json({
+          status: "Already expired.",
+          expired: true,
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      status: "error",
+      message:
+        "something went wrong, Please contact developer to look into this problem,",
     });
   }
-
-  // Send mail for this new community
-
-  const msg = {
-    to: req.user.email, // Change to your recipient
-    from: "shreyanshshah242@gmail.com", // Change to your verified sender
-    subject: `Welcome to ${req.body.name}`,
-    text: `Hi ${req.user.firstName} ${req.user.lastName}. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Here's what you can do with your community on Bluemeet. Happy Bluemeeting  🥳 🥳!`,
-    // html: ForgotPasswordTemplate(user, resetURL),
-  };
-
-  sgMail
-    .send(msg)
-    .then(() => {
-      res.status(200).json({
-        status: "success",
-        message: "New community creation email sent to user!",
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-  createSendTokenForCommunityLogin(
-    userId,
-    createdCommunity.id,
-    200,
-    createdCommunity,
-    res
-  );
 });
+
 exports.getAllRegisteredEvents = catchAsync(async (req, res, next) => {
   const registeredInEventsList = await User.findById(req.user.id)
     .select("registeredInEvents")

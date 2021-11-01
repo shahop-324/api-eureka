@@ -18,6 +18,8 @@ const RoomTable = require("../models/roomTableModel");
 const TableChats = require("./../models/tableChatsModel");
 const SessionQnA = require("./../models/sessionQnAModel");
 const SessionPoll = require("./../models/sessionPollModel");
+const CommunityAccountRequest = require("./../models/CommunityAccountRequestModel");
+const UserAccountRequest = require("./../models/UserAccountRequest");
 const { v4: uuidv4 } = require("uuid");
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -295,7 +297,9 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
 
   // Find session document
 
-  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
+  const SessionDoc = await Session.findById(req.body.sessionId)
+    .populate("host")
+    .populate("speaker");
 
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
@@ -336,7 +340,9 @@ exports.getLiveStageToken = catchAsync(async (req, res, next) => {
 
     // Find session document
 
-  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
+    const SessionDoc = await Session.findById(req.body.sessionId)
+      .populate("host")
+      .populate("speaker");
 
     // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
@@ -382,7 +388,9 @@ exports.getBackstageToken = catchAsync(async (req, res, next) => {
 
     // Find session document
 
-  const SessionDoc = await Session.findById(req.body.sessionId).populate('host').populate('speaker');
+    const SessionDoc = await Session.findById(req.body.sessionId)
+      .populate("host")
+      .populate("speaker");
 
     // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
@@ -1556,4 +1564,126 @@ exports.getEventRegistrations = catchAsync(async (req, res, next) => {
     status: "success",
     data: registrations,
   });
+});
+
+exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+
+  const communityAccountRequest = await CommunityAccountRequest.findById(id);
+
+  const msg = {
+    to: communityAccountRequest.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: `Verify your community mail.`,
+    text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${communityAccountRequest._id}`}`,
+    // html: ForgotPasswordTemplate(user, resetURL),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("Confirmation mail sent Community");
+      res.status(200).json({
+        status: "success",
+        message: "Confirmation mail sent to Community.",
+      });
+    })
+    .catch(async (error) => {
+      console.log("Failed to send confirmation mail to Community.");
+      res.status(400).json({
+        status: "error",
+        message: "Failed to send confirmation mail to Community.",
+      });
+    });
+});
+
+exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
+  // Check if someone already have an account with same email
+
+  const existingUser = await User.findOne({ email: req.body.email });
+
+  if (existingUser) {
+    // Send res that user already exists with this email
+    res.status(200).json({
+      status: "Not allowed",
+      message: "There is already a verified community with this email.",
+      alreadyUsedEmail: true,
+    });
+  } else {
+    // Create a new user account request and send verification mail
+
+    const newAccountDoc = await UserAccountRequest.create({
+      status: "Not Yet Claimed",
+      expired: false,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 14 * 24 * 60 * 60 * 1000,
+      email: req.body.email,
+      intent: req.body.intent,
+      eventId: req.body.eventId,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      password: req.body.password,
+    });
+
+    // Send mail for this new community
+
+    const msg = {
+      to: req.body.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `Verify your user account email.`,
+      text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://localhost:3001/verifying-account/${newAccountDoc._id}`}`,
+      // html: ForgotPasswordTemplate(user, resetURL),
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(200).json({
+          status: "success",
+          message: "verify account email sent successfully!",
+          id: newAccountDoc._id,
+          email: req.body.email,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(200).json({
+          status: "success",
+          message: "Failed to send verify account email.",
+          id: newAccountDoc._id,
+          email: req.body.email,
+        });
+      });
+  }
+});
+
+exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+
+  const userAccountRequest = await UserAccountRequest.findById(id);
+
+  const msg = {
+    to: userAccountRequest.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: `Verify your account email.`,
+    text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://localhost:3001/verifying-account/${userAccountRequest._id}`}`,
+    // html: ForgotPasswordTemplate(user, resetURL),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("Confirmation mail sent to user");
+      res.status(200).json({
+        status: "success",
+        message: "Confirmation mail sent to user.",
+      });
+    })
+    .catch(async (error) => {
+      console.log("Failed to send confirmation mail to user.");
+      res.status(400).json({
+        status: "error",
+        message: "Failed to send confirmation mail to user.",
+      });
+    });
 });

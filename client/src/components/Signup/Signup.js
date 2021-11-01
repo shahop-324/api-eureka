@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
 import { errorTrackerForSignUp, resetAuthError } from "../../actions/index";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp } from "../../actions/index";
+import { signUp, createUserAccountRequest } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import { reduxForm, Field } from "redux-form";
@@ -100,14 +100,13 @@ const Signup = (props) => {
   const { referredId } = useSelector((state) => state.user);
 
   const onSubmit = (formValues) => {
-    // e.preventDefault();
     setSignupClicked(true);
 
     if (referredId) {
       formValues.referralCode = referredId;
-      dispatch(signUp(formValues, params.intent, params.eventId));
+      dispatch(createUserAccountRequest(formValues, params.intent, params.eventId, setSignupClicked));
     } else {
-      dispatch(signUp(formValues, params.intent, params.eventId));
+      dispatch(createUserAccountRequest(formValues, params.intent, params.eventId, setSignupClicked));
     }
   };
 

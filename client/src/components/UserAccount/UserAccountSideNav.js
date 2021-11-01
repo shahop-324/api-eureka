@@ -5,10 +5,19 @@ import styled from "styled-components";
 import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
-import { communitySignIn, errorTrackerForCommunitySignIn } from "../../actions";
+import {
+  communitySignIn,
+  errorTrackerForCommunitySignIn,
+  setCommunityVerificationId,
+  setCommunityVerificationEmail,
+  setOpenCommunityVerificationNotice,
+} from "../../actions";
 import Loader from "../Loader";
 import CreateNewCommunityMsgCard from "./CreateNewCommunityMsgCard";
 import maleMascot from "./../../assets/images/winkingPerson.png";
+import CircleIcon from "@mui/icons-material/Circle";
+import Tooltip from "@mui/material/Tooltip";
+import Chip from "@mui/material/Chip";
 
 const SideNavPaper = styled.div`
   width: 100%;
@@ -125,6 +134,45 @@ const CommunityProfileTab = (props) => {
   );
 };
 
+const UnverifiedCommunityTab = ({ id, name, image, email }) => {
+  const dispatch = useDispatch();
+
+  const handleClickUnverifiedCommunityTab = () => {
+    // Open dialog and set email
+    dispatch(setCommunityVerificationId(id));
+    dispatch(setCommunityVerificationEmail(email));
+    dispatch(setOpenCommunityVerificationNotice(true));
+  };
+
+  return (
+    <>
+      <Tooltip title="Needs email verification" placement="right">
+        <div>
+          <CommunityTabPaper
+            className="px-4 py-2 mb-3 mx-2"
+            onClick={handleClickUnverifiedCommunityTab}
+          >
+            <Avatar
+              alt={name}
+              variant="rounded"
+              src={image}
+              style={{ alignSelf: "center" }}
+            />
+            <div className="d-flex flex-column justify-content-center align-items-left ms-3">
+              <div className="mb-1">
+                {name}{" "}
+                <span className="ms-3">
+                  <CircleIcon style={{ color: "red", fontSize: "10px" }} />
+                </span>
+              </div>
+            </div>
+          </CommunityTabPaper>
+        </div>
+      </Tooltip>
+    </>
+  );
+};
+
 class UserProfileTab extends React.Component {
   render() {
     const { name, email, imageURL } = this.props;
@@ -161,7 +209,9 @@ const UserAccountSideNav = () => {
     setOpen(false);
   };
 
-  const { communities } = useSelector((state) => state.community);
+  const { communities, communityRequests } = useSelector(
+    (state) => state.community
+  );
   const { userDetails } = useSelector((state) => state.user);
   if (isLoading) {
     return (
@@ -174,7 +224,7 @@ const UserAccountSideNav = () => {
       </div>
     );
   }
-  
+
   const { firstName, lastName, email, image } = userDetails;
 
   const name = `${firstName} ${lastName}`;
@@ -190,6 +240,26 @@ const UserAccountSideNav = () => {
             communityId={community._id}
             key={community._id}
             communityImage={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`}
+          />
+        );
+      });
+    }
+  };
+
+  const renderCommunityRequests = (communityRequests) => {
+    if (communityRequests) {
+      return communityRequests.map((request) => {
+        return (
+          <UnverifiedCommunityTab
+            id={request._id}
+            key={request._id}
+            name={request.name}
+            email={request.email}
+            image={
+              request.logo
+                ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${request.logo}`
+                : "#"
+            }
           />
         );
       });
@@ -242,6 +312,21 @@ const UserAccountSideNav = () => {
               img={maleMascot}
             />
           )}
+
+          {isCommunityLoading ? (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ width: "100%", height: "auto" }}
+            >
+              {" "}
+              <Loader />{" "}
+            </div>
+          ) : typeof communities !== "undefined" && communities.length > 0 ? (
+            renderCommunityRequests(communityRequests)
+          ) : (
+            <></>
+          )}
+
           <div className="create-new-community-sidebar-btn d-flex flex-row justify-content-center my-4">
             <BtnOutlinedWithIcon className="py-2" onClick={handleClickOpen}>
               Create New Community

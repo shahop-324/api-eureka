@@ -6,6 +6,7 @@ const communitySlice = createSlice({
   initialState: {
     codes: [],
     communities: [],
+    communityRequests: [],
     communityDetails: null,
     isCommunityLoading: false,
     error: false,
@@ -47,7 +48,7 @@ const communitySlice = createSlice({
       state.invitations = action.payload.invitations;
     },
     FetchTransactions(state, action) {
-state.transactions = action.payload.transactions;
+      state.transactions = action.payload.transactions;
     },
 
     FetchCommunityManagers(state, action) {
@@ -63,7 +64,14 @@ state.transactions = action.payload.transactions;
       state.communityDetails = action.payload.community;
       state.isLoading = false;
     },
-
+    FetchCommunityRequests(state, action) {
+      state.communityRequests = action.payload.communityRequests;
+      state.isLoading = false;
+    },
+    CreateCommunityRequest(state, action) {
+      state.communityRequests.push(action.payload.community);
+      state.isLoading = false;
+    },
     FetchCommunities(state, action) {
       state.communities = action.payload.communities;
       state.isLoading = false;

@@ -14,7 +14,12 @@ const userSlice = createSlice({
     error: false,
     referredId: null,
     succeded: false,
+    communityVerificationEmail: null,
+    userVerificationEmail: null,
+    communityVerificationId: null,
     openCommunityVerificationNotice: false,
+    communityVerificationLinkExpired: false,
+    userVerificationLinkExpired: false,
   },
 
   reducers: {
@@ -81,6 +86,23 @@ const userSlice = createSlice({
     },
     SetCommunityVerificationOpenState(state, action) {
       state.openCommunityVerificationNotice = action.payload.openState;
+    },
+    SetCommunityVerificationEmail(state, action) {
+      state.communityVerificationEmail = action.payload.email;
+    },
+    SetUserVerificationEmail(state, action) {
+      state.userVerificationEmail = action.payload.email;
+    },
+    SetCommunityVerificationId(state, action) {
+      state.communityVerificationId = action.payload.id;
+    },
+    SetCommunityVerificationLinkExpired(state, action) {
+      state.communityVerificationLinkExpired =
+        action.payload.communityVerificationLinkStatus;
+    },
+    SetUserVerificationLinkExpired(state, action) {
+      state.userVerificationLinkExpired =
+        action.payload.userVerificationLinkStatus;
     },
   },
 });

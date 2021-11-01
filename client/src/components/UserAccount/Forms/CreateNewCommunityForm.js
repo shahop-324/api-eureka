@@ -10,20 +10,17 @@ import { reduxForm, Field } from "redux-form";
 import { useState } from "react";
 
 import {
-  createCommunity,
+  createCommunityRequest,
   errorTrackerForCreateCommunity,
   resetCommunityError,
+  showSnackbar,
 } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import styled from "styled-components";
 
-import {
-  FormLabel,
-  ConsentText,
-  Input,
-} from "./../Elements";
+import { FormLabel, ConsentText, Input } from "./../Elements";
 import ConfirmCommunityMail from "../Helper/ConfirmCommunityMail";
 
 const FormHeading = styled.div`
@@ -214,6 +211,20 @@ const CreateNewCommunityForm = (props) => {
 
   const [createCommunityClicked, setCreateCommunityClicked] = useState(false);
 
+  const { communities, communityRequests } = useSelector(
+    (state) => state.community
+  );
+
+  let thisUsersCommunityEmails = [];
+
+  for (let element of communities) {
+    thisUsersCommunityEmails.push(element.email);
+  }
+
+  for (let element of communityRequests) {
+    thisUsersCommunityEmails.push(element.email);
+  }
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -231,8 +242,20 @@ const CreateNewCommunityForm = (props) => {
   const [maxWidth, setMaxWidth] = React.useState("md");
 
   const onSubmit = (formValues) => {
+    if (thisUsersCommunityEmails.includes(formValues.email)) {
+      dispatch(
+        showSnackbar(
+          "info",
+          "Sorry this email is already registered on another community. Please use another email."
+        )
+      );
+      return;
+    }
+
     setCreateCommunityClicked(true);
-    dispatch(createCommunity(formValues, file, userId));
+    dispatch(
+      createCommunityRequest(formValues, file, userId, props.closeHandler)
+    );
   };
 
   const handleChange = (event) => {
@@ -379,17 +402,14 @@ const CreateNewCommunityForm = (props) => {
               <button
                 type="submit"
                 class="btn btn-outline-primary btn-outline-text form-control"
-                disabled={
-                  pristine || submitting || !valid
-                }
+                disabled={pristine || submitting || !valid}
               >
                 Create New Community
                 {createCommunityClicked && formIsvalidated && !error ? (
                   <div
                     class="spinner-border text-primary spinner-border-sm ms-3"
                     role="status"
-                  >
-                  </div>
+                  ></div>
                 ) : (
                   <div></div>
                 )}
@@ -398,7 +418,6 @@ const CreateNewCommunityForm = (props) => {
           </div>
         </form>
       </Dialog>
-      
     </>
   );
 };

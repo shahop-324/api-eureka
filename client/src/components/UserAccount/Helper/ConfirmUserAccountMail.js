@@ -1,10 +1,13 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import MailSent from "./../Images/MailSent.png";
+import { useParams } from "react-router-dom";
+import { resendUserVerificationEmail } from "./../../../actions";
 
 const NavStrip = styled.div`
   height: 7vh;
-  border-bottom: 1px solid #D3D3D3;
+  border-bottom: 1px solid #d3d3d3;
 `;
 
 const Body = styled.div`
@@ -46,6 +49,12 @@ const Image = styled.img`
 `;
 
 const ConfirmUserAccountMail = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const id = params.id;
+
+  const { userVerificationEmail } = useSelector((state) => state.user);
+
   return (
     <>
       {/* Nav bar */}
@@ -61,8 +70,9 @@ const ConfirmUserAccountMail = () => {
         <Image className="mb-4" src={MailSent} />
 
         <SmallText className="mb-3">
-          We have just sent you an email at (test@mail.com). Please click on
-          verify button to start your journey with Bluemeet.{" "}
+          We have just sent you an email at{" "}
+          <strong> {userVerificationEmail} </strong> . Please click on verify
+          button to start your journey with Bluemeet.{" "}
         </SmallText>
 
         <SmallText className="mb-4">
@@ -70,7 +80,12 @@ const ConfirmUserAccountMail = () => {
           creation or you will have to sign up again.
         </SmallText>
 
-        <button className="btn btn-primary btn-outline-text">
+        <button
+          onClick={() => {
+            dispatch(resendUserVerificationEmail(id));
+          }}
+          className="btn btn-primary btn-outline-text"
+        >
           Resend mail
         </button>
       </Body>

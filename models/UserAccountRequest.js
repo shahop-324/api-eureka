@@ -20,6 +20,12 @@ const userAccountRequestSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    intent: { // * Intent for which user is signing up
+      type: String,
+    },
+    eventId: { // * Event page to which user needs to be forwarded
+      type: String,
+    },
     firstName: {
       type: String,
     },

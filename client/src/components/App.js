@@ -145,7 +145,7 @@ class App extends React.Component {
                 component={CommunityVerificationExpired}
               />
               <Route
-                path="/verify-account"
+                path="/verify-account/:id"
                 exact
                 component={ConfirmUserAccountMail}
               />
@@ -155,54 +155,36 @@ class App extends React.Component {
                 exact
                 component={SalesforceRedirect}
               />
-
-              {/* Attendee magic link destination */}
               <Route
                 path="/event/link/attendee/:registrationId"
                 exact
                 component={AttendeeMagicLinkDestination}
               />
-
-              {/* // event/invite/speaker/:registrationId => magic link for speakers */}
-
               <Route
                 path="/event/speaker/:registrationId"
                 exact
                 component={SpeakerMagicLinkDestination}
               />
-
-              {/* // event/invite/booth/:registrationId => magic link for exhibitors */}
-
               <Route
                 path="/event/booth/:registrationId"
                 exact
                 component={BoothMagicLinkDestination}
               />
-
-              {/* Speaker event invite for registering in event */}
-
               <Route
                 path="/event/invite/speaker/:invitationId"
                 exact
                 component={SpeakerEventInvite}
               />
-
-              {/* Booth event invite for registering in event */}
-
               <Route
                 path="/event/invite/booth/:invitationId"
                 exact
                 component={BoothEventInvite}
               />
-
-              {/* Team invite for joining bluemeet community team */}
-
               <Route
                 path="/team/invite/:invitationId"
                 exact
                 component={CommunityTeamInvite}
               />
-
               <Route
                 path="/accept-invite/:inviteId"
                 exact

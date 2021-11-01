@@ -257,4 +257,10 @@ router.post(
 
 router.get("/getEventRegistrations/:eventId", authController.protect, globalController.getEventRegistrations);
 
+router.post("/resendCommunityVerificationMail/:id", globalController.resendCommunityVerificationMail);
+
+router.post("/resendUserVerificationEmail/:id", globalController.resendUserVerificationEmail);
+
+router.post("/createUserAccountRequest", globalController.createUserAccountRequest);
+
 module.exports = router;

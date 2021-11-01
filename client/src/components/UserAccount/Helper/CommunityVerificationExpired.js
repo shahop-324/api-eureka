@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import CommunityLinkExpired from "./../Images/CommunityLinkExpired.png";
+import {
+  setCommunityVerificationLinkExpired,
+  verifyAndCreateCommunity,
+} from "./../../../actions";
 
 const NavStrip = styled.div`
   height: 7vh;
@@ -45,7 +51,30 @@ const Image = styled.img`
   border-radius: 10px;
 `;
 
+const Container = styled.div`
+  width: 480px;
+  height: 400px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  background: #edeef0;
+  -webkit-box-shadow: 10px 10px 20px #cecfd1, -10px -10px 20px #ffffff;
+  box-shadow: 10px 10px 20px #cecfd1, -10px -10px 20px #ffffff;
+`;
+
 const CommunityVerificationExpired = () => {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { communityVerificationLinkExpired } = useSelector(
+    (state) => state.user
+  );
+
+  const communityAccountRequestId = params.id;
+
+  useEffect(() => {
+    dispatch(verifyAndCreateCommunity(communityAccountRequestId));
+    dispatch(setCommunityVerificationLinkExpired(false));
+  }, []);
+
   return (
     <>
       {/* Nav bar */}
@@ -56,14 +85,25 @@ const CommunityVerificationExpired = () => {
         </button>
       </NavStrip>
       <Body className="px-4 py-3">
-        <Heading className="mb-4">Verification link expired.</Heading>
+        {!communityVerificationLinkExpired ? (
+          <Container className="d-flex flex-column align-items-center justify-content-center px-4 py-3">
+            <div className="spinner-border mb-4" role="status"></div>
+            <SmallText className="mb-3">
+              Please wait while we are verifying this community...
+            </SmallText>
+          </Container>
+        ) : (
+          <>
+            <Heading className="mb-4">Verification link expired.</Heading>
 
-        <Image className="mb-4" src={CommunityLinkExpired} />
+            <Image className="mb-4" src={CommunityLinkExpired} />
 
-        <SmallText className="mb-3">
-          Looks like this verification link has already expired. Please create a
-          new community account to continue.
-        </SmallText>
+            <SmallText className="mb-3">
+              Looks like this verification link has already expired. Please
+              create a new community account to continue.
+            </SmallText>
+          </>
+        )}
       </Body>
     </>
   );
