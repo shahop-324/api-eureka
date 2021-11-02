@@ -20,6 +20,7 @@ const userSlice = createSlice({
     openCommunityVerificationNotice: false,
     communityVerificationLinkExpired: false,
     userVerificationLinkExpired: false,
+    communityVerificationSucceded : false,
   },
 
   reducers: {
@@ -99,6 +100,9 @@ const userSlice = createSlice({
     SetCommunityVerificationLinkExpired(state, action) {
       state.communityVerificationLinkExpired =
         action.payload.communityVerificationLinkStatus;
+    },
+    SetCommunityVerificationSucceded(state, action) {
+      state.communityVerificationSucceded = action.payload.state;
     },
     SetUserVerificationLinkExpired(state, action) {
       state.userVerificationLinkExpired =

@@ -15,7 +15,6 @@ import "./../assets/css/UserAccountStyle.css";
 import "./../assets/css/CardStyle.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  communitySignIn,
   errorTrackerForEditUser,
   navigationIndex,
   signOut,
@@ -31,7 +30,6 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
-import { useSnackbar } from "notistack";
 const { REACT_APP_MY_ENV } = process.env;
 
 const useStyles = makeStyles((theme) => ({
@@ -47,15 +45,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvatarMenu = ({withCommunity, withCarot}) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+const AvatarMenu = () => {
   const referralCode = useSelector((state) => state.auth.referralCode);
 
   const [openReferral, setOpenReferral] = React.useState(false);
-  const { signupUsingReferral, upgrades, credit } = useSelector(
-    (state) => state.user.userDetails
-  );
+
+  const userDetails = useSelector((state) => state.user);
+
+  let signupUsingReferral = 0;
+  let upgrades = 0;
+  let credit = 0;
+
+  if (userDetails) {
+    signupUsingReferral = userDetails.signupUsingReferral
+      ? userDetails.signupUsingReferral
+      : 0;
+    upgrades = userDetails.upgrades ? userDetails.upgrades : 0;
+    credit = userDetails.credit ? userDetails.credit : 0;
+  }
+
   const dispatch = useDispatch();
 
   const handleClickOpenReferral = () => {
@@ -116,25 +124,23 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
     prevOpen.current = open;
   }, [open]);
 
-  const { communities } = useSelector((state) => state.community);
-
   if (isLoading) {
     return (
       <div className="spinner-border" role="status">
-        <span className="sr-only">Loading...</span>
       </div>
     );
   }
   if (error) {
-    // Here dispatch disable error
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForEditUser());
   }
 
-  const image = user.userDetails.image;
-  const userName = user.userDetails.firstName;
+  let image;
+  let userName;
+
+  if (user.userDeatils) {
+    image = user.userDetails.image;
+    userName = user.userDetails.firstName;
+  }
 
   let imgURL;
 
@@ -151,10 +157,7 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
     : `https://www.bluemeet.in/?ref=${referralCode}`;
 
   return (
-    <div
-      // style={{ zIndex: "10000" }}
-      className={`${classes.root}`}
-    >
+    <div className={`${classes.root}`}>
       <div>
         <Button
           style={{ padding: "0" }}
@@ -165,7 +168,10 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
           onClick={handleToggle}
           disableElevation={true}
         >
-          <div className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2" style={{borderRadius: "35px"}}>
+          <div
+            className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2"
+            style={{ borderRadius: "35px" }}
+          >
             <Avatar alt={userName} src={imgURL} />
             <ExpandMoreIcon className="mx-3" />
           </div>
@@ -176,8 +182,6 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
             zIndex: 10000,
             textAlign: "center",
             marginTop: "20px",
-            // maxWidth: "250px",
-            // marginRight: "4.5rem",
           }}
           open={open}
           anchorEl={anchorRef.current}
@@ -229,7 +233,6 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
 
                     <MenuItem
                       onClick={(event) => {
-                        // dispatch(navigationIndex(3));
                         history.push("/search-events");
                         handleClose(event);
                       }}
@@ -238,22 +241,10 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                         Explore Events
                       </div>
                     </MenuItem>
-                    {/* <MenuItem
-                      onClick={(event) => {
-                        // dispatch(navigationIndex(3));
-                        // history.push('/user/profile');
-                        handleClose(event);
-                      }}
-                    >
-                      <div className="avatar-menu-account-section-btns mb-2">
-                        Announcements
-                      </div>
-                    </MenuItem> */}
+
                     <MenuItem
                       onClick={(event) => {
                         handleClickOpenReferral();
-                        // dispatch(navigationIndex(3));
-                        // history.push('/user/profile');
                         handleClose(event);
                       }}
                     >
@@ -261,9 +252,6 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
                         Referrals & Credit
                       </div>
                     </MenuItem>
-
-                    
-                    
 
                     <hr className="px-2" />
                     <button
@@ -316,8 +304,6 @@ const AvatarMenu = ({withCommunity, withCarot}) => {
             <div className="refer-and-earn-banner px-3 py-2 mt-3">
               Refer your network to Bluemeet — give $5, get $5.
             </div>
-
-            {/* Number cards indication credit, signups, and upgrades */}
             <div className="referral-3-cards-row my-5">
               <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
                 <div className="mb-2" style={{ fontFamily: "Ubuntu" }}>

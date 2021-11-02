@@ -7,6 +7,7 @@ import {
   setUserVerificationLinkExpired,
   verifyUserEmailAndSignup,
 } from "./../../../actions";
+import history from "./../../../history";
 
 const NavStrip = styled.div`
   height: 7vh;
@@ -78,7 +79,9 @@ const UserVerificationExpired = () => {
       {/* Nav bar */}
       <NavStrip className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <BrandName>Bluemeet</BrandName>
-        <button className="btn btn-outline-text btn-outline-primary">
+        <button onClick={() => {
+          history.push("/")
+        }} className="btn btn-outline-text btn-outline-primary">
           Go to Bluemeet.in
         </button>
       </NavStrip>

@@ -73,9 +73,9 @@ const ResetPassword =(props)=> {
             <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
               <div className="col illustration-card">
                 <div className="row">
-                  <a href="https://www.evenz.in/home"
+                  <a href="https://www.bluemeet.in/home"
                   className="companyName"
-                  style={{ textDecoration: "none", color: "#538BF7" }}>Evenz</a>
+                  style={{ textDecoration: "none", color: "#538BF7" }}>Bluemeet</a>
                   <div className="welcome-message">
                     Let's reset your password...
                   </div>

@@ -1,12 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
+import { IconButton } from "@material-ui/core";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DialogContent from "@material-ui/core/DialogContent";
 import MailSent from "./../Images/MailSent.png";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenCommunityVerificationNotice, resendCommunityVerificationMail } from "./../../../actions";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import {
+  setOpenCommunityVerificationNotice,
+  resendCommunityVerificationMail,
+} from "./../../../actions";
+
+import EditCommunityEmail from "./EditCommunityEmail";
 
 const Heading = styled.div`
   font-size: 1.1rem;
@@ -38,7 +46,15 @@ const ConfirmCommunityMail = ({ open }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { communityVerificationEmail, communityVerificationId } = useSelector((state) => state.user);
+  const { communityVerificationEmail, communityVerificationId } = useSelector(
+    (state) => state.user
+  );
+
+  const [openEditMail, setOpenEditMail] = useState(false);
+
+  const handleCloseEditMail = () => {
+    setOpenEditMail(false);
+  }
 
   return (
     <>
@@ -48,8 +64,16 @@ const ConfirmCommunityMail = ({ open }) => {
         aria-labelledby="responsive-dialog-title"
       >
         <div className="" style={{ width: "520px" }}>
-          <HeaderFooter className="p-3">
+          <HeaderFooter className="d-flex flex-row align-items-center justify-content-between p-3">
             <Heading className="">Confirm community email</Heading>
+
+            <IconButton
+              onClick={() => {
+                dispatch(setOpenCommunityVerificationNotice(false));
+              }}
+            >
+              <CancelRoundedIcon />
+            </IconButton>
           </HeaderFooter>
 
           <DialogContent className="pt-4 d-flex flex-column align-items-center">
@@ -72,7 +96,9 @@ const ConfirmCommunityMail = ({ open }) => {
           <div className="d-flex flex-row align-items-center justify-content-end px-4 pb-4">
             <button
               onClick={() => {
-                dispatch(resendCommunityVerificationMail(communityVerificationId));
+                dispatch(
+                  resendCommunityVerificationMail(communityVerificationId)
+                );
                 // dispatch(setOpenCommunityVerificationNotice(false));
               }}
               className="btn btn-outline-text btn-primary me-3"
@@ -82,14 +108,17 @@ const ConfirmCommunityMail = ({ open }) => {
             <button
               onClick={() => {
                 dispatch(setOpenCommunityVerificationNotice(false));
+                setOpenEditMail(true);
               }}
-              className="btn btn-outline-text btn-outline-dark"
+              className="btn btn-outline-text btn-outline-dark d-flex flex-row align-items-center"
             >
-              Okay
+              <EditRoundedIcon style={{ fontSize: "17px" }} />{" "}
+              <span className="ms-2"> Edit email </span>
             </button>
           </div>
         </div>
       </Dialog>
+      <EditCommunityEmail open={openEditMail} handleClose={handleCloseEditMail} />
     </>
   );
 };

@@ -534,11 +534,15 @@ export const createCommunityRequest =
             dispatch(
               showSnackbar(
                 "error",
-                "This email is already used by another community."
+                "This email is registered on another community."
               )
             );
           } else {
             handleClose();
+
+            dispatch(
+              showSnackbar("success", "Community created successfully!")
+            );
 
             dispatch(
               communityActions.CreateCommunityRequest({
@@ -3293,7 +3297,7 @@ export const madeJustForYou = () => async (dispatch) => {
 
     dispatch(
       eventActions.FetchEvents({
-        events: res.data.data,
+        events: res.data.data.events,
       })
     );
   } catch (err) {
@@ -3314,54 +3318,6 @@ export const errorTrackerForMadeJustForYou =
   () => async (dispatch, getState) => {
     dispatch(eventActions.disabledError());
   };
-
-//user actions
-
-// export const createUser = (formValues, id) => async (dispatch, getState) => {
-//   console.log(id);
-//   console.log(formValues);
-
-//   dispatch( speakerActions.startLoading());
-//   try {
-//     console.log(id);
-//     console.log(formValues);
-//     let res = await fetch(
-//       `${BaseURL}events/${id}/addSpeaker`,
-//       {
-//         method: "POST",
-//         body: JSON.stringify({
-//           ...formValues,
-//         }),
-
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${getState().auth.token}`,
-//         },
-//       }
-//     );
-//     if (!res.ok) {
-//       if (!res.message) {
-//         throw new Error("Something went wrong");
-//       } else {
-//         throw new Error(res.message);
-//       }
-//     }
-//     res = await res.json();
-//     console.log(res);
-
-//     dispatch(
-//       speakerActions.CreateSpeaker({
-//         speaker: res.data,
-//       })
-//     );
-//   } catch (err) {
-//     dispatch( speakerActions.startLoading());
-//   }
-// };
-
-// export const errorTrackerForCreateSpeaker = () => async (dispatch, getState) => {
-//   dispatch(ticketActions.disabledError());
-// };
 
 export const fetchLobbyUsers = (users) => async (dispatch, getState) => {
   try {
@@ -3666,27 +3622,32 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
       }
     }
     const result = await res.json();
-    dispatch(
-      userActions.EditUser({
-        user: result.data.userData,
-      })
-    );
-    dispatch(
-      authActions.SignIn({
-        token: result.token,
-      })
-    );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Password updated successfully",
-        severity: "success",
-      })
-    );
+    if (result.wrongPassword) {
+      dispatch(showSnackbar("error", "You have entered wrong current password."));
+    } else {
+      dispatch(
+        userActions.EditUser({
+          user: result.data.userData,
+        })
+      );
+      dispatch(
+        authActions.SignIn({
+          token: result.token,
+        })
+      );
 
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Password updated successfully",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    }
   } catch (err) {
     dispatch(userActions.hasError(err.message));
 
@@ -5048,7 +5009,7 @@ export const googleLinkClicked = () => async (dispatch, getState) => {
 
 export const forgotPassword = (formValues) => async (dispatch, getState) => {
   try {
-    let res = await fetch(`${BaseURL}users/forgotPassword`, {
+    let res = await fetch(`${BaseURL}forgotPassword`, {
       method: "POST",
       body: JSON.stringify({
         ...formValues,
@@ -5062,18 +5023,19 @@ export const forgotPassword = (formValues) => async (dispatch, getState) => {
     res = await res.json();
     console.log(res);
 
-    // dispatch(
-    //   queriesActions.EditQuery({
-    //     query: res.data,
-    //   })
-    // );
+    dispatch(
+      showSnackbar(
+        "success",
+        "We have sent a password reset link if there is an account with this email."
+      )
+    );
   } catch (err) {
     console.log(err);
+    dispatch(showSnackbar("error", "There is no user with this email."));
   }
 };
 export const resetPassword =
   (formValues, token) => async (dispatch, getState) => {
-    dispatch(authActions.startLoading());
     dispatch(userActions.startLoading());
 
     try {
@@ -5109,6 +5071,9 @@ export const resetPassword =
           user: res.data.user,
         })
       );
+
+      dispatch(showSnackbar("success", "Password changed successfully!"));
+
       window.location.href = REACT_APP_MY_ENV
         ? "http://localhost:3001/user/home"
         : "https://www.bluemeet.in/user/home";
@@ -5116,6 +5081,12 @@ export const resetPassword =
       console.log(err);
       dispatch(userActions.hasError(err.message));
       dispatch(authActions.hasError(err.message));
+      dispatch(
+        showSnackbar(
+          "error",
+          "Token is invalid or has expired. Please try again by requesting new reset link."
+        )
+      );
     }
   };
 export const errorTrackerForResetPassword =
@@ -10741,6 +10712,15 @@ export const setUserVerificationEmail =
     );
   };
 
+export const setCommunityVerificationSucceded =
+  (state) => async (dispatch, getState) => {
+    dispatch(
+      userActions.SetCommunityVerificationSucceded({
+        state: state,
+      })
+    );
+  };
+
 export const setCommunityVerificationLinkExpired =
   (status) => async (dispatch, getState) => {
     dispatch(
@@ -10792,10 +10772,17 @@ export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
       );
 
       dispatch(
+        authActions.SignIn({
+          token: res.userToken,
+        })
+      );
+
+      dispatch(
         communityAuthActions.CommunitySignIn({
           token: res.token,
         })
       );
+
       dispatch(
         communityActions.CreateCommunity({
           community: res.communityDoc,
@@ -10804,9 +10791,18 @@ export const verifyAndCreateCommunity = (id) => async (dispatch, getState) => {
 
       dispatch(navigationIndexForCommunityDash(0));
 
-      history.push(
-        `/user/${res.userId}/community/overview/${res.communityDoc.id}`
+      // Dispatch that community verification succeded please refresh user dashboard to access your community
+
+      dispatch(
+        userActions.SetCommunityVerificationSucceded({
+          state: true,
+        })
       );
+
+      // console.log(
+      //   `/user/${res.userId}/community/getting-started/${res.communityDoc._id}`
+      // );
+      // window.location.href = `/user/${res.userId}/community/getting-started/${res.communityDoc._id}`;
     }
   } catch (error) {
     console.log(error);
@@ -10880,5 +10876,59 @@ export const resendUserVerificationEmail =
     }
   };
 
-export const verifyAndCreateUserAccount =
-  (id) => async (dispatch, getState) => {};
+export const changeCommunityAccountRequestEmail =
+  (id, email) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}changeCommunityAccountRequestEmail/${id}`,
+
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            email: email,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(
+            "Failed to send user verification mail. Please try again."
+          );
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      if (res.alreadyUsedEmail) {
+        dispatch(
+          showSnackbar(
+            "error",
+            "This email is already registered on another community."
+          )
+        );
+      } else {
+        dispatch(
+          communityActions.UpdateCommunityRequest({
+            community: res.data,
+          })
+        );
+        dispatch(
+          showSnackbar("success", "Community email updated successfully!")
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to update email, please try again.")
+      );
+    }
+  };

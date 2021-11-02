@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 
-router.post("/forgotPassword", userController.forgotPassword);
+
 
 // router.post("/signup", authController.signup);
 

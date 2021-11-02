@@ -116,6 +116,11 @@ const CommunityProfileTab = (props) => {
     return dispatch(errorTrackerForCommunitySignIn());
   }
 
+  const truncateText = (str, n) => {
+    if (!str) return;
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <CommunityTabPaper
       className="px-4 py-2 mb-3 mx-2"
@@ -128,7 +133,7 @@ const CommunityProfileTab = (props) => {
         style={{ alignSelf: "center" }}
       />
       <div className="d-flex flex-column justify-content-center align-items-left ms-3">
-        <div className="mb-1">{props.name}</div>
+        <div className="mb-1">{truncateText(props.name, 14)}</div>
       </div>
     </CommunityTabPaper>
   );
@@ -142,6 +147,11 @@ const UnverifiedCommunityTab = ({ id, name, image, email }) => {
     dispatch(setCommunityVerificationId(id));
     dispatch(setCommunityVerificationEmail(email));
     dispatch(setOpenCommunityVerificationNotice(true));
+  };
+
+  const truncateText = (str, n) => {
+    if (!str) return;
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
 
   return (
@@ -160,7 +170,7 @@ const UnverifiedCommunityTab = ({ id, name, image, email }) => {
             />
             <div className="d-flex flex-column justify-content-center align-items-left ms-3">
               <div className="mb-1">
-                {name}{" "}
+                {truncateText(name, 14)}{" "}
                 <span className="ms-3">
                   <CircleIcon style={{ color: "red", fontSize: "10px" }} />
                 </span>
@@ -178,6 +188,11 @@ class UserProfileTab extends React.Component {
     const { name, email, imageURL } = this.props;
     console.log(name, email);
 
+    const truncateText = (str, n) => {
+      if (!str) return;
+      return str.length > n ? `${str.substring(0, n)} ...` : str;
+    };
+
     return (
       <ProfileTabPaper className="user-profile-tab px-4 py-2 mb-4 mx-2">
         <Avatar
@@ -187,8 +202,8 @@ class UserProfileTab extends React.Component {
           style={{ alignSelf: "center" }}
         />
         <div className="d-flex flex-column justify-content-between align-items-left ms-3">
-          <ProfileName className="mb-1">{name}</ProfileName>
-          <ProfileEmail>{email}</ProfileEmail>
+          <ProfileName className="mb-1">{truncateText(name, 14)}</ProfileName>
+          <ProfileEmail>{truncateText(email, 18)}</ProfileEmail>
         </div>
       </ProfileTabPaper>
     );
@@ -225,7 +240,17 @@ const UserAccountSideNav = () => {
     );
   }
 
-  const { firstName, lastName, email, image } = userDetails;
+  let firstName;
+  let lastName;
+  let email;
+  let image;
+
+  if (userDetails) {
+    firstName = userDetails.firstName;
+    lastName = userDetails.lastName;
+    email = userDetails.email;
+    image = userDetails.image;
+  }
 
   const name = `${firstName} ${lastName}`;
 
@@ -304,7 +329,9 @@ const UserAccountSideNav = () => {
               {" "}
               <Loader />{" "}
             </div>
-          ) : typeof communities !== "undefined" && communities.length > 0 ? (
+          ) : (typeof communities !== "undefined" && communities.length) ||
+            (typeof communityRequests !== "undefined" &&
+              communityRequests.length) > 0 ? (
             renderCommunitiesList(communities)
           ) : (
             <CreateNewCommunityMsgCard
@@ -321,7 +348,8 @@ const UserAccountSideNav = () => {
               {" "}
               <Loader />{" "}
             </div>
-          ) : typeof communities !== "undefined" && communities.length > 0 ? (
+          ) : typeof communityRequests !== "undefined" &&
+            communityRequests.length > 0 ? (
             renderCommunityRequests(communityRequests)
           ) : (
             <></>

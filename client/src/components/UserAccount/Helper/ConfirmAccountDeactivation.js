@@ -41,7 +41,6 @@ const ConfirmAccountDeactivation = ({ open, handleClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { userDetails } = useSelector((state) => state.user);
 
-
   const userId = userDetails ? userDetails._id : null;
 
   return (

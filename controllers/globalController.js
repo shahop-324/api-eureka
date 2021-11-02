@@ -53,7 +53,6 @@ const TeamInvite = require("../models/teamInviteModel");
 
 exports.aliasTopEvents = catchAsync(async (req, res, next) => {
   req.query.sort = "-numberOfRegistrationsReceived";
-
   next();
 });
 
@@ -110,12 +109,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     .paginate()
     .ratingFilter()
     .sort();
-  // .paginate()
-  // .textFilter()
-
-  // .filter()
-  // .categoryWiseFilter()
-  // .dateWiseFilter();
+  
   const eventDocuments = await features.query;
 
   res.status(200).json({
@@ -1687,3 +1681,61 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
       });
     });
 });
+
+exports.changeCommunityAccountRequestEmail = catchAsync(
+  async (req, res, next) => {
+    const id = req.params.id;
+    const email = req.body.email;
+
+    // Check if there is any existing community with same email
+
+    const existingCommunity = await Community.findOne({ email: email });
+
+    if (existingCommunity) {
+      res.status(200).json({
+        status: "Not allowed",
+        message: "There is already a community registered on this email.",
+        alreadyUsedEmail: true,
+      });
+    } else {
+      // Update commmunity account request email
+
+      const updatedCommunityAccountRequest =
+        await CommunityAccountRequest.findByIdAndUpdate(
+          id,
+          { email: email },
+          { new: true, validateModifiedOnly: true }
+        );
+
+      // Send mail to updated email
+      // Send response with updated communityAccountRequest Document
+
+      const msg = {
+        to: updatedCommunityAccountRequest.email, // Change to your recipient
+        from: "shreyanshshah242@gmail.com", // Change to your verified sender
+        subject: `Verify your community email.`,
+        text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${updatedCommunityAccountRequest._id}`}`,
+        // html: ForgotPasswordTemplate(user, resetURL),
+      };
+
+      sgMail
+        .send(msg)
+        .then(async () => {
+          console.log("Confirmation mail sent to Community");
+          res.status(200).json({
+            status: "success",
+            data: updatedCommunityAccountRequest,
+            message: "Confirmation mail sent to Community.",
+          });
+        })
+        .catch(async (error) => {
+          console.log("Failed to send confirmation mail to Community.");
+          res.status(200).json({
+            status: "error",
+            data: updatedCommunityAccountRequest,
+            message: "Failed to send confirmation mail to Community.",
+          });
+        });
+    }
+  }
+);

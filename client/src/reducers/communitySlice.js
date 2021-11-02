@@ -72,6 +72,14 @@ const communitySlice = createSlice({
       state.communityRequests.push(action.payload.community);
       state.isLoading = false;
     },
+
+    UpdateCommunityRequest(state, action) {
+      state.communityRequests = state.communityRequests.map((element) =>
+        element._id === action.payload.community._id
+          ? action.payload.community
+          : element
+      );
+    },
     FetchCommunities(state, action) {
       state.communities = action.payload.communities;
       state.isLoading = false;

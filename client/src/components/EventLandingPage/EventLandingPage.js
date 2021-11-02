@@ -393,7 +393,7 @@ const EventLandingPage = (props) => {
                   className="navbar-brand"
                   style={{ color: "#538BF7", textDecoration: "none" }}
                 >
-                  Evenz
+                  Bluemeet
                 </Link>
                 <button
                   className="navbar-toggler"

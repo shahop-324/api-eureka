@@ -6,7 +6,11 @@ import CommunityLinkExpired from "./../Images/CommunityLinkExpired.png";
 import {
   setCommunityVerificationLinkExpired,
   verifyAndCreateCommunity,
+  setCommunityVerificationSucceded,
 } from "./../../../actions";
+import history from "./../../../history";
+
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
 
 const NavStrip = styled.div`
   height: 7vh;
@@ -64,13 +68,13 @@ const Container = styled.div`
 const CommunityVerificationExpired = () => {
   const params = useParams();
   const dispatch = useDispatch();
-  const { communityVerificationLinkExpired } = useSelector(
-    (state) => state.user
-  );
+  const { communityVerificationLinkExpired, communityVerificationSucceded } =
+    useSelector((state) => state.user);
 
   const communityAccountRequestId = params.id;
 
   useEffect(() => {
+    dispatch(setCommunityVerificationSucceded(false));
     dispatch(verifyAndCreateCommunity(communityAccountRequestId));
     dispatch(setCommunityVerificationLinkExpired(false));
   }, []);
@@ -80,18 +84,36 @@ const CommunityVerificationExpired = () => {
       {/* Nav bar */}
       <NavStrip className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <BrandName>Bluemeet</BrandName>
-        <button className="btn btn-outline-text btn-outline-primary">
+        <button
+          onClick={() => {
+            history.push("/");
+          }}
+          className="btn btn-outline-text btn-outline-primary"
+        >
           Go to Bluemeet.in
         </button>
       </NavStrip>
       <Body className="px-4 py-3">
         {!communityVerificationLinkExpired ? (
-          <Container className="d-flex flex-column align-items-center justify-content-center px-4 py-3">
-            <div className="spinner-border mb-4" role="status"></div>
-            <SmallText className="mb-3">
-              Please wait while we are verifying this community...
-            </SmallText>
-          </Container>
+          communityVerificationSucceded ? (
+            <Container className="d-flex flex-column align-items-center justify-content-center px-4 py-3">
+              <VerifiedUserRoundedIcon
+                className="mb-5"
+                style={{ color: "#1A9E0E", fontSize: "80px" }}
+              />
+              <SmallText className="mb-3">
+                Your community email has been successfully verified. Please
+                visit your user dashboard and refresh to access your community.
+              </SmallText>
+            </Container>
+          ) : (
+            <Container className="d-flex flex-column align-items-center justify-content-center px-4 py-3">
+              <div className="spinner-border mb-4" role="status"></div>
+              <SmallText className="mb-3">
+                Please wait while we are verifying this community...
+              </SmallText>
+            </Container>
+          )
         ) : (
           <>
             <Heading className="mb-4">Verification link expired.</Heading>

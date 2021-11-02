@@ -44,6 +44,7 @@ const renderSpeakers = (speakers) => {
 };
 
 const EventCard = ({
+  showSpeakers,
   image,
   id,
   eventName,
@@ -127,13 +128,19 @@ const EventCard = ({
           )}
         </div>
 
-        <div className="d-flex flex-column align-items-start justify-content-start mb-3">
-          <SpeakersHeading style={{ textAlign: "left" }} className="mb-3">
-            Speakers
-          </SpeakersHeading>
+        {showSpeakers &&
+        typeof speakers !== "undefined" &&
+        speakers.length > 0 ? (
+          <div className="d-flex flex-column align-items-start justify-content-start mb-3">
+            <SpeakersHeading style={{ textAlign: "left" }} className="mb-3">
+              Speakers
+            </SpeakersHeading>
 
-          <AvatarGroup max={4}>{renderSpeakers(speakers)}</AvatarGroup>
-        </div>
+            <AvatarGroup max={4}>{renderSpeakers(speakers)}</AvatarGroup>
+          </div>
+        ) : (
+          <></>
+        )}
 
         <div
           className="event-card-price-main mb-2"

@@ -538,60 +538,94 @@ let EditProfileForm = (props) => {
 const mapStateToProps = (state) => ({
   // console.log(state.user.userDetails);
   initialValues: {
-    imgUrl: state.user.userDetails.image
-      ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.user.userDetails.image}`
-      : " #",
-    firstName: state.user.userDetails.firstName
+    imgUrl: state.user.userDetails
+      ? state.user.userDetails.image
+        ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${state.user.userDetails.image}`
+        : " #"
+      : "#",
+    firstName: state.user.userDetails
       ? state.user.userDetails.firstName
+        ? state.user.userDetails.firstName
+        : ""
       : "",
-    lastName: state.user.userDetails.lastName
+    lastName: state.user.userDetails
       ? state.user.userDetails.lastName
+        ? state.user.userDetails.lastName
+        : ""
       : "",
-    email: state.user.userDetails.email ? state.user.userDetails.email : "",
+    email: state.user.userDetails
+      ? state.user.userDetails.email
+        ? state.user.userDetails.email
+        : ""
+      : "",
 
-    interests: state.user.userDetails.interests
-      ? state.user.userDetails.interests.map((interest) => {
-          return { value: interest, label: interest };
-        })
+    interests: state.user.userDetails
+      ? state.user.userDetails.interests
+        ? state.user.userDetails.interests.map((interest) => {
+            return { value: interest, label: interest };
+          })
+        : ""
       : "",
-    organisation: state.user.userDetails.organisation
+    organisation: state.user.userDetails
       ? state.user.userDetails.organisation
+        ? state.user.userDetails.organisation
+        : ""
       : "",
-    designation: state.user.userDetails.designation
+    designation: state.user.userDetails
       ? state.user.userDetails.designation
+        ? state.user.userDetails.designation
+        : ""
       : "",
-    city: state.user.userDetails.city ? state.user.userDetails.city : "",
-    country: state.user.userDetails.country
+    city: state.user.userDetails
+      ? state.user.userDetails.city
+        ? state.user.userDetails.city
+        : ""
+      : "",
+    country: state.user.userDetails
       ? state.user.userDetails.country
+        ? state.user.userDetails.country
+        : ""
       : "",
 
-    linkedin:
-      state.user.userDetails.socialMediaHandles &&
-      state.user.userDetails.socialMediaHandles.linkedin
+    linkedin: state.user.userDetails
+      ? state.user.userDetails.socialMediaHandles &&
+        state.user.userDetails.socialMediaHandles.linkedin
         ? state.user.userDetails.socialMediaHandles.linkedin
-        : "",
-    facebook:
-      state.user.userDetails.socialMediaHandles &&
-      state.user.userDetails.socialMediaHandles.facebook
+        : ""
+      : "",
+    facebook: state.user.userDetails
+      ? state.user.userDetails.socialMediaHandles &&
+        state.user.userDetails.socialMediaHandles.facebook
         ? state.user.userDetails.socialMediaHandles.facebook
-        : "",
-    twitter:
-      state.user.userDetails.socialMediaHandles &&
-      state.user.userDetails.socialMediaHandles.twitter
+        : ""
+      : "",
+    twitter: state.user.userDetails
+      ? state.user.userDetails.socialMediaHandles &&
+        state.user.userDetails.socialMediaHandles.twitter
         ? state.user.userDetails.socialMediaHandles.twitter
-        : "",
-    website:
-      state.user.userDetails.socialMediaHandles &&
-      state.user.userDetails.socialMediaHandles.website
+        : ""
+      : "",
+    website: state.user.userDetails
+      ? state.user.userDetails.socialMediaHandles &&
+        state.user.userDetails.socialMediaHandles.website
         ? state.user.userDetails.socialMediaHandles.website
-        : "",
-    phoneNumber: state.user.userDetails.phoneNumber
+        : ""
+      : "",
+    phoneNumber: state.user.userDetails
       ? state.user.userDetails.phoneNumber
+        ? state.user.userDetails.phoneNumber
+        : ""
       : "",
 
-    bio: state.user.userDetails.bio ? state.user.userDetails.bio : "",
-    headline: state.user.userDetails.headline
+    bio: state.user.userDetails
+      ? state.user.userDetails.bio
+        ? state.user.userDetails.bio
+        : ""
+      : "",
+    headline: state.user.userDetails
       ? state.user.userDetails.headline
+        ? state.user.userDetails.headline
+        : ""
       : "",
   },
 });

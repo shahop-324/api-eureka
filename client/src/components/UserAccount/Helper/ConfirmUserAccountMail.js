@@ -4,6 +4,7 @@ import styled from "styled-components";
 import MailSent from "./../Images/MailSent.png";
 import { useParams } from "react-router-dom";
 import { resendUserVerificationEmail } from "./../../../actions";
+import history from "./../../../history";
 
 const NavStrip = styled.div`
   height: 7vh;
@@ -60,7 +61,9 @@ const ConfirmUserAccountMail = () => {
       {/* Nav bar */}
       <NavStrip className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
         <BrandName>Bluemeet</BrandName>
-        <button className="btn btn-outline-text btn-outline-primary">
+        <button onClick={() => {
+          history.push("/")
+        }} className="btn btn-outline-text btn-outline-primary">
           Go to Bluemeet.in
         </button>
       </NavStrip>

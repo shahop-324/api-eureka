@@ -221,8 +221,10 @@ const CreateNewCommunityForm = (props) => {
     thisUsersCommunityEmails.push(element.email);
   }
 
-  for (let element of communityRequests) {
-    thisUsersCommunityEmails.push(element.email);
+  if (communityRequests) {
+    for (let element of communityRequests) {
+      thisUsersCommunityEmails.push(element.email);
+    }
   }
 
   const dispatch = useDispatch();
@@ -232,8 +234,14 @@ const CreateNewCommunityForm = (props) => {
     setCreateCommunityClicked(false);
   }, [dispatch, error]);
 
-  const { id } = useSelector((state) => state.user.userDetails);
-  const userId = id;
+  const { userDetails } = useSelector((state) => state.user);
+
+  let userId;
+
+  if(userDetails) {
+    userId = userDetails._id;
+  }
+
   const { handleSubmit, pristine, reset, valid, submitting } = props;
   const classes = useStyles();
 

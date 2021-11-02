@@ -5,6 +5,7 @@ const chatMessagesController = require("../controllers/chatMessageController");
 const eventAlertController = require("../controllers/eventAlertController");
 const eventPollController = require("../controllers/eventPollController");
 const networkingController = require("./../controllers/networkingController");
+const userController = require("./../controllers/userController");
 
 const router = express.Router();
 
@@ -50,9 +51,10 @@ router.delete(
 
 router.get("/mux", globalController.generateMUXCredentials);
 
-router
-  .route("/exploreEvents/madeJustForYou")
-  .get(globalController.aliasTopEvents, globalController.getAllEvents);
+router.get(
+  "/exploreEvents/madeJustForYou",
+  globalController.getAllEvents
+);
 
 router.get("/exploreEvents", globalController.getAllEvents);
 
@@ -255,12 +257,33 @@ router.post(
   globalController.sendStageReminder
 );
 
-router.get("/getEventRegistrations/:eventId", authController.protect, globalController.getEventRegistrations);
+router.get(
+  "/getEventRegistrations/:eventId",
+  authController.protect,
+  globalController.getEventRegistrations
+);
 
-router.post("/resendCommunityVerificationMail/:id", globalController.resendCommunityVerificationMail);
+router.post(
+  "/resendCommunityVerificationMail/:id",
+  globalController.resendCommunityVerificationMail
+);
 
-router.post("/resendUserVerificationEmail/:id", globalController.resendUserVerificationEmail);
+router.post(
+  "/resendUserVerificationEmail/:id",
+  globalController.resendUserVerificationEmail
+);
 
-router.post("/createUserAccountRequest", globalController.createUserAccountRequest);
+router.post(
+  "/createUserAccountRequest",
+  globalController.createUserAccountRequest
+);
+
+router.post("/forgotPassword", userController.forgotPassword);
+
+router.post(
+  "/changeCommunityAccountRequestEmail/:id",
+  authController.protect,
+  globalController.changeCommunityAccountRequestEmail
+);
 
 module.exports = router;

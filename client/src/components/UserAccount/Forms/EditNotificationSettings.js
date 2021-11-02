@@ -1,84 +1,109 @@
-import React from "react";
-import { Field, reduxForm } from "redux-form";
-
-import { withStyles } from "@material-ui/core/styles";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import React, { useState } from "react";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser, errorTrackerForEditUser } from "../../../actions";
-import { connect } from "react-redux";
-
 import { DashboardSectionHeading } from "../Elements";
+import Checkbox from "@mui/material/Checkbox";
 
-const RoyalBlueCheckBox = withStyles({
-  root: {
-    color: "#538BF7",
-    "&$checked": {
-      color: "#3877F3",
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
+const Label = styled.span`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #212121;
+  font-size: 0.9rem;
+`;
 
-const RenderCustomCheckboxLabels = ({ input, label, value }) => {
-  return (
-    <FormGroup row>
-      <FormControlLabel
-        control={<RoyalBlueCheckBox {...input} />}
-        label={label}
-      />
-    </FormGroup>
-  );
-};
-
-const EditNotificationSettings = (props) => {
+const EditNotificationSettings = () => {
   const { error } = useSelector((state) => state.user);
 
-  const { handleSubmit, pristine, submitting } = props;
+  const { userDetails } = useSelector((state) => state.user);
+
+  const [
+    NotificationsForRegisteredEvents,
+    setNotificationsForRegisteredEvents,
+  ] = useState(
+    userDetails ? userDetails.notificationsForRegisteredEvents : false
+  );
+
+  const [NotificationsForEventRemainder, setNotificationsForEventRemainder] =
+    useState(userDetails ? userDetails.notificationsForEventRemainder : false);
+
+  const [
+    NotificationBasedOnMyPreference,
+    setNotificationBasedOnMyPreference,
+  ] = useState(
+    userDetails ? userDetails.notificationBasedOnMyPreference : false
+  );
 
   const dispatch = useDispatch();
-  const onSubmit = (formValues) => {
-    dispatch(editUser(formValues));
-  };
+  
 
   if (error) {
     return dispatch(errorTrackerForEditUser());
   }
 
+  const handleSubmit = () => {
+    let formValues = {};
+
+    formValues.notificationsForRegisteredEvents =
+      NotificationsForRegisteredEvents;
+    formValues.notificationsForEventRemainder =
+      NotificationsForEventRemainder;
+    formValues.notificationBasedOnMyPreference =
+      NotificationBasedOnMyPreference;
+
+      console.log(formValues);
+
+    dispatch(editUser(formValues));
+  };
+
   return (
     <>
       <div className="user-account-edit-profile px-2 py-2">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <DashboardSectionHeading className=" mb-3">
             Manage notifications
           </DashboardSectionHeading>
 
-          <Field
-            name="notificationsForRegisteredEvents"
-            component={RenderCustomCheckboxLabels}
-            label="Receive Email Notifications for registered events."
-            value="Receive Email Notifications for registered events."
-          />
+          <div className="mb-3">
+            <Checkbox
+              onChange={(e) => {
+                setNotificationsForRegisteredEvents(e.target.checked);
+              }}
+              checked={NotificationsForRegisteredEvents}
+            />
 
-          <Field
-            name="notificationsForEventRemainders"
-            component={RenderCustomCheckboxLabels}
-            label="Receive Email Notifications for event reminders."
-            value="Receive Email Notifications for event reminders."
-          />
+            <Label>Receive Email Notifications for registered events.</Label>
+          </div>
+          <div className="mb-3">
+            <Checkbox
+              onChange={(e) => {
+                setNotificationsForEventRemainder(e.target.checked);
+              }}
+              checked={NotificationsForEventRemainder}
+            />
 
-          <Field
-            name="notificationsBasedOnMyPreference"
-            component={RenderCustomCheckboxLabels}
-            label="Receive Suggested List of events based on my preference."
-            value="Receive Suggested List of events based on my preference."
-          />
+            <Label>Receive Email Notifications for event reminders.</Label>
+          </div>
+          <div className="mb-3">
+            <Checkbox
+              onChange={(e) => {
+                setNotificationBasedOnMyPreference(e.target.checked);
+              }}
+              checked={NotificationBasedOnMyPreference}
+            />
+
+            <Label>
+              Receive Suggested List of events based on my preference.
+            </Label>
+          </div>
 
           <div className="row edit-profile-form-row my-3 d-flex flex-row justify-content-end">
             <button
-              type="submit"
-              disabled={submitting || pristine}
+              onClick={() => {
+                handleSubmit();
+              }}
+              type="button"
+              // disabled={submitting || pristine}
               className="col-3 btn btn-primary btn-outline-text"
             >
               Save changes
@@ -89,21 +114,5 @@ const EditNotificationSettings = (props) => {
     </>
   );
 };
-const mapStateToProps = (state, props) => ({
-  initialValues: {
-    notificationsForRegisteredEvents:
-      state.user.userDetails.notificationsForRegisteredEvents,
-    notificationsForEventRemainders:
-      state.user.userDetails.notificationsForEventRemainders,
-    notificationsBasedOnMyPreference:
-      state.user.userDetails.notificationsBasedOnMyPreference,
-  },
-});
 
-export default connect(mapStateToProps)(
-  reduxForm({
-    form: "notificationsSettings",
-    enableReinitialize: true,
-    destroyOnUnmount: false,
-  })(EditNotificationSettings)
-);
+export default EditNotificationSettings;

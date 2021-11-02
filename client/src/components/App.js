@@ -50,6 +50,7 @@ import {
   DuplicateUserSignOut,
   googleSignIn,
   newLinkedinLogin,
+  showSnackbar,
 } from "../actions/index";
 import { signIn } from "../actions/index";
 
@@ -95,6 +96,12 @@ class App extends React.Component {
 
       this.props.DuplicateUserSignOut(userId, message);
     });
+
+    socket.on("emailOrPasswordNotCorrect", () => {
+      // dispatch
+      this.props.showSnackbar("error", "Invalid email or password.");
+      window.location.reload();
+    })
 
     socket.on("newLogin", (res) => {
       this.props.signIn(
@@ -756,6 +763,11 @@ class App extends React.Component {
                 exact
                 component={ResetPassword}
               />
+              <Route
+                path="/resetPassword/:passwordResetToken"
+                exact
+                component={ResetPassword}
+              />
 
               <Route path="*">
                 <Redirect to="/not-found" exact component={NotFoundPage} />
@@ -818,6 +830,7 @@ const mapStateToProps = (state, props) => ({
 export default connect(mapStateToProps, {
   DuplicateUserSignOut,
   closeSnackbar,
+  showSnackbar,
   signIn,
   googleSignIn,
   newLinkedinLogin,

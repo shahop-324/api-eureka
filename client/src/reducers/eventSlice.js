@@ -34,6 +34,7 @@ const eventSlice = createSlice({
       state.isLoading = false;
     },
     FetchEvents(state, action) {
+      console.log(action.payload.events, "oppppoppoppopp");
       state.events = action.payload.events;
       state.length = action.payload.length;
       state.isLoading = false;

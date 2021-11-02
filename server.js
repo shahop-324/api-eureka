@@ -11,6 +11,9 @@ const ConnectionRequest = require("./models/connectionRequestModel");
 const NetworkingRoomChats = require("./models/networkingRoomChatsModel");
 const SessionPoll = require("./models/sessionPollModel");
 const SessionQnA = require("./models/sessionQnAModel");
+const TeamInvite = require("./models/teamInviteModel");
+const Community = require("./models/communityModel");
+const Speaker = require("./models/speakerModel");
 const { nanoid } = require("nanoid");
 
 process.on("uncaughtException", (err) => {
@@ -3271,12 +3274,14 @@ io.on("connect", (socket) => {
 
   socket.on("loggingInUser", async ({ email, password }) => {
     if (!email || !password) {
+      socket.emit("emailOrPasswordNotCorrect");
       return;
     }
 
     const user = await User.findOne({ email: email }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password))) {
+      socket.emit("emailOrPasswordNotCorrect");
       return;
     }
 

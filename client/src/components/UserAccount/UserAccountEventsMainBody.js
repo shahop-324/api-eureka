@@ -15,7 +15,6 @@ const UserAccountEventsMainBody = () => {
     dispatch(madeJustForYou());
   }, [dispatch]);
   const { events, isLoading, error } = useSelector((state) => state.event);
-  // console.log(events);
 
   if (error) {
     return dispatch(errorTrackerForMadeJustForYou());
@@ -36,6 +35,7 @@ const UserAccountEventsMainBody = () => {
 
         return (
           <EventCard
+          showSpeakers={true}
             image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
             date={formatedDate}
             id={event.id}

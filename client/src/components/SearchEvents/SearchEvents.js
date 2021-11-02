@@ -235,6 +235,7 @@ const SearchEvents = () => {
 
       return (
         <EventCard
+        showSpeakers={true}
           image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
           date={formatedDate}
           endDate={formatedEndDate}

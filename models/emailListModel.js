@@ -7,7 +7,6 @@ const emailListSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
     },
     addedAtDateAndTime: {
       type: Date,

@@ -80,20 +80,11 @@ class GoogleAuth extends React.Component {
               style={{ width: "100%" }}
             >
               <div className="google-btn-container d-flex flex-row align-items-center justify-content-center">
-                {this.state.isGoogleClicked ? (
-                  <div
-                    className="spinner-border text-danger ms-3 spinner-border-md"
-                    role="status"
-                  >
-                    {/* <span className="sr-only">Loading...</span> */}
-                  </div>
-                ) : (
-                  <img
-                    className=""
-                    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                    alt="google-signin"
-                  />
-                )}
+                <img
+                  className=""
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                  alt="google-signin"
+                />
 
                 <div className="sign-in-with-google-text ms-4">
                   Sign in with google

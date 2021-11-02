@@ -25,6 +25,8 @@ const UUID = require("uuid/v4");
 const EventTransactionIdsCommunityWise = require("../models/eventTransactionIdsCommunityWise");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
+const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
+
 const signTokenForCommunityLogin = (userId, communityId) =>
   jwt.sign(
     { userId: userId, communityId: communityId },
@@ -697,7 +699,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(
       new AppError(
-        "There is no user with email address or you signed up with google .",
+        "There is no user with email address or you signed up with google or linkedin.",
         404
       )
     );
@@ -938,10 +940,13 @@ exports.createNewCommunity = catchAsync(async (req, res, next) => {
 
         const token = signTokenForCommunityLogin(userId, createdCommunity._id);
 
+        const userToken = signToken(userId);
+
         res.status(200).json({
           status: "success",
           communityDoc: createdCommunity,
           token: token,
+          userToken: userToken,
           communityAccountRequests: allNonExpiredCommunityAccountRequests,
           userId: userId,
         });
