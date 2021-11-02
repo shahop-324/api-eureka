@@ -104,7 +104,6 @@ const Recordings = () => {
 
   let recordings = [];
 
-
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
