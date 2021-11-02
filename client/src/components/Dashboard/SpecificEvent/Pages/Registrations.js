@@ -32,7 +32,6 @@ const options = [
   { value: "VIP Ticket", label: "VIP Ticket" },
 ];
 
-
 const styles = {
   control: (base) => ({
     ...base,

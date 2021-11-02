@@ -12,12 +12,8 @@ import NetworkingFormRight from "./FormComponents/EditNetworkingForms/Networking
 import { useDispatch, useSelector } from "react-redux";
 import { errorTrackerForEditNetworking, fetchNetworking } from "../../../actions";
 import { Link, useParams } from "react-router-dom";
-import { useSnackbar } from "notistack";
 
 const Networking = () => {
-
-  const { enqueueSnackbar } = useSnackbar();
-
   const { error } = useSelector(
     (state) => state.networking
   );
@@ -34,16 +30,9 @@ const Networking = () => {
   }, [dispatch, id]);
 
   if(error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     return dispatch(errorTrackerForEditNetworking())
   }
 
-  // if(isLoading) {
-  //   return <Loader />;
-  // }
 
   return (
     <>
@@ -51,12 +40,7 @@ const Networking = () => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Networking</div>
           <div className="drop-selector d-flex flex-row justify-content-end">
-            {/* <button className="btn btn-outline-primary btn-outline-text">
-              Preview Venue
-            </button> */}
-
             <Link
-      
               className="btn btn-outline-primary btn-outline-text me-3"
               to={`/event-landing-page/${id}${communityId}`}
               target="_blank"

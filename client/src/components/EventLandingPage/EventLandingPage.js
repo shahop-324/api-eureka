@@ -14,7 +14,7 @@ import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import {
   captureUserInterestInEvent,
   errorTrackerForFetchEvent,
-  fetchEvent,
+  fetchEventLandingPage,
   getCommunityTawkLink,
 } from "../../actions/index";
 
@@ -65,17 +65,15 @@ const EventLandingPage = (props) => {
 
   const currentEventId = params.id;
 
-  let event = useSelector((state) => state.event.eventDetails); // * This is current event document
+  let event = useSelector((state) => state.event.eventDetails);
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  let isCommunityTeamMember = false; // Boolean flag
+  let isCommunityTeamMember = false;
 
   if (isSignedIn) {
     let teamMembers = [];
-    // get list of all community members (i.e., super admin & community managers)
     if (event) {
-      // Prepare list of all organising community team members
       teamMembers.push(event.createdBy.superAdmin);
       if (
         typeof event.createdBy.eventManagers !== "undefined" &&
@@ -86,19 +84,15 @@ const EventLandingPage = (props) => {
         }
       }
 
-      // At this point we have all members from organising team grouped together in teamMembers array
-      // * Test if currently logged in users id matches with any of organising team members id
       if (teamMembers.includes(userDetails._id)) {
         isCommunityTeamMember = true;
       }
     }
   }
 
-  let alreadyRegistered = false; // Boolean flag
+  let alreadyRegistered = false;
 
   if (isSignedIn) {
-    // get list of all events in which attendee is registered.
-    // compare if eventId is included in users registered events array.
     if (userDetails) {
       if (userDetails.registeredInEvents) {
         const EventsIdsArray = userDetails.registeredInEvents.map(
@@ -109,10 +103,6 @@ const EventLandingPage = (props) => {
         }
       }
     }
-
-    // if yes then don't allow to register again
-
-    // else leave it in normal state.
   }
 
   const { isLoading, error } = useSelector((state) => state.event);
@@ -129,7 +119,7 @@ const EventLandingPage = (props) => {
 
   useEffect(() => {
     dispatch(getCommunityTawkLink(communityId));
-    dispatch(fetchEvent(id));
+    dispatch(fetchEventLandingPage(id, true)); // true indicates that we have to increase number of views on this event
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -183,7 +173,7 @@ const EventLandingPage = (props) => {
 
   let col = 2;
   let secNavCol = "1fr 1fr 1fr 1fr 1fr";
-  let sessionIsPresent = false; // Session will always be there!
+  let sessionIsPresent = false;
   let speakerIsPresent = false;
   let sponsorIsPresent = false;
   let boothsIsPresent = false;
@@ -522,6 +512,7 @@ const EventLandingPage = (props) => {
                   className="event-landing-poster mb-5"
                   src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
                   alt="event-landing-hero"
+                  style={{ maxHeight: "460px" }}
                 />
                 <div className="event-start-end-date mb-4">
                   Starts at {startDateTime}
@@ -891,12 +882,6 @@ const EventLandingPage = (props) => {
                     </div>
                   </div>
                   <div className="hosted-by-social-grid mb-3">
-                    {/* <IconButton>
-                    <LanguageIcon style={{ fill: "#4D4D4D" }} />
-                  </IconButton>
-                  <IconButton>
-                    <LinkedInIcon style={{ fill: "#4D4D4D" }} />
-                  </IconButton> */}
                     {console.log(event.createdBy.email)}
                     <a href={`mailto:${event.createdBy.email}`}>
                       {" "}
@@ -911,11 +896,9 @@ const EventLandingPage = (props) => {
                   <div className="event-ticket-section-headline mb-4">
                     <ConfirmationNumberIcon style={{ fill: "#818181" }} />
                     <div className="ticket-headline-text">Tickets</div>
-                    <div className="ticket-price-range">
-                      {/* From <b>$17.00</b> to <b>$95.00</b> */}
-                    </div>
+                    <div className="ticket-price-range"></div>
                   </div>
-                  {/* This is ticket form */}
+
                   <TicketForm
                     isCommunityTeamMember={isCommunityTeamMember}
                     eventId={id}

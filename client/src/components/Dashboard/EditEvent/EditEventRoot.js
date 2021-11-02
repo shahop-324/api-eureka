@@ -1,8 +1,3 @@
-/* eslint-disable no-unused-vars */
-// Stream server URL : rtmps://global-live.mux.com:443/app
-// MUX ACCESS TOKEN ID : 7b811d14-10d2-48ff-8502-647f984989fe
-// MUX SECRET KEY : 6HtUbytX2zOrkdiGoaiqcWTUkave7nuy1uo336Jpk87CUiyEYsQGk3JzM2+gMft99FLKDr+Y444
-
 import React from "react";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
@@ -12,41 +7,31 @@ import Topnav from "../HelperComponent/TopNav";
 import "./../../../assets/Sass/EditEvent/Basics.scss";
 import SideNavEdit from "../HelperComponent/SideNavEdit";
 import "./../../../index.css";
-import Basics from "./Basics";
-import About from "./About";
 import Sessions from "./Sessions";
 import Speakers from "./Speakers";
 import Booths from "./Booths";
 import Sponsors from "./Sponsor";
 import Ticketing from "./Ticketing";
-import Networking from "./Networking";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
 import {
-  editEvent,
   errorTrackerForFetchParticularEventOfCommunity,
   fetchParticularEventOfCommunity,
 } from "../../../actions";
-
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { navigationIndexForEditEvent } from "../../../actions/index";
 import ErrorBoundriesEditEventSpeakers from "../../ErrorBoundries/ErrorBoundriesEditEventSpeakers";
 import ErrorBoundriesEditEventSession from "../../ErrorBoundries/ErrorBoundriesEditEventSession";
-
 import ErrorBoundriesEditEventBooths from "../../ErrorBoundries/ErrorBoundriesEditEventBooths";
 import ErrorBoundriesEditEventSponsors from "../../ErrorBoundries/ErrorBoundriesEditEventSponsors";
 import ErrorBoundriesEditEventTickets from "../../ErrorBoundries/ErrorBoundriesEditEventTicketing";
-
-import { useSnackbar } from "notistack";
 import SideNavEditLean from "../HelperComponent/SideNavEditLean";
 import { Chip, IconButton } from "@material-ui/core";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import { Link } from "react-router-dom";
-
 import EventOverview from "./Overview";
 import EventEntryAndParticipants from "./EventEntryAndParticipants";
-
 import Recordings from "./../Recordings";
 import Integrations from "./../SpecificEvent/Pages/Integrations";
 import Affiliates from "./../SpecificEvent/Pages/Affiliate";
@@ -59,14 +44,12 @@ import Analytics from "./Analytics";
 import Email from "./Email";
 import VideoLibrary from "./../VideoLibrary";
 import StageVibesLibrary from "./StageVibesLibrary";
-
 import EventMoreActions from "./SubComponent/EventMoreActions";
 import styled from "styled-components";
 import LiveStream from "./LiveStream";
 
 const Strip = styled.div`
   background-color: #f75353;
-
   font-size: 0.8rem;
   font-weight: 500;
   color: #ffffff;
@@ -90,11 +73,9 @@ const EditEventRoot = () => {
 
   const communityId = params.communityId;
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const userId = useSelector((state) => state.user.userDetails._id);
 
-  const { error, isLoading } = useSelector((state) => state.event);
+  const { error } = useSelector((state) => state.event);
 
   console.log(id);
   useEffect(() => {
@@ -205,9 +186,6 @@ const EditEventRoot = () => {
   console.log(currentIndex);
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForFetchParticularEventOfCommunity());
   }
   else {

@@ -81,50 +81,30 @@ const SearchEvents = () => {
       search_params.delete("min_price");
       url.search = search_params.toString();
       let new_url = url.toString();
-      // setFullLocation(new_url);
-
       const len = new_url.split("?")[0].length;
 
       const result = new_url.substring(len);
       console.log(typeof result);
       console.log(result);
-      // props.fetchEvents(event.target.value);
-      // if (result !== null) {
-      //   history.push("/search-events/");
-      // }
-      // // } else {
-      // //   history.push(result);
-      // // }
-      // console.log(location.search)
-      // if (location.search===null) {
-      //   history.push("/search-events/");
-      // } else {
-      //   history.push(result);
-      // }
       if (result === "") {
         history.push("/search-events/");
       } else {
         history.push(result);
       }
-      // history.push(result);
     } else if (price === "Any Price") {
       search_params.delete("max_price");
       search_params.delete("min_price");
       url.search = search_params.toString();
       let new_url = url.toString();
-      // setFullLocation(new_url);
       const len = new_url.split("?")[0].length;
 
       const result = new_url.substring(len);
       console.log(typeof result);
-      // props.fetchEvents(event.target.value);
       if (result === "") {
         history.push("/search-events/");
       } else {
         history.push(result);
       }
-      // if(result)
-      // history.push(result);
     }
   };
 
@@ -136,12 +116,9 @@ const SearchEvents = () => {
 
       url.search = search_params.toString();
       let new_url = url.toString();
-      // setFullLocation(new_url);
       const len = new_url.split("?")[0].length;
 
       const result = new_url.substring(len);
-
-      // props.fetchEvents(event.target.value);
       if (result === "") {
         history.push("/search-events/");
       } else {
@@ -152,12 +129,9 @@ const SearchEvents = () => {
 
       url.search = search_params.toString();
       let new_url = url.toString();
-      // setFullLocation(new_url);
       const len = new_url.split("?")[0].length;
 
       const result = new_url.substring(len);
-
-      // props.fetchEvents(event.target.value);
       if (result === "") {
         history.push("/search-events/");
       } else {
@@ -168,12 +142,9 @@ const SearchEvents = () => {
 
       url.search = search_params.toString();
       let new_url = url.toString();
-      // setFullLocation(new_url);
       const len = new_url.split("?")[0].length;
 
       const result = new_url.substring(len);
-
-      // props.fetchEvents(event.target.value);
       if (result === "") {
         history.push("/search-events/");
       } else {
@@ -194,7 +165,6 @@ const SearchEvents = () => {
     search_params.set("endDate", dateArray[1]);
     url.search = search_params.toString();
     let new_url = url.toString();
-    // setFullLocation(new_url);
     const len = new_url.split("?")[0].length;
 
     const result = new_url.substring(len);
@@ -215,8 +185,6 @@ const SearchEvents = () => {
 
       const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
       const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
-
-      //  Check if its a favourite event or not
 
       let isFavourite = false;
 
@@ -261,12 +229,9 @@ const SearchEvents = () => {
     search_params.delete("endDate");
     url.search = search_params.toString();
     let new_url = url.toString();
-    // setFullLocation(new_url);
     const len = new_url.split("?")[0].length;
 
     const result = new_url.substring(len);
-
-    // props.fetchEvents(event.target.value);
     if (result === "") {
       history.push("/search-events/");
     } else {
@@ -288,7 +253,6 @@ const SearchEvents = () => {
     }
     url.search = search_params.toString();
     let new_url = url.toString();
-    // setFullLocation(new_url);
     const len = new_url.split("?")[0].length;
 
     const result = new_url.substring(len);
@@ -309,12 +273,9 @@ const SearchEvents = () => {
     }
     url.search = search_params.toString();
     let new_url = url.toString();
-    // setFullLocation(new_url);
     const len = new_url.split("?")[0].length;
 
     const result = new_url.substring(len);
-
-    // props.fetchEvents(event.target.value);
     if (result === "") {
       history.push("/search-events/");
     } else {
@@ -423,16 +384,6 @@ const SearchEvents = () => {
               style={{ display: "none" }}
             >
               <div className="row" style={{ width: "99.5%", margin: "0 auto" }}>
-                {/* <button
-                
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseExample"
-                  aria-expanded="false"
-                  aria-controls="collapseExample"
-                  className="btn btn-outline-secondary"
-                >
-                  Filter
-                </button> */}
               </div>
             </div>
             <div className="col filter-wrapper" id="collapseExample">

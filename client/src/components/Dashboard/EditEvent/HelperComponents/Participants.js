@@ -85,10 +85,11 @@ const renderParticipants = (eventRegistrations) => {
       return (
         <ParticipantsDetailsCard
           image={
-            el.userImage ? 
-            el.userImage.startsWith("https://")
-              ? el.userImage
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${el.userImage}` : "#"
+            el.userImage
+              ? el.userImage.startsWith("https://")
+                ? el.userImage
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${el.userImage}`
+              : "#"
           }
           id={el._id}
           key={el._id}
@@ -304,32 +305,29 @@ const Participants = () => {
             {" "}
             <MailRoundedIcon className="me-2" /> <span> Send Invites </span>
           </button>
-          {/* <button
-            onClick={() => {
-              setOpen(true);
-            }}
-            className="btn btn-outline-primary btn-outline-text d-flex flex-row align-items-center"
-          >
-            {" "}
-            <AddRoundedIcon className="me-2" /> <span> Add Participants </span>
-          </button> */}
         </div>
       </div>
-      <div className="event-management-content-grid px-4 mb-4 py-4">
-        <ParticipantsListFields />
+      {typeof registrations !== "undefined" && registrations.length > 0 ? (
+        <div className="event-management-content-grid px-4 mb-4 py-4">
+          <ParticipantsListFields />
 
-        <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-          <Divider />
+          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+            <Divider />
+          </div>
+
+          {renderParticipants(registrations)}
         </div>
-        {typeof registrations !== "undefined" && registrations.length > 0 ? (
-          renderParticipants(registrations)
-        ) : (
+      ) : (
+        <div
+          className="d-flex flex-row align-items-center justify-content-center"
+          style={{ height: "63vh", width: "100%" }}
+        >
           <NoContentFound
             msgText="Awaiting registrations. Please spread word about your event."
             img={NoRegistrations}
           />
-        )}
-      </div>
+        </div>
+      )}
 
       <AddParticipantsOptions open={open} handleClose={handleClose} />
       <AttendeeBulkInvite

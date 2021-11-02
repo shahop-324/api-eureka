@@ -14,7 +14,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import BoothsListFields from "./BoothListFields";
 import BoothDetailsCard from "./BoothDetailsCard";
 import AddNewBooth from "./FormComponents/EditBoothsForms/AddNewBooth";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   errorTrackerForCreateBooth,
@@ -24,7 +24,6 @@ import {
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import BoothPNG from "./../../../assets/images/fogg-come-back-later-2.png";
-import { useSnackbar } from "notistack";
 import styled from "styled-components";
 
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded"; // Icon
@@ -127,7 +126,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -142,10 +140,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Booths = () => {
   const params = useParams();
-
-  const communityId = params.communityId;
-
-  const { enqueueSnackbar } = useSnackbar();
 
   let options = [{ value: "all", label: "All tags" }];
 
@@ -213,10 +207,6 @@ const Booths = () => {
   const classes = useStyles();
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     dispatch(errorTrackerForFetchBooths());
     return dispatch(errorTrackerForCreateBooth());
   }
@@ -266,27 +256,33 @@ const Booths = () => {
           </div>
         </div>
         <Grid>
-          <div className="session-content-grid px-3 mb-4">
-            <div className="basic-form-left-white px-4 py-4">
-              <BoothsListFields />
-              {isLoading ? (
-                <div
-                  className="d-flex flex-row align-items-center justify-content-center"
-                  style={{ height: "65vh" }}
-                >
-                  <Loader />
-                </div>
-              ) : typeof booths !== "undefined" && booths.length > 0 ? (
-                renderBoothList(booths)
-              ) : (
-                <NoContentFound
-                  msgText="This Events booths will appear here"
-                  img={BoothPNG}
-                />
-              )}
+          {typeof booths !== "undefined" && booths.length > 0 ? (
+            <div className="session-content-grid px-3 mb-4">
+              <div className="basic-form-left-white px-4 py-4">
+                <BoothsListFields />
+                {isLoading ? (
+                  <div
+                    className="d-flex flex-row align-items-center justify-content-center"
+                    style={{ height: "65vh" }}
+                  >
+                    <Loader />
+                  </div>
+                ) : (
+                  renderBoothList(booths)
+                )}
+              </div>
             </div>
-          </div>
-
+          ) : (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "63vh", width: "100%" }}
+            >
+              <NoContentFound
+                msgText="You can manage booth exhibitors here"
+                img={BoothPNG}
+              />
+            </div>
+          )}
           <BoothCustomizationPaper className="p-3">
             <Heading className="mb-3">Customize booths</Heading>
             <PropertyName className="mb-3">

@@ -137,7 +137,7 @@ const AvatarMenu = () => {
   let image;
   let userName;
 
-  if (user.userDeatils) {
+  if (user.userDetails) {
     image = user.userDetails.image;
     userName = user.userDetails.firstName;
   }

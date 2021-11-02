@@ -16,7 +16,7 @@ const ListDetailsCard = () => {
           alignItems: "center",
         }}
       >
-        <div className="event-visibility-field">
+        <div className="">
           <div
             className=" d-flex flex-row align-items-center"
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
@@ -25,7 +25,7 @@ const ListDetailsCard = () => {
             <span className="ms-3"> {Faker.name.findName()} </span>
           </div>
         </div>
-        <div className="event-status-field">
+        <div className="">
           <div
             className=""
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
@@ -33,7 +33,7 @@ const ListDetailsCard = () => {
             {Faker.internet.email()}
           </div>
         </div>
-        <div className="event-views-field">
+        <div className="">
           <div
             className=""
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
@@ -41,7 +41,7 @@ const ListDetailsCard = () => {
             {Faker.company.companyName()}
           </div>
         </div>
-        <div className="event-registrations-field">
+        <div className="">
           <div
             className=""
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
@@ -49,7 +49,7 @@ const ListDetailsCard = () => {
             {"Product manager"}
           </div>
         </div>
-        <div className="event-registrations-field">
+        <div className="">
           <div
             className=""
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
@@ -57,7 +57,7 @@ const ListDetailsCard = () => {
             <Chip label="Connected" variant="outlined" color="success" />
           </div>
         </div>
-        <div className="event-registrations-field">
+        <div className="">
           <div
             className="d-flex flex-row align-items-center"
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}

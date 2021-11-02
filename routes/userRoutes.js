@@ -9,8 +9,6 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 
-
-
 // router.post("/signup", authController.signup);
 
 router.post("/verifyUserEmailAndSignup/:id", authController.signup);
@@ -20,6 +18,7 @@ router.get("/loginMagicLinkUser/:userId", authController.loginMagicLinkUser);
 router.patch("/resetPassword/:token", authController.resetPassword);
 
 router.get("/event/:id", userController.getParticularEvent);
+router.post("/event/:id", userController.getEventLandingPage);
 
 router.post("/verifyAndCreateCommunity/:id", userController.createNewCommunity);
 
@@ -37,7 +36,6 @@ router.get("/getUserRegistrations", userController.getUserRegistrations); // TOD
 router.get("/personalData", userController.getAllPersonalData);
 router.patch("/updateMe", userController.updateMe);
 router.post("/newCommunityRequest", userController.createNewCommunityRequest);
-
 
 // ! Select Plan
 router.post(

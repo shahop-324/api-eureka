@@ -24,12 +24,8 @@ import { useEffect } from "react";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import NoSessionsPNG from "./../../../assets/images/confident.png";
-import { useSnackbar } from "notistack";
 import styled from "styled-components";
-
-import EventRoundedIcon from "@mui/icons-material/EventRounded"; // Schedule
 import EventSchedule from "./EventSchedule";
-import AgendaActivityOptions from "./SubComponent/AgendaActivityOptions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -100,7 +96,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sessions = () => {
-  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const handleNewSession = () => {
     setOpen(true);
@@ -180,10 +175,6 @@ const Sessions = () => {
   const classes = useStyles();
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     dispatch(errorTrackerForFetchSessions());
     return dispatch(errorTrackerForCreateSession());
   }
@@ -212,14 +203,6 @@ const Sessions = () => {
               />
             </div>
 
-            {/* <button
-              className="btn btn-outline-primary btn-outline-text me-3 d-flex flex-row align-items-center"
-              onClick={handleOpenSchedule}
-            >
-              <EventRoundedIcon className="me-2" />
-              <span>View & share schedule</span>
-            </button> */}
-
             <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSession}
@@ -233,28 +216,35 @@ const Sessions = () => {
           Here you can create and manage various activities in your event.
         </TextSmall>
 
-        <div className="session-content-grid px-3 mb-4">
-          <div className="basic-form-left-white px-4 py-4">
-            <>
-              <SessionListFields />
-              {isLoading ? (
-                <div
-                  className="d-flex flex-row align-items-center justify-content-center"
-                  style={{ height: "65vh" }}
-                >
-                  <Loader />
-                </div>
-              ) : typeof sessions !== "undefined" && sessions.length > 0 ? (
-                renderSessionsList(sessions)
-              ) : (
-                <NoContentFound
-                  msgText="This events sessions will appear here."
-                  img={NoSessionsPNG}
-                />
-              )}
-            </>
+        {typeof sessions !== "undefined" && sessions.length > 0 ? (
+          <div className="session-content-grid px-3 mb-4">
+            <div className="basic-form-left-white px-4 py-4">
+              <>
+                <SessionListFields />
+                {isLoading ? (
+                  <div
+                    className="d-flex flex-row align-items-center justify-content-center"
+                    style={{ height: "65vh" }}
+                  >
+                    <Loader />
+                  </div>
+                ) : (
+                  renderSessionsList(sessions)
+                )}
+              </>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            <NoContentFound
+              msgText="You can create and manage various sessions here"
+              img={NoSessionsPNG}
+            />
+          </div>
+        )}
       </div>
       <AddNewSession open={open} handleClose={handleClose} />
       <EventSchedule open={openSchedule} handleClose={handleCloseSchedule} />

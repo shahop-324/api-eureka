@@ -58,16 +58,8 @@ const EventCard = ({
   speakers,
   magic_link,
 }) => {
-  console.log(communityId);
   const dispatch = useDispatch();
-  const eventId = id;
-  const userDetails = useSelector((state) =>
-    state.user.userDetails ? state.user.userDetails : null
-  );
-
   const showLiked = isFavourite;
-
-  const color = showLiked ? "#DD3B3B" : "#212121";
 
   console.log(showBtn);
   const displayJoinBtn = showBtn ? "block" : "none";
@@ -81,7 +73,7 @@ const EventCard = ({
           onClick={() => dispatch(fetchEvent(id))}
           to={`/event-landing-page/${id}/${communityId}`}
         >
-          <img src={image} className="poster-img" alt="event-poster" />
+          <img src={image} className="poster-img" alt="event-poster" style={{maxHeight: "200px"}} />
         </Link>
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">
@@ -135,7 +127,6 @@ const EventCard = ({
             <SpeakersHeading style={{ textAlign: "left" }} className="mb-3">
               Speakers
             </SpeakersHeading>
-
             <AvatarGroup max={4}>{renderSpeakers(speakers)}</AvatarGroup>
           </div>
         ) : (
@@ -149,17 +140,10 @@ const EventCard = ({
           {console.log(minPrice)}
           {minPrice && `$ ${minPrice} - `} Upto ${maxPrice}
         </div>
-
-        {/* <div className="mt-4 mb-3" style={{ display: displayJoinBtn }}>
-          <Divider />
-        </div> */}
         <div className="d-flex flex-row justify-content-end align-items-center">
           <a href={`${magic_link}`} target="_blank" rel="noreferrer">
             <button
               type="button"
-              // onClick={() => {
-              //   history.push(magic_link);
-              // }}
               className="btn btn-outline-primary btn-outline-text"
               style={{
                 display: displayJoinBtn,

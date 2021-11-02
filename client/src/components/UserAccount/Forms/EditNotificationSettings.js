@@ -72,7 +72,7 @@ const EditNotificationSettings = () => {
               checked={NotificationsForRegisteredEvents}
             />
 
-            <Label>Receive Email Notifications for registered events.</Label>
+            <Label className="ms-2">Receive Email Notifications for registered events.</Label>
           </div>
           <div className="mb-3">
             <Checkbox
@@ -82,7 +82,7 @@ const EditNotificationSettings = () => {
               checked={NotificationsForEventRemainder}
             />
 
-            <Label>Receive Email Notifications for event reminders.</Label>
+            <Label className="ms-2">Receive Email Notifications for event reminders.</Label>
           </div>
           <div className="mb-3">
             <Checkbox
@@ -92,7 +92,7 @@ const EditNotificationSettings = () => {
               checked={NotificationBasedOnMyPreference}
             />
 
-            <Label>
+            <Label className="ms-2">
               Receive Suggested List of events based on my preference.
             </Label>
           </div>

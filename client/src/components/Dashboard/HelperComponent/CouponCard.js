@@ -2,6 +2,7 @@ import React from "react";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import InfoIcon from "@mui/icons-material/Info";
 import Ripple from "./../../ActiveStatusRipple";
 import "./../../../assets/Sass/Coupon.scss";
 
@@ -9,6 +10,7 @@ import EditCoupon from "../FormComponents/EditCoupon";
 import DeleteCoupon from "../FormComponents/DeleteCoupon";
 import { useDispatch } from "react-redux";
 import { fetchCoupon } from "../../../actions";
+import CouponInfo from "./CouponInfo";
 
 const CouponCard = ({
   id,
@@ -21,6 +23,8 @@ const CouponCard = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const [openInfo, setOpenInfo] = React.useState(false);
+
   const dispatch = useDispatch();
 
   const handleEditCoupon = () => {
@@ -35,6 +39,14 @@ const CouponCard = ({
   const handleDeleteCoupon = () => {
     setOpenDeleteDialog(true);
   };
+
+  const handleCloseInfo = () => {
+    setOpenInfo(false);
+  };
+
+  const handleOpenInfo = () => {
+    setOpenInfo(true);
+  }
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
@@ -55,13 +67,19 @@ const CouponCard = ({
             }}
           >
             <IconButton aria-label="delete" color="primary">
-              <EditRoundedIcon style={{ fill: "#538BF7" }} />
+              <EditRoundedIcon style={{ fill: "#FFFFFF" }} />
             </IconButton>
           </div>
 
           <div className="fit-content" onClick={handleDeleteCoupon}>
-            <IconButton aria-label="delete" color="secondary">
-              <DeleteIcon />
+            <IconButton aria-label="delete">
+              <DeleteIcon style={{ fill: "#FFFFFF" }} />
+            </IconButton>
+          </div>
+
+          <div className="fit-content" onClick={handleOpenInfo}>
+            <IconButton aria-label="delete">
+              <InfoIcon style={{ fill: "#FFFFFF" }} />
             </IconButton>
           </div>
         </div>
@@ -71,7 +89,6 @@ const CouponCard = ({
         style={{ height: "60%" }}
       >
         <div className="coupon-discount-percent mb-4">{percentage}% Off</div>
-        {/* <div className="discount-on mb-3" style={{fontFamily: "Ubuntu"}}>On {onEvent}</div> */}
         <div className="mb-3">
           <button
             type="button"
@@ -99,6 +116,8 @@ const CouponCard = ({
           <Ripple /> Active{" "}
         </div>
       </div>
+
+      <CouponInfo open={openInfo} handleClose={handleCloseInfo} />
 
       <EditCoupon open={open} handleClose={handleClose} id={id} />
 

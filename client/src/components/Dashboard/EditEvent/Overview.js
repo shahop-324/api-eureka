@@ -11,8 +11,6 @@ import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import { useParams } from "react-router";
-import { useSnackbar } from "notistack";
-
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -120,11 +118,12 @@ const EventOverview = (props) => {
 
   const { eventDetails, isLoading } = useSelector((state) => state.event);
 
-  const [tag, setTag] = useState( eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null);
+  const [tag, setTag] = useState(
+    eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null
+  );
   const [editMode, setEditMode] = useState(false);
 
   const { handleSubmit } = props;
-
 
   const { error } = useSelector((state) => state.event);
 
@@ -134,8 +133,8 @@ const EventOverview = (props) => {
 
   let aboutText;
 
-  if(eventDetails) {
-aboutText = eventDetails.editingComment
+  if (eventDetails) {
+    aboutText = eventDetails.editingComment;
   }
 
   const [editorState, setEditorState] = React.useState(
@@ -155,8 +154,7 @@ aboutText = eventDetails.editingComment
       editingComment: convertToRaw(editorState.getCurrentContent()),
     };
 
-      dispatch(editEventDescription(JSONData, id));
-    
+    dispatch(editEventDescription(JSONData, id));
   };
 
   const renderEditor = ({ input, id }) => {
@@ -174,8 +172,15 @@ aboutText = eventDetails.editingComment
     );
   };
 
-  if(isLoading || !eventDetails) {
-    return <div>Loading...</div>
+  if (isLoading || !eventDetails) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ height: "73vh", width: "100%" }}
+      >
+        <div class="spinner-border" role="status"></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -183,7 +188,8 @@ aboutText = eventDetails.editingComment
     return dispatch(errorTrackerForEditEventDiscription());
   }
 
-  const previousTag = eventDetails &&  eventDetails.organisedBy ? eventDetails.organisedBy  : null;
+  const previousTag =
+    eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null;
 
   const handleChangeTag = (e) => {
     setTag(e.target.value);
@@ -209,7 +215,6 @@ aboutText = eventDetails.editingComment
         </div>
 
         <div className=" px-3 mb-4">
-          {/*  */}
           <MainEventSetupCheckList />
           <EventOverviewGrid className="mb-5">
             <EventDetails className="px-4 py-3">
@@ -285,7 +290,6 @@ aboutText = eventDetails.editingComment
                     <TextSignificant className="my-1">
                       {eventDetails.Timezone}
                     </TextSignificant>
-                    {/* <TextSmall>IST</TextSmall> */}
                   </div>
                 </div>
               </EventDetailsGrid>
@@ -349,7 +353,6 @@ aboutText = eventDetails.editingComment
                   Embeddable widget
                 </buttton>
               </div>
-
               <EventDetailsHeading className="mb-4">
                 Event organised by
               </EventDetailsHeading>

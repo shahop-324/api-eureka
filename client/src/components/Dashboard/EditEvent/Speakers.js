@@ -20,7 +20,6 @@ import { useEffect } from "react";
 import {
   errorTrackerForCreateSpeaker,
   errorTrackerForFetchSpeakers,
-  fetchEvent,
   showSnackbar,
   fetchSessions,
   fetchSpeakers,
@@ -29,7 +28,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Loader";
 import NoSpeakers from "./../../../assets/images/scratching-head.png";
 import NoContentFound from "../../NoContent";
-import { useSnackbar } from "notistack";
 import styled from "styled-components";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import SendInvites from "./../EditEvent/FormComponents/EditSpeakersForms/SendInvites";
@@ -112,8 +110,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Speakers = () => {
-
-  const params   = useParams();
+  const params = useParams();
   const eventId = params.id;
 
   const [openInvites, setOpenInvites] = useState(false);
@@ -293,26 +290,33 @@ const Speakers = () => {
             </button>
           </div>
         </div>
-        <div className="session-content-grid px-3 mb-4">
-          <div className="basic-form-left-white px-4 py-4">
-            <SpeakersListFields />
-            {isLoading ? (
-              <div
-                className="d-flex flex-row align-items-center justify-content-center"
-                style={{ height: "65vh" }}
-              >
-                <Loader />
-              </div>
-            ) : typeof speakers !== "undefined" && speakers.length > 0 ? (
-              renderSpeakersList(speakers)
-            ) : (
-              <NoContentFound
-                msgText="This events speakers will appear here."
-                img={NoSpeakers}
-              />
-            )}
+        {typeof speakers !== "undefined" && speakers.length > 0 ? (
+          <div className="session-content-grid px-3 mb-4">
+            <div className="basic-form-left-white px-4 py-4">
+              <SpeakersListFields />
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center"
+                  style={{ height: "65vh" }}
+                >
+                  <Loader />
+                </div>
+              ) : (
+                renderSpeakersList(speakers)
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            <NoContentFound
+              msgText="You can invite and manage event speakers here"
+              img={NoSpeakers}
+            />
+          </div>
+        )}
       </div>
       <AddNewSpeaker open={open} handleClose={handleClose} />
       <SendInvites open={openInvites} handleClose={handleCloseInvites} />

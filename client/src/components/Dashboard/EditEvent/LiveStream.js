@@ -7,6 +7,8 @@ import AddStreamDestinationOptions from "../FormComponents/AddStreamDestinationO
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchStreamDestinations } from "./../../../actions";
+import NoContentFound from "./../../NoContent";
+import Broadcast from "./../../../assets/images/broadcast.png";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -70,7 +72,6 @@ const LiveStream = () => {
 
           <div className="sec-heading-action-button d-flex flex-row">
             <div className="d-flex flex-row align-items-center">
-          
               <button
                 className="btn btn-primary btn-outline-text"
                 onClick={handleOpen}
@@ -84,13 +85,26 @@ const LiveStream = () => {
           You can setup live stream destinations to go live from your event on
           any third party streaming software which supports RTMP.
         </TextSmall>
-        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          <LiveStreamListFields />
-          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-            <Divider />
+        {typeof streamDestinations !== "undefined" &&
+        streamDestinations.length > 0 ? (
+          <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
+            <LiveStreamListFields />
+            <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+              <Divider />
+            </div>
+            {renderStreams(streamDestinations)}
           </div>
-          {renderStreams(streamDestinations)}
-        </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            <NoContentFound
+              msgText="Live broadcast your event to any other streaming platform."
+              img={Broadcast}
+            />
+          </div>
+        )}
       </div>
       <AddStreamDestinationOptions open={open} handleClose={handleClose} />
     </>

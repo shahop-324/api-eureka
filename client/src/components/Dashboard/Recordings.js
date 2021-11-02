@@ -5,7 +5,6 @@ import "./../../assets/Sass/SideNav.scss";
 import "./../../assets/Sass/TopNav.scss";
 import "./../../assets/Sass/DataGrid.scss";
 import Divider from "@material-ui/core/Divider";
-// import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
@@ -14,11 +13,9 @@ import RecordingsListFields from "./HelperComponent/RecordingsListFields";
 
 import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
-import Downloading from './../../assets/images/Downloading.png';
+import Downloading from "./../../assets/images/Downloading.png";
 
-const options = [
-  { value: "All", label: "All Events" },
-];
+const options = [{ value: "All", label: "All Events" }];
 
 const timelineOptions = [
   { value: "Today", label: "Today" },
@@ -103,12 +100,14 @@ const Recordings = () => {
   const params = useParams();
   const communityId = params.communityId;
   console.log(communityId);
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
+
+  let recordings = [];
+
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">All Recordings</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -145,31 +144,27 @@ const Recordings = () => {
                 defaultValue={timelineOptions[4]}
               />
             </div>
-
-            {/* <button className="btn btn-primary btn-outline-text">
-                  Create New event
-                </button> */}
           </div>
         </div>
-        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          {/* <EventListFields /> */}
-          {/* <RegistrationsListFields /> */}
-          <RecordingsListFields />
-          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-            <Divider />
+        {typeof recordings !== "undefined" && recordings.length > 0 ? (
+          <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
+            <RecordingsListFields />
+            <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+              <Divider />
+            </div>
           </div>
-          {/* <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard />
-          <RecordingsDetailsCard /> */}
-          <NoContentFound msgText="Your event recording will appear here." img={Downloading}/>
-          
-        </div>
-        {/* Here I have to use pagination */}
-        {/* <CustomPagination /> */}
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            {" "}
+            <NoContentFound
+              msgText="All of your session recordings will show up here."
+              img={Downloading}
+            />{" "}
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
@@ -8,7 +7,6 @@ import ComingSoon from "./../../../assets/images/coming-soon.png";
 import WhoCanEnterEvent from "./HelperComponents/WhoCanEnterEvent";
 import PreviewRegistrationForm from "./HelperComponents/PreviewRegisterationForm";
 import EditRegistraionForm from "./HelperComponents/EditRegistrationForm";
-// import Registrations from "./Reg";
 import Participants from "./HelperComponents/Participants";
 
 const SectionHeading = styled.div`
@@ -106,17 +104,6 @@ const EventEntryAndParticipants = () => {
           >
             Registrations
           </SwitchTab>
-
-          {/* <SwitchTab
-            active={activeTab === "entryRules" ? true : false}
-            className=" me-5"
-            onClick={() => {
-              setActiveTab("entryRules");
-            }}
-          >
-            Entry rules
-          </SwitchTab> */}
-
         </div>
 
         <TextSmall className="mb-4">

@@ -108,6 +108,51 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
     })
     .populate("hosts");
 
+  if (req.body.countAsView) {
+    await Event.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { views: 1 } },
+      { new: true, validateModifiedOnly: true }
+    );
+  }
+
+  res.status(200).json({
+    status: "SUCCESS",
+    data: {
+      response,
+    },
+  });
+});
+
+exports.getEventLandingPage = catchAsync(async (req, res, next) => {
+  const eventDoc = await Event.findById(req.params.id)
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts");
+
   await Event.findByIdAndUpdate(
     req.params.id,
     { $inc: { views: 1 } },
@@ -116,9 +161,7 @@ exports.getParticularEvent = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: "SUCCESS",
-    data: {
-      response,
-    },
+    data: eventDoc,
   });
 });
 

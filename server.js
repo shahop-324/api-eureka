@@ -3704,7 +3704,7 @@ io.on("connect", (socket) => {
       result;
 
     const user = await User.findOne({
-      linkedinId: linkedinId,
+      email: email,
     });
 
     if (user) {

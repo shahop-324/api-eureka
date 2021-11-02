@@ -14,7 +14,6 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   editCoupon,
   errorTrackerForEditCoupon,
-  fetchTickets,
 } from "../../../actions";
 import Loader from "./../../Loader";
 import styled from "styled-components";
@@ -161,10 +160,6 @@ const EditCoupon = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // useEffect(() => {
-  //   dispatch(fetchTickets(eventId));
-  // }, []);
-
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -184,13 +179,10 @@ const EditCoupon = ({
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
     dispatch(editCoupon(ModifiedFormValues, id));
-    // handleClose();
-    // window.location.reload();
   };
 
   if (detailError) {
     dispatch(errorTrackerForEditCoupon());
-    // alert(detailError);
     return null;
   }
 
@@ -234,7 +226,6 @@ const EditCoupon = ({
                     styles={styles}
                     menuPlacement="auto"
                     options={ticketOptions}
-                    // create a list of all tickets in this event
                     component={renderReactSelect}
                   />
                 </div>

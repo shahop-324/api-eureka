@@ -16,12 +16,12 @@ import TicketingDetailsCard from "./TicketingDetailsCard";
 import AddNewTicket from "./FormComponents/EditTicketForms/AddNewTicket";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTickets } from "../../../actions";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CreateNewTicketAndConnectToStripe from "../NoContentCards/CreateNewTicketAndConnectToStripe";
 import Loader from "../../Loader";
 import { useSnackbar } from "notistack";
 import { errorTrackerForFetchTickets } from "../../../actions";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -86,7 +86,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Ticketing = () => {
-
   const { enqueueSnackbar } = useSnackbar();
 
   const [term, setTerm] = React.useState("");
@@ -94,16 +93,9 @@ const Ticketing = () => {
   const params = useParams();
   const id = params.id;
 
-  const communityId = params.communityId;
-
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(fetchTickets(id));
-  // }, [dispatch, id]);
-
   useEffect(() => {
-    //dispatch(fetchSpeakers(id,term));
     const timeoutId = setTimeout(() => {
       dispatch(fetchTickets(id, term));
     }, 500);
@@ -124,7 +116,6 @@ const Ticketing = () => {
   };
 
   const { tickets, isLoading, error } = useSelector((state) => state.ticket);
-  // const connectedToStripe = useSelector((state) => );
 
   const renderTicketList = (tickets) => {
     console.log(tickets);
@@ -132,7 +123,7 @@ const Ticketing = () => {
       .slice(0)
       .reverse()
       .map((ticket) => {
-        if(!ticket) return <></>;
+        if (!ticket) return <></>;
         return (
           <TicketingDetailsCard
             key={ticket._id}
@@ -191,23 +182,30 @@ const Ticketing = () => {
             </button>
           </div>
         </div>
-        <div className="session-content-grid px-3 mb-4">
-          <div className="basic-form-left-white px-4 py-4">
-            <TicketingListFields />
-            {isLoading ? (
-              <div
-                className="d-flex flex-row align-items-center justify-content-center"
-                style={{ height: "65vh" }}
-              >
-                <Loader />
-              </div>
-            ) : tickets.length !== 0 ? (
-              renderTicketList(tickets)
-            ) : (
-              <CreateNewTicketAndConnectToStripe />
-            )}
+        {tickets.length !== 0 ? (
+          <div className="session-content-grid px-3 mb-4">
+            <div className="basic-form-left-white px-4 py-4">
+              <TicketingListFields />
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center"
+                  style={{ height: "65vh" }}
+                >
+                  <Loader />
+                </div>
+              ) : (
+                renderTicketList(tickets)
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            <CreateNewTicketAndConnectToStripe />
+          </div>
+        )}
       </div>
       <AddNewTicket open={open} handleClose={handleClose} />
     </>

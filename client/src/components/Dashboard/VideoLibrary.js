@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import dateFormat from "dateformat";
 import {useSelector} from 'react-redux';
 import { getCommunityVideos, resetProgress } from "./../../actions";
+import NoContentFound from "../NoContent";
+import VOD from "./../../assets/images/vod.png";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -100,13 +102,24 @@ const VideoLibrary = () => {
         These videos can be linked to any event in your community.
         </TextSmall>
 
-        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
+        {typeof videos !== "undefined" && videos.length > 0 ? <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
           <VideoLibraryListFields />
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
           </div>
           {renderVideos(videos)}
-        </div>
+        </div>  :  <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            {" "}
+            <NoContentFound
+              msgText="You can manage videos here to play in your event."
+              img={VOD}
+            />{" "}
+          </div> }
+
+        
       </div>
       <UploadVideo
         open={openUploadVideo}

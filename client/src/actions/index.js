@@ -964,6 +964,49 @@ export const removeFromFavouriteEvents =
     }
   };
 
+export const fetchEventLandingPage =
+  (id, countAsView) => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
+
+    try {
+      const res = await fetch(
+        `${BaseURL}users/event/${id}`,
+
+        {
+          method: "POST",
+          body: JSON.stringify({
+            countAsView,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Unable to load event. Please try again.");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      dispatch(
+        eventActions.FetchEvent({
+          event: result.data,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        showSnackbar("error", "Unable to load event. Please try again.")
+      );
+      dispatch(eventActions.hasError(error));
+      console.log(error);
+    }
+  };
+
 export const fetchEvent = (id) => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
 
@@ -3624,7 +3667,9 @@ export const editUserPassword = (formValues) => async (dispatch, getState) => {
     const result = await res.json();
 
     if (result.wrongPassword) {
-      dispatch(showSnackbar("error", "You have entered wrong current password."));
+      dispatch(
+        showSnackbar("error", "You have entered wrong current password.")
+      );
     } else {
       dispatch(
         userActions.EditUser({

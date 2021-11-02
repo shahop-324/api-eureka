@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import styled from 'styled-components';
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -13,7 +13,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCoupons } from "../../actions";
 import Loader from "../Loader";
 import NoContentFound from "../NoContent";
-import noCoupons from './../../assets/images/coupons.png';
+import noCoupons from "./../../assets/images/coupons.png";
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
 
 const renderCouponList = (coupons, eventDetails) => {
   return coupons
@@ -26,7 +33,6 @@ const renderCouponList = (coupons, eventDetails) => {
           key={coupon._id}
           url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.image}`}
           percentage={coupon.discountPercentage}
-          
           validTillDate={coupon.validTillDate}
           discountCode={coupon.discountCode}
           status={coupon.status}
@@ -37,8 +43,8 @@ const renderCouponList = (coupons, eventDetails) => {
 
 const Coupons = () => {
   const dispatch = useDispatch();
-  const { coupons, isLoading, error } = useSelector((state) => state.coupon);
-  const {eventDetails} = useSelector((state) => state.event);
+  const { coupons, isLoading } = useSelector((state) => state.coupon);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const [open, setOpen] = React.useState(false);
 
@@ -60,13 +66,13 @@ const Coupons = () => {
         <Loader />
       </div>
     );
-  } 
+  }
 
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Coupons</div>
+          <SectionHeading className="sec-heading-text">All Coupons</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <button
               className="btn btn-primary btn-outline-text"
@@ -78,9 +84,22 @@ const Coupons = () => {
             <AddNewCoupon open={open} handleClose={handleClose} />
           </div>
         </div>
-        <div className="coupon-management-content-grid px-3 mx-3 mb-4 py-4">
-          { (typeof coupons !== 'undefined' && coupons.length > 0) ?  renderCouponList(coupons, eventDetails) : <NoContentFound msgText="Your event coupons will appear here" img={noCoupons} />}
-        </div>
+        {typeof coupons !== "undefined" && coupons.length > 0 ? (
+          <div className="coupon-management-content-grid px-3 mx-3 mb-4 py-4">
+            {" "}
+            {renderCouponList(coupons, eventDetails)}{" "}
+          </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "73vh", width: "100%" }}
+          >
+            <NoContentFound
+              msgText="Your can create and manage event coupons here"
+              img={noCoupons}
+            />
+          </div>
+        )}
       </div>
     </>
   );

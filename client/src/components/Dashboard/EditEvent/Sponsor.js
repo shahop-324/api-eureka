@@ -21,11 +21,10 @@ import {
   errorTrackerForFetchTickets,
   fetchSponsors,
 } from "../../../actions";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Loader from "../../Loader";
 import NoContentFound from "../../NoContent";
 import NoSponsor from "./../../../assets/images/working.png";
-import { useSnackbar } from "notistack";
 import styled from "styled-components";
 
 import ManageTiers from "./HelperComponents/ManageSponsorTiers";
@@ -36,10 +35,6 @@ const SectionHeading = styled.div`
   color: #212121;
   font-family: "Ubuntu";
 `;
-
-
-
-
 
 const options = [
   { value: "all", label: "All Sponsors" },
@@ -118,8 +113,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sponsors = () => {
-  
-
   const [openManageTiers, setOpenManageTiers] = React.useState(false);
 
   const handleCloseManageTiers = () => {
@@ -179,8 +172,6 @@ const Sponsors = () => {
   const classes = useStyles();
 
   if (error) {
-    
-
     dispatch(errorTrackerForFetchTickets());
     return dispatch(errorTrackerForCreateTicket());
   }
@@ -225,28 +216,34 @@ const Sponsors = () => {
             </button>
           </div>
         </div>
-        <div className="session-content-grid px-3 mb-4">
-          <div className="basic-form-left-white px-4 py-4">
-            <SponsorsListFields />
-           
-            {isLoading ? (
-              <div
-                className="d-flex flex-row align-items-center justify-content-center"
-                style={{ height: "65vh" }}
-              >
-                <Loader />
-              </div>
-            ) : typeof sponsors !== "undefined" && sponsors.length > 0 ? (
-              renderSponsorList(sponsors)
-            ) : (
-              <NoContentFound
-                msgText="This events sponsors will appear here."
-                img={NoSponsor}
-              />
-            )}
-            
+        {typeof sponsors !== "undefined" && sponsors.length > 0 ? (
+          <div className="session-content-grid px-3 mb-4">
+            <div className="basic-form-left-white px-4 py-4">
+              <SponsorsListFields />
+
+              {isLoading ? (
+                <div
+                  className="d-flex flex-row align-items-center justify-content-center"
+                  style={{ height: "65vh" }}
+                >
+                  <Loader />
+                </div>
+              ) : (
+                renderSponsorList(sponsors)
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className="d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "63vh", width: "100%" }}
+          >
+            <NoContentFound
+              msgText="Add and manage sponsors for your event."
+              img={NoSponsor}
+            />
+          </div>
+        )}
       </div>
       <AddNewSponsor open={open} handleClose={handleClose} />
       <ManageTiers

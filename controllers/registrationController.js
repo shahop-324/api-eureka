@@ -62,7 +62,7 @@ exports.updateRegistrationSettings = catchAsync(async (req, res, next) => {
     "sessionReminders",
     "microphoneId",
     "cameraId",
-    "speakerId",
+    "speakerId"
   );
 
   const registrationDoc = await Registration.findByIdAndUpdate(
@@ -89,7 +89,10 @@ exports.getOneRegistration = catchAsync(async (req, res, next) => {
 
 exports.getAllRegistrationsForOneEvent = catchAsync(async (req, res, next) => {
   const registrations = await Registration.find({
-    bookedForEventId: mongoose.Types.ObjectId(req.params.eventId),
+    $and: [
+      { bookedForEventId: mongoose.Types.ObjectId(req.params.eventId) },
+      { type: "Attendee" },
+    ],
   });
 
   res.status(200).json({
