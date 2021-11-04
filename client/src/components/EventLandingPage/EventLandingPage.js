@@ -9,6 +9,8 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import RedditIcon from "@mui/icons-material/Reddit";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import {
@@ -39,6 +41,38 @@ import { Avatar, IconButton } from "@material-ui/core";
 import StickyFooter from "./HelperComponent/StickyFooter";
 import Loader from "../Loader";
 import styled from "styled-components";
+
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  HatenaShareButton,
+  InstapaperShareButton,
+  LineShareButton,
+  LinkedinShareButton,
+  LivejournalShareButton,
+  MailruShareButton,
+  OKShareButton,
+  PinterestShareButton,
+  PocketShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TumblrShareButton,
+  TwitterShareButton,
+  ViberShareButton,
+  VKShareButton,
+  WhatsappShareButton,
+  WorkplaceShareButton,
+} from "react-share";
+
+import {
+  FacebookShareCount,
+  HatenaShareCount,
+  OKShareCount,
+  PinterestShareCount,
+  RedditShareCount,
+  TumblrShareCount,
+  VKShareCount,
+} from "react-share";
 
 const MessageStrip = styled.div`
   background-color: #e74646;
@@ -458,53 +492,90 @@ const EventLandingPage = (props) => {
                   >
                     Share on
                   </div>
-                  <a
-                    href={`https://www.linkedin.com`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div className="shareon-icon mb-3">
-                      <IconButton>
-                        {" "}
-                        <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
-                      </IconButton>
-                    </div>
-                  </a>
+                  <div className="Demo__some-network">
+                    <LinkedinShareButton
+                      url={`https://www.bluemeet.in`}
+                      title={"Bluemeet"}
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          {" "}
+                          <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
+                        </IconButton>
+                      </div>
+                    </LinkedinShareButton>
+                  </div>
 
-                  <a
-                    href={`https://www.twitter.com/`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div className="shareon-icon mb-3">
-                      <IconButton>
-                        <TwitterIcon style={{ fill: "#539FF7" }} />
-                      </IconButton>
-                    </div>
-                  </a>
+                  <div className="Demo__some-network">
+                    <TwitterShareButton
+                      url={`https://www.bluemeet.in`}
+                      title={"Bluemeet"}
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          <TwitterIcon style={{ fill: "#539FF7" }} />
+                        </IconButton>
+                      </div>
+                    </TwitterShareButton>
+                  </div>
 
-                  <a
-                    href={`https://www.facebook.com`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div className="shareon-icon mb-3">
-                      <IconButton>
-                        <FacebookIcon style={{ fill: "#1760A8" }} />
-                      </IconButton>
-                    </div>
-                  </a>
-                  <a
-                    href={`https://web.whatsapp.com/`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <div className="shareon-icon mb-3">
-                      <IconButton>
-                        <WhatsAppIcon style={{ fill: "#378D1E" }} />
-                      </IconButton>
-                    </div>
-                  </a>
+                  <div className="Demo__some-network">
+                    <FacebookShareButton
+                      url={`https://www.bluemeet.in`}
+                      quote={"Bluemeet"}
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          <FacebookIcon style={{ fill: "#1760A8" }} />
+                        </IconButton>
+                      </div>
+                    </FacebookShareButton>
+                  </div>
+                  <div className="Demo__some-network">
+                    <WhatsappShareButton
+                      url={`https://www.bluemeet.in`}
+                      title={"Bluemeet"}
+                      separator=":: "
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          <WhatsAppIcon style={{ fill: "#378D1E" }} />
+                        </IconButton>
+                      </div>
+                    </WhatsappShareButton>
+                  </div>
+                  <div className="Demo__some-network">
+                    <TelegramShareButton
+                      url={`https://www.bluemeet.in`}
+                      title={"Bluemeet"}
+                      separator=":: "
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          <TelegramIcon style={{ fill: "#0088cc" }} />
+                        </IconButton>
+                      </div>
+                    </TelegramShareButton>
+                  </div>
+                  <div className="Demo__some-network">
+                    <RedditShareButton
+                      url={`https://www.bluemeet.in`}
+                      title={"Bluemeet"}
+                      separator=":: "
+                      className="Demo__some-network__share-button"
+                    >
+                      <div className="shareon-icon mb-3">
+                        <IconButton>
+                          <RedditIcon style={{ fill: "#ff4500" }} />
+                        </IconButton>
+                      </div>
+                    </RedditShareButton>
+                  </div>
                 </div>
               </div>
               <div className="event-landing-main-content">

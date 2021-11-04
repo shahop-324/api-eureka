@@ -7,7 +7,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteBooth, errorTrackerForDeleteBooth } from "../../../../../actions";
+import {
+  deleteBooth,
+  errorTrackerForDeleteBooth,
+} from "../../../../../actions";
 import Loader from "../../../../Loader";
 
 import styled from "styled-components";
@@ -23,26 +26,30 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const DeleteBooth = ({openDeleteDialog, handleCloseDeleteBooth, id}) => {
+const DeleteBooth = ({ openDeleteDialog, handleCloseDeleteBooth, id }) => {
   const dispatch = useDispatch();
 
-  const {error, isLoading} = useSelector((state) => state.booth);
+  const { error, isLoading } = useSelector((state) => state.booth);
 
- 
- 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if(isLoading) {
-    return (<div className="d-flex flex-row align-items-center justify-content-center" style={{width: "100%", height: "80vh"}}> <Loader /> </div>);
+  if (isLoading) {
+    return (
+      <div
+        className="d-flex flex-row align-items-center justify-content-center"
+        style={{ width: "100%", height: "80vh" }}
+      >
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
   }
 
-  if(error) {
+  if (error) {
     dispatch(errorTrackerForDeleteBooth());
-    alert(error);
     return;
   }
-
 
   return (
     <>
@@ -51,12 +58,9 @@ const DeleteBooth = ({openDeleteDialog, handleCloseDeleteBooth, id}) => {
         open={openDeleteDialog}
         aria-labelledby="responsive-dialog-title"
       >
-      
-
         <HeaderFooter className="px-4 py-3">
           <FormHeading>Remove this Booth.</FormHeading>
         </HeaderFooter>
-
 
         <DialogContent>
           <DialogContentText>
@@ -65,9 +69,7 @@ const DeleteBooth = ({openDeleteDialog, handleCloseDeleteBooth, id}) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-
-
-        <button
+          <button
             className="btn btn-outline-dark btn-outline-text me-3"
             onClick={handleCloseDeleteBooth}
           >
@@ -79,17 +81,12 @@ const DeleteBooth = ({openDeleteDialog, handleCloseDeleteBooth, id}) => {
             onClick={() => {
               dispatch(deleteBooth(id));
               handleCloseDeleteBooth();
-             
             }}
           >
             Proceed
           </button>
-
-
-        
         </DialogActions>
       </Dialog>
-      
     </>
   );
 };

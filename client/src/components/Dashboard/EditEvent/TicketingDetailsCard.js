@@ -110,7 +110,7 @@ const dispatch=useDispatch();
         </div>
         <div className="event-running-status-field">
           <div
-            className="d-flex flex-row mb-3"
+            className="d-flex flex-row"
             style={{
               width: "100%",
             }}

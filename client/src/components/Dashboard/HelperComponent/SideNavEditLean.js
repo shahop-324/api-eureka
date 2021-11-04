@@ -19,7 +19,7 @@ import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
 import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"; // Tracking
-import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
+import EventRoundedIcon from "@mui/icons-material/EventRounded"; // Schedule
 import LiveTvRoundedIcon from "@mui/icons-material/LiveTvRounded"; // Live streaming
 
 const SideNavEditLean = ({
@@ -43,13 +43,11 @@ const SideNavEditLean = ({
   handleAffliateClick,
   handleMailingClick,
   handleReviewsClick,
-  handleTrackingClick,
 }) => {
   console.log(activeIndex);
 
   return (
     <>
-      {/* className="" */}
       <div
         className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
         style={{
@@ -59,9 +57,9 @@ const SideNavEditLean = ({
         }}
       >
         <div className="main-icon-btn-container py-4">
-          {/* <a data-tip="Overview" className="ms-3"> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleEventOverviewClick();
             }}
@@ -78,7 +76,6 @@ const SideNavEditLean = ({
                   (activeIndex === "0" ? "icon-btn-active-h" : "")
                 }
               />
-              {/* <img src={InfoDeskPNG} alt="reception-desk" /> */}
             </div>
             <div
               className={
@@ -92,6 +89,7 @@ const SideNavEditLean = ({
           </div>
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleEventEntryAndParticipantsClick();
             }}
@@ -149,9 +147,9 @@ const SideNavEditLean = ({
               Schedule
             </div>
           </div> */}
-
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleSessionsClick();
             }}
@@ -182,6 +180,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleSpeakersClick();
             }}
@@ -212,6 +211,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleBoothsClick();
             }}
@@ -242,6 +242,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleSponsorsClick();
             }}
@@ -272,6 +273,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleTicketingClick();
             }}
@@ -302,6 +304,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleCouponsClick();
             }}
@@ -332,6 +335,7 @@ const SideNavEditLean = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            style={{ marginBottom: "12px" }}
             onClick={() => {
               handleVideosClick();
             }}
@@ -389,7 +393,7 @@ const SideNavEditLean = ({
               Reception settings
             </div>
           </div> */}
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
@@ -420,10 +424,7 @@ const SideNavEditLean = ({
             </div>
           </div>
 
-
-
-
-{/* <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleAffliateClick();
@@ -453,8 +454,7 @@ const SideNavEditLean = ({
             </div>
           </div> */}
 
-
-<div
+          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
               handleLiveStreamingClick();
@@ -571,7 +571,7 @@ const SideNavEditLean = ({
               Analytics
             </div>
           </div>
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {
@@ -601,9 +601,7 @@ const SideNavEditLean = ({
               Integrations
             </div>
           </div>
-          
-          
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
             onClick={() => {

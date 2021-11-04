@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import styled from "styled-components";
 import template from "./../../../../design.json";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";

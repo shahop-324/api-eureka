@@ -96,8 +96,6 @@ exports.createEvent = catchAsync(async (req, res, next) => {
     "eventManagers"
   );
 
-  // console.log(eventManagers);
-
   const eventManagers = communityObject.eventManagers;
 
   // 1) Create a new event document with required fields
@@ -150,6 +148,7 @@ exports.createEvent = catchAsync(async (req, res, next) => {
           await Registration.create({
             type: "Host",
             status: "Completed",
+            viaCommunity: true,
             eventName: req.body.eventName,
             userName: doc.firstName + " " + doc.lastName,
             userImage: doc.image,
@@ -324,6 +323,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               boothId: doc._id,
               type: "Exhibitor",
               status: "Completed",
+              viaCommunity: true,
               cancelled: false,
               eventName: eventGettingBooth.eventName,
               userName: existingUser.firstName + " " + existingUser.lastName,
@@ -391,6 +391,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               boothId: doc._id,
               type: "Exhibitor",
               status: "Pending",
+              viaCommunity: true,
               cancelled: false,
               eventName: eventGettingBooth.eventName,
               bookedForEventId: eventGettingBooth._id,
@@ -513,8 +514,6 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
     const userOnPlatform = await User.findOne({ email: req.body.email });
 
-    console.log(userOnPlatform);
-
     // case 1.)  if exists then just add them as a speaker, create a speaker registration for them with speaker magic link and add this event in their list of registered events
     // case 2.) if not exists already then create a pending registration on thier name with a magic link and add as a speaker
 
@@ -529,6 +528,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       const newSpeakerRegistration = await Registration.create({
         type: "Speaker",
         status: "Completed",
+        viaCommunity: true, // As he /she is added via community
         eventName: eventGettingSpeaker.eventName,
         userName: req.body.firstName + " " + req.body.lastName,
         userImage: req.body.image,
@@ -547,7 +547,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         city: userOnPlatform.city,
         country: userOnPlatform.country,
         event_picture: eventGettingSpeaker.image,
-        community_picture: eventGettingSpeaker.image,
+        community_picture: communityGettingSpeaker.image,
       });
 
       // Add invitaion and magic link to this registration
@@ -582,6 +582,15 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
         dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
+
+      // Add this speaker to all sessions in which he/she is assigned
+
+      for (let element of processedArray) {
+        const sessionToUpdate = await Session.findById(element);
+        sessionToUpdate.speaker.push(element);
+
+        await sessionToUpdate.save({ new: true, validateModifiedOnly: true });
+      }
 
       speaker.socialMediaHandles = req.body.socialMediaHandles;
 
@@ -640,6 +649,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
       const newSpeakerRegistration = await Registration.create({
         type: "Speaker",
         status: "Pending",
+        viaCommunity: true,
         eventName: eventGettingSpeaker.eventName,
         userName: req.body.firstName + " " + req.body.lastName,
         userImage: req.body.image,
@@ -680,6 +690,15 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
         dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
+
+      // Add this speaker to all sessions in which he/she is assigned
+
+      for (let element of processedArray) {
+        const sessionToUpdate = await Session.findById(element);
+        sessionToUpdate.speaker.push(element);
+
+        await sessionToUpdate.save({ new: true, validateModifiedOnly: true });
+      }
 
       speaker.socialMediaHandles = req.body.socialMediaHandles;
 
@@ -788,7 +807,13 @@ exports.addSession = catchAsync(async (req, res, next) => {
     console.log(error);
   }
 
-  // For each
+  // For all speakers add this session to their assigned sessions
+
+  for (let element of processedArray) {
+    const speakerDoc = await Speaker.findById(element);
+    speakerDoc.sessions.push(session._id);
+    await speakerDoc.save({ new: true, validateModifiedOnly: true });
+  }
 
   session.host = req.body.host; // Save all host to whole event document as well
   session.tags = req.body.tags; // Save all tags to whole event document as well

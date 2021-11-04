@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Radio from "@material-ui/core/Radio";
@@ -11,17 +10,13 @@ import {
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
+import AddToCalender from "../HelperComponent/AddTocalender";
 
 const TwoButtonsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 24px;
 `;
-
-const { REACT_APP_MY_ENV } = process.env;
-const BaseURL = REACT_APP_MY_ENV
-  ? "http://localhost:3000/api-eureka/eureka/v1/"
-  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 const RoyalBlueRadio = withStyles({
   root: {
@@ -33,21 +28,24 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
+const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
   const params = useParams();
   const currentEventId = params.id;
+
+  const [openCalender, setOpenCalender] = React.useState(false);
+
+  const handleCloseAddToCalender = () => {
+    setOpenCalender(false);
+  };
 
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
   let alreadyRegistered = false; // Boolean flag
-
-  const userToken = useSelector((state) => state.auth.token);
+  
   const user = useSelector((state) => state.user.userDetails);
   const userDetails = useSelector((state) => state.user.userDetails);
 
   if (isSignedIn) {
-    // get list of all events in which attendee is registered.
-    // compare if eventId is included in users registered events array.
     if (userDetails) {
       if (userDetails.registeredInEvents) {
         const EventsIdsArray = userDetails.registeredInEvents.map(
@@ -58,10 +56,6 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
         }
       }
     }
-
-    // if yes then don't allow to register again
-
-    // else leave it in normal state.
   }
 
   const event = useSelector((state) => {
@@ -183,7 +177,7 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
           style={{ width: "100%" }}
         >
           <input
-          disabled={isCommunityTeamMember || alreadyRegistered}
+            disabled={isCommunityTeamMember || alreadyRegistered}
             style={{ textTransform: "uppercase" }}
             className="form-control mr-sm-2"
             type="search"
@@ -194,7 +188,7 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
             onChange={handleCouponChange}
           />
           <button
-          disabled={isCommunityTeamMember || alreadyRegistered}
+            disabled={isCommunityTeamMember || alreadyRegistered}
             className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
             onClick={handleCouponValidation}
           >
@@ -206,10 +200,21 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
       {/* // TODO Remember to show a message that you are already registerd for this event. */}
 
       <div className="reserve-your-spot">
-        {isCommunityTeamMember ?  <div className="d-flex flex-row align-items-center justify-content-center">  <button style={{width: "330px"}} className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center">
+        {isCommunityTeamMember ? (
+          <div className="d-flex flex-row align-items-center justify-content-center">
+            {" "}
+            <button
+              onClick={() => {
+                setOpenCalender(true);
+              }}
+              style={{ width: "330px" }}
+              className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center"
+            >
               <TodayRoundedIcon className="me-2" />
               <span>Add to calender</span>
-            </button> </div> :   alreadyRegistered === true ? (
+            </button>{" "}
+          </div>
+        ) : alreadyRegistered === true ? (
           <TwoButtonsGrid
             className=""
             style={{
@@ -218,11 +223,15 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
               marginRight: "auto",
             }}
           >
-            {/* Show visit event button and add to calander button to attendee*/}
             <button className="btn btn-outline-text btn-outline-primary">
               Join event
             </button>
-            <button className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center">
+            <button
+              onClick={() => {
+                setOpenCalender(true);
+              }}
+              className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center"
+            >
               <TodayRoundedIcon className="me-2" />
               <span>Add to calender</span>
             </button>
@@ -246,8 +255,7 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
               Reserve Your Spot
             </button>
           </div>
-        )  }
-      
+        )}
 
         <div className="col" style={{ marginTop: "4%", padding: "0" }}>
           {" "}
@@ -263,6 +271,10 @@ const TicketForm = ({isCommunityTeamMember, eventId, tickets, coupon }) => {
           </Link>
         </div>
       </div>
+      <AddToCalender
+        open={openCalender}
+        handleClose={handleCloseAddToCalender}
+      />
     </>
   );
 };

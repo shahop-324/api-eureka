@@ -251,8 +251,6 @@ const showResults = (formValues) => {
 const Pricing = (props) => {
   const { signInSucceded } = useSelector((state) => state.auth);
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const referral = useSelector((state) => state.user.referredUserId);
   const dispatch = useDispatch();
 
@@ -305,9 +303,6 @@ const Pricing = (props) => {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-
-    console.log(selectedCommunity);
-    console.log(user);
 
     let order = await fetch(`${BaseURL}razorpay/createCommunityPlanOrder`, {
       method: "POST",

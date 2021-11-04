@@ -13,8 +13,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SpeakerPreview from "./FormComponents/EditSpeakersForms/SpeakerPerview";
 import Chip from "@mui/material/Chip";
-import {sendSpeakerInvitation, showSnackbar} from "./../../../actions";
-
+import { sendSpeakerInvitation, showSnackbar } from "./../../../actions";
 
 const SpeakersDetailsCard = ({
   name,
@@ -30,7 +29,7 @@ const SpeakersDetailsCard = ({
   console.log(sessions);
   console.log(id);
 
-  const {isLoading, error} = useSelector((state) => state.speaker);
+  const { isLoading } = useSelector((state) => state.speaker);
 
   const dispatch = useDispatch();
 
@@ -66,7 +65,7 @@ const SpeakersDetailsCard = ({
     return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
 
-  if(isLoading) {
+  if (isLoading) {
     return <div>Loading</div>;
   }
 
@@ -211,7 +210,15 @@ const SpeakersDetailsCard = ({
 
               <div
                 onClick={() => {
-                  dispatch(sendSpeakerInvitation(name, email, id, invitationLink, sessions))
+                  dispatch(
+                    sendSpeakerInvitation(
+                      name,
+                      email,
+                      id,
+                      invitationLink,
+                      sessions
+                    )
+                  );
                 }}
               >
                 <IconButton color="secondary" aria-label="add to shopping cart">
@@ -220,15 +227,20 @@ const SpeakersDetailsCard = ({
               </div>
               <div
                 onClick={() => {
-                  navigator.clipboard.writeText(invitationLink).then(function() {
-                    console.log('Async: Copying to clipboard was successful!');
-                    dispatch(showSnackbar("success", "Copied to clipboard!"));
-                  }, function(err) {
-                    console.error('Async: Could not copy text: ', err);
-                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                  });
-
-                  
+                  navigator.clipboard.writeText(invitationLink).then(
+                    function () {
+                      console.log(
+                        "Async: Copying to clipboard was successful!"
+                      );
+                      dispatch(showSnackbar("success", "Copied to clipboard!"));
+                    },
+                    function (err) {
+                      console.error("Async: Could not copy text: ", err);
+                      dispatch(
+                        showSnackbar("error", "Failed to copy to clipboard!")
+                      );
+                    }
+                  );
                 }}
               >
                 <IconButton color="secondary" aria-label="add to shopping cart">

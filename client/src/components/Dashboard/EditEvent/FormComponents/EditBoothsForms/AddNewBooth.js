@@ -254,7 +254,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
 
   if (error) {
     dispatch(errorTrackerForCreateBooth());
-    alert(error);
     return;
   }
 
@@ -271,7 +270,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
             console.log("Side nav was closed");
           }}
         >
-
           <>
           <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 py-4">
               <div></div>

@@ -19,6 +19,7 @@ import AvatarMenu from "./../AvatarMenu";
 import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
 import ConfirmCommunityMail from "./Helper/ConfirmCommunityMail";
+import UserAccountBriefcase from "./UserAccountBriefcase";
 
 const UserAccountHome = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const UserAccountHome = () => {
         break;
       }
       case 4: {
-        history.push("/user/reviews");
+        history.push("/user/briefcase");
         break;
       }
       case 5: {
@@ -145,6 +146,9 @@ const UserAccountHome = () => {
 
                   case 3:
                     return <UserAccountProfileMainBody />;
+
+                  case 4:
+                    return <UserAccountBriefcase />;
 
                   default:
                     return <div>You are a User.</div>;

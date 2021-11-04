@@ -8,7 +8,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSpeaker,
@@ -51,8 +50,7 @@ const DeleteSpeaker = ({ id, handleCloseDeleteSpeaker, openDeleteDialog }) => {
 
   if (error) {
     dispatch(errorTrackerForDeletingSpeaker());
-    alert(error);
-    return;
+    return null;
   }
 
   return (

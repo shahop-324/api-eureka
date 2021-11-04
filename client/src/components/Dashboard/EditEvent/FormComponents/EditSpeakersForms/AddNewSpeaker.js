@@ -1,16 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-
 import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
 import Select from "react-select";
 import { Avatar, SwipeableDrawer } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";

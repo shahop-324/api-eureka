@@ -24,7 +24,7 @@ import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import NoEvent from "./../../assets/images/noEvent.png";
 import history from "./../../history";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -127,12 +127,10 @@ const EventManagement = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-  
-
     const timeoutId = setTimeout(() => {
       dispatch(fetchEventsOfParticularCommunity(term, page, limit));
     }, 500);
-   
+
     history.push(
       `/user/${userId}/community/event-management/${communityId}/?limit=${limit}&page=${page}`
     );
@@ -158,44 +156,43 @@ const EventManagement = () => {
   const communityEvents = events;
 
   const renderCommunityEventsList = (communityEvents) => {
-    return communityEvents
-      .map((communityEvent) => {
-        const {
-          id,
-          eventName,
-          shortDescription,
-          visibility,
-          publishedStatus,
-          views,
-          registrationsRecieved,
-          status,
-          moderators,
-          hosts
-        } = communityEvent;
-       
-        let imgUrl = " #";
-        const imgKey = communityEvent.image;
-        if (imgKey) {
-          imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
-        }
-        return (
-          <EventDetailCard
-            key={id}
-            imgUrl={imgUrl}
-            shortDescription={shortDescription}
-            publishedStatus={publishedStatus}
-            views={views}
-            registrations={registrationsRecieved}
-            status={status}
-            visibility={visibility}
-            eventName={eventName}
-            communityId={communityId}
-            id={id}
-            moderators={moderators}
-            hosts={hosts}
-          />
-        );
-      });
+    return communityEvents.map((communityEvent) => {
+      const {
+        id,
+        eventName,
+        shortDescription,
+        visibility,
+        publishedStatus,
+        views,
+        registrationsRecieved,
+        status,
+        moderators,
+        hosts,
+      } = communityEvent;
+
+      let imgUrl = " #";
+      const imgKey = communityEvent.image;
+      if (imgKey) {
+        imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
+      }
+      return (
+        <EventDetailCard
+          key={id}
+          imgUrl={imgUrl}
+          shortDescription={shortDescription}
+          publishedStatus={publishedStatus}
+          views={views}
+          registrations={registrationsRecieved}
+          status={status}
+          visibility={visibility}
+          eventName={eventName}
+          communityId={communityId}
+          id={id}
+          moderators={moderators}
+          hosts={hosts}
+        />
+      );
+    });
   };
 
   if (error) {
@@ -229,15 +226,11 @@ const EventManagement = () => {
               className="btn btn-primary btn-outline-text"
               onClick={handleClickOpen}
             >
-              <span>
-              Create New event
-              </span>
+              <span>Create New event</span>
             </button>
           </div>
         </div>
-        <div
-          className="event-management-content-grid px-3 mx-3 mb-4 py-4"
-        >
+        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
           <EventListFields />
           <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
             <Divider />
@@ -254,14 +247,19 @@ const EventManagement = () => {
             communityEvents.length > 0 ? (
             renderCommunityEventsList(communityEvents)
           ) : (
-            <NoContentFound
-              msgText="You have not created any event yet"
-              img={NoEvent}
-            />
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "53vh", width: "100%" }}
+            >
+              <NoContentFound
+                msgText="You have not created any event yet"
+                img={NoEvent}
+              />
+            </div>
           )}
         </div>
         <CustomPagination
-        page={page}
+          page={page}
           numOfPages={numberOfPages}
           limit={limit}
           currentPage={page}

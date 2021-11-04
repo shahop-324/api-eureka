@@ -1,8 +1,12 @@
 const catchAsync = require("../utils/catchAsync");
+const User = require("./../models/userModel");
+const Session = require("./../models/sessionModel");
+const Community = require("./../models/communityModel");
 const Speaker = require("../models/speakerModel");
 const apiFeatures = require("../utils/apiFeatures");
 const mongoose = require("mongoose");
 const Event = require("./../models/eventModel");
+const Registration = require("./../models/registrationsModel");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -26,38 +30,276 @@ exports.getParticularSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSpeaker = catchAsync(async (req, res, next) => {
-  const filteredBody = filterObj(
-    req.body,
-    "status",
-    "firstName",
-    "lastName",
-    "email",
-    "image",
-    "organisation",
-    "bio",
-    "sessions",
-    "socialMediaHandles",
-    "image",
-    "designation"
-  );
+  try {
+    const filteredBody = filterObj(
+      req.body,
+      "status",
+      "firstName",
+      "lastName",
+      "email",
+      "image",
+      "organisation",
+      "bio",
+      "sessions",
+      "socialMediaHandles",
+      "image",
+      "designation"
+    );
 
-  const updatedSpeaker = await Speaker.findByIdAndUpdate(
-    req.params.id,
-    filteredBody,
-    {
-      new: true,
-      validateModifiedOnly: true,
+    const speakerDoc = await Speaker.findById(req.params.id);
+
+    const eventId = speakerDoc.eventId;
+
+    const eventDoc = await Event.findById(eventId);
+
+    const communityGettingSpeaker = await Community.findById(
+      eventDoc.communityId
+    );
+
+    const assignedSessionsBeforeUpdate = speakerDoc.sessions;
+    const previousMail = speakerDoc.email;
+    const registrationId = speakerDoc.registrationId;
+
+    // Sessions updated
+
+    // Find new sessions that are assigned => add this speaker to those sessions
+
+    for (let element of req.body.sessions) {
+      if (!assignedSessionsBeforeUpdate.includes(element)) {
+        // Confirm that its a new session that has been mapped to this speaker
+        const session = await Session.findById(element);
+        session.speaker.push(req.params.id);
+        await session.save({ new: true, validateModifiedOnly: true });
+      }
     }
-  ).populate("sessions");
 
-  res.status(200).json({
-    status: "success",
-    data: { updatedSpeaker },
-  });
+    // Find sessions that have been removed  => remove this speaker from those sessions
+
+    let removedSessions = assignedSessionsBeforeUpdate.filter(
+      (el) => !req.body.sessions.includes(el)
+    );
+
+    for (let element of removedSessions) {
+      const session = await Session.findById(element);
+      session.speaker = session.speaker.filter(
+        (el) => el.toString() !== req.params.id.toString()
+      );
+      await session.save({ new: true, validateModifiedOnly: true });
+    }
+
+    // Speaker mail updated
+
+    if (req.body.email) {
+      if (req.body.email === previousMail) {
+        // Email has not been changed => let it pass
+      } else {
+        // Email has been updated
+
+        // Cancel previous registration on previous email
+
+        const previousRegistration = await Registration.findByIdAndDelete(
+          registrationId
+        );
+
+        // check if there is any user with updated mail on Bluemeet platform
+
+        const userOnPlatform = await User.findOne({ email: req.body.email });
+
+        if (userOnPlatform) {
+          // * Already a Bluemeet user
+
+          // TODO => Create a speaker registration with status as completed and cancelled as false.
+
+          const newSpeakerRegistration = await Registration.create({
+            type: "Speaker",
+            status: "Completed",
+            viaCommunity: true, // As he /she is added via community
+            eventName: eventDoc.eventName,
+            userName: userOnPlatform.firstName + " " + userOnPlatform.lastName,
+            userImage: userOnPlatform.image,
+            userEmail: userOnPlatform.email,
+            bookedByUser: userOnPlatform._id,
+            bookedForEventId: eventId,
+            eventByCommunityId: eventDoc.communityId,
+            createdAt: Date.now(),
+            email: userOnPlatform.email,
+            firstName: userOnPlatform.firstName,
+            lastName: userOnPlatform.lastName,
+            name: userOnPlatform.firstName + " " + userOnPlatform.lastName,
+            event_name: eventDoc.eventName,
+            organisation: userOnPlatform.organisation,
+            designation: userOnPlatform.designation,
+            city: userOnPlatform.city,
+            country: userOnPlatform.country,
+            event_picture: eventDoc.image,
+            community_picture: communityGettingSpeaker.image,
+          });
+
+          // Add invitaion and magic link to this registration
+
+          newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+
+          await newSpeakerRegistration.save({
+            new: true,
+            validateModifiedOnly: true,
+          });
+
+          // Update corresponding user document
+
+          userOnPlatform.registeredInEvents.push(eventId);
+          userOnPlatform.registrations.push(newSpeakerRegistration._id);
+
+          await userOnPlatform.save({ new: true, validateModifiedOnly: true });
+
+          speakerDoc.registrationId = newSpeakerRegistration._id;
+
+          // 2.) Send new Invitation via mail to speaker
+          const msg = {
+            to: req.body.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Your are invited as speaker in ${eventDoc.eventName}`,
+            text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Invitation sent to speaker.");
+              // Mark that invitation is sent
+              speakerDoc.invitationStatus = "Sent";
+              await speakerDoc.save({ new: true, validateModifiedOnly: true });
+              await eventDoc.save({ new: true, validateModifiedOnly: true });
+            })
+            .catch(async (error) => {
+              console.log("Failed to send invitation to speaker");
+              // Mark that invitation is not yet sent
+              speakerDoc.invitationStatus = "Not sent";
+              await speakerDoc.save({ new: true, validateModifiedOnly: true });
+              await eventDoc.save({ new: true, validateModifiedOnly: true });
+            });
+        } else {
+          // * Not a Bluemeet user yet
+
+          // TODO => Create a speaker registration with status as pending and cancelled as false.
+
+          const newSpeakerRegistration = await Registration.create({
+            type: "Speaker",
+            status: "Pending",
+            viaCommunity: true,
+            eventName: eventDoc.eventName,
+            userName: speakerDoc.firstName + " " + speakerDoc.lastName,
+            userImage: speakerDoc.image,
+            userEmail: speakerDoc.email,
+            bookedForEventId: req.params.eventId,
+            eventByCommunityId: communityId,
+            createdAt: Date.now(),
+            email: speakerDoc.email,
+            firstName: speakerDoc.firstName,
+            lastName: speakerDoc.lastName,
+            name: speakerDoc.firstName + " " + speakerDoc.lastName,
+            event_name: eventDoc.eventName,
+            event_picture: eventDoc.image,
+            community_picture: communityGettingSpeaker.image,
+          });
+
+          // Add invitaion and magic link to this registration
+
+          newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+          newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+
+          await newSpeakerRegistration.save({
+            new: true,
+            validateModifiedOnly: true,
+          });
+
+          // 2.) Send new Invitation via mail to speaker
+          const msg = {
+            to: req.body.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Your are invited as speaker in ${eventDoc.eventName}`,
+            text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Invitation sent to speaker.");
+              // Mark that invitation is sent
+              speakerDoc.invitationStatus = "Sent";
+              await speakerDoc.save({ new: true, validateModifiedOnly: true });
+              await eventDoc.save({ new: true, validateModifiedOnly: true });
+            })
+            .catch(async (error) => {
+              console.log("Failed to send invitation to speaker");
+              // Mark that invitation is not yet sent
+              speakerDoc.invitationStatus = "Not sent";
+              await speakerDoc.save({ new: true, validateModifiedOnly: true });
+              await eventDoc.save({ new: true, validateModifiedOnly: true });
+            });
+        }
+
+        // Follow the same procedure as done during adding a speaker
+      }
+    }
+
+    const updatedSpeaker = await Speaker.findByIdAndUpdate(
+      req.params.id,
+      filteredBody,
+      {
+        new: true,
+        validateModifiedOnly: true,
+      }
+    ).populate("sessions");
+
+    res.status(200).json({
+      status: "success",
+      data: { updatedSpeaker },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.DeleteSpeaker = catchAsync(async (req, res, next) => {
   const speakerId = req.params.id;
+
+  // Delete this speakers registration and remove him/her from all sessions to which he/she is assigned
+
+  // step 1.) Find speaker doc
+
+  const speakerDoc = await Speaker.findById(speakerId);
+
+  // Remove this speaker from onStagePeople from all of his assigned sessions
+
+  for (let element of speakerDoc.sessions) {
+    const sessionDoc = await Session.findById(element);
+
+    sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
+      (el) => el.user !== speakerDoc.registrationId
+    );
+    await sessionDoc.save({ new: true, validateModifiedOnly: true });
+  }
+
+  const deletedRegistration = await Registration.findByIdAndDelete(
+    speakerDoc.registrationId,
+    { new: true, validateModifiedOnly: true }
+  ); // We will delete this registration doc when speaker is removed from event
+
+  // Remove this speaker from sessions in which he/she is assigned
+
+  for (let item of speakerDoc.sessions) {
+    const sessionDoc = await Session.findById(item);
+    sessionDoc.speaker = sessionDoc.speaker.filter(
+      (el) => el.toString() !== speakerId.toString()
+    );
+
+    await sessionDoc.save({ new: true, validateModifiedOnly: true });
+  }
+
+  // We have removed this speaker from all sessions to which he/she was assigned.
 
   const deletedSpeaker = await Speaker.findByIdAndUpdate(
     speakerId,
@@ -119,7 +361,7 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
         speakerId,
         { invitationStatus: "Sent" },
         { new: true, validateModifiedOnly: true }
-      );
+      ).populate("sessions", "name");
 
       res.status(200).json({
         status: "success",
@@ -134,7 +376,7 @@ exports.sendInvitation = catchAsync(async (req, res, next) => {
         speakerId,
         { invitationStatus: "Not sent" },
         { new: true, validateModifiedOnly: true }
-      );
+      ).populate("sessions", "name");
 
       res.status(400).json({
         status: "failed",

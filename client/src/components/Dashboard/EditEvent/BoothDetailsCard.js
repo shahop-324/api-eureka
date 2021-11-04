@@ -110,7 +110,6 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
                     label={truncateText(email, 20)}
                     color="primary"
                     variant="outlined"
-                    className="mb-3"
                   />
                 );
               })}
@@ -127,7 +126,8 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
                 className="speaker-card-session-grid"
                 style={{ gridTemplateColumns: "1fr" }}
               >
-                {boothTags.map((boothTag) => {
+                { typeof boothTags !== "undefined" &&
+            boothTags.length > 0 ? boothTags.map((boothTag) => {
                   return (
                     <Chip
                       label={truncateText(boothTag, 35)}
@@ -135,7 +135,11 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
                       variant="outlined"
                     />
                   );
-                })}
+                }) : <Chip
+                label={"No tags"}
+                color="secondary"
+                variant="outlined"
+              />}
               </div>
             </div>
           </div>

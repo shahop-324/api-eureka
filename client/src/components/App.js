@@ -101,7 +101,7 @@ class App extends React.Component {
       // dispatch
       this.props.showSnackbar("error", "Invalid email or password.");
       window.location.reload();
-    })
+    });
 
     socket.on("newLogin", (res) => {
       this.props.signIn(
@@ -309,7 +309,11 @@ class App extends React.Component {
                 <Route path="/user/profile" exact component={UserAccountHome} />
               )}
               {isSignedIn && (
-                <Route path="/user/reviews" exact component={UserAccountHome} />
+                <Route
+                  path="/user/briefcase"
+                  exact
+                  component={UserAccountHome}
+                />
               )}
               {isSignedIn && (
                 <Route path="/user/queries" exact component={UserAccountHome} />
@@ -564,6 +568,14 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/tracking"
+                  exact
+                  component={EditEventRoot}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
+                  path="/community/:communityId/edit-event/:id/landing-page"
                   exact
                   component={EditEventRoot}
                 />

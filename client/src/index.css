@@ -1,7 +1,8 @@
 /* rest of app styles */
-*{
+* {
   font-family: "Ubuntu" !important;
 }
+
 
 .email-list-group {
   border: 1px solid transparent;
@@ -26,9 +27,9 @@ a.disabled {
 }
 
 /* this will hide the scrollbar in webkit based browsers - safari, chrome, etc */
-.scroll-hide ul::-webkit-scrollbar { 
+.scroll-hide ul::-webkit-scrollbar {
   width: 0 !important;
-  display: none; 
+  display: none;
 }
 
 .blockbuilder-branding {
@@ -1313,4 +1314,14 @@ button.rbc-input::-moz-focus-inner {
   height: 1px;
   background-color: #74ad31;
   pointer-events: none;
+}
+
+.blockbuilder-branding {
+  visibility: hidden !important;
+  display: none !important;
+}
+
+.brand {
+  visibility: hidden !important;
+  display: none !important;
 }

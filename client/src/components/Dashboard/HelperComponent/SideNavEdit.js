@@ -3,9 +3,6 @@ import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
 import { Divider } from "@material-ui/core";
-
-import CategoryIcon from "@material-ui/icons/Category";
-import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 import TrackChangesIcon from "@material-ui/icons/TrackChanges";
 import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
@@ -21,7 +18,6 @@ import {
 
 import AdjustRoundedIcon from "@mui/icons-material/AdjustRounded";
 import FormatAlignCenterRoundedIcon from "@mui/icons-material/FormatAlignCenterRounded"; // Event entry
-import CalendarViewDayRoundedIcon from "@mui/icons-material/CalendarViewDayRounded"; // reception settings
 import OndemandVideoRoundedIcon from "@mui/icons-material/OndemandVideoRounded"; // Videos
 import WallpaperRoundedIcon from "@mui/icons-material/WallpaperRounded"; // stage vibes
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded"; // Recordings
@@ -31,10 +27,8 @@ import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRou
 import LoyaltyRoundedIcon from "@mui/icons-material/LoyaltyRounded"; // Coupons
 import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
-import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded'; // Sponsor
-import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded'; // Tracking
-import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Schedule
-import Chip from "@mui/material/Chip";
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
+import PagesIcon from "@mui/icons-material/Pages"; // Landing page Icon
 
 const SideNavEdit = ({
   activeIndex,
@@ -57,7 +51,8 @@ const SideNavEdit = ({
   handleMailingClick,
   handleReviewsClick,
   handleTrackingClick,
-  handleLiveStreamingClick
+  handleLiveStreamingClick,
+  handleLandingPageClick,
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -116,7 +111,10 @@ const SideNavEdit = ({
 
   return (
     <>
-      <div className="side-nav-wrapper py-4 pt-4" style={{height: "86vh !important", overflow: "auto"}}>
+      <div
+        className="side-nav-wrapper py-4 pt-4"
+        style={{ height: "86vh !important", overflow: "auto" }}
+      >
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
@@ -165,7 +163,7 @@ const SideNavEdit = ({
               (activeIndex === "1" ? "btn-text-active-d" : " ")
             }
           >
-           Registrations
+            Registrations
           </div>
         </div>
         {/* <div
@@ -342,7 +340,30 @@ const SideNavEdit = ({
             Coupons
           </div>
         </div>
-
+        {/* <div
+          onClick={handleLandingPageClick}
+          className={
+            `dashboard-side-nav-btn px-3 mb-2 d-flex flex-row align-items-center ` +
+            (activeIndex === "20" ? "btn-active-d" : " ")
+          }
+        >
+          <div
+            className={
+              "mx-3 sidenav-icon " +
+              (activeIndex === "20" ? "btn-icon-active-d" : " ")
+            }
+          >
+            <PagesIcon style={{ fontSize: 26 }} />
+          </div>
+          <div
+            className={
+              `mx-3 button-text-dashboard-sidenav ` +
+              (activeIndex === "20" ? "btn-text-active-d" : " ")
+            }
+          >
+            Landing page
+          </div>
+        </div> */}
         {/* <div
           onClick={handleReceptionSettingsClick}
           className={
@@ -392,8 +413,6 @@ const SideNavEdit = ({
             Videos
           </div>
         </div>
-
-
 
         <div
           onClick={handleStageVibesClick}
@@ -461,24 +480,20 @@ const SideNavEdit = ({
             <LiveTvRoundedIcon style={{ fontSize: 26 }} />
           </div>
           <div className="d-flex flex-row align-items-center justify-content-between">
-
-
-          <div
-            className={
-              `mx-3 button-text-dashboard-sidenav me-5 ` +
-              (activeIndex === "13" ? "btn-text-active-d" : " ")
-            }
-          >
-            Live stream
-          </div>
-          {/* <Chip
+            <div
+              className={
+                `mx-3 button-text-dashboard-sidenav me-5 ` +
+                (activeIndex === "13" ? "btn-text-active-d" : " ")
+              }
+            >
+              Live stream
+            </div>
+            {/* <Chip
             label="soon"
             // variant="outlined"
             style={{ color: "#538BF7", backgroundColor: "#E6E6E6", fontWeight: "500" }}
           /> */}
-
           </div>
-          
         </div>
 
         <div
@@ -556,10 +571,6 @@ const SideNavEdit = ({
           </div>
         </div>
 
-
-        
-
-
         <div
           onClick={handleIntegrationsClick}
           className={
@@ -584,9 +595,7 @@ const SideNavEdit = ({
             Integrations
           </div>
         </div>
-        
-        
-        
+
         <div
           onClick={handleReviewsClick}
           className={

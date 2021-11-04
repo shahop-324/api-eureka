@@ -88,8 +88,8 @@ const CouponCard = ({
         className="coupon-card-other-info px-4 py-3 d-flex flex-column align-items-center"
         style={{ height: "60%" }}
       >
-        <div className="coupon-discount-percent mb-4">{percentage}% Off</div>
-        <div className="mb-3">
+        <div className="coupon-discount-percent mb-4 mt-3">{percentage}% Off</div>
+        <div className="mb-3" style={{marginBottom: "20px"}}>
           <button
             type="button"
             className="btn btn-outline-secondary disabled-text"
@@ -99,7 +99,7 @@ const CouponCard = ({
             30 JUN, TUE
           </button>
         </div>
-        <div className="mb-3">
+        <div className="mb-3" style={{marginBottom: "28px"}}>
           <button
             type="button"
             className="btn btn-primary disabled-text"

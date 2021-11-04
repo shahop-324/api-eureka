@@ -178,11 +178,7 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
 
-      // console.log(ModifiedFormValues);
-
     dispatch(createCoupon(ModifiedFormValues, id));
-    // handleClose();
-    // window.location.reload();
   };
 
   return (

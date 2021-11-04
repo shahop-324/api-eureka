@@ -118,7 +118,6 @@ const registrationSchema = new mongoose.Schema(
         type: String,
       },
     ],
-
     socialMediaHandles: {
       type: Map,
       of: String,
@@ -208,6 +207,10 @@ const registrationSchema = new mongoose.Schema(
         ref: "ScheduledMeet",
       },
     ],
+    viaCommunity: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },

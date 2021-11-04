@@ -1,13 +1,10 @@
 import React from "react";
 import dateFormat from "dateformat";
 import IconButton from "@material-ui/core/IconButton";
-
 import Select from "react-select";
-
 import { connect, useSelector } from "react-redux";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch } from "react-redux";
 import {
   editSession,
@@ -53,20 +50,6 @@ const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
-const FormHeading = styled.div`
-  font-size: 1.2rem;
-  font-family: "Ubuntu";
-  font-weight: 600;
-  color: #212121;
-`;
-
-const FormSubHeading = styled.div`
-  font-size: 0.87rem;
-  font-family: "Ubuntu";
-  font-weight: 500;
-  color: #424242;
-`;
-
 const FormError = styled.div`
   font-family: "Ubuntu";
   color: red;
@@ -83,7 +66,6 @@ const FormWarning = styled.div`
 
 const renderInput = ({
   input,
-
   meta: { touched, error, warning },
   type,
   ariadescribedby,
@@ -272,7 +254,6 @@ const EditSession = ({
 
   if (detailError) {
     dispatch(errorTrackerForEditSession());
-    alert(detailError);
     return null;
   }
   return (
@@ -395,7 +376,7 @@ const EditSession = ({
                   <div className="mb-4 overlay-form-input-row">
                     <FormLabel for="speakers">Speakers</FormLabel>
                     <Field
-                    isMulti={true}
+                      isMulti={true}
                       name="speaker"
                       styles={styles}
                       menuPlacement="top"
@@ -460,7 +441,10 @@ const mapStateToProps = (state) => ({
   initialValues: {
     activityType:
       state.session.sessionDetails && state.session.sessionDetails.type
-        ? { value: state.session.sessionDetails.type, label: state.session.sessionDetails.type}
+        ? {
+            value: state.session.sessionDetails.type,
+            label: state.session.sessionDetails.type,
+          }
         : "",
     name:
       state.session.sessionDetails && state.session.sessionDetails.name

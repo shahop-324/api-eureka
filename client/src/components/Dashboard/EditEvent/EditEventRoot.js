@@ -47,6 +47,7 @@ import StageVibesLibrary from "./StageVibesLibrary";
 import EventMoreActions from "./SubComponent/EventMoreActions";
 import styled from "styled-components";
 import LiveStream from "./LiveStream";
+import LandingPage from "../HelperComponent/LandingPage";
 
 const Strip = styled.div`
   background-color: #f75353;
@@ -178,12 +179,16 @@ const EditEventRoot = () => {
     dispatch(navigationIndexForEditEvent(19));
     history.push(`/community/${communityId}/edit-event/${id}/tracking`);
   };
+
+  const handleLandingPageClick = () => {
+    dispatch(navigationIndexForEditEvent(20));
+    history.push(`/community/${communityId}/edit-event/${id}/landing-page`);
+  }
+
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForEditEvent
   );
   currentIndex = currentIndex.toString();
-
-  console.log(currentIndex);
 
   if (error) {
     return dispatch(errorTrackerForFetchParticularEventOfCommunity());
@@ -345,6 +350,7 @@ const EditEventRoot = () => {
               handleMailingClick={handleMailingClick}
               handleReviewsClick={handleReviewsClick}
               handleTrackingClick={handleTrackingClick}
+              handleLandingPageClick={handleLandingPageClick}
             />
             <SideNavEditLean
               activeIndex={currentIndex}
@@ -370,9 +376,10 @@ const EditEventRoot = () => {
               handleMailingClick={handleMailingClick}
               handleReviewsClick={handleReviewsClick}
               handleTrackingClick={handleTrackingClick}
+              handleLandingPageClick={handleLandingPageClick}
             />
   
-            <div className="main-content-wrapper" style={{ height: "100vh" }}>
+  {currentIndex*1 === 20 ? <LandingPage /> : <div className="main-content-wrapper" style={{ height: "100vh" }}>
               {(() => {
                 switch (currentIndex) {
                   case "0":
@@ -440,12 +447,17 @@ const EditEventRoot = () => {
                     return <Reviews />;
                   case "19":
                     return <Tracking />;
+
+                    // case "20": 
+                    // return <LandingPage />
   
                   default:
                     return <div>You are a community Editing an event.</div>;
                 }
               })()}
-            </div>
+            </div> }
+            
+            
           </div>
         </div>
   

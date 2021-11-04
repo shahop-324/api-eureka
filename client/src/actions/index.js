@@ -477,28 +477,6 @@ export const createCommunityRequest =
       if (file) {
         console.log(file);
 
-        s3.getSignedUrl(
-          "putObject",
-          {
-            Bucket: "bluemeet-inc",
-            Key: key,
-            ContentType: "image/jpeg",
-          },
-          async (err, presignedURL) => {
-            const awsRes = await fetch(presignedURL, {
-              method: "PUT",
-
-              body: file,
-
-              headers: {
-                "Content-Type": file.type,
-              },
-            });
-
-            console.log(awsRes);
-          }
-        );
-
         const communityCreating = async () => {
           let res = await fetch(
             `${BaseURL}users/newCommunityRequest`,
@@ -527,42 +505,64 @@ export const createCommunityRequest =
           return res;
         };
 
-        try {
-          let res = await communityCreating();
+        s3.getSignedUrl(
+          "putObject",
+          {
+            Bucket: "bluemeet-inc",
+            Key: key,
+            ContentType: "image/jpeg",
+          },
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
 
-          if (res.alreadyUsedEmail) {
-            dispatch(
-              showSnackbar(
-                "error",
-                "This email is registered on another community."
-              )
-            );
-          } else {
-            handleClose();
+              body: file,
 
-            dispatch(
-              showSnackbar("success", "Community created successfully!")
-            );
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
 
-            dispatch(
-              communityActions.CreateCommunityRequest({
-                community: res.data,
-              })
-            );
-            dispatch(
-              userActions.SetCommunityVerificationEmail({
-                email: res.email,
-              })
-            );
-            dispatch(
-              userActions.SetCommunityVerificationOpenState({
-                openState: true,
-              })
-            );
+            console.log(awsRes);
+
+            try {
+              let res = await communityCreating();
+
+              if (res.alreadyUsedEmail) {
+                dispatch(
+                  showSnackbar(
+                    "error",
+                    "This email is registered on another community."
+                  )
+                );
+              } else {
+                handleClose();
+
+                dispatch(
+                  showSnackbar("success", "Community created successfully!")
+                );
+
+                dispatch(
+                  communityActions.CreateCommunityRequest({
+                    community: res.data,
+                  })
+                );
+                dispatch(
+                  userActions.SetCommunityVerificationEmail({
+                    email: res.email,
+                  })
+                );
+                dispatch(
+                  userActions.SetCommunityVerificationOpenState({
+                    openState: true,
+                  })
+                );
+              }
+            } catch (e) {
+              dispatch(communityActions.hasError(e.message));
+            }
           }
-        } catch (e) {
-          dispatch(communityActions.hasError(e.message));
-        }
+        );
       } else {
         const communityCreating = async () => {
           let res = await fetch(`${BaseURL}users/newCommunityRequest`, {

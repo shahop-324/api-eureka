@@ -1,5 +1,7 @@
 const catchAsync = require("./../utils/catchAsync");
 const mongoose = require("mongoose");
+const Event = require("./../models/eventModel");
+const Session = require("./../models/sessionModel");
 const TeamInvite = require("./../models/teamInviteModel");
 const Community = require("../models/communityModel");
 const User = require("../models/userModel");
@@ -149,6 +151,7 @@ exports.acceptInvitation = catchAsync(async (req, res, next) => {
       await Registration.create({
         type: "Host",
         status: "Completed",
+        viaCommunity: true,
         eventName: event.eventName,
         userName: userDoc.firstName + " " + userDoc.lastName,
         userImage: userDoc.image,
@@ -261,7 +264,6 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
         console.log(doc);
       }
     );
-
     // Removed from team , now this invitation won't be valid anymore and appropriate message will be shown to the user.
   }
   if (status === "Accepted") {
@@ -285,6 +287,74 @@ exports.removeFromTeam = catchAsync(async (req, res, next) => {
     );
     console.log(communityDoc.eventManagers, "After");
     await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+    // Delete all registrations of this user in this community events
+
+    const registrationsRelatedToUser = await Registration.find({
+      $and: [
+        { eventByCommunityId: mongoose.Types.ObjectId(communityId) },
+        { bookedByUser: mongoose.Types.ObjectId(userDoc._id) },
+        { viaCommunity: true },
+      ],
+    });
+
+    // For each element of registrationsRelatedToUser loop over them and delete them
+
+    for (let element of registrationsRelatedToUser) {
+      await Registration.findByIdAndDelete(element._id);
+    }
+
+    // Here we have deleted all registrations of this user for this community's events in which he/she was registered via community
+
+    // * Remove this user as host from all sessions of any event of this community
+
+    const eventsOfThisCommunity = await Event.find({
+      communityId: communityId,
+    });
+
+    for (let element of eventsOfThisCommunity) {
+      const sessionsOfThisEvent = await Session.find({
+        eventId: mongoose.Types.ObjectId(element),
+      });
+
+      for (let item of sessionsOfThisEvent) {
+        const sessionDoc = await Session.findById(item);
+
+        sessionDoc.host = sessionDoc.host.filter(
+          (el) => el.toString() !== userDoc._id.toString()
+        );
+        await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      }
+    }
+
+    // * Remove this user from onStagePeople from all sessions of any event of this community
+
+    for (let element of eventsOfThisCommunity) {
+      const sessionsOfThisEvent = await Session.find({
+        eventId: mongoose.Types.ObjectId(element),
+      });
+
+      for (let item of sessionsOfThisEvent) {
+        const sessionDoc = await Session.findById(item);
+
+        sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
+          (el) => el.user.toString() !== userDoc._id.toString()
+        );
+
+        await sessionDoc.save({ new: true, validateModifiedOnly: true });
+      }
+    }
+
+    // * Remove this user from moderator from any event of this community
+
+    for (let element of eventsOfThisCommunity) {
+      const eventDoc = await Event.findById(element);
+
+      eventDoc.moderators = eventDoc.moderators.filter(
+        (el) => el.toString() !== userDoc._id.toString()
+      );
+      await eventDoc.save({ new: true, validateModifiedOnly: true });
+    }
 
     // TODO Send a mail to concerned person and community super admin saying that he/she has been removed from community as a community manager.
 

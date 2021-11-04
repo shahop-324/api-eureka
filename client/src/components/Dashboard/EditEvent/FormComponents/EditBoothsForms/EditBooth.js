@@ -1,22 +1,15 @@
 import React, { useState } from "react";
-
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
-
 import { makeStyles } from "@material-ui/core/styles";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-
 import { editBooth, errorTrackerForEditBooth } from "../../../../../actions";
-
 import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
 import Loader from "../../../../Loader";
-
 import { SwipeableDrawer } from "@material-ui/core";
-
 import styled from "styled-components";
 
 const StyledInput = styled.input`
@@ -124,7 +117,6 @@ const renderTextArea = ({
         className={classes}
         placeholder={placeholder}
       />
-
       {touched &&
         ((error && <FormError className="my-1">{error}</FormError>) ||
           (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
@@ -174,8 +166,6 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
       return booth._id === id;
     });
   });
-
-  console.log(booth.image);
 
   const imgKey = booth.image;
 
