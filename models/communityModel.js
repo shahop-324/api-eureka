@@ -506,6 +506,10 @@ const communitySchema = new mongoose.Schema(
     verifiedStripeAccountId: {
       type: String,
     },
+    upgradedForFirstTime: {
+      type: Boolean, // ! We will mark this as true after this community purchases their first plan on Bluemeet
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },

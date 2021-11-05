@@ -77,12 +77,6 @@ exports.createAddOnOrder = catchAsync(async (req, res, next) => {
       }
     }
   );
-
-  // addonName: "Registrations",
-  //       numOfRegistrations: value,
-  //       price: value * 1,
-  //       communityId: communityDetails._id,
-  //       userId: userDetails._id,
 });
 
 exports.createOrderForCommunityPlan = catchAsync(async (req, res, next) => {
@@ -159,6 +153,8 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
 
         const userDoc = await User.findById(userId);
 
+        // Here we need to add credits to super admin account and referrer account if this community's super admin was referred by someone and if this is this communities first ever upgrade
+
         const newCommunityTransaction = await CommunityTransaction.create({
           type: "Community Plan",
           planName: planName,
@@ -171,6 +167,87 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         });
 
         const communityDoc = await Community.findById(communityId);
+
+        if (!communityDoc.upgradedForFirstTime) {
+          // * This is this community's first ever upgrade
+
+          // Apply credits to super admin if he/she is eligible
+
+          const superAdminId = communityDoc.superAdmin;
+
+          const superAdminDoc = await User.findById(superAdminId);
+
+          const referredBy = superAdminDoc.referrer;
+
+          if (referredBy) {
+            // This person joined Bluemeet via referral
+
+            const referredBydoc = await User.findById(referredBy);
+
+            // Add USD 10 to both super admin and referrer and add 1 to upgrades of referrer
+
+            superAdminDoc.credit = superAdminDoc.credit + 10;
+            await superAdminDoc.save({ new: true, validateModifiedOnly: true });
+
+            // Send mail to super admin informing about credits that were applied to their account
+            const referralRedeemedMsg = {
+              to: superAdminDoc.email, // Change to your recipient
+              from: "shreyanshshah242@gmail.com", // Change to your verified sender
+              subject: `$10 Bluemeet credits applied to your account.`,
+              text: `We have applied your $10 referral credits to your account. Encourage others to switch to Bluemeet and earn $10 and give your referral $10 too. Its a win win for all of us. Cheers.`,
+              // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+            };
+
+            sgMail
+              .send(referralRedeemedMsg)
+              .then(async () => {
+                console.log("Referral redeemed mail sent to super admin.");
+              })
+              .catch(async (error) => {
+                console.log(
+                  "Failed to send Referral redeemed mail to super admin."
+                );
+              });
+
+            if (referredBydoc) {
+              // Means referrer exists
+              referredBydoc.credit = referredBydoc.credit + 10;
+              referredBydoc.upgrades = referredBydoc.upgrades + 1;
+
+              await referredBydoc.save({
+                new: true,
+                validateModifiedOnly: true,
+              });
+
+              // Send mail to referrer informing about credits that were applied to their account
+
+              const creditsAppliedMsg = {
+                to: referredBydoc.email, // Change to your recipient
+                from: "shreyanshshah242@gmail.com", // Change to your verified sender
+                subject: `$10 Bluemeet credits applied to your account.`,
+                text: `Someone has just upgraded their Bluemeet plan by your referral. So we have added $10 to your Bluemeet account.`,
+                // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+              };
+
+              sgMail
+                .send(creditsAppliedMsg)
+                .then(async () => {
+                  console.log("Credits applied mail sent to referrer.");
+                })
+                .catch(async (error) => {
+                  console.log(
+                    "Failed to send credits applied mail to referrer."
+                  );
+                });
+            }
+
+            //
+          }
+
+          // Mark that this community has upgraded their account before
+          communityDoc.upgradedForFirstTime = true; // This is a flag that this community has upgraded their account to premium before
+        }
+
         communityDoc.planName = planName;
         communityDoc.planExpiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
         communityDoc.allowedRegistrationLimit = registrations * 1;
@@ -179,6 +256,27 @@ exports.listenForSuccessfulRegistration = catchAsync(async (req, res, next) => {
         communityDoc.downgradeToFreeOnNextCycle = false;
 
         await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+        // Send mail to super admin informing about plan switch on their community
+
+        const planSwitchMsg = {
+          to: communityDoc.superAdminEmail, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: `Your Bluemeet plan has been changed!`,
+          text: `We have successfully processed your request to change your Bluemeet plan. Please visit your community dashboard to get more details.`,
+          // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+        };
+
+        sgMail
+          .send(planSwitchMsg)
+          .then(async () => {
+            console.log("Plan switched mail sent to Community Super admin.");
+          })
+          .catch(async (error) => {
+            console.log(
+              "Failed to send plan switched mail sent to Community Super admin."
+            );
+          });
       } catch (error) {
         console.log(error);
       }

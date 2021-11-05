@@ -27,6 +27,7 @@ import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 import MainEventSetupCheckList from "../Checklist/Main";
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -333,7 +334,7 @@ const EventOverview = (props) => {
                         );
                     }}
                   >
-                    <i className="copy outline icon"></i>
+                    <ContentCopyRoundedIcon />
                   </button>
                 </div>
                 <Link

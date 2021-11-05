@@ -16,7 +16,11 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
-import { fetchEventsOfParticularCommunity } from "../../actions";
+import {
+  fetchEventsOfParticularCommunity,
+  fetchPendingInvitations,
+  fetchCommunityManagers,
+} from "../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -125,6 +129,14 @@ const EventManagement = () => {
 
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Fetch invited members of this community who have status pending
+    dispatch(fetchPendingInvitations(communityId));
+
+    // Fetch People who have accepted invitation
+    dispatch(fetchCommunityManagers(communityId));
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

@@ -825,7 +825,7 @@ exports.createNewCommunityRequest = catchAsync(async (req, res, next) => {
       subject: `Verify your community mail.`,
       text: `Hi ${user.firstName} ${
         user.lastName
-      }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${accountRequest._id}`}`,
+      }. Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${accountRequest._id}`}`,
       // html: ForgotPasswordTemplate(user, resetURL),
     };
 

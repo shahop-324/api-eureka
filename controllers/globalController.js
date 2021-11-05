@@ -109,7 +109,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     .paginate()
     .ratingFilter()
     .sort();
-  
+
   const eventDocuments = await features.query;
 
   res.status(200).json({
@@ -1569,7 +1569,7 @@ exports.resendCommunityVerificationMail = catchAsync(async (req, res, next) => {
     to: communityAccountRequest.email, // Change to your recipient
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: `Verify your community mail.`,
-    text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${communityAccountRequest._id}`}`,
+    text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`https://www.bluemeet.in/verifying-community/${communityAccountRequest._id}`}`,
     // html: ForgotPasswordTemplate(user, resetURL),
   };
 
@@ -1625,7 +1625,7 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
       to: req.body.email, // Change to your recipient
       from: "shreyanshshah242@gmail.com", // Change to your verified sender
       subject: `Verify your user account email.`,
-      text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://localhost:3001/verifying-account/${newAccountDoc._id}`}`,
+      text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${newAccountDoc._id}`}`,
       // html: ForgotPasswordTemplate(user, resetURL),
     };
 
@@ -1660,7 +1660,7 @@ exports.resendUserVerificationEmail = catchAsync(async (req, res, next) => {
     to: userAccountRequest.email, // Change to your recipient
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: `Verify your account email.`,
-    text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://localhost:3001/verifying-account/${userAccountRequest._id}`}`,
+    text: `Congratulations on joining Bluemeet platform. We are so excited to have you onboard and we can't wait to show you around. But before that we need you to please verify your email. ${`http://www.bluemeet.in/verifying-account/${userAccountRequest._id}`}`,
     // html: ForgotPasswordTemplate(user, resetURL),
   };
 
@@ -1714,7 +1714,7 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
         to: updatedCommunityAccountRequest.email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Verify your community email.`,
-        text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://localhost:3001/verifying-community/${updatedCommunityAccountRequest._id}`}`,
+        text: ` Congratulations on taking your first step towards managing and hosting awesome and effortless virtual and hybrid events. Please verify community by clicking on the button below. See you in. ${`http://www.bluemeet.in/verifying-community/${updatedCommunityAccountRequest._id}`}`,
         // html: ForgotPasswordTemplate(user, resetURL),
       };
 

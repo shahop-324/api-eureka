@@ -3526,6 +3526,209 @@ io.on("connect", (socket) => {
             token,
             data: { user },
           });
+
+          const msg = {
+            to: user.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Welcome to Bluemeet`,
+            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            // html: ForgotPasswordTemplate(user, resetURL),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
+        } else {
+          // !What happens if there is no referrer document found
+
+          const user = await new User({
+            googleId: googleId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            policySigned: true,
+            referralCode: MyReferralCode,
+            subscribedToMailList: true,
+            image: image,
+            signupUsingReferral: 0,
+            upgrades: 0,
+            credit: 0,
+          }).save({ validateModifiedOnly: true });
+          const name = `${firstName} ${lastName}`;
+          await MailList.create({
+            name: name,
+            email: email,
+          });
+          await LoggedInUsers.create({
+            userId: user._id,
+          });
+
+          const teamInvites = await TeamInvite.find({
+            invitedUserEmail: email,
+          });
+
+          for (let element of teamInvites) {
+            const status = element.status;
+
+            const userEmail = element.invitedUserEmail;
+
+            const communityId = element.communityId;
+
+            const userDoc = user;
+
+            const CommunityDoc = await Community.findById(communityId).populate(
+              "eventManagers",
+              "email"
+            );
+
+            // accept team invitaion
+
+            // Push this persons userId in eventManagers array in community
+            CommunityDoc.eventManagers.push(userDoc._id);
+            await CommunityDoc.save({ new: true, validateModifiedOnly: true });
+
+            // add this community in this users doc in invited communities array
+            userDoc.invitedCommunities.push(communityId);
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+
+            // Mark this invitation document status as accepted
+            element.status = "Accepted";
+            await element.save({ new: true, validateModifiedOnly: true });
+
+            // TODO For every team invitation accepted please send a confirmation mail to user and community super admin
+
+            // Team invitation accepted
+          }
+
+          // * DONE At this point we are sure that we have accepted all pending team invitations
+
+          // Get all speaker registrations that are still pending and not cancelled for this users email
+
+          const speakerRegistrations = await Registration.find({
+            $and: [
+              { type: "Speaker" },
+              { status: "Pending" },
+              { cancelled: false },
+              { userEmail: email },
+            ],
+          });
+
+          const speakers = await Speaker.find({
+            email: email,
+          });
+
+          for (let element of speakers) {
+            element.userId = user._id;
+            await element.save({ new: true, validateModifiedOnly: true });
+          }
+
+          // Now we have all speaker registrations for this user which are still pending and not cancelled
+
+          for (let element of speakerRegistrations) {
+            // For every registration add it to user registered events and push each registration into user document
+
+            const userDoc = user;
+
+            userDoc.registeredInEvents.push(element.bookedForEventId);
+            userDoc.registrations.push(element._id);
+
+            // update each registration as completed and fill details like user Id and other user details that are needed
+
+            element.status = "Completed";
+            element.userName = userDoc.firstName + " " + userDoc.lastName;
+            element.userImage = userDoc.image;
+            element.bookedByUser = userDoc._id;
+            element.first_name = userDoc.firstName;
+            element.lastName = userDoc.lastName;
+            element.name = userDoc.firstName + " " + userDoc.lastName;
+            element.organisation = userDoc.organisation;
+            element.designation = userDoc.designation;
+            element.city = userDoc.city;
+            element.country = userDoc.country;
+
+            // Save all updates in userDoc and registration doc.
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+            await element.save({ new: true, validateModifiedOnly: true });
+
+            // TODO For every speaker invitation accepted please send a confirmation mail to user
+
+            // Speaker invitation accepted
+          }
+
+          // * DONE At this point we are sure that we have accepted all pending speaker invitations
+
+          const boothRegistrations = await Registration.find({
+            $and: [
+              { type: "Exhibitor" },
+              { status: "Pending" },
+              { cancelled: false },
+              { userEmail: email },
+            ],
+          });
+
+          // Now we have all booth registrations for this user which are still pending and not cancelled
+
+          for (let element of boothRegistrations) {
+            // For every registration add it to user registered events and push each registration into user document
+
+            const userDoc = user;
+
+            userDoc.registeredInEvents.push(element.bookedForEventId);
+            userDoc.registrations.push(element._id);
+
+            // update each registration as completed and fill details like user Id and other user details that are needed
+
+            element.status = "Completed";
+            element.userName = userDoc.firstName + " " + userDoc.lastName;
+            element.userImage = userDoc.image;
+            element.bookedByUser = userDoc._id;
+            element.first_name = userDoc.firstName;
+            element.lastName = userDoc.lastName;
+            element.name = userDoc.firstName + " " + userDoc.lastName;
+            element.organisation = userDoc.organisation;
+            element.designation = userDoc.designation;
+            element.city = userDoc.city;
+            element.country = userDoc.country;
+
+            // Save all updates in userDoc and registration doc.
+            await userDoc.save({ new: true, validateModifiedOnly: true });
+            await element.save({ new: true, validateModifiedOnly: true });
+
+            // TODO For every booth invitation accepted please send a confirmation mail to user
+
+            // Booth invitation accepted
+          }
+
+          // * DONE At this point we are sure that we have accepted all pending booth invitations
+
+          const token = signToken(user._id);
+
+          socket.emit("newGoogleLogin", {
+            token,
+            data: { user },
+          });
+
+          const msg = {
+            to: user.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Welcome to Bluemeet`,
+            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            // html: ForgotPasswordTemplate(user, resetURL),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
         }
       } else {
         const user = await new User({
@@ -3695,6 +3898,23 @@ io.on("connect", (socket) => {
           token,
           data: { user },
         });
+
+        const msg = {
+          to: user.email, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: `Welcome to Bluemeet`,
+          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+          // html: ForgotPasswordTemplate(user, resetURL),
+        };
+
+        sgMail
+          .send(msg)
+          .then(async () => {
+            console.log("Welcome mail sent successfully!");
+          })
+          .catch(async (error) => {
+            console.log("Failed to send welcome message to our user.");
+          });
       }
     }
   });
@@ -3776,7 +3996,6 @@ io.on("connect", (socket) => {
           });
 
           for (let element of teamInvites) {
-
             const communityId = element.communityId;
 
             const userDoc = user;
@@ -3912,6 +4131,23 @@ io.on("connect", (socket) => {
             token,
             data: { user },
           });
+
+          const msg = {
+            to: user.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Welcome to Bluemeet`,
+            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            // html: ForgotPasswordTemplate(user, resetURL),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
         } else {
           const user = await new User({
             linkedinId: linkedinId,
@@ -4080,6 +4316,23 @@ io.on("connect", (socket) => {
             token,
             data: { user },
           });
+
+          const msg = {
+            to: user.email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Welcome to Bluemeet`,
+            text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+            // html: ForgotPasswordTemplate(user, resetURL),
+          };
+
+          sgMail
+            .send(msg)
+            .then(async () => {
+              console.log("Welcome mail sent successfully!");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send welcome message to our user.");
+            });
         }
       } else {
         const user = await new User({
@@ -4249,6 +4502,23 @@ io.on("connect", (socket) => {
           token,
           data: { user },
         });
+
+        const msg = {
+          to: user.email, // Change to your recipient
+          from: "shreyanshshah242@gmail.com", // Change to your verified sender
+          subject: `Welcome to Bluemeet`,
+          text: ` We are glad to have you on Bluemeet. Our customer success team will be in touch with you shortly for helping you discover and unleash power of virtual and hybrid events. In the meantime you can go through these resources to do a self exploration of Bluemeet platform. Cheers!`,
+          // html: ForgotPasswordTemplate(user, resetURL),
+        };
+
+        sgMail
+          .send(msg)
+          .then(async () => {
+            console.log("Welcome mail sent successfully!");
+          })
+          .catch(async (error) => {
+            console.log("Failed to send welcome message to our user.");
+          });
       }
     }
   });
@@ -4257,7 +4527,7 @@ io.on("connect", (socket) => {
     await LoggedInUsers.findOneAndDelete({
       userId: user.userId,
     });
-  });
+  }); 
 });
 
 server.listen(port, () => {

@@ -18,6 +18,7 @@ import {
   errorTrackerForEditUser,
   navigationIndex,
   signOut,
+  showSnackbar,
 } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import history from "../history";
@@ -30,6 +31,32 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import RedditIcon from "@mui/icons-material/Reddit";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  HatenaShareButton,
+  InstapaperShareButton,
+  LineShareButton,
+  LinkedinShareButton,
+  LivejournalShareButton,
+  MailruShareButton,
+  OKShareButton,
+  PinterestShareButton,
+  PocketShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TumblrShareButton,
+  TwitterShareButton,
+  ViberShareButton,
+  VKShareButton,
+  WhatsappShareButton,
+  WorkplaceShareButton,
+} from "react-share";
+
 const { REACT_APP_MY_ENV } = process.env;
 
 const useStyles = makeStyles((theme) => ({
@@ -125,10 +152,7 @@ const AvatarMenu = () => {
   }, [open]);
 
   if (isLoading) {
-    return (
-      <div className="spinner-border" role="status">
-      </div>
-    );
+    return <div className="spinner-border" role="status"></div>;
   }
   if (error) {
     return dispatch(errorTrackerForEditUser());
@@ -152,9 +176,7 @@ const AvatarMenu = () => {
     }
   }
 
-  const referralLink = REACT_APP_MY_ENV
-    ? `http://localhost:3001/?ref=${referralCode}`
-    : `https://www.bluemeet.in/?ref=${referralCode}`;
+  const referralLink = `https://www.bluemeet.in/signup?ref=${referralCode}`;
 
   return (
     <div className={`${classes.root}`}>
@@ -271,7 +293,6 @@ const AvatarMenu = () => {
           maxWidth={maxWidth}
           fullScreen={fullScreen}
           open={openReferral}
-          // onClose={props.closeHandler}
           aria-labelledby="responsive-dialog-title"
         >
           <div className="user-referral-container p-4">
@@ -302,7 +323,7 @@ const AvatarMenu = () => {
             </div>
 
             <div className="refer-and-earn-banner px-3 py-2 mt-3">
-              Refer your network to Bluemeet — give $5, get $5.
+              Refer your network to Bluemeet — give $10, get $10.
             </div>
             <div className="referral-3-cards-row my-5">
               <div className="referral-display-card p-4 d-flex flex-column align-item-center justify-content-center">
@@ -341,11 +362,28 @@ const AvatarMenu = () => {
                 <button
                   className="ui icon button"
                   onClick={() => {
-                    navigator.clipboard.writeText(referralLink);
-                    alert("copied to clipboard!");
+                    navigator.clipboard.writeText(referralLink).then(
+                      function () {
+                        console.log(
+                          "Async: Copying to clipboard was successful!"
+                        );
+                        dispatch(
+                          showSnackbar(
+                            "success",
+                            "Referral Link copied to clipboard!"
+                          )
+                        );
+                      },
+                      function (err) {
+                        console.error("Async: Could not copy text: ", err);
+                        dispatch(
+                          showSnackbar("error", "Failed to copy referral link.")
+                        );
+                      }
+                    );
                   }}
                 >
-                  <i className="copy outline icon"></i>
+                  <ContentCopyRoundedIcon />
                 </button>
               </div>
             </div>
@@ -359,11 +397,12 @@ const AvatarMenu = () => {
                 className=" d-flex flex-row align-items-center justify-content-center"
                 style={{ width: "100%" }}
               >
-                <div className="shareon-icon p-3 ">
-                  <a
-                    href="https://web.whatsapp.com"
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="Demo__some-network me-4">
+                  <WhatsappShareButton
+                    url={referralLink}
+                    title={"Claim your $10 on Bluemeet.in for Free!"}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
                   >
                     <IconButton
                       style={{ height: "fit-content", width: "fit-content" }}
@@ -372,58 +411,73 @@ const AvatarMenu = () => {
                         style={{ fontSize: "24", fill: "#0C881D" }}
                       />
                     </IconButton>
-                  </a>
+                  </WhatsappShareButton>
                 </div>
-                <div className="shareon-icon p-3 ">
-                  <a
-                    href="https://www.facebook.com"
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="Demo__some-network me-4">
+                  <FacebookShareButton
+                    url={referralLink}
+                    quote={"Claim your $10 on Bluemeet.in for Free!"}
+                    className="Demo__some-network__share-button"
                   >
                     <IconButton>
                       <FacebookIcon
                         style={{ fontSize: "24", fill: "#1760A8" }}
                       />
                     </IconButton>
-                  </a>
+                  </FacebookShareButton>
                 </div>
-                <div className="shareon-icon p-3 ">
-                  <a
-                    href="https://www.linkedin.com"
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="Demo__some-network me-4">
+                  <LinkedinShareButton
+                    url={referralLink}
+                    title={"Claim your $10 on Bluemeet.in for Free!"}
+                    className="Demo__some-network__share-button"
                   >
                     <IconButton>
                       <LinkedInIcon
                         style={{ fontSize: "24", fill: "#2565A5" }}
                       />
                     </IconButton>
-                  </a>
+                  </LinkedinShareButton>
                 </div>
-                <div className="shareon-icon p-3 ">
-                  <a
-                    href="https://www.twitter.com"
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="Demo__some-network me-4">
+                  <TwitterShareButton
+                    url={referralLink}
+                    title={"Claim your $10 on Bluemeet.in for Free!"}
+                    className="Demo__some-network__share-button"
                   >
                     <IconButton>
                       <TwitterIcon
                         style={{ fontSize: "24", fill: "#539FF7" }}
                       />
                     </IconButton>
-                  </a>
+                  </TwitterShareButton>
                 </div>
 
-                <div className="shareon-icon p-3 ">
-                  <a
-                    href="https://www.instagram.com"
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="Demo__some-network me-4">
+                  <RedditShareButton
+                    url={referralLink}
+                    title={"Claim your $10 on Bluemeet.in for Free!"}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
                   >
                     <IconButton>
-                      <Instagram style={{ fontSize: "24", fill: "#841E8D" }} />
+                      <RedditIcon style={{ fontSize: "24", fill: "#ff4500" }} />
                     </IconButton>
-                  </a>
+                  </RedditShareButton>
+                </div>
+                <div className="Demo__some-network me-4">
+                  <TelegramShareButton
+                    url={referralLink}
+                    title={"Claim your $10 on Bluemeet.in for Free!"}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
+                  >
+                    <IconButton>
+                      <TelegramIcon
+                        style={{ fontSize: "24", fill: "#0088cc" }}
+                      />
+                    </IconButton>
+                  </TelegramShareButton>
                 </div>
               </div>
             </div>

@@ -5,14 +5,12 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongosanitize = require("express-mongo-sanitize");
-const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const WorkOS = require("@workos-inc/node");
 const catchAsync = require("./utils/catchAsync");
 const jsforce = require("jsforce");
 const passport = require("passport");
 const xss = require("xss-clean");
-
 const globalErrorHandler = require("./controllers/errController");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -20,9 +18,7 @@ const jwt = require("jsonwebtoken");
 const session = require("cookie-session");
 const Event = require("./models/eventModel");
 var request = require("superagent");
-
 const querystring = require("querystring");
-
 const uploadRoutes = require("./routes/uploadRoutes");
 const userRoutes = require("./routes/userRoutes");
 const registrationRoutes = require("./routes/registrationRoutes");
@@ -53,8 +49,6 @@ const paypalRoutes = require("./routes/payPalRoutes");
 const zapierRoutes = require("./routes/zapierRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const mailRoutes = require("./routes/mailRoutes");
-
-// const { initialize } = require("passport");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
