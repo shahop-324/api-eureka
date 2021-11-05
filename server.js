@@ -3776,9 +3776,6 @@ io.on("connect", (socket) => {
           });
 
           for (let element of teamInvites) {
-            const status = element.status;
-
-            const userEmail = element.invitedUserEmail;
 
             const communityId = element.communityId;
 

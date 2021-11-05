@@ -176,14 +176,11 @@ app.get("/api-eureka/getUserCredentials", (req, res, next) => {
   const parameters = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3001/signin"
-        : "https://bluemeet.in/signin",
+    redirect_uri: "https://bluemeet.in/signin",
     client_id: "7761igbj4li3f2",
     client_secret: "aitQmTG7uYvSkaRZ",
   };
-  console.log(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
+  console.log(urlToGetLinkedInAccessToken, qs.stringify(parameters), config);
   axios
     .post(urlToGetLinkedInAccessToken, qs.stringify(parameters), config)
     .then((response) => {
