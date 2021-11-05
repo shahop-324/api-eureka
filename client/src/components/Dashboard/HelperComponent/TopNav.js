@@ -179,7 +179,7 @@ const Topnav = ({
             />
             <div
               onClick={handleClickOpenSettings}
-              className={`${classes.root} mx-2 dash-settings`}
+              className={`${classes.root} mx-2`}
             >
               <IconButton>
                 <EditRoundedIcon style={{color: "#212121"}} />

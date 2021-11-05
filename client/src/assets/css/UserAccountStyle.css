@@ -254,7 +254,7 @@
 @media only screen and (max-width: 1428px) {
   .user-account-events-event-card-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 35px;
   }
 

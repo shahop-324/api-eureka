@@ -651,71 +651,75 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const filteredBody = filterObj(
-    req.body,
-    "phoneNumber",
-    "firstName",
-    "lastName",
-    "headline",
-    "bio",
-    "email",
-    "photo",
-    "interests",
-    "socialMediaHandles",
-    "notificationsForRegisteredEvents",
-    "notificationsForEventRemainder",
-    "notificationBasedOnMyPreference",
-    "image",
-    "organisation",
-    "designation",
-    "city",
-    "country"
-  );
+  try {
+    const userId = req.user.id;
+    const filteredBody = filterObj(
+      req.body,
+      "phoneNumber",
+      "firstName",
+      "lastName",
+      "headline",
+      "bio",
+      "email",
+      "photo",
+      "interests",
+      "socialMediaHandles",
+      "notificationsForRegisteredEvents",
+      "notificationsForEventRemainder",
+      "notificationBasedOnMyPreference",
+      "image",
+      "organisation",
+      "designation",
+      "city",
+      "country"
+    );
 
-  const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+    const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
+      new: true,
+      runValidators: true,
+    });
 
-  // ! Fetch and update all registrations of this user
+    // ! Fetch and update all registrations of this user
 
-  // Step 1.) => Find all registrations of this user
+    // Step 1.) => Find all registrations of this user
 
-  const registrations = await Registration.find({
-    bookedByUser: mongoose.Types.ObjectId(userId),
-  });
+    const registrations = await Registration.find({
+      bookedByUser: mongoose.Types.ObjectId(userId),
+    });
 
-  for (let element of registrations) {
-    element.userName = updatedUser.firstName + " " + updatedUser.lastName;
-    element.userImage = updatedUser.image;
-    element.userEmail = updatedUser.email;
-    element.image = updatedUser.image;
-    element.email = updatedUser.email;
-    element.first_name = updatedUser.firstName;
-    element.last_name = updatedUser.lastName;
-    element.name = updatedUser.firstName + " " + updatedUser.lastName;
-    element.headline = updatedUser.headline;
-    element.organisation = updatedUser.organisation;
-    element.designation = updatedUser.designation;
-    element.city = updatedUser.city;
-    element.country = updatedUser.country;
-    element.interests = updatedUser.interests;
-    element.socialMediaHandles = updatedUser.socialMediaHandles;
+    for (let element of registrations) {
+      element.userName = updatedUser.firstName + " " + updatedUser.lastName;
+      element.userImage = updatedUser.image;
+      element.userEmail = updatedUser.email;
+      element.image = updatedUser.image;
+      element.email = updatedUser.email;
+      element.first_name = updatedUser.firstName;
+      element.last_name = updatedUser.lastName;
+      element.name = updatedUser.firstName + " " + updatedUser.lastName;
+      element.headline = updatedUser.headline;
+      element.organisation = updatedUser.organisation;
+      element.designation = updatedUser.designation;
+      element.city = updatedUser.city;
+      element.country = updatedUser.country;
+      element.interests = updatedUser.interests;
+      element.socialMediaHandles = updatedUser.socialMediaHandles;
 
-    // Save all changes made to this registration document
+      // Save all changes made to this registration document
 
-    await element.save({ new: true, validateModifiedOnly: true });
+      await element.save({ new: true, validateModifiedOnly: true });
+    }
+
+    // At this point we have updated all registration documents that were registered for this user
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        userData: updatedUser,
+      },
+    });
+  } catch (error) {
+    console.log(error);
   }
-
-  // At this point we have updated all registration documents that were registered for this user
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      userData: updatedUser,
-    },
-  });
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
