@@ -44,8 +44,8 @@ import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
 import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
-
 import socket from "./HostingPlatform/service/socket";
+
 import {
   DuplicateUserSignOut,
   googleSignIn,
