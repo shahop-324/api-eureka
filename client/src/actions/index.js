@@ -193,7 +193,7 @@ export const fetchReferralCode =
   };
 
 export const createUserAccountRequest =
-  (formValues, intent, eventId, setSignupClicked) =>
+  (formValues, intent, eventId, setSignupClicked, referralCode) =>
   async (dispatch, getState) => {
     try {
       let res = await fetch(
@@ -206,6 +206,7 @@ export const createUserAccountRequest =
             ...formValues,
             intent: intent,
             eventId: eventId,
+            referralCode: referralCode,
           }),
 
           headers: {
@@ -10977,3 +10978,11 @@ export const changeCommunityAccountRequestEmail =
       );
     }
   };
+
+export const setReferralCode = (referralCode) => async (dispatch, getState) => {
+  dispatch(
+    userActions.SetReferralCode({
+      referralCode: referralCode,
+    })
+  );
+};

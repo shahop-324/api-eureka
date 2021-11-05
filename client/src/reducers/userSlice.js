@@ -108,6 +108,9 @@ const userSlice = createSlice({
       state.userVerificationLinkExpired =
         action.payload.userVerificationLinkStatus;
     },
+    SetReferralCode(state, action) {
+      state.referredId = action.payload.referralCode;
+    }
   },
 });
 export const userActions = userSlice.actions;

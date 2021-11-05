@@ -16,9 +16,9 @@ class LinkedinAuth extends React.Component {
         <a href={oauthUrl}>
           <div>
             <button
-            onClick={() => {
-              console.log(oauthUrl);
-            }}
+              onClick={() => {
+                console.log(oauthUrl);
+              }}
               type="button"
               className="btn btn-light py-2"
               style={{ width: "100%" }}

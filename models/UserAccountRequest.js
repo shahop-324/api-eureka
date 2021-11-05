@@ -35,6 +35,9 @@ const userAccountRequestSchema = new mongoose.Schema(
     password: {
       type: String,
     },
+    referralCode: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },

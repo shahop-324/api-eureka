@@ -1617,6 +1617,7 @@ exports.createUserAccountRequest = catchAsync(async (req, res, next) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       password: req.body.password,
+      referralCode: req.body.referralCode,
     });
 
     // Send mail for this new community

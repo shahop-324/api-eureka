@@ -80,23 +80,22 @@ import ConfirmUserAccountMail from "./UserAccount/Helper/ConfirmUserAccountMail"
 import UserVerificationExpired from "./UserAccount/Helper/UserVerificationExpired";
 import CommunityVerificationExpired from "./UserAccount/Helper/CommunityVerificationExpired";
 
-import * as Amplitude from '@amplitude/node';
+import * as Amplitude from "@amplitude/node";
 
-const client = Amplitude.init('7ce61ef36a075fab0d8a6e6db4f59349');
+const client = Amplitude.init("7ce61ef36a075fab0d8a6e6db4f59349");
 
 client.logEvent({
-  event_type: 'Node.js Event',
-  user_id: 'datamonster@gmail.com',
+  event_type: "Node.js Event",
+  user_id: "datamonster@gmail.com",
   location_lat: 37.77,
   location_lng: -122.39,
-  ip: '127.0.0.1',
+  ip: "127.0.0.1",
   event_properties: {
-    keyString: 'valueString',
+    keyString: "valueString",
     keyInt: 11,
-    keyBool: true
-  }
+    keyBool: true,
+  },
 });
-
 
 const vertical = "top";
 const horizontal = "center";
@@ -111,7 +110,6 @@ class App extends React.Component {
   componentDidMount = () => {
     socket.on("logOutUser", ({ userId, message }) => {
       // dispatch(createNewEventAlert(newAlert));
-
       this.props.DuplicateUserSignOut(userId, message);
     });
 
