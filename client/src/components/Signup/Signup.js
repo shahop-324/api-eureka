@@ -109,7 +109,15 @@ const Signup = (props) => {
 
   const onSubmit = (formValues) => {
     setSignupClicked(true);
-      dispatch(createUserAccountRequest(formValues, params.intent, params.eventId, setSignupClicked, referralCode));
+    dispatch(
+      createUserAccountRequest(
+        formValues,
+        params.intent,
+        params.eventId,
+        setSignupClicked,
+        referralCode
+      )
+    );
   };
 
   if (error) {
