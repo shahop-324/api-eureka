@@ -7034,6 +7034,79 @@ export const fetchApiKeys = (communityId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
     dispatch(apiKeyActions.hasError(error.message));
+
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to fetch API credentials, Please try again."
+      )
+    );
+  }
+};
+
+export const updateAPIKey = (id, enabled) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(
+      `${BaseURL}community/updateApiKey/${id}/${enabled}`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    dispatch(
+      apiKeyActions.UpdateApiKey({
+        apiKey: result.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Api Credential updated successfully!"));
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to update API credential, Please try again."
+      )
+    );
+  }
+};
+
+export const deleteAPIKey = (id) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}community/deleteApiKey/${id}`, {
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      apiKeyActions.FetchApiKeys({
+        apiKeys: result.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", "API Credential deleted successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to delete API credential, Please try again."
+      )
+    );
   }
 };
 
@@ -9730,29 +9803,38 @@ export const fetchEventForMagicLinkPage =
       }
 
       const result = await res.json();
-      console.log(result);
-      // Inside result we get data(eventDetails) userId (userToBeLoggedIn) and userRole (role of user in event)
 
-      dispatch(
-        magicLinkActions.FetchEventDetails({
-          event: result.data,
-        })
-      );
-      dispatch(
-        magicLinkActions.FetchUserId({
-          userId: result.userId,
-        })
-      );
-      dispatch(
-        magicLinkActions.FetchUserRole({
-          userRole: result.userRole,
-        })
-      );
-      dispatch(
-        magicLinkActions.FetchUserEmail({
-          userEmail: result.userEmail,
-        })
-      );
+      // Inside result we get data(eventDetails) userId (userToBeLoggedIn)
+      // and userRole (role of user in event)
+
+      if (result.notFound) {
+        // Registration doc was not found
+
+        history.push("/does-not-exist");
+      } else {
+        // Normal case => Registration doc was found.
+
+        dispatch(
+          magicLinkActions.FetchEventDetails({
+            event: result.data,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserId({
+            userId: result.userId,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserRole({
+            userRole: result.userRole,
+          })
+        );
+        dispatch(
+          magicLinkActions.FetchUserEmail({
+            userEmail: result.userEmail,
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
 
@@ -9792,64 +9874,76 @@ export const fetchSpeakerRegistrationInfo =
       }
 
       const result = await res.json();
-      console.log(
-        result,
-        "This is the result of speaker visiting magic link page."
-      );
 
       // Check if speaker is registered on Bluemeet or not
 
       if (result.userIsOnBluemeet) {
-        // user is registered on Bluemeet Platform
+        if (result.notFound) {
+          // Registration doc was not found
 
-        dispatch(
-          magicLinkActions.FetchEventDetails({
-            event: result.data,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserId({
-            userId: result.userId,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserRole({
-            userRole: result.userRole,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserEmail({
-            userEmail: result.userEmail,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserIsOnBluemeet({
-            userIsOnBluemeet: result.userIsOnBluemeet,
-          })
-        );
+          history.push("/does-not-exist");
+        } else {
+          // Normal case => Registration doc was found.
+
+          // user is registered on Bluemeet Platform
+
+          dispatch(
+            magicLinkActions.FetchEventDetails({
+              event: result.data,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserId({
+              userId: result.userId,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserRole({
+              userRole: result.userRole,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserEmail({
+              userEmail: result.userEmail,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserIsOnBluemeet({
+              userIsOnBluemeet: result.userIsOnBluemeet,
+            })
+          );
+        }
       } else {
         // user is not registered on Bluemeet Platform
 
-        dispatch(
-          magicLinkActions.FetchEventDetails({
-            event: result.data,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserRole({
-            userRole: result.userRole,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserEmail({
-            userEmail: result.userEmail,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserIsOnBluemeet({
-            userIsOnBluemeet: result.userIsOnBluemeet,
-          })
-        );
+        if (result.notFound) {
+          // Registration doc was not found
+
+          history.push("/does-not-exist");
+        } else {
+          // Normal case => Registration doc was found.
+
+          dispatch(
+            magicLinkActions.FetchEventDetails({
+              event: result.data,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserRole({
+              userRole: result.userRole,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserEmail({
+              userEmail: result.userEmail,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserIsOnBluemeet({
+              userIsOnBluemeet: result.userIsOnBluemeet,
+            })
+          );
+        }
       }
 
       // Inside result we get data(eventDetails) and if this speaker is registered on Bluemeet platform as a user or not if he / she is on Bluemeet platform than we will get his / her name, emai, userId
@@ -9903,54 +9997,70 @@ export const fetchExhibitorRegistrationInfo =
       if (result.userIsOnBluemeet) {
         // user is registered on Bluemeet Platform
 
-        dispatch(
-          magicLinkActions.FetchEventDetails({
-            event: result.data,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserId({
-            userId: result.userId,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserRole({
-            userRole: result.userRole,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserEmail({
-            userEmail: result.userEmail,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserIsOnBluemeet({
-            userIsOnBluemeet: result.userIsOnBluemeet,
-          })
-        );
+        if (result.notFound) {
+          // Registration doc was not found
+
+          history.push("/does-not-exist");
+        } else {
+          // Normal case => Registration document was found
+
+          dispatch(
+            magicLinkActions.FetchEventDetails({
+              event: result.data,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserId({
+              userId: result.userId,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserRole({
+              userRole: result.userRole,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserEmail({
+              userEmail: result.userEmail,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserIsOnBluemeet({
+              userIsOnBluemeet: result.userIsOnBluemeet,
+            })
+          );
+        }
       } else {
         // user is not registered on Bluemeet Platform
 
-        dispatch(
-          magicLinkActions.FetchEventDetails({
-            event: result.data,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserRole({
-            userRole: result.userRole,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserEmail({
-            userEmail: result.userEmail,
-          })
-        );
-        dispatch(
-          magicLinkActions.FetchUserIsOnBluemeet({
-            userIsOnBluemeet: result.userIsOnBluemeet,
-          })
-        );
+        if (result.notFound) {
+          // Registration doc was not found
+
+          history.push("/does-not-exist");
+        } else {
+          // Normal case => Registration document was found
+
+          dispatch(
+            magicLinkActions.FetchEventDetails({
+              event: result.data,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserRole({
+              userRole: result.userRole,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserEmail({
+              userEmail: result.userEmail,
+            })
+          );
+          dispatch(
+            magicLinkActions.FetchUserIsOnBluemeet({
+              userIsOnBluemeet: result.userIsOnBluemeet,
+            })
+          );
+        }
       }
     } catch (error) {
       console.log(error);
@@ -10985,4 +11095,90 @@ export const setReferralCode = (referralCode) => async (dispatch, getState) => {
       referralCode: referralCode,
     })
   );
+};
+
+export const fetchLatestEvent = () => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}fetchLatestEvent`,
+
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(
+          "Failed to fetch latest event please try reloading this page."
+        );
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.FetchLatestEvent({
+        latestEvent: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to fetch latest event please try reloading this page."
+      )
+    );
+  }
+};
+
+export const createLatestEvent = (formValues) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}community/events/createLatestEvent`,
+
+      {
+        method: "POST",
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Failed to create event please try again.");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.FetchLatestEvent({
+        latestEvent: res.data.event,
+      })
+    );
+
+    dispatch(showSnackbar("success", "New event created successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to create event, please try again.")
+    );
+  }
 };

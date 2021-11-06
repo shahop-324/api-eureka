@@ -28,7 +28,11 @@ const apiKeySlice = createSlice({
       state.isLoading = false;
       state.error = false;
     },
-
+    UpdateApiKey(state, action) {
+      state.apiKeys = state.apiKeys.filter((el) =>
+        el._id === action.payload.apiKey._id ? action.payload.apiKey : el
+      );
+    },
     FetchApiKeys(state, action) {
       state.apiKeys = action.payload.apiKeys;
       state.isLoading = false;

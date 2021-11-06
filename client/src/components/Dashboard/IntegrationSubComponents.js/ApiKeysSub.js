@@ -60,6 +60,8 @@ const ApiKeysSub = () => {
       });
   };
 
+  const preProcessedAPIKeys = apiKeys.filter((el) => el.deleted !== true);
+
   return (
     <>
       <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
@@ -67,7 +69,6 @@ const ApiKeysSub = () => {
         <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
           <Divider />
         </div>
-
         {isLoading ? (
           <div
             className="d-flex flex-row align-items-center justify-content-center"
@@ -75,10 +76,19 @@ const ApiKeysSub = () => {
           >
             <Loader />
           </div>
-        ) : typeof apiKeys !== "undefined" && apiKeys.length > 0 ? (
-          renderApiKeys(apiKeys)
+        ) : typeof preProcessedAPIKeys !== "undefined" &&
+          preProcessedAPIKeys.length > 0 ? (
+          renderApiKeys(preProcessedAPIKeys)
         ) : (
-          <NoContentFound msgText="No Api keys were found!" img={NoKeyFound} />
+          <div
+            style={{ height: "63vh", width: "100%" }}
+            className="d-flex flex-row align-items-center justify-content-center"
+          >
+            <NoContentFound
+              msgText="No Api keys were found!"
+              img={NoKeyFound}
+            />
+          </div>
         )}
       </div>
     </>

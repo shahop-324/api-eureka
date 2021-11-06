@@ -4,7 +4,7 @@ import Select from "react-select";
 import "./../../../index.css";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { createEvent } from "../../../actions";
+import { createEvent, createLatestEvent } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useSelector } from "react-redux";
@@ -224,6 +224,7 @@ const CreateNewEventForm = ({
   showBlockButton,
   showInlineButton,
   hideFormHeading,
+  latestEvent,
 }) => {
   let hostOptions = [];
   const communityManagers = useSelector(
@@ -276,7 +277,14 @@ const CreateNewEventForm = ({
       formValues.numberOfTablesInLounge;
     ModifiedFormValues.moderators = moderators;
 
-    dispatch(createEvent(ModifiedFormValues));
+    if(latestEvent) {
+dispatch(createLatestEvent(ModifiedFormValues));
+    }
+    else {
+      dispatch(createEvent(ModifiedFormValues));
+    }
+
+   
     handleClose();
   };
   return (

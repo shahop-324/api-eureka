@@ -347,8 +347,8 @@ exports.createBooth = catchAsync(async (req, res, next) => {
             });
 
             // Provide magic_link and invitation link
-            newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
-            newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+            newRegistration.magic_link = `http://bluemeet.in/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://bluemeet.in/event/booth/${newRegistration._id}`;
 
             // Add this event in users registered events and push this registration in users resgistrations doc.
             existingUser.registeredInEvents.push(eventGettingBooth._id);
@@ -369,7 +369,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
-              } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+              } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
               // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
             };
 
@@ -405,8 +405,8 @@ exports.createBooth = catchAsync(async (req, res, next) => {
             });
 
             // Provide magic_link and invitation link
-            newRegistration.magic_link = `http://localhost:3001/event/booth/${newRegistration._id}`;
-            newRegistration.invitationLink = `http://localhost:3001/event/booth/${newRegistration._id}`;
+            newRegistration.magic_link = `http://bluemeet.in/event/booth/${newRegistration._id}`;
+            newRegistration.invitationLink = `http://bluemeet.in/event/booth/${newRegistration._id}`;
 
             // Save user doc and registration doc
             await newRegistration.save({
@@ -422,7 +422,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
               subject: `Your are invited as a exhibitor in ${eventGettingBooth.eventName}`,
               text: `use this link to join this event ${
                 eventGettingBooth.eventName
-              } as a booth exhibitor. ${`http://localhost:3001/event/booth/${newRegistration._id}`}`,
+              } as a booth exhibitor. ${`http://bluemeet.in/event/booth/${newRegistration._id}`}`,
               // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
             };
 
@@ -552,8 +552,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
       // Add invitaion and magic link to this registration
 
-      newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-      newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.magic_link = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.invitationLink = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
 
       await newSpeakerRegistration.save({
         new: true,
@@ -579,8 +579,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         eventId: eventGettingSpeaker.id,
         image: req.body.image,
         designation: req.body.designation,
-        invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
-        dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
+        invitationLink: `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`,
+        dashboardLink: `http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
 
       // Add this speaker to all sessions in which he/she is assigned
@@ -599,7 +599,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         to: req.body.email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
-        text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+        text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
       };
 
@@ -668,8 +668,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
       // Add invitaion and magic link to this registration
 
-      newSpeakerRegistration.magic_link = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
-      newSpeakerRegistration.invitationLink = `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.magic_link = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
+      newSpeakerRegistration.invitationLink = `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`;
 
       await newSpeakerRegistration.save({
         new: true,
@@ -687,8 +687,8 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         eventId: eventGettingSpeaker.id,
         image: req.body.image,
         designation: req.body.designation,
-        invitationLink: `http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`,
-        dashboardLink: `http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`,
+        invitationLink: `http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`,
+        dashboardLink: `http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`,
       });
 
       // Add this speaker to all sessions in which he/she is assigned
@@ -707,7 +707,7 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
         to: req.body.email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: `Your are invited as speaker in ${eventGettingSpeaker.eventName}`,
-        text: `use this link to join this event as a speaker. ${`http://localhost:3001/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://localhost:3001/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
+        text: `use this link to join this event as a speaker. ${`http://bluemeet.in/event/speaker/${newSpeakerRegistration._id}`}. You can manage your details here by visiting your dashboard ${`http://bluemeet.in/event/speaker/dashboard/${newSpeakerRegistration._id}`}`,
         // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
       };
 

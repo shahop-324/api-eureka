@@ -1,12 +1,10 @@
 import React from "react";
-import {
-  Dialog,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Dialog, useMediaQuery, useTheme } from "@material-ui/core";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import {showSnackbar} from "./../../../actions";
+import { showSnackbar } from "./../../../actions";
+
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 const EventLinkInput = styled.input`
   font-weight: 500;
@@ -23,7 +21,7 @@ const FormLabel = styled.label`
   font-family: "Ubuntu" !important;
   font-size: 0.82rem !important;
   font-weight: 500 !important;
-  color: #5F5F5F !important;
+  color: #5f5f5f !important;
 `;
 
 const CodePaper = styled.div`
@@ -68,73 +66,96 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
           </HeaderFooter>
           <div className="px-4 py-3">
             <CodePaper>
-            <FormLabel
-              className="form-label form-label-customized"
-            >
-             Api key
-            </FormLabel>
-            <div
-                  className="ui action input mb-4"
-                  style={{ minWidth: "380px", marginLeft: "auto", marginRight: "auto" }}
+              <FormLabel className="form-label form-label-customized">
+                Api key
+              </FormLabel>
+              <div
+                className="ui action input mb-4"
+                style={{
+                  minWidth: "380px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <EventLinkInput
+                  className="event-sharable-link"
+                  type="text"
+                  value={APIKey}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  className="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(APIKey).then(
+                      function () {
+                        console.log(
+                          "Async: Copying to clipboard was successful!"
+                        );
+                        dispatch(
+                          showSnackbar(
+                            "success",
+                            "Api key copied to clipboard!"
+                          )
+                        );
+                      },
+                      function (err) {
+                        console.error("Async: Could not copy text: ", err);
+                        dispatch(
+                          showSnackbar("error", "Failed to copy to clipboard!")
+                        );
+                      }
+                    );
+                  }}
                 >
-                  <EventLinkInput
-                    className="event-sharable-link"
-                    type="text"
-                    value={APIKey}
-                    readOnly
-                    placeholder="Search..."
-                  />
-                  <button
-                    className="ui icon button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(APIKey).then(function() {
-                        console.log('Async: Copying to clipboard was successful!');
-                        dispatch(showSnackbar("success", "Api key copied to clipboard!"));
-                      }, function(err) {
-                        console.error('Async: Could not copy text: ', err);
-                        dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                      });      
-                    }}
-                  >
-                    <i className="copy outline icon"></i>
-                  </button>
-                </div>
-                <FormLabel
-              
-              className="form-label form-label-customized"
-            >
-              Api secret
-            </FormLabel>
-            <div
-                  className="ui action input"
-                  style={{ minWidth: "380px", marginLeft: "auto", marginRight: "auto" }}
+                  <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />
+                </button>
+              </div>
+              <FormLabel className="form-label form-label-customized">
+                Api secret
+              </FormLabel>
+              <div
+                className="ui action input"
+                style={{
+                  minWidth: "380px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <EventLinkInput
+                  className="event-sharable-link"
+                  type="text"
+                  value={APISecret}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  className="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(APISecret).then(
+                      function () {
+                        console.log(
+                          "Async: Copying to clipboard was successful!"
+                        );
+                        dispatch(
+                          showSnackbar(
+                            "success",
+                            "Api secret copied to clipboard!"
+                          )
+                        );
+                      },
+                      function (err) {
+                        console.error("Async: Could not copy text: ", err);
+                        dispatch(
+                          showSnackbar("error", "Failed to copy to clipboard!")
+                        );
+                      }
+                    );
+                  }}
                 >
-                  <EventLinkInput
-                    className="event-sharable-link"
-                    type="text"
-                    value={APISecret}
-                    readOnly
-                    placeholder="Search..."
-                  />
-                  <button
-                    className="ui icon button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(APISecret).then(function() {
-                        console.log('Async: Copying to clipboard was successful!');
-                        dispatch(showSnackbar("success", "Api secret copied to clipboard!"));
-                      }, function(err) {
-                        console.error('Async: Could not copy text: ', err);
-                        dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                      });
-    
-                      
-                    }}
-                  >
-                    <i className="copy outline icon"></i>
-                  </button>
-                </div>
-
-
+                  <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />
+                </button>
+              </div>
             </CodePaper>
           </div>
           <HeaderFooter className="px-4 py-3 d-flex flex-row align-items-center justify-content-end">
@@ -144,7 +165,6 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
             >
               Cancel
             </button>
-            
           </HeaderFooter>
         </Paper>
       </Dialog>
@@ -153,4 +173,3 @@ const ShowKeys = ({ open, handleClose, APIKey, APISecret }) => {
 };
 
 export default ShowKeys;
-

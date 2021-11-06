@@ -11,7 +11,6 @@ import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import Chip from "@mui/material/Chip";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import {
-  Avatar,
   Dialog,
   IconButton,
   SwipeableDrawer,
@@ -30,7 +29,7 @@ import CommunityProfileTab from "../SubComponents/CommunityProfileTab";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import styled from "styled-components";
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 // import Avatar from '@material-ui/core/Avatar';
 // import Faker from 'faker';
 
@@ -155,7 +154,6 @@ const Topnav = ({
             className="brand-logo-text d-flex flex-row align-items-center"
             style={{ fontFamily: "Inter" }}
           >
-            
             <a
               href="https://www.bluemeet.in/home"
               style={{ textDecoration: "none", color: "#538BF7" }}
@@ -182,7 +180,7 @@ const Topnav = ({
               className={`${classes.root} mx-2`}
             >
               <IconButton>
-                <EditRoundedIcon style={{color: "#212121"}} />
+                <EditRoundedIcon style={{ color: "#212121" }} />
               </IconButton>
             </div>
             <div
@@ -190,14 +188,12 @@ const Topnav = ({
               style={{ padding: "0" }}
             >
               <AvatarMenu />
-              
             </div>
           </div>
         </div>
       </div>
 
       <React.Fragment key="left">
-        
         <SwipeableDrawer
           anchor="left"
           open={openDrawer}

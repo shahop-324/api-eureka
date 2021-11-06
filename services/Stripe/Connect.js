@@ -586,8 +586,8 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         community_picture: `https://bluemeet.s3.us-west-1.amazonaws.com/${communityGettingEventTransaction.image}`,
       });
 
-      newlyCreatedRegistration.invitationLink = `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`;
-      newlyCreatedRegistration.magic_link = `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.invitationLink = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
+      newlyCreatedRegistration.magic_link = `https://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`;
       await newlyCreatedRegistration.save({
         new: true,
         validateModifiedOnly: true,
@@ -782,7 +782,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         mailChimpFormValues.merge_fields = {
           FNAME: user.firstName,
           LNAME: user.lastName,
-          MAGIC_LINK: `http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`,
+          MAGIC_LINK: `http://bluemeet/event/link/attendee/${newlyCreatedRegistration._id}`,
         };
         mailChimpFormValues.status = "subscribed";
         for (let element of event.mailChimpAudienceTag) {
@@ -800,7 +800,7 @@ exports.eventTicketPurchased = catchAsync(async (req, res, next) => {
         to: email, // Change to your recipient
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: "Your Event Registration Confirmation.",
-        text: `You have just successfully registered in an event. Checkout your evenz user dashboard for more information. Thanks! Here is your magic link http://localhost:3001/event/link/attendee/${newlyCreatedRegistration._id}`,
+        text: `You have just successfully registered in an event. Checkout your Bluemeet user dashboard for more information. Thanks! Here is your magic link http://bluemeet.in/event/link/attendee/${newlyCreatedRegistration._id}`,
         // html: EventRegistrationTemplate(
         //   `${userDoingEventTransaction.firstName}  ${userDoingEventTransaction.lastName}`,
         //   eventGettingEventTransaction.eventName,

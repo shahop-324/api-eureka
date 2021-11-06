@@ -30,6 +30,14 @@ router.get(
 );
 
 router.post(
+  "/updateApiKey/:id/:enabled",
+  authController.protectCommunity,
+  communityController.updateApiKey
+);
+
+router.patch("/deleteApiKey/:id", authController.protectCommunity, communityController.deleteApiKey);
+
+router.post(
   "/updateVideo",
   authController.protectCommunity,
   communityController.linkCommunityVideoToEvent
@@ -81,6 +89,12 @@ router.patch(
 
 router.post(
   "/events/new",
+  authController.protectCommunity,
+  eventController.createEvent
+);
+
+router.post(
+  "/events/createLatestEvent",
   authController.protectCommunity,
   eventController.createEvent
 );

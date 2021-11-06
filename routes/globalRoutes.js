@@ -51,10 +51,7 @@ router.delete(
 
 router.get("/mux", globalController.generateMUXCredentials);
 
-router.get(
-  "/exploreEvents/madeJustForYou",
-  globalController.getAllEvents
-);
+router.get("/exploreEvents/madeJustForYou", globalController.getAllEvents);
 
 router.get("/exploreEvents", globalController.getAllEvents);
 
@@ -284,6 +281,12 @@ router.post(
   "/changeCommunityAccountRequestEmail/:id",
   authController.protect,
   globalController.changeCommunityAccountRequestEmail
+);
+
+router.get(
+  "/fetchLatestEvent",
+  authController.protectCommunity,
+  globalController.getLatestEvent
 );
 
 module.exports = router;

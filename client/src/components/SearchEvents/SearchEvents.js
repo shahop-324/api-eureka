@@ -10,10 +10,7 @@ import history from "../../history";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import {
-  errorTrackerForFetchEvents,
-  fetchEvents,
-} from "../../actions/index";
+import { errorTrackerForFetchEvents, fetchEvents } from "../../actions/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import dateFormat from "dateformat";
@@ -21,7 +18,7 @@ import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
 import PreFooter from "../PreFooter";
-
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
 import NoResultsFound from "../NoResultsFound";
@@ -203,7 +200,7 @@ const SearchEvents = () => {
 
       return (
         <EventCard
-        showSpeakers={true}
+          showSpeakers={true}
           image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
           date={formatedDate}
           endDate={formatedEndDate}
@@ -329,7 +326,8 @@ const SearchEvents = () => {
                     onChange={onChangeSearchEvents}
                   />
                   <button className="btn btn-outline-primary" type="submit">
-                    <i className="fa fa-search"></i>
+                    {/* <i className="fa fa-search"></i> */}
+                    <SearchRoundedIcon />
                   </button>
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -383,8 +381,10 @@ const SearchEvents = () => {
               className="filter-toggle-button col"
               style={{ display: "none" }}
             >
-              <div className="row" style={{ width: "99.5%", margin: "0 auto" }}>
-              </div>
+              <div
+                className="row"
+                style={{ width: "99.5%", margin: "0 auto" }}
+              ></div>
             </div>
             <div className="col filter-wrapper" id="collapseExample">
               <div
@@ -595,7 +595,7 @@ const SearchEvents = () => {
                 className="row search-result-grid"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: "1fr 1fr 1fr",
                   gridColumnGap: "40px",
                   gridRowGap: "40px",
                 }}

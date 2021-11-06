@@ -167,13 +167,15 @@ const AttendeeMagicLinkDestination = () => {
   }
 
   if (eventDetails) {
-    if (eventDetails.status === "Upcoming") {
+    if (
+      eventDetails.status === "Upcoming" ||
+      eventDetails.status === "Paused"
+    ) {
       eventStatus = 0;
     }
     if (
       eventDetails.status === "Started" ||
-      eventDetails.status === "Resumed" ||
-      eventDetails.status === "Paused"
+      eventDetails.status === "Resumed"
     ) {
       eventStatus = 1;
     }
@@ -252,6 +254,17 @@ const AttendeeMagicLinkDestination = () => {
                       </Announcement>
                       <div className="d-flex flex-row align-items-center justify-content-between">
                         <JoinEventButton
+                          onClick={() => {
+                            dispatch(logInMagicLinkUser(userId));
+                            dispatch(navigationIndexForHostingPlatform(5));
+                            dispatch(
+                              generateEventAccessToken(
+                                userId,
+                                userEmail,
+                                "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                              )
+                            );
+                          }}
                           disabled
                           className="btn btn-outline-text btn-primary"
                           style={{ width: "48%" }}
@@ -270,7 +283,7 @@ const AttendeeMagicLinkDestination = () => {
                                 generateEventAccessToken(
                                   userId,
                                   userEmail,
-                                  "attendee", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                                  "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
                                 )
                               );
                             }}
@@ -288,6 +301,17 @@ const AttendeeMagicLinkDestination = () => {
                   // Event has started or resumed or paused
                   return (
                     <JoinEventButton
+                      onClick={() => {
+                        dispatch(logInMagicLinkUser(userId));
+                        dispatch(navigationIndexForHostingPlatform(5));
+                        dispatch(
+                          generateEventAccessToken(
+                            userId,
+                            userEmail,
+                            "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                          )
+                        );
+                      }}
                       className="btn btn-outline-text btn-primary"
                       style={{ width: "100%" }}
                     >
@@ -302,12 +326,17 @@ const AttendeeMagicLinkDestination = () => {
                       <Announcement className="mb-3">
                         This event is already ended.
                       </Announcement>
-                      <JoinEventButton
-                        className="btn btn-outline-text btn-primary"
-                        style={{ width: "100%" }}
+                      <a
+                        href="https://www.bluemeet.in"
+                        style={{ textDecoration: "none" }}
                       >
-                        Take me home
-                      </JoinEventButton>
+                        <JoinEventButton
+                          className="btn btn-outline-text btn-primary"
+                          style={{ width: "100%" }}
+                        >
+                          Take me home
+                        </JoinEventButton>
+                      </a>
                     </>
                   );
 

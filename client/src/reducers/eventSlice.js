@@ -7,6 +7,7 @@ const eventSlice = createSlice({
     events: [],
     favouriteEvents: [],
     eventDetails: null,
+    latestEvent: null,
     entryRestriction: null,
     permittedTickets: [],
     permittedPeople: [],
@@ -93,6 +94,15 @@ const eventSlice = createSlice({
       state.events = state.events.filter(
         (event) => event.id !== action.payload.event.id
       );
+      state.isLoading = false;
+    },
+    FetchLatestEvent(state, action) {
+      state.latestEvent = action.payload.latestEvent;
+      state.isLoading = false;
+    },
+
+    CreateLatestEvent(state, action) {
+      state.latestEvent = action.payload.event;
       state.isLoading = false;
     },
   },

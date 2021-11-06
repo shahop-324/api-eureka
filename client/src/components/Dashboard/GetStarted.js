@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Help from "./Checklist/help.png";
 import GetStartedPNG from "./../../assets/images/getStarted.svg";
-import VirtualEvent from "./../../assets/images/virtual_event.jpeg";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import Intro from "./../../assets/Static/1.png";
@@ -16,6 +15,17 @@ import Candid from "./../../assets/Static/candid.jpeg";
 import WIT from "./../../assets/Static/wit.png";
 import DevOps from "./../../assets/Static/devops.png";
 import Social from "./../../assets/Static/socialsharing.jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import CreateNewEventForm from "./FormComponents/CreateNewEventForm";
+
+import Dialog from "@material-ui/core/Dialog";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
+
+import LatestEventCard from "./LatestEventCard";
+import GetHelp from "./GetHelp";
+
+import { fetchLatestEvent } from "../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -102,8 +112,6 @@ const EventImage = styled.img`
   height: 300px;
   width: 100%;
   border-radius: 10px;
-
-  
 `;
 
 const EventTag = styled.div`
@@ -190,6 +198,32 @@ class DemoCarousel extends React.Component {
 }
 
 const GetStarted = () => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { latestEvent } = useSelector((state) => state.event);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchLatestEvent());
+  }, []);
+
+  const [openCreateEvent, setOpenCreateEvent] = React.useState(false);
+
+  const handleCloseCreateEvent = () => {
+    setOpenCreateEvent(false);
+  };
+
+  const [openGetHelp, setOpenGetHelp] = useState(false);
+
+  const handleCloseGetHelp = () => {
+    setOpenGetHelp(false);
+  };
+
+  // Find the latest event of this community and show it here otherwise ask the user to create their first event
+  // Define latestEvent in eventSlice and create an action to fetch and create latest event of community
+
   return (
     <>
       <div className="hide-scrollbar scroll-hide me-3">
@@ -207,18 +241,40 @@ const GetStarted = () => {
 
         <div className="px-4 mb-4" style={{ minWidth: "1138px" }}>
           <Grid>
-            <CardMain className="d-flex flex-row align-items-center">
-              <MainImgCard src={GetStartedPNG} className="me-3"></MainImgCard>
+            {latestEvent ? (
+              <LatestEventCard
+                startTime={latestEvent.startTime}
+                visibility={latestEvent.visibility}
+                publishedStatus={latestEvent.publishedStatus}
+                name={latestEvent.eventName}
+                image={
+                  latestEvent.image
+                    ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${latestEvent.image}`
+                    : "#"
+                }
+                runningStatus={latestEvent.status}
+                id={latestEvent._id}
+                communityId={latestEvent.communityId}
+              />
+            ) : (
+              <CardMain className="d-flex flex-row align-items-center">
+                <MainImgCard src={GetStartedPNG} className="me-3"></MainImgCard>
+                <div>
+                  <AttractionHeading className="mb-4">
+                    Your first event is just a click away!
+                  </AttractionHeading>
+                  <button
+                    onClick={() => {
+                      setOpenCreateEvent(true);
+                    }}
+                    className="btn btn-primary btn-outline-text"
+                  >
+                    Create my first event
+                  </button>
+                </div>
+              </CardMain>
+            )}
 
-              <div>
-                <AttractionHeading className="mb-4">
-                  Your first event is just a click away!
-                </AttractionHeading>
-                <button className="btn btn-primary btn-outline-text">
-                  Create my first event
-                </button>
-              </div>
-            </CardMain>
             <EventPromoImageContainer className="px-4 py-3">
               <HelpCard className="d-flex flex-row align-items-center">
                 <ImgCard src={Help} className="me-4"></ImgCard>
@@ -226,7 +282,12 @@ const GetStarted = () => {
                   <TextSmall className="mb-3">
                     Need a hand in setting up your event?{" "}
                   </TextSmall>
-                  <button className="btn btn-outline-success btn-outline-text">
+                  <button
+                    onClick={() => {
+                      setOpenGetHelp(true);
+                    }}
+                    className="btn btn-outline-success btn-outline-text"
+                  >
                     Get Help
                   </button>
                 </div>
@@ -266,7 +327,7 @@ const GetStarted = () => {
                   <span>SBC Digital Summit</span>
                 </EventCardName>
               </DemoEventCard>
-             
+
               <DemoEventCard className="demo-event-card">
                 <EventTag>Product Launch</EventTag>
                 <EventImage src={Car}></EventImage>
@@ -326,6 +387,18 @@ const GetStarted = () => {
           </div>
         </div>
       </div>
+      <Dialog
+        fullScreen={fullScreen}
+        open={openCreateEvent}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <CreateNewEventForm
+          latestEvent={true}
+          showInlineButton="false"
+          handleClose={handleCloseCreateEvent}
+        />
+      </Dialog>
+      <GetHelp open={openGetHelp} handleClose={handleCloseGetHelp} />
     </>
   );
 };

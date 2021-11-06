@@ -182,13 +182,13 @@ const SpeakerMagicLinkDestination = () => {
   }
 
   if (eventDetails) {
-    if (eventDetails.status === "Upcoming") {
+    if (eventDetails.status === "Upcoming" || eventDetails.status === "Paused") {
       eventStatus = 0;
     }
     if (
       eventDetails.status === "Started" ||
-      eventDetails.status === "Resumed" ||
-      eventDetails.status === "Paused"
+      eventDetails.status === "Resumed"
+      
     ) {
       eventStatus = 1;
     }
@@ -292,6 +292,17 @@ const SpeakerMagicLinkDestination = () => {
                         </Announcement>
                         <div className="d-flex flex-row align-items-center justify-content-between">
                           <JoinEventButton
+                          onClick={() => {
+                            dispatch(logInMagicLinkUser(userId));
+                            dispatch(navigationIndexForHostingPlatform(5));
+                            dispatch(
+                              generateEventAccessToken(
+                                userId,
+                                userEmail,
+                                "speaker", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                              )
+                            );
+                          }}
                             disabled
                             className="btn btn-outline-text btn-primary"
                             style={{ width: "48%" }}
@@ -328,6 +339,17 @@ const SpeakerMagicLinkDestination = () => {
                     // Event has started or resumed or paused
                     return (
                       <JoinEventButton
+                      onClick={() => {
+                        dispatch(logInMagicLinkUser(userId));
+                        dispatch(navigationIndexForHostingPlatform(5));
+                        dispatch(
+                          generateEventAccessToken(
+                            userId,
+                            userEmail,
+                            "speaker", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                          )
+                        );
+                      }}
                         className="btn btn-outline-text btn-primary"
                         style={{ width: "100%" }}
                       >
@@ -342,12 +364,14 @@ const SpeakerMagicLinkDestination = () => {
                         <Announcement className="mb-3">
                           This event is already ended.
                         </Announcement>
+                        <a href="https://www.bluemeet.in" style={{textDecoration: "none"}}>
                         <JoinEventButton
                           className="btn btn-outline-text btn-primary"
                           style={{ width: "100%" }}
                         >
                           Take me home
                         </JoinEventButton>
+                        </a>
                       </>
                     );
 

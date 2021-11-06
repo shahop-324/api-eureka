@@ -67,6 +67,7 @@ import { closeSnackbar } from "../actions/index";
 import InvitationAccepted from "./Supplement/InvitationAccepted";
 import Blank from "./Blank";
 import SalesforceRedirect from "./SalesforceRedirect";
+import OopsDNE from "./MagicLinkDestination/OopsDNE";
 import AttendeeMagicLinkDestination from "./MagicLinkDestination/AttendeeMagicLinkDestination";
 import SpeakerMagicLinkDestination from "./MagicLinkDestination/SpeakerMagicLinkDestination";
 import BoothMagicLinkDestination from "./MagicLinkDestination/BoothMagicLinkDestination";
@@ -157,6 +158,11 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
+              <Route
+                path="/does-not-exist"
+                exact
+                component={OopsDNE}
+              />
               <Route
                 path="/verifying-account/:id"
                 exact

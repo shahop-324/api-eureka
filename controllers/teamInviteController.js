@@ -63,9 +63,9 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
   });
 
   if (existingUser) {
-    urlToBeSent = `http://localhost:3001/accept-invite/${newlyCreatedInvitation._id}`;
+    urlToBeSent = `http://bluemeet.in/accept-invite/${newlyCreatedInvitation._id}`;
   } else {
-    urlToBeSent = `http://localhost:3001/team/invite/${newlyCreatedInvitation._id}`;
+    urlToBeSent = `http://bluemeet.in/team/invite/${newlyCreatedInvitation._id}`;
   }
 
   // 2.) Send new Invitation via mail to user
@@ -73,7 +73,7 @@ exports.createNewInvitation = catchAsync(async (req, res, next) => {
     to: email, // Change to your recipient
     from: "shreyanshshah242@gmail.com", // Change to your verified sender
     subject: "Your Community Invitation Link",
-    text: "use this link to accept invitation from this community.",
+    text: `use this link ${urlToBeSent} to accept invitation from this community.`,
     html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
   };
 

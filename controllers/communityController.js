@@ -481,6 +481,44 @@ exports.getApiKeys = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateApiKey = catchAsync(async (req, res, next) => {
+  const credentialId = req.params.id;
+  const enabled = req.params.enabled;
+
+  const updatedCredential = await CommunityCredentials.findByIdAndUpdate(
+    credentialId,
+    { isEnabled: enabled },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    message: "API credential updated successfully!",
+    data: updatedCredential,
+  });
+});
+
+exports.deleteApiKey = catchAsync(async (req, res, next) => {
+  const credentialId = req.params.id;
+
+  const updatedCredential = await CommunityCredentials.findByIdAndUpdate(
+    credentialId,
+    { deleted: true },
+    { new: true, validateModifiedOnly: true }
+  );
+
+  const apiKeyDocs = await CommunityCredentials.find({
+    communityId: updatedCredential.communityId,
+  });
+
+
+  res.status(200).json({
+    status: "success",
+    message: "API credential updated successfully!",
+    data: apiKeyDocs,
+  });
+});
+
 exports.uploadVideo = catchAsync(async (req, res, next) => {
   const communityId = req.community._id;
   const eventId = req.body.eventId;

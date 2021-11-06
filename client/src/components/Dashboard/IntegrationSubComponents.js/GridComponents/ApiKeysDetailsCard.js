@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useDispatch } from "react-redux";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -9,6 +9,7 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import { IconButton } from "@material-ui/core";
 import ShowKeys from "../ShowKeysPopup";
 import DeleteAPIKey from "../Forms/DeleteApiKey";
+import { updateAPIKey } from "../../../../actions";
 
 const RoyalBlueSwitch = withStyles({
   switchBase: {
@@ -25,7 +26,6 @@ const RoyalBlueSwitch = withStyles({
 })(Switch);
 
 const ApiKeysDetailsCard = ({
-  key,
   isEnabled,
   createdAt,
   label,
@@ -35,6 +35,8 @@ const ApiKeysDetailsCard = ({
   communityId,
   id,
 }) => {
+  const dispatch = useDispatch();
+
   const [showKeys, setShowKeys] = useState(false);
 
   const [openDelete, setOpenDelete] = useState(false);
@@ -49,11 +51,7 @@ const ApiKeysDetailsCard = ({
 
   const [checked, setChecked] = React.useState(isEnabled);
   const handleChange = () => {
-    if (!checked) {
-      //   dispatch(fetchMailChimpAudiences(eventId));
-      //   setOpen(true);
-    }
-
+    dispatch(updateAPIKey(id, !checked));
     setChecked(!checked);
   };
 
@@ -115,8 +113,14 @@ const ApiKeysDetailsCard = ({
         </div>
       </div>
 
-      <ShowKeys open={showKeys} handleClose={handleCloseShowKeys} APISecret={APISecret} APIKey={APIKey}/>
+      <ShowKeys
+        open={showKeys}
+        handleClose={handleCloseShowKeys}
+        APISecret={APISecret}
+        APIKey={APIKey}
+      />
       <DeleteAPIKey
+      id={id}
         openDelete={openDelete}
         handleCloseDelete={handleCloseDelete}
       />

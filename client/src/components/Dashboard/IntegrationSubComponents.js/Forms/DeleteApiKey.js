@@ -10,7 +10,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 
-const DeleteAPIKey = ({openDelete, handleCloseDelete}) => {
+import {useDispatch} from "react-redux";
+import {deleteAPIKey} from "./../../../../actions";
+
+const DeleteAPIKey = ({openDelete, handleCloseDelete, id}) => {
+
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -35,7 +40,7 @@ const DeleteAPIKey = ({openDelete, handleCloseDelete}) => {
           </Button>
           <Button
             onClick={() => {
-            //   dispatch(deleteCoupon(id));
+              dispatch(deleteAPIKey(id))
               handleCloseDelete();
             }}
             style={{ color: "#538BF7" }}

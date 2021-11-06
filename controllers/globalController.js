@@ -1287,33 +1287,42 @@ exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
 
   const registrationDoc = await Registration.findById(registrationId);
 
-  const userId = registrationDoc.bookedByUser;
+  if (registrationDoc) {
+    const userId = registrationDoc.bookedByUser;
 
-  const userDoc = await User.findById(userId);
+    const userDoc = await User.findById(userId);
 
-  const eventId = registrationDoc.bookedForEventId;
-  const userRole = registrationDoc.type;
-  const userEmail = userDoc.email;
-  const eventDetails = await Event.findById(eventId).populate(
-    "speaker",
-    "firstName lastName image"
-  );
+    const eventId = registrationDoc.bookedForEventId;
+    const userRole = registrationDoc.type;
+    const userEmail = userDoc.email;
+    const eventDetails = await Event.findById(eventId).populate(
+      "speaker",
+      "firstName lastName image"
+    );
 
-  res.status(200).json({
-    status: "success",
-    data: eventDetails,
-    userId: userId,
-    userRole: userRole,
-    userEmail: userEmail,
-  });
+    res.status(200).json({
+      status: "success",
+      data: eventDetails,
+      userId: userId,
+      userRole: userRole,
+      userEmail: userEmail,
+    });
+  } else {
+    res.status(200).json({
+      status: "failed",
+      message: "Registration document was not found",
+      notFound: true,
+    });
+  }
 });
 
 exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
   async (req, res, next) => {
-    try {
-      const registrationId = req.params.registrationId;
+    const registrationId = req.params.registrationId;
 
-      const registrationDoc = await Registration.findById(registrationId);
+    const registrationDoc = await Registration.findById(registrationId);
+
+    if (registrationDoc) {
       const eventId = registrationDoc.bookedForEventId;
       const userRole = registrationDoc.type;
       const userEmail = registrationDoc.userEmail;
@@ -1357,8 +1366,12 @@ exports.getSpeakerRegistrationInfoForMagicLinkPage = catchAsync(
           userIsOnBluemeet: false,
         });
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      res.status(200).json({
+        status: "failed",
+        message: "Registration document was not found",
+        notFound: true,
+      });
     }
   }
 );
@@ -1368,47 +1381,56 @@ exports.getExhibitorRegistrationInfoForMagicLinkPage = catchAsync(
     const registrationId = req.params.registrationId;
 
     const registrationDoc = await Registration.findById(registrationId);
-    const eventId = registrationDoc.bookedForEventId;
-    const userRole = registrationDoc.type;
-    const userEmail = registrationDoc.email;
-    const eventDetails = await Event.findById(eventId).populate(
-      "speaker",
-      "firstName lastName image"
-    );
 
-    console.log(userEmail, "This is booth exhibitor's email");
+    if (registrationDoc) {
+      const eventId = registrationDoc.bookedForEventId;
+      const userRole = registrationDoc.type;
+      const userEmail = registrationDoc.email;
+      const eventDetails = await Event.findById(eventId).populate(
+        "speaker",
+        "firstName lastName image"
+      );
 
-    // Check if user with registered email exists
+      console.log(userEmail, "This is booth exhibitor's email");
 
-    const existingUser = await User.findOne({
-      email: registrationDoc.userEmail,
-    });
+      // Check if user with registered email exists
 
-    if (existingUser) {
-      const userEmail = existingUser.email;
-      const userId = existingUser._id;
-
-      // * send userIsOnBluemeet => true
-
-      res.status(200).json({
-        status: "success",
-        data: eventDetails,
-        userId: userId,
-        userRole: userRole,
-        userEmail: userEmail,
-        userIsOnBluemeet: true,
+      const existingUser = await User.findOne({
+        email: registrationDoc.userEmail,
       });
+
+      if (existingUser) {
+        const userEmail = existingUser.email;
+        const userId = existingUser._id;
+
+        // * send userIsOnBluemeet => true
+
+        res.status(200).json({
+          status: "success",
+          data: eventDetails,
+          userId: userId,
+          userRole: userRole,
+          userEmail: userEmail,
+          userIsOnBluemeet: true,
+        });
+      } else {
+        // Send that user is not registered on Bluemeet platform => Send event details
+
+        // * send userIsOnBluemeet => false
+
+        res.status(200).json({
+          status: "success",
+          data: eventDetails,
+          userRole: userRole,
+          userEmail: userEmail,
+          userIsOnBluemeet: false,
+        });
+      }
     } else {
-      // Send that user is not registered on Bluemeet platform => Send event details
-
-      // * send userIsOnBluemeet => false
-
       res.status(200).json({
-        status: "success",
-        data: eventDetails,
-        userRole: userRole,
-        userEmail: userEmail,
-        userIsOnBluemeet: false,
+        status: "failed",
+        message: "Registration document was not found",
+        notFound: true,
       });
     }
   }
@@ -1740,3 +1762,20 @@ exports.changeCommunityAccountRequestEmail = catchAsync(
     }
   }
 );
+
+exports.getLatestEvent = catchAsync(async (req, res, next) => {
+  const communityId = req.community._id;
+
+  // Find all events of this community sorted by date Of Creation in descending order
+
+  let events = await Event.find({
+    createdBy: mongoose.Types.ObjectId(communityId),
+  }).sort({ createdAt: "desc" });
+
+  const [latestEvent] = events;
+
+  res.status(200).json({
+    status: "success",
+    data: latestEvent,
+  });
+});

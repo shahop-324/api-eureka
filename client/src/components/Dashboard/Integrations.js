@@ -121,19 +121,6 @@ const Integrations = () => {
             })()}
           </div>
         </div>
-        {/* <div className="px-4 py-4">
-          <ToggleButtonGroup
-            color="primary"
-            value={alignment}
-            exclusive
-            onChange={handleChange}
-          >
-            <ToggleButton value="integrations">Integrations</ToggleButton>
-
-            <ToggleButton value="apikeys">API Keys</ToggleButton>
-          </ToggleButtonGroup>
-        </div> */}
-
         <div className="px-4 py-4">
           <div
             className="d-flex flex-row align-items-center "
@@ -178,7 +165,6 @@ const Integrations = () => {
         openDrawer={openGenerateApikey}
         handleCloseDrawer={handleCloseOpenGenerateApiKey}
       />
-
       <BuildWithBluemeetForm
         open={openBuildWithBluemeet}
         handleClose={handleCloseBuildWithBluemeet}
