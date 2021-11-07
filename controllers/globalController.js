@@ -20,7 +20,9 @@ const SessionQnA = require("./../models/sessionQnAModel");
 const SessionPoll = require("./../models/sessionPollModel");
 const CommunityAccountRequest = require("./../models/CommunityAccountRequestModel");
 const UserAccountRequest = require("./../models/UserAccountRequest");
-const { v4: uuidv4 } = require("uuid");
+const CommunityVideo = require("./../models/videoModel");
+const EventVideo = require("./../models/eventVideosModel");
+
 const { nanoid } = require("nanoid");
 const random = require("random");
 var btoa = require("btoa");
@@ -617,7 +619,6 @@ exports.createRTMPDestination = catchAsync(async (req, res, next) => {
         "sessions",
         "name"
       );
-      s;
 
       res.status(200).json({
         status: "success",
@@ -1795,4 +1796,45 @@ exports.getLatestEvent = catchAsync(async (req, res, next) => {
     status: "success",
     data: latestEvent,
   });
+});
+
+exports.getEventVideos = catchAsync(async (req, res, next) => {
+  let videos = await EventVideo.find({ eventId: req.body.eventId });
+
+  // also find all linked videos
+
+  const eventDoc = await Event.findById(req.body.eventId);
+
+  for (let element of eventDoc.linkedVideos) {
+    await CommunityVideo.findById(element, (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if (doc) {
+          videos.push(doc);
+        }
+      }
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    videos: videos,
+  });
+});
+
+exports.linkVideo = catchAsync(async (req, res, next) => {
+  // Find video from Video resource then add eventId to its listOfLinkedEvents and then save
+
+  const videoDoc = await CommunityVideo.findById(req.body.videoId);
+  videoDoc.linkedToEvents.push(req.body.eventId);
+  await videoDoc.save({ new: true, validateModifiedOnly: true });
+
+  // Find eventDoc and push videoId to linkedVideos list and then save eventDoc
+
+  const eventDoc = await Event.findById(req.body.eventId);
+  eventDoc.linkedVideos.push(videoDoc._id);
+  await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+  next();
 });

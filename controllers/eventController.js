@@ -18,6 +18,7 @@ const Mux = require("@mux/mux-node");
 const Vibe = require("./../models/vibeModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("./../models/roomTableModel");
+const EventVideo = require("./../models/eventVideosModel");
 const { Video } = new Mux(
   process.env.MUX_TOKEN_ID,
   process.env.MUX_TOKEN_SECRET
@@ -1412,5 +1413,33 @@ exports.deleteVibe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "successfully deleted stage vibe",
+  });
+});
+
+exports.uploadVideo = catchAsync(async (req, res, next) => {
+  const communityId = req.community._id;
+  const eventId = req.body.eventId;
+
+  const videoDoc = await EventVideo.create({
+    date: Date.now(),
+    name: req.body.fileName,
+    communityId: communityId,
+    eventId: eventId,
+    key: req.body.key,
+  });
+
+  res.status(200).json({
+    status: "success",
+    video: videoDoc,
+  });
+});
+
+exports.deleteVideo = catchAsync(async (req, res, next) => {
+  const videoId = req.body.videoId;
+
+  await EventVideo.findByIdAndDelete(videoId);
+
+  res.status(200).json({
+    status: "success",
   });
 });

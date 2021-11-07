@@ -8,7 +8,11 @@ import { IconButton } from "@material-ui/core";
 import VideoPNG from "./../../../assets/images/UploadVideo.svg";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadVideoForCommunity, resetProgress } from "../../../actions";
+import {
+  uploadVideoForCommunity,
+  uploadVideoForEvent,
+  resetEventVideoUploadProgress,
+} from "../../../actions";
 import { useParams } from "react-router-dom";
 
 const Heading = styled.div`
@@ -85,12 +89,12 @@ const VideoContainer = styled.video`
 const UploadVideo = ({ open, handleClose }) => {
   const params = useParams();
   const dispatch = useDispatch();
-  let communityId = params.id;
+  let eventId = params.id;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { uplooadPercent } = useSelector((state) => state.community);
+  const { videoUploadPercent } = useSelector((state) => state.event);
 
   const [file, setFile] = React.useState(null);
 
@@ -103,13 +107,14 @@ const UploadVideo = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-    dispatch(resetProgress());
+    dispatch(resetEventVideoUploadProgress());
     setFile(null);
     setFileToPreview(null);
   }, []);
 
   const uploadVideo = () => {
-    dispatch(uploadVideoForCommunity(communityId, file, handleClose));
+    // dispatch(uploadVideoForCommunity(communityId, file, handleClose));
+    dispatch(uploadVideoForEvent(eventId, file, handleClose));
   };
 
   return (
@@ -150,17 +155,19 @@ const UploadVideo = ({ open, handleClose }) => {
             className="form-control mb-5"
           ></input>
 
-          {uplooadPercent !== 0 ? (
+          {videoUploadPercent !== 0 ? (
             <ProgressContainer>
               <ProgressFill
                 style={{
-                  width: `${uplooadPercent ? `${uplooadPercent}%` : "0%"}`,
+                  width: `${
+                    videoUploadPercent ? `${videoUploadPercent}%` : "0%"
+                  }`,
                 }}
                 className="d-flex flex-row align-items-center py-2"
               >
                 <ProgressText>
-                  {uplooadPercent && uplooadPercent * 1 > 1.2 ? (
-                    `${(uplooadPercent * 1).toFixed(2)}%`
+                  {videoUploadPercent && videoUploadPercent * 1 > 1.2 ? (
+                    `${(videoUploadPercent * 1).toFixed(2)}%`
                   ) : (
                     <div className="py-2">
                       <div class="spinner-border text-dark" role="status"></div>

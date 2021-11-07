@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const videoSchema = new mongoose.Schema(
+const eventVideoSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -17,12 +17,6 @@ const videoSchema = new mongoose.Schema(
     eventId: {
       type: String,
     },
-    linkedToEvents: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "Event",
-      },
-    ],
   },
   {
     toJSON: { virtuals: true },
@@ -30,5 +24,5 @@ const videoSchema = new mongoose.Schema(
   }
 );
 
-const Video = mongoose.model("Video", videoSchema);
-module.exports = Video;
+const EventVideo = mongoose.model("EventVideo", eventVideoSchema);
+module.exports = EventVideo;

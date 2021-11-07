@@ -14,6 +14,8 @@ const eventSlice = createSlice({
     isLoading: true,
     error: false,
     length: 0,
+    videoUploadPercent: 0,
+    vibeUploadPercent: 0,
   },
 
   reducers: {
@@ -105,6 +107,14 @@ const eventSlice = createSlice({
       state.latestEvent = action.payload.event;
       state.isLoading = false;
     },
+    SetVideoUploadPercent(state, action) {
+      state.videoUploadPercent = action.payload.percent;
+      state.isLoading = false;
+    },
+    SetVibeUploadPercent(state, action) {
+      state.vibeUploadPercent = action.payload.percent;
+      state.isLoading = false;
+    }
   },
 });
 export const eventActions = eventSlice.actions;

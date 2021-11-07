@@ -493,6 +493,12 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    linkedVideos: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Video",
+      },
+    ],
     // * Done I have to do research on how recording will work and where it will be stored.
   },
   {

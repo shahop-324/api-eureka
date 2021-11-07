@@ -436,7 +436,6 @@ class App extends React.Component {
                   component={SpecificEventRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/event-overview"
@@ -444,7 +443,6 @@ class App extends React.Component {
                   component={EditEventRoot}
                 />
               )}
-
               {isSignedIn && (
                 <Route
                   path="/community/:communityId/edit-event/:id/event-entry-and-participants"

@@ -20,6 +20,19 @@ router.post(
 );
 
 router.post(
+  "/fetchEventVideos",
+  authController.protectCommunity,
+  globalController.getEventVideos
+);
+
+router.post(
+  "/linkVideo",
+  authController.protectCommunity,
+  globalController.linkVideo,
+  globalController.getEventVideos
+);
+
+router.post(
   "/createRTMPDestination/:eventId",
   authController.protectCommunity,
   globalController.createRTMPDestination

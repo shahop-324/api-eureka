@@ -43,6 +43,7 @@ import { snackbarActions } from "../reducers/snackbarSlice";
 import { roleActions } from "../reducers/roleSlice";
 import { sessionRestrictionActions } from "../reducers/sessionRestrictionSlice";
 import { videoActions } from "./../reducers/videoSlice";
+import {eventVideoActions} from "./../reducers/eventVideoSlice";
 import { vibeActions } from "../reducers/vibeSlice";
 import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
 import { mailActions } from "../reducers/mailSlice";
@@ -7341,6 +7342,179 @@ export const uploadVideoForCommunity =
     }
   };
 
+export const uploadVideoForEvent =
+  (eventId, file, handleClose) => async (dispatch, getState) => {
+    try {
+      const key = `${eventId}/${UUID()}.mp4`;
+
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet-inc",
+          Key: key,
+          ContentType: "video/mp4",
+        },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              eventActions.SetVideoUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Save this video info in event document.
+
+            const res = await fetch(`${BaseURL}events/uploadVideo/`, {
+              method: "POST",
+
+              body: JSON.stringify({
+                fileName: file.name,
+                key: key,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().communityAuth.token}`,
+              },
+            });
+
+            const result = await res.json();
+            console.log(result, "This is the result of new uploaded video.");
+
+            dispatch(
+              eventVideoActions.UploadVideo({
+                video: result.video,
+              })
+            );
+
+            dispatch(
+              snackbarActions.openSnackBar({
+                message: "Video uploaded successfully!",
+                severity: "success",
+              })
+            );
+
+            handleClose();
+
+            setTimeout(function () {
+              dispatch(snackbarActions.closeSnackBar());
+            }, 6000);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  export const deleteEventVideo = (videoId) => async(dispatch, getState) => {
+    try {
+      console.log(videoId);
+      let res = await fetch(`${BaseURL}events/deleteVideo`, {
+        method: "DELETE",
+  
+        body: JSON.stringify({
+          videoId: videoId,
+        }),
+  
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+  
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+  
+      dispatch(
+        eventVideoActions.DeleteVideo({
+          videoId: videoId,
+        })
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  export const linkVideo = (videoId, eventId) => async(dispatch, getState) => {
+    try{
+      const res = await fetch(
+        `${BaseURL}linkVideo`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            videoId: videoId,
+            eventId: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(eventVideoActions.FetchVideos({
+        videos: result.videos,
+      }))
+
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }
+
+  export const fetchEventVideos = (eventId) => async(dispatch, getState) => {
+    try {
+      console.log(eventId);
+      let res = await fetch(`${BaseURL}fetchEventVideos`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          eventId: eventId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      res = await res.json();
+      console.log(res);
+
+      dispatch(
+        eventVideoActions.FetchVideos({
+          videos: res.videos,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 export const acceptInvitation =
   (invitationId) => async (dispatch, getState) => {
     try {
@@ -9090,6 +9264,32 @@ export const resetProgress = () => async (dispatch, getState) => {
     console.log(error);
   }
 };
+
+export const resetEventVideoUploadProgress =
+  () => async (dispatch, getState) => {
+    try {
+      dispatch(
+        eventActions.SetVideoUploadPercent({
+          percent: 0,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const resetEventVibeUploadProgress =
+  () => async (dispatch, getState) => {
+    try {
+      dispatch(
+        eventActions.SetVibeUploadPercent({
+          percent: 0,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const fetchCommunityTransactions =
   (communityId) => async (dispatch, getState) => {

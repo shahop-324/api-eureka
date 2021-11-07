@@ -18,6 +18,18 @@ router.patch(
   eventController.updateEvent
 );
 
+router.post(
+  "/uploadVideo",
+  authController.protectCommunity,
+  eventController.uploadVideo
+);
+
+router.delete(
+  "/deleteVideo/:id",
+  authController.protectCommunity,
+  eventController.deleteVideo
+);
+
 router.patch(
   "/:eventId/updateCustomisation",
   authController.protectCommunity,
