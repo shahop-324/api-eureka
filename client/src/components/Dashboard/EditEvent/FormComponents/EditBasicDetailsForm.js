@@ -6,7 +6,11 @@ import "./../../../../index.css";
 import { connect, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { editEvent, errorTrackerForeditEvent, showSnackbar } from "../../../../actions";
+import {
+  editEvent,
+  errorTrackerForeditEvent,
+  showSnackbar,
+} from "../../../../actions";
 import Loader from "../../../Loader";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -270,8 +274,6 @@ const EditBasicDetailsForm = ({
       categories.push(element.value);
     }
 
-  
-
     const ModifiedFormValues = {};
     ModifiedFormValues.eventName = formValues.eventName;
     ModifiedFormValues.shortDescription = formValues.shortDescription;
@@ -323,7 +325,6 @@ const EditBasicDetailsForm = ({
       );
       return;
     }
-
     if (
       Math.ceil(
         Math.abs(
@@ -340,7 +341,6 @@ const EditBasicDetailsForm = ({
       );
       return;
     }
-
 
     dispatch(editEvent(ModifiedFormValues, id));
     handleClose();
@@ -408,7 +408,7 @@ const EditBasicDetailsForm = ({
                 (hideFormHeading === "1" ? "hide" : "")
               }
             >
-             You can edit event basic details here
+              You can edit event basic details here
             </h5>
             <div className="mb-4 overlay-form-input-row">
               <FormLabel

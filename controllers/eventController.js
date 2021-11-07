@@ -290,7 +290,9 @@ exports.createBooth = catchAsync(async (req, res, next) => {
     eventGettingBooth.communityId
   );
 
-  let createdBooth = await Booth.create(
+  let createdBooth;
+  
+  Booth.create(
     {
       name: req.body.name,
       emails: req.body.emails,
@@ -302,6 +304,8 @@ exports.createBooth = catchAsync(async (req, res, next) => {
     },
     async (err, doc) => {
       console.log(err);
+
+      createdBooth = doc;
 
       // save refrence of this booth in its event
       try {
@@ -446,16 +450,23 @@ exports.createBooth = catchAsync(async (req, res, next) => {
         await doc.save({ new: true, validateModifiedOnly: true });
 
         await eventGettingBooth.save({ validateModifiedOnly: true });
+
+        res.status(200).json({
+          status: "success",
+          data: doc,
+        });
+
       } catch (error) {
         console.log(error);
+        res.status(400).json({
+          status: "error",
+          message: "Failed to create booth."
+        });
       }
     }
   );
 
-  res.status(200).json({
-    status: "success",
-    data: createdBooth,
-  });
+  
 });
 
 // add sponsor

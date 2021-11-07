@@ -23,8 +23,7 @@ import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 
 import Help from "./help.png";
 import EventStreamSettings from "../EditEvent/SubComponent/EventStreamSettings";
-
-
+import GetHelp from "../GetHelp";
 
 const EventOverviewGrid = styled.div`
   display: grid;
@@ -48,18 +47,18 @@ const CheckListSteps = styled.div`
 `;
 
 const RTMPCard = styled.div`
-background-color: #f5f7f8;
+  background-color: #f5f7f8;
   padding: 20px;
   height: auto;
   border-radius: 10px;
-`
+`;
 
 const HelpCard = styled.div`
-background-color: #f5f7f8;
+  background-color: #f5f7f8;
   padding: 20px;
   height: auto;
   border-radius: 10px;
-`
+`;
 
 const FillerOuter = styled.div`
   width: 100%;
@@ -97,11 +96,11 @@ const StepSectionButton = styled.div`
 `;
 
 const TextSmall = styled.div`
-font-weight: 500;
-    font-family: "Ubuntu";
-    color: #7E7E7E;
-    font-size: 0.78rem;
-`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #7e7e7e;
+  font-size: 0.78rem;
+`;
 
 const CheckListButton = styled.div`
   background-color: ${(props) =>
@@ -142,23 +141,27 @@ const EventDetails = styled.div`
 `;
 
 const ImgCard = styled.img`
-height: 150px;
-width: 150px;
-object-fit: contain;
-background-color: #ffffff;
-border-radius:10px;
-`
+  height: 150px;
+  width: 150px;
+  object-fit: contain;
+  background-color: #ffffff;
+  border-radius: 10px;
+`;
 
 const MainEventSetupCheckList = () => {
+  const [openGetHelp, setOpenGetHelp] = useState(false);
+
+  const handleCloseGetHelp = () => {
+    setOpenGetHelp(false);
+  };
+
   const [selectedStep, setSelectedStep] = useState("setupEvent");
 
   const [openStreamSettings, setOpenStreamSettings] = useState(false);
 
   const handleCloseStreamSettings = () => {
     setOpenStreamSettings(false);
-  }
-
-
+  };
 
   return (
     <>
@@ -232,8 +235,6 @@ const MainEventSetupCheckList = () => {
                 <VisibilityOffRoundedIcon className="me-2" /> Hide Checklist
               </button> */}
             </div>
-
-
 
             {(() => {
               switch (selectedStep) {
@@ -494,31 +495,50 @@ const MainEventSetupCheckList = () => {
         </EventDetails>
 
         <EventPromoImageContainer className="px-4 py-3">
-            <RTMPCard className="mb-3">
-                 <CheckListHeading className="mb-3">
+          <RTMPCard className="mb-3">
+            <CheckListHeading className="mb-3">
               RTMP credentials
             </CheckListHeading>
-            <TextSmall className="mb-3">You can use RTMP to stream live from Youtube, Vimeo, Facebook, Twitter, Linkedin, Vmix, OBS and more streaming software directly in your Bluemeet event. </TextSmall>
-            <button onClick={() => {
-              setOpenStreamSettings(true);
-            }} className="btn btn-outline-text btn-outline-primary"> 
-                View
+            <TextSmall className="mb-3">
+              You can use RTMP to stream live from Youtube, Vimeo, Facebook,
+              Twitter, Linkedin, Vmix, OBS and more streaming software directly
+              in your Bluemeet event.{" "}
+            </TextSmall>
+            <button
+              onClick={() => {
+                setOpenStreamSettings(true);
+              }}
+              className="btn btn-outline-text btn-outline-primary"
+            >
+              View
             </button>
-            </RTMPCard>
+          </RTMPCard>
 
-            <HelpCard className="d-flex flex-row align-items-center">
-
-<ImgCard src={Help} className="me-4"></ImgCard>
-<div>
-<TextSmall className="mb-3">Need a hand in setting up your event? </TextSmall>
-<button className="btn btn-outline-success btn-outline-text">Get Help</button>
-</div>
-
-            </HelpCard>
+          <HelpCard className="d-flex flex-row align-items-center">
+            <ImgCard src={Help} className="me-4"></ImgCard>
+            <div>
+              <TextSmall className="mb-3">
+                Need a hand in setting up your event?{" "}
+              </TextSmall>
+              <button
+                onClick={() => {
+                  setOpenGetHelp(true);
+                }}
+                className="btn btn-outline-success btn-outline-text"
+              >
+                Get Help
+              </button>
+            </div>
+          </HelpCard>
         </EventPromoImageContainer>
       </EventOverviewGrid>
 
-      <EventStreamSettings open={openStreamSettings} handleClose={handleCloseStreamSettings} />
+      <EventStreamSettings
+        open={openStreamSettings}
+        handleClose={handleCloseStreamSettings}
+      />
+
+      <GetHelp open={openGetHelp} handleClose={handleCloseGetHelp} />
     </>
   );
 };

@@ -1,12 +1,10 @@
 import React from "react";
-import {
-  Dialog,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Dialog, useMediaQuery, useTheme } from "@material-ui/core";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import {showSnackbar} from "./../../../../actions";
+import { showSnackbar } from "./../../../../actions";
+
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 const EventLinkInput = styled.input`
   font-weight: 500;
@@ -23,7 +21,7 @@ const FormLabel = styled.label`
   font-family: "Ubuntu" !important;
   font-size: 0.82rem !important;
   font-weight: 500 !important;
-  color: #5F5F5F !important;
+  color: #5f5f5f !important;
 `;
 
 const CodePaper = styled.div`
@@ -72,74 +70,106 @@ const EventStreamSettings = ({ open, handleClose }) => {
           </HeaderFooter>
           <div className="px-4 py-3">
             <CodePaper>
-            <FormLabel
-              
-              className="form-label form-label-customized"
-            >
-             RTMP Stream key
-            </FormLabel>
-            <div
-                  className="ui action input mb-4"
-                  style={{ minWidth: "380px", marginLeft: "auto", marginRight: "auto" }}
+              <FormLabel className="form-label form-label-customized">
+                RTMP Stream key
+              </FormLabel>
+              <div
+                className="ui action input mb-4"
+                style={{
+                  minWidth: "380px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <EventLinkInput
+                  className="event-sharable-link"
+                  type="text"
+                  value={`${eventDetails.muxStreamKey}`}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  className="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard
+                      .writeText(`${eventDetails.muxStreamKey}`)
+                      .then(
+                        function () {
+                          console.log(
+                            "Async: Copying to clipboard was successful!"
+                          );
+                          dispatch(
+                            showSnackbar(
+                              "success",
+                              "RTMP stream key copied to clipboard!"
+                            )
+                          );
+                        },
+                        function (err) {
+                          console.error("Async: Could not copy text: ", err);
+                          dispatch(
+                            showSnackbar(
+                              "error",
+                              "Failed to copy to clipboard!"
+                            )
+                          );
+                        }
+                      );
+                  }}
                 >
-                  <EventLinkInput
-                    className="event-sharable-link"
-                    type="text"
-                    value={`${eventDetails.muxStreamKey}`}
-                    readOnly
-                    placeholder="Search..."
-                  />
-                  <button
-                    className="ui icon button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(`${eventDetails.muxStreamKey}`).then(function() {
-                        console.log('Async: Copying to clipboard was successful!');
-                        dispatch(showSnackbar("success", "RTMP stream key copied to clipboard!"));
-                      }, function(err) {
-                        console.error('Async: Could not copy text: ', err);
-                        dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                      });      
-                    }}
-                  >
-                    <i className="copy outline icon"></i>
-                  </button>
-                </div>
-                <FormLabel
-              
-              className="form-label form-label-customized"
-            >
-              RTMP server url
-            </FormLabel>
-            <div
-                  className="ui action input"
-                  style={{ minWidth: "380px", marginLeft: "auto", marginRight: "auto" }}
+                  <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />
+                </button>
+              </div>
+              <FormLabel className="form-label form-label-customized">
+                RTMP server url
+              </FormLabel>
+              <div
+                className="ui action input"
+                style={{
+                  minWidth: "380px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <EventLinkInput
+                  className="event-sharable-link"
+                  type="text"
+                  value={`${eventDetails.muxServerURL}`}
+                  readOnly
+                  placeholder="Search..."
+                />
+                <button
+                  className="ui icon button"
+                  onClick={() => {
+                    navigator.clipboard
+                      .writeText(`${eventDetails.muxServerURL}`)
+                      .then(
+                        function () {
+                          console.log(
+                            "Async: Copying to clipboard was successful!"
+                          );
+                          dispatch(
+                            showSnackbar(
+                              "success",
+                              "RTMP server url copied to clipboard!"
+                            )
+                          );
+                        },
+                        function (err) {
+                          console.error("Async: Could not copy text: ", err);
+                          dispatch(
+                            showSnackbar(
+                              "error",
+                              "Failed to copy to clipboard!"
+                            )
+                          );
+                        }
+                      );
+                  }}
                 >
-                  <EventLinkInput
-                    className="event-sharable-link"
-                    type="text"
-                    value={`${eventDetails.muxServerURL}`}
-                    readOnly
-                    placeholder="Search..."
-                  />
-                  <button
-                    className="ui icon button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(`${eventDetails.muxServerURL}`).then(function() {
-                        console.log('Async: Copying to clipboard was successful!');
-                        dispatch(showSnackbar("success", "RTMP server url copied to clipboard!"));
-                      }, function(err) {
-                        console.error('Async: Could not copy text: ', err);
-                        dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                      });
-    
-                      
-                    }}
-                  >
-                    <i className="copy outline icon"></i>
-                  </button>
-                </div>
-
-
+                  <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />
+                </button>
+              </div>
             </CodePaper>
           </div>
           <HeaderFooter className="px-4 py-3 d-flex flex-row align-items-center justify-content-end">
@@ -149,7 +179,6 @@ const EventStreamSettings = ({ open, handleClose }) => {
             >
               Cancel
             </button>
-            
           </HeaderFooter>
         </Paper>
       </Dialog>

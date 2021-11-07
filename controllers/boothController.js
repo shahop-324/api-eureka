@@ -62,59 +62,66 @@ const fillSocialMediaHandler = (object, updatedUser) => {
 };
 
 exports.deleteBooth = catchAsync(async (req, res, next) => {
-  const boothId = req.params.id;
+  try {
+    const boothId = req.params.id;
 
-  const boothDoc = await Booth.findById(boothId);
+    const boothDoc = await Booth.findById(boothId);
 
-  const eventId = boothDoc.eventId;
+    const eventId = boothDoc.eventId;
 
-  const eventDoc = await Event.findById(eventId);
+    const eventDoc = await Event.findById(eventId);
 
-  // Unregister all registrations associated with this booth
+    // Unregister all registrations associated with this booth
 
-  const registrations = await Registration.find({
-    $and: [
-      { boothId: mongoose.Types.ObjectId(boothId) },
-      { type: "Exhibitor" },
-    ],
-  });
+    const registrations = await Registration.find({
+      $and: [
+        { boothId: mongoose.Types.ObjectId(boothId) },
+        { type: "Exhibitor" },
+      ],
+    });
 
-  for (let element of registrations) {
-    await Registration.findByIdAndDelete(element);
-  }
+    for (let element of registrations) {
+      await Registration.findByIdAndDelete(element);
+    }
 
-  // * DONE Remove all booth tags associated with this booth
+    // * DONE Remove all booth tags associated with this booth
 
-  // Step 1.) get all booths of this event and collect thier unique tags
+    // Step 1.) get all booths of this event and collect thier unique tags
 
-  let uniqueTags = [];
+    let uniqueTags = [];
 
-  for (element of eventDoc.booths) {
-    if (!(element.toString() === boothId)) {
-      const booth = await Booth.findById(element);
+    for (element of eventDoc.booths) {
+      if (!(element.toString() === boothId)) {
+        const booth = await Booth.findById(element);
 
-      for (let item of booth.tags) {
-        if (!uniqueTags.includes(item)) {
-          uniqueTags.push(item);
+        if (booth) {
+          for (let item of booth.tags) {
+            if (!uniqueTags.includes(item)) {
+              uniqueTags.push(item);
+            }
+          }
         }
       }
     }
+
+    // Step 2.) assign that array of unique tags to boothTags field of this event
+
+    eventDoc.boothTags = uniqueTags;
+    await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+    await Booth.findByIdAndUpdate(
+      boothId,
+      { status: "Deleted" },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: boothId,
+    });
+  } catch (error) {
+    console.log(error);
   }
-
-  // Step 2.) assign that array of unique tags to boothTags field of this event
-
-  eventDoc.boothTags = uniqueTags;
-  await eventDoc.save({ new: true, validateModifiedOnly: true });
-
-  await Booth.findByIdAndUpdate(
-    boothId,
-    { status: "Deleted" },
-    { new: true, validateModifiedOnly: true }
-  );
-
-  res.status(200).json({
-    status: "success",
-  });
 });
 
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {

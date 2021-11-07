@@ -1,1 +1,0 @@
-//! Here we need to maintain screen track in screen tracks array which will be used to render all screen tracks in a grid

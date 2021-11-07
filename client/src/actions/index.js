@@ -2526,7 +2526,7 @@ export const deleteBooth = (id) => async (dispatch, getState) => {
     dispatch(
       snackbarActions.openSnackBar({
         message: "Failed to delete booth. Please try again later.",
-        severity: "success",
+        severity: "error",
       })
     );
 

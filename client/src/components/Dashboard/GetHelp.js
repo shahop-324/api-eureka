@@ -1,11 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
-
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 const Container = styled.div`
   width: 568px;
@@ -39,12 +36,6 @@ const GetHelp = ({ open, handleClose }) => {
               Visit Help Center
             </button>
           </a>
-          <button
-            className="btn btn-outline-text btn-outline-primary py-2 mb-5"
-            style={{ width: "250px" }}
-          >
-            Visit Support Lounge
-          </button>
           <iframe
             className="mb-5"
             width="250"
@@ -53,7 +44,6 @@ const GetHelp = ({ open, handleClose }) => {
             style={{ border: "0" }}
             src="https://cdn.smooch.io/message-us/index.html?channel=whatsapp&color=teal&size=standard&radius=4px&label=Message us on WhatsApp&number=919770668454"
           ></iframe>
-
           <iframe
             width="250"
             height="50"
