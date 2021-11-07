@@ -291,7 +291,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
   );
 
   let createdBooth;
-  
+
   Booth.create(
     {
       name: req.body.name,
@@ -455,18 +455,15 @@ exports.createBooth = catchAsync(async (req, res, next) => {
           status: "success",
           data: doc,
         });
-
       } catch (error) {
         console.log(error);
         res.status(400).json({
           status: "error",
-          message: "Failed to create booth."
+          message: "Failed to create booth.",
         });
       }
     }
   );
-
-  
 });
 
 // add sponsor
@@ -1024,7 +1021,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "mailChimpAudienceListIdForRegistrants",
       "isMailchimpEnabled",
       "status",
-      "numberOfTablesInLounge"
+      "numberOfTablesInLounge",
+      "ticketSaleIsEnabled"
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);

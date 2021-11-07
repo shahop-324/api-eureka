@@ -27,7 +27,13 @@ import dateFormat from "dateformat";
 import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 import MainEventSetupCheckList from "../Checklist/Main";
-import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+
+import Switch from "@mui/material/Switch";
+
+const label = {
+  inputProps: { "aria-label": "Switch demo" },
+};
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -128,10 +134,6 @@ const EventOverview = (props) => {
 
   const { error } = useSelector((state) => state.event);
 
-  // const aboutText = useSelector(
-  //   (state) => state.event.eventDetails.editingComment
-  // );
-
   let aboutText;
 
   if (eventDetails) {
@@ -216,7 +218,7 @@ const EventOverview = (props) => {
         </div>
 
         <div className=" px-3 mb-4">
-          <MainEventSetupCheckList />
+          {/* <MainEventSetupCheckList /> */}
           <EventOverviewGrid className="mb-5">
             <EventDetails className="px-4 py-3">
               <EventDetailsHeading className="mb-3">
@@ -353,6 +355,23 @@ const EventOverview = (props) => {
                 >
                   Embeddable widget
                 </buttton>
+                <div className="d-flex flex-row align-items-center mt-4">
+                  <div style={{ fontWeight: "500", fontSize: "0.9rem" }}>
+                    Ticket Sell
+                  </div>
+                  <Switch
+                    {...label}
+                    checked={eventDetails.ticketSaleIsEnabled}
+                    onChange={(e) => {
+                      dispatch(
+                        editEvent(
+                          { ticketSaleIsEnabled: e.target.checked },
+                          eventDetails._id
+                        )
+                      );
+                    }}
+                  />
+                </div>
               </div>
               <EventDetailsHeading className="mb-4">
                 Event organised by

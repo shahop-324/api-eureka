@@ -16,9 +16,6 @@ const { Video } = new Mux(
 exports.authenticateCommunity = catchAsync(async (req, res, next) => {
   const { apiKey, apiSecret } = req.query;
 
-  console.log(apiKey);
-  console.log(apiSecret);
-
   // 1) Check if apiKey and apiSecret Exist
   if (!apiKey || !apiSecret) {
     return next(new AppError("Please provide apiKey and apiSecret!", 400));
@@ -28,6 +25,14 @@ exports.authenticateCommunity = catchAsync(async (req, res, next) => {
   const credentialDoc = await CommunityCredentials.findOne({
     APIKey: apiKey,
   }).select("+APISecret");
+
+  // Check if credential is disabled or deleted => If yes, then return AppError
+
+  if (!credentialDoc.isEnabled || credentialDoc.deleted) {
+    return next(
+      new AppError("Credentials are disabled temporarily or deleted", 401)
+    );
+  }
 
   if (
     !credentialDoc ||

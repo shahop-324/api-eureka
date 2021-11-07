@@ -8,17 +8,15 @@ import "./../../assets/Sass/DataGrid.scss";
 // import CustomPagination from "./HelperComponent/Pagination";
 import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
 import ApexGaugeChart from "./ChartComponents/ApexGaugeChart";
-import ReviewsPNG from './../../assets/images/reviews.png';
+import ReviewsPNG from "./../../assets/images/reviews.png";
 import NoContentFound from "../NoContent";
 
-const options = [
-  { value: "All", label: "All Events" },
-];
+const options = [{ value: "All", label: "All Events" }];
 
 const ratingOptions = [
   { value: "All Ratings", label: "All Ratings" },
@@ -30,14 +28,14 @@ const ratingOptions = [
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: "Inter",
-    fontWeight: "600",
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
     color: "#757575",
   }),
 };
@@ -59,9 +57,9 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -84,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -102,7 +99,7 @@ const Reviews = () => {
 
   return (
     <>
-      <div style={{minWidth: "1138px"}}>
+      <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Reviews (0)</div>
           <div className="sec-heading-action-button d-flex flex-row">
@@ -147,7 +144,16 @@ const Reviews = () => {
             {/* {<ReviewCard />
             <ReviewCard />
             <ReviewCard />} */}
-            <NoContentFound msgText="Your reviews will appear here" img={ReviewsPNG}/>
+
+            <div
+              style={{ height: "63vh", width: "100%" }}
+              className="d-flex flex-row align-items-center justify-content-center"
+            >
+              <NoContentFound
+                msgText="Your reviews will appear here"
+                img={ReviewsPNG}
+              />
+            </div>
           </div>
 
           <div className="overall-audience-satisfaction-gauge-conatiner">

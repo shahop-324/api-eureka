@@ -5,8 +5,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 const Container = styled.div`
-  width: 568px;
-  height: 480px;
+  width: 468px;
+  height: auto;
 `;
 
 const GetHelp = ({ open, handleClose }) => {
@@ -22,7 +22,7 @@ const GetHelp = ({ open, handleClose }) => {
         open={open}
         aria-labelledby="responsive-dialog-title"
       >
-        <Container className="d-flex flex-column align-items-center justify-content-center">
+        <Container className="d-flex flex-column align-items-center justify-content-center py-5">
           <a
             href="https://bluemeetinc.zendesk.com/hc/en-us"
             target="_blank"
