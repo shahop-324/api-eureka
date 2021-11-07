@@ -757,104 +757,111 @@ exports.addSpeaker = catchAsync(async (req, res, next) => {
 
 // added Sessions
 exports.addSession = catchAsync(async (req, res, next) => {
-  const eventId = req.params.eventId;
-  const speakersMappedByCommunityForSession = req.body.speakers;
-  const eventGettingSessions = await Event.findById(eventId);
-  const allSpeakersInThisEvent = eventGettingSessions.speaker;
+  try {
+    const eventId = req.params.eventId;
+    const speakersMappedByCommunityForSession = req.body.speakers;
+    const eventGettingSessions = await Event.findById(eventId);
+    const allSpeakersInThisEvent = eventGettingSessions.speaker;
 
-  let processedArray = [];
-  const fxn = (allSpeakersInThisEvent, speakersMappedByCommunityForSession) => {
-    const processedSpeakers = [];
-    speakersMappedByCommunityForSession.map((el) => {
-      if (allSpeakersInThisEvent.includes(el)) {
-        processedSpeakers.push(el);
-      }
-    });
-    return processedSpeakers;
-  };
-  if (speakersMappedByCommunityForSession != undefined) {
-    processedArray = fxn(
+    let processedArray = [];
+    const fxn = (
       allSpeakersInThisEvent,
       speakersMappedByCommunityForSession
-    );
-  }
-
-  let session = await Session.create({
-    type: req.body.type,
-    name: req.body.name,
-    startDate: req.body.startDate,
-    startTime: req.body.startTime,
-    description: req.body.description,
-    endDate: req.body.endDate,
-    endTime: req.body.endTime,
-    speaker: processedArray,
-    eventId: eventGettingSessions.id,
-  });
-
-  console.log(processedArray); // array of speaker Ids
-  console.log(req.body.host);
-
-  try {
-    for (let element of req.body.host) {
-      session.onStagePeople.push({ user: element });
+    ) => {
+      const processedSpeakers = [];
+      speakersMappedByCommunityForSession.map((el) => {
+        if (allSpeakersInThisEvent.includes(el)) {
+          processedSpeakers.push(el);
+        }
+      });
+      return processedSpeakers;
+    };
+    if (speakersMappedByCommunityForSession != undefined) {
+      processedArray = fxn(
+        allSpeakersInThisEvent,
+        speakersMappedByCommunityForSession
+      );
     }
+
+    let session = await Session.create({
+      type: req.body.type,
+      name: req.body.name,
+      startDate: req.body.startDate,
+      startTime: req.body.startTime,
+      description: req.body.description,
+      endDate: req.body.endDate,
+      endTime: req.body.endTime,
+      speaker: processedArray,
+      eventId: eventGettingSessions.id,
+    });
+
+    console.log(processedArray); // array of speaker Ids
+    console.log(req.body.host);
+
+    try {
+      for (let element of req.body.host) {
+        session.onStagePeople.push({ user: element });
+      }
+
+      for (let element of processedArray) {
+        const speaker = await Speaker.findById(element);
+        session.onStagePeople.push({ user: speaker.registrationId });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // For all speakers add this session to their assigned sessions
 
     for (let element of processedArray) {
-      const speaker = await Speaker.findById(element);
-      session.onStagePeople.push({ user: speaker.registrationId });
+      const speakerDoc = await Speaker.findById(element);
+      speakerDoc.sessions.push(session._id);
+      await speakerDoc.save({ new: true, validateModifiedOnly: true });
     }
+
+    session.host = req.body.host; // Save all host to whole event document as well
+    session.tags = req.body.tags; // Save all tags to whole event document as well
+
+    for (let element of req.body.tags) {
+      if (!eventGettingSessions.sessionTags.includes(element)) {
+        eventGettingSessions.sessionTags.push(element);
+      }
+    }
+
+    for (let element of req.body.host) {
+      if (!eventGettingSessions.hosts.includes(element)) {
+        eventGettingSessions.hosts.push(element);
+      }
+    }
+
+    if (req.body.type === "Stream") {
+      const muxRes = await Video.LiveStreams.create({
+        playback_policy: "public",
+        new_asset_settings: { playback_policy: "public" },
+      });
+
+      session.RTMPstreamKey = muxRes.stream_key;
+      session.RTMPPlaybackId = muxRes.playback_ids[0].id;
+      session.RTMPCredentialsId = muxRes.id;
+      session.RTMPstreamURL = `rtmps://global-live.mux.com:443/app`;
+    }
+
+    await session.save({ new: true, validateModifiedOnly: true });
+
+    const populatedSession = await Session.findById(session.id)
+      .populate("speaker")
+      .populate("host");
+
+    eventGettingSessions.session.push(session._id);
+    await eventGettingSessions.save({ validateModifiedOnly: true });
+
+    res.status(200).json({
+      status: "success",
+      data: populatedSession,
+    });
   } catch (error) {
     console.log(error);
   }
-
-  // For all speakers add this session to their assigned sessions
-
-  for (let element of processedArray) {
-    const speakerDoc = await Speaker.findById(element);
-    speakerDoc.sessions.push(session._id);
-    await speakerDoc.save({ new: true, validateModifiedOnly: true });
-  }
-
-  session.host = req.body.host; // Save all host to whole event document as well
-  session.tags = req.body.tags; // Save all tags to whole event document as well
-
-  for (let element of req.body.tags) {
-    if (!eventGettingSessions.sessionTags.includes(element)) {
-      eventGettingSessions.sessionTags.push(element);
-    }
-  }
-
-  for (let element of req.body.host) {
-    if (!eventGettingSessions.hosts.includes(element)) {
-      eventGettingSessions.hosts.push(element);
-    }
-  }
-
-  if (req.body.type === "Stream") {
-    const muxRes = await Video.LiveStreams.create({
-      playback_policy: "public",
-      new_asset_settings: { playback_policy: "public" },
-    });
-
-    session.RTMPstreamKey = muxRes.stream_key;
-    session.RTMPPlaybackId = muxRes.playback_ids[0].id;
-    session.RTMPCredentialsId = muxRes.id;
-    session.RTMPstreamURL = `rtmps://global-live.mux.com:443/app`;
-  }
-
-  await session.save({ new: true, validateModifiedOnly: true });
-
-  const populatedSession = await Session.findById(session.id).populate(
-    "speaker"
-  );
-
-  eventGettingSessions.session.push(session._id);
-  await eventGettingSessions.save({ validateModifiedOnly: true });
-
-  res.status(200).json({
-    status: "success",
-    data: populatedSession,
-  });
 });
 //update handler for updating speakers
 exports.updateSpeaker = catchAsync(async (req, res, next) => {

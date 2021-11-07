@@ -9,7 +9,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { createCoupon, fetchTickets } from "./../../../actions";
+import { createCoupon, fetchTickets, showSnackbar } from "./../../../actions";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
@@ -150,6 +150,13 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
 
   const events = useSelector((state) => state.event.events);
 
+  const { startTime, endTime } = useSelector(
+    (state) => state.event.eventDetails
+  );
+
+  const eventStartDateTime = new Date(startTime);
+  const eventEndDateTime = new Date(endTime);
+
   if (events) {
     eventOptions = events.map((event) => {
       return {
@@ -162,10 +169,23 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
+    if (
+      !(
+        typeof formValues.eventTickets !== "undefined" &&
+        formValues.eventTickets.length > 0
+      )
+    ) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Coupon must be applicable to atleast one ticket."
+        )
+      );
+    }
+
     const applicableTickets = formValues.eventTickets.map(
       (ticket) => ticket.value
     );
-    console.log("accessible areas", applicableTickets);
 
     const ModifiedFormValues = {};
     ModifiedFormValues.tickets = applicableTickets;
@@ -178,7 +198,41 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
 
-    dispatch(createCoupon(ModifiedFormValues, id));
+    if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
+      // Coupon cannot be applied in past
+      dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
+      return;
+    }
+    if (new Date(ModifiedFormValues.validTillTime) > eventEndDateTime) {
+      // Coupon must expire before event ends
+      dispatch(
+        showSnackbar("warning", "Coupon must expire before event ends.")
+      );
+      return;
+    }
+
+    if (
+      new Date(ModifiedFormValues.startTime) >=
+      new Date(ModifiedFormValues.validTillTime)
+    ) {
+      // Coupon expiry Date & Time must be greater than coupon applicability Date & Time.
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Coupon expiry Date & Time must be greater than coupon applicability Date & Time."
+        )
+      );
+      return;
+    }
+
+    if (
+      !(new Date(ModifiedFormValues.startTime) < new Date(Date.now())) ||
+      !(new Date(ModifiedFormValues.validTillTime) > eventEndDateTime)
+    ) {
+      // Only in this case we will allow coupon to be created
+
+      dispatch(createCoupon(ModifiedFormValues, id));
+    }
   };
 
   return (

@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import {
   editSession,
   errorTrackerForEditSession,
+  showSnackbar,
 } from "../../../../../actions";
 import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
@@ -189,6 +190,13 @@ const EditSession = ({
 
   const speakers = useSelector((state) => state.speaker.speakers);
 
+  const { startTime, endTime } = useSelector(
+    (state) => state.event.eventDetails
+  );
+
+  const eventStartDateTime = new Date(startTime);
+  const eventEndDateTime = new Date(endTime);
+
   const speakerOptions = speakers.map((speaker) => {
     return {
       label: speaker.firstName,
@@ -249,7 +257,55 @@ const EditSession = ({
       });
     }
 
-    dispatch(editSession(ModifiedFormValues, id));
+    if (
+      !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
+    ) {
+      // Atleast one tag for each session is required
+      dispatch(showSnackbar("warning", "Atleast one tag is required."));
+      return;
+    }
+
+    // Atleast one host is required
+    if (
+      !(
+        typeof ModifiedFormValues.host !== "undefined" &&
+        ModifiedFormValues.host.length > 0
+      )
+    ) {
+      // Atleast one host is required
+
+      dispatch(showSnackbar("warning", "Atleast one host is required."));
+      return;
+    }
+
+    if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
+      // Session start Date & time must be withing event timeline
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Session start Date time must be within event timeline"
+        )
+      );
+      return;
+    }
+    if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
+      // Session end Date & time must be withing event timeline
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Session end Date & time must be within event timeline"
+        )
+      );
+      return;
+    }
+
+    if (
+      !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
+      !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
+    ) {
+      // only in this case we will allow this session to be edited
+      dispatch(editSession(ModifiedFormValues, id));
+    }
   };
 
   if (detailError) {

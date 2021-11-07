@@ -7,6 +7,7 @@ import { reduxForm, Field } from "redux-form";
 import {
   createSession,
   errorTrackerForCreateSession,
+  showSnackbar,
 } from "../../../../../actions";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -15,7 +16,6 @@ import Loader from "../../../../Loader";
 import MultiTagInput from "../../../MultiTagInput";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
-import WhoCanJoinSession from "./WhoCanJoinSession";
 
 let hostOptions;
 let activityOptions = [
@@ -230,6 +230,13 @@ const AddNewSession = ({
   const params = useParams();
   const id = params.id;
 
+  const { startTime, endTime } = useSelector(
+    (state) => state.event.eventDetails
+  );
+
+  const eventStartDateTime = new Date(startTime);
+  const eventEndDateTime = new Date(endTime);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
     let speakersArray = [];
@@ -247,6 +254,16 @@ const AddNewSession = ({
     }
 
     const ModifiedFormValues = {};
+
+    // Activity type is required
+
+    if (!formValues.activityType) {
+      // Please choose activity type
+
+      dispatch(showSnackbar("warning", "Please choose an activity type"));
+      return;
+    }
+
     ModifiedFormValues.type = formValues.activityType.value;
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
@@ -258,9 +275,65 @@ const AddNewSession = ({
     ModifiedFormValues.tags = formValues.tags;
     ModifiedFormValues.host = hostArray;
 
-    dispatch(createSession(ModifiedFormValues, id));
+    if (
+      !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
+    ) {
+      // Atleast one tag for each session is required
+      dispatch(showSnackbar("warning", "Atleast one tag is required."));
+      return;
+    }
+
+    // Atleast one host is required
+    if (!(typeof hostArray !== "undefined" && hostArray.length > 0)) {
+      // Atleast one host is required
+
+      dispatch(showSnackbar("warning", "Atleast one host is required."));
+      return;
+    }
+
+    if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
+      // Session start Date & time must be withing event timeline
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Session start Date time must be within event timeline"
+        )
+      );
+      return;
+    }
+    if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
+      // Session end Date & time must be withing event timeline
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Session end Date & time must be within event timeline"
+        )
+      );
+      return;
+    }
+
+    if (
+      new Date(ModifiedFormValues.startTime) >=
+      new Date(ModifiedFormValues.endTime)
+    ) {
+      // Session start Date & Time must be less than session end Date & Time
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Session start Date & Time must be less than session end Date & Time"
+        )
+      );
+      return;
+    }
+
+    if (
+      !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
+      !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
+    ) {
+      // only in this case we will allow this session to be created
+      dispatch(createSession(ModifiedFormValues, id));
+    }
   };
- 
 
   if (isLoading) {
     return (

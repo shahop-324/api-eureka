@@ -1,27 +1,21 @@
 import React from "react";
-
 import IconButton from "@material-ui/core/IconButton";
 import { SwipeableDrawer } from "@material-ui/core";
 import Select from "react-select";
-
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { reduxForm, Field, Form } from "redux-form";
-import { editTicket, errorTrackerForEditTicket } from "../../../../../actions";
+import { reduxForm, Field } from "redux-form";
+import {
+  editTicket,
+  errorTrackerForEditTicket,
+  showSnackbar,
+} from "../../../../../actions";
 import Loader from "../../../../Loader";
 import dateFormat from "dateformat";
-
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
 import styled from "styled-components";
-
-const ticketVisibilityOptions = [
-  { value: "Public", label: "Public" },
-  { value: "Hidden", label: "Hidden" },
-  { value: "Private", label: "Private" },
-];
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -84,6 +78,8 @@ const styles = {
 };
 
 const renderInput = ({
+  isRequired,
+  isDisabled,
   input,
   meta: { touched, error, warning },
   type,
@@ -95,6 +91,8 @@ const renderInput = ({
   return (
     <div className={className}>
       <StyledInput
+        required={isRequired}
+        disabled={isDisabled}
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
@@ -135,6 +133,7 @@ const renderTextArea = ({
 };
 
 const renderReactSelect = ({
+  isDisabled,
   isMulti,
   input,
   meta: { touched, error, warning },
@@ -142,12 +141,12 @@ const renderReactSelect = ({
   menuPlacement,
   options,
   defaultValue,
-
   name,
 }) => (
   <div>
     <div>
       <Select
+        isDisabled={isDisabled}
         isMulti={isMulti}
         defaultValue={defaultValue}
         styles={styles}
@@ -181,20 +180,148 @@ const EditTicket = ({
     ticketDetails ? ticketDetails.type : "Paid"
   );
 
-  const currencyOptions = [
-    // { value: "USD", label: "US Dollars" },
-    // { value: "AED", label: "United Arab Emirates Dirham" },
-    { value: "INR", label: "Indian Rupees" },
-    // { value: "BMD", label: "Bermudan Dollar equals" },
-    // { value: "CAD", label: "Canadian Dollar" },
-  ];
+  const { startTime, endTime } = useSelector(
+    (state) => state.event.eventDetails
+  );
 
-  const venueAreaOptions = [
-    { value: "Sessions", label: "Sessions" },
-    { value: "Speed Networking", label: "Speed Networking" },
-    { value: "Group Based Networking", label: "Group Based Networking" },
-    { value: "Social Lounge", label: "Social Lounge" },
-    { value: "Booths", label: "Booths" },
+  const eventStartDateTime = new Date(startTime);
+  const eventEndDateTime = new Date(endTime);
+
+  const currencyOptions = [
+    { value: "USD", label: "US Dollars" },
+    { value: "AED", label: "United Arab Emirates Dirham" },
+    { value: "AFN", label: "Afghan Afghani" },
+    { value: "ALL", label: "Albanian Lek" },
+    { value: "AMD", label: "Armenian Dram" },
+    { value: "ANG", label: "Netherlands Antillean Guilder" },
+    { value: "AOA", label: "Angolan Kwanza" },
+    { value: "ARS", label: "Argentine Peso" },
+    { value: "AUD", label: "Australian Dollar" },
+    { value: "AWG", label: "Aruban Florin" },
+    { value: "AZN", label: "Azerbaijani Manat" },
+    { value: "BAM", label: "Bosnia-Herzegovina Convertible Mark" },
+    { value: "BBD", label: "Bajan dollar" },
+    { value: "BDT", label: "Bangladeshi Taka" },
+    { value: "BGN", label: "Bulgarian Lev" },
+    { value: "BIF", label: "Burundian Franc" },
+    { value: "BMD", label: "Bermudan Dollar" },
+    { value: "BND", label: "Brunei Dollar" },
+    { value: "BOB", label: "Bolivian Boliviano" },
+    { value: "BRL", label: "Brazilian Real" },
+    { value: "BSD", label: "Bahamian Dollar" },
+    { value: "BWP", label: "Botswanan Pula" },
+    { value: "BYN", label: "Belarusian Ruble" },
+    { value: "BZD", label: "Belize Dollar" },
+    { value: "CAD", label: "Canadian Dollar" },
+    { value: "CDF", label: "Congolese Franc" },
+    { value: "CHF", label: "Swiss Franc" },
+    { value: "CLP", label: "Chilean Peso" },
+    { value: "CNY", label: "Chinese Yuan" },
+    { value: "COP", label: "Colombian Peso" },
+    { value: "CRC", label: "Costa Rican Colón" },
+    { value: "CVE", label: "Cape Verdean Escudo" },
+    { value: "CZK", label: "Czech Koruna" },
+    { value: "DKK", label: "Danish Krone" },
+    { value: "DOP", label: "Dominican Peso" },
+    { value: "DZD", label: "Algerian Dinar" },
+    { value: "EGP", label: "Egyptian Pound" },
+    { value: "ETB", label: "Ethiopian Birr" },
+    { value: "EUR", label: "Euro" },
+    { value: "FJD", label: "Fijian Dollar" },
+    { value: "FKP", label: "Falkland Island Pound" },
+    { value: "GBP", label: "Pound sterling" },
+    { value: "GEL", label: "Georgian Lari" },
+    { value: "GIP", label: "Gibraltar Pound" },
+    { value: "GMD", label: "Gambian dalasi" },
+    { value: "GMF", label: "Grumfork" },
+    { value: "GTQ", label: "Guatemalan Quetzal" },
+    { value: "GYD", label: "Guyanaese Dollar" },
+    { value: "HKD", label: "Hong Kong Dollar" },
+    { value: "HNL", label: "Honduran Lempira" },
+    { value: "HRK", label: "Croatian Kuna" },
+    { value: "HTG", label: "Haitian Gourde" },
+    { value: "HUF", label: "Hungarian Forint" },
+    { value: "IDR", label: "Indonesian Rupiah" },
+    { value: "ILS", label: "Israeli New Shekel" },
+    { value: "INR", label: "Indian Rupee" },
+    { value: "ISK", label: "Icelandic Króna" },
+    { value: "JMD", label: "Jamaican Dollar" },
+    { value: "JPY", label: "Japanese Yen" },
+    { value: "KES", label: "Kenyan Shilling" },
+    { value: "KGS", label: "Kyrgystani Som" },
+    { value: "KHR", label: "Cambodian riel" },
+    { value: "KMF", label: "Comorian franc" },
+    { value: "KRW", label: "South Korean won" },
+    { value: "KYD", label: "Cayman Islands Dollar " },
+    { value: "KZT", label: "Kazakhstani Tenge" },
+    { value: "LAK", label: "Laotian Kip" },
+    { value: "LBP", label: "Lebanese pound" },
+    { value: "LKR", label: "Sri Lankan Rupee" },
+    { value: "LRD", label: "Liberian Dollar" },
+    { value: "LSL", label: "Lesotho loti" },
+    { value: "MAD", label: "Moroccan Dirham" },
+    { value: "MDL", label: "Moldovan Leu" },
+    { value: "MGA", label: "Malagasy Ariary" },
+    { value: "MKD", label: "Macedonian Denar" },
+    { value: "MMK", label: "Myanmar Kyat" },
+    { value: "MNT", label: "Mongolian Tughrik" },
+    { value: "MOP", label: "Macanese Pataca" },
+    { value: "MUR", label: "Mauritian Rupee" },
+    { value: "MVR", label: "Maldivian Rufiyaa" },
+    { value: "MWK", label: "Malawian Kwacha" },
+    { value: "MXN", label: "Mexican Peso" },
+    { value: "MYR", label: "Malaysian Ringgit" },
+    { value: "MZN", label: "Mozambican metical" },
+    { value: "NAD", label: "Namibian dollar" },
+    { value: "NGN", label: "Nigerian Naira" },
+    { value: "NIO", label: "Nicaraguan Córdoba" },
+    { value: "NOK", label: "Norwegian Krone" },
+    { value: "NPR", label: "Nepalese Rupee" },
+    { value: "NZD", label: "New Zealand Dollar" },
+    { value: "PAB", label: "Panamanian Balboa" },
+    { value: "PEN", label: "Sol" },
+    { value: "PGK", label: "Papua New Guinean Kina" },
+    { value: "PHP", label: "Philippine peso" },
+    { value: "PKR", label: "Pakistani Rupee" },
+    { value: "PLN", label: "Poland złoty" },
+    { value: "PYG", label: "Paraguayan Guarani" },
+    { value: "QAR", label: "Qatari Rial" },
+    { value: "RON", label: "Romanian Leu" },
+    { value: "RSD", label: "Serbian Dinar" },
+    { value: "RUB", label: "Russian Ruble" },
+    { value: "RWF", label: "Rwandan franc" },
+    { value: "SAR", label: "Rial" },
+    { value: "SBD", label: "Solomon Islands Dollar" },
+    { value: "SCR", label: "Seychellois Rupee" },
+    { value: "SEK", label: "Swedish Krona" },
+    { value: "SGD", label: "Singapore Dollar" },
+    { value: "SHP", label: "St. Helena Pound" },
+    { value: "SLL", label: "Sierra Leonean Leone" },
+    { value: "SOS", label: "Somali Shilling" },
+    { value: "SRD", label: "Surinamese Dollar" },
+    { value: "STD", label: "Sao Tomean Dobra" },
+    { value: "SZL", label: "Swazi Lilangeni" },
+    { value: "THB", label: "Thai Baht" },
+    { value: "TJS", label: "Tajikistani Somoni" },
+    { value: "TOP", label: "Tongan Paʻanga" },
+    { value: "TRY", label: "Turkish lira" },
+    { value: "TTD", label: "Trinidad & Tobago Dollar" },
+    { value: "TWD", label: "New Taiwan dollar" },
+    { value: "TZS", label: "Tanzanian Shilling" },
+    { value: "UAH", label: "Ukrainian hryvnia" },
+    { value: "UGX", label: "Ugandan Shilling" },
+    { value: "UYU", label: "Uruguayan Peso" },
+    { value: "UZS", label: "Uzbekistani Som" },
+    { value: "VND", label: "Vietnamese dong" },
+    { value: "VUV", label: "Ni-Vanuatu Vatu" },
+    { value: "WST", label: "Samoan Tala" },
+    { value: "XAF", label: "Central African CFA franc" },
+    { value: "XCD", label: "East Caribbean Dollar" },
+    { value: "XOF", label: "West African CFA franc" },
+    { value: "XPF", label: "CFP Franc" },
+    { value: "YER", label: "Yemeni Rial" },
+    { value: "ZAR", label: "South African Rand" },
+    { value: "ZMW", label: "Zambian Kwacha" },
   ];
 
   const dispatch = useDispatch();
@@ -216,7 +343,7 @@ const EditTicket = ({
     // ModifiedFormValues.shareRecording = formValues.shareRecording;
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
-    ModifiedFormValues.venueAreasAccessible = accessibleAreas;
+
     ModifiedFormValues.visibility = formValues.visibility.value;
     ModifiedFormValues.message = formValues.message;
     ModifiedFormValues.salesStartDate = formValues.salesStartDate;
@@ -224,33 +351,75 @@ const EditTicket = ({
     ModifiedFormValues.salesStartTime = `${formValues.startDate}T${formValues.salesStartTime}:00Z`;
     ModifiedFormValues.salesEndTime = `${formValues.endDate}T${formValues.salesEndTime}:00Z`;
 
-    // console.log(ModifiedFormValues);
 
-    dispatch(editTicket(ModifiedFormValues, id, handleClose));
+    if (new Date(ModifiedFormValues.salesStartTime) < new Date(Date.now())) {
+      // Ticket sale cannot be started in past
+      dispatch(
+        showSnackbar("warning", "Ticket sale cannot be started in past")
+      );
+    }
+    
+    if (new Date(ModifiedFormValues.salesEndTime) > eventEndDateTime) {
+      // Ticket cannot be saled after event has ended
+      dispatch(
+        showSnackbar("warning", "Ticket cannot be saled after event has ended")
+      );
+    }
 
-    // showResults(ModifiedFormValues);
-    // handleClose();
+
+    if (
+      new Date(ModifiedFormValues.salesStartTime) >=
+      new Date(ModifiedFormValues.salesEndTime)
+    ) {
+      // Ticket sale start Date Time must be less than Sales end date Time.
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Ticket sale end Date & Time must be greater than sale start Date & Time."
+        )
+      );
+    }
+
+    if (
+      !(new Date(ModifiedFormValues.salesStartTime) < new Date(Date.now())) ||
+      !(new Date(ModifiedFormValues.salesEndTime) > eventEndDateTime)
+    ) {
+      if (type === "Paid") {
+        // Currency and amount is required
+        if (!ModifiedFormValues.currency) {
+          dispatch(showSnackbar("warning", "Ticket currency is required"));
+        }
+        if (!ModifiedFormValues.price) {
+          dispatch(showSnackbar("warning", "Ticket price is required"));
+        }
+        if (ModifiedFormValues.price && ModifiedFormValues.currency) {
+          // Here we can create this ticket
+          dispatch(editTicket(ModifiedFormValues, id, handleClose));
+        }
+      }
+      if (type === "Free") {
+        // Niether currency nor amount is required
+        dispatch(editTicket(ModifiedFormValues, id, handleClose));
+      }
+      if (type === "Donation") {
+        // Niether currency nor amount is required
+        // Buyers can choose a fair price for ticket according to them
+        dispatch(editTicket(ModifiedFormValues, id, handleClose));
+      }
+    }
+
+    
   };
 
   if (detailError) {
     dispatch(errorTrackerForEditTicket());
-    // alert(detailError);
     return null;
   }
 
   return (
     <>
       <React.Fragment key="right">
-        <SwipeableDrawer
-          anchor="right"
-          open={open}
-          onOpen={() => {
-            console.log("Side nav was opended");
-          }}
-          onClose={() => {
-            console.log("Side nav was closed");
-          }}
-        >
+        <SwipeableDrawer anchor="right" open={open}>
           {isLoadingDetail ? (
             <div
               className="d-flex flex-row align-items-center justify-content-center"
@@ -318,6 +487,7 @@ const EditTicket = ({
                           value="Paid"
                           control={
                             <Radio
+                              disabled={true}
                               onChange={(e) => {
                                 setType(e.target.value);
                               }}
@@ -332,6 +502,7 @@ const EditTicket = ({
                           value="Free"
                           control={
                             <Radio
+                              disabled={true}
                               onChange={(e) => {
                                 setType(e.target.value);
                               }}
@@ -346,6 +517,7 @@ const EditTicket = ({
                           value="Donation"
                           control={
                             <Radio
+                              disabled={true}
                               onChange={(e) => {
                                 setType(e.target.value);
                               }}
@@ -361,6 +533,7 @@ const EditTicket = ({
                     <div>
                       <FormLabel Forhtml="eventStartDate">Currency</FormLabel>
                       <Field
+                        isDisabled={true}
                         name="currency"
                         placeholder="currency"
                         styles={styles}
@@ -372,6 +545,8 @@ const EditTicket = ({
                     <div>
                       <FormLabel Forhtml="eventStartDate">Price</FormLabel>
                       <Field
+                        isRequired={type === "Paid" ? true : false}
+                        isDisabled={type !== "Paid" ? true : false}
                         name="price"
                         type="number"
                         classes="form-control"
@@ -449,31 +624,7 @@ const EditTicket = ({
                       />
                     </div>
                   </div>
-                  <div className="mb-3 overlay-form-input-row">
-                    <FormLabel for="communityName">
-                      Select Available Venue Areas
-                    </FormLabel>
-                    <Field
-                      name="venueAreasAccessible"
-                      isMulti
-                      placeholder="venue areas"
-                      styles={styles}
-                      menuPlacement="top"
-                      options={venueAreaOptions}
-                      component={renderReactSelect}
-                    />
-                  </div>
-                  <div className="mb-3 overlay-form-input-row">
-                    <FormLabel for="communityName">Visibility</FormLabel>
-                    <Field
-                      name="visibility"
-                      placeholder="Ticket visibility"
-                      styles={styles}
-                      menuPlacement="top"
-                      options={ticketVisibilityOptions}
-                      component={renderReactSelect}
-                    />
-                  </div>
+
                   <div className="mb-3 overlay-form-input-row">
                     <FormLabel for="communityName">
                       Message for attendees
@@ -540,10 +691,6 @@ const mapStateToProps = (state) => ({
       state.ticket.ticketDetails.numberOfTicketAvailable
         ? state.ticket.ticketDetails.numberOfTicketAvailable
         : "",
-    // shareRecording:
-    //   state.ticket.ticketDetails && state.ticket.ticketDetails.shareRecording
-    //     ? state.ticket.ticketDetails.shareRecording
-    //     : "",
     currency:
       state.ticket.ticketDetails && state.ticket.ticketDetails.currency
         ? {
@@ -551,23 +698,7 @@ const mapStateToProps = (state) => ({
             value: state.ticket.ticketDetails.currency,
           }
         : "",
-    venueAreasAccessible:
-      state.ticket.ticketDetails &&
-      state.ticket.ticketDetails.venueAreasAccessible
-        ? state.ticket.ticketDetails.venueAreasAccessible.map((element) => {
-            return {
-              value: element,
-              label: element,
-            };
-          })
-        : "",
-    visibility:
-      state.ticket.ticketDetails && state.ticket.ticketDetails.visibility
-        ? {
-            value: state.ticket.ticketDetails.visibility,
-            label: state.ticket.ticketDetails.visibility,
-          }
-        : "",
+
     salesStartDate:
       state.ticket.ticketDetails && state.ticket.ticketDetails.salesStartDate
         ? dateFormat(
@@ -609,21 +740,29 @@ const validate = (formValues) => {
   if (!formValues.description) {
     errors.description = "Ticket description is required";
   }
-  if (!formValues.currency) {
-    errors.currency = "Currency is required";
-  }
-  if (!formValues.price) {
-    errors.price = "Ticket price is required";
-  }
-  if (formValues.price < 100) {
-    errors.price = "Minimum ticket price can be Rs. 100";
-  }
-  // if (!formValues.venueAreasAccessible) {
-  //   errors.venueAreasAccessible = "Accessible venue areas is required";
-  // }
   if (!formValues.numberOfTicketAvailable) {
     errors.numberOfTicketAvailable = "Number of tickets available is required";
   }
+  if (formValues.numberOfTicketAvailable <= 0) {
+    errors.numberOfTicketAvailable =
+      "Number of available tickets must be atleast 1";
+  }
+  if (!formValues.startDate) {
+    errors.startDate = "Sales start date is required";
+  }
+  if (!formValues.endDate) {
+    errors.endDate = "Sales end date is required";
+  }
+  if (!formValues.startTime) {
+    errors.startTime = "Sales start time is required";
+  }
+  if (!formValues.endTime) {
+    errors.endTime = "Sales end time is required";
+  }
+  if (!formValues.message) {
+    errors.message = "Message for attendees is required";
+  }
+
   return errors;
 };
 

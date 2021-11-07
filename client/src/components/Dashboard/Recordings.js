@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import styled from 'styled-components';
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -14,15 +15,14 @@ import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
 import Downloading from "./../../assets/images/Downloading.png";
 
-const options = [{ value: "All", label: "All Events" }];
+const sessionOptions = [{ value: "All", label: "All Sessions" }];
 
-const timelineOptions = [
-  { value: "Today", label: "Today" },
-  { value: "This Week", label: "This Week" },
-  { value: "This Month", label: "This Month" },
-  { value: "This Year", label: "This Year" },
-  { value: "Lifetime", label: "Lifetime" },
-];
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
 
 const styles = {
   control: (base) => ({
@@ -106,7 +106,7 @@ const Recordings = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">All Recordings</div>
+          <SectionHeading className="">All Recordings</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search}`}
@@ -128,17 +128,8 @@ const Recordings = () => {
               <Select
                 styles={styles}
                 menuPlacement="top"
-                options={options}
-                defaultValue={options[0]}
-              />
-            </div>
-
-            <div className="ms-3" style={{ minWidth: "250px" }}>
-              <Select
-                styles={styles}
-                menuPlacement="top"
-                options={timelineOptions}
-                defaultValue={timelineOptions[4]}
+                options={sessionOptions}
+                defaultValue={sessionOptions[0]}
               />
             </div>
           </div>

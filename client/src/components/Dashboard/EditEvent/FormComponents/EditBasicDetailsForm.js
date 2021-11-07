@@ -6,17 +6,13 @@ import "./../../../../index.css";
 import { connect, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { editEvent, errorTrackerForeditEvent } from "../../../../actions";
+import { editEvent, errorTrackerForeditEvent, showSnackbar } from "../../../../actions";
 import Loader from "../../../Loader";
-import { useSnackbar } from "notistack";
-
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
 import styled from "styled-components";
 
 const StyledInput = styled.input`
@@ -187,6 +183,8 @@ const options = [
   { value: "Web Security", label: "Web Security" },
 ];
 
+// ! Give option to select from all available time zones
+
 const timeZoneOptions = [
   { value: "(GMT + 00:00) UTC", label: "(GMT + 00:00) UTC" },
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
@@ -249,8 +247,6 @@ const EditBasicDetailsForm = ({
     });
   }
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -274,7 +270,7 @@ const EditBasicDetailsForm = ({
       categories.push(element.value);
     }
 
-    console.log(categories);
+  
 
     const ModifiedFormValues = {};
     ModifiedFormValues.eventName = formValues.eventName;
@@ -289,6 +285,62 @@ const EditBasicDetailsForm = ({
     ModifiedFormValues.numberOfTablesInLounge =
       formValues.numberOfTablesInLounge;
     ModifiedFormValues.moderators = moderators;
+
+    if (!formValues.visibility) {
+      dispatch(showSnackbar("warning", "Please choose event visibility."));
+      return;
+    }
+
+    // There should be atleast one moderator in the event
+    if (
+      !(
+        typeof ModifiedFormValues.moderators !== "undefined" &&
+        ModifiedFormValues.moderators.length > 0
+      )
+    ) {
+      dispatch(
+        showSnackbar("warning", "There should be atleast one moderator.")
+      );
+      return;
+    }
+
+    if (new Date(ModifiedFormValues.startTime) <= new Date(Date.now())) {
+      dispatch(
+        showSnackbar("warning", "Event start Date & Time cannot be in past.")
+      );
+      return;
+    }
+
+    if (
+      new Date(ModifiedFormValues.startTime) >=
+      new Date(ModifiedFormValues.endTime)
+    ) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Event start time must be less than event end time."
+        )
+      );
+      return;
+    }
+
+    if (
+      Math.ceil(
+        Math.abs(
+          new Date(ModifiedFormValues.endTime) -
+            new Date(ModifiedFormValues.startTime)
+        ) /
+          (1000 * 60 * 60 * 24)
+      ) *
+        1 >
+      180
+    ) {
+      dispatch(
+        showSnackbar("warning", "Max time span for an event is 180 days.")
+      );
+      return;
+    }
+
 
     dispatch(editEvent(ModifiedFormValues, id));
     handleClose();
@@ -307,9 +359,6 @@ const EditBasicDetailsForm = ({
   }
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     return dispatch(errorTrackerForeditEvent());
   }
 
@@ -351,7 +400,7 @@ const EditBasicDetailsForm = ({
                 (hideFormHeading === "1" ? "hide" : "")
               }
             >
-              New Event
+              Edit event
             </FormLabel>
             <h5
               className={
@@ -359,7 +408,7 @@ const EditBasicDetailsForm = ({
                 (hideFormHeading === "1" ? "hide" : "")
               }
             >
-              Let's create an all new event for your community.
+             You can edit event basic details here
             </h5>
             <div className="mb-4 overlay-form-input-row">
               <FormLabel
@@ -492,10 +541,9 @@ const EditBasicDetailsForm = ({
                 component={renderReactSelect}
               />
             </div>
-
             <div className="mb-4 overlay-form-input-row">
               <FormLabel
-                Forhtml="selectCategories"
+                Forhtml="moderators"
                 className="form-label form-label-customized"
               >
                 Select moderators
@@ -509,7 +557,6 @@ const EditBasicDetailsForm = ({
                 component={renderReactSelect}
               />
             </div>
-
             <div className="mb-4 overlay-form-input-row">
               <FormLabel className="mb-3">Event Visibility</FormLabel>
               <div className="form-check mb-2">
@@ -519,7 +566,6 @@ const EditBasicDetailsForm = ({
                   type="radio"
                   id="flexRadioDefault1"
                   value="Public"
-                  // component={renderInput}
                   component="input"
                 />
                 <label
@@ -547,9 +593,7 @@ const EditBasicDetailsForm = ({
                   type="radio"
                   name="visibility"
                   id="flexRadioDefault2"
-                  // checked="true"
                   value="Private"
-                  // component={renderInput}
                   component="input"
                 />
                 <label
@@ -564,31 +608,7 @@ const EditBasicDetailsForm = ({
                   Private
                 </label>
               </div>
-              {/* <div className="form-check">
-                <Field
-                  className="form-check-input"
-                  type="radio"
-                  name="visibility"
-                  id="flexRadioDefault2"
-                  // checked="true"
-                  value="Hidden"
-                  // component={renderInput}
-                  component="input"
-                />
-                <label
-                  className="form-check-label"
-                  for="flexRadioDefault2"
-                  style={{
-                    fontFamily: "Inter",
-                    fontWeight: "500",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Hidden
-                </label>
-              </div> */}
             </div>
-
             <div className="mb-4 overlay-form-input-row">
               <FormLabel
                 for="communityName"
@@ -711,7 +731,6 @@ const mapStateToProps = (state) => ({
             };
           })
         : null,
-
     visibility:
       state.event.eventDetails && state.event.eventDetails.visibility
         ? state.event.eventDetails.visibility
@@ -720,10 +739,6 @@ const mapStateToProps = (state) => ({
       state.event.eventDetails &&
       state.event.eventDetails.numberOfTablesInLounge
         ? state.event.eventDetails.numberOfTablesInLounge
-        : "",
-    service:
-      state.event.eventDetails && state.event.eventDetails.service
-        ? state.event.eventDetails.service
         : "",
   },
 });
@@ -735,7 +750,7 @@ const validate = (formValues) => {
     errors.eventName = "Event name is required";
   }
   if (!formValues.shortDescription) {
-    errors.description = "Event description is required";
+    errors.shortDescription = "Event description is required";
   }
   if (!formValues.startDate) {
     errors.startDate = "Start Date is required";
@@ -755,8 +770,13 @@ const validate = (formValues) => {
   if (!formValues.selectCategories) {
     errors.selectCategories = "Categories is required";
   }
-  if (!formValues.visibility) {
-    errors.visibility = "Event visibility is required";
+  if (!formValues.moderators) {
+    errors.moderators = "Atleast one moderator is required";
+  }
+  if (formValues.numberOfTablesInLounge) {
+    if (formValues.numberOfTablesInLounge < 20) {
+      errors.numberOfTablesInLounge = "Minimum number of tables can be 20.";
+    }
   }
   return errors;
 };

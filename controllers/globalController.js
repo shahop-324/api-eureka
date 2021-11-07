@@ -1283,36 +1283,53 @@ exports.fetchInvitationDetails = catchAsync(async (req, res, next) => {
 });
 
 exports.getEventDetailsForMagicLinkPage = catchAsync(async (req, res, next) => {
-  const registrationId = req.params.registrationId;
+  try {
+    let registrationId = req.params.registrationId;
 
-  const registrationDoc = await Registration.findById(registrationId);
+    if (registrationId.endsWith(".")) {
+      console.log("Confirmed it ends with a fullstop.");
+      registrationId = registrationId
+        .split("")
+        .reverse()
+        .join("")
+        .slice(1)
+        .split("")
+        .reverse()
+        .join("");
+      console.log(registrationId);
+    }
 
-  if (registrationDoc) {
-    const userId = registrationDoc.bookedByUser;
+    const registrationDoc = await Registration.findById(registrationId);
 
-    const userDoc = await User.findById(userId);
+    if (registrationDoc) {
+      const userId = registrationDoc.bookedByUser;
 
-    const eventId = registrationDoc.bookedForEventId;
-    const userRole = registrationDoc.type;
-    const userEmail = userDoc.email;
-    const eventDetails = await Event.findById(eventId).populate(
-      "speaker",
-      "firstName lastName image"
-    );
+      const userDoc = await User.findById(userId);
 
-    res.status(200).json({
-      status: "success",
-      data: eventDetails,
-      userId: userId,
-      userRole: userRole,
-      userEmail: userEmail,
-    });
-  } else {
-    res.status(200).json({
-      status: "failed",
-      message: "Registration document was not found",
-      notFound: true,
-    });
+      const eventId = registrationDoc.bookedForEventId;
+      const userRole = registrationDoc.type;
+      const userEmail = userDoc.email;
+      const eventDetails = await Event.findById(eventId).populate(
+        "speaker",
+        "firstName lastName image"
+      );
+
+      res.status(200).json({
+        status: "success",
+        data: eventDetails,
+        userId: userId,
+        userRole: userRole,
+        userEmail: userEmail,
+      });
+    } else {
+      res.status(200).json({
+        status: "failed",
+        message: "Registration document was not found",
+        notFound: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

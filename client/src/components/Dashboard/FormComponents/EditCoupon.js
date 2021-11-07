@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
@@ -14,6 +14,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   editCoupon,
   errorTrackerForEditCoupon,
+  showSnackbar,
 } from "../../../actions";
 import Loader from "./../../Loader";
 import styled from "styled-components";
@@ -146,6 +147,13 @@ const EditCoupon = ({
   const params = useParams();
   const eventId = params.id;
 
+  const { startTime, endTime } = useSelector(
+    (state) => state.event.eventDetails
+  );
+
+  const eventStartDateTime = new Date(startTime);
+  const eventEndDateTime = new Date(endTime);
+
   if (tickets) {
     ticketOptions = tickets.map((ticket) => {
       return {
@@ -163,10 +171,23 @@ const EditCoupon = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
 
+    if (
+      !(
+        typeof formValues.eventTickets !== "undefined" &&
+        formValues.eventTickets.length > 0
+      )
+    ) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Coupon must be applicable to atleast one ticket."
+        )
+      );
+    }
+
     const applicableTickets = formValues.eventTickets.map(
       (ticket) => ticket.value
     );
-    console.log("accessible areas", applicableTickets);
 
     const ModifiedFormValues = {};
     ModifiedFormValues.tickets = applicableTickets;
@@ -178,7 +199,42 @@ const EditCoupon = ({
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
-    dispatch(editCoupon(ModifiedFormValues, id));
+
+    if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
+      // Coupon cannot be applied in past
+      dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
+      return;
+    }
+    if (new Date(ModifiedFormValues.validTillTime) > eventEndDateTime) {
+      // Coupon must expire before event ends
+      dispatch(
+        showSnackbar("warning", "Coupon must expire before event ends.")
+      );
+      return;
+    }
+
+    if (
+      new Date(ModifiedFormValues.startTime) >=
+      new Date(ModifiedFormValues.validTillTime)
+    ) {
+      // Coupon expiry Date & Time must be greater than coupon applicability Date & Time.
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Coupon expiry Date & Time must be greater than coupon applicability Date & Time."
+        )
+      );
+      return;
+    }
+
+    if (
+      !(new Date(ModifiedFormValues.startTime) < new Date(Date.now())) ||
+      !(new Date(ModifiedFormValues.validTillTime) > eventEndDateTime)
+    ) {
+      // Only in this case we will allow coupon to be edited
+
+      dispatch(editCoupon(ModifiedFormValues, id));
+    }
   };
 
   if (detailError) {
@@ -371,17 +427,15 @@ const EditCoupon = ({
 
 const mapStateToProps = (state) => ({
   initialValues: {
-
     eventTickets:
-    state.coupon.couponDetails &&
-    state.coupon.couponDetails.tickets
-      ? state.coupon.couponDetails.tickets.map((element) => {
-          return {
-            value: element._id,
-            label: element.name,
-          };
-        })
-      : "",
+      state.coupon.couponDetails && state.coupon.couponDetails.tickets
+        ? state.coupon.couponDetails.tickets.map((element) => {
+            return {
+              value: element._id,
+              label: element.name,
+            };
+          })
+        : "",
 
     startDate:
       state.coupon.couponDetails && state.coupon.couponDetails.startDate
@@ -392,10 +446,7 @@ const mapStateToProps = (state) => ({
         : "",
     startTime:
       state.coupon.couponDetails && state.coupon.couponDetails.startTime
-        ? dateFormat(
-            new Date(state.coupon.couponDetails.startTime),
-            "HH:MM"
-          )
+        ? dateFormat(new Date(state.coupon.couponDetails.startTime), "HH:MM")
         : "",
     expiryDate:
       state.coupon.couponDetails && state.coupon.couponDetails.validTillDate

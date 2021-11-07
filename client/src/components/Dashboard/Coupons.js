@@ -72,7 +72,7 @@ const Coupons = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <SectionHeading className="sec-heading-text">All Coupons</SectionHeading>
+          <SectionHeading className="">All Coupons</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <button
               className="btn btn-primary btn-outline-text"

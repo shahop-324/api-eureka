@@ -4,7 +4,7 @@ import Select from "react-select";
 import "./../../../index.css";
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
-import { createEvent, createLatestEvent } from "../../../actions";
+import { createEvent, createLatestEvent, showSnackbar } from "../../../actions";
 import { IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useSelector } from "react-redux";
@@ -188,6 +188,8 @@ const options = [
   { value: "Web Security", label: "Web Security" },
 ];
 
+// ! Give option to select from all available time zones
+
 const timeZoneOptions = [
   { value: "(GMT + 00:00) UTC", label: "(GMT + 00:00) UTC" },
   { value: "(GMT + 00:00) Edinburgh", label: "(GMT + 00:00) Edinburgh" },
@@ -277,14 +279,67 @@ const CreateNewEventForm = ({
       formValues.numberOfTablesInLounge;
     ModifiedFormValues.moderators = moderators;
 
-    if(latestEvent) {
-dispatch(createLatestEvent(ModifiedFormValues));
+    if (!formValues.visibility) {
+      dispatch(showSnackbar("warning", "Please choose event visibility."));
+      return;
     }
-    else {
+
+    // There should be atleast one moderator in the event
+    if (
+      !(
+        typeof ModifiedFormValues.moderators !== "undefined" &&
+        ModifiedFormValues.moderators.length > 0
+      )
+    ) {
+      dispatch(
+        showSnackbar("warning", "There should be atleast one moderator.")
+      );
+      return;
+    }
+
+    // if (new Date(ModifiedFormValues.startTime) <= new Date(Date.now())) {
+    //   dispatch(
+    //     showSnackbar("warning", "Event start Date & Time cannot be in past.")
+    //   );
+    //   return;
+    // }
+
+    if (
+      new Date(ModifiedFormValues.startTime) >=
+      new Date(ModifiedFormValues.endTime)
+    ) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          "Event start time must be less than event end time."
+        )
+      );
+      return;
+    }
+
+    if (
+      Math.ceil(
+        Math.abs(
+          new Date(ModifiedFormValues.endTime) -
+            new Date(ModifiedFormValues.startTime)
+        ) /
+          (1000 * 60 * 60 * 24)
+      ) *
+        1 >
+      180
+    ) {
+      dispatch(
+        showSnackbar("warning", "Max time span for an event is 180 days.")
+      );
+      return;
+    }
+
+    if (latestEvent) {
+      dispatch(createLatestEvent(ModifiedFormValues));
+    } else {
       dispatch(createEvent(ModifiedFormValues));
     }
 
-   
     handleClose();
   };
   return (
@@ -486,16 +541,13 @@ dispatch(createLatestEvent(ModifiedFormValues));
                 name="visibility"
                 className="form-check-input"
                 type="radio"
-                // name="flexRadioDefault"
                 id="flexRadioDefault1"
                 value="Public"
-                // component={renderInput}
                 component="input"
               />
               <label
                 className="form-check-label"
                 style={{
-                  fontFamily: "Inter",
                   fontWeight: "500",
                   fontSize: "0.9rem",
                 }}
@@ -523,7 +575,6 @@ dispatch(createLatestEvent(ModifiedFormValues));
               <label
                 className="form-check-label"
                 style={{
-                  fontFamily: "Inter",
                   fontWeight: "500",
                   fontSize: "0.9rem",
                 }}
@@ -532,27 +583,6 @@ dispatch(createLatestEvent(ModifiedFormValues));
                 Private
               </label>
             </div>
-            {/* <div className="form-check">
-              <Field
-                className="form-check-input"
-                type="radio"
-                name="visibility"
-                id="flexRadioDefault2"
-                value="Hidden"
-                component="input"
-              />
-              <label
-                className="form-check-label"
-                style={{
-                  fontFamily: "Inter",
-                  fontWeight: "500",
-                  fontSize: "0.9rem",
-                }}
-                for="flexRadioDefault2"
-              >
-                Hidden
-              </label>
-            </div> */}
           </div>
 
           <div className="mb-4 overlay-form-input-row">
@@ -631,26 +661,21 @@ const validate = (formValues) => {
     errors.eventName = "Event name is required";
   }
   if (!formValues.shortDescription) {
-    errors.description = "Event description is required";
+    errors.shortDescription = "Event description is required";
   }
   if (!formValues.startDate) {
     errors.startDate = "Start Date is required";
   }
-
   if (formValues.startDate) {
     if (new Date(formValues.startDate) <= Date.now()) {
       errors.startDate = "Please enter valid startDate";
     }
   }
   if (formValues.endDate && formValues.startDate) {
-    if (
-      // new Date(formValues.endDate) < Date.now() ||
-      new Date(formValues.endDate) < new Date(formValues.startDate)
-    ) {
+    if (new Date(formValues.endDate) < new Date(formValues.startDate)) {
       errors.endDate = "Please enter valid endDate";
     }
   }
-
   if (!formValues.startTime) {
     errors.startTime = "Start Time is required";
   }
@@ -666,16 +691,14 @@ const validate = (formValues) => {
   if (!formValues.selectCategories) {
     errors.selectCategories = "Categories is required";
   }
-  if (!formValues.visibility) {
-    errors.visibility = "Event visibility is required";
+  if (!formValues.moderators) {
+    errors.moderators = "Atleast one moderator is required";
   }
-
   if (formValues.numberOfTablesInLounge) {
     if (formValues.numberOfTablesInLounge < 20) {
       errors.numberOfTablesInLounge = "Minimum number of tables can be 20.";
     }
   }
-
   return errors;
 };
 
