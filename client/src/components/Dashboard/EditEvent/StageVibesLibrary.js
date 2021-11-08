@@ -130,7 +130,7 @@ const renderVibes = (vibes, handleOpenPreview, handleOpenDelete, setVibeId) => {
     .map((vibe) => {
       return (
         <VibeCard key={vibe._id} id={vibe._id} className="p-3">
-          <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+          <div className="d-flex flex-row align-items-center justify-content-between mb-3">
             <div className="d-flex flex-row align-items-center">
               <Chip label={vibe.name} color="success" variant="outlined" />
             </div>
@@ -261,18 +261,9 @@ const StageVibesLibrary = () => {
         <Paper className="p-4 mb-5">
           {renderVibes(vibes, handleOpenPreview, handleOpenDelete, setVibeId)}
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
-                {/* <BackdropNameRow className="me-3">Christmas</BackdropNameRow> */}
                 <Chip label="Bluemeet" color="success" variant="outlined" />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <IconButton onClick={handleOpenDelete} className="">
-                  <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
-                </IconButton>
-                <IconButton onClick={handleOpenPreview}>
-                  <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-                </IconButton>
               </div>
             </div>
 
@@ -289,17 +280,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
-                {/* <BackdropNameRow className="me-3">Christmas</BackdropNameRow> */}
                 <Chip label="Christmas" color="success" variant="outlined" />
               </div>
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
-              {/* <IconButton>
-                <DeleteRoundedIcon style={{ color: "#D62C2C" }} />
-              </IconButton> */}
             </div>
 
             <div
@@ -315,13 +299,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Beach" color="success" variant="outlined" />
               </div>
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -337,7 +318,7 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip
                   label="Dark Christmas"
@@ -345,9 +326,6 @@ const StageVibesLibrary = () => {
                   variant="outlined"
                 />
               </div>
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -363,13 +341,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Desert" color="success" variant="outlined" />
               </div>
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -385,14 +360,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Festival" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -408,14 +379,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Finance" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -431,14 +398,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Ice" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -454,14 +417,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Mountains" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -477,14 +436,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="NewYear" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -500,14 +455,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Ocean" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -523,14 +474,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Rocks" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -546,14 +493,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Startup" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div
@@ -569,16 +512,11 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Sunrise" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
-
             <div
               style={{
                 height: "230px",
@@ -592,16 +530,11 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Sunset" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
-
             <div
               style={{
                 height: "230px",
@@ -615,16 +548,11 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Tech" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
-
             <div
               style={{
                 height: "230px",
@@ -638,14 +566,10 @@ const StageVibesLibrary = () => {
             ></div>
           </VibeCard>
           <VibeCard className="p-3">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-2">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
               <div className="d-flex flex-row align-items-center">
                 <Chip label="Winter" color="success" variant="outlined" />
               </div>
-
-              <IconButton onClick={handleOpenPreview}>
-                <RemoveRedEyeIcon style={{ color: "#F7538A" }} />
-              </IconButton>
             </div>
 
             <div

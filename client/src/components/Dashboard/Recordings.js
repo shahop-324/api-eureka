@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
 import Downloading from "./../../assets/images/Downloading.png";
 
+// Here we need to provide list of sessions for which recording is present
 const sessionOptions = [{ value: "All", label: "All Sessions" }];
 
 const SectionHeading = styled.div`
@@ -127,7 +128,7 @@ const Recordings = () => {
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
-                menuPlacement="top"
+                menuPlacement="bottom"
                 options={sessionOptions}
                 defaultValue={sessionOptions[0]}
               />
@@ -148,7 +149,7 @@ const Recordings = () => {
           >
             {" "}
             <NoContentFound
-              msgText="All of your session recordings will show up here."
+              msgText="No recording found for any session of this event"
               img={Downloading}
             />{" "}
           </div>

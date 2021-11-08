@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -9,10 +9,35 @@ import VibePNG from "./../../../assets/images/Welcome.svg";
 
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 
-import { useDispatch } from "react-redux";
-import { addVibe, uploadVideoForCommunity } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addVibe,
+  uploadVideoForCommunity,
+  resetEventVibeUploadProgress,
+} from "../../../actions";
 import { useParams } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
+
+const ProgressContainer = styled.div`
+  width: 100%;
+  height: 40px;
+  background-color: #dadada;
+  border-radius: 10px;
+`;
+
+const ProgressFill = styled.div`
+  height: 40px;
+  background-color: #47d188;
+  border-radius: 10px;
+`;
+
+const ProgressText = styled.div`
+  font-weight: 600;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+  color: #000000;
+  padding-left: 32px;
+`;
 
 const Heading = styled.div`
   font-weight: 600;
@@ -120,6 +145,8 @@ const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
   const params = useParams();
   console.log(params);
 
+  const { percent } = useSelector((state) => state.vibe);
+
   const communityId = params.communityId;
   const eventId = params.id;
 
@@ -138,15 +165,14 @@ const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
-  const uploadVideo = () => {
-    dispatch(uploadVideoForCommunity(communityId, file));
-  };
-
   const onSubmit = (formValues) => {
     console.log(formValues);
-
-    dispatch(addVibe(file, eventId, formValues.vibeName));
+    dispatch(addVibe(file, eventId, formValues.vibeName, handleClose));
   };
+
+  useEffect(() => {
+    dispatch(resetEventVibeUploadProgress());
+  }, []);
 
   return (
     <>
@@ -202,16 +228,37 @@ const UploadStageVibe = ({ open, handleClose, handleSubmit }) => {
               />
             </div>
 
-            <button
-              type="submit"
-              // onClick={() => {
-              //   handleClose();
-              // }}
-              className="btn btn-primary btn-outline-text"
-              style={{ width: "100%" }}
-            >
-              Upload vibe 
-            </button>
+            {percent !== 0 ? (
+              <ProgressContainer>
+                <ProgressFill
+                  style={{
+                    width: `${percent ? `${percent}%` : "0%"}`,
+                  }}
+                  className="d-flex flex-row align-items-center py-2"
+                >
+                  <ProgressText>
+                    {percent && percent * 1 > 1.2 ? (
+                      `${(percent * 1).toFixed(2)}%`
+                    ) : (
+                      <div className="py-2">
+                        <div
+                          class="spinner-border text-dark"
+                          role="status"
+                        ></div>
+                      </div>
+                    )}
+                  </ProgressText>
+                </ProgressFill>
+              </ProgressContainer>
+            ) : (
+              <button
+                type="submit"
+                className="btn btn-primary btn-outline-text"
+                style={{ width: "100%" }}
+              >
+                Upload vibe
+              </button>
+            )}
           </form>
         </div>
       </Dialog>

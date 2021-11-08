@@ -7285,7 +7285,6 @@ export const uploadVideoForCommunity =
 
           try {
             // Save this video info in community document.
-
             const res = await fetch(`${BaseURL}community/uploadVideo/`, {
               method: "POST",
 
@@ -8459,33 +8458,28 @@ export const LinkCommunityVideoToEvent =
     }
   };
 
-export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
-  try {
-    const key = `${eventId}/${UUID()}.jpeg`;
+export const addVibe =
+  (file, eventId, name, handleClose) => async (dispatch, getState) => {
+    try {
+      const key = `${eventId}/${UUID()}.jpeg`;
 
-    s3.getSignedUrl(
-      "putObject",
-      {
-        Bucket: "bluemeet-inc",
-        Key: key,
-        ContentType: "image/jpeg",
-      },
-      async (err, presignedURL) => {
-        const awsRes = await fetch(presignedURL, {
-          method: "PUT",
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet-inc",
+          Key: key,
+          ContentType: "image/jpeg",
+        },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              vibeActions.SetUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
 
-          body: file,
-
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-
-        console.log(awsRes);
-
-        if (awsRes.status === 200) {
           try {
-            // Save this vibe info in event document.
             let res = await fetch(`${BaseURL}events/addVibe/${eventId}`, {
               method: "POST",
 
@@ -8524,6 +8518,8 @@ export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
               })
             );
 
+            handleClose();
+
             setTimeout(function () {
               dispatch(snackbarActions.closeSnackBar());
             }, 6000);
@@ -8533,7 +8529,7 @@ export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
 
             dispatch(
               snackbarActions.openSnackBar({
-                message: "Failed to upload promo image.",
+                message: "Failed to upload vibe image, Please try again.",
                 severity: "error",
               })
             );
@@ -8542,12 +8538,11 @@ export const addVibe = (file, eventId, name) => async (dispatch, getState) => {
             }, 4000);
           }
         }
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getVibes = (eventId) => async (dispatch, getState) => {
   try {
@@ -8608,8 +8603,11 @@ export const deleteVibe = (vibeId) => async (dispatch, getState) => {
     );
 
     console.log(res);
+
+    dispatch(showSnackbar("success", "Vibe deleted successfully!"));
   } catch (error) {
     console.log(error);
+    dispatch(showSnackbar("error", "Failed to delete vibe, Please try again."));
   }
 };
 
@@ -8650,7 +8648,8 @@ export const createRTMPDestination =
       }
       res = await res.json();
 
-      console.log(res.data); // * Confirmed that res.data is the stream destination object
+      console.log(res.data); 
+      // * Confirmed that res.data is the stream destination object
       //* Make Slice and actions and then dispatch it in global redux store.
 
       dispatch(
@@ -8658,14 +8657,12 @@ export const createRTMPDestination =
           streamDestination: res.data,
         })
       );
-
       dispatch(
         snackbarActions.openSnackBar({
           message: "Stream destination added successfully!",
           severity: "success",
         })
       );
-
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
@@ -8678,7 +8675,6 @@ export const createRTMPDestination =
           severity: "success",
         })
       );
-
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
@@ -8794,8 +8790,16 @@ export const updateStreamDestination =
           streamDestination: res.data,
         })
       );
+
+      dispatch(showSnackbar("success", "Stream destination updated!"));
     } catch (error) {
       console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to update stream destination, please try again."
+        )
+      );
     }
   };
 
@@ -8832,8 +8836,17 @@ export const deleteStreamDestination =
           destinationId: destinationId,
         })
       );
+      dispatch(
+        showSnackbar("success", "Stream destination deleted successfully!")
+      );
     } catch (error) {
       console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to delete stream destination, Please try again."
+        )
+      );
     }
   };
 
@@ -9333,7 +9346,7 @@ export const resetEventVibeUploadProgress =
   () => async (dispatch, getState) => {
     try {
       dispatch(
-        eventActions.SetVibeUploadPercent({
+        vibeActions.SetUploadPercent({
           percent: 0,
         })
       );

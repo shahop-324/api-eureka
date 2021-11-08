@@ -8,6 +8,7 @@ const vibeSlice = createSlice({
     error: false,
     vibes: [],
     vibeToPreview: null,
+    percent: 0,
   },
 
   reducers: {
@@ -48,6 +49,9 @@ const vibeSlice = createSlice({
 
       state.vibes = state.vibes.filter((vibe) => vibe._id !== vibeId);
     },
+    SetUploadPercent(state, action) {
+      state.percent = action.payload.percent;
+    }
   },
 });
 
