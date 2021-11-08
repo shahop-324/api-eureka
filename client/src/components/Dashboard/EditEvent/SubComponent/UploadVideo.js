@@ -5,14 +5,13 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
-import VideoPNG from "./../../../assets/images/UploadVideo.svg";
+import VideoPNG from "./../../../../assets/images/UploadVideo.svg";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  uploadVideoForCommunity,
   uploadVideoForEvent,
   resetEventVideoUploadProgress,
-} from "../../../actions";
+} from "../../../../actions";
 import { useParams } from "react-router-dom";
 
 const Heading = styled.div`
@@ -113,7 +112,6 @@ const UploadVideo = ({ open, handleClose }) => {
   }, []);
 
   const uploadVideo = () => {
-    // dispatch(uploadVideoForCommunity(communityId, file, handleClose));
     dispatch(uploadVideoForEvent(eventId, file, handleClose));
   };
 

@@ -3,14 +3,18 @@ import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import VideoLibraryListFields from "./GridComponents/VideoLibrary/ListFields";
 import VideoLibraryDetailsCard from "./GridComponents/VideoLibrary/DetailsCard";
-import UploadVideo from "./SubComponents/UploadVideo";
+import UploadVideo from "./SubComponent/UploadVideo";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import dateFormat from "dateformat";
-import {useSelector} from 'react-redux';
-import { getCommunityVideos, resetProgress } from "./../../actions";
-import NoContentFound from "../NoContent";
-import VOD from "./../../assets/images/vod.png";
+import { useSelector } from "react-redux";
+import {
+  fetchEventVideos,
+  resetEventVideoUploadProgress,
+} from "./../../../actions";
+import NoContentFound from "../../NoContent";
+import VOD from "./../../../assets/images/vod.png";
+import LinkVideoFromLibrary from "./SubComponent/LinkVideoFromLibrary";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -27,11 +31,12 @@ const TextSmall = styled.div`
 `;
 
 const renderVideos = (videos) => {
-  if(!videos) return;
+  if (!videos) return;
   return videos.map((video) => {
-    if(!video) return <></>;
+    if (!video) return <></>;
     return (
       <VideoLibraryDetailsCard
+        isLinked={video.linkedToEvents ? true : false}
         name={video.name}
         id={video._id}
         key={video._id}
@@ -45,17 +50,18 @@ const renderVideos = (videos) => {
 };
 
 const VideoLibrary = () => {
+  let linkedVideos = [];
 
-  const {videos} = useSelector((state) => state.video);
+  const { videos } = useSelector((state) => state.eventVideos);
   const params = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-      dispatch(getCommunityVideos(params.id));
+    dispatch(fetchEventVideos(params.id));
   }, []);
 
   const [openUploadVideo, setOpenUploadVideo] = React.useState(false);
-
+  const [openLinkVideo, setOpenLinkVideo] = React.useState(false);
 
   const handleCloseUploadVideo = () => {
     setOpenUploadVideo(false);
@@ -64,6 +70,17 @@ const VideoLibrary = () => {
   const handleOpenUploadVideo = () => {
     setOpenUploadVideo(true);
   };
+
+  const handleCloseLinkVideo = () => {
+    setOpenLinkVideo(false);
+  };
+
+  videos.map((el) => {
+    if (el.linkedToEvents) {
+      linkedVideos.push(el._id);
+    }
+    return linkedVideos;
+  });
 
   return (
     <>
@@ -75,12 +92,19 @@ const VideoLibrary = () => {
           <div className="sec-heading-action-button d-flex flex-row">
             <div className="d-flex flex-row align-items-center">
               <button
-                className="btn btn-primary btn-outline-text"
-                onClick={ () => {
-                  dispatch(resetProgress());
+                className="btn btn-outline-primary btn-outline-text"
+                onClick={() => {
+                  setOpenLinkVideo(true);
+                }}
+              >
+                Link Video from Library
+              </button>
+              <button
+                className="btn btn-primary btn-outline-text ms-3"
+                onClick={() => {
+                  dispatch(resetEventVideoUploadProgress());
                   handleOpenUploadVideo();
-
-                } }
+                }}
               >
                 Upload video
               </button>
@@ -88,15 +112,19 @@ const VideoLibrary = () => {
           </div>
         </div>
         <TextSmall className="mx-4 mb-4">
-        These videos can be linked to any event in your community.
+          These videos will be available in all sessions of this event for you
+          to play on demand.
         </TextSmall>
-        {typeof videos !== "undefined" && videos.length > 0 ? <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-          <VideoLibraryListFields />
-          <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-            <Divider />
+        {typeof videos !== "undefined" && videos.length > 0 ? (
+          <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
+            <VideoLibraryListFields />
+            <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+              <Divider />
+            </div>
+            {renderVideos(videos)}
           </div>
-          {renderVideos(videos)}
-        </div>  :  <div
+        ) : (
+          <div
             className="d-flex flex-row align-items-center justify-content-center"
             style={{ height: "63vh", width: "100%" }}
           >
@@ -105,11 +133,17 @@ const VideoLibrary = () => {
               msgText="You can manage videos here to play in your event."
               img={VOD}
             />{" "}
-          </div> }
+          </div>
+        )}
       </div>
       <UploadVideo
         open={openUploadVideo}
         handleClose={handleCloseUploadVideo}
+      />
+      <LinkVideoFromLibrary
+        linkedVideos={linkedVideos}
+        open={openLinkVideo}
+        handleClose={handleCloseLinkVideo}
       />
     </>
   );

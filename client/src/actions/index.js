@@ -43,7 +43,7 @@ import { snackbarActions } from "../reducers/snackbarSlice";
 import { roleActions } from "../reducers/roleSlice";
 import { sessionRestrictionActions } from "../reducers/sessionRestrictionSlice";
 import { videoActions } from "./../reducers/videoSlice";
-import {eventVideoActions} from "./../reducers/eventVideoSlice";
+import { eventVideoActions } from "./../reducers/eventVideoSlice";
 import { vibeActions } from "../reducers/vibeSlice";
 import { StreamDestinationActions } from "../reducers/streamDestinationSlice";
 import { mailActions } from "../reducers/mailSlice";
@@ -7371,6 +7371,7 @@ export const uploadVideoForEvent =
 
               body: JSON.stringify({
                 fileName: file.name,
+                eventId: eventId,
                 key: key,
               }),
 
@@ -7411,81 +7412,55 @@ export const uploadVideoForEvent =
     }
   };
 
-  export const deleteEventVideo = (videoId) => async(dispatch, getState) => {
-    try {
-      console.log(videoId);
-      let res = await fetch(`${BaseURL}events/deleteVideo`, {
-        method: "DELETE",
-  
-        body: JSON.stringify({
-          videoId: videoId,
-        }),
-  
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().communityAuth.token}`,
-        },
-      });
-  
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(res.message);
-        }
+export const deleteEventVideo = (videoId) => async (dispatch, getState) => {
+  try {
+    console.log(videoId);
+    let res = await fetch(`${BaseURL}events/deleteVideo`, {
+      method: "DELETE",
+
+      body: JSON.stringify({
+        videoId: videoId,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
       }
-      res = await res.json();
-  
-      dispatch(
-        eventVideoActions.DeleteVideo({
-          videoId: videoId,
-        })
-      );
-      console.log(res);
-    } catch (error) {
-      console.log(error);
     }
+    res = await res.json();
+
+    dispatch(
+      eventVideoActions.DeleteVideo({
+        videoId: videoId,
+      })
+    );
+    console.log(res);
+
+    dispatch(showSnackbar("success", "Video Deleted successfully!"));
+  } catch (error) {
+    console.log(error);
+
+    showSnackbar("error", "Failed to delete video, Please try again.");
   }
+};
 
-  export const linkVideo = (videoId, eventId) => async(dispatch, getState) => {
-    try{
-      const res = await fetch(
-        `${BaseURL}linkVideo`,
-        {
-          method: "POST",
-
-          body: JSON.stringify({
-            videoId: videoId,
-            eventId: eventId,
-          }),
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
-
-      const result = await res.json();
-      console.log(result);
-
-      dispatch(eventVideoActions.FetchVideos({
-        videos: result.videos,
-      }))
-
-    }
-    catch(error) {
-      console.log(error);
-    }
-  }
-
-  export const fetchEventVideos = (eventId) => async(dispatch, getState) => {
+export const unlinkVideo =
+  (videoId, eventId, handleClose) => async (dispatch, getState) => {
+    console.log(videoId, eventId);
     try {
-      console.log(eventId);
-      let res = await fetch(`${BaseURL}fetchEventVideos`, {
+      const res = await fetch(`${BaseURL}unlinkVideo`, {
         method: "POST",
 
         body: JSON.stringify({
+          videoId: videoId,
           eventId: eventId,
         }),
 
@@ -7495,25 +7470,98 @@ export const uploadVideoForEvent =
         },
       });
 
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error("Something went wrong");
-        } else {
-          throw new Error(res.message);
-        }
-      }
-      res = await res.json();
-      console.log(res);
+      const result = await res.json();
+      console.log(result);
 
       dispatch(
         eventVideoActions.FetchVideos({
-          videos: res.videos,
+          videos: result.videos,
         })
       );
+
+      handleClose();
+
+      dispatch(showSnackbar("success", "Video Unlinked successfully!"));
     } catch (error) {
       console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to unlink video, Please try again.")
+      );
     }
+  };
+
+export const linkVideo =
+  (videoId, eventId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}linkVideo`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          videoId: videoId,
+          eventId: eventId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        eventVideoActions.FetchVideos({
+          videos: result.videos,
+        })
+      );
+
+      handleClose();
+
+      dispatch(showSnackbar("success", "Video linked successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to link video, Please try again.")
+      );
+    }
+  };
+
+export const fetchEventVideos = (eventId) => async (dispatch, getState) => {
+  try {
+    console.log(eventId);
+    let res = await fetch(`${BaseURL}fetchEventVideos`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        eventId: eventId,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      eventVideoActions.FetchVideos({
+        videos: res.videos,
+      })
+    );
+  } catch (error) {
+    console.log(error);
   }
+};
 
 export const acceptInvitation =
   (invitationId) => async (dispatch, getState) => {
@@ -8370,9 +8418,12 @@ export const deleteVideo = (videoId) => async (dispatch, getState) => {
       })
     );
 
-    console.log(res);
+    dispatch(showSnackbar("success", "Video deleted successfully!"));
   } catch (error) {
     console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to delete video, Please try again.")
+    );
   }
 };
 

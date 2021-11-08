@@ -25,7 +25,7 @@ router.post(
 );
 
 router.delete(
-  "/deleteVideo/:id",
+  "/deleteVideo",
   authController.protectCommunity,
   eventController.deleteVideo
 );

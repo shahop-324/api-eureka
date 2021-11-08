@@ -42,7 +42,7 @@ import EventSchedule from "./EventSchedule";
 import ReceptionSettings from "./SubComponent/ReceptionSetting";
 import Analytics from "./Analytics";
 import Email from "./Email";
-import VideoLibrary from "./../VideoLibrary";
+import Video from "./Video";
 import StageVibesLibrary from "./StageVibesLibrary";
 import EventMoreActions from "./SubComponent/EventMoreActions";
 import styled from "styled-components";
@@ -426,7 +426,7 @@ const EditEventRoot = () => {
                   case "8":
                     return <ReceptionSettings />;
                   case "9":
-                    return <VideoLibrary />;
+                    return <Video />;
                   case "10":
                     return <StageVibesLibrary />;
                   case "11":

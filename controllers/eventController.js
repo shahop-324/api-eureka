@@ -19,6 +19,7 @@ const Vibe = require("./../models/vibeModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("./../models/roomTableModel");
 const EventVideo = require("./../models/eventVideosModel");
+
 const { Video } = new Mux(
   process.env.MUX_TOKEN_ID,
   process.env.MUX_TOKEN_SECRET

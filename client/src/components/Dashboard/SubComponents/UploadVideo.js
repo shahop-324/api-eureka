@@ -122,7 +122,6 @@ const UploadVideo = ({ open, handleClose }) => {
         <div className="p-4" style={{ height: "auto", width: "580px" }}>
           <div className="d-flex flex-row align-items-center justify-content-between mb-4">
             <Heading>Upload video</Heading>
-
             <IconButton onClick={handleClose}>
               <CancelRoundedIcon />
             </IconButton>

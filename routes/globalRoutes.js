@@ -7,6 +7,8 @@ const eventPollController = require("../controllers/eventPollController");
 const networkingController = require("./../controllers/networkingController");
 const userController = require("./../controllers/userController");
 
+const videoController = require("./../controllers/videoController");
+
 const router = express.Router();
 
 router.post("/generateCodes", globalController.generateCodes);
@@ -22,14 +24,19 @@ router.post(
 router.post(
   "/fetchEventVideos",
   authController.protectCommunity,
-  globalController.getEventVideos
+  videoController.getEventVideos
 );
 
 router.post(
   "/linkVideo",
   authController.protectCommunity,
-  globalController.linkVideo,
-  globalController.getEventVideos
+  videoController.linkVideo,
+);
+
+router.post(
+  "/unlinkVideo",
+  authController.protectCommunity,
+  videoController.unlinkVideo,
 );
 
 router.post(
