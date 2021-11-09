@@ -89,6 +89,8 @@ function VerticalTabs({ canPublishStream }) {
     currentUserIsAnAttendee = true;
   }
 
+  currentUserIsAHost = true;
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

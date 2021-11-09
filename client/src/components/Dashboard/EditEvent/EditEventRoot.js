@@ -183,7 +183,7 @@ const EditEventRoot = () => {
   const handleLandingPageClick = () => {
     dispatch(navigationIndexForEditEvent(20));
     history.push(`/community/${communityId}/edit-event/${id}/landing-page`);
-  }
+  };
 
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForEditEvent
@@ -192,8 +192,7 @@ const EditEventRoot = () => {
 
   if (error) {
     return dispatch(errorTrackerForFetchParticularEventOfCommunity());
-  }
-  else {
+  } else {
     return (
       <>
         {(() => {
@@ -210,7 +209,7 @@ const EditEventRoot = () => {
             }
           }
         })()}
-  
+
         <div className="dashboard-position-fixed-non-scrollable-container">
           {/* TOP NAV */}
           <Topnav />
@@ -227,11 +226,10 @@ const EditEventRoot = () => {
             </div>
             <div className="d-flex flex-row align-items-center">
               <div className="event-name-head-text me-3">
-                { eventDetails ?  eventDetails.eventName : <></>}
+                {eventDetails ? eventDetails.eventName : <></>}
               </div>
               {(() => {
-
-                if(eventDetails) {
+                if (eventDetails) {
                   switch (eventDetails.status) {
                     case "Upcoming":
                       return (
@@ -293,13 +291,11 @@ const EditEventRoot = () => {
                           }}
                         />
                       );
-    
+
                     default:
                       break;
                   }
                 }
-
-                
               })()}
             </div>
             <div className="d-flex flex-row align-items-center justify-content-end me-3">
@@ -312,11 +308,17 @@ const EditEventRoot = () => {
                 More actions
               </button>
               <Link
-                to={`/compatibility-test/community/${ eventDetails ? eventDetails.communityId : null}/event/${eventDetails ?  eventDetails._id : null}/`}
+                to={`/compatibility-test/community/${
+                  eventDetails ? eventDetails.communityId : null
+                }/event/${eventDetails ? eventDetails._id : null}/`}
                 target="_blank"
               >
                 <button
-                  disabled={eventDetails && eventDetails.status === "Ended" ? true : false}
+                  disabled={
+                    eventDetails && eventDetails.status === "Ended"
+                      ? true
+                      : false
+                  }
                   className="btn btn-primary btn-outline-text"
                 >
                   View event
@@ -378,89 +380,90 @@ const EditEventRoot = () => {
               handleTrackingClick={handleTrackingClick}
               handleLandingPageClick={handleLandingPageClick}
             />
-  
-  {currentIndex*1 === 20 ? <LandingPage /> : <div className="main-content-wrapper" style={{ height: "100vh" }}>
-              {(() => {
-                switch (currentIndex) {
-                  case "0":
-                    return <EventOverview />;
-  
-                  case "1":
-                    return <EventEntryAndParticipants />;
-  
-                  case "2":
-                    return <EventSchedule />;
-  
-                  case "3":
-                    return (
-                      <ErrorBoundriesEditEventSession>
-                        <Sessions />
-                      </ErrorBoundriesEditEventSession>
-                    );
-  
-                  case "4":
-                    return (
-                      <ErrorBoundriesEditEventSpeakers>
-                        <Speakers />
-                      </ErrorBoundriesEditEventSpeakers>
-                    );
-  
-                  case "5":
-                    return (
-                      <ErrorBoundriesEditEventBooths>
-                        <Booths />
-                      </ErrorBoundriesEditEventBooths>
-                    );
-                  case "6":
-                    return (
-                      <ErrorBoundriesEditEventSponsors>
-                        <Sponsors />
-                      </ErrorBoundriesEditEventSponsors>
-                    );
-                  case "7":
-                    return (
-                      <ErrorBoundriesEditEventTickets>
-                        <Ticketing />
-                      </ErrorBoundriesEditEventTickets>
-                    );
-                  case "8":
-                    return <ReceptionSettings />;
-                  case "9":
-                    return <Video />;
-                  case "10":
-                    return <StageVibesLibrary />;
-                  case "11":
-                    return <Recordings />;
-                  case "12":
-                    return <Analytics />;
-                  case "13":
-                    return <LiveStream />;
-                  case "14":
-                    return <Integrations />;
-                  case "15":
-                    return <Coupons />;
-                  case "16":
-                    return <Email />;
-                  case "17":
-                    return <Affiliates />;
-                  case "18":
-                    return <Reviews />;
-                  case "19":
-                    return <Tracking />;
 
-                    // case "20": 
+            {currentIndex * 1 === 20 ? (
+              <LandingPage />
+            ) : (
+              <div className="main-content-wrapper" style={{ height: "100vh" }}>
+                {(() => {
+                  switch (currentIndex) {
+                    case "0":
+                      return <EventOverview />;
+
+                    case "1":
+                      return <EventEntryAndParticipants />;
+
+                    case "2":
+                      return <EventSchedule />;
+
+                    case "3":
+                      return (
+                        <ErrorBoundriesEditEventSession>
+                          <Sessions />
+                        </ErrorBoundriesEditEventSession>
+                      );
+
+                    case "4":
+                      return (
+                        <ErrorBoundriesEditEventSpeakers>
+                          <Speakers />
+                        </ErrorBoundriesEditEventSpeakers>
+                      );
+                    case "5":
+                      return (
+                        <ErrorBoundriesEditEventBooths>
+                          <Booths />
+                        </ErrorBoundriesEditEventBooths>
+                      );
+                    case "6":
+                      return (
+                        <ErrorBoundriesEditEventSponsors>
+                          <Sponsors />
+                        </ErrorBoundriesEditEventSponsors>
+                      );
+                    case "7":
+                      return (
+                        <ErrorBoundriesEditEventTickets>
+                          <Ticketing />
+                        </ErrorBoundriesEditEventTickets>
+                      );
+                    case "8":
+                      return <ReceptionSettings />;
+                    case "9":
+                      return <Video />;
+                    case "10":
+                      return <StageVibesLibrary />;
+                    case "11":
+                      return <Recordings />;
+                    case "12":
+                      return <Analytics />;
+                    case "13":
+                      return <LiveStream />;
+                    case "14":
+                      return <Integrations />;
+                    case "15":
+                      return <Coupons />;
+                    case "16":
+                      return <Email />;
+                    case "17":
+                      return <Affiliates />;
+                    case "18":
+                      return <Reviews />;
+                    case "19":
+                      return <Tracking />;
+
+                    // case "20":
                     // return <LandingPage />
-  
-                  default:
-                    return <div>You are a community Editing an event.</div>;
-                }
-              })()}
-            </div> }
-            
-            
+
+                    default:
+                      return <div>You are a community Editing an event.</div>;
+                  }
+                })()}
+              </div>
+            )}
           </div>
         </div>
-  
+
         <EventMoreActions
           open={openMoreActions}
           handleClose={handleCloseMoreActions}
@@ -468,9 +471,6 @@ const EditEventRoot = () => {
       </>
     );
   }
- 
-
-  
 };
 
 export default EditEventRoot;

@@ -17,23 +17,18 @@ import socket from "./../HostingPlatform/service/socket";
 import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
 import { useDispatch, useSelector } from "react-redux";
 import { getRTCTokenForScreenShare } from "../../actions";
-
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-
 import { withStyles } from "@material-ui/core/styles";
-
 import Settings from "./Settings";
 import Tools from "./Tools";
 import StartRecordingConfirmation from "./SubComponent/StartRecordingConfirmation";
 import StopRecordingConfirmation from "./SubComponent/StopRecordingConfirmation";
-
 import PanToolRoundedIcon from "@mui/icons-material/PanToolRounded";
 import Like from "./../../assets/images/like.png";
 import Clapping from "./../../assets/images/clapping.png";
 import Love from "./../../assets/images/love.png";
 import Smile from "./../../assets/images/Smile.png";
-
 import Speakers from "./Speakers";
 import SpeakerInfoTab from "./SpeakersInfoTab";
 
@@ -228,6 +223,8 @@ const StageControlsComponent = ({
     currentUserIsAnAttendee = true;
   }
 
+  currentUserIsAHost = true;
+
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
   }
@@ -348,7 +345,6 @@ const StageControlsComponent = ({
             ) : (
               <></>
             )}
-
             {canPublishStream ? (
               <IconButton
                 onClick={() => {
@@ -371,7 +367,6 @@ const StageControlsComponent = ({
             ) : (
               <></>
             )}
-
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
@@ -406,7 +401,6 @@ const StageControlsComponent = ({
             ) : (
               <></>
             )}
-
             {canPublishStream ? (
               <IconButton
                 onClick={() => {
@@ -434,7 +428,6 @@ const StageControlsComponent = ({
             ) : (
               <></>
             )}
-
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
@@ -469,7 +462,6 @@ const StageControlsComponent = ({
             ) : (
               <></>
             )}
-
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
@@ -497,7 +489,6 @@ const StageControlsComponent = ({
         ) : (
           <div></div>
         )}
-
         <div className="d-flex flex-row align-items-center justify-content-end">
           {canPublishStream && currentUserIsAHost && !sessionHasEnded ? (
             (() => {
@@ -517,7 +508,6 @@ const StageControlsComponent = ({
                       <div className="rec-label-text">REC</div>
                     </div>
                   );
-
                 case "Resumed":
                   return (
                     <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
@@ -533,7 +523,6 @@ const StageControlsComponent = ({
                       <div className="rec-label-text">REC</div>
                     </div>
                   );
-
                 default:
                   break;
               }
@@ -581,7 +570,6 @@ const StageControlsComponent = ({
               // handleOpenPhotoBooth();
               if (fullScreen) {
                 // Logic for exiting full screen mode
-
                 setFullScreen(false);
 
                 document.exitFullscreen();

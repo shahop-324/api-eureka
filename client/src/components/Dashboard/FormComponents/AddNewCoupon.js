@@ -230,7 +230,6 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
       !(new Date(ModifiedFormValues.validTillTime) > eventEndDateTime)
     ) {
       // Only in this case we will allow coupon to be created
-
       dispatch(createCoupon(ModifiedFormValues, id));
     }
   };

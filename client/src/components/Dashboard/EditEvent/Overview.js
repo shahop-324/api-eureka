@@ -216,18 +216,15 @@ const EventOverview = (props) => {
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <SectionHeading className="">Overview</SectionHeading>
         </div>
-
         <div className=" px-3 mb-4">
           {/* <MainEventSetupCheckList /> */}
-          <EventOverviewGrid className="mb-5">
+          <EventOverviewGrid className="mb-5 pb-4">
             <EventDetails className="px-4 py-3">
               <EventDetailsHeading className="mb-3">
                 Event Name
               </EventDetailsHeading>
-
               <EventDetailsGrid className="mb-5">
                 <EventName>{eventDetails.eventName}</EventName>
-
                 <div className="d-flex flex-row align-items-center justify-content-end">
                   <button
                     disabled={eventDetails.status === "Ended" ? true : false}
@@ -244,7 +241,6 @@ const EventOverview = (props) => {
                     />{" "}
                     edit
                   </button>
-
                   {eventDetails.publishedStatus !== "Draft" ? (
                     <Chip
                       label="Published"
@@ -421,7 +417,6 @@ const EventOverview = (props) => {
                         style={{ fill: "#188627" }}
                         className="editable me-3"
                       />
-
                       <ClearRoundedIcon
                         onClick={() => {
                           resetTag();
@@ -439,13 +434,11 @@ const EventOverview = (props) => {
               <UploadEventImageForm />
             </EventPromoImageContainer>
           </EventOverviewGrid>
-
           <form onSubmit={handleSubmit(onSubmit)} className="pt-5">
-            <div className="d-flex flex-row align-items-center justify-content-between mb-3">
+            <div className="d-flex flex-row align-items-center justify-content-between mb-3 pt-4">
               <TextSignificant className="" style={{ fontSize: "1.15rem" }}>
                 Description
               </TextSignificant>
-
               <div
                 className="d-flex flex-row justify-content-end"
                 style={{ width: "100%" }}
@@ -458,7 +451,6 @@ const EventOverview = (props) => {
                 </button>
               </div>
             </div>
-
             <TextSmall className="mb-4">
               Make a great impression on your attendees by adding an
               eye-catching description.

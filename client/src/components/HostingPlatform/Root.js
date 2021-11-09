@@ -123,13 +123,10 @@ const Root = () => {
 
   useEffect(() => {
 
-    
-
     socket.on("previousSessionMessages", ({ chats }) => {
       dispatch(fetchSessionChats(chats));
     });
    
-
     socket.on("newMatch", ({ room, matchedWith }) => {
       dispatch(showNotification("New match detected"));
       console.log(room);

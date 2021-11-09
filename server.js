@@ -701,7 +701,9 @@ io.on("connect", (socket) => {
           element.user.toString() === registrationId
       );
 
-      thisUserOnStage.camera = camera;
+      if(thisUserOnStage) {
+        thisUserOnStage.camera = camera;
+      }
 
       // 3.) save session doc
 

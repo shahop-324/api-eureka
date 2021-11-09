@@ -259,7 +259,7 @@ const EventDetailCard = ({
                       generateEventAccessToken(
                         userId,
                         email,
-                        role, // organiser ||  moderator ||  host
+                        role // organiser ||  moderator ||  host
                       )
                     );
                   }}

@@ -110,7 +110,6 @@ const SessionDetailCard = ({
   const dispatch = useDispatch();
 
   const params = useParams();
-  
 
   const eventId = params.eventId;
   const communityId = params.communityId;
@@ -137,18 +136,24 @@ const SessionDetailCard = ({
   let btnText = "Join";
   let bgColor = "#538BF7d8";
 
- 
-
   if (role === "host" || role === "speaker") {
     if (hosts.includes(userId) || speakerEmails.includes(userEmail)) {
       // Set role as host for this session
       sessionRole = "host";
+      // alert('This is case 11')
     } else {
       sessionRole = "audience";
+      // alert('This is case 12')
     }
   } else {
     sessionRole = "audience";
+    // alert('This is case 21')
   }
+
+  if (role === "host") {
+    sessionRole = "host";
+  }
+
   if (sessionRole === "host") {
     btnText = "Backstage";
     bgColor = "#538BF7";
@@ -240,9 +245,14 @@ const SessionDetailCard = ({
                 // Get a RTC token
 
                 // alert(channel)
-;
                 dispatch(
-                  getRTCTokenAndSession(id, channel, sessionRole, eventId, communityId)
+                  getRTCTokenAndSession(
+                    id,
+                    channel,
+                    sessionRole,
+                    eventId,
+                    communityId
+                  )
                 );
 
                 // Join session channel

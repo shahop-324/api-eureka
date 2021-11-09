@@ -266,31 +266,37 @@ const mailChimpRegistrationCapture = catchAsync(
   }
 );
 exports.initiateConnectedAccount = catchAsync(async (req, res, next) => {
-  const communityId = req.community.id;
+  try {
+    const communityId = req.community.id;
 
-  const communityDoc = await Community.findById(communityId);
+    const communityDoc = await Community.findById(communityId);
 
-  const connectedStripeAccountId = communityDoc.communityDoc;
+    const connectedStripeAccountId = communityDoc.communityDoc;
 
-  if (connectedStripeAccountId) {
-    // Stripe connect account id is already generated
-    req.accountId = connectedStripeAccountId;
-  } else {
-    // No previous stripe connect account Id
-    const account = await stripe.accounts.create({
-      type: "standard",
-    });
+    if (connectedStripeAccountId) {
+      // Stripe connect account id is already generated
+      req.accountId = connectedStripeAccountId;
+    } else {
+      // No previous stripe connect account Id
+      const account = await stripe.accounts.create({
+        type: "standard",
+        // capabilities: { transfers: { requested: true } },
+        // tos_acceptance: { service_agreement: "recipient" },
+      });
 
-    const updatedCommunity = await Community.findByIdAndUpdate(
-      communityId,
-      { connectedStripeAccountId: account.id },
-      { new: true, validateModifiedOnly: true }
-    );
+      const updatedCommunity = await Community.findByIdAndUpdate(
+        communityId,
+        { connectedStripeAccountId: account.id },
+        { new: true, validateModifiedOnly: true }
+      );
 
-    // Pass accountId to next middleware function
-    req.accountId = account.id;
+      // Pass accountId to next middleware function
+      req.accountId = account.id;
+    }
+    next();
+  } catch (error) {
+    console.log(error.message);
   }
-  next();
 });
 
 exports.getConnectLink = catchAsync(async (req, res, next) => {

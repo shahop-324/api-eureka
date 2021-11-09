@@ -12,9 +12,7 @@ import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // S
 import { useParams } from "react-router-dom";
 import VideocamOffRoundedIcon from "@mui/icons-material/VideocamOffRounded";
 import MicOffRoundedIcon from "@mui/icons-material/MicOffRounded";
-
 import socket from "./../HostingPlatform/service/socket";
-
 import SendStageReminder from "./SendStageReminder";
 
 const Paper = styled.div`
@@ -234,14 +232,22 @@ const PeopleComponent = ({
                       ? turnOnVideo()
                       : unMuteMyVideo()
                     : socket.emit(
-                      "muteVideo",
-                      { userId, sessionId },
-                      (error) => {
-                        console.log(error);
-                      }
-                    );
+                        "muteVideo",
+                        { userId, sessionId },
+                        (error) => {
+                          console.log(error);
+                        }
+                      );
                 }}
-                disabled={ !thisIsMe ? camera ? (available ? false : true) : true : false}
+                disabled={
+                  !thisIsMe
+                    ? camera
+                      ? available
+                        ? false
+                        : true
+                      : true
+                    : false
+                }
                 className="me-4"
               >
                 {camera ? (
@@ -283,10 +289,12 @@ const PeopleComponent = ({
                       ? turnOnAudio()
                       : unMuteMyAudio()
                     : socket.emit("muteMic", { userId, sessionId }, (error) => {
-                      console.log(error);
-                    }); 
+                        console.log(error);
+                      });
                 }}
-                disabled={ !thisIsMe ? mic ? (available ? false : true) : true : false}
+                disabled={
+                  !thisIsMe ? (mic ? (available ? false : true) : true) : false
+                }
                 className="me-4"
               >
                 {mic ? (
@@ -331,7 +339,15 @@ const PeopleComponent = ({
                         }
                       );
                 }}
-                disabled={ !thisIsMe ? screen ? (available ? false : true) : true : false}
+                disabled={
+                  !thisIsMe
+                    ? screen
+                      ? available
+                        ? false
+                        : true
+                      : true
+                    : false
+                }
                 className="me-4"
               >
                 {screen ? (
@@ -495,7 +511,6 @@ const Speakers = ({
       if (element.user === item.bookedByUser) {
         // get This users all required details to create a list (array) of people on stage
         switch (element.userRole) {
-          
           case "Host":
             hostsOnStage.push({
               userId: element.user,
@@ -638,7 +653,7 @@ const Speakers = ({
     }
   }
 
-  console.log(hostsOnStage)
+  console.log(hostsOnStage);
 
   return (
     <>

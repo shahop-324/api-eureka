@@ -134,7 +134,11 @@ const SessionStage = () => {
     (element) => element.bookedByUser.toString() === userId
   );
 
-  const registrationId = myRegistration._id;
+  let registrationId;
+
+  if (myRegistration) {
+    registrationId = myRegistration._id;
+  }
 
   const hosts = sessionDetails.host; // Hosts for this session
   const speakers = sessionDetails.speaker; // Speakers for this session
@@ -317,10 +321,8 @@ const SessionStage = () => {
       dispatch(deleteBackstageChat(deletedMsg));
     });
 
-    socket.on("sessionStarted", async({ session }) => {
+    socket.on("sessionStarted", async ({ session }) => {
       // Start showing 10 sec countdown timer
-
-      
 
       // ! Step 1.) Switch off camera, mic and screen share
 
@@ -611,8 +613,6 @@ const SessionStage = () => {
     //   stopPresenting();
     // });
   };
-
-
 
   const stopPresenting = async () => {
     // We will use this fxn to stop presenting our screen
@@ -1188,12 +1188,12 @@ const SessionStage = () => {
     }
   };
 
-  const handleSwitchOffMediaBeforeTransition = async() => {
+  const handleSwitchOffMediaBeforeTransition = async () => {
     // here we need to switch off camera, mic and screen share if available
 
     turnOffAudio(); // Audio turned off
     turnOffVideo(); // Video turned off
-    // stopPresenting(); 
+    // stopPresenting();
 
     // Screen share turned off
     rtc.localScreenTrack && rtc.localScreenTrack.close();

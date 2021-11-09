@@ -196,16 +196,13 @@ const Billing = () => {
                   className="d-flex flex-row align-items-center justify-content-center py-1"
                   style={{ width: "100%" }}
                 >
-                  <div class="spinner-border text-light" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                  <div class="spinner-border text-light" role="status"></div>
                 </div>
               ) : (
                 <span>Connect with</span>
               )}
             </a>
           )}
-
           <div className="d-flex flex-row justify-content-end mb-3">
             <div className="btn-outline-text current-plan-will-renew-at me-3">
               Current status:

@@ -198,6 +198,8 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
     currentUserIsAnAttendee = true;
   }
 
+  currentUserIsAHost = true;
+  
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
   }
