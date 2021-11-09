@@ -20,6 +20,11 @@ const AttractiveText = styled.a`
   font-size: 1rem;
   color: #e2d40e;
   text-decoration: none;
+
+  &:hover {
+    cursor: pointer;
+    color: #80e767;
+  }
 `;
 
 const StaticBanner = () => {

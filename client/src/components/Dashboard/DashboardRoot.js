@@ -8,40 +8,24 @@ import "./../../assets/Sass/DataGrid.scss";
 import Topnav from "./HelperComponent/TopNav";
 import SideNav from "./HelperComponent/SideNav";
 import {
-  errorTrackerForFetchCommunity,
   fetchCommunity,
   navigationIndexForCommunityDash,
 } from "../../actions/index";
-import Overview from "./Overview";
 import EventManagement from "./EventManagement";
-import Reviews from "./Reviews";
-import Queries from "./Queries";
-import Registrations from "./Registrations";
-import Coupons from "./Coupons";
-import Recordings from "./Recordings";
 import Billing from "./Billing";
 import TeamManagement from "./TeamManagement";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../history";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import RevenueManagement from "./RevenueManagement";
 
 import ErrorBoundriesDashboardOverview from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
-
-import ErrorBoundriesBilling from "../ErrorBoundries/ErrorBoundriesDashboardBilling";
 import ErrorBoundriesCoupons from "../ErrorBoundries/ErrorBoundriesDashboardCoupons";
-import ErrorBoundriesRecordings from "../ErrorBoundries/ErrorBoundriesDashboardRecordings";
 import ErrorBoundriesRegistrations from "../ErrorBoundries/ErrorBoundriesDashboardRegistrations";
-import ErrorBoundriesRevenueManagement from "../ErrorBoundries/ErrorBoundriesDashboardRevenueManagement";
 import ErrorBoundriesReviews from "../ErrorBoundries/ErrorBoundariesDashboardReviews";
-import ErrorBoundriesTeamManagement from "../ErrorBoundries/ErrorBoundriesDashboardTeamManagement";
 import ErrorBoundriesQueries from "../ErrorBoundries/ErrorBoundriesDashboardQueries";
 import ErrorBoundriesEventManagement from "../ErrorBoundries/ErrorBoundriesDashboardEventManagement";
-
-import ErrorBoundary from "../ErrorBoundries/ErrorBoundriesDashboardOverview";
 import Integrations from "./Integrations";
-import Scheduler from "./Scheduler";
 import SideNavLean from "./HelperComponent/SideNavLean";
 import VideoLibrary from "./VideoLibrary";
 import Tracking from "./EditEvent/Tracking";
@@ -49,22 +33,17 @@ import GetStarted from "./GetStarted";
 import AddOnsAndPlan from "./AddOnsAndPlan";
 
 const DashboardRoot = () => {
-  
-
   const params = useParams();
-
-  const { error, isLoading } = useSelector((state) => state.community);
 
   const dispatch = useDispatch();
   const id = params.id;
   const userId = params.userId;
-  
+
   useEffect(() => {
     dispatch(fetchCommunity(id));
   }, [id, dispatch]);
   useEffect(() => {
     return () => {
-      
       dispatch(navigationIndexForCommunityDash(0));
     };
   }, [dispatch]);
@@ -75,7 +54,6 @@ const DashboardRoot = () => {
   };
 
   const handleEventsClick = () => {
-    
     dispatch(navigationIndexForCommunityDash(1));
     history.push(
       `/user/${userId}/community/event-management/${id}/?limit=5&page=1`
@@ -121,7 +99,7 @@ const DashboardRoot = () => {
       <div className="dashboard-position-fixed-non-scrollable-container">
         {/* TOP NAV */}
         <Topnav />
-        <div className="dashboard-body" style={{height: "93vh !important"}}>
+        <div className="dashboard-body" style={{ height: "93vh !important" }}>
           {/* <div className="side-nav-container"> */}
           <SideNav
             activeIndex={currentIndex}
@@ -191,7 +169,6 @@ const DashboardRoot = () => {
                     </ErrorBoundriesRegistrations>
                   );
 
-               
                 case "6":
                   return (
                     <ErrorBoundriesCoupons>

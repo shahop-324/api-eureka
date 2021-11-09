@@ -4,7 +4,7 @@ import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import dateFormat from "dateformat";
-import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import AvatarMenu from "./../AvatarMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -182,13 +182,15 @@ const SpeakerMagicLinkDestination = () => {
   }
 
   if (eventDetails) {
-    if (eventDetails.status === "Upcoming" || eventDetails.status === "Paused") {
+    if (
+      eventDetails.status === "Upcoming" ||
+      eventDetails.status === "Paused"
+    ) {
       eventStatus = 0;
     }
     if (
       eventDetails.status === "Started" ||
       eventDetails.status === "Resumed"
-      
     ) {
       eventStatus = 1;
     }
@@ -206,7 +208,11 @@ const SpeakerMagicLinkDestination = () => {
         <></>
       )}
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
-        <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
+        <img
+          src={BluemeetLogoLight}
+          alt="Bluemeet Logo"
+          style={{ height: "50px" }}
+        />
         {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
 
@@ -271,12 +277,12 @@ const SpeakerMagicLinkDestination = () => {
                       access.
                     </Announcement>
                     <Link to="/signup">
-                    <JoinEventButton
-                      className="btn btn-outline-text btn-primary"
-                      style={{ width: "100%" }}
-                    >
-                      Create my account
-                    </JoinEventButton>
+                      <JoinEventButton
+                        className="btn btn-outline-text btn-primary"
+                        style={{ width: "100%" }}
+                      >
+                        Create my account
+                      </JoinEventButton>
                     </Link>
                   </>
                 );
@@ -292,17 +298,17 @@ const SpeakerMagicLinkDestination = () => {
                         </Announcement>
                         <div className="d-flex flex-row align-items-center justify-content-between">
                           <JoinEventButton
-                          onClick={() => {
-                            dispatch(logInMagicLinkUser(userId));
-                            dispatch(navigationIndexForHostingPlatform(5));
-                            dispatch(
-                              generateEventAccessToken(
-                                userId,
-                                userEmail,
-                                "speaker", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                              )
-                            );
-                          }}
+                            onClick={() => {
+                              dispatch(logInMagicLinkUser(userId));
+                              dispatch(navigationIndexForHostingPlatform(5));
+                              dispatch(
+                                generateEventAccessToken(
+                                  userId,
+                                  userEmail,
+                                  "speaker" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                                )
+                              );
+                            }}
                             disabled
                             className="btn btn-outline-text btn-primary"
                             style={{ width: "48%" }}
@@ -321,7 +327,7 @@ const SpeakerMagicLinkDestination = () => {
                                   generateEventAccessToken(
                                     userId,
                                     userEmail,
-                                    "speaker", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                                    "speaker" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
                                   )
                                 );
                               }}
@@ -339,17 +345,17 @@ const SpeakerMagicLinkDestination = () => {
                     // Event has started or resumed or paused
                     return (
                       <JoinEventButton
-                      onClick={() => {
-                        dispatch(logInMagicLinkUser(userId));
-                        dispatch(navigationIndexForHostingPlatform(5));
-                        dispatch(
-                          generateEventAccessToken(
-                            userId,
-                            userEmail,
-                            "speaker", // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                          )
-                        );
-                      }}
+                        onClick={() => {
+                          dispatch(logInMagicLinkUser(userId));
+                          dispatch(navigationIndexForHostingPlatform(5));
+                          dispatch(
+                            generateEventAccessToken(
+                              userId,
+                              userEmail,
+                              "speaker" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                            )
+                          );
+                        }}
                         className="btn btn-outline-text btn-primary"
                         style={{ width: "100%" }}
                       >
@@ -364,13 +370,16 @@ const SpeakerMagicLinkDestination = () => {
                         <Announcement className="mb-3">
                           This event is already ended.
                         </Announcement>
-                        <a href="https://www.bluemeet.in" style={{textDecoration: "none"}}>
-                        <JoinEventButton
-                          className="btn btn-outline-text btn-primary"
-                          style={{ width: "100%" }}
+                        <a
+                          href="https://www.bluemeet.in"
+                          style={{ textDecoration: "none" }}
                         >
-                          Take me home
-                        </JoinEventButton>
+                          <JoinEventButton
+                            className="btn btn-outline-text btn-primary"
+                            style={{ width: "100%" }}
+                          >
+                            Take me home
+                          </JoinEventButton>
                         </a>
                       </>
                     );

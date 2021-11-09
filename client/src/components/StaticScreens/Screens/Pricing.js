@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Footer from "../../Footer";
-
+import styled from 'styled-components';
 import "./../Styles/pricing.scss";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-import TopNav from "../Helper/TopNav";
 import { useDispatch, useSelector } from "react-redux";
 import history from "../../../history";
 import SelectCommunityList from "../Helper/SelectCommunityList";
@@ -21,23 +19,23 @@ import {
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import Bored from "./../../../assets/images/Bored.png";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
-import { Field, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import {
   createDemoRequest,
-  errorTrackerForCreateDemo,
   switchToFreePlan,
 } from "../../../actions";
-import Select from "react-select";
-
-import PhoneInput from "react-phone-input-2";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
-import { useSnackbar } from "notistack";
 import RequestDemo from "../FormComponents/RequestDemo";
+import TopNavNew from "../Helper/TopNavNew";
+
+import PropTypes from "prop-types";
+import Slider from "@mui/material/Slider";
+import { styled as muiStyled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -133,121 +131,6 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const renderInput = ({
-  input,
-  meta: { touched, error, warning },
-  type,
-  ariadescribedby,
-  classes,
-  placeholder,
-}) => {
-  const className = `field ${error && touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <input
-        type={type}
-        {...input}
-        aria-describedby={ariadescribedby}
-        className={classes}
-        placeholder={placeholder}
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  );
-};
-
-const renderPhoneInput = ({
-  input,
-  meta: { touched, error, warning },
-  label,
-  type,
-}) => (
-  <div>
-    <div>
-      <PhoneInput
-        inputStyle={{
-          paddingLeft: "50px",
-        }}
-        inputProps={{
-          enableSearch: true,
-        }}
-        country={"us"}
-        // value={state.phone}
-        //   onChange={phone => setState({ phone })}
-        {...input}
-        type={type}
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  </div>
-);
-
-const renderEventPreferences = ({
-  input,
-  meta: { touched, error, warning },
-  name,
-}) => (
-  <div>
-    <div>
-      <Select
-        styles={styles}
-        className="basic-multi-select"
-        classNamePrefix="select"
-        name={name}
-        options={options}
-        value={input.value}
-        onChange={(value) => input.onChange(value)}
-        onBlur={() => input.onBlur()}
-      />
-      {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
-    </div>
-  </div>
-);
-
-const showResults = (formValues) => {
-  // await sleep(500); // simulate server latency
-  window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-};
-
 const Pricing = (props) => {
   const { signInSucceded } = useSelector((state) => state.auth);
 
@@ -270,13 +153,71 @@ const Pricing = (props) => {
 
   const [openDemoForm, setOpenDemoForm] = React.useState(false);
 
-  // handleCloseRequestDemo, openDemoForm,
-
   const handleCloseRequestDemo = () => {
     setOpenDemoForm(false);
   };
 
   const [selectedPlan, setSelectedPlan] = useState("");
+
+  function ValueLabelComponent(props) {
+    const { children, value } = props;
+
+    return (
+      <Tooltip enterTouchDelay={0} placement="top" title={value}>
+        {children}
+      </Tooltip>
+    );
+  }
+
+  ValueLabelComponent.propTypes = {
+    children: PropTypes.element.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  const Summary = styled.summary`
+    font-weight: 500;
+    font-size: 1rem;
+    color: #ffffff;
+  `;
+
+  const PrettoSlider = muiStyled(Slider)({
+    color: "#538BF7",
+    height: 8,
+    "& .MuiSlider-track": {
+      border: "none",
+    },
+    "& .MuiSlider-thumb": {
+      height: 24,
+      width: 24,
+      backgroundColor: "#fff",
+      border: "2px solid currentColor",
+      "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+        boxShadow: "inherit",
+      },
+      "&:before": {
+        display: "none",
+      },
+    },
+    "& .MuiSlider-valueLabel": {
+      lineHeight: 1.2,
+      fontSize: 12,
+      background: "unset",
+      padding: 0,
+      width: 32,
+      height: 32,
+      borderRadius: "50% 50% 50% 0",
+      backgroundColor: "#3575F6",
+      transformOrigin: "bottom left",
+      transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+      "&:before": { display: "none" },
+      "&.MuiSlider-valueLabelOpen": {
+        transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+      },
+      "& > *": {
+        transform: "rotate(45deg)",
+      },
+    },
+  });
 
   const onSubmit = (formValues) => {
     console.log(formValues);
@@ -293,7 +234,6 @@ const Pricing = (props) => {
     ModifiedFormValues.region = formValues.region.label;
 
     dispatch(createDemoRequest(ModifiedFormValues));
-    showResults(ModifiedFormValues);
   };
 
   const displayRazorpay = async (referral) => {
@@ -328,8 +268,7 @@ const Pricing = (props) => {
       currency: "USD",
       name: "Bluemeet",
       description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
-      image:
-        "https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png",
+      image: "https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png",
 
       order_id: order.data.id,
       handler: function (response) {
@@ -388,7 +327,6 @@ const Pricing = (props) => {
     return communities.map((community) => {
       const name = community.name;
       const image = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`;
-// https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png
       return (
         <div
           className="ticket-card mb-2 px-3 py-4"
@@ -432,6 +370,8 @@ const Pricing = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [registrations, setRegistrations] = React.useState(100);
+
   const [openCommunityList, setOpenCommunityList] = React.useState(false);
 
   const handleCloseCommunityList = () => {
@@ -457,9 +397,8 @@ const Pricing = (props) => {
     <>
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
-          {/* Here Goes Top Nav */}
-
-          <TopNav />
+          {/* <TopNav /> */}
+          <TopNavNew />
 
           <div className="pricing-section  py-4">
             <div className="pricing-heading-primary mt-5 mb-4">
@@ -470,7 +409,10 @@ const Pricing = (props) => {
             </div>
 
             <div className="pricing-cards-grid-wrapper py-5">
-              <div className="card__container grid" style={{ maxWidth: "1600px" }}>
+              <div
+                className="card__container grid"
+                style={{ maxWidth: "1600px" }}
+              >
                 {/* <!--==================== CARD 1 ====================--> */}
                 <article
                   className="card__content grid px-5"
@@ -478,11 +420,10 @@ const Pricing = (props) => {
                   data-aos-delay="100"
                   data-aos-easing="ease-in-sine"
                 >
-                  <div className="card__pricing">
+                  <div className="card__pricing p-3">
                     <div className="card__pricing-number">
                       <span className="card__pricing-symbol">$</span>0
                     </div>
-                    <span className="card__pricing-month">/month</span>
                   </div>
 
                   <header className="card__header">
@@ -494,7 +435,9 @@ const Pricing = (props) => {
                       />
                     </div>
 
-                    <span className="card__header-subtitle mb-3">Free plan</span>
+                    <span className="card__header-subtitle mb-3">
+                      Free plan
+                    </span>
                     <h1 className="card__header-title mb-4">Basic</h1>
                   </header>
 
@@ -509,13 +452,15 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">100 registrations</p>
+                      <p className="card__list-description">10 registrations</p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">4 hours event length</p>
+                      <p className="card__list-description">
+                        2 hours event length
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -529,10 +474,11 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">1 Event Per Month</p>
+                      <p className="card__list-description">
+                        1 Event Per Month
+                      </p>
                     </li>
                   </ul>
-
                   <button
                     onClick={() => {
                       isSignedIn
@@ -542,7 +488,7 @@ const Pricing = (props) => {
                     className="card__button btn btn-outline-primary btn-outline-text"
                     style={{ backgroundColor: "#ffffff" }}
                   >
-                    Start my journey
+                    Let's try it
                   </button>
                 </article>
 
@@ -553,11 +499,10 @@ const Pricing = (props) => {
                   data-aos-delay="100"
                   data-aos-easing="ease-in-sine"
                 >
-                  <div className="card__pricing">
+                  <div className="card__pricing p-3">
                     <div className="card__pricing-number">
                       <span className="card__pricing-symbol">$</span>19
                     </div>
-                    <span className="card__pricing-month">/month</span>
                   </div>
 
                   <header className="card__header">
@@ -574,6 +519,20 @@ const Pricing = (props) => {
                     </span>
                     <h1 className="card__header-title mb-4">Starter</h1>
                   </header>
+
+                  <PrettoSlider
+                    valueLabelDisplay="on"
+                    aria-label="pretto slider"
+                    defaultValue={100}
+                    step={200}
+                    marks
+                    min={100}
+                    max={900}
+                    onChange={(event, value) => {
+                      console.log(value);
+                      setRegistrations(value);
+                    }}
+                  />
 
                   <ul className="card__list grid">
                     <li className="card__list-item">
@@ -594,7 +553,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">300 registrations</p>
+                      <p className="card__list-description">
+                        300 registrations
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -608,7 +569,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">Unlimited Coupons</p>
+                      <p className="card__list-description">
+                        Unlimited Coupons
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -628,7 +591,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">3 Events per month</p>
+                      <p className="card__list-description">
+                        3 Events per month
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -660,11 +625,10 @@ const Pricing = (props) => {
                   data-aos-delay="100"
                   data-aos-easing="ease-in-sine"
                 >
-                  <div className="card__pricing">
+                  <div className="card__pricing p-3">
                     <div className="card__pricing-number">
                       <span className="card__pricing-symbol">$</span>39
                     </div>
-                    <span className="card__pricing-month">/month</span>
                   </div>
 
                   <header className="card__header">
@@ -676,9 +640,25 @@ const Pricing = (props) => {
                       />
                     </div>
 
-                    <span className="card__header-subtitle mb-3">Most popular</span>
+                    <span className="card__header-subtitle mb-3">
+                      Most popular
+                    </span>
                     <h1 className="card__header-title mb-4">Professional</h1>
                   </header>
+
+                  <PrettoSlider
+                    valueLabelDisplay="on"
+                    aria-label="pretto slider"
+                    defaultValue={1000}
+                    step={2000}
+                    marks
+                    min={1000}
+                    max={10000}
+                    onChange={(event, value) => {
+                      console.log(value);
+                      setRegistrations(value);
+                    }}
+                  />
 
                   <ul className="card__list grid">
                     <li className="card__list-item">
@@ -699,7 +679,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">1200 Registrations</p>
+                      <p className="card__list-description">
+                        1200 Registrations
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -713,7 +695,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">Stage Customisation</p>
+                      <p className="card__list-description">
+                        Stage Customisation
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -749,7 +733,9 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">Real Time analytics</p>
+                      <p className="card__list-description">
+                        Real Time analytics
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -788,13 +774,6 @@ const Pricing = (props) => {
                   data-aos-delay="100"
                   data-aos-easing="ease-in-sine"
                 >
-                  {/* <div className="card__pricing">
-                    <div className="card__pricing-number">
-                      <span className="card__pricing-symbol">$</span>29
-                    </div>
-                    <span className="card__pricing-month">/month</span>
-                  </div> */}
-
                   <header className="card__header">
                     <div className="card__header-circle grid">
                       <img
@@ -804,7 +783,9 @@ const Pricing = (props) => {
                       />
                     </div>
 
-                    <span className="card__header-subtitle mb-3">For agencies</span>
+                    <span className="card__header-subtitle mb-3">
+                      For agencies
+                    </span>
                     <h1 className="card__header-title mb-4">Enterprise</h1>
                   </header>
 
@@ -850,13 +831,17 @@ const Pricing = (props) => {
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">Onboarding session</p>
+                      <p className="card__list-description">
+                        Onboarding session
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
                         style={{ fill: "#538BF7", marginRight: "1rem" }}
                       />
-                      <p className="card__list-description">99.99% Uptime SLA</p>
+                      <p className="card__list-description">
+                        99.99% Uptime SLA
+                      </p>
                     </li>
                     <li className="card__list-item">
                       <CheckRoundedIcon
@@ -882,22 +867,21 @@ const Pricing = (props) => {
           </div>
 
           <div className="FAQs-section px-4">
-            <h2 className="mb-4 main-heading-calculate-profits">F.A.Q.</h2>
+            <h2 className="mb-4">F.A.Q.</h2>
             <details>
-              <summary>
+              <Summary>
                 Is there any special pricing for non profit organisation?
-              </summary>
+              </Summary>
               <p>
                 Yes, we have special offers for NGOs and Not for profit
                 organisations. For More details please contact contact us at
                 <a href="mailto:support@bluemeet.in"> support@bluemeet.in</a>
               </p>{" "}
-              {/*  */}
             </details>
             <details>
-              <summary>
+              <Summary>
                 How many tickets, coupons and landing pages can I create ?
-              </summary>
+              </Summary>
               <p>
                 There is no limit on how many tickets, coupons and landing pages
                 you can create as of now. And this service is always going to be
@@ -905,20 +889,21 @@ const Pricing = (props) => {
               </p>
             </details>
             <details>
-              <summary>
+              <Summary>
                 What all is needed to get started with posting and selling
                 tickets on bluemeet platform ?
-              </summary>
+              </Summary>
               <p>
-                All you need is a free bluemeet account and you can start posting
-                and selling your tickets to the whole world in few clicks.
+                All you need is a free bluemeet account and you can start
+                posting and selling your tickets to the whole world in few
+                clicks.
               </p>
             </details>
             <details>
-              <summary>
-                How much service charge bluemeet takes on each booking and is this
-                same for any type of tickets ?
-              </summary>
+              <Summary>
+                How much service charge bluemeet takes on each booking and is
+                this same for any type of tickets ?
+              </Summary>
               <p>
                 We have a simple pricing model which chrages only 1% on each
                 booking along with tax price as applicable. Yes, we charge only
@@ -926,10 +911,10 @@ const Pricing = (props) => {
               </p>
             </details>
             <details>
-              <summary>
+              <Summary>
                 How can I recieve my payouts and what payment methods do you
                 accept ?
-              </summary>
+              </Summary>
               <p>
                 You can recieve your payouts simply by adding a payout request
                 from your bluemeet community dashboard. You will be able track
@@ -940,7 +925,7 @@ const Pricing = (props) => {
               </p>
             </details>
             <details>
-              <summary>I still have some queries ?</summary>
+              <Summary>I still have some queries ?</Summary>
               <p>
                 Please reach out to us at{" "}
                 <a href="mailto:support@bluemeet.in"> support@bluemeet.in</a>
@@ -1010,12 +995,16 @@ const Pricing = (props) => {
 
       <React.Fragment key="right">
         {/* <Button onClick={toggleDrawer(right, true)}>{right}</Button> */}
-        <SwipeableDrawer anchor="right" open={openDrawer} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
+        <SwipeableDrawer
+          anchor="right"
+          open={openDrawer}
+          onOpen={() => {
+            console.log("Side nav was opended");
+          }}
+          onClose={() => {
+            console.log("Side nav was closed");
+          }}
+        >
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Review Plan Details</div>

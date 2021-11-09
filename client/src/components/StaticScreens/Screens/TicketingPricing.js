@@ -11,9 +11,6 @@ import PreFooter from "../../PreFooter";
 import { Link } from "react-router-dom";
 
 const TicketingPricing = () => {
-  const referral = useSelector((state) => state.user.referredUserId);
-  const dispatch = useDispatch();
-
   const [amount, setAmount] = useState("");
 
   const [price, setPrice] = useState("");

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 
@@ -16,6 +17,8 @@ import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
 import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+import StaticBanner from "./../Screens/StaticBanner";
+import history from "./../../../history";
 
 const Paper = styled.div`
   width: 100%;
@@ -132,55 +135,104 @@ const NavLinkDropdown = styled.div`
   }
 `;
 
-const DarkTopNav = ({setOpenProduct, setOpenUseCase, setOpenCompany, setOpenResources}) => {
+const DarkTopNav = ({
+  handleOpenRequestDemo,
+  setOpenProduct,
+  setOpenUseCase,
+  setOpenCompany,
+  setOpenResources,
+}) => {
+  const { isSignedIn } = useSelector((state) => state.auth);
+
   return (
     <NavContainer className="container py-3 ">
       {/* Logo */}
       <img src={BluemeetLogo} alt="Bluemeet Logo" />
-
       {/* Links */}
       <div className="d-flex flex-row align-items-center justify-content-evenly">
-        <NavLinkDropdown className="d-flex flex-row me-3"  onMouseOver={() => {
-              setOpenProduct(true)
-          }}>
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOver={() => {
+            setOpenProduct(true);
+          }}
+        >
           <span className="me-1"> Product</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOverCapture={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOverCapture={() => {
             setOpenProduct(false);
             setOpenUseCase(true);
-        }}>
+          }}
+        >
           <span className="me-1"> Use cases</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3">
+        <NavLinkDropdown
+          onClick={() => {
+            history.push("/pricing");
+          }}
+          className="d-flex flex-row me-3 sec-nav-link"
+        >
           Pricing
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3">
+        <NavLinkDropdown
+          onClick={() => {
+            history.push("/search-events");
+          }}
+          className="d-flex flex-row me-3 sec-nav-link"
+        >
           Explore Events
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOverCapture={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOverCapture={() => {
             setOpenProduct(false);
             setOpenResources(true);
-        }}>
+          }}
+        >
           <span className="me-1">Resources</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" 
-        onMouseOverCapture={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOverCapture={() => {
             setOpenProduct(false);
             setOpenCompany(true);
-        }}>
+          }}
+        >
           <span className="me-1"> Company</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
       </div>
       <div className="d-flex flex-row align-items-center justify-content-end">
-        <NavLinkDropdown className="me-3">
-          <span className="me-1">Your account</span>
-          <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
-        </NavLinkDropdown>
-        <button className="btn btn-outline-dark btn-outline-text">
+        {isSignedIn ? (
+          <NavLinkDropdown
+            onClick={() => {
+              history.push("/user/home");
+            }}
+            className="me-3"
+          >
+            <span className="me-1">Your account</span>
+            <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
+          </NavLinkDropdown>
+        ) : (
+          <button
+            onClick={() => {
+              history.push("/signin");
+            }}
+            className="btn btn-dark btn-outline-text me-4"
+          >
+            Signin
+          </button>
+        )}
+        <button
+          onClick={() => {
+            handleOpenRequestDemo();
+          }}
+          className="btn btn-outline-dark btn-outline-text"
+        >
           Request demo
         </button>
       </div>
@@ -189,7 +241,15 @@ const DarkTopNav = ({setOpenProduct, setOpenUseCase, setOpenCompany, setOpenReso
   );
 };
 
-const ProductDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpenUseCase, setOpenCompany, setOpenResources }) => {
+const ProductDrawer = ({
+  openDrawer,
+  handleCloseDrawer,
+  setOpenProduct,
+  setOpenUseCase,
+  setOpenCompany,
+  setOpenResources,
+  handleOpenRequestDemo,
+}) => {
   console.log(openDrawer);
   return (
     <>
@@ -207,146 +267,162 @@ const ProductDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpenU
         >
           {/* <TopNav /> */}
 
-          <div style={{ height: "80px" }}>
-            <DarkTopNav setOpenProduct={setOpenProduct} setOpenUseCase={setOpenUseCase} setOpenCompany={setOpenCompany} setOpenResources={setOpenResources}/>
+          <div
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setOpenProduct(false);
+              }, 500);
+            }}
+          >
+            <StaticBanner />
+
+            <div style={{ height: "80px" }}>
+              <DarkTopNav
+                handleOpenRequestDemo={handleOpenRequestDemo}
+                setOpenProduct={setOpenProduct}
+                setOpenUseCase={setOpenUseCase}
+                setOpenCompany={setOpenCompany}
+                setOpenResources={setOpenResources}
+              />
+            </div>
+
+            <Paper className="px-4 py-3 container">
+              <WhatsNew className="px-3 py-3">
+                <NavSectionHeading className="mb-3">
+                  What's new
+                </NavSectionHeading>
+                <WhatsNewCard className="mb-3 p-3">
+                  <WhatsNewHeading className="mb-3">
+                    Unvieling New Bluemeet studio: Video for the enterprise
+                  </WhatsNewHeading>
+                  <WhatsNewParagraph>
+                    Bluemeet is expanding our enterprise grade offering - with
+                    all new bluemeet stage for hosting all purspose professional
+                    video streams with an easy to use setup.
+                  </WhatsNewParagraph>
+                </WhatsNewCard>
+                <WhatsNewCard className="mb-3 p-3">
+                  <WhatsNewHeading className="mb-3">
+                    Introducing most advanced event gamification for rich event
+                    experiences
+                  </WhatsNewHeading>
+                  <WhatsNewParagraph>
+                    Bluemeet is expanding beyond just a video streaming platform
+                    by providing rich gamification methods to engage everyone in
+                    the event.
+                  </WhatsNewParagraph>
+                </WhatsNewCard>
+              </WhatsNew>
+              <Products className="px-4 py-3">
+                <NavSectionHeading className="mb-5">Products</NavSectionHeading>
+
+                <ProductCard className="mb-4">
+                  <ProductIcon className="p-1 me-3">
+                    <StreamRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2"> Virtual venue</ProductName>
+                    <ProductCatchLine>
+                      Amaze your audience with your interactive events
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#4FBCEE",
+                      border: "1px solid #4FBCEE",
+                    }}
+                  >
+                    <CameraIndoorRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2"> Studio</ProductName>
+                    <ProductCatchLine>
+                      Produce professional, high quality streams with ease.
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#6A883A",
+                      border: "1px solid #6A883A",
+                    }}
+                  >
+                    <MarkEmailUnreadRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Event marketing</ProductName>
+                    <ProductCatchLine>
+                      Promote beautiful landing pages that drive registrations
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+              </Products>
+
+              <Platform className="px-4 py-3">
+                <NavSectionHeading className="mb-5">Platform</NavSectionHeading>
+
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#6044BE",
+                      border: "1px solid #6044BE",
+                    }}
+                  >
+                    <GamepadRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">
+                      Advanced gamification
+                    </ProductName>
+                    <ProductCatchLine>
+                      Increase event enagement and ROI at same time using our
+                      advance gamification tools.
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#BE44BE",
+                      border: "1px solid #BE44BE",
+                    }}
+                  >
+                    <SettingsEthernetRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Integrations</ProductName>
+                    <ProductCatchLine>
+                      Connect bluemeet to your apps and services
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#6A883A",
+                      border: "1px solid #B9B144",
+                    }}
+                  >
+                    <AdminPanelSettingsRoundedIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Security</ProductName>
+                    <ProductCatchLine>
+                      Protect your events with enterprise grade security
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+              </Platform>
+            </Paper>
           </div>
-
-          <Paper className="px-4 py-3 container" onMouseLeave={() => {
-              setOpenProduct(false);
-          }}>
-            <WhatsNew className="px-3 py-3">
-              <NavSectionHeading className="mb-3">What's new</NavSectionHeading>
-              <WhatsNewCard className="mb-3 p-3">
-                <WhatsNewHeading className="mb-3">
-                  Unvieling New Bluemeet studio: Video for the enterprise
-                </WhatsNewHeading>
-                <WhatsNewParagraph>
-                  Bluemeet is expanding our enterprise grade offering - with all
-                  new bluemeet stage for hosting all purspose professional video
-                  streams with an easy to use setup.
-                </WhatsNewParagraph>
-              </WhatsNewCard>
-              <WhatsNewCard className="mb-3 p-3">
-                <WhatsNewHeading className="mb-3">
-                  Introducing most advanced event gamification for rich event
-                  experiences
-                </WhatsNewHeading>
-                <WhatsNewParagraph>
-                  Bluemeet is expanding beyond just a video streaming platform
-                  by providing rich gamification methods to engage everyone in
-                  the event.
-                </WhatsNewParagraph>
-              </WhatsNewCard>
-            </WhatsNew>
-            <Products className="px-4 py-3">
-              <NavSectionHeading className="mb-5">Products</NavSectionHeading>
-
-              <ProductCard className="mb-4">
-                <ProductIcon className="p-1 me-3">
-                  <StreamRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2"> Virtual venue</ProductName>
-                  <ProductCatchLine>
-                    Amaze your audience with your interactive events
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#4FBCEE",
-                    border: "1px solid #4FBCEE",
-                  }}
-                >
-                  <CameraIndoorRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2"> Studio</ProductName>
-                  <ProductCatchLine>
-                    Produce professional, high quality streams with ease.
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#6A883A",
-                    border: "1px solid #6A883A",
-                  }}
-                >
-                  <MarkEmailUnreadRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Event marketing</ProductName>
-                  <ProductCatchLine>
-                    Promote beautiful landing pages that drive registrations
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-            </Products>
-
-            <Platform className="px-4 py-3">
-              <NavSectionHeading className="mb-5">Platform</NavSectionHeading>
-
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#6044BE",
-                    border: "1px solid #6044BE",
-                  }}
-                >
-                  <GamepadRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">
-                    Advanced gamification
-                  </ProductName>
-                  <ProductCatchLine>
-                    Increase event enagement and ROI at same time using our
-                    advance gamification tools.
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#BE44BE",
-                    border: "1px solid #BE44BE",
-                  }}
-                >
-                  <SettingsEthernetRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Integrations</ProductName>
-                  <ProductCatchLine>
-                    Connect bluemeet to your apps and services
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#6A883A",
-                    border: "1px solid #B9B144",
-                  }}
-                >
-                  <AdminPanelSettingsRoundedIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Security</ProductName>
-                  <ProductCatchLine>
-                    Protect your events with enterprise grade security
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-            </Platform>
-          </Paper>
         </SwipeableDrawer>
       </React.Fragment>
     </>

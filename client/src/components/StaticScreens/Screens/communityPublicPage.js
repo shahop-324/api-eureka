@@ -7,15 +7,13 @@ import AvatarMenu from "../../AvatarMenu";
 import "./../Styles/CommunityPublicPage.scss";
 import Faker from "faker";
 import { makeStyles } from "@material-ui/core/styles";
-
-
-import StarOutlineRoundedIcon from '@material-ui/icons/StarOutlineRounded';
+import StarOutlineRoundedIcon from "@material-ui/icons/StarOutlineRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
-
-
+import BluemeetLogoLight from "./../../../assets/images/Bluemeet_Logo_Light.svg";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 import Footer from "../../Footer";
 
@@ -57,18 +55,15 @@ const CommunityPublicPage = () => {
 
   const handleUpcomingEventsClick = () => {
     setSelectedTabIndex(0);
-    //
-  }
+  };
 
   const handlePastEventsClick = () => {
     setSelectedTabIndex(1);
-    //
-  }
+  };
 
   const handleReviewsClick = () => {
     setSelectedTabIndex(2);
-    //
-  }
+  };
 
   const onSubmitTextSearch = (e) => {
     e.preventDefault();
@@ -79,12 +74,9 @@ const CommunityPublicPage = () => {
     }
     url.search = search_params.toString();
     let new_url = url.toString();
-    // setFullLocation(new_url);
     const len = new_url.split("?")[0].length;
 
     const result = new_url.substring(len);
-
-    // props.fetchEvents(event.target.value);
     if (result === "") {
       history.push("/search-events/");
     } else {
@@ -104,7 +96,11 @@ const CommunityPublicPage = () => {
                 className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
-                Evenz
+                <img
+                  src={BluemeetLogoLight}
+                  alt="Bluemeet Logo"
+                  style={{ height: "50px" }}
+                />
               </Link>
               <button
                 className="navbar-toggler"
@@ -113,10 +109,11 @@ const CommunityPublicPage = () => {
                 aria-controls="navbarSupportedContent"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
+              ></button>
+              <div
+                className="collapse navbar-collapse"
+                id="navbarSupportedContent"
               >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <form
                   onSubmit={onSubmitTextSearch}
                   className="d-flex special"
@@ -131,7 +128,7 @@ const CommunityPublicPage = () => {
                     onChange={onChangeSearchEvents}
                   />
                   <button className="btn btn-outline-primary" type="submit">
-                    <i className="fa fa-search"></i>
+                    <SearchRoundedIcon style={{ fontSize: "20px" }} />
                   </button>
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -170,7 +167,10 @@ const CommunityPublicPage = () => {
           src="http://www.calendarp.com/wp-content/uploads/2019/02/YouTube-Channel-Art-CP-008.jpg"
           alt="community public page art"
         ></img>
-        <div className="container max-width-container-public-page mt-5" style={{height: "auto"}}>
+        <div
+          className="container max-width-container-public-page mt-5"
+          style={{ height: "auto" }}
+        >
           {/* // TODO Replace alt and src */}
           <Avatar
             alt="Travis Howard"
@@ -205,11 +205,37 @@ const CommunityPublicPage = () => {
           </div>
 
           {/* <hr className="my-3" /> */}
- 
-          <div className="d-flex flex-row align-items-center  my-5" style={{borderBottom: "1px solid #212121"}}>
-            <div onClick={handleUpcomingEventsClick} className={`px-4 ${ selectedTabIndex === 0  ?  "active-tab" : ""} tab`} style={{fontWeight: "600"}}>Upcoming Events (3)</div>
-            <div onClick={handlePastEventsClick} className={`mx-5 px-4 tab ${ selectedTabIndex ===  1 ?  "active-tab" : ""}`}>Past Events (592)</div>
-            <div onClick={handleReviewsClick} className={`px-4 tab ${ selectedTabIndex === 2  ?  "active-tab" : ""}`}>Reviews  ( <StarOutlineRoundedIcon style={{fontSize: "16px"}} /> 4.3)</div>
+
+          <div
+            className="d-flex flex-row align-items-center  my-5"
+            style={{ borderBottom: "1px solid #212121" }}
+          >
+            <div
+              onClick={handleUpcomingEventsClick}
+              className={`px-4 ${
+                selectedTabIndex === 0 ? "active-tab" : ""
+              } tab`}
+              style={{ fontWeight: "600" }}
+            >
+              Upcoming Events (3)
+            </div>
+            <div
+              onClick={handlePastEventsClick}
+              className={`mx-5 px-4 tab ${
+                selectedTabIndex === 1 ? "active-tab" : ""
+              }`}
+            >
+              Past Events (592)
+            </div>
+            <div
+              onClick={handleReviewsClick}
+              className={`px-4 tab ${
+                selectedTabIndex === 2 ? "active-tab" : ""
+              }`}
+            >
+              Reviews ( <StarOutlineRoundedIcon style={{ fontSize: "16px" }} />{" "}
+              4.3)
+            </div>
           </div>
 
           <div className="community-public-page-grid-view my-5">
@@ -304,9 +330,7 @@ const CommunityPublicPage = () => {
           </div>
         </div>
         <Footer />
-        
       </div>
-      
     </>
   );
 };

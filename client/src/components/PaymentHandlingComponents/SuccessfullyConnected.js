@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import HeroLogo from "./../../assets/Logo/light.svg";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
 const PaymentHandlingNav = styled.div`
@@ -32,7 +32,11 @@ const SuccessfullyConnected = () => {
     <>
       <div>
         <PaymentHandlingNav className="d-flex flex-row align-items-center px-4">
-          <img src={HeroLogo} alt="Blumeet logo" />
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </PaymentHandlingNav>
         <div
           style={{ height: "93vh" }}

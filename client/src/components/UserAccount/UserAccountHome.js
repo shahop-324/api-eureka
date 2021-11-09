@@ -93,7 +93,6 @@ const UserAccountHome = () => {
   return (
     <>
       <CssBaseline />
-
       {isLoading ? (
         <div
           className="d-flex flex-row justify-content-center align-items-center"
@@ -111,7 +110,6 @@ const UserAccountHome = () => {
             width: "auto",
           }}
         >
-          {/* <UserAccountNav /> */}
           <div className="user-account-body">
             <UserAccountSideNav className="first-step-user-section" />
             <div

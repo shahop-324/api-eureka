@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import styled from "styled-components";
-import HeroLogo from "./../../assets/Logo/light.svg";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import SentimentDissatisfiedRoundedIcon from "@mui/icons-material/SentimentDissatisfiedRounded";
 import { useDispatch } from "react-redux";
 import { getStripeConnectLink } from "../../actions";
@@ -73,7 +73,11 @@ const NotConnected = () => {
     <>
       <div className="d-flex flex-column align-items-center">
         <PaymentHandlingNav className="d-flex flex-row align-items-center px-4">
-          <img src={HeroLogo} alt="Blumeet logo" />
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </PaymentHandlingNav>
         <div
           style={{ height: "93vh" }}

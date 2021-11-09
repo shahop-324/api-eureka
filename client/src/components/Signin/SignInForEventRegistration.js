@@ -66,7 +66,6 @@ const renderInput = ({
               {warning}
             </div>
           )))}
-      {/* {renderError(meta)} */}
       {!error && !warning
         ? (formIsvalidated = true)
         : (formIsvalidated = false)}
@@ -75,8 +74,6 @@ const renderInput = ({
 };
 
 const Signin = (props) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { error, signOutSucceded } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
   const { handleSubmit } = props;
@@ -91,7 +88,6 @@ const Signin = (props) => {
 
   useEffect(() => {
     console.log(params.code);
-    // dispatch(MailChimpAuth(params.code));
     dispatch(eventRegistrationSignIn(params.eventId));
     dispatch(eventBuyingPlan(params.intent));
     if (params.code) {
@@ -110,7 +106,6 @@ const Signin = (props) => {
       email: formValues.email,
       password: formValues.password,
     });
-    //dispatch(signIn(formValues));
   };
 
   if (isSending) {
@@ -122,30 +117,12 @@ const Signin = (props) => {
   }
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     setSigninClicked(false);
     return dispatch(errorTrackerForSignIn());
   }
 
-  const chatBot = () => {
-    var Tawk_API = Tawk_API || {},
-      Tawk_LoadStart = new Date();
-    (function () {
-      var s1 = document.createElement("script"),
-        s0 = document.getElementsByTagName("script")[0];
-      s1.async = true;
-      s1.src = "https://embed.tawk.to/611c4005649e0a0a5cd1a0c5/1fdb5k5ha";
-      s1.charset = "UTF-8";
-      s1.setAttribute("crossorigin", "*");
-      s0.parentNode.insertBefore(s1, s0);
-    })();
-  };
-
   return (
     <>
-      {chatBot()}
       <CssBaseline />
       {params.code && (
         <div
@@ -198,7 +175,9 @@ const Signin = (props) => {
           <div className="col col-md-6 col-lg-8 col-12 signin-form-container">
             <div className="col signin-form">
               <div className="container">
-                <div className="row sign-in-heading px-2">Sign in to Bluemeet</div>
+                <div className="row sign-in-heading px-2">
+                  Sign in to Bluemeet
+                </div>
                 <div className="row sign-in-sub-heading px-2">
                   Enter your details below.
                 </div>

@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import DNE from "./../../assets/images/DNE.png";
-
-import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 
 const NavBar = styled.div`
   min-height: 7vh;
@@ -49,7 +48,11 @@ const OopsDNE = () => {
   return (
     <>
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-1">
-        <img src={BluemeetLOGO} alt={"Bluemeet logo"} />
+        <img
+          src={BluemeetLogoLight}
+          alt="Bluemeet Logo"
+          style={{ height: "50px" }}
+        />
         {isSignedIn ? <Avatar /> : <></>}
       </NavBar>
 

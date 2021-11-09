@@ -2,7 +2,7 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import styled from "styled-components";
-import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import { useDispatch, useSelector } from "react-redux";
 import CreateNewCommunityForm from "./Forms/CreateNewCommunityForm";
 import {
@@ -305,9 +305,9 @@ const UserAccountSideNav = () => {
     <SideNavPaper>
       <div className="px-3 py-2 mb-4 mt-3">
         <img
-          src={BluemeetLOGO}
+          src={BluemeetLogoLight}
           alt="bluemeet logo"
-          style={{ width: "120px" }}
+          style={{ height: "50px" }}
         />
       </div>
 

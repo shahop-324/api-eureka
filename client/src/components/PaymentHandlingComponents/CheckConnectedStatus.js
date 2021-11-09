@@ -3,11 +3,12 @@
 import { Avatar } from "@material-ui/core";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import HeroLogo from "./../../assets/Logo/light.svg";
 import LOGO_Only_light from "./../../assets/Logo/light-logo-only.svg";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getStripeConnectAccountStatus } from "../../actions";
+
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 
 const PaymentHandlingNav = styled.div`
   background-color: #525f7f;
@@ -38,7 +39,7 @@ const CheckConnectedStatus = () => {
   const accountId = params.accountId;
   const communityId = params.communityId;
 
-   console.log(userId, accountId, communityId)
+  console.log(userId, accountId, communityId);
 
   useEffect(() => {
     dispatch(getStripeConnectAccountStatus(userId, communityId, accountId));
@@ -49,7 +50,11 @@ const CheckConnectedStatus = () => {
     <>
       <div>
         <PaymentHandlingNav className="d-flex flex-row align-items-center px-4">
-          <img src={HeroLogo} alt="Blumeet logo" />
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </PaymentHandlingNav>
         <div
           style={{ height: "93vh" }}

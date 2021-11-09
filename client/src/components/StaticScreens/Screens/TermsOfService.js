@@ -1,9 +1,8 @@
 import React from "react";
-import TopNav from "../Helper/TopNav";
-
 import "./../Styles/StaticScreenNav.scss";
 
 import Footer from "../../Footer";
+import TopNavNew from "../Helper/TopNavNew";
 
 const TermsOfService = () => {
   return (
@@ -15,7 +14,8 @@ const TermsOfService = () => {
         >
           {/* Here Goes Top Nav */}
 
-          <TopNav />
+         
+          <TopNavNew />
 
           <div className="container py-5 my-5" style={{ textAlign: "center" }}>
             <div className="heading-primary-term mb-5">Terms of service</div>

@@ -1,7 +1,9 @@
 import React from "react";
-import BluemeetLOGO from "./../../assets/Logo/Bluemeet_LOGO_official.svg";
 import AvatarMenu from "../AvatarMenu";
 import styled from "styled-components";
+
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
+
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 
 const BtnOutlinedWithIcon = styled.div`
@@ -35,15 +37,8 @@ class UserAccountNav extends React.Component {
     return (
       <UserAccountNavPaper className="row px-3 py-1">
         <div className="custom-nav-bar d-flex flex-row align-items-center justify-content-between px-3 py-2">
-          {/* <a
-            href="https://www.bluemeet.in/home"
-            className="navbar-brand"
-            style={{ textDecoration: "none", color: "#dcc7be" }}
-          >
-            Bluemeet
-          </a> */}
 
-          <img src={BluemeetLOGO} alt="bluemeet logo" style={{width: "120px"}}/>
+          <img src={BluemeetLogoLight} alt="bluemeet logo" style={{width: "120px"}}/>
 
           <div className="d-flex flex-row align-items-center">
             <BtnOutlinedWithIcon>

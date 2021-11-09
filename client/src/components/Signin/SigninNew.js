@@ -123,13 +123,6 @@ const RenderPassword = ({
 
 const SignInNew = ({ handleSubmit }) => {
   const onSubmit = (formValues) => {
-    // setSigninClicked(true);
-    // console.log(formValues);
-    // socket.emit("loggingInUser", {
-    //   email: formValues.email,
-    //   password: formValues.password,
-    // });
-    //dispatch(signIn(formValues));
   };
 
   return (

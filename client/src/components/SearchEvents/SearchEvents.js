@@ -18,10 +18,11 @@ import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Footer from "../Footer";
 import PreFooter from "../PreFooter";
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
 import NoResultsFound from "../NoResultsFound";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 
 const categories = [
   { title: "Technology" },
@@ -190,8 +191,6 @@ const SearchEvents = () => {
         favouriteEvent = userFavourites.filter((el) => el.id === event.id);
       }
 
-      console.log(favouriteEvent, "opppppppppp");
-
       if (typeof favouriteEvent !== "undefined" && favouriteEvent.length > 0) {
         isFavourite = true;
       } else {
@@ -296,7 +295,11 @@ const SearchEvents = () => {
                 className="navbar-brand"
                 style={{ color: "#538BF7", textDecoration: "none" }}
               >
-                Bluemeet
+                <img
+                  src={BluemeetLogoLight}
+                  alt="Bluemeet Logo"
+                  style={{ height: "50px" }}
+                />
               </Link>
               <button
                 className="navbar-toggler"
@@ -326,8 +329,7 @@ const SearchEvents = () => {
                     onChange={onChangeSearchEvents}
                   />
                   <button className="btn btn-outline-primary" type="submit">
-                    {/* <i className="fa fa-search"></i> */}
-                    <SearchRoundedIcon />
+                    <SearchRoundedIcon style={{ fontSize: "20px" }} />
                   </button>
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

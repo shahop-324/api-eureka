@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import "./StaticScreens/Styles/StaticScreenNav.scss";
+import validator from "validator";
 
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 import { useDispatch } from "react-redux";
-import { signupForEmailNewsletter } from "../actions";
+import { showSnackbar, signupForEmailNewsletter } from "../actions";
+
+import TelegramIcon from "@mui/icons-material/Telegram";
 
 const Footer = (props) => {
   const dispatch = useDispatch();
@@ -202,10 +205,21 @@ const Footer = (props) => {
                 type="button"
                 className="ui blue icon button"
                 onClick={() => {
-                  email && dispatch(signupForEmailNewsletter(email));
+                  if (email) {
+                    if (validator.isEmail(email)) {
+                      dispatch(signupForEmailNewsletter(email));
+                    } else {
+                      dispatch(
+                        showSnackbar(
+                          "error",
+                          "Please enter a valid email address."
+                        )
+                      );
+                    }
+                  }
                 }}
               >
-                <i className="send icon"></i>
+                <TelegramIcon />
               </button>
             </div>
           </div>

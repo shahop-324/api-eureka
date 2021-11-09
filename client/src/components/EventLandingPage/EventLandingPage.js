@@ -20,6 +20,8 @@ import {
   getCommunityTawkLink,
 } from "../../actions/index";
 
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
+
 import SessionCard from "./HelperComponent/SessionCard";
 import SpeakerCard from "./HelperComponent/SpeakerCard";
 import DiamondSponsorCard from "./HelperComponent/DiamondSponsorCard";
@@ -43,25 +45,12 @@ import Loader from "../Loader";
 import styled from "styled-components";
 
 import {
-  EmailShareButton,
   FacebookShareButton,
-  HatenaShareButton,
-  InstapaperShareButton,
-  LineShareButton,
   LinkedinShareButton,
-  LivejournalShareButton,
-  MailruShareButton,
-  OKShareButton,
-  PinterestShareButton,
-  PocketShareButton,
   RedditShareButton,
   TelegramShareButton,
-  TumblrShareButton,
   TwitterShareButton,
-  ViberShareButton,
-  VKShareButton,
   WhatsappShareButton,
-  WorkplaceShareButton,
 } from "react-share";
 
 import {
@@ -417,7 +406,11 @@ const EventLandingPage = (props) => {
                   className="navbar-brand"
                   style={{ color: "#538BF7", textDecoration: "none" }}
                 >
-                  Bluemeet
+                  <img
+                    src={BluemeetLogoLight}
+                    alt="Bluemeet Logo"
+                    style={{ height: "50px" }}
+                  />
                 </Link>
                 <button
                   className="navbar-toggler"

@@ -43,7 +43,7 @@ import EventPlatform from "./StaticScreens/Screens/EventPlatform";
 import SigninForBuyingPlan from "./Signin/SigninForBuyingPlan";
 import CompatibilityTest from "./HostingPlatform/CompatibilityTest";
 import TicketingPricing from "./StaticScreens/Screens/TicketingPricing";
-import CommunityPublicPage from "./StaticScreens/Screens/communityPublicPage";
+import CommunityPublicPage from "./StaticScreens/Screens/CommunityPublicPage";
 import socket from "./HostingPlatform/service/socket";
 
 import {
@@ -82,6 +82,7 @@ import UserVerificationExpired from "./UserAccount/Helper/UserVerificationExpire
 import CommunityVerificationExpired from "./UserAccount/Helper/CommunityVerificationExpired";
 
 import * as Amplitude from "@amplitude/node";
+import AppSumo from "./StaticScreens/Screens/Deals/AppSumo";
 
 const client = Amplitude.init("7ce61ef36a075fab0d8a6e6db4f59349");
 
@@ -235,6 +236,7 @@ class App extends React.Component {
                 component={NotConnected}
               />
               <Route path="/home" exact component={Home} />
+              <Route path="/deal/appsumo" exact component={AppSumo} />
               <Route path="/" exact component={Home} />
               <Route path="/signup" exact component={Signup} />
               <Route path="/login" exact component={SignInNew} />

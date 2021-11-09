@@ -3,6 +3,9 @@
   font-family: "Ubuntu" !important;
 }
 
+.sec-nav-link:hover{
+  border-bottom: 1px solid #212121;
+}
 
 .email-list-group {
   border: 1px solid transparent;

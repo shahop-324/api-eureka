@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./../Styles/StaticScreenNav.scss";
 import { fetchReferralCode } from "../../../actions";
@@ -16,17 +16,11 @@ import ConnectionThatLasts from "./../../../assets/images/section-6-home.png";
 import PollsChatsAndQnA from "./../../../assets/images/section-7-home.png";
 import EndlessUseCases from "./../../../assets/images/section-8-home.png";
 import BoostYourEvents from "./../../../assets/images/section-9-home.png";
-
-
 import styled from "styled-components";
-
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-
 import { Link } from "react-router-dom";
 import Footer from "../../Footer";
-
 import { useDispatch } from "react-redux";
-
 import AOS from "aos";
 import "aos/dist/aos.css";
 import TopNavNew from "../Helper/TopNavNew.js";
@@ -37,8 +31,6 @@ import PhotoCollage from "./../../../assets/Static/Photo-collage.svg";
 import ChatsAndPolls from "./../../../assets/Static/Chats-and-polls.svg";
 import Vibes from "./../../../assets/Static/Vibes.svg";
 import Video from "./../../../assets/Static/Video.svg";
-
-
 import Integrations from "./../../../assets/Static/integration-showcase.svg";
 import StaticBanner from "./StaticBanner";
 
@@ -61,7 +53,7 @@ const PlatformShowcaseHeading = styled.div`
   font-weight: 500;
   font-size: 2rem;
   font-family: "Ubuntu";
-  color: #538BF7;
+  color: #538bf7;
   text-align: center;
 `;
 
@@ -91,25 +83,26 @@ const SlideTab = styled.div`
   font-weight: 500;
   font-size: 0.9rem;
   font-family: "Ubuntu";
-  color: ${(props) => props && props.active ? "#152d3f" : "#ffffff" } ;
+  color: ${(props) => (props && props.active ? "#152d3f" : "#ffffff")};
   text-align: center;
 
-  background-color:  ${(props) => props && props.active ? "#ffffff" : "#152d3f" } ;
+  background-color: ${(props) =>
+    props && props.active ? "#ffffff" : "#152d3f"};
   text-align: center;
 
   &:hover {
-    background-color: #EBEBEB70;
+    background-color: #ebebeb70;
     cursor: pointer;
   }
 `;
 
 const SlideView = styled.img`
-border: 2px solid #528BF7;
-padding: 6px;
-border-radius: 12px;
-height: 70vh;
-object-fit: contain;
-`
+  border: 2px solid #528bf7;
+  padding: 6px;
+  border-radius: 12px;
+  height: 70vh;
+  object-fit: contain;
+`;
 
 var TxtType = function (el, toRotate, period) {
   this.toRotate = toRotate;
@@ -171,31 +164,30 @@ window.onload = function () {
 };
 
 const Home = () => {
-
   const [selectedTab, setSelectedTab] = useState("liveStage");
 
   let Image = LiveStage;
 
-  {(() => {
-    switch (selectedTab) {
-      case "liveStage":
-       return Image = LiveStage;
-      case "rooms":
-       return Image = Rooms;
-      case "photoCollage":
-       return Image = PhotoCollage;
-      case "chatsAndPolls":
-       return Image = ChatsAndPolls;
-      case "vibes":
-       return Image = Vibes;
-      case "videos":
-       return Image = Video;
-       
-    
-      default:
-        break;
-    }
-  })()}
+  {
+    (() => {
+      switch (selectedTab) {
+        case "liveStage":
+          return (Image = LiveStage);
+        case "rooms":
+          return (Image = Rooms);
+        case "photoCollage":
+          return (Image = PhotoCollage);
+        case "chatsAndPolls":
+          return (Image = ChatsAndPolls);
+        case "vibes":
+          return (Image = Vibes);
+        case "videos":
+          return (Image = Video);
+        default:
+          break;
+      }
+    })();
+  }
 
   const dispatch = useDispatch();
 
@@ -215,20 +207,22 @@ const Home = () => {
 
   const [openDemoForm, setOpenDemoForm] = React.useState(false);
 
-  // handleCloseRequestDemo, openDemoForm,
-
   const handleCloseRequestDemo = () => {
     setOpenDemoForm(false);
   };
 
+  const handleOpenRequestDemo = () => {
+    setOpenDemoForm(true);
+  }
+
   return (
     <>
-    <StaticBanner />
+      <StaticBanner />
       <div className="container-fluid p-0" id="home-page">
         <div className="header-section-home header-section">
           {/* Here goes Top Nav */}
           {/* <TopNav /> */}
-          <TopNavNew />
+          <TopNavNew handleOpenRequestDemo={handleOpenRequestDemo} />
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
@@ -289,10 +283,8 @@ const Home = () => {
             Making Your event more <br />
             engaging and effortless
           </div>
-          <div className="centered-heading-secondary mb-5">
-            From exploration, management, hosting to post analysis and resource
-            distribution, <br /> we do all this for you, so you can rest
-            peacefully.
+          <div className="centered-heading-secondary mb-5" style={{fontSize: "1rem"}}>
+            From managing, hosting, analysing, feedback collection to post event surveys Bluemeet handles all of <br /> this and more for you so you can enjoy your hassle free and engaging event.
           </div>
 
           <div
@@ -358,60 +350,105 @@ const Home = () => {
 
           <div className="container">
             <SlideTabGroup className="mb-5">
-              <SlideTab active={selectedTab === "liveStage" ? true : false} onClick={() => {
-                setSelectedTab("liveStage")
-              }}>Live Stage</SlideTab>
-              <SlideTab active={selectedTab === "rooms" ? true : false} onClick={() => {
-                setSelectedTab("rooms")
-              }}>Rooms</SlideTab>
-              <SlideTab active={selectedTab === "photoCollage" ? true : false} onClick={() => {
-                setSelectedTab("photoCollage")
-              }}>Photo Collage</SlideTab>
-              <SlideTab active={selectedTab === "chatsAndPolls" ? true : false} onClick={() => {
-                setSelectedTab("chatsAndPolls")
-              }}>Chat & Polls</SlideTab>
-              <SlideTab active={selectedTab === "vibes" ? true : false} onClick={() => {
-                setSelectedTab("vibes")
-              }}>Vibes</SlideTab>
-              <SlideTab active={selectedTab === "videos" ? true : false} onClick={() => {
-                setSelectedTab("videos")
-              }}>Videos</SlideTab>
+              <SlideTab
+                active={selectedTab === "liveStage" ? true : false}
+                onClick={() => {
+                  setSelectedTab("liveStage");
+                }}
+              >
+                Live Stage
+              </SlideTab>
+              <SlideTab
+                active={selectedTab === "rooms" ? true : false}
+                onClick={() => {
+                  setSelectedTab("rooms");
+                }}
+              >
+                Rooms
+              </SlideTab>
+              <SlideTab
+                active={selectedTab === "photoCollage" ? true : false}
+                onClick={() => {
+                  setSelectedTab("photoCollage");
+                }}
+              >
+                Photo Collage
+              </SlideTab>
+              <SlideTab
+                active={selectedTab === "chatsAndPolls" ? true : false}
+                onClick={() => {
+                  setSelectedTab("chatsAndPolls");
+                }}
+              >
+                Chat & Polls
+              </SlideTab>
+              <SlideTab
+                active={selectedTab === "vibes" ? true : false}
+                onClick={() => {
+                  setSelectedTab("vibes");
+                }}
+              >
+                Vibes
+              </SlideTab>
+              <SlideTab
+                active={selectedTab === "videos" ? true : false}
+                onClick={() => {
+                  setSelectedTab("videos");
+                }}
+              >
+                Videos
+              </SlideTab>
             </SlideTabGroup>
 
-            <div style={{width: "100%"}} className="d-flex flex-row align-items-center">
-
-            <SlideView src={Image} style={{marginLeft: "auto", marginRight: "auto"}}>
-            </SlideView>
+            <div
+              style={{ width: "100%" }}
+              className="d-flex flex-row align-items-center"
+            >
+              <SlideView
+                src={Image}
+                style={{ marginLeft: "auto", marginRight: "auto" }}
+              ></SlideView>
             </div>
           </div>
         </PlatformShowcaseBody>
 
         {/* Integrations showcase */}
 
-        <PlatformShowcaseBody className="d-flex flex-column align-items-center p-4" style={{backgroundColor: "#E4E4E4"}}>
-          <PlatformShowcaseHeading className="mt-5 mb-4" style={{fontWeight: "700", color: "#212121"}}>
-            Integrate apps for a  <br /> smoother workflow
+        <PlatformShowcaseBody
+          className="d-flex flex-column align-items-center p-4"
+          style={{ backgroundColor: "#E4E4E4" }}
+        >
+          <PlatformShowcaseHeading
+            className="mt-5 mb-4"
+            style={{ fontWeight: "700", color: "#212121" }}
+          >
+            Integrate apps for a <br /> smoother workflow
           </PlatformShowcaseHeading>
 
-          <PlatformShocaseSubHeading className="mb-5" style={{color: "#8A8A8A"}}>
-          Use our integrations to push data from your live events into <br/> 3rd-party apps and get real insights into all of your events.
+          <PlatformShocaseSubHeading
+            className="mb-5"
+            style={{ color: "#8A8A8A" }}
+          >
+            Use our integrations to push data from your live events into <br />{" "}
+            3rd-party apps and get real insights into all of your events.
           </PlatformShocaseSubHeading>
 
           <div className="container pt-3">
-            
-
-            <div style={{width: "100%"}} className="d-flex flex-row align-items-center">
-
-            <SlideView src={Integrations} style={{marginLeft: "auto", marginRight: "auto", border: "none"}}>
-            </SlideView>
+            <div
+              style={{ width: "100%" }}
+              className="d-flex flex-row align-items-center"
+            >
+              <SlideView
+                src={Integrations}
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  border: "none",
+                }}
+              ></SlideView>
             </div>
           </div>
         </PlatformShowcaseBody>
-
-
-       
-        
-       
 
         <div className="home-section-7 p-4">
           <div className=" container mt-3">
@@ -425,17 +462,22 @@ const Home = () => {
               >
                 <div
                   className="section-heading-primary pb-2"
-                  style={{fontSize: "2rem", fontWeight: "900"}}
+                  style={{ fontSize: "2rem", fontWeight: "900" }}
                 >
                   Engage your audience.
                 </div>
 
                 <div
                   className="home-text-description my-5"
-                  style={{ color: "#ffffff", fontWeight: "400 !important", fontSize: "0.95rem", lineHeight: "36px"  }}
-                  
+                  style={{
+                    color: "#ffffff",
+                    fontWeight: "400 !important",
+                    fontSize: "0.95rem",
+                    lineHeight: "36px",
+                  }}
                 >
-                  Enjoy a clutter free and full of engagement virtual event that increases your ROI and build geniune connections that lasts
+                  Enjoy a clutter free and full of engagement virtual event that
+                  increases your ROI and build geniune connections that lasts
                 </div>
 
                 <div className="action-btn-home py-3">
@@ -445,7 +487,6 @@ const Home = () => {
                     }}
                     className="btn btn-light btn-outline-text px-5 py-3 me-3"
                     style={{
-                      
                       borderRadius: "15px",
                     }}
                   >
@@ -470,9 +511,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-
-       
-
 
         <div className="home-section-9">
           <div className="container py-5 mt-3">

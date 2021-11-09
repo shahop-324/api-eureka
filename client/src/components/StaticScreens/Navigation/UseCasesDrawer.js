@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useSelector } from "react-redux";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 import StreamRoundedIcon from "@mui/icons-material/StreamRounded";
@@ -12,6 +12,8 @@ import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
 import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+import StaticBanner from "./../Screens/StaticBanner";
+import history from "./../../../history";
 
 const Paper = styled.div`
   width: 100%;
@@ -90,7 +92,15 @@ const NavLinkDropdown = styled.div`
   }
 `;
 
-const DarkTopNav = ({ setOpenProduct, setOpenUseCase, setOpenResources,  setOpenCompany}) => {
+const DarkTopNav = ({
+  setOpenProduct,
+  setOpenUseCase,
+  setOpenResources,
+  setOpenCompany,
+  handleOpenRequestDemo,
+}) => {
+  const { isSignedIn } = useSelector((state) => state.auth);
+
   return (
     <NavContainer className="container py-3 ">
       {/* Logo */}
@@ -98,47 +108,89 @@ const DarkTopNav = ({ setOpenProduct, setOpenUseCase, setOpenResources,  setOpen
 
       {/* Links */}
       <div className="d-flex flex-row align-items-center justify-content-evenly">
-        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOver={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOver={() => {
             setOpenUseCase(false);
             setOpenProduct(true);
-        }}>
+          }}
+        >
           <span className="me-1"> Product</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOver={() => {
-              setOpenUseCase(true)
-          }}>
+        <NavLinkDropdown
+          className="d-flex flex-row me-3 sec-nav-link"
+          onMouseOver={() => {
+            setOpenUseCase(true);
+          }}
+        >
           <span className="me-1"> Use cases</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3">
+        <NavLinkDropdown
+          onClick={() => {
+            history.push("/pricing");
+          }}
+          className="d-flex flex-row me-3 sec-nav-link"
+        >
           Pricing
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3">
+        <NavLinkDropdown
+          onClick={() => {
+            history.push("/search-events");
+          }}
+          className="d-flex flex-row me-3"
+        >
           Explore Events
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" onMouseOver={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOver={() => {
             setOpenUseCase(false);
             setOpenResources(true);
-        }}>
+          }}
+        >
           <span className="me-1">Resources</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
-        <NavLinkDropdown className="d-flex flex-row me-3" 
-        onMouseOver={() => {
+        <NavLinkDropdown
+          className="d-flex flex-row me-3"
+          onMouseOver={() => {
             setOpenUseCase(false);
             setOpenCompany(true);
-        }}>
+          }}
+        >
           <span className="me-1"> Company</span>
           <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />
         </NavLinkDropdown>
       </div>
       <div className="d-flex flex-row align-items-center justify-content-end">
-        <NavLinkDropdown className="me-3">
-          <span className="me-1">Your account</span>
-          <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
-        </NavLinkDropdown>
-        <button className="btn btn-outline-dark btn-outline-text">
+        {isSignedIn ? (
+          <NavLinkDropdown
+            onClick={() => {
+              history.push("/user/home");
+            }}
+            className="me-3"
+          >
+            <span className="me-1">Your account</span>
+            <ArrowRightRoundedIcon style={{ fontSize: "20px" }} />
+          </NavLinkDropdown>
+        ) : (
+          <button
+            onClick={() => {
+              history.push("/signin");
+            }}
+            className="btn btn-dark btn-outline-text me-4"
+          >
+            Signin
+          </button>
+        )}
+        <button
+          onClick={() => {
+            handleOpenRequestDemo();
+          }}
+          className="btn btn-outline-dark btn-outline-text"
+        >
           Request demo
         </button>
       </div>
@@ -147,7 +199,15 @@ const DarkTopNav = ({ setOpenProduct, setOpenUseCase, setOpenResources,  setOpen
   );
 };
 
-const UseCasesDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpenUseCase, setOpenResources,  setOpenCompany }) => {
+const UseCasesDrawer = ({
+  openDrawer,
+  handleCloseDrawer,
+  setOpenProduct,
+  setOpenUseCase,
+  setOpenResources,
+  setOpenCompany,
+  handleOpenRequestDemo,
+}) => {
   return (
     <>
       <React.Fragment key="top">
@@ -162,118 +222,133 @@ const UseCasesDrawer = ({ openDrawer, handleCloseDrawer, setOpenProduct, setOpen
           open={openDrawer}
           disableBackdropTransition={true}
         >
-          <div style={{ height: "80px" }}>
-            <DarkTopNav setOpenProduct={setOpenProduct} setOpenUseCase={setOpenUseCase} setOpenResources={setOpenResources}  setOpenCompany={setOpenCompany} />
+          <div
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setOpenUseCase(false);
+              }, 500);
+            }}
+          >
+            <StaticBanner />
+            <div style={{ height: "80px" }}>
+              <DarkTopNav
+                setOpenProduct={setOpenProduct}
+                setOpenUseCase={setOpenUseCase}
+                setOpenResources={setOpenResources}
+                setOpenCompany={setOpenCompany}
+                handleOpenRequestDemo={handleOpenRequestDemo}
+              />
+            </div>
+            <Paper className="px-4 py-4 container">
+              <NavSectionHeading className="mb-4">Use cases</NavSectionHeading>
+              <ProductUseCasesGrid>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#4FBCEE",
+                      border: "1px solid #4FBCEE",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Office hours</ProductName>
+                    <ProductCatchLine>
+                      Host amazing office hours with your customers
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#ECE141",
+                      border: "1px solid #ECE141",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Tech Talks</ProductName>
+                    <ProductCatchLine>
+                      Talk about tech with bluemeet
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#EC6341",
+                      border: "1px solid #EC6341",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">
+                      Recruiting events
+                    </ProductName>
+                    <ProductCatchLine>
+                      Attract more portential and generate job oppertunities
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#55EC41",
+                      border: "1px solid #55EC41",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Webinar</ProductName>
+                    <ProductCatchLine>
+                      Host your multitrack multisession event without efforts
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#9941EC",
+                      border: "1px solid #9941EC",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Product demos</ProductName>
+                    <ProductCatchLine>
+                      Showcase your product and generate leads using bluemeet
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+                <ProductCard className="mb-4">
+                  <ProductIcon
+                    className="p-1 me-3"
+                    style={{
+                      backgroundColor: "#EC4196",
+                      border: "1px solid #EC4196",
+                    }}
+                  >
+                    <CircleIcon />
+                  </ProductIcon>
+                  <div>
+                    <ProductName className="mb-2">Build in public</ProductName>
+                    <ProductCatchLine>
+                      Engage your public audienece using bluemeet
+                    </ProductCatchLine>
+                  </div>
+                </ProductCard>
+              </ProductUseCasesGrid>
+            </Paper>
           </div>
-          <Paper className="px-4 py-4 container" onMouseLeave={() => {
-              setOpenUseCase(false);
-          }}>
-            <NavSectionHeading className="mb-4">Use cases</NavSectionHeading>
-            <ProductUseCasesGrid>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#4FBCEE",
-                    border: "1px solid #4FBCEE",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Office hours</ProductName>
-                  <ProductCatchLine>
-                    Host amazing office hours with your customers
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#ECE141",
-                    border: "1px solid #ECE141",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Tech Talks</ProductName>
-                  <ProductCatchLine>
-                    Talk about tech with bluemeet
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#EC6341",
-                    border: "1px solid #EC6341",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Recruiting events</ProductName>
-                  <ProductCatchLine>
-                    Attract more portential and generate job oppertunities
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#55EC41",
-                    border: "1px solid #55EC41",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Webinar</ProductName>
-                  <ProductCatchLine>
-                    Host your multitrack multisession event without efforts
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#9941EC",
-                    border: "1px solid #9941EC",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Product demos</ProductName>
-                  <ProductCatchLine>
-                    Showcase your product and generate leads using bluemeet
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-              <ProductCard className="mb-4">
-                <ProductIcon
-                  className="p-1 me-3"
-                  style={{
-                    backgroundColor: "#EC4196",
-                    border: "1px solid #EC4196",
-                  }}
-                >
-                  <CircleIcon />
-                </ProductIcon>
-                <div>
-                  <ProductName className="mb-2">Build in public</ProductName>
-                  <ProductCatchLine>
-                    Engage your public audienece using bluemeet
-                  </ProductCatchLine>
-                </div>
-              </ProductCard>
-            </ProductUseCasesGrid>
-          </Paper>
         </SwipeableDrawer>
       </React.Fragment>
     </>

@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import {
   errorTrackerForSignIn,
   resetAuthError,
-  MailChimpAuth,
   eventBuyingPlan,
 } from "../../actions/index";
 import LinkedinAuth from "../LinkedinAuth";
@@ -22,7 +21,6 @@ import Footer from "../Footer";
 import { linkedinSignIn } from "../../actions";
 import Loader from "../Loader";
 import "material-react-toastify/dist/ReactToastify.css";
-import { useSnackbar } from "notistack";
 import socket from "../HostingPlatform/service/socket";
 let formIsvalidated = false;
 
@@ -71,8 +69,6 @@ const renderInput = ({
 };
 
 const Signin = (props) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { error, signOutSucceded } = useSelector((state) => state.auth);
   const { isSending } = useSelector((state) => state.auth);
   const { handleSubmit } = props;
@@ -87,7 +83,6 @@ const Signin = (props) => {
 
   useEffect(() => {
     console.log(params.code);
-    // dispatch(MailChimpAuth(params.code));
     dispatch(eventRegistrationSignIn(params.eventId));
     dispatch(eventBuyingPlan(params.intent));
     if (params.code) {
@@ -96,7 +91,6 @@ const Signin = (props) => {
 
     dispatch(resetAuthError());
     setSigninClicked(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, error]);
   const { signinForBuyingPlanIntent, signinForEventRegistrationEventId } =
     useSelector((state) => state.auth);
@@ -119,30 +113,13 @@ const Signin = (props) => {
   }
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
     setSigninClicked(false);
     return dispatch(errorTrackerForSignIn());
   }
 
-  const chatBot = () => {
-    var Tawk_API = Tawk_API || {},
-      Tawk_LoadStart = new Date();
-    (function () {
-      var s1 = document.createElement("script"),
-        s0 = document.getElementsByTagName("script")[0];
-      s1.async = true;
-      s1.src = "https://embed.tawk.to/611c4005649e0a0a5cd1a0c5/1fdb5k5ha";
-      s1.charset = "UTF-8";
-      s1.setAttribute("crossorigin", "*");
-      s0.parentNode.insertBefore(s1, s0);
-    })();
-  };
-
   return (
     <>
-      {chatBot()}
+     
       <CssBaseline />
       {params.code && (
         <div

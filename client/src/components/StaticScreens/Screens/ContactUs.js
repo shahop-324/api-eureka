@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import styled from "styled-components";
 import Footer from "../../Footer";
 import PhoneIcon from "@material-ui/icons/Phone";
 import EmailIcon from "@material-ui/icons/Email";
@@ -11,14 +12,25 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import Instagram from "@material-ui/icons/Instagram";
 
 import "./../Styles/ContactUs.scss";
-
 import PreFooter from "../../PreFooter";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { contactUs, errorTrackerForContactUs } from "../../../actions";
+import TopNavNew from "../Helper/TopNavNew";
 
-import TopNav from "../Helper/TopNav";
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
 
 const renderInput = ({
   input,
@@ -39,19 +51,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -77,35 +78,16 @@ const renderTextArea = ({
       />
 
       {touched &&
-        ((error && (
-          <div style={{ color: "red", fontWeight: "500" }} className="my-1">
-            {error}
-          </div>
-        )) ||
-          (warning && (
-            <div
-              className="my-1"
-              style={{ color: "#8B780D", fontWeight: "500" }}
-            >
-              {warning}
-            </div>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
 
-const showResults = (formValues) => {
-  // await sleep(500); // simulate server latency
-  window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
-};
-
 const ContactUs = (props) => {
-
   const dispatch = useDispatch();
 
-  const {error, isLoading} = useSelector((state) => state.contact);
-
-
+  const { error, isLoading } = useSelector((state) => state.contact);
 
   const { handleSubmit, pristine, submitting } = props;
 
@@ -116,13 +98,10 @@ const ContactUs = (props) => {
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    // dispatch(editUser(ModifiedFormValues, file));
     dispatch(contactUs(formValues));
-    showResults(formValues);
   };
 
-  if(error) {
-    alert(error);
+  if (error) {
     dispatch(errorTrackerForContactUs());
     return;
   }
@@ -131,13 +110,12 @@ const ContactUs = (props) => {
     <>
       <div
         className="container-fluid p-0"
-        style={{ backgroundColor: "#474747", width: "100vw" }}
+        style={{ backgroundColor: "#152d35", width: "100vw" }}
       >
         {/* Here Goes Top Nav Bar */}
+        <TopNavNew />
 
-        <TopNav />
-
-        <div className="contact-us-container d-flex flex-column my-5" >
+        <div className="contact-us-container d-flex flex-column my-5">
           <div
             className="centered-heading-primary my-3"
             style={{ color: "#D3D4D8" }}
@@ -185,7 +163,10 @@ const ContactUs = (props) => {
                 </div>
               </div>
               <div className="contact-us-form-container px-5 py-5 ">
-                <form onSubmit={handleSubmit(onSubmit)} className="justify-content-center d-flex flex-column justify-content-center px-4 py-4 my-5 ui form error">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="justify-content-center d-flex flex-column justify-content-center px-4 py-4 my-5 ui form error"
+                >
                   <div className="input-col-2-in-1 mb-4">
                     <div className="mb-3">
                       <label
@@ -194,12 +175,6 @@ const ContactUs = (props) => {
                       >
                         First Name
                       </label>
-                      {/* <input
-                        type="email"
-                        className="form-control"
-                        id="firstName"
-                        placeholder="John"
-                      /> */}
                       <Field
                         name="firstName"
                         type="text"
@@ -216,13 +191,6 @@ const ContactUs = (props) => {
                       >
                         Last Name
                       </label>
-                      {/* <input
-                        type="email"
-                        className="form-control"
-                        id="lastName"
-                        placeholder="Doe"
-                      /> */}
-
                       <Field
                         name="lastName"
                         type="text"
@@ -240,13 +208,6 @@ const ContactUs = (props) => {
                       >
                         Contact No.
                       </label>
-                      {/* <input
-                        type="tel"
-                        className="form-control"
-                        id="contactNumber"
-                        placeholder="+91 9770668454"
-                      /> */}
-
                       <Field
                         name="phoneNumber"
                         type="tel"
@@ -272,12 +233,6 @@ const ContactUs = (props) => {
                       >
                         Email address
                       </label>
-                      {/* <input
-                        type="email"
-                        className="form-control"
-                        id="contactEmail"
-                        placeholder="john@example.com"
-                      /> */}
                       <Field
                         name="email"
                         type="text"
@@ -295,12 +250,6 @@ const ContactUs = (props) => {
                     >
                       Your Message
                     </label>
-                    {/* <textarea
-                      className="form-control"
-                      id="message"
-                      rows="5"
-                    ></textarea> */}
-
                     <Field
                       name="message"
                       type="text"
@@ -361,8 +310,6 @@ const validate = (formValues) => {
 
   return errors;
 };
-
-// export default ContactUs;
 
 export default reduxForm({
   form: "contactUsForm",

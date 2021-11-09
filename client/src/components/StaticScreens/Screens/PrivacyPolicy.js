@@ -1,8 +1,7 @@
 import React from "react";
-import TopNav from "../Helper/TopNav";
-
 import "./../Styles/StaticScreenNav.scss";
 import Footer from "../../Footer";
+import TopNavNew from "../Helper/TopNavNew";
 
 const PrivacyPolicy = () => {
   return (
@@ -13,7 +12,7 @@ const PrivacyPolicy = () => {
           style={{ height: "auto" }}
         >
           {/* Here Goes Top Nav */}
-          <TopNav />
+          <TopNavNew />
 
           <div className="container py-5 my-5" style={{ textAlign: "center" }}>
             <div className="heading-primary-term mb-5">Privacy Policy</div>
@@ -33,7 +32,7 @@ const PrivacyPolicy = () => {
                 respects your privacy. This Privacy Policy describes our
                 practices with respect to Personal Information that we collect
                 from you or that you provide to us when you visit our website,
-                https://www.experiencewelcome.com/ (the “Website”), register for
+                https://www.bluemeet.in/ (the “Website”), register for
                 an account to attend virtual events on the Bluemeet virtual meeting
                 platform (the “Bluemeet Platform”), or sign up to use the Bluemeet
                 Platform as a producer to host virtual events. As used in this

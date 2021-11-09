@@ -6223,13 +6223,18 @@ export const createDemoRequest = (formValues) => async (dispatch, getState) => {
     setTimeout(function () {
       dispatch(demoActions.disableSucceded());
     }, 4000);
-    // alert("Request submitted successfully!");
-    // return <GlobalSnackbar severity={"success"} feedbackMsg={"Successfully recieved your request."}/>;
+
+    dispatch(
+      showSnackbar(
+        "success",
+        "We have recieved your request and we will be in touch very soon."
+      )
+    );
   } catch (err) {
     dispatch(demoActions.hasError(err.message));
-    // return <GlobalSnackbar severity={"error"} feedbackMsg={err.response}/>
-    // GlobalSnackbar("error", err.response);
-    // console.log(err);
+    dispatch(
+      showSnackbar("error", "Failed to submit your request, Please try again.")
+    );
   }
 };
 
@@ -6260,9 +6265,12 @@ export const signupForEmailNewsletter =
         }
       }
       res = await res.json();
-      console.log(res.data);
+
+      dispatch(showSnackbar("success", "Ok, We will send you our newsletters."))
+      
     } catch (error) {
       console.log(error);
+      dispatch(showSnackbar("error", "Failed to subscribe to newsletter. Please try again."))
     }
   };
 
@@ -6290,9 +6298,18 @@ export const contactUs = (formValues) => async (dispatch, getState) => {
     res = await res.json();
     console.log(res.data);
 
-    alert("Your contact request is recieved successfully.");
     dispatch(contactUsActions.ContactUs());
+
+    dispatch(
+      showSnackbar(
+        "success",
+        "We have recieved your ticket. We will be in touch soon."
+      )
+    );
   } catch (err) {
+    dispatch(
+      showSnackbar("error", "Failed to submit your ticket. Please try again.")
+    );
     dispatch(contactUsActions.hasError(err.message));
     console.log(err);
   }
@@ -8648,7 +8665,7 @@ export const createRTMPDestination =
       }
       res = await res.json();
 
-      console.log(res.data); 
+      console.log(res.data);
       // * Confirmed that res.data is the stream destination object
       //* Make Slice and actions and then dispatch it in global redux store.
 

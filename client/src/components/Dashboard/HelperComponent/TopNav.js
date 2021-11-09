@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React from "react";
 import "./../../../assets/Sass/TopNav.scss";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import { makeStyles } from "@material-ui/core/styles";
-import Badge from "@material-ui/core/Badge";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import SettingsIcon from "@material-ui/icons/Settings";
 import AvatarMenu from "./../../AvatarMenu";
-import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import Chip from "@mui/material/Chip";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import {
@@ -19,10 +15,9 @@ import {
 } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import SideNav from "./SideNav";
-import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import { Field, reduxForm } from "redux-form";
-import { connect, useSelector } from "react-redux";
-import SettingsVerticalTabs from "../SubComponents/SettingsVerticalTabs";
+import { useSelector } from "react-redux";
+
+import BluemeetLogoLight from "./../../../assets/images/Bluemeet_Logo_Light.svg";
 
 import SwitchCommunity from "./SwitchCommunity";
 import CommunityProfileTab from "../SubComponents/CommunityProfileTab";
@@ -30,22 +25,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import styled from "styled-components";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-// import Avatar from '@material-ui/core/Avatar';
-// import Faker from 'faker';
 
-const StyledInput = styled.input`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  font-size: 0.8rem;
-  color: #4e4e4e;
-`;
-
-const FormLabel = styled.label`
-  font-family: "Ubuntu" !important;
-  font-size: 0.82rem !important;
-  font-weight: 500 !important;
-  color: #727272 !important;
-`;
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
@@ -58,31 +38,11 @@ const FormHeading = styled.div`
 `;
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   flexGrow: 1,
-  //   backgroundColor: theme.palette.background.paper,
-  //   width: "100%",
-  //   display: "flex",
-  //   minHeight: "76.5vh",
-  // },
   large: {
     width: theme.spacing(10),
     height: theme.spacing(10),
   },
-  // tabs: {
-  //   borderRight: `1px solid ${theme.palette.divider}`,
-  // },
 }));
-
-const renderError = ({ error, touched }) => {
-  if (touched && error) {
-    return (
-      <div className="ui error message">
-        <div className="header">{error}</div>
-      </div>
-    );
-  }
-};
 
 const Topnav = ({
   activeIndex,
@@ -97,10 +57,6 @@ const Topnav = ({
   handleBillingClick,
   handleTeamManagementClick,
   handleRevenueManagementClick,
-  handleSubmit,
-  pristine,
-  reset,
-  submitting,
 }) => {
   const [openSettings, setOpenSettings] = React.useState(false);
 
@@ -112,10 +68,6 @@ const Topnav = ({
 
   const handleClickOpenSettings = () => {
     setOpenSettings(true);
-  };
-
-  const handleCloseSettings = () => {
-    setOpenSettings(false);
   };
 
   const theme = useTheme();
@@ -142,24 +94,19 @@ const Topnav = ({
     imgUrl = imgKey;
   }
 
-  const onSubmit = (formValues) => {
-    console.log(formValues);
-  };
-
   return (
     <>
       <div className="row topnav-container px-3 py-2">
         <div className="col-6 left">
           <div
             className="brand-logo-text d-flex flex-row align-items-center"
-            style={{ fontFamily: "Inter" }}
+            style={{ fontFamily: "Ubuntu" }}
           >
-            <a
-              href="https://www.bluemeet.in/home"
-              style={{ textDecoration: "none", color: "#538BF7" }}
-            >
-              Bluemeet
-            </a>
+            <img
+              src={BluemeetLogoLight}
+              alt="Bluemeet Logo"
+              style={{ height: "50px" }}
+            />
           </div>
         </div>
         <div className="col-6 right">
