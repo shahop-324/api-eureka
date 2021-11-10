@@ -32,11 +32,13 @@ const SuccessfullyConnected = () => {
     <>
       <div>
         <PaymentHandlingNav className="d-flex flex-row align-items-center px-4">
-          <img
-            src={BluemeetLogoLight}
-            alt="Bluemeet Logo"
-            style={{ height: "50px" }}
-          />
+          <a href="/">
+            <img
+              src={BluemeetLogoLight}
+              alt="Bluemeet Logo"
+              style={{ height: "50px" }}
+            />
+          </a>
         </PaymentHandlingNav>
         <div
           style={{ height: "93vh" }}

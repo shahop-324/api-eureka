@@ -401,17 +401,15 @@ const EventLandingPage = (props) => {
               style={{ backgroundColor: "#ffffff" }}
             >
               <div className="container-fluid">
-                <Link
-                  to="/home"
-                  className="navbar-brand"
-                  style={{ color: "#538BF7", textDecoration: "none" }}
-                >
+                
+                  <a href="/">
                   <img
                     src={BluemeetLogoLight}
                     alt="Bluemeet Logo"
                     style={{ height: "50px" }}
                   />
-                </Link>
+                  </a>
+                
                 <button
                   className="navbar-toggler"
                   data-bs-toggle="collapse"

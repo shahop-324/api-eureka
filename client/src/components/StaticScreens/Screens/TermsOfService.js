@@ -1,8 +1,8 @@
 import React from "react";
 import "./../Styles/StaticScreenNav.scss";
-
 import Footer from "../../Footer";
 import TopNavNew from "../Helper/TopNavNew";
+import StaticBanner from "./StaticBanner";
 
 const TermsOfService = () => {
   return (
@@ -13,8 +13,7 @@ const TermsOfService = () => {
           style={{ height: "auto" }}
         >
           {/* Here Goes Top Nav */}
-
-         
+          <StaticBanner />
           <TopNavNew />
 
           <div className="container py-5 my-5" style={{ textAlign: "center" }}>
@@ -33,15 +32,16 @@ const TermsOfService = () => {
                 1. Acceptance of terms
               </div>
               <div className="term-description">
-                These Bluemeet Terms of Service (“Terms”) are an agreement between
-                you, whether personally or on behalf of an entity (“user,” “you”
-                or “your”) and Gather Wholesale, Inc. d/b/a Bluemeet (“Company,”
-                “we,” “us” or “our”), concerning your access to and use of the
-                website located at https://www.Bluemeet.in, the Bluemeet virtual
-                meeting platform and any other products or services provided on
-                or through our web (collectively, the “Services”). Please read
-                these Terms carefully before you start to use the Services. The
-                Services include an internet-based meeting platform that enables
+                These Bluemeet Terms of Service (“Terms”) are an agreement
+                between you, whether personally or on behalf of an entity
+                (“user,” “you” or “your”) and Gather Wholesale, Inc. d/b/a
+                Bluemeet (“Company,” “we,” “us” or “our”), concerning your
+                access to and use of the website located at
+                https://www.bluemeet.in, the Bluemeet virtual meeting platform
+                and any other products or services provided on or through our
+                web (collectively, the “Services”). Please read these Terms
+                carefully before you start to use the Services. The Services
+                include an internet-based meeting platform that enables
                 producers to provide access to live and recorded virtual events
                 to attendees and presenters, and to enable those in attendance
                 to post, submit, and subscribe to content in the course of such
@@ -204,8 +204,9 @@ const TermsOfService = () => {
                 addresses, personal information, and any contents of the
                 Services where it is legally compelled to do so. Please read the
                 Company Privacy Policy, available at
-                https://www.Bluemeet.in/privacy-policy relating to our collection,
-                use, storage and disclosure of your personal information.
+                https://www.Bluemeet.in/privacy-policy relating to our
+                collection, use, storage and disclosure of your personal
+                information.
               </div>
             </div>
             <div

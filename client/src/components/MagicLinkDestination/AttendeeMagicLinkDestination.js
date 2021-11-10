@@ -1,38 +1,38 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import Faker from 'faker'
-import { Avatar } from '@material-ui/core'
-import AvatarGroup from '@mui/material/AvatarGroup'
-import dateFormat from 'dateformat'
-import BluemeetLogoLight from './../../assets/images/Bluemeet_Logo_Light.svg'
-import AvatarMenu from './../AvatarMenu'
-import { useParams } from 'react-router'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import Faker from "faker";
+import { Avatar } from "@material-ui/core";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import dateFormat from "dateformat";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
+import AvatarMenu from "./../AvatarMenu";
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchEventForMagicLinkPage,
   generateEventAccessToken,
   navigationIndexForHostingPlatform,
   logInMagicLinkUser,
-} from './../../actions'
-import Loader from '../Loader'
-import { Link } from 'react-router-dom'
+} from "./../../actions";
+import Loader from "../Loader";
+import { Link } from "react-router-dom";
 
 const Paper = styled.div`
   height: auto;
   background-color: #2f9bf3;
   text-align: center;
-`
+`;
 
 const NormalText = styled.span`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 1rem;
   color: #ffffff;
-`
+`;
 
 const AttractiveText = styled.a`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 1rem;
   color: #e2d40e;
   text-decoration: none;
@@ -40,24 +40,24 @@ const AttractiveText = styled.a`
     cursor: pointer;
     color: #212121;
   }
-`
+`;
 
 const StaticBanner = () => {
   return (
     <>
       <Paper className="py-2">
-        <NormalText>This event has already ended.</NormalText>{' '}
+        <NormalText>This event has already ended.</NormalText>{" "}
         <AttractiveText>Take me home.</AttractiveText>
       </Paper>
     </>
-  )
-}
+  );
+};
 
 const NavBar = styled.div`
   min-height: 7vh;
   background-color: #ffffff;
   border-bottom: 1px solid #ebebeb;
-`
+`;
 
 const Grid = styled.div`
   display: grid;
@@ -65,7 +65,7 @@ const Grid = styled.div`
   grid-gap: 24px;
   width: 100%;
   height: 54vh;
-`
+`;
 
 const EventPoster = styled.img`
   object-fit: cover;
@@ -73,59 +73,59 @@ const EventPoster = styled.img`
   width: 100%;
   border-radius: 10px;
   background-color: #212121;
-`
+`;
 
 const HostedBy = styled.div`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 0.9rem;
   color: #212121;
-`
+`;
 
 const Heading = styled.div`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 0.9rem;
   color: #212121;
-`
+`;
 
 const CommunityName = styled.div`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 0.86rem;
   color: #525252;
-`
+`;
 
 const EventName = styled.div`
   font-weight: 600;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 1.5rem;
   color: #444444;
-`
+`;
 
 const EventTimeline = styled.div`
   font-weight: 500;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   font-size: 1.1rem;
   color: #686868;
-`
+`;
 
 const JoinEventButton = styled.button`
   font-weight: 600;
   font-size: 1.2rem;
   width: 100%;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   color: #ffffff;
   border-radius: 15px;
-`
+`;
 
 const Announcement = styled.div`
   font-weight: 500;
   font-size: 0.85rem;
 
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
   color: #db3a3a;
-`
+`;
 
 const renderSpeakers = (speakers) => {
   return speakers.map((speaker) => {
@@ -133,77 +133,79 @@ const renderSpeakers = (speakers) => {
       <Avatar
         alt={speaker.firstName}
         src={
-          speaker.image.startsWith('https://')
+          speaker.image.startsWith("https://")
             ? speaker.image
             : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
         }
       />
-    )
-  })
-}
+    );
+  });
+};
 
 const AttendeeMagicLinkDestination = () => {
-  let eventStatus = 0
-  const params = useParams()
-  const dispatch = useDispatch()
+  let eventStatus = 0;
+  const params = useParams();
+  const dispatch = useDispatch();
 
   const { eventDetails, userId, userEmail, userRole } = useSelector(
-    (state) => state.magicLink,
-  )
+    (state) => state.magicLink
+  );
 
-  const { isSignedIn } = useSelector((state) => state.auth)
+  const { isSignedIn } = useSelector((state) => state.auth);
 
-  const registrationId = params.registrationId
+  const registrationId = params.registrationId;
 
   useEffect(() => {
-    dispatch(fetchEventForMagicLinkPage(registrationId))
-  }, [])
+    dispatch(fetchEventForMagicLinkPage(registrationId));
+  }, []);
 
   if (!eventDetails || !userId || !userRole) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (eventDetails) {
     if (
-      eventDetails.status === 'Upcoming' ||
-      eventDetails.status === 'Paused'
+      eventDetails.status === "Upcoming" ||
+      eventDetails.status === "Paused"
     ) {
-      eventStatus = 0
+      eventStatus = 0;
     }
     if (
-      eventDetails.status === 'Started' ||
-      eventDetails.status === 'Resumed'
+      eventDetails.status === "Started" ||
+      eventDetails.status === "Resumed"
     ) {
-      eventStatus = 1
+      eventStatus = 1;
     }
-    if (eventDetails.status === 'Ended') {
-      eventStatus = 2
+    if (eventDetails.status === "Ended") {
+      eventStatus = 2;
     }
   }
 
   return (
     <>
-      {eventDetails.status === 'Ended' ? <StaticBanner></StaticBanner> : <></>}
+      {eventDetails.status === "Ended" ? <StaticBanner></StaticBanner> : <></>}
 
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-1">
-        <img
-          src={BluemeetLogoLight}
-          alt="Bluemeet Logo"
-          style={{ height: '50px' }}
-        />
+        <a href="/">
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
+        </a>
         {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
 
       <div
         className="container d-flex flex-row align-items-center"
-        style={{ height: '93vh' }}
+        style={{ height: "93vh" }}
       >
         <Grid className="p-3">
           <div className="d-flex flex-column justify-content-center">
             <EventPoster
               className="mb-3"
               src={
-                eventDetails.image.startsWith('https://')
+                eventDetails.image.startsWith("https://")
                   ? eventDetails.image
                   : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.image}`
               }
@@ -230,8 +232,8 @@ const AttendeeMagicLinkDestination = () => {
             {/* Event timeline */}
             <Heading className="mb-3">Event Timeline</Heading>
             <EventTimeline className="mb-4">
-              {dateFormat(eventDetails.startTime, 'ddd, mmm dS, yy')} {'  '} -{' '}
-              {'  '} {dateFormat(eventDetails.endTime, 'ddd, mmm dS, yy')}
+              {dateFormat(eventDetails.startTime, "ddd, mmm dS, yy")} {"  "} -{" "}
+              {"  "} {dateFormat(eventDetails.endTime, "ddd, mmm dS, yy")}
             </EventTimeline>
             {/* Event speakers */}
             <Heading className="mb-3">Speakers</Heading>
@@ -256,69 +258,69 @@ const AttendeeMagicLinkDestination = () => {
                       <div className="d-flex flex-row align-items-center justify-content-between">
                         <JoinEventButton
                           onClick={() => {
-                            dispatch(logInMagicLinkUser(userId))
-                            dispatch(navigationIndexForHostingPlatform(5))
+                            dispatch(logInMagicLinkUser(userId));
+                            dispatch(navigationIndexForHostingPlatform(5));
                             dispatch(
                               generateEventAccessToken(
                                 userId,
                                 userEmail,
-                                'attendee', // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                              ),
-                            )
+                                "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                              )
+                            );
                           }}
                           disabled
                           className="btn btn-outline-text btn-primary"
-                          style={{ width: '48%' }}
+                          style={{ width: "48%" }}
                         >
                           Join event
                         </JoinEventButton>
                         <Link
-                          style={{ width: '48%' }}
+                          style={{ width: "48%" }}
                           to={`/community/${eventDetails.communityId}/event/${eventDetails._id}/hosting-platform/rooms`}
                         >
                           <JoinEventButton
                             onClick={() => {
-                              dispatch(logInMagicLinkUser(userId))
-                              dispatch(navigationIndexForHostingPlatform(5))
+                              dispatch(logInMagicLinkUser(userId));
+                              dispatch(navigationIndexForHostingPlatform(5));
                               dispatch(
                                 generateEventAccessToken(
                                   userId,
                                   userEmail,
-                                  'attendee', // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                                ),
-                              )
+                                  "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                                )
+                              );
                             }}
                             className="btn btn-outline-text btn-outline-primary"
-                            style={{ width: '100%' }}
+                            style={{ width: "100%" }}
                           >
                             Go to waiting room
                           </JoinEventButton>
                         </Link>
                       </div>
                     </>
-                  )
+                  );
 
                 case 1:
                   // Event has started or resumed or paused
                   return (
                     <JoinEventButton
                       onClick={() => {
-                        dispatch(logInMagicLinkUser(userId))
-                        dispatch(navigationIndexForHostingPlatform(5))
+                        dispatch(logInMagicLinkUser(userId));
+                        dispatch(navigationIndexForHostingPlatform(5));
                         dispatch(
                           generateEventAccessToken(
                             userId,
                             userEmail,
-                            'attendee', // attendee || speaker || exhibitor || organiser ||  moderator ||  host
-                          ),
-                        )
+                            "attendee" // attendee || speaker || exhibitor || organiser ||  moderator ||  host
+                          )
+                        );
                       }}
                       className="btn btn-outline-text btn-primary"
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                     >
                       Join event
                     </JoinEventButton>
-                  )
+                  );
 
                 case 2:
                   // Event has Ended
@@ -329,21 +331,21 @@ const AttendeeMagicLinkDestination = () => {
                       </Announcement>
                       <a
                         href="https://www.bluemeet.in"
-                        style={{ textDecoration: 'none' }}
+                        style={{ textDecoration: "none" }}
                       >
                         <JoinEventButton
                           className="btn btn-outline-text btn-primary"
-                          style={{ width: '100%' }}
+                          style={{ width: "100%" }}
                         >
                           Take me home
                         </JoinEventButton>
                       </a>
                     </>
-                  )
+                  );
 
                 default:
-                  console.log(eventStatus)
-                  break
+                  console.log(eventStatus);
+                  break;
               }
             })()}
 
@@ -352,7 +354,7 @@ const AttendeeMagicLinkDestination = () => {
         </Grid>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AttendeeMagicLinkDestination
+export default AttendeeMagicLinkDestination;

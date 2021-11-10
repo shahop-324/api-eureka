@@ -32,7 +32,9 @@ const StaticBanner = () => {
     <>
       <Paper className="py-2">
         <NormalText>Looking for a lifetime deal?</NormalText>
-        <AttractiveText> Click here</AttractiveText>
+        <a href="/deal/appsumo" style={{ textDecoration: "none" }}>
+          <AttractiveText> Click here</AttractiveText>
+        </a>
       </Paper>
     </>
   );

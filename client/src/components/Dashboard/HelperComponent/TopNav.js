@@ -102,11 +102,13 @@ const Topnav = ({
             className="brand-logo-text d-flex flex-row align-items-center"
             style={{ fontFamily: "Ubuntu" }}
           >
-            <img
-              src={BluemeetLogoLight}
-              alt="Bluemeet Logo"
-              style={{ height: "50px" }}
-            />
+            <a href="/">
+              <img
+                src={BluemeetLogoLight}
+                alt="Bluemeet Logo"
+                style={{ height: "50px" }}
+              />
+            </a>
           </div>
         </div>
         <div className="col-6 right">

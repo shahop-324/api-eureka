@@ -3,6 +3,7 @@ import "./../../assets/css/style.css";
 import styled from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SignupPNG from "./../../assets/images/Saly-38.png";
+import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
 import { errorTrackerForSignUp, resetAuthError } from "../../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { createUserAccountRequest, setReferralCode } from "../../actions/index";
@@ -136,14 +137,14 @@ const Signup = (props) => {
           <div className="col col-md-6 col-lg-4 col-12 signin-illustration-container d-flex">
             <div className="col illustration-card">
               <div className="row">
-                <a
-                  href="https://www.bluemeet.in/home"
-                  className="companyName"
-                  style={{ textDecoration: "none", color: "#538BF7" }}
-                >
-                  Bluemeet
+                <a href="/" className="companyName">
+                  <img
+                    src={BluemeetLogoLight}
+                    alt="Bluemeet Logo"
+                    style={{ height: "50px" }}
+                  />
                 </a>
-                <div className="welcome-message mb-5">
+                <div className="welcome-message mb-2">
                   Let's create your account.
                 </div>
                 <div className="login-illustration">

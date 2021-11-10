@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Footer from "../../Footer";
-import styled from 'styled-components';
+import styled from "styled-components";
 import "./../Styles/pricing.scss";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
@@ -22,10 +22,7 @@ import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { reduxForm } from "redux-form";
-import {
-  createDemoRequest,
-  switchToFreePlan,
-} from "../../../actions";
+import { createDemoRequest, switchToFreePlan } from "../../../actions";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
@@ -36,6 +33,8 @@ import PropTypes from "prop-types";
 import Slider from "@mui/material/Slider";
 import { styled as muiStyled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import StaticBanner from "./StaticBanner";
+import PlanComparison from "./../Helper/PlanComparison";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -131,6 +130,13 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
+const ComparePlans = styled.div`
+font-weight: 500;
+font-size: 1.1rem;
+color: #ffffff;
+text-align: center;
+`
+
 const Pricing = (props) => {
   const { signInSucceded } = useSelector((state) => state.auth);
 
@@ -218,23 +224,6 @@ const Pricing = (props) => {
       },
     },
   });
-
-  const onSubmit = (formValues) => {
-    console.log(formValues);
-
-    const ModifiedFormValues = {};
-
-    ModifiedFormValues.firstName = formValues.firstName;
-    ModifiedFormValues.lastName = formValues.lastName;
-    ModifiedFormValues.email = formValues.email;
-    ModifiedFormValues.companyName = formValues.companyName;
-    ModifiedFormValues.phoneNumber = formValues.phoneNumber;
-    ModifiedFormValues.jobTitle = formValues.jobTitle;
-    ModifiedFormValues.isAnEventAgency = formValues.eventAgency;
-    ModifiedFormValues.region = formValues.region.label;
-
-    dispatch(createDemoRequest(ModifiedFormValues));
-  };
 
   const displayRazorpay = async (referral) => {
     const res = await loadRazorpay();
@@ -398,16 +387,15 @@ const Pricing = (props) => {
       <div className="container-fluid p-0">
         <div className="header-section-home header-section">
           {/* <TopNav /> */}
+          <StaticBanner />
           <TopNavNew />
-
-          <div className="pricing-section  py-4">
+          <div className="pricing-section pt-4">
             <div className="pricing-heading-primary mt-5 mb-4">
               Built For <span style={{ color: "#ffffff" }}>Everyone</span>
             </div>
             <div className="pricing-heading-secondary mb-4">
               Choose a plan that works for you
             </div>
-
             <div className="pricing-cards-grid-wrapper py-5">
               <div
                 className="card__container grid"
@@ -438,7 +426,7 @@ const Pricing = (props) => {
                     <span className="card__header-subtitle mb-3">
                       Free plan
                     </span>
-                    <h1 className="card__header-title mb-4">Basic</h1>
+                    <h1 className="card__header-title mb-4">Starter</h1>
                   </header>
 
                   <ul className="card__list grid">
@@ -517,7 +505,7 @@ const Pricing = (props) => {
                     <span className="card__header-subtitle mb-3">
                       FOR INDIVIDUALS
                     </span>
-                    <h1 className="card__header-title mb-4">Starter</h1>
+                    <h1 className="card__header-title mb-4">Essential</h1>
                   </header>
 
                   <PrettoSlider
@@ -627,7 +615,7 @@ const Pricing = (props) => {
                 >
                   <div className="card__pricing p-3">
                     <div className="card__pricing-number">
-                      <span className="card__pricing-symbol">$</span>39
+                      <span className="card__pricing-symbol">$</span>350
                     </div>
                   </div>
 
@@ -643,7 +631,7 @@ const Pricing = (props) => {
                     <span className="card__header-subtitle mb-3">
                       Most popular
                     </span>
-                    <h1 className="card__header-title mb-4">Professional</h1>
+                    <h1 className="card__header-title mb-4">Pro</h1>
                   </header>
 
                   <PrettoSlider
@@ -866,7 +854,18 @@ const Pricing = (props) => {
             </div>
           </div>
 
-          <div className="FAQs-section px-4">
+          <ComparePlans className="mb-5">
+            All of our plans at a glance
+          </ComparePlans>
+
+          <div className="container mb-5">
+          <PlanComparison />
+
+          </div>
+
+         
+
+          <div className="FAQs-section px-4 mt-5">
             <h2 className="mb-4">F.A.Q.</h2>
             <details>
               <Summary>
@@ -933,6 +932,7 @@ const Pricing = (props) => {
             </details>
           </div>
         </div>
+        
         <PreFooter />
         {/* Pre Footer Here */}
         <Footer />

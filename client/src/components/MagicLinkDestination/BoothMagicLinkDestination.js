@@ -209,11 +209,13 @@ const BoothMagicLinkDestination = () => {
         <></>
       )}
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
+      <a href="/">
         <img
           src={BluemeetLogoLight}
           alt="Bluemeet Logo"
           style={{ height: "50px" }}
         />
+        </a>
         {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
 

@@ -44,7 +44,9 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
     <>
       <NavContainer className="container py-3 ">
         {/* Logo */}
+        <a href="/">
         <img src={BluemeetLogo} alt="Bluemeet Logo" style={{height: "50px"}} />
+        </a>
         {/* Links */}
         <div className="d-flex flex-row align-items-center justify-content-evenly">
           <NavLinkDropdown

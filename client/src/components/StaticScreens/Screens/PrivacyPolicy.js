@@ -2,6 +2,7 @@ import React from "react";
 import "./../Styles/StaticScreenNav.scss";
 import Footer from "../../Footer";
 import TopNavNew from "../Helper/TopNavNew";
+import StaticBanner from "./StaticBanner";
 
 const PrivacyPolicy = () => {
   return (
@@ -12,6 +13,7 @@ const PrivacyPolicy = () => {
           style={{ height: "auto" }}
         >
           {/* Here Goes Top Nav */}
+          <StaticBanner />
           <TopNavNew />
 
           <div className="container py-5 my-5" style={{ textAlign: "center" }}>
@@ -28,38 +30,39 @@ const PrivacyPolicy = () => {
             >
               <div className="terms-condition-heading mb-3">Privacy Policy</div>
               <div className="term-description">
-                Gather Wholesale, Inc. d/b/a Bluemeet (“Bluemeet,” “we,” “our,” “us,”)
-                respects your privacy. This Privacy Policy describes our
+                Gather Wholesale, Inc. d/b/a Bluemeet (“Bluemeet,” “we,” “our,”
+                “us,”) respects your privacy. This Privacy Policy describes our
                 practices with respect to Personal Information that we collect
                 from you or that you provide to us when you visit our website,
-                https://www.bluemeet.in/ (the “Website”), register for
-                an account to attend virtual events on the Bluemeet virtual meeting
-                platform (the “Bluemeet Platform”), or sign up to use the Bluemeet
-                Platform as a producer to host virtual events. As used in this
-                Privacy Policy, “Personal Information” means information that
-                identifies or that could be used to identify you, and “Services”
-                means, collectively, the Website and the Bluemeet Platform. This
-                Privacy Policy does not apply to information that our customers
-                who produce virtual events through the Bluemeet Platform (“Event
-                Producers”) collect, create, or provide to Bluemeet when they use
-                the Bluemeet Platform to host virtual events, which we refer to as
-                “Customer Data.” Customer Data, which may include Personal
-                Information contained in text, images, photos, audio clips, chat
-                logs, and audio and video recordings that are created or shared
-                during or in connection with a virtual event, is owned and
-                controlled by the Event Producer. Our use and disclosure of
-                Customer Data is governed by our agreements with Event
-                Producers. If you have questions about the information practices
-                of an Event Producer that uses the Bluemeet Platform to host
-                virtual events, please review the Event Producer’s privacy
-                policy or contact the Event Producer directly. In addition, we
-                do not control the actions of anyone with whom you may choose to
-                share information during or in connection with virtual events
-                hosted on the Bluemeet Platform, and we cannot and do not guarantee
-                that any information you share will not be viewed by
-                unauthorized persons. You should therefore be cautious about the
-                information you choose to share when attending or participating
-                in virtual events hosted through the Bluemeet Platform.
+                https://www.bluemeet.in/ (the “Website”), register for an
+                account to attend virtual events on the Bluemeet virtual meeting
+                platform (the “Bluemeet Platform”), or sign up to use the
+                Bluemeet Platform as a producer to host virtual events. As used
+                in this Privacy Policy, “Personal Information” means information
+                that identifies or that could be used to identify you, and
+                “Services” means, collectively, the Website and the Bluemeet
+                Platform. This Privacy Policy does not apply to information that
+                our customers who produce virtual events through the Bluemeet
+                Platform (“Event Producers”) collect, create, or provide to
+                Bluemeet when they use the Bluemeet Platform to host virtual
+                events, which we refer to as “Customer Data.” Customer Data,
+                which may include Personal Information contained in text,
+                images, photos, audio clips, chat logs, and audio and video
+                recordings that are created or shared during or in connection
+                with a virtual event, is owned and controlled by the Event
+                Producer. Our use and disclosure of Customer Data is governed by
+                our agreements with Event Producers. If you have questions about
+                the information practices of an Event Producer that uses the
+                Bluemeet Platform to host virtual events, please review the
+                Event Producer’s privacy policy or contact the Event Producer
+                directly. In addition, we do not control the actions of anyone
+                with whom you may choose to share information during or in
+                connection with virtual events hosted on the Bluemeet Platform,
+                and we cannot and do not guarantee that any information you
+                share will not be viewed by unauthorized persons. You should
+                therefore be cautious about the information you choose to share
+                when attending or participating in virtual events hosted through
+                the Bluemeet Platform.
               </div>
             </div>
             <div
@@ -109,11 +112,11 @@ const PrivacyPolicy = () => {
                 user account details, including username and password; and Other
                 information that you choose to share in connection with your
                 request or inquiry Event Registrant Data. To attend virtual
-                events that are produced and hosted through the Bluemeet Platform,
-                we ask that you register for an account with us. To set up your
-                account, we may ask you to provide the following Personal
-                Information: Name; Company name and job title/position; and
-                Email address.
+                events that are produced and hosted through the Bluemeet
+                Platform, we ask that you register for an account with us. To
+                set up your account, we may ask you to provide the following
+                Personal Information: Name; Company name and job title/position;
+                and Email address.
               </div>
             </div>
             <div
@@ -170,26 +173,27 @@ const PrivacyPolicy = () => {
               <div className="term-description">
                 In some cases, we receive Personal Information from third
                 parties. For instance, if you have been invited to attend a
-                virtual event on the Bluemeet Platform by an Event Producer, we may
-                receive your name and email address from the Event Producer to
-                facilitate your registration and attendance. We may also receive
-                Personal Information from other third-party sources, including:
-                Our service providers, such as online analytics providers; Data
-                brokers from which we purchase demographic data to supplement
-                the data we collect; Services that make user-generated content
-                from their service available to others, such as public posts on
-                social media networks; and Publicly available sources, such as
-                business registries. In addition, if you choose to interact with
-                us on social media by posting to our pages, tagging us (or using
-                certain hashtags or other identifiers) in posts, or otherwise
-                communicating with us or participating in social media
-                activities in which we are involved, we may collect certain
-                information from the social media account you use to interact
-                with us, including the name associated with the account, the
-                account handle, recent activity, the content of any posts in
-                which we are tagged, and other information that may be contained
-                on your social media profile to allow us to respond to the posts
-                and understand and engage with our audience.
+                virtual event on the Bluemeet Platform by an Event Producer, we
+                may receive your name and email address from the Event Producer
+                to facilitate your registration and attendance. We may also
+                receive Personal Information from other third-party sources,
+                including: Our service providers, such as online analytics
+                providers; Data brokers from which we purchase demographic data
+                to supplement the data we collect; Services that make
+                user-generated content from their service available to others,
+                such as public posts on social media networks; and Publicly
+                available sources, such as business registries. In addition, if
+                you choose to interact with us on social media by posting to our
+                pages, tagging us (or using certain hashtags or other
+                identifiers) in posts, or otherwise communicating with us or
+                participating in social media activities in which we are
+                involved, we may collect certain information from the social
+                media account you use to interact with us, including the name
+                associated with the account, the account handle, recent
+                activity, the content of any posts in which we are tagged, and
+                other information that may be contained on your social media
+                profile to allow us to respond to the posts and understand and
+                engage with our audience.
               </div>
             </div>
             <div
@@ -351,8 +355,8 @@ const PrivacyPolicy = () => {
               <div className="term-description">
                 The Services may contain links to other third-party websites and
                 services. These websites and services are not subject to this
-                Privacy Policy. They are not controlled by Bluemeet and Bluemeet is
-                not responsible for their content or their privacy policies,
+                Privacy Policy. They are not controlled by Bluemeet and Bluemeet
+                is not responsible for their content or their privacy policies,
                 which may differ from ours. We have not reviewed and make no
                 representations about the accuracy of information on third-party
                 websites, or about their information handling practices. Visits
