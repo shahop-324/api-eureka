@@ -630,6 +630,13 @@ const PlanComparision = () => {
         <DetailText>Coming soon</DetailText>
         <DetailText>Coming soon</DetailText>
       </DetailStrip>
+      <DetailStrip className="px-4 py-4">
+        <Text>Mobile & Tablet Support</Text>
+        <DetailText>Coming soon</DetailText>
+        <DetailText>Coming soon</DetailText>
+        <DetailText>Coming soon</DetailText>
+        <DetailText>Coming soon</DetailText>
+      </DetailStrip>
       <HeadingStrip className="px-4 py-4">
         <span>  </span>
 

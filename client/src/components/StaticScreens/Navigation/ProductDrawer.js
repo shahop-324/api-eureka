@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import styled from "styled-components";
 
@@ -10,15 +10,15 @@ import MarkEmailUnreadRoundedIcon from "@mui/icons-material/MarkEmailUnreadRound
 import GamepadRoundedIcon from "@mui/icons-material/GamepadRounded";
 import SettingsEthernetRoundedIcon from "@mui/icons-material/SettingsEthernetRounded";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
-import BluemeetLogo from "./../../../assets/Logo/Bluemeet_LOGO_official.svg";
+import BluemeetLogo from "./../../../assets/images/Bluemeet_Logo_Dark.svg";
 
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
-import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
-import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+
 import StaticBanner from "./../Screens/StaticBanner";
 import history from "./../../../history";
+import { toggleRequestDemo } from "../../../actions";
 
 const Paper = styled.div`
   width: 100%;
@@ -136,7 +136,6 @@ const NavLinkDropdown = styled.div`
 `;
 
 const DarkTopNav = ({
-  handleOpenRequestDemo,
   setOpenProduct,
   setOpenUseCase,
   setOpenCompany,
@@ -144,10 +143,18 @@ const DarkTopNav = ({
 }) => {
   const { isSignedIn } = useSelector((state) => state.auth);
 
+  const dispatch = useDispatch();
+
   return (
     <NavContainer className="container py-3 ">
       {/* Logo */}
-      <img src={BluemeetLogo} alt="Bluemeet Logo" />
+      <a href="/">
+        <img
+          src={BluemeetLogo}
+          alt="Bluemeet Logo"
+          style={{ height: "50px" }}
+        />
+      </a>
       {/* Links */}
       <div className="d-flex flex-row align-items-center justify-content-evenly">
         <NavLinkDropdown
@@ -229,7 +236,7 @@ const DarkTopNav = ({
         )}
         <button
           onClick={() => {
-            handleOpenRequestDemo();
+            dispatch(toggleRequestDemo(true));
           }}
           className="btn btn-outline-dark btn-outline-text"
         >
@@ -248,7 +255,6 @@ const ProductDrawer = ({
   setOpenUseCase,
   setOpenCompany,
   setOpenResources,
-  handleOpenRequestDemo,
 }) => {
   console.log(openDrawer);
   return (
@@ -278,7 +284,6 @@ const ProductDrawer = ({
 
             <div style={{ height: "80px" }}>
               <DarkTopNav
-                handleOpenRequestDemo={handleOpenRequestDemo}
                 setOpenProduct={setOpenProduct}
                 setOpenUseCase={setOpenUseCase}
                 setOpenCompany={setOpenCompany}

@@ -372,7 +372,8 @@ const EventOverview = (props) => {
               <EventDetailsHeading className="mb-4">
                 Event organised by
               </EventDetailsHeading>
-              <div className="form-group">
+              {/* // TODO We need to make it work properly */}
+              {/* <div className="form-group">
                 <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
                   <EventLinkInput
                     name="community name"
@@ -428,7 +429,7 @@ const EventOverview = (props) => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
             </EventDetails>
             <EventPromoImageContainer>
               <UploadEventImageForm />

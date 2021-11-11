@@ -22,11 +22,10 @@ import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { reduxForm } from "redux-form";
-import { createDemoRequest, switchToFreePlan } from "../../../actions";
+import { createDemoRequest, switchToFreePlan, toggleRequestDemo } from "../../../actions";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
-import RequestDemo from "../FormComponents/RequestDemo";
 import TopNavNew from "../Helper/TopNavNew";
 
 import PropTypes from "prop-types";
@@ -843,7 +842,7 @@ const Pricing = (props) => {
 
                   <button
                     onClick={() => {
-                      setOpenDemoForm(true);
+                     dispatch(toggleRequestDemo(true));
                     }}
                     className="card__button btn btn-primary btn-outline-text"
                   >
@@ -1084,13 +1083,6 @@ const Pricing = (props) => {
           </div>
         </SwipeableDrawer>
       </React.Fragment>
-
-      {/* Request Demo form goes here */}
-
-      <RequestDemo
-        handleCloseRequestDemo={handleCloseRequestDemo}
-        openDemoForm={openDemoForm}
-      />
     </>
   );
 };

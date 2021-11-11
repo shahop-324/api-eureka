@@ -58,6 +58,7 @@ import { connectionsActions } from "../reducers/connectionsSlice";
 import { scheduledMeetActions } from "../reducers/scheduledMeetSlice";
 import { sessionQnAActions } from "../reducers/sessionQnASlice";
 import { sessionPollActions } from "./../reducers/sessionPollSlice";
+import { openCloseActions } from "../reducers/openCloseSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -6266,11 +6267,17 @@ export const signupForEmailNewsletter =
       }
       res = await res.json();
 
-      dispatch(showSnackbar("success", "Ok, We will send you our newsletters."))
-      
+      dispatch(
+        showSnackbar("success", "Ok, We will send you our newsletters.")
+      );
     } catch (error) {
       console.log(error);
-      dispatch(showSnackbar("error", "Failed to subscribe to newsletter. Please try again."))
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to subscribe to newsletter. Please try again."
+        )
+      );
     }
   };
 
@@ -11462,4 +11469,12 @@ export const createLatestEvent = (formValues) => async (dispatch, getState) => {
       showSnackbar("error", "Failed to create event, please try again.")
     );
   }
+};
+
+export const toggleRequestDemo = (openState) => async (dispatch, getState) => {
+  dispatch(
+    openCloseActions.toggleRequestDemo({
+      openState: openState,
+    })
+  );
 };

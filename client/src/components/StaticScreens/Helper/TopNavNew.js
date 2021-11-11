@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import BluemeetLogo from "./../../../assets/images/Bluemeet_logo.svg";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
@@ -9,6 +9,7 @@ import UseCasesDrawer from "../Navigation/UseCasesDrawer";
 import ResourcesDrawer from "../Navigation/ResourcesDrawer";
 import CompanyDrawer from "../Navigation/CompanyDrawer";
 import history from "./../../../history";
+import { toggleRequestDemo } from "../../../actions";
 
 const NavContainer = styled.div`
   display: grid;
@@ -32,7 +33,9 @@ const NavLinkDropdown = styled.div`
   }
 `;
 
-const TopNavNew = ({ handleOpenRequestDemo }) => {
+const TopNavNew = () => {
+  const dispatch = useDispatch();
+
   const [openProduct, setOpenProduct] = useState(false);
   const [openUseCase, setOpenUseCase] = useState(false);
   const [openResources, setOpenResources] = useState(false);
@@ -45,7 +48,11 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
       <NavContainer className="container py-3 ">
         {/* Logo */}
         <a href="/">
-        <img src={BluemeetLogo} alt="Bluemeet Logo" style={{height: "50px"}} />
+          <img
+            src={BluemeetLogo}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </a>
         {/* Links */}
         <div className="d-flex flex-row align-items-center justify-content-evenly">
@@ -130,7 +137,7 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
           )}
           <button
             onClick={() => {
-              handleOpenRequestDemo();
+              dispatch(toggleRequestDemo(true));
             }}
             className="btn btn-outline-light btn-outline-text"
           >
@@ -146,7 +153,6 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
         setOpenUseCase={setOpenUseCase}
         setOpenCompany={setOpenCompany}
         setOpenResources={setOpenResources}
-        handleOpenRequestDemo={handleOpenRequestDemo}
       />
       <UseCasesDrawer
         openDrawer={openUseCase}
@@ -154,7 +160,6 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
         setOpenUseCase={setOpenUseCase}
         setOpenCompany={setOpenCompany}
         setOpenResources={setOpenResources}
-        handleOpenRequestDemo={handleOpenRequestDemo}
       />
       <ResourcesDrawer
         openDrawer={openResources}
@@ -162,7 +167,6 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
         setOpenUseCase={setOpenUseCase}
         setOpenCompany={setOpenCompany}
         setOpenResources={setOpenResources}
-        handleOpenRequestDemo={handleOpenRequestDemo}
       />
       <CompanyDrawer
         openDrawer={openCompany}
@@ -170,7 +174,6 @@ const TopNavNew = ({ handleOpenRequestDemo }) => {
         setOpenUseCase={setOpenUseCase}
         setOpenCompany={setOpenCompany}
         setOpenResources={setOpenResources}
-        handleOpenRequestDemo={handleOpenRequestDemo}
       />
     </>
   );

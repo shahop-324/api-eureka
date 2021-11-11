@@ -58,6 +58,7 @@ import scheduledMeetSlice from "./scheduledMeetSlice";
 import sessionQnASlice from "./sessionQnASlice";
 import sessionPollSlice from "./sessionPollSlice";
 import eventVideoSlice from "./eventVideoSlice";
+import openCloseSlice from "./openCloseSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -118,4 +119,5 @@ export default combineReducers({
   sessionQnAs: sessionQnASlice.reducer,
   sessionPolls: sessionPollSlice.reducer,
   eventVideos: eventVideoSlice.reducer,
+  openClose: openCloseSlice.reducer,
 });

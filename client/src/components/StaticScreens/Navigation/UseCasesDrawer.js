@@ -5,15 +5,16 @@ import styled from "styled-components";
 import StreamRoundedIcon from "@mui/icons-material/StreamRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 
-import BluemeetLogo from "./../../../assets/Logo/Bluemeet_LOGO_official.svg";
+import BluemeetLogo from "./../../../assets/images/Bluemeet_Logo_Dark.svg";
 
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
-import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
-import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
 import StaticBanner from "./../Screens/StaticBanner";
 import history from "./../../../history";
+
+import { useDispatch } from "react-redux";
+import { toggleRequestDemo } from "./../../../actions";
 
 const Paper = styled.div`
   width: 100%;
@@ -97,14 +98,21 @@ const DarkTopNav = ({
   setOpenUseCase,
   setOpenResources,
   setOpenCompany,
-  handleOpenRequestDemo,
 }) => {
   const { isSignedIn } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
 
   return (
     <NavContainer className="container py-3 ">
       {/* Logo */}
-      <img src={BluemeetLogo} alt="Bluemeet Logo" />
+      <a href="/">
+        <img
+          src={BluemeetLogo}
+          alt="Bluemeet Logo"
+          style={{ height: "50px" }}
+        />
+      </a>
 
       {/* Links */}
       <div className="d-flex flex-row align-items-center justify-content-evenly">
@@ -187,7 +195,7 @@ const DarkTopNav = ({
         )}
         <button
           onClick={() => {
-            handleOpenRequestDemo();
+           dispatch(toggleRequestDemo(true));
           }}
           className="btn btn-outline-dark btn-outline-text"
         >
@@ -206,7 +214,6 @@ const UseCasesDrawer = ({
   setOpenUseCase,
   setOpenResources,
   setOpenCompany,
-  handleOpenRequestDemo,
 }) => {
   return (
     <>
@@ -236,7 +243,6 @@ const UseCasesDrawer = ({
                 setOpenUseCase={setOpenUseCase}
                 setOpenResources={setOpenResources}
                 setOpenCompany={setOpenCompany}
-                handleOpenRequestDemo={handleOpenRequestDemo}
               />
             </div>
             <Paper className="px-4 py-4 container">

@@ -7,8 +7,12 @@ import Select from "react-select";
 import { Field } from "redux-form";
 import { reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
-import { createDemoRequest, errorTrackerForCreateDemo } from "../../../actions";
-import styled from 'styled-components';
+import {
+  createDemoRequest,
+  errorTrackerForCreateDemo,
+  toggleRequestDemo,
+} from "../../../actions";
+import styled from "styled-components";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -88,18 +92,8 @@ const renderInput = ({
         placeholder={placeholder}
       />
       {touched &&
-        ((error && (
-          <FormError className="my-1">
-            {error}
-          </FormError>
-        )) ||
-          (warning && (
-            <FormWarning
-              className="my-1"
-            >
-              {warning}
-            </FormWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
@@ -124,18 +118,8 @@ const renderPhoneInput = ({
         type={type}
       />
       {touched &&
-        ((error && (
-          <FormError className="my-1">
-            {error}
-          </FormError>
-        )) ||
-          (warning && (
-            <FormWarning
-              className="my-1"
-            >
-              {warning}
-            </FormWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -158,18 +142,8 @@ const renderEventPreferences = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && (
-          <FormError className="my-1">
-            {error}
-          </FormError>
-        )) ||
-          (warning && (
-            <FormWarning
-              className="my-1"
-            >
-              {warning}
-            </FormWarning>
-          )))}
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -181,6 +155,7 @@ const RequestDemo = ({
   pristine,
   submitting,
 }) => {
+  const { requestDemo } = useSelector((state) => state.openClose);
 
   const { error, succeded } = useSelector((state) => state.demo);
 
@@ -201,29 +176,23 @@ const RequestDemo = ({
     ModifiedFormValues.region = formValues.region.label;
 
     dispatch(createDemoRequest(ModifiedFormValues));
-    // showResults(ModifiedFormValues);
+    dispatch(toggleRequestDemo(false));
   };
 
   if (error) {
-    
     return dispatch(errorTrackerForCreateDemo());
   }
 
   return (
     <>
       <React.Fragment key="right">
-        <SwipeableDrawer anchor="right" open={openDemoForm} onOpen={() => {
-          console.log("Side nav was opended")
-        }}
-        onClose={() => {
-          console.log("Side nav was closed")
-        }}>
+        <SwipeableDrawer anchor="right" open={requestDemo}>
           <div className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Let's Schedule a meet</div>
               <div
                 onClick={() => {
-                  handleCloseRequestDemo();
+                  dispatch(toggleRequestDemo(false));
                 }}
               >
                 <IconButton aria-label="close-drawer">
@@ -390,7 +359,10 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <FormLabel className="form-check-label" for="flexRadioDefault1">
+                  <FormLabel
+                    className="form-check-label"
+                    for="flexRadioDefault1"
+                  >
                     Yes
                   </FormLabel>
                 </div>
@@ -405,7 +377,10 @@ const RequestDemo = ({
                     // component={renderInput}
                     component="input"
                   />
-                  <FormLabel className="form-check-label" for="flexRadioDefault2">
+                  <FormLabel
+                    className="form-check-label"
+                    for="flexRadioDefault2"
+                  >
                     No
                   </FormLabel>
                 </div>
@@ -441,9 +416,6 @@ const RequestDemo = ({
                   className="btn btn-primary btn-outline-text"
                   style={{ width: "100%" }}
                   disabled={pristine || submitting}
-                  onClick={() => {
-                    handleCloseRequestDemo();
-                  }}
                 >
                   Submit
                 </button>

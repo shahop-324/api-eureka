@@ -83,6 +83,9 @@ import CommunityVerificationExpired from "./UserAccount/Helper/CommunityVerifica
 
 import * as Amplitude from "@amplitude/node";
 import AppSumo from "./StaticScreens/Screens/Deals/AppSumo";
+import RequestDemo from "./StaticScreens/FormComponents/RequestDemo";
+import MainBlogPage from "./Blog/MainBlogPage";
+import IndividualBlog from "./Blog/IndividualBlog";
 
 const client = Amplitude.init("7ce61ef36a075fab0d8a6e6db4f59349");
 
@@ -159,11 +162,9 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route
-                path="/does-not-exist"
-                exact
-                component={OopsDNE}
-              />
+              <Route path="/does-not-exist" exact component={OopsDNE} />
+              <Route path="/blog" exact component={MainBlogPage} />
+              <Route path="/blog/:blogId" exact component={IndividualBlog} />
               <Route
                 path="/verifying-account/:id"
                 exact
@@ -821,6 +822,8 @@ class App extends React.Component {
           draggable
           pauseOnHover
         />
+
+        <RequestDemo />
 
         {this.props && this.props.message && this.props.open ? (
           <Snackbar

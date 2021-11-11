@@ -222,7 +222,7 @@ const Home = () => {
         <div className="header-section-home header-section">
           {/* Here goes Top Nav */}
           {/* <TopNav /> */}
-          <TopNavNew handleOpenRequestDemo={handleOpenRequestDemo} />
+          <TopNavNew  />
           <div className="header-content-section container d-flex">
             <div className="grid-of-2 my-4" style={{ width: "100%" }}>
               <div className="grid-1-of-2">
@@ -544,13 +544,6 @@ const Home = () => {
         <Footer />
         {/* Footer */}
       </div>
-
-      {/* Request Demo form here */}
-
-      <RequestDemo
-        handleCloseRequestDemo={handleCloseRequestDemo}
-        openDemoForm={openDemoForm}
-      />
     </>
   );
 };

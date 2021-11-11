@@ -1,21 +1,15 @@
 import React from "react";
-import styled from "styled-components";
 import "./../../../../assets/Sass/Billing.scss";
 import { Divider } from "@material-ui/core";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import Chip from "@mui/material/Chip";
-import GetProductDemo from "./GetProductDemo";
-import RequestDemo from "../../../StaticScreens/FormComponents/RequestDemo";
-
-
+import { useDispatch } from "react-redux";
+import { toggleRequestDemo } from "../../../../actions";
 
 const EnterprisePlanCard = () => {
-  const [openGetDemo, setOpenGetDemo] = React.useState(false);
 
-  const handleCloseGetDemo = () => {
-    setOpenGetDemo(false);
-  }
-  
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className="pricing-plan-card p-4">
@@ -155,7 +149,7 @@ const EnterprisePlanCard = () => {
         <button
           type="button"
           onClick={() => {
-            setOpenGetDemo(true);
+            dispatch(toggleRequestDemo(true));
           }}
           className="btn btn-primary btn-outline-text mt-3"
           style={{ width: "100%", marginTop: "80px" }}
@@ -163,7 +157,6 @@ const EnterprisePlanCard = () => {
           Schedule a demo
         </button>
       </div>
-      <RequestDemo openDemoForm={openGetDemo} handleCloseRequestDemo={handleCloseGetDemo} />
     </>
   );
 };

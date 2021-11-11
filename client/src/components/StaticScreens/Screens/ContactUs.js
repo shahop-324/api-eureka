@@ -17,6 +17,7 @@ import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import { contactUs, errorTrackerForContactUs } from "../../../actions";
 import TopNavNew from "../Helper/TopNavNew";
+import StaticBanner from "./StaticBanner";
 
 const FormError = styled.div`
   font-family: "Ubuntu";
@@ -113,6 +114,7 @@ const ContactUs = (props) => {
         style={{ backgroundColor: "#152d35", width: "100vw" }}
       >
         {/* Here Goes Top Nav Bar */}
+        <StaticBanner />
         <TopNavNew />
 
         <div className="contact-us-container d-flex flex-column my-5">
