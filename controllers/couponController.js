@@ -1,6 +1,7 @@
 const Community = require("../models/communityModel");
 const Coupon = require("../models/couponModel");
 const Event = require("../models/eventModel");
+const mongoose = require("mongoose");
 const catchAsync = require("../utils/catchAsync");
 
 const filterObj = (obj, ...allowedFields) => {
@@ -25,15 +26,12 @@ exports.getOneCoupon = catchAsync(async (req, res, next) => {
 
 exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
-  const communityId = req.community.id;
-
   const eventGettingCoupon = await Event.findById(eventId);
-  const communityGettingCoupon = await Community.findById(communityId);
 
   // 1) when a new coupon is created then create a new document in Coupons Resource
   try {
     const createdCoupon = await Coupon.create({
-      discountForEventId: req.body.discountForEventId,
+      eventId: req.body.eventId,
       discountPercentage: req.body.discountPercentage,
       discountCode: req.body.discountCode,
       startTime: req.body.startTime,
@@ -42,15 +40,12 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
       validTillDate: req.body.validTillDate,
       validTillTime: req.body.validTillTime,
       maxNumOfDiscountPermitted: req.body.maxNumOfDiscountPermitted,
+      createdAt: req.body.createdAt,
     });
 
     // 2) Update Coupons field in corresponding event document for which this coupon is created
     eventGettingCoupon.coupon.push(createdCoupon.id);
     await eventGettingCoupon.save({ validateModifiedOnly: true });
-
-    // 3) Update coupons field in corresponding community document for which this coupon is created
-    communityGettingCoupon.coupons.push(createdCoupon.id);
-    await communityGettingCoupon.save({ validateModifiedOnly: true });
 
     const populatedCoupon = await Coupon.findById(createdCoupon._id).populate(
       "tickets",
@@ -68,23 +63,31 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllCoupons = catchAsync(async (req, res, next) => {
-  let couponDocs = await Community.findById(req.community.id)
-    .select("coupons")
-    .populate({
-      path: "coupons",
-      populate: {
-        path: "discountForEventId",
-      },
-    })
-    .populate("tickets", "name");
+  const eventId = req.params.eventId;
 
-  couponDocs = couponDocs.coupons.filter(
-    (coupon) => coupon.status !== "Deleted"
-  );
+  let couponDocs = await Coupon.find({
+    eventId: mongoose.Types.ObjectId(eventId),
+  }).populate("tickets", "name");
+
+  // Filter out all deleted coupons
+
+  couponDocs = couponDocs.filter((el) => !el.deleted);
+
+  // Also fetch all active and non-deleted tickets for this event
+
+  const tickets = await Ticket.find({
+    $and: [
+      { eventId: mongoose.Types.ObjectId(eventId) },
+      { active: true },
+      { deleted: false },
+      { soldOut: false },
+    ],
+  });
 
   res.status(200).json({
     status: "success",
     data: couponDocs,
+    tickets: tickets,
   });
 });
 
@@ -122,7 +125,7 @@ exports.UpdateCoupon = catchAsync(async (req, res, next) => {
 exports.DeleteCoupon = catchAsync(async (req, res, next) => {
   const deletedCoupon = await Coupon.findByIdAndUpdate(
     req.params.id,
-    { status: "Deleted", active: false },
+    { deleted: true, active: false },
     {
       new: true,
       runValidators: true,

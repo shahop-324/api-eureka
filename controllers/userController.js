@@ -159,9 +159,21 @@ exports.getEventLandingPage = catchAsync(async (req, res, next) => {
     { new: true, validateModifiedOnly: true }
   );
 
+  // Find all events of this event which are not deleted & active and send back as a response
+
+  const tickets = await Ticket.find({
+    $and: [
+      { eventId: mongoose.Types.ObjectId(req.params.id) }, // Event Id for which we want to find tickets for
+      { deleted: false }, // Ticket must not be deleted
+      { active: true }, // Ticket must be active
+      { soldOut: false }, // Ticket must not be sold out
+    ],
+  });
+
   res.status(200).json({
     status: "SUCCESS",
     data: eventDoc,
+    tickets: tickets,
   });
 });
 

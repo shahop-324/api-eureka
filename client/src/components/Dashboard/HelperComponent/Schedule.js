@@ -281,20 +281,20 @@ class Dnd extends React.Component {
     //alert(`${event.title} was resized to ${start}-${end}`)
   };
 
-  newEvent(_event) {
-    // let idList = this.state.events.map(a => a.id)
-    // let newId = Math.max(...idList) + 1
-    // let hour = {
-    //   id: newId,
-    //   title: 'New Event',
-    //   allDay: event.slots.length == 1,
-    //   start: event.start,
-    //   end: event.end,
-    // }
-    // this.setState({
-    //   events: this.state.events.concat([hour]),
-    // })
-  }
+  // newEvent(_event) {
+  //   let idList = this.state.events.map(a => a.id)
+  //   let newId = Math.max(...idList) + 1
+  //   let hour = {
+  //     id: newId,
+  //     title: 'New Event',
+  //     allDay: event.slots.length == 1,
+  //     start: event.start,
+  //     end: event.end,
+  //   }
+  //   this.setState({
+  //     events: this.state.events.concat([hour]),
+  //   })
+  // }
 
   render() {
     return (

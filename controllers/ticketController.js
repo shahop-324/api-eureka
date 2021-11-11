@@ -17,13 +17,16 @@ exports.deleteTicket = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTickets = catchAsync(async (req, res, next) => {
-
   const query = Ticket.find({
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   });
 
   const features = new apiFeatures(query, req.query).textFilter();
-  const tickets = await features.query;
+  let tickets = await features.query;
+
+  console.log(tickets);
+
+  tickets = tickets.filter((el) => !el.deleted);
 
   res.status(200).json({
     status: "SUCCESS",

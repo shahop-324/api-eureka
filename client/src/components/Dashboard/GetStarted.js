@@ -228,10 +228,21 @@ const GetStarted = () => {
     <>
       <div className="hide-scrollbar scroll-hide me-3">
         <div
-          className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 mb-3"
+          className="secondary-heading-row d-flex flex-row align-items-center justify-content-between px-4 pt-4 mb-3"
           style={{ minWidth: "1138px" }}
         >
           <SectionHeading>Getting started</SectionHeading>
+          <div className="d-flex flex-row align-items-center">
+            <button className="btn btn-outline-primary btn-outline-text">
+              Archive
+            </button>
+            <button className="btn btn-outline-primary btn-outline-text mx-3">
+              Community
+            </button>
+            <button className="btn btn-outline-primary btn-outline-text">
+              Followers
+            </button>
+          </div>
         </div>
         <div className="px-4 mb-5">
           <TextSmall>

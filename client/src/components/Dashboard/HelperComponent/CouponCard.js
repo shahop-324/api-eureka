@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { fetchCoupon } from "../../../actions";
 import CouponInfo from "./CouponInfo";
 
+import dateFormat from "dateformat";
+
 const CouponCard = ({
   id,
   url,
@@ -46,7 +48,7 @@ const CouponCard = ({
 
   const handleOpenInfo = () => {
     setOpenInfo(true);
-  }
+  };
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
@@ -76,30 +78,31 @@ const CouponCard = ({
               <DeleteIcon style={{ fill: "#FFFFFF" }} />
             </IconButton>
           </div>
-
-          <div className="fit-content" onClick={handleOpenInfo}>
-            <IconButton aria-label="delete">
-              <InfoIcon style={{ fill: "#FFFFFF" }} />
-            </IconButton>
-          </div>
         </div>
       </div>
       <div
         className="coupon-card-other-info px-4 py-3 d-flex flex-column align-items-center"
         style={{ height: "60%" }}
       >
-        <div className="coupon-discount-percent mb-4 mt-3">{percentage}% Off</div>
-        <div className="mb-3" style={{marginBottom: "20px"}}>
+        <div className="coupon-discount-percent mb-4 mt-3">
+          {percentage}% Off
+        </div>
+        <div className="mb-3" style={{ marginBottom: "20px" }}>
           <button
             type="button"
             className="btn btn-outline-secondary disabled-text"
             style={{ minWidth: "210px" }}
             disabled
           >
-            30 JUN, TUE
+            {/* Here we need to show coupon expiry date */}
+
+            {/* 30 JUN, TUE */}
+
+            {dateFormat(new Date(validTillDate), "dS mmm, ddd")}
+            {/* // Saturday, June 9th, 2007, 5:46:21 PM */}
           </button>
         </div>
-        <div className="mb-3" style={{marginBottom: "28px"}}>
+        <div className="mb-3" style={{ marginBottom: "28px" }}>
           <button
             type="button"
             className="btn btn-primary disabled-text"

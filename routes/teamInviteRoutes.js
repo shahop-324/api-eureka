@@ -18,6 +18,8 @@ router.get("/fetchPendingInvitations", authController.protectCommunity, teamInvi
 
 router.get("/fetchCommunityManagers", authController.protectCommunity, teamInviteController.fetchCommunityManagers);
 
+router.get("/getSuperAdmin/:communityId", authController.protectCommunity, teamInviteController.fetchSuperAdmin);
+
 router.delete("/removeFromTeam/:email/:status", authController.protectCommunity, teamInviteController.removeFromTeam);
 
 module.exports = router;

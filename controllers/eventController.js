@@ -961,7 +961,7 @@ exports.createTicket = catchAsync(async (req, res, next) => {
   }
 
   // Create a new Ticket Document in Ticket collection
-  const newlyCreatedTicket = await Ticket.create(
+  await Ticket.create(
     {
       name: req.body.name,
       price: req.body.price,
@@ -976,18 +976,18 @@ exports.createTicket = catchAsync(async (req, res, next) => {
       salesEndDate: req.body.salesEndDate,
       salesEndTime: req.body.salesEndTime,
       salesStartTime: req.body.salesStartTime,
-      visibility: req.body.visibility,
       message: req.body.message,
-      eventId: eventGettingNewTicket.id,
+      eventId: eventId,
     },
     async (err, doc) => {
-      console.log(err);
-      eventGettingNewTicket.tickets.push(doc._id ? doc._id : doc.id);
-      await eventGettingNewTicket.save({ validateModifiedOnly: true });
-      await Event.findByIdAndUpdate(eventId, {
-        minTicketPrice: updatedMinPrice,
-        maxTicketPrice: updatedMaxPrice,
-      });
+      await Event.findByIdAndUpdate(
+        eventId,
+        {
+          minTicketPrice: updatedMinPrice,
+          maxTicketPrice: updatedMaxPrice,
+        },
+        { new: true, validateModifiedOnly: true }
+      );
 
       // Update corresponsing event document with newly created ticket objectId and set new values for min and max ticket price
       res.status(201).json({
@@ -1212,55 +1212,58 @@ exports.getNetworkSettings = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTicket = catchAsync(async (req, res, next) => {
-  const ticketId = req.params.id;
-  const ticketDoc = await Ticket.findById(ticketId);
 
-  const eventUpdatingTicket = await Event.findById(ticketDoc.eventId);
-
-  const previousMinPrice = eventUpdatingTicket.minTicketPrice;
-  const previousMaxPrice = eventUpdatingTicket.maxTicketPrice;
-
-  let updatedMinPrice = previousMinPrice;
-  let updatedMaxPrice = previousMaxPrice;
-  const currentPriceValue = req.body.price;
-
-  if (currentPriceValue < previousMinPrice) {
-    updatedMinPrice = currentPriceValue;
+  try{
+    const ticketId = req.params.id;
+    const ticketDoc = await Ticket.findById(ticketId);
+  
+    const eventUpdatingTicket = await Event.findById(ticketDoc.eventId);
+  
+    const previousMinPrice = eventUpdatingTicket.minTicketPrice;
+    const previousMaxPrice = eventUpdatingTicket.maxTicketPrice;
+  
+    let updatedMinPrice = previousMinPrice;
+    let updatedMaxPrice = previousMaxPrice;
+    const currentPriceValue = req.body.price;
+  
+    if (currentPriceValue < previousMinPrice) {
+      updatedMinPrice = currentPriceValue;
+    }
+    if (currentPriceValue > previousMaxPrice) {
+      updatedMaxPrice = currentPriceValue;
+    }
+  
+    const updatedTicket = await Ticket.findByIdAndUpdate(
+      ticketId,
+      {
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+        numberOfTicketAvailable: req.body.numberOfTicketAvailable,
+        currency: req.body.currency,
+        type: req.body.type,
+        salesStartDate: req.body.salesStartDate,
+        salesEndDate: req.body.salesEndDate,
+        salesEndTime: req.body.salesEndTime,
+        salesStartTime: req.body.salesStartTime,
+        message: req.body.message,
+      },
+      { new: true, validateModifiedOnly: true }
+    );
+  
+    await Event.findByIdAndUpdate(ticketDoc.eventId, {
+      minTicketPrice: updatedMinPrice,
+      maxTicketPrice: updatedMaxPrice,
+    });
+  
+    res.status(200).json({
+      status: "success",
+      data: updatedTicket,
+    });
   }
-  if (currentPriceValue > previousMaxPrice) {
-    updatedMaxPrice = currentPriceValue;
+  catch(error){
+    console.log(error);
   }
-
-  const updatedTicket = await Ticket.findByIdAndUpdate(
-    ticketId,
-    {
-      name: req.body.name,
-      price: req.body.price,
-      description: req.body.description,
-      numberOfTicketAvailable: req.body.numberOfTicketAvailable,
-      currency: req.body.currency,
-      shareRecording: req.body.shareRecording,
-      venueAreasAccessible: req.body.venueAreasAccessible,
-      type: req.body.type,
-      salesStartDate: req.body.salesStartDate,
-      salesEndDate: req.body.salesEndDate,
-      salesEndTime: req.body.salesEndTime,
-      salesStartTime: req.body.salesStartTime,
-      visibility: req.body.visibility,
-      message: req.body.message,
-    },
-    { new: true, validateModifiedOnly: true }
-  );
-
-  await Event.findByIdAndUpdate(ticketDoc.eventId, {
-    minTicketPrice: updatedMinPrice,
-    maxTicketPrice: updatedMaxPrice,
-  });
-
-  res.status(200).json({
-    status: "success",
-    data: updatedTicket,
-  });
 });
 
 exports.getAllTickets = catchAsync(async (req, res, next) => {
@@ -1288,7 +1291,7 @@ exports.getOneTicket = catchAsync(async (req, res, next) => {
 exports.deleteTicket = catchAsync(async (req, res, next) => {
   let deletedTicket = await Ticket.findByIdAndUpdate(
     req.params.id,
-    { status: "Deleted" },
+    { deleted: true, active: false },
     { new: true, validateModifiedOnly: true }
   );
 

@@ -145,7 +145,7 @@ router.get(
 
 // DONE Getting all coupons which are created by a community
 router.get(
-  "/coupons",
+  "/coupons/:eventId",
   authController.protectCommunity,
   couponController.getAllCoupons
 );

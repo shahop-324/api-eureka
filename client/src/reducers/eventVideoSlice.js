@@ -27,6 +27,8 @@ const eventVideoSlice = createSlice({
     // Fetch videos
 
     FetchVideos(state, action) {
+      // alert("This is Fetch videos action");
+      console.log(action.payload.videos);
       state.videos = action.payload.videos;
     },
 

@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import "./../../assets/Sass/Dashboard_Overview.scss";
 import "./../../assets/Sass/EventManagement.scss";
 import "./../../assets/Sass/SideNav.scss";
@@ -14,6 +15,7 @@ import { fetchCoupons } from "../../actions";
 import Loader from "../Loader";
 import NoContentFound from "../NoContent";
 import noCoupons from "./../../assets/images/coupons.png";
+import { useParams } from "react-router";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -45,11 +47,13 @@ const Coupons = () => {
   const dispatch = useDispatch();
   const { coupons, isLoading } = useSelector((state) => state.coupon);
   const { eventDetails } = useSelector((state) => state.event);
-
   const [open, setOpen] = React.useState(false);
 
+  const params = useParams();
+  const eventId = params.id;
+
   useEffect(() => {
-    dispatch(fetchCoupons());
+    dispatch(fetchCoupons(eventId));
   }, [dispatch]);
 
   const handleNewCoupon = () => {

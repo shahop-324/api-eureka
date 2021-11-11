@@ -6,6 +6,8 @@ import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import WeekendIcon from "@mui/icons-material/Weekend";
+import AirplayRoundedIcon from '@mui/icons-material/AirplayRounded';
+import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 import { Avatar } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -22,6 +24,7 @@ const SideNav = ({
   handleRoomsClick,
   handleBoothsClick,
   handleSessionsClick,
+  handleStageClick,
 }) => {
   return (
     <>
@@ -68,10 +71,62 @@ const SideNav = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "3" ? "active-wrapper-h" : "")
+                (activeIndex === "1" ? "active-wrapper-h" : "")
               }
             >
               <VideocamRoundedIcon
+                className={
+                  "icon-btn-venue " +
+                  (activeIndex === "1" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text-venue " +
+                (activeIndex === "1" ? "icon-btn-text-active-h" : "")
+              }
+            >
+              Sessions
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={handleStageClick}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "2" ? "active-wrapper-h" : "")
+              }
+            >
+              <AirplayRoundedIcon
+                className={
+                  "icon-btn-venue " +
+                  (activeIndex === "2" ? "icon-btn-active-h" : "")
+                }
+              />
+            </div>
+            <div
+              className={
+                "icon-btn-text-venue " +
+                (activeIndex === "2" ? "icon-btn-text-active-h" : "")
+              }
+            >
+              Stage
+            </div>
+          </div>
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
+            onClick={handleNetworkingClick}
+          >
+            <div
+              className={
+                "icon-wrapper p-3 mb-1 " +
+                (activeIndex === "3" ? "active-wrapper-h" : "")
+              }
+            >
+              <ConnectWithoutContactRoundedIcon
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "3" ? "icon-btn-active-h" : "")
@@ -82,32 +137,6 @@ const SideNav = ({
               className={
                 "icon-btn-text-venue " +
                 (activeIndex === "3" ? "icon-btn-text-active-h" : "")
-              }
-            >
-              Sessions
-            </div>
-          </div>
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleNetworkingClick}
-          >
-            <div
-              className={
-                "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "4" ? "active-wrapper-h" : "")
-              }
-            >
-              <WifiTetheringRoundedIcon
-                className={
-                  "icon-btn-venue " +
-                  (activeIndex === "4" ? "icon-btn-active-h" : "")
-                }
-              ></WifiTetheringRoundedIcon>
-            </div>
-            <div
-              className={
-                "icon-btn-text-venue " +
-                (activeIndex === "4" ? "icon-btn-text-active-h" : "")
               }
             >
               Networking
@@ -121,20 +150,20 @@ const SideNav = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "5" ? "active-wrapper-h" : "")
+                (activeIndex === "4" ? "active-wrapper-h" : "")
               }
             >
               <WeekendIcon
                 className={
                   "icon-btn-venue " +
-                  (activeIndex === "5" ? "icon-btn-active-h" : "")
+                  (activeIndex === "4" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text-venue " +
-                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "4" ? "icon-btn-text-active-h" : "")
               }
             >
               Lounge
@@ -148,20 +177,20 @@ const SideNav = ({
             <div
               className={
                 "icon-wrapper p-3 mb-1 " +
-                (activeIndex === "6" ? "active-wrapper-h" : "")
+                (activeIndex === "5" ? "active-wrapper-h" : "")
               }
             >
               <StorefrontRoundedIcon
                 className={
                   "icon-btn-venue " +
-                  (activeIndex === "6" ? "icon-btn-active-h" : "")
+                  (activeIndex === "5" ? "icon-btn-active-h" : "")
                 }
               />
             </div>
             <div
               className={
                 "icon-btn-text-venue " +
-                (activeIndex === "6" ? "icon-btn-text-active-h" : "")
+                (activeIndex === "5" ? "icon-btn-text-active-h" : "")
               }
             >
               Booths

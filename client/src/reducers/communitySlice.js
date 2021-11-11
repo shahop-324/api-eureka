@@ -5,6 +5,7 @@ const communitySlice = createSlice({
 
   initialState: {
     codes: [],
+    superAdmin: null,
     communities: [],
     communityRequests: [],
     communityDetails: null,
@@ -50,15 +51,12 @@ const communitySlice = createSlice({
     FetchTransactions(state, action) {
       state.transactions = action.payload.transactions;
     },
-
     FetchCommunityManagers(state, action) {
       state.communityManagers = action.payload.communityManagers;
     },
-
     SendTeamInvitation(state, action) {
       state.invitations.push(action.payload.invitation);
     },
-
     CreateCommunity(state, action) {
       state.communities.push(action.payload.community);
       state.communityDetails = action.payload.community;
@@ -72,7 +70,6 @@ const communitySlice = createSlice({
       state.communityRequests.push(action.payload.community);
       state.isLoading = false;
     },
-
     UpdateCommunityRequest(state, action) {
       state.communityRequests = state.communityRequests.map((element) =>
         element._id === action.payload.community._id
@@ -85,6 +82,9 @@ const communitySlice = createSlice({
       state.isLoading = false;
 
       state.isCommunityLoading = false;
+    },
+    FetchSuperAdmin(state, action) {
+      state.superAdmin = action.payload.superAdmin;
     },
     FetchMailChimpAudiences(state, action) {
       state.mailChimpAudiences = action.payload.mailChimpAudiences;

@@ -86,8 +86,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Ticketing = () => {
-  const { enqueueSnackbar } = useSnackbar();
-
   const [term, setTerm] = React.useState("");
 
   const params = useParams();
@@ -133,8 +131,9 @@ const Ticketing = () => {
             currency={ticket.currency}
             unitsAvailable={ticket.numberOfTicketAvailable}
             unitsSold={ticket.numberOfTicketSold}
-            status={ticket.status}
+           active={ticket.active}
             id={ticket._id}
+            type={ticket.type}
           />
         );
       });
@@ -143,12 +142,7 @@ const Ticketing = () => {
   const classes = useStyles();
 
   if (error) {
-    enqueueSnackbar(error, {
-      variant: "error",
-    });
-
     return dispatch(errorTrackerForFetchTickets());
-    // throw new Error(error);
   }
 
   return (

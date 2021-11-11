@@ -6,6 +6,8 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import "./../../../assets/Sass/DataGrid.scss";
 
+import Chip from "@mui/material/Chip";
+
 import ConfirmationNumberOutlinedIcon from "@material-ui/icons/ConfirmationNumberOutlined";
 import Ripple from "../../ActiveStatusRipple";
 import EditTicket from "./FormComponents/EditTicketForms/EditTicket";
@@ -14,9 +16,7 @@ import { fetchTicket } from "../../../actions";
 import { useDispatch } from "react-redux";
 
 const TicketingDetailsCard = (props) => {
-    const [open, setOpen] = React.useState(false);
-
-    console.log(props);
+  const [open, setOpen] = React.useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -27,9 +27,9 @@ const TicketingDetailsCard = (props) => {
   const handleCloseDeleteTicket = () => {
     setOpenDeleteDialog(false);
   };
-const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const handleEditTicket = () => {
-    dispatch(fetchTicket(props.id))
+    dispatch(fetchTicket(props.id));
     setOpen(true);
   };
 
@@ -45,7 +45,7 @@ const dispatch=useDispatch();
     <>
       <div className="ticketing-list-fields-container">
         <div
-          className="event-card-field "
+          className="event-card-field"
           style={{
             width: "100%",
           }}
@@ -53,11 +53,13 @@ const dispatch=useDispatch();
           <div className="registrations-name-field">
             <div className="registrations-field-label d-flex flex-row justify-content-start">
               {/* attendee avatar and name */}
-              <ConfirmationNumberOutlinedIcon style={{ fill: "#538BF7" }} />
-              <div className="ms-3 px-2 registration-name-styled">
-                {/* {props.name} */}
-                {truncateText(props.name, 20)}
-              </div>
+              <ConfirmationNumberOutlinedIcon
+                className="me-2"
+                style={{ fontSize: "22px", fill: "#538BF7" }}
+              />
+
+              {/* {props.name} */}
+              {truncateText(props.name, 20)}
             </div>
           </div>
         </div>
@@ -85,7 +87,25 @@ const dispatch=useDispatch();
             className="event-field-label registrations-field-label d-flex flex-column align-items-start"
             style={{ width: "100%" }}
           >
-            {`${props.currency} ${props.price}`}
+            {/* Here we need to show chips with label Free or Donation if its not paid ticket */}
+            {(() => {
+              switch (props.type) {
+                case "Free":
+                  return (
+                    <Chip label="Free" color="primary" variant="outlined" />
+                  );
+
+                case "Paid":
+                  return `${props.currency} ${props.price}`;
+
+                case "Donation":
+                  return (
+                    <Chip label="Donation" color="primary" variant="outlined" />
+                  );
+                default:
+                  break;
+              }
+            })()}
           </div>
         </div>
         <div
@@ -119,13 +139,13 @@ const dispatch=useDispatch();
               className="d-flex flex-row align-items-center event-field-label field-label-value"
               style={{ color: "#75BF72" }}
             >
-              {props.status === "Active" ? (
+              {props.active === true ? (
                 <div className="d-flex flex-row">
                   {" "}
                   <Ripple /> Active{" "}
                 </div>
               ) : (
-                <div>Inactive</div>
+                <div style={{ color: "#B83838" }}>Inactive</div>
               )}
             </div>
           </div>

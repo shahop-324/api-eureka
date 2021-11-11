@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 const ticketSchema = new mongoose.Schema(
   {
-    visibility: {
-      type: String,
-      enum: ["Public", "Private", "Hidden"],
-    },
     message: {
       type: String,
     },
@@ -28,10 +24,13 @@ const ticketSchema = new mongoose.Schema(
     salesEndTime: {
       type: Date,
     },
-    status: {
-      type: String,
-      enum: ["Active", "Inactive", "Deleted"],
-      default: "Active",
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
     },
     currency: {
       type: String,
@@ -43,19 +42,9 @@ const ticketSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: true,
     },
     description: {
       type: String,
-    },
-    venueAreasAccessible: [
-      {
-        type: String,
-      },
-    ],
-    shareRecording: {
-      type: Boolean,
-      default: false,
     },
     numberOfTicketAvailable: {
       type: Number,
@@ -68,19 +57,17 @@ const ticketSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    ticketIsSoldOut: {
-      type: Boolean,
+    soldOut: {
+      type: Boolean, // Mark as true when all tickets of this type are sold out.
       default: false,
     },
     initiatedAt: {
       type: Date,
     },
-
     lastUpdatedAt: {
       type: Date,
       default: Date.now(),
     },
-    // Leaderboard winner prices and other sharable event assets or resources.
   },
   {
     toJSON: { virtuals: true },

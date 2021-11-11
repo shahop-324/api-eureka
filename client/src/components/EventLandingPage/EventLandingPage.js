@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
+import Select from "react-select";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
@@ -43,6 +44,12 @@ import { Avatar, IconButton } from "@material-ui/core";
 import StickyFooter from "./HelperComponent/StickyFooter";
 import Loader from "../Loader";
 import styled from "styled-components";
+
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-daterangepicker/daterangepicker.css";
+
+import Chip from "@mui/material/Chip";
 
 import {
   FacebookShareButton,
@@ -89,6 +96,7 @@ const EventLandingPage = (props) => {
   const currentEventId = params.id;
 
   let event = useSelector((state) => state.event.eventDetails);
+  let tickets = useSelector((state) => state.ticket.tickets);
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -369,6 +377,54 @@ const EventLandingPage = (props) => {
     console.log(event);
   };
 
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
+
+  const handleDelete = () => {
+    console.info("You clicked the delete icon.");
+  };
+
+  const handleCancel = (event, picker) => {
+    picker.element.val("");
+    // search_params.delete("startDate");
+    // search_params.delete("endDate");
+    // url.search = search_params.toString();
+    // let new_url = url.toString();
+    // const len = new_url.split("?")[0].length;
+
+    // const result = new_url.substring(len);
+    // if (result === "") {
+    //   history.push("/search-events/");
+    // } else {
+    //   history.push(result);
+    // }
+  };
+
+  const handleApply = (event, picker) => {
+    picker.element.val(
+      picker.startDate.format("YYYY/MM/DD") +
+        " - " +
+        picker.endDate.format("YYYY/MM/DD")
+    );
+    const dateRange = event.target.value;
+
+    const dateArray = dateRange.split("-");
+    // search_params.set("startDate", dateArray[0]);
+    // search_params.set("endDate", dateArray[1]);
+    // url.search = search_params.toString();
+    // let new_url = url.toString();
+    // const len = new_url.split("?")[0].length;
+
+    // const result = new_url.substring(len);
+
+    // if (result === "") {
+    //   history.push("/search-events/");
+    // } else {
+    //   history.push(result);
+    // }
+  };
+
   return (
     <>
       <>
@@ -401,15 +457,14 @@ const EventLandingPage = (props) => {
               style={{ backgroundColor: "#ffffff" }}
             >
               <div className="container-fluid">
-                
-                  <a href="/">
+                <a href="/">
                   <img
                     src={BluemeetLogoLight}
                     alt="Bluemeet Logo"
                     style={{ height: "50px" }}
                   />
-                  </a>
-                
+                </a>
+
                 <button
                   className="navbar-toggler"
                   data-bs-toggle="collapse"
@@ -757,10 +812,36 @@ const EventLandingPage = (props) => {
                       className="schedule-section mb-5 mt-3 pt-4"
                       id="schedule-section"
                     >
-                      <div className="event-landing-page-section-headline mb-5">
+                      <div className="event-landing-page-section-headline mb-3">
                         <div className="section-headline">Schedule</div>
                       </div>
-
+                      <div className="schedule-filter-grid mb-4">
+                        <Select options={[]} placeholder="Speakers" />{" "}
+                        <Select options={[]} placeholder="tracks" />
+                        <DateRangePicker
+                          initialSettings={{
+                            autoUpdateInput: false,
+                            locale: {
+                              cancelLabel: "Clear",
+                            },
+                          }}
+                          onApply={handleApply}
+                          onCancel={handleCancel}
+                        >
+                          <input
+                            type="text"
+                            className="form-control col-4"
+                            Value=""
+                          />
+                        </DateRangePicker>
+                        <Chip
+                          style={{ width: "fit-content", justifySelf: "end" }}
+                          label="Clear filters"
+                          variant="outlined"
+                          onClick={handleClick}
+                          onDelete={handleDelete}
+                        />
+                      </div>
                       <div className="session-card-row ">
                         {renderSessionList()}
                       </div>
@@ -964,7 +1045,7 @@ const EventLandingPage = (props) => {
                   <TicketForm
                     isCommunityTeamMember={isCommunityTeamMember}
                     eventId={id}
-                    tickets={event.tickets}
+                    tickets={tickets}
                     coupon={event.coupon}
                   />
                 </div>

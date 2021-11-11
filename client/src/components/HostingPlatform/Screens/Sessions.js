@@ -18,6 +18,14 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-daterangepicker/daterangepicker.css";
+
+import Chip from "@mui/material/Chip";
+import Select from "react-select";
+import Stack from "@mui/material/Stack";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -96,16 +104,72 @@ const Sessions = () => {
     );
   }
 
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
 
+  const handleDelete = () => {
+    console.info("You clicked the delete icon.");
+  };
+
+  const handleCancel = (event, picker) => {
+    picker.element.val("");
+    // search_params.delete("startDate");
+    // search_params.delete("endDate");
+    // url.search = search_params.toString();
+    // let new_url = url.toString();
+    // const len = new_url.split("?")[0].length;
+
+    // const result = new_url.substring(len);
+    // if (result === "") {
+    //   history.push("/search-events/");
+    // } else {
+    //   history.push(result);
+    // }
+  };
+
+  const handleApply = (event, picker) => {
+    picker.element.val(
+      picker.startDate.format("YYYY/MM/DD") +
+        " - " +
+        picker.endDate.format("YYYY/MM/DD")
+    );
+    const dateRange = event.target.value;
+
+    const dateArray = dateRange.split("-");
+    // search_params.set("startDate", dateArray[0]);
+    // search_params.set("endDate", dateArray[1]);
+    // url.search = search_params.toString();
+    // let new_url = url.toString();
+    // const len = new_url.split("?")[0].length;
+
+    // const result = new_url.substring(len);
+
+    // if (result === "") {
+    //   history.push("/search-events/");
+    // } else {
+    //   history.push(result);
+    // }
+  };
 
   return (
     <>
       <div className="sessions-heading-and-search-box-wrapper-grid d-flex flex-row mb-5">
-        <div className="col-3"></div>
-        <div className="sessions-and-networking-body-heading col-6">
-          Select Session to enter
+        <div className="col-8">
+          <div className="schedule-filter-grid">
+            <Select options={[]} placeholder="Speakers" />{" "}
+            <Select options={[]} placeholder="tracks" />
+            <Chip
+              style={{ width: "fit-content", justifySelf: "end" }}
+              label="Clear filters"
+              variant="outlined"
+              onClick={handleClick}
+              onDelete={handleDelete}
+            />
+          </div>
         </div>
-        <div className="col-3">
+
+        <div className="col-4 ms-4">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -117,6 +181,15 @@ const Sessions = () => {
           </Search>
         </div>
       </div>
+
+      <Stack direction="row" spacing={1} className="mb-4">
+        <Chip label="Clickable" onClick={handleClick} />
+        <Chip label="Clickable" variant="outlined" onClick={handleClick} />
+        <Chip label="Clickable" variant="outlined" onClick={handleClick} />
+        <Chip label="Clickable" variant="outlined" onClick={handleClick} />
+        <Chip label="Clickable" variant="outlined" onClick={handleClick} />
+        <Chip label="Clickable" variant="outlined" onClick={handleClick} />
+      </Stack>
 
       <SessionDetailCardsList
         sessions={sessions}

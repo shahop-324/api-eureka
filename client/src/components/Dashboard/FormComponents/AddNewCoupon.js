@@ -49,8 +49,6 @@ const FormWarning = styled.div`
   font-size: 0.8rem;
 `;
 
-let eventOptions = [];
-
 const styles = {
   control: (base) => ({
     ...base,
@@ -130,10 +128,12 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
 
   if (tickets) {
     ticketOptions = tickets.map((ticket) => {
-      return {
-        label: ticket.name,
-        value: ticket._id,
-      };
+      if (ticket.type === "Paid") {
+        return {
+          label: ticket.name,
+          value: ticket._id,
+        };
+      }
     });
   }
 
@@ -157,18 +157,7 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
   const eventStartDateTime = new Date(startTime);
   const eventEndDateTime = new Date(endTime);
 
-  if (events) {
-    eventOptions = events.map((event) => {
-      return {
-        label: event.eventName,
-        value: event._id,
-      };
-    });
-  }
-
   const onSubmit = (formValues) => {
-    console.log(formValues);
-
     if (
       !(
         typeof formValues.eventTickets !== "undefined" &&
@@ -188,6 +177,7 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
     );
 
     const ModifiedFormValues = {};
+    ModifiedFormValues.eventId = id;
     ModifiedFormValues.tickets = applicableTickets;
     ModifiedFormValues.startDate = formValues.startDate;
     ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
@@ -197,6 +187,7 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
     ModifiedFormValues.discountCode = formValues.couponCode;
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
+    ModifiedFormValues.createdAt = Date.now();
 
     if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
       // Coupon cannot be applied in past
@@ -231,6 +222,7 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
     ) {
       // Only in this case we will allow coupon to be created
       dispatch(createCoupon(ModifiedFormValues, id));
+      handleClose();
     }
   };
 

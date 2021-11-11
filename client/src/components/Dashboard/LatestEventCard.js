@@ -58,12 +58,7 @@ const EventPromoImage = styled.img`
   border-radius: 10px;
   height: 100%;
   width: 100%;
-  object-fit: scale-down;
-
-  background: rgba(141, 141, 141, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(1.5px);
-  -webkit-backdrop-filter: blur(1.5px);
+  object-fit: cover;
 `;
 
 const EventName = styled.div`

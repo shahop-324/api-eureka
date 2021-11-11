@@ -8,7 +8,7 @@ const couponSchema = new mongoose.Schema(
         ref: "Ticket",
       },
     ],
-    discountForEventId: {
+    eventId: {
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
@@ -21,9 +21,13 @@ const couponSchema = new mongoose.Schema(
         "A coupon must have a valid discount percentage offered on original price",
       ],
     },
-    // discountOnWhichTicketType: { // TODO I have to implement this functionality in which communities can create multiple coupons for an event based on type of ticket
-    //   type: String,
-    // },
+    tickets: [
+      {
+        // TODO I have to implement this functionality in which communities can create multiple coupons for an event based on type of ticket
+        type: mongoose.Schema.ObjectId,
+        ref: "Ticket",
+      },
+    ],
     discountCode: {
       type: String,
       required: [true, "A coupon must have a coupon Code."],
@@ -56,10 +60,9 @@ const couponSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    status: {
-      type: String,
-      enum: ["Active", "Inactive", "Deleted"],
-      default: "Active",
+    deleted: {
+      type: Boolean,
+      default: false,
     },
     numOfCouponsUsed: {
       type: Number,

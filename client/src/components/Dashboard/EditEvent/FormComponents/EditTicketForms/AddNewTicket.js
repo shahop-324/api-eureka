@@ -172,6 +172,19 @@ const renderReactSelect = ({
     </div>
   </div>
 );
+
+const Note = styled.div`
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #212121;
+`;
+
+const Small = styled.small`
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #797979;
+`;
+
 const AddNewTicket = ({
   open,
   handleClose,
@@ -333,13 +346,27 @@ const AddNewTicket = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
 
+    if (type !== "Paid") {
+      formValues.price = undefined;
+    }
+
     const ModifiedFormValues = {};
 
-    ModifiedFormValues.currency = formValues.currency.value;
+    ModifiedFormValues.type = type; // Maybe Paid, Free or Donation
+
+    if (formValues.currency) {
+      if (formValues.currency.value) {
+        ModifiedFormValues.currency = formValues.currency.value;
+      }
+    }
+
+    if (type === "Paid" && formValues.price) {
+      ModifiedFormValues.price = formValues.price;
+    }
+
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.type = type;
-    ModifiedFormValues.price = formValues.price;
+
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
     ModifiedFormValues.message = formValues.messageForAttendee;
@@ -386,13 +413,13 @@ const AddNewTicket = ({
 
       if (type === "Paid") {
         // Currency and amount is required
-        if (!ModifiedFormValues.currency) {
-          dispatch(showSnackbar("warning", "Ticket currency is required"));
-        }
+        // if (!ModifiedFormValues.currency) {
+        //   dispatch(showSnackbar("warning", "Ticket currency is required"));
+        // }
         if (!ModifiedFormValues.price) {
           dispatch(showSnackbar("warning", "Ticket price is required"));
         }
-        if (ModifiedFormValues.price && ModifiedFormValues.currency) {
+        if (ModifiedFormValues.price) {
           // Here we can create this ticket
           dispatch(createTicket(ModifiedFormValues, id, handleClose));
         }
@@ -440,6 +467,13 @@ const AddNewTicket = ({
                 </IconButton>
               </div>
             </HeaderFooter>
+
+            {/* // ! PUT A NOTE THAT ALL Ticket fees will be charged in USD */}
+
+            <div className="d-flex flex-row align-items-center px-4">
+              <Note className="me-2">NOTE:</Note>{" "}
+              <Small>All Ticket fees will be charged in USD</Small>
+            </div>
 
             <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
               <div className="create-new-coupon-form px-4 py-4">
@@ -523,8 +557,8 @@ const AddNewTicket = ({
                   </div>
                 </RadioGroup>
 
-                <div className="mb-4 overlay-form-input-row form-row-3-in-1">
-                  <div>
+                <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                  {/* <div>
                     <FormLabel Forhtml="eventStartDate">Currency</FormLabel>
                     <Field
                       isRequired={type === "Paid" ? true : false}
@@ -536,9 +570,11 @@ const AddNewTicket = ({
                       options={currencyOptions}
                       component={renderReactSelect}
                     />
-                  </div>
+                  </div> */}
                   <div>
-                    <FormLabel Forhtml="eventStartDate">Price</FormLabel>
+                    <FormLabel Forhtml="eventStartDate">
+                      Price (in USD){" "}
+                    </FormLabel>
                     <Field
                       isRequired={type === "Paid" ? true : false}
                       isDisabled={type !== "Paid" ? true : false}
@@ -546,7 +582,7 @@ const AddNewTicket = ({
                       type="number"
                       classes="form-control"
                       ariadescribedby="emailHelp"
-                      placeholder="50"
+                      // placeholder="50"
                       component={renderInput}
                     />
                   </div>

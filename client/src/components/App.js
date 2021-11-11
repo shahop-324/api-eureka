@@ -744,6 +744,14 @@ class App extends React.Component {
 
               {isSignedIn && (
                 <Route
+                  path="/community/:communityId/event/:eventId/hosting-platform/stage"
+                  exact
+                  component={Root}
+                />
+              )}
+
+              {isSignedIn && (
+                <Route
                   path="/community/:communityId/event/:eventId/hosting-platform/networking"
                   exact
                   component={Root}

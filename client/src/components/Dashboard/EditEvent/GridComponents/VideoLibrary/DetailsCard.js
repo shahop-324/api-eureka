@@ -12,12 +12,12 @@ import { deleteEventVideo } from "./../../../../../actions";
 import { useParams } from "react-router-dom";
 
 const EventVideoLibraryDetailsCard = ({ name, id, time, date, isLinked }) => {
-  console.log({ name, id, time, date, isLinked });
+  
   const params = useParams();
   const dispatch = useDispatch();
   const eventId = params.id;
 
-  console.log(id, eventId);
+ 
 
   const [openDeleteVideo, setOpenDeleteVideo] = React.useState(false);
   const [openUnlinkVideo, setOpenUnlinkVideo] = React.useState(false);

@@ -213,11 +213,16 @@ const EventOverview = (props) => {
   return (
     <>
       <div style={{ minWidth: "1138px" }}>
-        <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
+        <div className="secondary-heading-row d-flex flex-row align-items-center justify-content-between px-4 py-4">
           <SectionHeading className="">Overview</SectionHeading>
+          <div>
+            <button className="btn btn-outline-text btn-outline-primary">
+              Add to archive
+            </button>
+          </div>
         </div>
         <div className=" px-3 mb-4">
-          {/* <MainEventSetupCheckList /> */}
+          <MainEventSetupCheckList />
           <EventOverviewGrid className="mb-5 pb-4">
             <EventDetails className="px-4 py-3">
               <EventDetailsHeading className="mb-3">

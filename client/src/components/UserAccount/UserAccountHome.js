@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import "./../../assets/css/hiddenScroll.css";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, IconButton } from "@material-ui/core";
 import "./../../assets/css/UserAccountStyle.css";
 import CenteredTabs from "./UserAccountCenteredTabBar";
 import UserAccountSideNav from "./UserAccountSideNav";
@@ -20,6 +20,7 @@ import HelpSideDrawer from "../HelpSideDrawer";
 import WhatsNew from "../WhatsNew";
 import ConfirmCommunityMail from "./Helper/ConfirmCommunityMail";
 import UserAccountBriefcase from "./UserAccountBriefcase";
+import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 
 const UserAccountHome = () => {
   const dispatch = useDispatch();
@@ -122,6 +123,9 @@ const UserAccountHome = () => {
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
               <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
+                <IconButton>
+                  <NotificationsNoneRoundedIcon />
+                </IconButton>
                 <div className="ms-3">
                   <AvatarMenu />
                 </div>

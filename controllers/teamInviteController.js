@@ -232,6 +232,20 @@ exports.fetchPendingInvitations = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.fetchSuperAdmin = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+  const communityDoc = await Community.findById(communityId);
+
+  const userId = communityDoc.superAdmin;
+
+  const superAdmin = await User.findById(userId).select("firstName lastName image email");
+
+  res.status(200).json({
+    status: "success",
+    data: superAdmin,
+  });
+});
+
 exports.fetchCommunityManagers = catchAsync(async (req, res, next) => {
   const communityId = req.community._id;
 

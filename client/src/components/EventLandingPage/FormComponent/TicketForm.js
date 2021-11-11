@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 import AddToCalender from "../HelperComponent/AddTocalender";
+import Chip from "@mui/material/Chip";
 
 const TwoButtonsGrid = styled.div`
   display: grid;
@@ -41,7 +42,7 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
 
   let alreadyRegistered = false; // Boolean flag
-  
+
   const user = useSelector((state) => state.user.userDetails);
   const userDetails = useSelector((state) => state.user.userDetails);
 
@@ -135,11 +136,33 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
             <div className="ticket-name mb-1">{ticket.name}</div>
             <div className="ticket-description">{ticket.description}</div>
           </div>
-          {ticket.ticketIsSoldOut ? (
+          {ticket.soldOut ? (
             <div className="ticket-sold-out-text">Sold out</div>
           ) : (
             <div className="ticket-price">
-              <b>Rs.{(price * 1) / (factor * 1)}</b>
+              {(() => {
+                switch (ticket.type) {
+                  case "Paid":
+                    return <b>${(price * 1) / (factor * 1)}</b>;
+
+                  case "Free":
+                    return (
+                      <Chip label="Free" color="primary" variant="outlined" />
+                    );
+
+                  case "Donation":
+                    return (
+                      <Chip
+                        label="Donation"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    );
+
+                  default:
+                    break;
+                }
+              })()}
             </div>
           )}
         </div>

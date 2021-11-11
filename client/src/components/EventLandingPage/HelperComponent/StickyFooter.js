@@ -252,7 +252,6 @@ const StickyFooter = () => {
                   <button
                     disabled={!isSignedIn}
                     className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-               
                     onClick={handleAskQuery}
                   >
                     Ask

@@ -14,6 +14,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LanguageIcon from "@material-ui/icons/Language";
 import BluemeetLogoLight from "./../../../assets/images/Bluemeet_Logo_Light.svg";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 import Footer from "../../Footer";
 
@@ -188,6 +189,9 @@ const CommunityPublicPage = () => {
             <div className="d-flex flex-row align-items-center justify-content-between">
               <IconButton>
                 <LanguageIcon />
+              </IconButton>
+              <IconButton>
+                <TwitterIcon />
               </IconButton>
               <IconButton>
                 <FacebookIcon />

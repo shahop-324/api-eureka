@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchPendingInvitations,
   fetchCommunityManagers,
+  getSuperAdmin,
 } from "./../../actions";
 import { useParams } from "react-router-dom";
 
@@ -77,6 +78,8 @@ const TeamManagement = (props) => {
     (state) => state.community.communityDetails
   );
 
+  const { superAdmin } = useSelector((state) => state.community);
+
   const communityId = params.id;
 
   const dispatch = useDispatch();
@@ -84,6 +87,9 @@ const TeamManagement = (props) => {
   useEffect(() => {
     // Fetch invited members of this community who have status pending
     dispatch(fetchPendingInvitations(communityId));
+
+    // Fetch community super admin
+    dispatch(getSuperAdmin(communityId));
 
     // Fetch People who have accepted invitation
     dispatch(fetchCommunityManagers(communityId));
@@ -158,13 +164,23 @@ const TeamManagement = (props) => {
                     >
                       <Divider />
                     </div>
-                    <TeamMembersDetailsCard
-                      image={superAdminImage}
-                      name={superAdminName}
-                      position={"Super admin"}
-                      email={superAdminEmail}
-                      status={"----"}
-                    />
+                    {superAdmin ? (
+                      <TeamMembersDetailsCard
+                        image={
+                          superAdmin.image
+                            ? superAdmin.image.startsWith("https://")
+                              ? superAdmin.image
+                              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${superAdmin.image}`
+                            : "#"
+                        }
+                        name={superAdmin.firstName + " " + superAdmin.lastName}
+                        position={"Super admin"}
+                        email={superAdmin.email}
+                        status={"----"}
+                      />
+                    ) : (
+                      <></>
+                    )}
 
                     {renderCommunityManagers(communityManagers)}
 

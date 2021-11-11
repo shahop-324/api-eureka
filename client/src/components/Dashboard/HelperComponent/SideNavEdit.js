@@ -29,6 +29,7 @@ import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
 import PagesIcon from "@mui/icons-material/Pages"; // Landing page Icon
+import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Event Schedule
 
 const SideNavEdit = ({
   activeIndex,

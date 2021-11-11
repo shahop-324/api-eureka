@@ -156,10 +156,12 @@ const EditCoupon = ({
 
   if (tickets) {
     ticketOptions = tickets.map((ticket) => {
-      return {
-        label: ticket.name,
-        value: ticket._id,
-      };
+      if (ticket.type === "Paid") {
+        return {
+          label: ticket.name,
+          value: ticket._id,
+        };
+      }
     });
   }
 

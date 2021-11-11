@@ -1001,6 +1001,12 @@ export const fetchEventLandingPage =
           event: result.data,
         })
       );
+
+      dispatch(
+        ticketActions.FetchTickets({
+          tickets: result.tickets,
+        })
+      );
     } catch (error) {
       dispatch(
         showSnackbar("error", "Unable to load event. Please try again.")
@@ -3040,28 +3046,13 @@ export const createTicket = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Ticket added successfully!",
-        severity: "success",
-      })
-    );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
+    dispatch(showSnackbar("success", "Ticket created successfully!"));
   } catch (err) {
-    console.log(err);
     dispatch(ticketActions.hasError(err.message));
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to create ticket. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to create ticket, Please try again.")
     );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 export const errorTrackerForCreateTicket = () => async (dispatch, getState) => {
@@ -3121,14 +3112,8 @@ export const fetchTickets = (id, term) => async (dispatch, getState) => {
     console.log(err);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch tickets. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to fetch tickets, Please try again.")
     );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 
@@ -3168,14 +3153,8 @@ export const fetchTicket = (id) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch ticket. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to fetch ticket, Please try again.")
     );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 export const errorTrackerForFetchTicket = () => async (dispatch, getState) => {
@@ -3214,26 +3193,12 @@ export const editTicket = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Ticket updated successfully!",
-        severity: "success",
-      })
-    );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
+    dispatch(showSnackbar("success", "Ticket updated successfully!"));
   } catch (err) {
     dispatch(ticketActions.detailHasError(err.message));
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to update ticket. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to update ticket, Please try again.")
     );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 export const errorTrackerForEditTicket = () => async (dispatch, getState) => {
@@ -3244,8 +3209,6 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
   dispatch(ticketActions.startLoading());
 
   try {
-    console.log(id);
-
     let res = await fetch(`${BaseURL}events/${id}/deleteTicket`, {
       method: "DELETE",
 
@@ -3270,26 +3233,12 @@ export const deleteTicket = (id) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Ticket deleted successfully!",
-        severity: "success",
-      })
-    );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
+    dispatch(showSnackbar("success", "Ticket deleted successfully!"));
   } catch (err) {
     dispatch(ticketActions.hasError(err.message));
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to delete ticket. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to delete ticket, Please try again.")
     );
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
   }
 };
 export const errorTrackerForDeleteTicket = () => async (dispatch, getState) => {
@@ -4578,41 +4527,25 @@ export const createCoupon =
         })
       );
 
-      dispatch(
-        snackbarActions.openSnackBar({
-          message: "Coupon added successfully!",
-          severity: "success",
-        })
-      );
-
-      setTimeout(function () {
-        closeSnackbar();
-      }, 6000);
+      dispatch(showSnackbar("success", "Coupon created successfully!"));
     } catch (err) {
       dispatch(couponActions.hasError(err.message));
       console.log(err);
 
       dispatch(
-        snackbarActions.openSnackBar({
-          message: "Failed to create coupon. Please try again later.",
-          severity: "error",
-        })
+        showSnackbar("error", "Failed to create coupon, Please try again.")
       );
-
-      setTimeout(function () {
-        closeSnackbar();
-      }, 6000);
     }
   };
 export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledError());
 };
 
-export const fetchCoupons = () => async (dispatch, getState) => {
+export const fetchCoupons = (eventId) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 
   const getCoupons = async () => {
-    let res = await fetch(`${BaseURL}community/coupons`, {
+    let res = await fetch(`${BaseURL}community/coupons/${eventId}`, {
       method: "GET",
 
       headers: {
@@ -4640,20 +4573,18 @@ export const fetchCoupons = () => async (dispatch, getState) => {
         coupons: res.data,
       })
     );
-  } catch (err) {
-    dispatch(couponActions.hasError(err.message));
-    console.log(err);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch coupons. Please try again later.",
-        severity: "error",
+      ticketActions.FetchTickets({
+        tickets: res.tickets,
       })
     );
+  } catch (err) {
+    dispatch(couponActions.hasError(err.message));
 
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(
+      showSnackbar("error", "Failed to fetch coupons, Please try again.")
+    );
   }
 };
 export const errorTrackerForFetchCoupons = () => async (dispatch, getState) => {
@@ -4694,15 +4625,8 @@ export const fetchCoupon = (id) => async (dispatch, getState) => {
     console.log(err);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch coupon. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to fetch coupon, Please try again.")
     );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
   }
 };
 export const errorTrackerForFetchCoupon = () => async (dispatch, getState) => {
@@ -4740,30 +4664,14 @@ export const editCoupon = (formValues, id) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Coupon updated successfully.",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("success", "Coupon updated successfully!"));
   } catch (err) {
     dispatch(couponActions.detailHasError(err.message));
     console.log(err);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to update coupon. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to update coupon, Please try again.")
     );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
   }
 };
 export const errorTrackerForEditCoupon = () => async (dispatch, getState) => {
@@ -4800,30 +4708,14 @@ export const deleteCoupon = (id) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Coupon deleted successfully.",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("success", "Coupon deleted successfully!"));
   } catch (err) {
     dispatch(couponActions.hasError(err.message));
     console.log(err);
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to delete coupon. Please try again later.",
-        severity: "error",
-      })
+      showSnackbar("error", "Failed to delete coupon, Please try again.")
     );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
   }
 };
 export const errorTrackerForDeleteCoupon = () => async (dispatch, getState) => {
@@ -7531,7 +7423,11 @@ export const linkVideo =
       });
 
       const result = await res.json();
-      console.log(result);
+      console.info(result);
+
+      // alert("We have recieved result");
+
+      dispatch(showSnackbar("success", "Video linked successfully!"));
 
       dispatch(
         eventVideoActions.FetchVideos({
@@ -7540,8 +7436,6 @@ export const linkVideo =
       );
 
       handleClose();
-
-      dispatch(showSnackbar("success", "Video linked successfully!"));
     } catch (error) {
       console.log(error);
       dispatch(
@@ -7660,8 +7554,41 @@ export const fetchCommunityManagers =
       );
     } catch (error) {
       console.log(error);
+
+      dispatch(showSnackbar("error", "Failed to fetch team members, Please try again."))
     }
   };
+
+  export const getSuperAdmin = (communityId) => async(dispatch, getState) => {
+    try{
+      const res = await fetch(
+        `${BaseURL}team-invites/getSuperAdmin/${communityId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+
+      dispatch(
+        communityActions.FetchSuperAdmin({
+         superAdmin: result.data,
+        })
+      );
+
+    }
+    catch(error) {
+      console.log(error);
+      dispatch(showSnackbar("error", "Failed to fetch super admin, Please try again."))
+    }
+  } 
+
 
 export const removeFromTeam =
   (email, communityId, status) => async (dispatch, getState) => {

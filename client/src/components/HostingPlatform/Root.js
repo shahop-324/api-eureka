@@ -12,6 +12,7 @@ import LobbyAgenda from "./Screens/LobbyAgenda";
 import Networking from "./Screens/Networking";
 import Rooms from "./Screens/Rooms";
 import Booths from "./Screens/Booths";
+import Stage from "./Screens/Stage";
 import {
   createNewEventAlert,
   createNewEventMsg,
@@ -122,11 +123,10 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-
     socket.on("previousSessionMessages", ({ chats }) => {
       dispatch(fetchSessionChats(chats));
     });
-   
+
     socket.on("newMatch", ({ room, matchedWith }) => {
       dispatch(showNotification("New match detected"));
       console.log(room);
@@ -287,7 +287,6 @@ const Root = () => {
       ) {
         const audio = new Audio(MsgTone);
         audio.addEventListener("canplaythrough", (event) => {
-          // the audio is now playable; play it if permissions allow
           audio.play();
         });
         dispatch(showNotification(`New message from ${newChat.senderName}`));
@@ -304,8 +303,6 @@ const Root = () => {
     });
   }, [dispatch]);
 
-  // console.log(isEventLoading);
-
   if (eventError) {
     dispatch(errorTrackerForFetchEvent());
     return null;
@@ -319,24 +316,24 @@ const Root = () => {
     );
   };
 
-  const handleSocialSpaceClick = () => {
-    dispatch(navigationIndexForHostingPlatform(2));
-
-    history.push(
-      `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
-    );
-  };
-
   const handleSessionsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(3));
+    dispatch(navigationIndexForHostingPlatform(1));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/Sessions`
     );
   };
 
+  const handleStageClick = () => {
+    dispatch(navigationIndexForHostingPlatform(2));
+
+    history.push(
+      `/community/${communityId}/event/${eventId}/hosting-platform/Stage`
+    );
+  };
+
   const handleNetworkingClick = () => {
-    dispatch(navigationIndexForHostingPlatform(4));
+    dispatch(navigationIndexForHostingPlatform(3));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/networking`
@@ -344,7 +341,7 @@ const Root = () => {
   };
 
   const handleRoomsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(5));
+    dispatch(navigationIndexForHostingPlatform(4));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/rooms`
@@ -352,7 +349,7 @@ const Root = () => {
   };
 
   const handleBoothsClick = () => {
-    dispatch(navigationIndexForHostingPlatform(6));
+    dispatch(navigationIndexForHostingPlatform(5));
 
     history.push(
       `/community/${communityId}/event/${eventId}/hosting-platform/booths`
@@ -390,11 +387,11 @@ const Root = () => {
           activeIndex={currentIndex}
           handleLobbyClick={handleLobbyClick}
           handleSessionsClick={handleSessionsClick}
+          handleStageClick={handleStageClick}
           handleNetworkingClick={handleNetworkingClick}
           handleRoomsClick={handleRoomsClick}
           handleBoothsClick={handleBoothsClick}
           handleLogoutClick={handleLogoutClick}
-          handleSocialSpaceClick={handleSocialSpaceClick}
         />
 
         {/* Mid container */}
@@ -403,9 +400,6 @@ const Root = () => {
           <div className="main-body-content-h">
             {(() => {
               switch (currentIndex) {
-                // case "0":
-                //   return <Reception />;
-
                 case "0":
                   return (
                     <RootBackground style={{ position: "relative" }}>
@@ -421,6 +415,22 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
+                case "1":
+                  return (
+                    <RootBackground style={{ position: "relative" }}>
+                      <div
+                        className="opaque-layer "
+                        style={{ height: "100%" }}
+                      ></div>
+                      <div
+                        style={{ maxWidth: "1360px", margin: "0 auto" }}
+                        className="py-4 px-5"
+                      >
+                       <Sessions />{" "}
+                      </div>
+                    </RootBackground>
+                  );
+
                 case "2":
                   return (
                     <RootBackground style={{ position: "relative" }}>
@@ -432,28 +442,12 @@ const Root = () => {
                         style={{ maxWidth: "1360px", margin: "0 auto" }}
                         className="py-4 px-5"
                       >
-                        <SocialSpace />
+                        <Stage />{" "}
                       </div>
                     </RootBackground>
                   );
 
                 case "3":
-                  return (
-                    <RootBackground style={{ position: "relative" }}>
-                      <div
-                        className="opaque-layer "
-                        style={{ height: "100%" }}
-                      ></div>
-                      <div
-                        style={{ maxWidth: "1360px", margin: "0 auto" }}
-                        className="py-4 px-5"
-                      >
-                        <Sessions />{" "}
-                      </div>
-                    </RootBackground>
-                  );
-
-                case "4":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div className="opaque-layer "></div>
@@ -465,7 +459,7 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
-                case "5":
+                case "4":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div
@@ -481,7 +475,7 @@ const Root = () => {
                     </RootBackground>
                   );
 
-                case "6":
+                case "5":
                   return (
                     <RootBackground style={{ position: "relative" }}>
                       <div

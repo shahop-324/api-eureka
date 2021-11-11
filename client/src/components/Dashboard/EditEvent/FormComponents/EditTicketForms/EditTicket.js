@@ -163,6 +163,19 @@ const renderReactSelect = ({
     </div>
   </div>
 );
+
+const Note = styled.div`
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #212121;
+`;
+
+const Small = styled.small`
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #797979;
+`;
+
 const EditTicket = ({
   open,
   handleClose,
@@ -329,28 +342,31 @@ const EditTicket = ({
   const onSubmit = (formValues) => {
     console.log(formValues);
 
-    const accessibleAreas = formValues.venueAreasAccessible.map(
-      (area) => area.value
-    );
-    console.log("accessible areas", accessibleAreas);
     const ModifiedFormValues = {};
 
-    ModifiedFormValues.currency = formValues.currency.value;
+    ModifiedFormValues.type = type;
+
+    if (formValues.currency) {
+      if (formValues.currency.value) {
+        ModifiedFormValues.currency = formValues.currency.value;
+      }
+    }
+
+    if (formValues.price) {
+      ModifiedFormValues.price = formValues.price;
+    }
+
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.type = type;
-    ModifiedFormValues.price = formValues.price;
-    // ModifiedFormValues.shareRecording = formValues.shareRecording;
+
     ModifiedFormValues.numberOfTicketAvailable =
       formValues.numberOfTicketAvailable;
 
-    ModifiedFormValues.visibility = formValues.visibility.value;
     ModifiedFormValues.message = formValues.message;
     ModifiedFormValues.salesStartDate = formValues.salesStartDate;
     ModifiedFormValues.salesEndDate = formValues.salesEndDate;
-    ModifiedFormValues.salesStartTime = `${formValues.startDate}T${formValues.salesStartTime}:00Z`;
-    ModifiedFormValues.salesEndTime = `${formValues.endDate}T${formValues.salesEndTime}:00Z`;
-
+    ModifiedFormValues.salesStartTime = `${formValues.salesStartDate}T${formValues.salesStartTime}:00Z`;
+    ModifiedFormValues.salesEndTime = `${formValues.salesEndDate}T${formValues.salesEndTime}:00Z`;
 
     if (new Date(ModifiedFormValues.salesStartTime) < new Date(Date.now())) {
       // Ticket sale cannot be started in past
@@ -358,14 +374,13 @@ const EditTicket = ({
         showSnackbar("warning", "Ticket sale cannot be started in past")
       );
     }
-    
+
     if (new Date(ModifiedFormValues.salesEndTime) > eventEndDateTime) {
       // Ticket cannot be saled after event has ended
       dispatch(
         showSnackbar("warning", "Ticket cannot be saled after event has ended")
       );
     }
-
 
     if (
       new Date(ModifiedFormValues.salesStartTime) >=
@@ -407,8 +422,6 @@ const EditTicket = ({
         dispatch(editTicket(ModifiedFormValues, id, handleClose));
       }
     }
-
-    
   };
 
   if (detailError) {
@@ -444,6 +457,14 @@ const EditTicket = ({
                   </IconButton>
                 </div>
               </HeaderFooter>
+
+              {/* // ! PUT A NOTE THAT ALL Ticket fees will be charged in USD */}
+
+              <div className="d-flex flex-row align-items-center px-4">
+                <Note className="me-2">NOTE:</Note>{" "}
+                <Small>All Ticket fees will be charged in USD</Small>
+              </div>
+
               <form className="ui from error" onSubmit={handleSubmit(onSubmit)}>
                 <div className="create-new-coupon-form px-4 py-4">
                   <div className="mb-3 overlay-form-input-row ">
@@ -529,8 +550,8 @@ const EditTicket = ({
                       </div>
                     </div>
                   </RadioGroup>
-                  <div className="mb-4 overlay-form-input-row form-row-3-in-1">
-                    <div>
+                  <div className="mb-4 overlay-form-input-row form-row-2-in-1">
+                    {/* <div>
                       <FormLabel Forhtml="eventStartDate">Currency</FormLabel>
                       <Field
                         isDisabled={true}
@@ -541,7 +562,7 @@ const EditTicket = ({
                         options={currencyOptions}
                         component={renderReactSelect}
                       />
-                    </div>
+                    </div> */}
                     <div>
                       <FormLabel Forhtml="eventStartDate">Price</FormLabel>
                       <Field
@@ -551,7 +572,7 @@ const EditTicket = ({
                         type="number"
                         classes="form-control"
                         ariadescribedby="emailHelp"
-                        placeholder="50"
+                        // placeholder="50"
                         component={renderInput}
                       />
                     </div>
