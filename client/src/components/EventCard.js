@@ -5,16 +5,31 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.scss";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addToFavouriteEvents,
   fetchEvent,
   removeFromFavouriteEvents,
 } from "../actions";
 import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
-import Fab from "@material-ui/core/Fab";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import history from "./../history";
+import Tooltip from "@mui/material/Tooltip";
+
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
+
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import RedditIcon from "@mui/icons-material/Reddit";
+
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
 
 const SpeakersHeading = styled.div`
   font-weight: 500;
@@ -27,21 +42,72 @@ const RatingPaper = styled.div`
   background-color: #152d35 !important;
 `;
 
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
 const renderSpeakers = (speakers) => {
   if (!speakers) return;
   return speakers.map((speaker) => {
     return (
-      <Avatar
-        alt={speaker.name}
-        src={
-          speaker.image.startsWith("https://")
-            ? speaker.image
-            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
-        }
-      />
+      <Tooltip title={`${speaker.firstName}  ${speaker.lastName}`}>
+        <Avatar
+          alt={speaker.firstName}
+          src={
+            speaker.image.startsWith("https://")
+              ? speaker.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
+          }
+        />
+      </Tooltip>
     );
   });
 };
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
 
 const EventCard = ({
   showSpeakers,
@@ -61,19 +127,123 @@ const EventCard = ({
   const dispatch = useDispatch();
   const showLiked = isFavourite;
 
-  console.log(showBtn);
+  const [showIconButton, setShowIconButton] = React.useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setShowIconButton(false);
+  };
   const displayJoinBtn = showBtn ? "block" : "none";
   return (
-    <div className="event-card-main">
+    <div
+      className="event-card-main"
+      onMouseOver={() => {
+        setShowIconButton(true);
+      }}
+      onMouseOut={() => {
+        setShowIconButton(false);
+      }}
+    >
       <div
-        className="event-card-img-container"
-        style={{ position: "relative" }}
+        className="d-flex flex-column align-items-center"
+        style={{
+          position: "absolute",
+          top: "12px",
+          right: "12px",
+          zIndex: "2",
+        }}
       >
+        <button
+          style={{
+            borderRadius: "23px",
+            height: "46px",
+            width: "46px",
+            display: showIconButton || open ? "inline-block" : "none",
+          }}
+          className="btn btn-outline-text btn-light mb-3"
+        >
+          <FavoriteRoundedIcon
+            style={{
+              fontSize: "20px",
+              display: showIconButton || open ? "inline-block" : "none",
+            }}
+          />
+        </button>
+        <button
+          id="demo-customized-button"
+          aria-controls="demo-customized-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          variant="outlined"
+          disableElevation
+          onClick={handleClickMore}
+          style={{
+            borderRadius: "23px",
+            height: "46px",
+            width: "46px",
+            display: showIconButton || open ? "inline-block" : "none",
+          }}
+          className="btn btn-outline-text btn-light"
+        >
+          <ReplyRoundedIcon
+            style={{
+              fontSize: "20px",
+              display: showIconButton || open ? "inline-block" : "none",
+            }}
+          />
+        </button>
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <FacebookIcon style={{ color: "#4267B2" }} />
+            <MenuText>Facebook</MenuText>
+          </MenuItem>
+
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <TwitterIcon style={{ color: "#1DA1F2" }} />
+            <MenuText>Twitter</MenuText>
+          </MenuItem>
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <LinkedInIcon style={{ color: "#0e76a8" }} />
+            <MenuText>Linkedin</MenuText>
+          </MenuItem>
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <WhatsAppIcon style={{ color: "#075E54" }} />
+            <MenuText>WhatsApp</MenuText>
+          </MenuItem>
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <TelegramIcon style={{ color: "#0088cc" }} />
+            <MenuText>Telegram</MenuText>
+          </MenuItem>
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <RedditIcon style={{ color: "#FF5700" }} />
+            <MenuText>Reddit</MenuText>
+          </MenuItem>
+        </StyledMenu>
+      </div>
+      <div className="event-card-img-container" style={{ height: "auto" }}>
         <Link
           onClick={() => dispatch(fetchEvent(id))}
           to={`/event-landing-page/${id}/${communityId}`}
         >
-          <img src={image} className="poster-img" alt="event-poster" style={{maxHeight: "200px"}} />
+          <img
+            src={image}
+            className="poster-img"
+            alt="event-poster"
+            style={{ height: "200px" }}
+          />
         </Link>
       </div>
       <div className="event-card-text-info d-flex flex-column justfy-content-between px-4 py-4">

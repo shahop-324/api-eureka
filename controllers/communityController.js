@@ -9,6 +9,9 @@ const Video = require("../models/videoModel");
 const { v4: uuidv4 } = require("uuid");
 const MailChimp = require("./../models/mailChimpModel");
 const SalesForce = require("./../models/salesForceModel");
+const Review = require("./../models/reviewModel");
+const mongoose = require("mongoose");
+const Event = require("./../models/eventModel");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -511,7 +514,6 @@ exports.deleteApiKey = catchAsync(async (req, res, next) => {
     communityId: updatedCredential.communityId,
   });
 
-
   res.status(200).json({
     status: "success",
     message: "API credential updated successfully!",
@@ -610,6 +612,139 @@ exports.restartMembership = catchAsync(async (req, res, next) => {
     communityId,
     { downgradeToFreeOnNextCycle: false },
     { new: true, validateModifiedOnly: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
+
+exports.getReviews = catchAsync(async (req, res, next) => {
+  // Get reviews of this community which are not hidden
+
+  const communityId = req.params.communityId;
+
+  const reviews = await Review.find({
+    $and: [
+      { communityId: mongoose.Types.ObjectId(communityId) },
+      { hidden: false },
+    ],
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: reviews,
+  });
+});
+
+exports.getEvents = catchAsync(async (req, res, next) => {
+  // Get list of public events
+
+  const communityId = req.params.communityId;
+
+  const events = await Event.find({
+    $and: [{ communityId: communityId }, { visibility: "Public" }],
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: events,
+  });
+});
+
+exports.getCommunityProfile = catchAsync(async (req, res, next) => {
+  // Get Community profile
+
+  const communityId = req.params.communityId;
+
+  const community = await Community.findById(communityId).select(
+    "name email socialMediaHandles image cover headline"
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: community,
+  });
+});
+
+exports.followCommunity = catchAsync(async (req, res, next) => {
+  const userId = req.body.userId;
+  const communityId = req.body.communityId;
+
+  // Follow community => Add user to communities list of followers and add community to user's following list
+
+  const communityDoc = await Community.findById(communityId);
+
+  if (!communityDoc.followers.includes(userId)) {
+    communityDoc.followers.push(userId);
+  }
+
+  await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+  const userDoc = await User.findById(userId);
+
+  if (!userDoc.following.includes(communityId)) {
+    userDoc.following.push(communityId);
+  }
+
+  const updatedUser = await userDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedUser,
+  });
+});
+
+exports.unfollowCommunity = catchAsync(async (req, res, next) => {
+  const userId = req.body.userId;
+  const communityId = req.body.communityId;
+
+  // Unfollow community => Remove user from communities list of followers and remove community from user's following list
+
+  const communityDoc = await Community.findById(communityId);
+
+  communityDoc.followers = communityDoc.followers.filter(
+    (follower) => follower.toString() !== userId.toString()
+  );
+
+  await communityDoc.save({ new: true, validateModifiedOnly: true });
+
+  const userDoc = await User.findById(userId);
+
+  userDoc.following = userDoc.following.filter(
+    (sampleCommunity) => sampleCommunity.toString() !== communityId.toString()
+  );
+
+  const updatedUser = await userDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedUser,
+  });
+});
+
+exports.updateCommunityProfile = catchAsync(async (req, res, next) => {
+  // Update community cover image
+
+  const communityId = req.params.communityId;
+
+  const cover = req.body.cover;
+
+  const community = await Community.findById(communityId);
+
+  community.cover = cover;
+
+  await community.save({ new: true, validateModifiedOnly: true });
+
+  const updatedCommunity = await Community.findById(communityId).select(
+    "name email socialMediaHandles image cover headline"
   );
 
   res.status(200).json({

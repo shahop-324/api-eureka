@@ -1,37 +1,39 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
   {
-    createdForEvent: {
+    eventId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Event',
+      ref: "Event",
     },
-    createdByUser: {
+    communityId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: "Community",
+    },
+    userId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
     },
     createdAt: {
       type: Date,
       default: Date.now(),
     },
-    userName: {
-      type: String,
-    },
-    userImg: {
-      type: String,
-    },
     rating: {
       type: Number,
       required: [
         true,
-        'A review must have a rating between 1 to 5 on a scale of 5',
+        "A review must have a rating between 1 to 5 on a scale of 5",
       ],
       min: 1,
       max: 5,
     },
     reviewComment: {
       type: String,
-      max: [300, 'A review comment can have maximum 300 characters length.'],
+      max: [500, "A review comment can have maximum 300 characters length."],
+    },
+    hidden: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -40,5 +42,5 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-const Review = mongoose.model('Review', reviewSchema);
+const Review = mongoose.model("Review", reviewSchema);
 module.exports = Review;

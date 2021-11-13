@@ -18,7 +18,7 @@ const UserAccountConnections = () => {
             Your Connections
           </DashboardSectionHeading>
           <div className="px-4">
-            <ConnectionListLabels></ConnectionListLabels>
+            <ConnectionListLabels />
             <ListDetailsCard />
           </div>
 

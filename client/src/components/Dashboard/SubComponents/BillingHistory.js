@@ -34,16 +34,10 @@ const BillingHistory = ({ open, handleClose }) => {
         <SwipeableDrawer
           anchor="right"
           open={open}
-          onOpen={() => {
-            console.log("Side nav was opended");
-          }}
-          onClose={() => {
-            console.log("Side nav was closed");
-          }}
         >
           <div
             className="registration-more-details-right-drawer px-4 py-4"
-            style={{ width: "900px" }}
+            style={{ width: "1050px" }}
           >
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">
               <div className="side-drawer-heading">Your Billing History</div>
@@ -71,11 +65,15 @@ const BillingHistory = ({ open, handleClose }) => {
             {typeof transactions !== "undefined" && transactions.length > 0 ? (
               renderTransactionsList(transactions)
             ) : (
-              <NoContentFound
-                msgText={"Seems like this there are no transactions yet."}
-                img={NoTransaction}
-
-              />
+              <div
+                style={{ height: "73vh", width: "100%" }}
+                className="d-flex flex-row align-items-center justify-content-center"
+              >
+                <NoContentFound
+                  msgText={"Seems like this there are no transactions yet."}
+                  img={NoTransaction}
+                />
+              </div>
             )}
           </div>
         </SwipeableDrawer>

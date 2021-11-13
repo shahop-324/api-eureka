@@ -1,4 +1,5 @@
 import React from "react";
+import styled from 'styled-components';
 import "./../../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../../assets/Sass/EventManagement.scss";
 import "./../../../../assets/Sass/SideNav.scss";
@@ -19,6 +20,13 @@ import Hubspot from "./../Integration/Cards/Hubspot";
 import Salesforce from "./../Integration/Cards/Salesforce";
 import Typeform from "./../Integration/Cards/Typeform";
 import Slido from "./../Integration/Cards/Slido";
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
 
 const options = [
   { value: "All", label: "All Integrations" },
@@ -114,14 +122,14 @@ const Integrations = () => {
     <>
       <div style={{ minWidth: "1138px" }} className="mb-4">
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 pb-3">
-          <div className="sec-heading-text">Integrations</div>
+          <SectionHeading className="">Integrations</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
            
             
             <button className="btn btn-outline-primary btn-outline-text">Suggest Integration</button>
           </div>
         </div>
-        <div className="px-4 py-4 mb-4">
+        <div className="px-4 py-4 mb-5">
         <Mailchimp />
         <Salesforce />
         <Hubspot />

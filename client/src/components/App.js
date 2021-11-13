@@ -281,7 +281,7 @@ class App extends React.Component {
               <Route path="/event-platform" exact component={EventPlatform} />
               <Route path="/contact-us" exact component={ContactUs} />
               <Route
-                path="/community-public-page/:communityId"
+                path="/community/:communityId"
                 exact
                 component={CommunityPublicPage}
               />
@@ -333,15 +333,9 @@ class App extends React.Component {
               {isSignedIn && (
                 <Route path="/user/profile" exact component={UserAccountHome} />
               )}
+              
               {isSignedIn && (
-                <Route
-                  path="/user/briefcase"
-                  exact
-                  component={UserAccountHome}
-                />
-              )}
-              {isSignedIn && (
-                <Route path="/user/queries" exact component={UserAccountHome} />
+                <Route path="/user/following" exact component={UserAccountHome} />
               )}
 
               {isSignedIn && (

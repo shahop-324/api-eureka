@@ -21,9 +21,25 @@ import WhatsNew from "../WhatsNew";
 import ConfirmCommunityMail from "./Helper/ConfirmCommunityMail";
 import UserAccountBriefcase from "./UserAccountBriefcase";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+import NotificationSideDrawer from "./Helper/NotificationSideDrawer";
+import Wishlist from "./Helper/Wishlist";
+import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
+import Following from "./Following";
 
 const UserAccountHome = () => {
   const dispatch = useDispatch();
+
+  const [openNotifications, setOpenNotifications] = useState(false);
+
+  const [openWishlist, setOpenWishlist] = React.useState(false);
+
+  const handleCloseWishlist = () => {
+    setOpenWishlist(false);
+  };
+
+  const handleCloseNotifications = () => {
+    setOpenNotifications(false);
+  };
 
   const { openCommunityVerificationNotice } = useSelector(
     (state) => state.user
@@ -76,13 +92,10 @@ const UserAccountHome = () => {
         break;
       }
       case 4: {
-        history.push("/user/briefcase");
+        history.push("/user/following");
         break;
       }
-      case 5: {
-        history.push("/user/queries");
-        break;
-      }
+    
       default: {
         break;
       }
@@ -123,7 +136,18 @@ const UserAccountHome = () => {
             >
               <div className="opaque-layer" style={{ height: "100%" }}></div>
               <div className="d-flex flex-row align-items-center justify-content-end py-2 px-2">
-                <IconButton>
+                <IconButton
+                  onClick={() => {
+                    setOpenWishlist(true);
+                  }}
+                >
+                  <FavoriteBorderRoundedIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    setOpenNotifications(true);
+                  }}
+                >
                   <NotificationsNoneRoundedIcon />
                 </IconButton>
                 <div className="ms-3">
@@ -150,7 +174,7 @@ const UserAccountHome = () => {
                     return <UserAccountProfileMainBody />;
 
                   case 4:
-                    return <UserAccountBriefcase />;
+                    return <Following />;
 
                   default:
                     return <div>You are a User.</div>;
@@ -166,6 +190,11 @@ const UserAccountHome = () => {
         handleCloseWhatsNew={handleCloseWhatsNew}
       />
       <ConfirmCommunityMail open={openCommunityVerificationNotice} />
+      <NotificationSideDrawer
+        open={openNotifications}
+        handleClose={handleCloseNotifications}
+      />
+      <Wishlist open={openWishlist} handleClose={handleCloseWishlist} />
     </>
   );
 };

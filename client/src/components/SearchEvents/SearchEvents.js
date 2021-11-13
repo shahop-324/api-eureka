@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import styled from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -23,6 +24,12 @@ import Loader from "./../../components/Loader";
 import AvatarMenu from "../AvatarMenu";
 import NoResultsFound from "../NoResultsFound";
 import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
+import { IconButton } from "@material-ui/core";
+
+import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
+import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+import NotificationSideDrawer from "./../UserAccount/Helper/NotificationSideDrawer";
+import Wishlist from "./../UserAccount/Helper/Wishlist";
 
 const categories = [
   { title: "Technology" },
@@ -37,8 +44,41 @@ const categories = [
   { title: "Business & Entrepreneurship" },
 ];
 
+const HeroHeading = styled.div`
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #212121;
+  text-align: center;
+`;
+
+const MainResultHeading = styled.div`
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: #212121;
+`;
+
+const EventAndCatgory = styled.div`
+text-align: center;
+font-weight: 400;
+  font-size: 0.9rem;
+  color: #212121;
+
+`
+
 const SearchEvents = () => {
   const dispatch = useDispatch();
+
+  const [openNotifications, setOpenNotifications] = useState(false);
+
+  const [openWishlist, setOpenWishlist] = React.useState(false);
+
+  const handleCloseWishlist = () => {
+    setOpenWishlist(false);
+  };
+
+  const handleCloseNotifications = () => {
+    setOpenNotifications(false);
+  };
 
   const { isSignedIn } = useSelector((state) => state.auth);
 
@@ -330,7 +370,22 @@ const SearchEvents = () => {
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                   {isSignedIn ? (
-                    <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
+                    <div className=" py-2 d-flex flex-row align-items-center">
+                      <IconButton
+                        onClick={() => {
+                          setOpenWishlist(true);
+                        }}
+                      >
+                        <FavoriteBorderRoundedIcon />
+                      </IconButton>
+                      <IconButton
+                        className="mx-2"
+                        onClick={() => {
+                          setOpenNotifications(true);
+                        }}
+                      >
+                        <NotificationsNoneRoundedIcon />
+                      </IconButton>
                       <AvatarMenu />
                     </div>
                   ) : (
@@ -360,15 +415,10 @@ const SearchEvents = () => {
           </nav>
         </div>
         <div className="row no-of-events-section">
-          <div
-            className="text-center search-page-events-text"
-            style={{ fontFamily: "Inter" }}
-          >
-            Events
-          </div>
-          <div className="text-center search-page-results-text">
+          <HeroHeading>Events</HeroHeading>
+          <EventAndCatgory className="my-2">
             {eventsList.length} Events . 8 Categories
-          </div>
+          </EventAndCatgory>
         </div>
         <div
           className="row filter-and-results-section max-width"
@@ -587,7 +637,9 @@ const SearchEvents = () => {
             </div>
           </div>
           <div className="col-12 col-lg-9 search-results-section px-5">
-            <div className="row search-result-heading pb-4">Top Picks</div>
+            <MainResultHeading className="row pb-4">
+              Top Picks
+            </MainResultHeading>
             {eventsList[0] ? (
               <div
                 className="row search-result-grid"
@@ -631,6 +683,11 @@ const SearchEvents = () => {
         <PreFooter />
         <Footer />
       </div>
+      <NotificationSideDrawer
+        open={openNotifications}
+        handleClose={handleCloseNotifications}
+      />
+      <Wishlist open={openWishlist} handleClose={handleCloseWishlist} />
     </>
   );
 };

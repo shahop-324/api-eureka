@@ -25,6 +25,9 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import styled from "styled-components";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+
+import NotificationsSideDrawer from "./../HelperComponent/NotificationsSideDrawer";
 
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
@@ -73,6 +76,12 @@ const Topnav = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [maxWidth, setMaxWidth] = React.useState("lg");
+
+  const [openNotifications, setOpenNotifications] = React.useState(false);
+
+  const handleCloseNotifications = () => {
+    setOpenNotifications(false);
+  };
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const classes = useStyles();
@@ -124,12 +133,19 @@ const Topnav = ({
               className="me-2"
               style={{ border: "1px solid #538BF7", color: "#538BF7" }}
             />
+            <IconButton
+              onClick={() => {
+                setOpenNotifications(true);
+              }}
+            >
+              <NotificationsNoneRoundedIcon />
+            </IconButton>
             <div
               onClick={handleClickOpenSettings}
               className={`${classes.root} mx-2`}
             >
               <IconButton>
-                <EditRoundedIcon style={{ color: "#212121" }} />
+                <EditRoundedIcon style={{ fontSize: "22px" }} />
               </IconButton>
             </div>
             <div
@@ -206,8 +222,8 @@ const Topnav = ({
           >
             <div></div>
             <FormHeading
-              className="overlay-form-heading"
-              style={{ fontFamily: "Ubuntu" }}
+              className=""
+              style={{ fontFamily: "Ubuntu", textAlign: "center" }}
             >
               Edit community profile
             </FormHeading>
@@ -229,6 +245,10 @@ const Topnav = ({
       <SwitchCommunity
         open={openSwitchCommunity}
         handleClose={handleCloseSwitchCommunity}
+      />
+      <NotificationsSideDrawer
+        open={openNotifications}
+        handleClose={handleCloseNotifications}
       />
     </>
   );

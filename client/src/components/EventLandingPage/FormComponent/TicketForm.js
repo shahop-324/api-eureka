@@ -19,6 +19,24 @@ const TwoButtonsGrid = styled.div`
   grid-gap: 24px;
 `;
 
+const TicketTitle = styled.div`
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
+const TicketBrief = styled.div`
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #212121;
+`;
+
+const TicketPrice = styled.div`
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
 const RoyalBlueRadio = withStyles({
   root: {
     color: "#538BF7",
@@ -133,13 +151,22 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
             />
           </div>
           <div className="ticket-name-and-description">
-            <div className="ticket-name mb-1">{ticket.name}</div>
-            <div className="ticket-description">{ticket.description}</div>
+            <TicketTitle className="ticket-name mb-1">
+              {ticket.name}
+            </TicketTitle>
+            <TicketBrief className="ticket-description">
+              {ticket.description}
+            </TicketBrief>
           </div>
           {ticket.soldOut ? (
-            <div className="ticket-sold-out-text">Sold out</div>
+            <TicketPrice
+              className="ticket-sold-out-text"
+              style={{ color: "#B84141" }}
+            >
+              Sold out
+            </TicketPrice>
           ) : (
-            <div className="ticket-price">
+            <TicketPrice className="ticket-price">
               {(() => {
                 switch (ticket.type) {
                   case "Paid":
@@ -163,7 +190,7 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
                     break;
                 }
               })()}
-            </div>
+            </TicketPrice>
           )}
         </div>
       );

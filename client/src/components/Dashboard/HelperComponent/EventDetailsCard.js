@@ -1,5 +1,5 @@
 import React from "react";
-
+import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import Ripple from "./../../ActiveStatusRipple";
@@ -12,6 +12,69 @@ import { Link } from "react-router-dom";
 import { IconButton } from "@material-ui/core";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Chip from "@mui/material/Chip";
+
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import WebRoundedIcon from "@mui/icons-material/WebRounded";
+import ShareLocationRoundedIcon from "@mui/icons-material/ShareLocationRounded";
+
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
+
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
 
 const EventDetailCard = ({
   id,
@@ -27,6 +90,15 @@ const EventDetailCard = ({
   moderators, // ids of moderators
   hosts, // ids of hosts
 }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   let role = "organiser"; // default role is organiser
   const dispatch = useDispatch();
   const eventId = id;
@@ -55,7 +127,7 @@ const EventDetailCard = ({
         className="events-field-value-container"
         style={{ alignItems: "center" }}
       >
-        <div className="event-edit-field me-2">
+        {/* <div className="event-edit-field me-2">
           <Link
             className="event-field-label event-edit-icon "
             to={`/community/${communityId}/edit-event/${id}/event-overview`}
@@ -64,9 +136,8 @@ const EventDetailCard = ({
               <EditRoundedIcon />
             </IconButton>
           </Link>
-        </div>
-
-        <div className="event-card-field">
+        </div> */}
+        <div className="event-card-field ms-3">
           <div
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
@@ -247,7 +318,52 @@ const EventDetailCard = ({
         <div className="event-stage-field">
           <div className="event-field-label field-label-value">
             <div className="visit-stage-button">
-              <Link
+              <IconButton
+                id="demo-customized-button"
+                aria-controls="demo-customized-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                variant="outlined"
+                disableElevation
+                onClick={handleClickMore}
+              >
+                <MoreVertOutlinedIcon />
+              </IconButton>
+
+              <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                  "aria-labelledby": "demo-customized-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} disableRipple>
+                  <EditIcon />
+                  <MenuText>Edit</MenuText>
+                </MenuItem>
+                <MenuItem onClick={handleClose} disableRipple>
+                  <FileCopyIcon />
+                  <MenuText>Duplicate</MenuText>
+                </MenuItem>
+
+                <MenuItem onClick={handleClose} disableRipple>
+                  <ArchiveIcon />
+                  <MenuText>Archive</MenuText>
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={handleClose} disableRipple>
+                  <WebRoundedIcon />
+                  <MenuText>Landing page</MenuText>
+                </MenuItem>
+                <MenuItem onClick={handleClose} disableRipple>
+                  <ShareLocationRoundedIcon />
+                  <MenuText>Venue</MenuText>
+                </MenuItem>
+              </StyledMenu>
+
+              {/* <Link
                 onClick={() => {
                   dispatch(fetchEvent(eventId));
                 }}
@@ -271,7 +387,7 @@ const EventDetailCard = ({
                   />
                   Preview
                 </button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

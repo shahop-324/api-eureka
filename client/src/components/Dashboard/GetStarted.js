@@ -26,6 +26,11 @@ import LatestEventCard from "./LatestEventCard";
 import GetHelp from "./GetHelp";
 
 import { fetchLatestEvent } from "../../actions";
+import { useParams } from "react-router-dom";
+
+import Archive from "./HelperComponent/Archive";
+
+import Chip from '@mui/material/Chip';
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -199,6 +204,11 @@ class DemoCarousel extends React.Component {
 
 const GetStarted = () => {
   const theme = useTheme();
+
+  const params = useParams();
+
+  const communityId = params.id;
+
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { latestEvent } = useSelector((state) => state.event);
@@ -210,6 +220,12 @@ const GetStarted = () => {
   }, []);
 
   const [openCreateEvent, setOpenCreateEvent] = React.useState(false);
+
+  const [openArchive, setOpenArchive] = React.useState(false);
+
+  const handleCloseArchive = () => {
+    setOpenArchive(false);
+  }
 
   const handleCloseCreateEvent = () => {
     setOpenCreateEvent(false);
@@ -233,15 +249,21 @@ const GetStarted = () => {
         >
           <SectionHeading>Getting started</SectionHeading>
           <div className="d-flex flex-row align-items-center">
-            <button className="btn btn-outline-primary btn-outline-text">
+            <button onClick={() => {
+              setOpenArchive(true);
+            }} className="btn btn-outline-primary btn-outline-text">
               Archive
             </button>
-            <button className="btn btn-outline-primary btn-outline-text mx-3">
-              Community
-            </button>
-            <button className="btn btn-outline-primary btn-outline-text">
-              Followers
-            </button>
+            <a
+              href={`/community/${communityId}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <button className="btn btn-outline-primary btn-outline-text mx-3">
+                Community
+              </button>
+            </a>
+            <Chip label="1.2K Followers" color="primary" style={{fontWeight: "500"}} />
           </div>
         </div>
         <div className="px-4 mb-5">
@@ -410,6 +432,7 @@ const GetStarted = () => {
         />
       </Dialog>
       <GetHelp open={openGetHelp} handleClose={handleCloseGetHelp} />
+      <Archive open={openArchive} handleClose={handleCloseArchive} />
     </>
   );
 };

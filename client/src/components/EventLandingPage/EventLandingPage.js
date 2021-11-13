@@ -15,13 +15,15 @@ import RedditIcon from "@mui/icons-material/Reddit";
 import LanguageIcon from "@material-ui/icons/Language";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import {
-  captureUserInterestInEvent,
   errorTrackerForFetchEvent,
   fetchEventLandingPage,
   getCommunityTawkLink,
+  fetchCommunityProfile,
 } from "../../actions/index";
 
 import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
+
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 
 import SessionCard from "./HelperComponent/SessionCard";
 import SpeakerCard from "./HelperComponent/SpeakerCard";
@@ -60,15 +62,88 @@ import {
   WhatsappShareButton,
 } from "react-share";
 
-import {
-  FacebookShareCount,
-  HatenaShareCount,
-  OKShareCount,
-  PinterestShareCount,
-  RedditShareCount,
-  TumblrShareCount,
-  VKShareCount,
-} from "react-share";
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
+
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+
+const styles = {
+  control: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.8rem",
+    color: "#757575",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.8rem",
+    color: "#757575",
+  }),
+};
+
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
 
 const MessageStrip = styled.div`
   background-color: #e74646;
@@ -90,11 +165,98 @@ const InfoMessageStrip = styled.div`
   text-align: center;
 `;
 
+const HostedBy = styled.span`
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  color: #075285 !important;
+  /* text-decoration: underline !important; */
+
+  &:hover {
+    cursor: pointer !important;
+  }
+`;
+
+const EventName = styled.div`
+  font-size: 1.8rem;
+  color: #212121;
+  font-weight: 500;
+`;
+
+const EventBrief = styled.div`
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
+const HostedByTitle = styled.div`
+  font-size: 0.95rem;
+  color: #212121;
+  font-weight: 500;
+`;
+
+const CommunityHeadline = styled.div`
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #212121;
+`;
+
+const MonthOfEvent = styled.div`
+  font-weight: 500;
+  font-size: 1rem;
+  color: #212121;
+`;
+
+const DateOfEvent = styled.div`
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #212121;
+`;
+
+const YearOfEvent = styled.div`
+  font-weight: 400;
+  font-size: 1rem;
+  color: #212121;
+`;
+
+const EventTimeline = styled.div`
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
+const SectionHeading = styled.div`
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: #212121;
+`;
+
+const TicketsHeadline = styled.div`
+  font-weight: 500;
+  font-size: 1rem;
+  color: #212121;
+`;
+
 const EventLandingPage = (props) => {
   const params = useParams();
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const currentEventId = params.id;
 
+  let community = useSelector((state) => state.communityPage.community);
   let event = useSelector((state) => state.event.eventDetails);
   let tickets = useSelector((state) => state.ticket.tickets);
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
@@ -150,22 +312,14 @@ const EventLandingPage = (props) => {
 
   useEffect(() => {
     dispatch(getCommunityTawkLink(communityId));
+    dispatch(fetchCommunityProfile(communityId));
     dispatch(fetchEventLandingPage(id, true)); // true indicates that we have to increase number of views on this event
   }, [dispatch, id]);
-
-  useEffect(() => {
-    if (isSignedIn) {
-      // TODO dispatch(captureInterest())
-      dispatch(captureUserInterestInEvent(id));
-      console.log("Here we will capture interest");
-    }
-  }, []);
 
   const [selectedSection, setSelectedSection] = useState(0);
 
   const handleSecNav = (i) => {
     setSelectedSection(i);
-    console.log(i);
   };
 
   const convertFromJSONToHTML = (text) => {
@@ -213,12 +367,24 @@ const EventLandingPage = (props) => {
   let platinumIsPresent = false;
   let goldIsPresent = false;
 
-  console.log(event.speaker);
-
   event.session && event.session[0] && (sessionIsPresent = true);
   event.speaker && event.speaker[0] && (speakerIsPresent = true);
   event.sponsors && event.sponsors[0] && (sponsorIsPresent = true);
   event.booths && event.booths[0] && (boothsIsPresent = true);
+
+  // Determine if platinum, diamond and gold sponsors are present
+
+  for (let element of event.sponsors) {
+    if (element.status === "Platinum") {
+      platinumIsPresent = true;
+    }
+    if (element.status === "Diamond") {
+      diamondIsPresent = true;
+    }
+    if (element.status === "Gold") {
+      goldIsPresent = true;
+    }
+  }
 
   if (speakerIsPresent) {
     col = col + 1;
@@ -281,10 +447,6 @@ const EventLandingPage = (props) => {
     });
   };
 
-  diamondIsPresent = true;
-  platinumIsPresent = true;
-  goldIsPresent = true;
-
   const renderDiamondSponsorCard = () => {
     return event.sponsors.map((sponsor) => {
       console.log(sponsor);
@@ -293,6 +455,7 @@ const EventLandingPage = (props) => {
 
         return (
           <DiamondSponsorCard
+            url={sponsor.website}
             id={sponsor.id}
             image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
@@ -309,6 +472,7 @@ const EventLandingPage = (props) => {
         platinumIsPresent = true;
         return (
           <PlatinumSponsorCard
+            url={sponsor.website}
             id={sponsor.id}
             image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
@@ -325,6 +489,7 @@ const EventLandingPage = (props) => {
         goldIsPresent = true;
         return (
           <GoldSponsorCard
+            url={sponsor.website}
             id={sponsor.id}
             image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
           />
@@ -464,7 +629,6 @@ const EventLandingPage = (props) => {
                     style={{ height: "50px" }}
                   />
                 </a>
-
                 <button
                   className="navbar-toggler"
                   data-bs-toggle="collapse"
@@ -481,7 +645,7 @@ const EventLandingPage = (props) => {
                 >
                   <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                     {isSignedIn ? (
-                      <div className="me-5 py-2 d-flex flex-row align-items-center justify-content-center">
+                      <div className=" py-2 d-flex flex-row align-items-center justify-content-center">
                         <AvatarMenu />
                       </div>
                     ) : (
@@ -625,14 +789,47 @@ const EventLandingPage = (props) => {
                 </div>
               </div>
               <div className="event-landing-main-content">
+                <div className="d-flex flex-row align-items-center justify-content-end">
+                  {/*  */}
+                </div>
                 <img
                   className="event-landing-poster mb-5"
                   src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
                   alt="event-landing-hero"
                   style={{ maxHeight: "460px" }}
                 />
-                <div className="event-start-end-date mb-4">
-                  Starts at {startDateTime}
+                <div className="event-start-end-date mb-4 d-flex flex-row align-items-center justify-content-between">
+                  <EventTimeline> Starts at {startDateTime} </EventTimeline>
+                  <IconButton
+                    id="demo-customized-button"
+                    aria-controls="demo-customized-menu"
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    variant="outlined"
+                    disableElevation
+                    onClick={handleClickMore}
+                  >
+                    <MoreVertOutlinedIcon />
+                  </IconButton>
+
+                  <StyledMenu
+                    id="demo-customized-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "demo-customized-button",
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose} disableRipple>
+                      <FavoriteRoundedIcon />
+                      <MenuText>Add to wishlist</MenuText>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} disableRipple>
+                      <ReplyRoundedIcon />
+                      <MenuText>Report</MenuText>
+                    </MenuItem>
+                  </StyledMenu>
                 </div>
 
                 <div className="event-name-date-hosting-community-container mb-4 px-4">
@@ -653,144 +850,189 @@ const EventLandingPage = (props) => {
                       variant="rounded"
                     />
                     <div className="hosted-by-community-name-sec">
-                      <div
+                      <HostedByTitle
                         className="hosted-by-headline mb-1"
                         style={{ fontWeight: "600" }}
                       >
                         Hosted By
-                      </div>
-                      <div className="hosted-by-community-name mb-2">
-                        {event.createdBy.name}
-                      </div>
+                      </HostedByTitle>
+                      <a
+                        href={`/community/${communityId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <HostedBy className="mb-2">
+                          {event.createdBy.name}
+                        </HostedBy>
+                      </a>
                     </div>
                   </div>
 
-                  <div className="hosted-by-social-grid mb-3">
-                    <IconButton>
-                      <LanguageIcon style={{ fill: "#4D4D4D" }} />
-                    </IconButton>
-                    <IconButton>
-                      <LinkedInIcon style={{ fill: "#4D4D4D" }} />
-                    </IconButton>
-                    <IconButton>
-                      <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
-                    </IconButton>
-                  </div>
-                </div>
+                  <CommunityHeadline className="mb-4">
+                    {community.headline}
+                  </CommunityHeadline>
 
-                <div
-                  className="event-landing-secondary-nav mb-3"
-                  style={{
-                    position: "sticky",
-                    top: "2rem",
-                    gridTemplateColumns: secNavCol,
-                  }}
-                >
-                  <a
-                    onClick={() => {
-                      handleSecNav(0);
-                    }}
-                    href="#overview-section"
-                    style={{ textDecoration: "none", fontWeight: "600" }}
-                  >
-                    <div
-                      className={`event-landing-secondary-nav-item  ${
-                        selectedSection === 0
-                          ? "active-secondary-nav-item py-1"
-                          : ""
-                      }`}
-                      style={{ fontFamily: "Inter", fontWeight: "500" }}
-                    >
-                      Overview
+                  {community ? (
+                    <div className="hosted-by-social-grid">
+                      {community.socialMediaHandles ? (
+                        <>
+                          {community.socialMediaHandles.website ? (
+                            <a
+                              href={`//${community.socialMediaHandles.website}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <LanguageIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.twitter ? (
+                            <a
+                              href={`//${community.socialMediaHandles.twitter}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <TwitterIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.facebook ? (
+                            <a
+                              href={`//${community.socialMediaHandles.facebook}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <FacebookIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.linkedin ? (
+                            <a
+                              href={`//${community.socialMediaHandles.linkedin}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <LinkedInIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
+                      {community.email ? (
+                        <a
+                          href={`mailto:${community.email}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {" "}
+                          <IconButton>
+                            <MailOutlineIcon
+                              style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                            />
+                          </IconButton>
+                        </a>
+                      ) : (
+                        <></>
+                      )}
                     </div>
-                  </a>
-                  <a
-                    onClick={() => {
-                      handleSecNav(1);
-                    }}
-                    href="#schedule-section"
-                    style={{ textDecoration: "none", fontWeight: "600" }}
-                  >
-                    <div
-                      className={`event-landing-secondary-nav-item  ${
-                        selectedSection === 1
-                          ? "active-secondary-nav-item py-1"
-                          : ""
-                      }`}
-                      style={{ fontFamily: "Inter", fontWeight: "500" }}
-                    >
-                      Schedule
-                    </div>
-                  </a>
-                  {speakerIsPresent ? (
-                    <a
-                      onClick={() => {
-                        handleSecNav(2);
-                      }}
-                      href="#speakers-section"
-                      style={{ textDecoration: "none", fontWeight: "600" }}
-                    >
-                      <div
-                        className={`event-landing-secondary-nav-item  ${
-                          selectedSection === 2
-                            ? "active-secondary-nav-item py-1"
-                            : ""
-                        }`}
-                        style={{ fontFamily: "Inter", fontWeight: "500" }}
-                      >
-                        Speakers
-                      </div>
-                    </a>
-                  ) : (
-                    <></>
-                  )}
-                  {sponsorIsPresent ? (
-                    <a
-                      onClick={() => {
-                        handleSecNav(3);
-                      }}
-                      href="#sponsors-section"
-                      style={{ textDecoration: "none", fontWeight: "600" }}
-                    >
-                      <div
-                        className={`event-landing-secondary-nav-item  ${
-                          selectedSection === 3
-                            ? "active-secondary-nav-item py-1"
-                            : ""
-                        }`}
-                        style={{ fontFamily: "Inter", fontWeight: "500" }}
-                      >
-                        Sponsors
-                      </div>
-                    </a>
-                  ) : (
-                    <></>
-                  )}
-                  {boothsIsPresent ? (
-                    <a
-                      onClick={() => {
-                        handleSecNav(4);
-                      }}
-                      href="#booths-section"
-                      style={{ textDecoration: "none", fontWeight: "600" }}
-                    >
-                      <div
-                        className={`event-landing-secondary-nav-item  ${
-                          selectedSection === 4
-                            ? "active-secondary-nav-item py-1"
-                            : ""
-                        }`}
-                        style={{ fontFamily: "Inter", fontWeight: "500" }}
-                      >
-                        Booths
-                      </div>
-                    </a>
                   ) : (
                     <></>
                   )}
                 </div>
 
-                {console.log(event.editingComment)}
+                <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant="fullWidth"
+                  >
+                    <Tab
+                      onClick={() => {
+                        window.location.hash = "#overview-section";
+                      }}
+                      label="Overview"
+                      style={{ fontWeight: "500", textTransform: "capitalize" }}
+                    />
+
+                    <Tab
+                      onClick={() => {
+                        window.location.hash = "#schedule-section";
+                      }}
+                      label="Schedule"
+                      style={{ fontWeight: "500", textTransform: "capitalize" }}
+                    />
+
+                    {speakerIsPresent ? (
+                      <Tab
+                        onClick={() => {
+                          window.location.hash = "#speakers-section";
+                        }}
+                        label="Speakers"
+                        style={{
+                          fontWeight: "500",
+                          textTransform: "capitalize",
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    {sponsorIsPresent ? (
+                      <Tab
+                        onClick={() => {
+                          window.location.hash = "#sponsors-section";
+                        }}
+                        label="Sponsors"
+                        style={{
+                          fontWeight: "500",
+                          textTransform: "capitalize",
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    {boothsIsPresent ? (
+                      <Tab
+                        onClick={() => {
+                          window.location.hash = "#booths-section";
+                        }}
+                        label="Booths"
+                        style={{
+                          fontWeight: "500",
+                          textTransform: "capitalize",
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </Tabs>
+                </Box>
 
                 {event.editingComment ? (
                   <div
@@ -813,11 +1055,19 @@ const EventLandingPage = (props) => {
                       id="schedule-section"
                     >
                       <div className="event-landing-page-section-headline mb-3">
-                        <div className="section-headline">Schedule</div>
+                        <SectionHeading className="">Schedule</SectionHeading>
                       </div>
                       <div className="schedule-filter-grid mb-4">
-                        <Select options={[]} placeholder="Speakers" />{" "}
-                        <Select options={[]} placeholder="tracks" />
+                        <Select
+                          options={[]}
+                          placeholder="Speakers"
+                          styles={styles}
+                        />{" "}
+                        <Select
+                          options={[]}
+                          placeholder="tracks"
+                          styles={styles}
+                        />
                         <DateRangePicker
                           initialSettings={{
                             autoUpdateInput: false,
@@ -859,7 +1109,7 @@ const EventLandingPage = (props) => {
                       id="speakers-section"
                     >
                       <div className="event-landing-page-section-headline mb-5">
-                        <div className="section-headline">Speakers</div>
+                        <SectionHeading>Speakers</SectionHeading>
                       </div>
                       <div className="speakers-card-grid">
                         {renderSpeakerList()}
@@ -878,7 +1128,7 @@ const EventLandingPage = (props) => {
                     id="sponsors-section"
                   >
                     <div className="event-landing-page-section-headline mb-5">
-                      <div className="section-headline">Sponsors</div>
+                      <SectionHeading>Sponsors</SectionHeading>
                     </div>
 
                     {diamondIsPresent ? (
@@ -969,12 +1219,7 @@ const EventLandingPage = (props) => {
                     id="booths-section"
                   >
                     <div className="event-landing-page-section-headline mb-5">
-                      <div
-                        className="section-headline"
-                        style={{ fontSize: "1.8rem" }}
-                      >
-                        Booths
-                      </div>
+                      <SectionHeading className="">Booths</SectionHeading>
                     </div>
                     <div className="booth-section-card-grid">
                       {renderBoothCardList()}
@@ -990,55 +1235,145 @@ const EventLandingPage = (props) => {
                     className="event-info-card-1-primary px-4 py-2"
                     style={{ zIndex: "10000" }}
                   >
-                    <div className="month-main mb-3">{startMonth}</div>
-                    <div className="date-duration-main mb-3">
+                    <MonthOfEvent className="mb-3">{startMonth}</MonthOfEvent>
+                    <DateOfEvent className="mb-3">
                       {startDate} - {endDate}
-                    </div>
-                    <div className="year-main">{startYear}</div>
+                    </DateOfEvent>
+                    <YearOfEvent className="year-main">{startYear}</YearOfEvent>
                   </div>
                   <div className="event-info-card-1-secondary px-4">
-                    <div className="event-name mb-2">{event.eventName}</div>
-                    <div className="event-short-description">
+                    <EventName className="mb-2">{event.eventName}</EventName>
+                    <EventBrief className="">
                       {event.shortDescription}
-                    </div>
+                    </EventBrief>
                   </div>
                 </div>
                 <div className="event-info-card-2 px-4 py-4 mb-5">
-                  <div className="hosted-by-community-grid  mb-4">
+                  <div className="hosted-by-community-grid mb-4">
                     <Avatar
                       src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.createdBy.image}`}
                       // className="hosted-by-community-logo"
-                      style={{ height: "4rem", width: "4rem" }}
+                      style={{ height: "3rem", width: "3rem" }}
                       alt={event.createdBy.name}
                       variant="rounded"
                     />
                     <div className="hosted-by-community-name-sec">
-                      <div
-                        className="hosted-by-headline mb-1"
-                        style={{ fontWeight: "600" }}
+                      <HostedByTitle className="mb-1">Hosted By</HostedByTitle>
+                      <a
+                        href={`/community/${communityId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ textDecoration: "none" }}
                       >
-                        Hosted By
-                      </div>
-                      <div className="hosted-by-community-name mb-2">
-                        {event.createdBy.name}
-                      </div>
+                        <HostedBy className="mb-2">
+                          {event.createdBy.name}
+                        </HostedBy>
+                      </a>
                     </div>
                   </div>
-                  <div className="hosted-by-social-grid mb-3">
-                    {console.log(event.createdBy.email)}
-                    <a href={`mailto:${event.createdBy.email}`}>
-                      {" "}
-                      <IconButton>
-                        <MailOutlineIcon style={{ fill: "#4D4D4D" }} />
-                      </IconButton>
-                    </a>
-                  </div>
+
+                  <CommunityHeadline className="mb-4">
+                    {community.headline}
+                  </CommunityHeadline>
+
+                  {community ? (
+                    <div className="hosted-by-social-grid">
+                      {community.socialMediaHandles ? (
+                        <>
+                          {community.socialMediaHandles.website ? (
+                            <a
+                              href={`//${community.socialMediaHandles.website}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <LanguageIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.twitter ? (
+                            <a
+                              href={`//${community.socialMediaHandles.twitter}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <TwitterIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.facebook ? (
+                            <a
+                              href={`//${community.socialMediaHandles.facebook}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <FacebookIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+
+                          {community.socialMediaHandles.linkedin ? (
+                            <a
+                              href={`//${community.socialMediaHandles.linkedin}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <IconButton>
+                                <LinkedInIcon
+                                  style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                                />
+                              </IconButton>
+                            </a>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
+                      {community.email ? (
+                        <a
+                          href={`mailto:${community.email}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {" "}
+                          <IconButton>
+                            <MailOutlineIcon
+                              style={{ fill: "#4D4D4D", fontSize: "22px" }}
+                            />
+                          </IconButton>
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
                 <div className="event-ticket-section px-4 py-4 mb-5">
                   <div className="event-ticket-section-headline mb-4">
                     <ConfirmationNumberIcon style={{ fill: "#818181" }} />
-                    <div className="ticket-headline-text">Tickets</div>
+                    <TicketsHeadline className="">Tickets</TicketsHeadline>
                     <div className="ticket-price-range"></div>
                   </div>
 

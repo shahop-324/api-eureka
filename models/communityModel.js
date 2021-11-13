@@ -459,6 +459,10 @@ const communitySchema = new mongoose.Schema(
     ],
     coverPhoto: String,
     image: { type: String, default: "#" },
+    cover: {
+      type: String,
+      default: "Natural-Facebook-Cover-Photo.jpg.webp",
+    },
     superAdmin: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
@@ -510,6 +514,12 @@ const communitySchema = new mongoose.Schema(
       type: Boolean, // ! We will mark this as true after this community purchases their first plan on Bluemeet
       default: false,
     },
+    followers: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

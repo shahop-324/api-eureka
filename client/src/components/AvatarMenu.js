@@ -1,14 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import Button from "@material-ui/core/Button";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Grow from "@material-ui/core/Grow";
-import Paper from "@material-ui/core/Paper";
-import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
+import styled from "styled-components";
+
 import "./../index.css";
 import "./../assets/css/style.css";
 import "./../assets/css/UserAccountStyle.css";
@@ -16,46 +12,94 @@ import "./../assets/css/CardStyle.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
   errorTrackerForEditUser,
-  navigationIndex,
   signOut,
   showSnackbar,
 } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import history from "../history";
+import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import { Dialog, IconButton, useMediaQuery } from "@material-ui/core";
-import { useTheme } from "@material-ui/core";
+import { useTheme, Divider } from "@material-ui/core";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import Instagram from "@material-ui/icons/Instagram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import RedditIcon from "@mui/icons-material/Reddit";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import {
-  EmailShareButton,
   FacebookShareButton,
-  HatenaShareButton,
-  InstapaperShareButton,
-  LineShareButton,
   LinkedinShareButton,
-  LivejournalShareButton,
-  MailruShareButton,
-  OKShareButton,
-  PinterestShareButton,
-  PocketShareButton,
   RedditShareButton,
   TelegramShareButton,
-  TumblrShareButton,
   TwitterShareButton,
-  ViberShareButton,
-  VKShareButton,
   WhatsappShareButton,
-  WorkplaceShareButton,
 } from "react-share";
+
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded";
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
+
+const MenuButton = styled.div`
+  &:hover {
+    cursor: pointer;
+    background-color: #dddddd;
+  }
+`;
+
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
 
 const { REACT_APP_MY_ENV } = process.env;
 
@@ -73,6 +117,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvatarMenu = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const referralCode = useSelector((state) => state.auth.referralCode);
 
   const [openReferral, setOpenReferral] = React.useState(false);
@@ -110,27 +163,27 @@ const AvatarMenu = () => {
   const error = user.error;
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  // const [open, setOpen] = React.useState(false);
+  // const anchorRef = React.useRef(null);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+  // const handleToggle = () => {
+  //   setOpen((prevOpen) => !prevOpen);
+  // };
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
+  // const handleClose = (event) => {
+  //   if (anchorRef.current && anchorRef.current.contains(event.target)) {
+  //     return;
+  //   }
 
-    setOpen(false);
-  };
+  //   setOpen(false);
+  // };
 
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
+  // function handleListKeyDown(event) {
+  //   if (event.key === "Tab") {
+  //     event.preventDefault();
+  //     setOpen(false);
+  //   }
+  // }
 
   const onClickLoggedOut = async () => {
     const allKeys = Object.keys(localStorage);
@@ -144,12 +197,12 @@ const AvatarMenu = () => {
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-    prevOpen.current = open;
-  }, [open]);
+  // React.useEffect(() => {
+  //   if (prevOpen.current === true && open === false) {
+  //     anchorRef.current.focus();
+  //   }
+  //   prevOpen.current = open;
+  // }, [open]);
 
   if (isLoading) {
     return <div className="spinner-border" role="status"></div>;
@@ -181,25 +234,62 @@ const AvatarMenu = () => {
   return (
     <div className={`${classes.root}`}>
       <div>
-        <Button
-          style={{ padding: "0" }}
-          ref={anchorRef}
-          disableRipple={true}
-          aria-controls={open ? "menu-list-grow" : undefined}
-          aria-haspopup="false"
-          onClick={handleToggle}
-          disableElevation={true}
+        <MenuButton
+          id="demo-customized-button"
+          aria-controls="demo-customized-menu"
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          variant="outlined"
+          disableElevation
+          onClick={handleClickMore}
+          className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2"
+          style={{ borderRadius: "35px" }}
         >
-          <div
-            className="avatar-menu-h-wrapper d-flex flex-row align-items-center ps-3 py-2"
-            style={{ borderRadius: "35px" }}
-          >
-            <Avatar alt={userName} src={imgURL} />
-            <ExpandMoreIcon className="mx-3" />
-          </div>
-        </Button>
+          <Avatar
+            alt={userName}
+            src={imgURL}
+            style={{ height: "2rem", width: "2rem" }}
+          />
+          {open ? (
+            <ExpandLessRoundedIcon
+              className="mx-2"
+              style={{ fontSize: "20px" }}
+            />
+          ) : (
+            <ExpandMoreIcon className="mx-2" style={{ fontSize: "20px" }} />
+          )}
+        </MenuButton>
 
-        <Popper
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <AccountCircleRoundedIcon />
+            <MenuText>Home</MenuText>
+          </MenuItem>
+
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <ExploreRoundedIcon />
+            <MenuText>Explore Events</MenuText>
+          </MenuItem>
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <MonetizationOnRoundedIcon />
+            <MenuText>Referral & Credit</MenuText>
+          </MenuItem>
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <LogoutRoundedIcon />
+            <MenuText>Sign out</MenuText>
+          </MenuItem>
+        </StyledMenu>
+
+        {/* <Popper
           style={{
             zIndex: 10000,
             textAlign: "center",
@@ -287,7 +377,7 @@ const AvatarMenu = () => {
               </Paper>
             </Grow>
           )}
-        </Popper>
+        </Popper> */}
 
         <Dialog
           maxWidth={maxWidth}

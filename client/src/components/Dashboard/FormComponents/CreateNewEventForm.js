@@ -352,8 +352,8 @@ const CreateNewEventForm = ({
           >
             <div></div>
             <FormHeading
-              className="overlay-form-heading"
-              style={{ fontFamily: "Ubuntu" }}
+              className=""
+              style={{ fontFamily: "Ubuntu", textAlign: "center" }}
             >
               New Event
             </FormHeading>

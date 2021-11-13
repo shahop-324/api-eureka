@@ -10,6 +10,7 @@ import {
 import Loader from "./../Loader";
 import dateFormat from "dateformat";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
+import NotRegistered from "./../../assets/images/NoWish.png";
 
 const renderRegisteredEvents = (events, registrations) => {
   return events.map((event) => {
@@ -121,6 +122,7 @@ const UserAccountHomeMainBody = () => {
             className="d-flex flex-row align-items-center justify-content-center"
           >
             <YouHaveNoEventComing
+            img={NotRegistered}
               msgText={"You have not yet registered in any events yet."}
             />
           </div>

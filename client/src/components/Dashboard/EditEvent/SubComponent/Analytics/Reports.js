@@ -33,6 +33,13 @@ import TopicRoundedIcon from "@mui/icons-material/TopicRounded"; // Interests Re
 import StorageRoundedIcon from "@mui/icons-material/StorageRounded"; // Registration form data report No. 29
 import DownloadHistory from "./DownloadHistory";
 
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
 const SwitchTab = styled.div`
   font-weight: 500;
   font-size: 0.95rem;
@@ -62,6 +69,9 @@ const EventReportGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 24px;
+
+  overflow: auto;
+  height: 98vh;
 `;
 
 const EventReportCard = styled.div`
@@ -110,7 +120,7 @@ const Reports = () => {
 
   return (
     <>
-      <div
+      {/* <div
         className="d-flex flex-row align-items-center mb-4"
         style={{ borderBottom: "1px solid #D1D1D1" }}
       >
@@ -131,18 +141,19 @@ const Reports = () => {
         >
           Downloads History
         </SwitchTab>
-      </div>
+      </div> */}
+
+      <SectionHeading className="mb-3">Analytics</SectionHeading>
 
       <TextBrief className="mb-4">
-        Here you can query various reports from your event, view them and share
-        directly with others.
+        Here you can query various reports from your event.
       </TextBrief>
 
       {(() => {
         switch (activeTab) {
           case "reports":
             return (
-              <EventReportGrid>
+              <EventReportGrid className="mb-5 pb-3">
                 <EventReportCard>
                   <EventReportIconBox
                     color={"#2E70F3"}

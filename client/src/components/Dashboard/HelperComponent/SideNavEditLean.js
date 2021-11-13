@@ -49,10 +49,10 @@ const SideNavEditLean = ({
   return (
     <>
       <div
-        className="h-side-nav lean-side-nav lean-nav-wrapper px-3 pb-4"
+        className="lean-side-nav lean-nav-wrapper px-3 pb-4"
         style={{
           backgroundColor: "#ffffff",
-          height: "76vh !important",
+          height: "88vh !important",
           overflow: "auto !important",
         }}
       >
@@ -603,7 +603,7 @@ const SideNavEditLean = ({
           </div>
 
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3"
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3 pb-3 pb-5 mb-5"
             onClick={() => {
               handleReviewsClick();
             }}

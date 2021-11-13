@@ -3,15 +3,13 @@ import { IconButton } from "@material-ui/core";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import { Field, reduxForm } from "redux-form";
-
-import Select from "react-select";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createNewInvitation } from "../../../actions";
 
 const Paper = styled.div`
-  width: 420px !important;
+  width: 400px !important;
 `;
 
 const renderError = ({ error, touched }) => {
@@ -45,11 +43,6 @@ const renderInput = ({
       {renderError(meta)}
     </div>
   );
-};
-
-const showResults = (formValues) => {
-  // await sleep(500); // simulate server latency
-  window.alert(`You submitted:\n\n${JSON.stringify(formValues, null, 2)}`);
 };
 
 const AddNewMember = ({
@@ -100,12 +93,6 @@ const AddNewMember = ({
         <SwipeableDrawer
           anchor="right"
           open={open}
-          onOpen={() => {
-            console.log("Side nav was opended");
-          }}
-          onClose={() => {
-            console.log("Side nav was closed");
-          }}
         >
           <Paper className="registration-more-details-right-drawer px-4 py-4">
             <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between">

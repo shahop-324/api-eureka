@@ -23,6 +23,16 @@ import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
 import GrowthPlanCard from "./HelperComponent/BillingComponents/GrowthPlanCard";
 import BillingHistory from "./SubComponents/BillingHistory";
 
+import LockRoundedIcon from "@mui/icons-material/LockRounded";
+
+import Chip from "@mui/material/Chip";
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
+
+import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
+import ShowHistory from "./Billing/ShowHistory";
+import Withdraw from "./Billing/Withdraw";
+import EditEmail from "./Billing/EditEmail";
+
 const SectionHeading = styled.div`
   font-size: 1.25rem;
   font-weight: 500;
@@ -76,6 +86,14 @@ const StripeAccountCardBody = styled.div`
   max-width: 1460px;
 `;
 
+const PayoutCardBody = styled.div`
+  background-color: #ffffff;
+  border-radius: 10px;
+  height: auto;
+  width: 100%;
+  max-width: 1460px;
+`;
+
 const NoteContainer = styled.div`
   width: 100%;
   height: auto;
@@ -85,10 +103,34 @@ const NoteContainer = styled.div`
 `;
 
 const NoteText = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   font-family: "Ubuntu";
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #ffffff;
+`;
+
+const AmountToWithdraw = styled.div`
+  font-weight: 500;
+  font-size: 1rem;
+  color: #212121;
+`;
+
+const PaypalEmail = styled.div`
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
+const Email = styled.div`
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #447bea;
+`;
+
+const Amount = styled.div`
+  font-weight: 600;
+  font-size: 1rem;
+  color: #447bea;
 `;
 
 const Billing = () => {
@@ -98,7 +140,21 @@ const Billing = () => {
 
   const [isClicked, setIsClicked] = React.useState(false);
 
+  const [openPayoutHistory, setOpenPayoutHistory] = React.useState(false);
+
   const [duration, setDuration] = React.useState("monthly");
+
+  const [openWithdraw, setOpenWithdraw] = useState(false);
+
+  const [openEditEmail, setOpenEditEmail] = useState(false);
+
+  const handleCloseEditEmail = () => {
+    setOpenEditEmail(false);
+  };
+
+  const handleCloseWithdraw = () => {
+    setOpenWithdraw(false);
+  };
 
   const params = useParams();
 
@@ -123,7 +179,13 @@ const Billing = () => {
     setOpenDrawer(false);
   };
 
-  const color = isStripeEnabled ? "#90EE7D" : "#dfe769";
+  const handleClosePayoutHistory = () => {
+    setOpenPayoutHistory(false);
+  };
+
+  const color = "#90EE7D";
+
+  const lockColor = "#dfe769";
 
   // Determine if currently logged in user is the community super admin
 
@@ -142,11 +204,97 @@ const Billing = () => {
         </div>
 
         <TextSmall className="mx-4 mb-4">
-          Your ticketing revenue will be deposited instantly in your connected
-          stripe account.
+          Your ticketing revenue will be deposited within 2-6 hrs of withdrawl
+          request.
         </TextSmall>
 
-        <StripeAccountCardBody
+        <PayoutCardBody className="px-4 mx-3 mb-4 py-4">
+          <div className="d-flex flex-row align-items-center justify-content-between mb-4">
+            {/* Amount to withdraw */}
+
+            <div className="d-flex flex-row align-items-center">
+              <AmountToWithdraw className="me-3">
+                Amount to withdraw:{" "}
+              </AmountToWithdraw>
+              <Amount>$5500</Amount>
+            </div>
+
+            <div className="d-flex flex-row align-items-center">
+              <button
+                onClick={() => {
+                  setOpenWithdraw(true);
+                }}
+                className="btn btn-outline-text btn-primary"
+              >
+                Withdraw
+              </button>
+              <button
+                onClick={() => {
+                  setOpenPayoutHistory(true);
+                }}
+                className="btn btn-outline-text btn-outline-primary ms-3"
+              >
+                Show history
+              </button>
+            </div>
+
+            {/* Withdraw money and withdrawl history buttons */}
+          </div>
+
+          <div className="d-flex flex-row align-items-center mb-5">
+            {/* Paypal email */}
+
+            <PaypalEmail className="me-3">Paypal Email</PaypalEmail>
+
+            {/* Email */}
+
+            <Email className="me-3">omprakash.shah@bluemeet.in</Email>
+            {/* if email is not present then ask them to add email with a add button */}
+
+            {/* Verified status */}
+
+            <Chip
+              label="Not verified"
+              color="error"
+              variant="outlined"
+              className="me-3"
+            />
+
+            {/* Add / Edit */}
+            {/* Give edit & Send verification email button */}
+
+            <button
+              onClick={() => {
+                setOpenEditEmail(true);
+              }}
+              className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3"
+            >
+              <EditRoundedIcon style={{ fontSize: "20px" }} />{" "}
+              <span className="ms-1">Edit</span>
+            </button>
+            <button className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center">
+              <ReplayRoundedIcon style={{ fontSize: "20px" }} />{" "}
+              <span className="ms-1">Resend verification email</span>
+            </button>
+          </div>
+
+          {/* Paypal email */}
+          <NoteContainer className="px-4 py-3">
+            <NoteText
+              style={{ color: color }}
+              className="d-flex flex-row align-items-center"
+            >
+              <LockRoundedIcon style={{ color: lockColor, fontSize: "22px" }} />{" "}
+              <span className="ms-2">
+                {" "}
+                All payouts are securly processed to your verified paypal
+                account. These information are only visibile to super admin.
+              </span>
+            </NoteText>
+          </NoteContainer>
+        </PayoutCardBody>
+
+        {/* <StripeAccountCardBody
           className="px-4 mx-3 mb-4 py-4 d-flex flex-column align-items-center justify-content-center"
           style={{
             backgroundColor: "#ffffff",
@@ -243,7 +391,7 @@ const Billing = () => {
                 : "Please connect your account with stripe for secure payments."}
             </NoteText>
           </NoteContainer>
-        </StripeAccountCardBody>
+        </StripeAccountCardBody> */}
 
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <SectionHeading>Billing</SectionHeading>
@@ -313,6 +461,12 @@ const Billing = () => {
       </div>
 
       <BillingHistory open={openDrawer} handleClose={handleCloseDrawer} />
+      <ShowHistory
+        open={openPayoutHistory}
+        handleClose={handleClosePayoutHistory}
+      />
+      <Withdraw open={openWithdraw} handleClose={handleCloseWithdraw} />
+      <EditEmail open={openEditEmail} handleClose={handleCloseEditEmail} />
     </>
   );
 };

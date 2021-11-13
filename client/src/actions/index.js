@@ -59,6 +59,7 @@ import { scheduledMeetActions } from "../reducers/scheduledMeetSlice";
 import { sessionQnAActions } from "../reducers/sessionQnASlice";
 import { sessionPollActions } from "./../reducers/sessionPollSlice";
 import { openCloseActions } from "../reducers/openCloseSlice";
+import { communityPageActions } from "./../reducers/communityPageSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -7319,11 +7320,17 @@ export const uploadVideoForEvent =
             }, 6000);
           } catch (error) {
             console.log(error);
+            dispatch(
+              showSnackbar("error", "Failed to upload video, Please try again.")
+            );
           }
         }
       );
     } catch (error) {
       console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to upload video, Please try again.")
+      );
     }
   };
 
@@ -7362,7 +7369,6 @@ export const deleteEventVideo = (videoId) => async (dispatch, getState) => {
     dispatch(showSnackbar("success", "Video Deleted successfully!"));
   } catch (error) {
     console.log(error);
-
     showSnackbar("error", "Failed to delete video, Please try again.");
   }
 };
@@ -7555,40 +7561,41 @@ export const fetchCommunityManagers =
     } catch (error) {
       console.log(error);
 
-      dispatch(showSnackbar("error", "Failed to fetch team members, Please try again."))
+      dispatch(
+        showSnackbar("error", "Failed to fetch team members, Please try again.")
+      );
     }
   };
 
-  export const getSuperAdmin = (communityId) => async(dispatch, getState) => {
-    try{
-      const res = await fetch(
-        `${BaseURL}team-invites/getSuperAdmin/${communityId}`,
-        {
-          method: "GET",
+export const getSuperAdmin = (communityId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(
+      `${BaseURL}team-invites/getSuperAdmin/${communityId}`,
+      {
+        method: "GET",
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
-          },
-        }
-      );
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
 
-      const result = await res.json();
-      console.log(result);
+    const result = await res.json();
+    console.log(result);
 
-      dispatch(
-        communityActions.FetchSuperAdmin({
-         superAdmin: result.data,
-        })
-      );
-
-    }
-    catch(error) {
-      console.log(error);
-      dispatch(showSnackbar("error", "Failed to fetch super admin, Please try again."))
-    }
-  } 
-
+    dispatch(
+      communityActions.FetchSuperAdmin({
+        superAdmin: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch super admin, Please try again.")
+    );
+  }
+};
 
 export const removeFromTeam =
   (email, communityId, status) => async (dispatch, getState) => {
@@ -11405,3 +11412,263 @@ export const toggleRequestDemo = (openState) => async (dispatch, getState) => {
     })
   );
 };
+
+export const uploadCommunityCover =
+  (file, communityId, handleClose) => async (dispatch, getState) => {
+    try {
+      const key = `${communityId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              communityPageActions.FetchUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Edit community
+
+            const res = await fetch(
+              `${BaseURL}community/${communityId}/updateCommunityProfile`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  cover: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().communityAuth.token}`,
+                },
+              }
+            );
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+            const result = await res.json();
+
+            dispatch(
+              communityPageActions.FetchCommunity({
+                community: result.data,
+              })
+            );
+
+            dispatch(showSnackbar("success", "Cover updated successfully!"));
+          } catch (error) {
+            console.log(error);
+            dispatch(
+              showSnackbar("error", "Failed to update cover, Please try again.")
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to update cover, Please try again.")
+      );
+    }
+  };
+
+export const followCommunity =
+  (userId, communityId) => async (dispatch, getState) => {
+    try {
+      // Here we will get updated user
+
+      const res = await fetch(
+        `${BaseURL}community/${communityId}/followCommunity`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            userId: userId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        userActions.CreateUser({
+          user: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("Started following this community."));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to follow community, Please try again.")
+      );
+    }
+  };
+
+export const unfollowCommunity =
+  (userId, communityId) => async (dispatch, getState) => {
+    try {
+      // Here we will get updated user
+
+      // Here we will get updated user
+
+      const res = await fetch(
+        `${BaseURL}community/${communityId}/unfollowCommunity`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            userId: userId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        userActions.CreateUser({
+          user: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("Unfollowed this community."));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to unfollow community, Please try again.")
+      );
+    }
+  };
+
+export const fetchCommunityProfile =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}community/${communityId}/getCommunityProfile`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityPageActions.FetchCommunity({
+          community: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch community, Please try again.")
+      );
+    }
+  };
+
+export const fetchCommunityEvents =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}community/${communityId}/getEvents`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityPageActions.FetchEvents({
+          events: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch events, Please try again.")
+      );
+    }
+  };
+
+export const fetchCommunityReviews =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}community/${communityId}/getReviews`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityPageActions.FetchReviews({
+          reviews: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to fetch community Reviews, Please try again."
+        )
+      );
+    }
+  };

@@ -15,8 +15,19 @@ import Rating from "react-star-rating-lite";
 import ApexGaugeChart from "./ChartComponents/ApexGaugeChart";
 import ReviewsPNG from "./../../assets/images/reviews.png";
 import NoContentFound from "../NoContent";
+import styled from 'styled-components';
+
+import ReviewCard from "./HelperComponent/ReviewCard";
 
 const options = [{ value: "All", label: "All Events" }];
+
+const SectionHeading = styled.div`
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #212121;
+  font-family: "Ubuntu";
+`;
+
 
 const ratingOptions = [
   { value: "All Ratings", label: "All Ratings" },
@@ -30,12 +41,14 @@ const styles = {
     ...base,
     fontFamily: "Ubuntu",
     fontWeight: "500",
+    fontSize: "0.83rem",
     color: "#757575",
   }),
   menu: (base) => ({
     ...base,
     fontFamily: "Ubuntu",
     fontWeight: "500",
+    fontSize: "0.83rem",
     color: "#757575",
   }),
 };
@@ -101,7 +114,7 @@ const Reviews = () => {
     <>
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
-          <div className="sec-heading-text">Reviews (0)</div>
+          <SectionHeading className="">Reviews (0)</SectionHeading>
           <div className="sec-heading-action-button d-flex flex-row">
             <div
               className={`${classes.search}`}
@@ -119,14 +132,14 @@ const Reviews = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </div>
-            <div className="ms-3" style={{ minWidth: "250px" }}>
+            {/* <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
                 styles={styles}
                 menuPlacement="bottom"
                 options={options}
                 defaultValue={options[0]}
               />
-            </div>
+            </div> */}
 
             <div className="ms-3" style={{ minWidth: "250px" }}>
               <Select
@@ -141,11 +154,14 @@ const Reviews = () => {
         <div className="event-reviews-content-grid  mx-3 mb-4 ">
           <div className="review-cards-container px-4 py-4">
             {/* Here I have to place review cards */}
-            {/* {<ReviewCard />
-            <ReviewCard />
-            <ReviewCard />} */}
 
-            <div
+            <>
+              <ReviewCard />
+              <ReviewCard />
+              <ReviewCard />
+            </>
+
+            {/* <div
               style={{ height: "63vh", width: "100%" }}
               className="d-flex flex-row align-items-center justify-content-center"
             >
@@ -153,7 +169,7 @@ const Reviews = () => {
                 msgText="Your reviews will appear here"
                 img={ReviewsPNG}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="overall-audience-satisfaction-gauge-conatiner">

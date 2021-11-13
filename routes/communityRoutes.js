@@ -35,7 +35,11 @@ router.post(
   communityController.updateApiKey
 );
 
-router.patch("/deleteApiKey/:id", authController.protectCommunity, communityController.deleteApiKey);
+router.patch(
+  "/deleteApiKey/:id",
+  authController.protectCommunity,
+  communityController.deleteApiKey
+);
 
 router.post(
   "/updateVideo",
@@ -281,11 +285,39 @@ router.patch(
   authController.protectCommunity,
   communityController.disconnectMailchimp
 );
+
 // Disconnect Salesforce
 router.patch(
   "/disconnectSalesforce/:communityId",
   authController.protectCommunity,
   communityController.disconnectSalesforce
+);
+
+router.get("/:communityId/getReviews", communityController.getReviews);
+
+router.get("/:communityId/getEvents", communityController.getEvents);
+
+router.get(
+  "/:communityId/getCommunityProfile",
+  communityController.getCommunityProfile
+);
+
+router.post(
+  "/:communityId/unfollowCommunity",
+  authController.protect,
+  communityController.unfollowCommunity
+);
+
+router.post(
+  "/:communityId/followCommunity",
+  authController.protect,
+  communityController.followCommunity
+);
+
+router.patch(
+  "/:communityId/updateCommunityProfile",
+  authController.protect,
+  communityController.updateCommunityProfile
 );
 
 // router.patch("/event/:id/update",authController.protectCommunity,eventController.updateEvent)

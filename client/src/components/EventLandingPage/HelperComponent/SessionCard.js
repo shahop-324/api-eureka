@@ -1,10 +1,29 @@
 import React from "react";
+import styled from 'styled-components';
 import { IconButton } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { Tooltip } from "@material-ui/core";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
 import dateFormat from "dateformat";
 import AddToCalender from "./../HelperComponent/AddTocalender";
+
+const SessionTimeline = styled.div`
+font-weight: 500;
+  font-size: 0.9rem;
+  color: #212121;
+`;
+
+const SessionName = styled.div`
+font-weight: 500;
+  font-size: 1rem;
+  color: #212121;`;
+
+const SessionBrief = styled.div`
+font-weight: 400;
+  font-size: 0.85rem;
+  color: #212121;
+
+`;
 
 const SessionCard = ({
   startDate,
@@ -43,10 +62,10 @@ const SessionCard = ({
     <>
       <div key={id} className="session-card mb-3 px-3 py-4">
         <div className="d-flex flex-row align-items-center justify-content-between mb-3">
-          <div className="session-date-time-venue-section">
+          <SessionTimeline className="session-date-time-venue-section">
             {dateFormat(startTime, "mmm dS, h:MM TT")} -{" "}
             {dateFormat(endTime, "mmm dS, h:MM TT")}
-          </div>
+          </SessionTimeline>
 
           <div
             onClick={() => {
@@ -59,8 +78,8 @@ const SessionCard = ({
           </div>
         </div>
 
-        <div className="session-name mb-2">{sessionName}</div>
-        <div className="session-description mb-2">{sessionDescription}</div>
+        <SessionName className="session-name mb-2">{sessionName}</SessionName>
+        <SessionBrief className="session-description mb-2">{sessionDescription}</SessionBrief>
 
         <div className="session-speakers-grid pt-3">
           {renderSpeakerAvatarList(speakerAvatarList)}

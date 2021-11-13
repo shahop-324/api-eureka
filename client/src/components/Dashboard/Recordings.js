@@ -10,6 +10,7 @@ import Select from "react-select";
 import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
+import RecordingDetailsCard from "./HelperComponent/RecordingsDetailsCard";
 import RecordingsListFields from "./HelperComponent/RecordingsListFields";
 import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
@@ -135,6 +136,13 @@ const Recordings = () => {
             </div>
           </div>
         </div>
+        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
+        <RecordingsListFields />
+            <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+              <Divider />
+            </div>
+            <RecordingDetailsCard />
+            </div>
         {typeof recordings !== "undefined" && recordings.length > 0 ? (
           <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
             <RecordingsListFields />

@@ -4,6 +4,7 @@ import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
 import Avatar from '@material-ui/core/Avatar';
 import './../../../assets/Sass/Reviews.scss';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 
 const ReviewCard = () => {
     return (
@@ -15,9 +16,9 @@ const ReviewCard = () => {
                     </div>
 
                     <div className="d-flex flex-row align-items-center">
-                        <div className="me-3 px-3 py-2 event-name-chip-review">
-                            E-Summit
-                        </div>
+                        <button className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3">
+                         <VisibilityOffRoundedIcon style={{fontSize: "20px"}} className="me-2" />   <span>Hide</span>
+                        </button>
                     <Box component="fieldset" mb={1} borderColor="transparent">
                     <Rating value="4.2" color="#1499fa" weight="19" readonly />
                   </Box>

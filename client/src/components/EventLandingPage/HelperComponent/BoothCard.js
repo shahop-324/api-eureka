@@ -1,4 +1,17 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const BoothName = styled.div`
+font-weight: 600;
+  font-size: 1.05rem;
+  color: #212121;
+`;
+
+const BoothBrief = styled.div`
+font-weight: 400;
+  font-size: 0.8rem;
+  color: #212121;
+`;
 
 const BoothCard = ({name,description,id, image}) => {
   return (
@@ -8,10 +21,10 @@ const BoothCard = ({name,description,id, image}) => {
         className="booth-card-image mb-3"
         alt="booth-poster"
       />
-      <div className="booth-name mb-3">{name}</div>
-      <div className="booth-short-description mb-3">
+      <BoothName className="booth-name mb-3">{name}</BoothName>
+      <BoothBrief className="booth-short-description mb-3">
       {description}
-      </div>
+      </BoothBrief>
     </div>
   );
 };

@@ -26,6 +26,7 @@ import NoContentFound from "../../NoContent";
 import NoSessionsPNG from "./../../../assets/images/confident.png";
 import styled from "styled-components";
 import EventSchedule from "./EventSchedule";
+import ManageTracks from "./SubComponent/ManageTracks";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -108,6 +109,7 @@ const Sessions = () => {
   const [term, setTerm] = React.useState("");
 
   const [openSchedule, setOpenSchedule] = React.useState(false);
+  const [openManageTracks, setOpenManageTracks] = React.useState(false);
 
   const handleOpenSchedule = () => {
     setOpenSchedule(true);
@@ -116,6 +118,14 @@ const Sessions = () => {
   const handleCloseSchedule = () => {
     setOpenSchedule(false);
   };
+
+  const handleManageTracks = () => {
+    setOpenManageTracks(true);
+  }
+
+  const handleCloseManageTracks = () => {
+    setOpenManageTracks(false);
+  }
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -204,6 +214,13 @@ const Sessions = () => {
             </div>
 
             <button
+              className="btn btn-outline-primary btn-outline-text me-3"
+              // onClick={handleNewSession}
+              onClick={handleManageTracks}
+            >
+              Manage tracks
+            </button>
+            <button
               className="btn btn-primary btn-outline-text"
               onClick={handleNewSession}
             >
@@ -248,6 +265,7 @@ const Sessions = () => {
       </div>
       <AddNewSession open={open} handleClose={handleClose} />
       <EventSchedule open={openSchedule} handleClose={handleCloseSchedule} />
+      <ManageTracks open={openManageTracks} handleClose={handleCloseManageTracks} />
     </>
   );
 };

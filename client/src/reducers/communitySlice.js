@@ -17,6 +17,7 @@ const communitySlice = createSlice({
     communityManagers: [],
     uplooadPercent: 0, // Number indicating upload progress (Range => 0-100%)
     transactions: [],
+    payouts: [], // List of all payouts to this community
   },
   reducers: {
     ResetError(state, action) {
@@ -131,6 +132,10 @@ const communitySlice = createSlice({
           (el) => el.email !== action.payload.email
         );
       }
+    },
+    FetchCommunityPayouts(state, action) {
+      state.payouts = action.payload.payouts;
+      state.isLoading = false;
     },
   },
 });
