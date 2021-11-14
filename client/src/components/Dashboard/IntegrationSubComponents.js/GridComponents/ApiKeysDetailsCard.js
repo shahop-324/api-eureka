@@ -61,13 +61,14 @@ const ApiKeysDetailsCard = ({
         className="events-list-fields-container"
         style={{
           display: "grid",
+          alignItems: "center",
           gridTemplateColumns: "1.5fr 2fr 2fr 1fr 0.3fr",
         }}
       >
         <div className="event-card-field">
           <div className="event-field-label">{label}</div>
         </div>
-        <div className="event-card-field">
+        <div className="">
           <div className="event-field-label registrations-field-value-modified">
             {APIKey}
           </div>

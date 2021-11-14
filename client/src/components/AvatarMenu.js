@@ -14,6 +14,7 @@ import {
   errorTrackerForEditUser,
   signOut,
   showSnackbar,
+  navigationIndex,
 } from "../actions/index";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
@@ -44,6 +45,8 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded";
+
+import history from "./../history";
 
 const MenuText = styled.span`
   font-weight: 500;
@@ -269,21 +272,50 @@ const AvatarMenu = () => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={(event) => {
+              dispatch(navigationIndex(0));
+              history.push("/user/home");
+              handleClose();
+            }}
+            className="mb-1"
+            disableRipple
+          >
             <AccountCircleRoundedIcon />
             <MenuText>Home</MenuText>
           </MenuItem>
 
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+          <MenuItem
+            className="mb-1"
+            onClick={(event) => {
+              history.push("/search-events");
+              handleClose();
+            }}
+            disableRipple
+          >
             <ExploreRoundedIcon />
             <MenuText>Explore Events</MenuText>
           </MenuItem>
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+          <MenuItem
+            className="mb-1"
+            onClick={(event) => {
+              handleClickOpenReferral();
+              handleClose();
+            }}
+            disableRipple
+          >
             <MonetizationOnRoundedIcon />
             <MenuText>Referral & Credit</MenuText>
           </MenuItem>
           <Divider sx={{ my: 0.5 }} />
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              onClickLoggedOut();
+              handleClose();
+            }}
+            className="mb-1"
+            disableRipple
+          >
             <LogoutRoundedIcon />
             <MenuText>Sign out</MenuText>
           </MenuItem>

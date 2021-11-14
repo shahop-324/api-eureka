@@ -88,146 +88,152 @@ const fillSocialMediaHandler = (object) => {
 };
 
 exports.createEvent = catchAsync(async (req, res, next) => {
-  const communityId = req.community._id;
-  const communityGettingEvent = await Community.findById(communityId);
-  const document = await EventsIdsCommunityWise.findById(
-    communityGettingEvent.eventsDocIdCommunityWise
-  );
+  try {
+    const communityId = req.community._id;
+    const communityGettingEvent = await Community.findById(communityId);
+    const document = await EventsIdsCommunityWise.findById(
+      communityGettingEvent.eventsDocIdCommunityWise
+    );
 
-  const communityObject = await Community.findById(communityId).select(
-    "eventManagers"
-  );
+    const communityObject = await Community.findById(communityId).select(
+      "eventManagers"
+    );
 
-  const eventManagers = communityObject.eventManagers;
+    const eventManagers = communityObject.eventManagers;
 
-  // 1) Create a new event document with required fields
+    // 1) Create a new event document with required fields
 
-  const createdEvent = await Event.create({
-    eventName: req.body.eventName,
-    shortDescription: req.body.shortDescription,
-    visibility: req.body.visibility,
-    createdBy: communityId,
-    communityRating: communityGettingEvent.commuintyAverageRating,
-    categories: req.body.categories,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    startTime: new Date(req.body.startTime),
-    endTime: new Date(req.body.endTime),
-    socialMediaHandles: communityGettingEvent.socialMediaHandles,
-    Timezone: req.body.timezone,
-    communityName: communityGettingEvent.name,
-    communityLogo: communityGettingEvent.image,
-    organisedBy: communityGettingEvent.name,
-    communityId: communityGettingEvent._id,
-    numberOfTablesInLounge: req.body.numberOfTablesInLounge,
-  });
+    const createdEvent = await Event.create({
+      type: req.body.type,
+      showOnGetStarted: req.body.showOnGetStarted,
+      eventName: req.body.eventName,
+      shortDescription: req.body.shortDescription,
+      visibility: req.body.visibility,
+      createdBy: communityId,
+      communityRating: communityGettingEvent.commuintyAverageRating,
+      categories: req.body.categories,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      startTime: new Date(req.body.startTime),
+      endTime: new Date(req.body.endTime),
+      socialMediaHandles: communityGettingEvent.socialMediaHandles,
+      Timezone: req.body.timezone,
+      communityName: communityGettingEvent.name,
+      communityLogo: communityGettingEvent.image,
+      organisedBy: communityGettingEvent.name,
+      communityId: communityGettingEvent._id,
+      numberOfTablesInLounge: req.body.numberOfTablesInLounge,
+    });
 
-  // Initialise all tables as specified
+    // Initialise all tables as specified
 
-  // Register all members of its community into this event
+    // Register all members of its community into this event
 
-  // Step 1. Get all members of this community
+    // Step 1. Get all members of this community
 
-  let members = [];
+    let members = [];
 
-  members.push(communityGettingEvent.superAdmin);
+    members.push(communityGettingEvent.superAdmin);
 
-  for (let element of eventManagers) {
-    members.push(element);
-  }
+    for (let element of eventManagers) {
+      members.push(element);
+    }
 
-  // Here we have all team members ids
+    // Here we have all team members ids
 
-  for (let element of members) {
-    // Fetch user document for this id and then register in this event
-    await User.findById(element, async (err, doc) => {
-      if (err) {
-        console.log(err);
-      } else {
-        if (doc) {
-          // User document is found. So, now we will just register this person in this event
+    for (let element of members) {
+      // Fetch user document for this id and then register in this event
+      await User.findById(element, async (err, doc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          if (doc) {
+            // User document is found. So, now we will just register this person in this event
 
-          await Registration.create({
-            type: "Host",
-            status: "Completed",
-            viaCommunity: true,
-            eventName: req.body.eventName,
-            userName: doc.firstName + " " + doc.lastName,
-            userImage: doc.image,
-            userEmail: doc.email,
-            bookedByUser: doc._id,
-            bookedForEventId: createdEvent._id,
-            eventByCommunityId: communityId,
-            createdAt: Date.now(),
-            image: doc.image,
-            email: doc.email,
-            first_name: doc.firstName,
-            last_name: doc.lastName,
-            name: doc.firstName + " " + doc.lastName,
-            headline: doc.headline,
-            organisation: doc.organisation,
-            designation: doc.designation,
-            city: doc.city,
-            country: doc.country,
-            interests: doc.interests,
-            socialMediaHandles: doc.socialMediaHandles,
-            event_name: req.body.eventName,
-          });
+            await Registration.create({
+              type: "Host",
+              status: "Completed",
+              viaCommunity: true,
+              eventName: req.body.eventName,
+              userName: doc.firstName + " " + doc.lastName,
+              userImage: doc.image,
+              userEmail: doc.email,
+              bookedByUser: doc._id,
+              bookedForEventId: createdEvent._id,
+              eventByCommunityId: communityId,
+              createdAt: Date.now(),
+              image: doc.image,
+              email: doc.email,
+              first_name: doc.firstName,
+              last_name: doc.lastName,
+              name: doc.firstName + " " + doc.lastName,
+              headline: doc.headline,
+              organisation: doc.organisation,
+              designation: doc.designation,
+              city: doc.city,
+              country: doc.country,
+              interests: doc.interests,
+              socialMediaHandles: doc.socialMediaHandles,
+              event_name: req.body.eventName,
+            });
+          }
         }
-      }
+      });
+    }
+
+    // Here we have all team members of this community registered in this event
+
+    for (let i = 0; i < req.body.numberOfTablesInLounge * 1; i++) {
+      // Create tables with tableId as `${eventId}_table_${i}`
+      await RoomTable.create({
+        eventId: createdEvent._id,
+        tableId: `${createdEvent._id}_table_${i}`,
+        lastUpdatedAt: Date.now(),
+      });
+    }
+
+    // Generate mux stream key --- this needs to be very very private.
+
+    const muxRes = await Video.LiveStreams.create({
+      playback_policy: "public",
+      new_asset_settings: { playback_policy: "public" },
     });
-  }
 
-  // Here we have all team members of this community registered in this event
+    // 0) Create a registration form document for this event and store its id in this event
 
-  for (let i = 0; i < req.body.numberOfTablesInLounge * 1; i++) {
-    // Create tables with tableId as `${eventId}_table_${i}`
-    await RoomTable.create({
+    const registrationForm = await RegistrationForm.create({
+      initialisedAt: Date.now(),
       eventId: createdEvent._id,
-      tableId: `${createdEvent._id}_table_${i}`,
-      lastUpdatedAt: Date.now(),
     });
+
+    createdEvent.registrationFormId = registrationForm._id;
+
+    createdEvent.muxStreamKey = muxRes.stream_key;
+    createdEvent.muxVideoPlaybackId = muxRes.playback_ids[0].id;
+    createdEvent.mux_credentialId = muxRes.id;
+    createdEvent.moderators = req.body.moderators;
+    const newEvent = await createdEvent.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // 2) Update that event into communities resource in events array
+    document.eventsIds.push(createdEvent.id);
+    await document.save({ validateModifiedOnly: true });
+
+    const event = await Event.findById(createdEvent.id).populate(
+      "registrationFormId"
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        event: event,
+      },
+    });
+  } catch (error) {
+    console.log(error);
   }
-
-  // Generate mux stream key --- this needs to be very very private.
-
-  const muxRes = await Video.LiveStreams.create({
-    playback_policy: "public",
-    new_asset_settings: { playback_policy: "public" },
-  });
-
-  // 0) Create a registration form document for this event and store its id in this event
-
-  const registrationForm = await RegistrationForm.create({
-    initialisedAt: Date.now(),
-    eventId: createdEvent._id,
-  });
-
-  createdEvent.registrationFormId = registrationForm._id;
-
-  createdEvent.muxStreamKey = muxRes.stream_key;
-  createdEvent.muxVideoPlaybackId = muxRes.playback_ids[0].id;
-  createdEvent.mux_credentialId = muxRes.id;
-  createdEvent.moderators = req.body.moderators;
-  const newEvent = await createdEvent.save({
-    new: true,
-    validateModifiedOnly: true,
-  });
-
-  // 2) Update that event into communities resource in events array
-  document.eventsIds.push(createdEvent.id);
-  await document.save({ validateModifiedOnly: true });
-
-  const event = await Event.findById(createdEvent.id).populate(
-    "registrationFormId"
-  );
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      event: event,
-    },
-  });
 });
 
 exports.getAllEventsForCommunities = catchAsync(async (req, res, next) => {
@@ -1004,6 +1010,8 @@ exports.createTicket = catchAsync(async (req, res, next) => {
 //////////////////////////
 exports.updateEvent = catchAsync(async (req, res, next) => {
   try {
+    const isUnarchiving = req.body.unarchive;
+
     const filteredBody = filterObj(
       req.body,
       "whoCanEnterEvent",
@@ -1024,7 +1032,10 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "isMailchimpEnabled",
       "status",
       "numberOfTablesInLounge",
-      "ticketSaleIsEnabled"
+      "ticketSaleIsEnabled",
+      "archived",
+      "type",
+      "showOnGetStarted"
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);
@@ -1212,27 +1223,26 @@ exports.getNetworkSettings = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTicket = catchAsync(async (req, res, next) => {
-
-  try{
+  try {
     const ticketId = req.params.id;
     const ticketDoc = await Ticket.findById(ticketId);
-  
+
     const eventUpdatingTicket = await Event.findById(ticketDoc.eventId);
-  
+
     const previousMinPrice = eventUpdatingTicket.minTicketPrice;
     const previousMaxPrice = eventUpdatingTicket.maxTicketPrice;
-  
+
     let updatedMinPrice = previousMinPrice;
     let updatedMaxPrice = previousMaxPrice;
     const currentPriceValue = req.body.price;
-  
+
     if (currentPriceValue < previousMinPrice) {
       updatedMinPrice = currentPriceValue;
     }
     if (currentPriceValue > previousMaxPrice) {
       updatedMaxPrice = currentPriceValue;
     }
-  
+
     const updatedTicket = await Ticket.findByIdAndUpdate(
       ticketId,
       {
@@ -1250,18 +1260,17 @@ exports.updateTicket = catchAsync(async (req, res, next) => {
       },
       { new: true, validateModifiedOnly: true }
     );
-  
+
     await Event.findByIdAndUpdate(ticketDoc.eventId, {
       minTicketPrice: updatedMinPrice,
       maxTicketPrice: updatedMaxPrice,
     });
-  
+
     res.status(200).json({
       status: "success",
       data: updatedTicket,
     });
-  }
-  catch(error){
+  } catch (error) {
     console.log(error);
   }
 });

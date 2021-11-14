@@ -18,6 +18,8 @@ const communitySlice = createSlice({
     uplooadPercent: 0, // Number indicating upload progress (Range => 0-100%)
     transactions: [],
     payouts: [], // List of all payouts to this community
+    payPalEmailVerificationLinkExpired: false,
+    payPalEmailVerificationSucceded: false,
   },
   reducers: {
     ResetError(state, action) {
@@ -137,6 +139,24 @@ const communitySlice = createSlice({
       state.payouts = action.payload.payouts;
       state.isLoading = false;
     },
+    SetPayPalEmailVerificationLinkExpired(state, action) {
+      // action.payload.expired will be either true or false
+      state.payPalEmailVerificationLinkExpired = action.payload.expired;
+      state.isLoading = false;
+    },
+    SetPayPalEmailVerificationSucceded(state, action) {
+      // action.payload.succeded will be either true or false
+      state.payPalEmailVerificationSucceded = action.payload.succeded;
+      state.isLoading = false;
+    },
+    FetchPayouts(state, action) {
+      state.payouts = action.payload.payouts;
+      state.isLoading = false;
+    },
+    CreatePayout(state, action) {
+      state.payouts.push(action.payload.payout);
+      state.isLoading = false;
+    }
   },
 });
 export const communityActions = communitySlice.actions;

@@ -1,5 +1,5 @@
 import React from "react";
-
+import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -10,11 +10,21 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 
-import {useDispatch} from "react-redux";
-import {deleteAPIKey} from "./../../../../actions";
+import { useDispatch } from "react-redux";
+import { deleteAPIKey } from "./../../../../actions";
 
-const DeleteAPIKey = ({openDelete, handleCloseDelete, id}) => {
+const HeaderFooter = styled.div`
+  background-color: #ebf4f6;
+`;
 
+const FormHeading = styled.div`
+  font-size: 1rem;
+  font-family: "Ubuntu";
+  font-weight: 500;
+  color: #212121;
+`;
+
+const DeleteAPIKey = ({ openDelete, handleCloseDelete, id }) => {
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -26,28 +36,32 @@ const DeleteAPIKey = ({openDelete, handleCloseDelete, id}) => {
         open={openDelete}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Delete API Key"}
-        </DialogTitle>
+        <HeaderFooter className="px-4 py-3 mb-2">
+          <FormHeading>Delete this API Credential.</FormHeading>
+        </HeaderFooter>
+
         <DialogContent>
           <DialogContentText>
             You are about to delete this API key. Are you sure ?
           </DialogContentText>
         </DialogContent>
+
         <DialogActions>
-          <Button autoFocus onClick={handleCloseDelete}>
+          <button
+            className="btn btn-outline-dark btn-outline-text me-3"
+            onClick={handleCloseDelete}
+          >
             Cancel
-          </Button>
-          <Button
+          </button>
+          <button
+            className="btn btn-outline-text btn-primary"
             onClick={() => {
-              dispatch(deleteAPIKey(id))
+              dispatch(deleteAPIKey(id));
               handleCloseDelete();
             }}
-            style={{ color: "#538BF7" }}
-            autoFocus
           >
             Proceed
-          </Button>
+          </button>
         </DialogActions>
       </Dialog>
     </>

@@ -499,6 +499,34 @@ const eventSchema = new mongoose.Schema(
         ref: "Video",
       },
     ],
+    showOnGetStarted: {
+      type: Boolean,
+      default: false,
+    },
+    type: {
+      type: String,
+      enum: [
+        "Conference",
+        "Product Launch",
+        "Meetup",
+        "Career Fair",
+        "Workshop",
+        "Summit",
+        "Office hour",
+        "Training Event",
+        "Social webinar",
+        "Onboarding",
+        "Investor Meetings",
+        "Team hour",
+        "Town Hall",
+        "Product demo",
+        "Interview Session",
+      ],
+    },
+    archived: {
+      type: Boolean,
+      default: false,
+    },
     // * Done I have to do research on how recording will work and where it will be stored.
   },
   {

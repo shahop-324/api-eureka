@@ -6,6 +6,8 @@ const eventSlice = createSlice({
   initialState: {
     events: [],
     favouriteEvents: [],
+    archivedEvents: [],
+    demoEvents: [],
     eventDetails: null,
     latestEvent: null,
     entryRestriction: null,
@@ -37,9 +39,12 @@ const eventSlice = createSlice({
       state.isLoading = false;
     },
     FetchEvents(state, action) {
-      console.log(action.payload.events, "oppppoppoppopp");
       state.events = action.payload.events;
       state.length = action.payload.length;
+      state.isLoading = false;
+    },
+    FetchArchivedEvents(state, action) {
+      state.archivedEvents = action.payload.events;
       state.isLoading = false;
     },
     FetchFavouriteEvents(state, action) {
@@ -47,6 +52,10 @@ const eventSlice = createSlice({
       state.length = action.payload.length;
       state.isLoading = false;
       state.error = false;
+    },
+    FetchDemoEvents(state, action) {
+      state.demoEvents = action.payload.events;
+      state.isLoading = false;
     },
     AddToFavouriteEvents(state, action) {
       const newFavouriteEvent = action.payload.event;
@@ -114,7 +123,13 @@ const eventSlice = createSlice({
     SetVibeUploadPercent(state, action) {
       state.vibeUploadPercent = action.payload.percent;
       state.isLoading = false;
-    }
+    },
+    UnarchiveEvent(state, action) {
+      state.archivedEvents = state.archivedEvents.filter(
+        (el) => el._id.toString() !== action.payload.eventId.toString()
+      );
+      state.isLoading = false;
+    },
   },
 });
 export const eventActions = eventSlice.actions;

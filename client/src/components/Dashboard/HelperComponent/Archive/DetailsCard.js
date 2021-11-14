@@ -1,9 +1,10 @@
 import React from "react";
 import Divider from "@material-ui/core/Divider";
 import "./../../../../assets/Sass/DataGrid.scss";
-
+import { editEvent } from "./../../../../actions";
 import { IconButton } from "@material-ui/core";
 import Chip from "@mui/material/Chip";
+import { useDispatch } from "react-redux";
 
 import IndeterminateCheckBoxRoundedIcon from "@mui/icons-material/IndeterminateCheckBoxRounded";
 
@@ -12,12 +13,13 @@ const ArchiveDetailCard = ({
   imgUrl,
   shortDescription,
   publishedStatus,
-
   registrations,
-
+  communityId,
   visibility,
   eventName,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <div
@@ -25,10 +27,15 @@ const ArchiveDetailCard = ({
         style={{
           alignItems: "center",
           display: "grid",
-          gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "3.5fr 1fr 1fr 1fr 0.5fr",
         }}
       >
-        <div className="event-card-field ms-3">
+        <div
+          onClick={() => {
+            window.location.href = `/community/${communityId}/edit-event/${id}/event-overview`;
+          }}
+          className="event-img-name-container ms-3"
+        >
           <div
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
@@ -140,9 +147,13 @@ const ArchiveDetailCard = ({
         <div className="event-stage-field">
           <div className="event-field-label field-label-value">
             <div className="visit-stage-button">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  dispatch(editEvent({ archived: false }, id, true)); // Third argument tells that we are unarchiving event
+                }}
+              >
                 <IndeterminateCheckBoxRoundedIcon
-                  style={{ color: "#BB4646" }}
+                  style={{ color: "#C82727" }}
                 />
               </IconButton>
             </div>

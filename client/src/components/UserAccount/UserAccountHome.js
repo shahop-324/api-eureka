@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
+import MenuItem from "@material-ui/core/MenuItem";
+import styled from "styled-components";
 import "./../../assets/css/hiddenScroll.css";
 import { CssBaseline, IconButton } from "@material-ui/core";
 import "./../../assets/css/UserAccountStyle.css";
@@ -26,7 +28,97 @@ import Wishlist from "./Helper/Wishlist";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import Following from "./Following";
 
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
+import ForumRoundedIcon from "@mui/icons-material/ForumRounded";
+import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
+import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
+
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
+
+const CustomButton = styled.div`
+  color: #212121;
+  border-radius: 25px;
+  &:hover {
+    cursor: pointer;
+    background-color: #ececec;
+  }
+`;
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
+
+const MenuButton = styled.div`
+  &:hover {
+    cursor: pointer;
+    background-color: #dddddd;
+  }
+`;
+
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
 const UserAccountHome = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpenHelpDropUp((prev) => !prev);
+  };
+
+  const [openHelpDropUp, setOpenHelpDropUp] = React.useState(false);
+
+  const handleCloseHelpDropUp = () => {
+    setOpenHelpDropUp(false);
+  };
+
   const dispatch = useDispatch();
 
   const [openNotifications, setOpenNotifications] = useState(false);
@@ -95,7 +187,7 @@ const UserAccountHome = () => {
         history.push("/user/following");
         break;
       }
-    
+
       default: {
         break;
       }
@@ -150,6 +242,64 @@ const UserAccountHome = () => {
                 >
                   <NotificationsNoneRoundedIcon />
                 </IconButton>
+                <CustomButton
+                  id="demo-customized-button"
+                  aria-controls="demo-customized-menu"
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  variant="outlined"
+                  disableElevation
+                  onClick={handleClickMore}
+                  className="btn-outline-text ms-2 d-flex flex-row align-items-center p-2"
+                >
+                  <span className="mx-2"> Help </span>
+                </CustomButton>
+                <StyledMenu
+                  id="demo-customized-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "demo-customized-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      dispatch(navigationIndex(0));
+                      history.push("/user/home");
+                      window.location.href = `https://bluemeetinc.zendesk.com/hc/en-us`;
+                      handleClose();
+                    }}
+                    className="mb-1"
+                    disableRipple
+                  >
+                    <ArticleRoundedIcon />
+                    <MenuText>Knowledge Base</MenuText>
+                  </MenuItem>
+
+                  <MenuItem
+                    className="mb-1"
+                    onClick={() => {
+                      history.push("/learn");
+                      handleClose();
+                    }}
+                    disableRipple
+                  >
+                    <VideoLibraryRoundedIcon />
+                    <MenuText>Tutorial videos</MenuText>
+                  </MenuItem>
+                  <MenuItem
+                    className="mb-1"
+                    onClick={() => {
+                      window.location.href = `https://bluemeetinc.zendesk.com/hc/en-us/community/topics`;
+                      handleClose();
+                    }}
+                    disableRipple
+                  >
+                    <ForumRoundedIcon />
+                    <MenuText>Ask in community</MenuText>
+                  </MenuItem>
+                </StyledMenu>
                 <div className="ms-3">
                   <AvatarMenu />
                 </div>

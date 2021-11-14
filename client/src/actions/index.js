@@ -1215,74 +1215,84 @@ export const errorTrackerForCreateEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
 
-export const editEvent = (formValues, id) => async (dispatch, getState) => {
-  dispatch(eventActions.startLoading());
-  const editingEvent = async () => {
-    console.log(id);
-    console.log(formValues);
+export const editEvent =
+  (formValues, id, unarchive) => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
+    const editingEvent = async () => {
+      console.log(id);
+      console.log(formValues);
 
-    let res = await fetch(
-      `${BaseURL}events/${id}/update`,
+      let res = await fetch(
+        `${BaseURL}events/${id}/update`,
 
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...formValues,
-        }),
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            ...formValues,
+            unarchive: unarchive,
+          }),
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
-    );
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
+      res = await res.json();
+      return res;
+    };
+    try {
+      const res = await editingEvent();
+      console.log(res);
+
+      if (unarchive) {
+        dispatch(
+          eventActions.UnarchiveEvent({
+            eventId: id,
+          })
+        );
       }
+
+      dispatch(
+        eventActions.EditEvent({
+          event: res.updatedEvent,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Event updated successfully!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
+    } catch (err) {
+      console.log(err);
+
+      dispatch(eventActions.hasError(err.message));
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Failed to update event.",
+          severity: "error",
+        })
+      );
+
+      setTimeout(function () {
+        dispatch(snackbarActions.closeSnackBar());
+      }, 6000);
     }
-    res = await res.json();
-    return res;
   };
-  try {
-    const res = await editingEvent();
-    console.log(res);
-
-    dispatch(
-      eventActions.EditEvent({
-        event: res.updatedEvent,
-      })
-    );
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Event updated successfully!",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
-  } catch (err) {
-    console.log(err);
-
-    dispatch(eventActions.hasError(err.message));
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to update event.",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      dispatch(snackbarActions.closeSnackBar());
-    }, 6000);
-  }
-};
 export const errorTrackerForeditEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
 };
@@ -11672,3 +11682,338 @@ export const fetchCommunityReviews =
       );
     }
   };
+
+export const setPaypalEmailVerificationSucceded =
+  (succeded) => async (dispatch, getState) => {
+    dispatch(
+      communityActions.SetPayPalEmailVerificationSucceded({
+        succeded: succeded,
+      })
+    );
+  };
+
+export const setPaypalEmailVerificationLinkExpired =
+  (expired) => async (dispatch, getState) => {
+    dispatch(
+      communityActions.SetPayPalEmailVerificationLinkExpired({
+        expired: expired,
+      })
+    );
+  };
+
+export const verifyPaypalEmail = (id) => async (dispatch, getState) => {
+  try {
+    // Here we need to take verificationId and verify it and return response accordingly
+    const res = await fetch(`${BaseURL}verifyPayPalEmail/${id}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+
+    if (result.expired) {
+      // Email verification link has expired
+      dispatch(
+        communityActions.SetPayPalEmailVerificationLinkExpired({
+          expired: true,
+        })
+      );
+    } else {
+      // Verified
+      dispatch(
+        communityActions.SetPayPalEmailVerificationSucceded({
+          succeded: true,
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      communityActions.SetPayPalEmailVerificationSucceded({
+        succeded: false,
+      })
+    );
+
+    dispatch(
+      showSnackbar("error", "Failed to verify email, Please try again.")
+    );
+  }
+};
+
+export const fetchPaypalPayouts =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      // Just go ahead and fetch payouts
+      const res = await fetch(`${BaseURL}fetchPaypalPayouts/${communityId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityActions.FetchPayouts({
+          payouts: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch payouts, Please try again.")
+      );
+    }
+  };
+
+export const createPayPalPayoutrequest =
+  (communityId, email, amount) => async (dispatch, getState) => {
+    try {
+      // Just go ahead and create new PayPal Payout request
+
+      const res = await fetch(
+        `${BaseURL}createPayPalPayoutRequest/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            email: email,
+            amount: amount,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      dispatch(
+        communityActions.CreatePayout({
+          payout: result.data,
+        })
+      );
+
+      dispatch(
+        showSnackbar(
+          "success",
+          "Please keep an eye on your email for confirmation."
+        )
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to create payout request, Please try again."
+        )
+      );
+    }
+  };
+
+export const editPaypalPayoutEmail =
+  (communityId, email) => async (dispatch, getState) => {
+    try {
+      // Create a request to change paypal email
+
+      const res = await fetch(
+        `${BaseURL}editPayPalPayoutEmail/${communityId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            communityId: communityId,
+            email: email,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityActions.FetchCommunity({
+          community: result.data,
+        })
+      );
+
+      dispatch(
+        showSnackbar("success", "Please check provided email for verification.")
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to update email, Please try again.")
+      );
+    }
+  };
+
+export const resendPayPalPayoutEmailVerificationLink =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      // Resend mail for paypal payout
+      const res = await fetch(
+        `${BaseURL}resendPayPalEmailVerificationLink/${communityId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(showSnackbar("success", "Email sent successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to send Email, Please try again.")
+      );
+    }
+  };
+
+export const duplicateEvent = (eventId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}duplicateEvent/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+
+    // dispatch newly created event
+
+    dispatch(
+      eventActions.CreateEvent({
+        event: result.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Event duplicated successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to duplicate event, Please try again.")
+    );
+  }
+};
+
+export const fetchArchivedEvents =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}getArchivedEvents/${communityId}`, {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        eventActions.FetchArchivedEvents({
+          events: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch archive list, Please try again.")
+      );
+    }
+  };
+
+export const fetchShowcaseEvents = () => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getShowcaseEvents`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    const result = await res.json();
+
+    dispatch(
+      eventActions.FetchDemoEvents({
+        events: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Cannot get Demo events, Please try again.")
+    );
+  }
+};

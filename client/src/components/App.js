@@ -86,6 +86,7 @@ import AppSumo from "./StaticScreens/Screens/Deals/AppSumo";
 import RequestDemo from "./StaticScreens/FormComponents/RequestDemo";
 import MainBlogPage from "./Blog/MainBlogPage";
 import IndividualBlog from "./Blog/IndividualBlog";
+import VerifyingPaypalEmail from "./Dashboard/Billing/VerifyingPaypalEmail";
 
 const client = Amplitude.init("7ce61ef36a075fab0d8a6e6db4f59349");
 
@@ -162,6 +163,7 @@ class App extends React.Component {
         <Router history={history}>
           <div>
             <Switch>
+              <Route path="/verify-paypal-email/:id" exact component={VerifyingPaypalEmail} />
               <Route path="/does-not-exist" exact component={OopsDNE} />
               <Route path="/blog" exact component={MainBlogPage} />
               <Route path="/blog/:blogId" exact component={IndividualBlog} />

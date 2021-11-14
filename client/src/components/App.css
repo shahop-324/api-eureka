@@ -63,3 +63,7 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
 }
+
+.event-img-name-container:hover {
+  cursor: pointer;
+}

@@ -217,6 +217,24 @@ const styles = {
   }),
 };
 
+const typeOptions = [
+  { value: "Conference", label: "Conference" },
+  { value: "Product Launch", label: "Product Launch" },
+  { value: "Meetup", label: "Meetup" },
+  { value: "Career Fair", label: "Career Fair" },
+  { value: "Workshop", label: "Workshop" },
+  { value: "Summit", label: "Summit" },
+  { value: "Office hour", label: "Office hour" },
+  { value: "Training Event", label: "Training Event" },
+  { value: "Social webinar", label: "Social webinar" },
+  { value: "Onboarding", label: "Onboarding" },
+  { value: "Investor Meetings", label: "Investor Meetings" },
+  { value: "Team hour", label: "Team hour" },
+  { value: "Town Hall", label: "Town Hall" },
+  { value: "Product demo", label: "Product Demo" },
+  { value: "Interview Session", label: "Interview Session" },
+];
+
 const EditBasicDetailsForm = ({
   handleSubmit,
   pristine,
@@ -232,6 +250,14 @@ const EditBasicDetailsForm = ({
   const communityManagers = useSelector(
     (state) => state.community.communityManagers
   );
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userEmail = userDetails.email;
+
+  let isMYFounder =
+    userEmail === "omprakash.shah@bluemeet.in" ||
+    userEmail === "dinesh.shah@bluemeet.in";
 
   const { superAdminName, superAdminEmail, superAdmin } = useSelector(
     (state) => state.community.communityDetails
@@ -275,6 +301,14 @@ const EditBasicDetailsForm = ({
     }
 
     const ModifiedFormValues = {};
+
+    if (formValues.showOnGetStarted && isMYFounder) {
+      ModifiedFormValues.showOnGetStarted =
+        formValues.showOnGetStarted === "Yes" ? true : false;
+    }
+
+    ModifiedFormValues.type = formValues.type.value;
+
     ModifiedFormValues.eventName = formValues.eventName;
     ModifiedFormValues.shortDescription = formValues.shortDescription;
     ModifiedFormValues.startDate = formValues.startDate;
@@ -376,8 +410,8 @@ const EditBasicDetailsForm = ({
           >
             <div></div>
             <FormHeading
-              className="overlay-form-heading"
-              style={{ fontFamily: "Ubuntu" }}
+              className=""
+              style={{ fontFamily: "Ubuntu", textAlign: "center" }}
             >
               Edit Event
             </FormHeading>
@@ -533,7 +567,7 @@ const EditBasicDetailsForm = ({
               </FormLabel>
               <Field
                 name="selectCategories"
-                isMulti="true"
+                isMulti={true}
                 styles={styles}
                 menuPlacement="auto"
                 options={options}
@@ -541,6 +575,25 @@ const EditBasicDetailsForm = ({
                 component={renderReactSelect}
               />
             </div>
+
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                Forhtml="type"
+                className="form-label form-label-customized"
+              >
+                Type of Event
+              </FormLabel>
+              <Field
+                name="type"
+                isMulti={false}
+                styles={styles}
+                menuPlacement="auto"
+                options={typeOptions}
+                defaultValue={typeOptions[0]}
+                component={renderReactSelect}
+              />
+            </div>
+
             <div className="mb-4 overlay-form-input-row">
               <FormLabel
                 Forhtml="moderators"
@@ -550,7 +603,7 @@ const EditBasicDetailsForm = ({
               </FormLabel>
               <Field
                 name="moderators"
-                isMulti="true"
+                isMulti={true}
                 styles={styles}
                 menuPlacement="auto"
                 options={moderatorOptions}
@@ -625,6 +678,56 @@ const EditBasicDetailsForm = ({
                 component={renderInput}
               />
             </div>
+
+            {isMYFounder ? (
+              <div className="mb-4 overlay-form-input-row">
+                <FormLabel className="form-label form-label-customized">
+                  Show on get started
+                </FormLabel>
+                <div className="form-check mb-2">
+                  <Field
+                    name="showOnGetStarted"
+                    className="form-check-input"
+                    type="radio"
+                    id="flexRadioDefault1"
+                    value="Yes"
+                    component="input"
+                  />
+                  <label
+                    className="form-check-label"
+                    style={{
+                      fontWeight: "500",
+                      fontSize: "0.9rem",
+                    }}
+                    for="flexRadioDefault1"
+                  >
+                    Yes
+                  </label>
+                </div>
+                <div className="form-check mb-2">
+                  <Field
+                    className="form-check-input"
+                    type="radio"
+                    name="showOnGetStarted"
+                    id="flexRadioDefault2"
+                    value="No"
+                    component="input"
+                  />
+                  <label
+                    className="form-check-label"
+                    style={{
+                      fontWeight: "500",
+                      fontSize: "0.9rem",
+                    }}
+                    for="flexRadioDefault2"
+                  >
+                    No
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
 
             <div className={showInlineButton === "false" ? "hide" : ""}></div>
             <div
@@ -709,6 +812,13 @@ const mapStateToProps = (state) => ({
           label: state.event.eventDetails.Timezone,
         }
       : { value: "(GMT + 00:00) UTC", label: "(GMT + 00:00) UTC" },
+
+    type: state.event.eventDetails
+      ? {
+          value: state.event.eventDetails.type,
+          label: state.event.eventDetails.type,
+        }
+      : "",
     selectCategories: state.event.eventDetails
       ? state.event.eventDetails.categories.map((element) => {
           return {
@@ -735,6 +845,13 @@ const mapStateToProps = (state) => ({
       state.event.eventDetails && state.event.eventDetails.visibility
         ? state.event.eventDetails.visibility
         : "",
+    showOnGetStarted:
+      state.event.eventDetails && state.event.eventDetails.showOnGetStarted
+        ? state.event.eventDetails.showOnGetStarted === true
+          ? "Yes"
+          : "No"
+        : "",
+
     numberOfTablesInLounge:
       state.event.eventDetails &&
       state.event.eventDetails.numberOfTablesInLounge
@@ -770,6 +887,11 @@ const validate = (formValues) => {
   if (!formValues.selectCategories) {
     errors.selectCategories = "Categories is required";
   }
+
+  if (!formValues.type) {
+    errors.type = "Event type is required";
+  }
+
   if (!formValues.moderators) {
     errors.moderators = "Atleast one moderator is required";
   }

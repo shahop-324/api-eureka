@@ -25,12 +25,13 @@ import { useTheme } from "@material-ui/core/styles";
 import LatestEventCard from "./LatestEventCard";
 import GetHelp from "./GetHelp";
 
-import { fetchLatestEvent } from "../../actions";
+import { fetchLatestEvent, fetchShowcaseEvents } from "../../actions";
 import { useParams } from "react-router-dom";
 
 import Archive from "./HelperComponent/Archive";
 
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
+import millify from "millify";
 
 const SectionHeading = styled.div`
   font-size: 1.25rem;
@@ -104,12 +105,12 @@ const DemoEventsGrid = styled.div`
 
 const DemoEventCard = styled.div`
   height: 300px;
-  background-color: #ffffff;
+  border: 1px solid #e2e2e2;
   border-radius: 10px;
   position: relative;
 
   &:hover {
-    background-color: #ffffff;
+    cursor: pointer;
   }
 `;
 
@@ -117,6 +118,7 @@ const EventImage = styled.img`
   height: 300px;
   width: 100%;
   border-radius: 10px;
+  object-fit: cover;
 `;
 
 const EventTag = styled.div`
@@ -203,6 +205,8 @@ class DemoCarousel extends React.Component {
 }
 
 const GetStarted = () => {
+  const { communityDetails } = useSelector((state) => state.community);
+
   const theme = useTheme();
 
   const params = useParams();
@@ -217,6 +221,7 @@ const GetStarted = () => {
 
   useEffect(() => {
     dispatch(fetchLatestEvent());
+    dispatch(fetchShowcaseEvents());
   }, []);
 
   const [openCreateEvent, setOpenCreateEvent] = React.useState(false);
@@ -225,7 +230,7 @@ const GetStarted = () => {
 
   const handleCloseArchive = () => {
     setOpenArchive(false);
-  }
+  };
 
   const handleCloseCreateEvent = () => {
     setOpenCreateEvent(false);
@@ -237,8 +242,26 @@ const GetStarted = () => {
     setOpenGetHelp(false);
   };
 
+  const { demoEvents } = useSelector((state) => state.event);
+
   // Find the latest event of this community and show it here otherwise ask the user to create their first event
   // Define latestEvent in eventSlice and create an action to fetch and create latest event of community
+
+  const renderDemoEvents = (events) => {
+    return events.map((event) => {
+      return (
+        <DemoEventCard className="demo-event-card">
+          <EventTag>{event.type}</EventTag>
+          <EventImage
+            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
+          ></EventImage>
+          <EventCardName className="px-4 py-3">
+            <span>{event.eventName}</span>
+          </EventCardName>
+        </DemoEventCard>
+      );
+    });
+  };
 
   return (
     <>
@@ -249,9 +272,12 @@ const GetStarted = () => {
         >
           <SectionHeading>Getting started</SectionHeading>
           <div className="d-flex flex-row align-items-center">
-            <button onClick={() => {
-              setOpenArchive(true);
-            }} className="btn btn-outline-primary btn-outline-text">
+            <button
+              onClick={() => {
+                setOpenArchive(true);
+              }}
+              className="btn btn-outline-primary btn-outline-text"
+            >
               Archive
             </button>
             <a
@@ -263,7 +289,11 @@ const GetStarted = () => {
                 Community
               </button>
             </a>
-            <Chip label="1.2K Followers" color="primary" style={{fontWeight: "500"}} />
+            <Chip
+              label={`${millify(communityDetails.followers.length)} Followers`}
+              color="primary"
+              style={{ fontWeight: "500" }}
+            />
           </div>
         </div>
         <div className="px-4 mb-5">
@@ -349,72 +379,18 @@ const GetStarted = () => {
             style={{
               display: "grid",
               gridTemplateColumns: "2fr 1fr",
-              gridGap: "24px",
+              gridGap: "32px",
             }}
           >
-            <DemoEventsGrid>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Conference</EventTag>
-                <EventImage src={SBC}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>SBC Digital Summit</span>
-                </EventCardName>
-              </DemoEventCard>
-
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Product Launch</EventTag>
-                <EventImage src={Car}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Unvieling Roadster</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Meetup</EventTag>
-                <EventImage src={Crypto}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Let's Talk Crypto</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Workshop</EventTag>
-                <EventImage src={Investing}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Investing & Growing</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Summit</EventTag>
-                <EventImage src={WIT}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Women in tech</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Office hour</EventTag>
-                <EventImage src={DevOps}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>DevOps Monthly Meetup</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Training Event</EventTag>
-                <EventImage src={Social}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Social Influencing 101</span>
-                </EventCardName>
-              </DemoEventCard>
-              <DemoEventCard className="demo-event-card">
-                <EventTag>Social webinar</EventTag>
-                <EventImage src={Candid}></EventImage>
-                <EventCardName className="px-4 py-3">
-                  <span>Candid Conversation</span>
-                </EventCardName>
-              </DemoEventCard>
-            </DemoEventsGrid>
-
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gridGap: "32px",
+            }}>
+            {renderDemoEvents(demoEvents)}
+            </div>
+           
             <div>
-              {/*  */}
-
               <DemoCarousel />
             </div>
           </div>

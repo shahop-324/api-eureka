@@ -5,7 +5,12 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import Ripple from "./../../ActiveStatusRipple";
 import "./../../../assets/Sass/DataGrid.scss";
 
-import { fetchEvent, generateEventAccessToken } from "../../../actions";
+import {
+  fetchEvent,
+  generateEventAccessToken,
+  duplicateEvent,
+  editEvent,
+} from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -18,6 +23,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
+import UnarchiveRoundedIcon from '@mui/icons-material/UnarchiveRounded';
 import ArchiveIcon from "@mui/icons-material/Archive";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -89,6 +95,7 @@ const EventDetailCard = ({
   communityId,
   moderators, // ids of moderators
   hosts, // ids of hosts
+  archived,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -137,7 +144,12 @@ const EventDetailCard = ({
             </IconButton>
           </Link>
         </div> */}
-        <div className="event-card-field ms-3">
+        <div
+          onClick={() => {
+            window.location.href = `/community/${communityId}/edit-event/${id}/event-overview`;
+          }}
+          className="event-card-field event-img-name-container ms-3"
+        >
           <div
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
@@ -329,7 +341,6 @@ const EventDetailCard = ({
               >
                 <MoreVertOutlinedIcon />
               </IconButton>
-
               <StyledMenu
                 id="demo-customized-menu"
                 MenuListProps={{
@@ -339,25 +350,79 @@ const EventDetailCard = ({
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem
+                  onClick={() => {
+                    window.location.href = `/community/${communityId}/edit-event/${id}/event-overview`;
+                    handleClose();
+                  }}
+                  disableRipple
+                >
                   <EditIcon />
                   <MenuText>Edit</MenuText>
                 </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(duplicateEvent(id));
+                    handleClose();
+                  }}
+                  disableRipple
+                >
                   <FileCopyIcon />
                   <MenuText>Duplicate</MenuText>
                 </MenuItem>
 
-                <MenuItem onClick={handleClose} disableRipple>
-                  <ArchiveIcon />
-                  <MenuText>Archive</MenuText>
-                </MenuItem>
+                {archived ? (
+                  <MenuItem
+                    onClick={() => {
+                      dispatch(editEvent({ archived: false }, id, true));
+                      handleClose();
+                    }}
+                    disableRipple
+                  >
+                    <UnarchiveRoundedIcon />
+                    <MenuText>Unarchive</MenuText>
+                  </MenuItem>
+                ) : (
+                  <MenuItem
+                    onClick={() => {
+                      dispatch(editEvent({ archived: true }, id));
+                      handleClose();
+                    }}
+                    disableRipple
+                  >
+                    <ArchiveIcon />
+                    <MenuText>Archive</MenuText>
+                  </MenuItem>
+                )}
+
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(fetchEvent(eventId));
+                    window.location.href = `/event-landing-page/${eventId}/${communityId}`;
+                    handleClose();
+                  }}
+                  disableRipple
+                >
                   <WebRoundedIcon />
-                  <MenuText>Landing page</MenuText>
+                  <MenuText>Registration page</MenuText>
                 </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(
+                      generateEventAccessToken(
+                        userId,
+                        email,
+                        role // organiser ||  moderator ||  host
+                      )
+                    );
+
+                    window.location.href = `/compatibility-test/community/${communityId}/event/${eventId}/`;
+
+                    handleClose();
+                  }}
+                  disableRipple
+                >
                   <ShareLocationRoundedIcon />
                   <MenuText>Venue</MenuText>
                 </MenuItem>

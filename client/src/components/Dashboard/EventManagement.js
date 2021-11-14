@@ -180,6 +180,7 @@ const EventManagement = () => {
         status,
         moderators,
         hosts,
+        archived,
       } = communityEvent;
 
       let imgUrl = " #";
@@ -202,6 +203,7 @@ const EventManagement = () => {
           id={id}
           moderators={moderators}
           hosts={hosts}
+          archived={archived}
         />
       );
     });

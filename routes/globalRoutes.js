@@ -30,13 +30,13 @@ router.post(
 router.post(
   "/linkVideo",
   authController.protectCommunity,
-  videoController.linkVideo,
+  videoController.linkVideo
 );
 
 router.post(
   "/unlinkVideo",
   authController.protectCommunity,
-  videoController.unlinkVideo,
+  videoController.unlinkVideo
 );
 
 router.post(
@@ -308,5 +308,18 @@ router.get(
   authController.protectCommunity,
   globalController.getLatestEvent
 );
+
+router.get(
+  "/getArchivedEvents/:communityId",
+  authController.protectCommunity,
+  globalController.getArchivedEvents
+);
+router.get(
+  "/duplicateEvent/:eventId",
+  authController.protectCommunity,
+  globalController.duplicateEvent
+);
+
+router.get("/getShowcaseEvents", globalController.getShowcaseEvents);
 
 module.exports = router;

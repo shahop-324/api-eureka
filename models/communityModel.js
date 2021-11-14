@@ -520,6 +520,19 @@ const communitySchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    payPalPayoutEmailId: {
+      // Paypal Email Id => we have to transfer payout to this paypal account
+      type: String,
+    },
+    paypalEmailIsVerified: {
+      // flag to keep track if paypal Email is verified or not
+      type: Boolean,
+      default: false,
+    },
+    amountToWithdraw: {
+      type: Number, // Amount in USD that needs to be paid to the commuity super admin
+      default: 0,
+    },
   },
   {
     toJSON: { virtuals: true },

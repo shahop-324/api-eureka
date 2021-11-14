@@ -203,6 +203,24 @@ const timeZoneOptions = [
   { value: "(GMT+5:45) Kathmandu", label: "(GMT+5:45) Kathmandu" },
 ];
 
+const typeOptions = [
+  { value: "Conference", label: "Conference" },
+  { value: "Product Launch", label: "Product Launch" },
+  { value: "Meetup", label: "Meetup" },
+  { value: "Career Fair", label: "Career Fair" },
+  { value: "Workshop", label: "Workshop" },
+  { value: "Summit", label: "Summit" },
+  { value: "Office hour", label: "Office hour" },
+  { value: "Training Event", label: "Training Event" },
+  { value: "Social webinar", label: "Social webinar" },
+  { value: "Onboarding", label: "Onboarding" },
+  { value: "Investor Meetings", label: "Investor Meetings" },
+  { value: "Team hour", label: "Team hour" },
+  { value: "Town Hall", label: "Town Hall" },
+  { value: "Product demo", label: "Product Demo" },
+  { value: "Interview Session", label: "Interview Session" },
+];
+
 const styles = {
   control: (base) => ({
     ...base,
@@ -229,6 +247,15 @@ const CreateNewEventForm = ({
   latestEvent,
 }) => {
   let hostOptions = [];
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userEmail = userDetails.email;
+
+  let isMYFounder =
+    userEmail === "omprakash.shah@bluemeet.in" ||
+    userEmail === "dinesh.shah@bluemeet.in";
+
   const communityManagers = useSelector(
     (state) => state.community.communityManagers
   );
@@ -266,6 +293,14 @@ const CreateNewEventForm = ({
     }
 
     const ModifiedFormValues = {};
+
+    // User email must be omprakash.shah@bluemeet.in or dinesh.shah@bluemeet.in
+
+    if (formValues.showOnGetStarted && isMYFounder) {
+      ModifiedFormValues.showOnGetStarted = formValues.showOnGetStarted === "Yes" ? true : false;
+    }
+
+    ModifiedFormValues.type = formValues.type.value;
     ModifiedFormValues.eventName = formValues.eventName;
     ModifiedFormValues.shortDescription = formValues.shortDescription;
     ModifiedFormValues.startDate = formValues.startDate;
@@ -285,6 +320,7 @@ const CreateNewEventForm = ({
     }
 
     // There should be atleast one moderator in the event
+
     if (
       !(
         typeof ModifiedFormValues.moderators !== "undefined" &&
@@ -296,13 +332,6 @@ const CreateNewEventForm = ({
       );
       return;
     }
-
-    // if (new Date(ModifiedFormValues.startTime) <= new Date(Date.now())) {
-    //   dispatch(
-    //     showSnackbar("warning", "Event start Date & Time cannot be in past.")
-    //   );
-    //   return;
-    // }
 
     if (
       new Date(ModifiedFormValues.startTime) >=
@@ -505,11 +534,29 @@ const CreateNewEventForm = ({
             </FormLabel>
             <Field
               name="selectCategories"
-              isMulti="true"
+              isMulti={true}
               styles={styles}
               menuPlacement="auto"
               options={options}
               defaultValue={options[0]}
+              component={renderReactSelect}
+            />
+          </div>
+
+          <div className="mb-4 overlay-form-input-row">
+            <FormLabel
+              Forhtml="type"
+              className="form-label form-label-customized"
+            >
+              Type of Event
+            </FormLabel>
+            <Field
+              name="type"
+              isMulti={false}
+              styles={styles}
+              menuPlacement="auto"
+              options={typeOptions}
+              defaultValue={typeOptions[0]}
               component={renderReactSelect}
             />
           </div>
@@ -608,6 +655,57 @@ const CreateNewEventForm = ({
               Note: Tables cannot be decreased later but can be increased.
             </div>
           </div>
+
+          {isMYFounder ? (
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel className="form-label form-label-customized">
+                Show on get started
+              </FormLabel>
+              <div className="form-check mb-2">
+                <Field
+                  name="showOnGetStarted"
+                  className="form-check-input"
+                  type="radio"
+                  id="flexRadioDefault1"
+                  value="Yes"
+                  component="input"
+                />
+                <label
+                  className="form-check-label"
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "0.9rem",
+                  }}
+                  for="flexRadioDefault1"
+                >
+                  Yes
+                </label>
+              </div>
+              <div className="form-check mb-2">
+                <Field
+                  className="form-check-input"
+                  type="radio"
+                  name="showOnGetStarted"
+                  id="flexRadioDefault2"
+                  value="No"
+                  component="input"
+                />
+                <label
+                  className="form-check-label"
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "0.9rem",
+                  }}
+                  for="flexRadioDefault2"
+                >
+                  No
+                </label>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+
           <div className={showInlineButton === "false" ? "hide" : ""}></div>
           <div
             className="d-flex flex-row justify-content-end"
@@ -691,6 +789,11 @@ const validate = (formValues) => {
   if (!formValues.selectCategories) {
     errors.selectCategories = "Categories is required";
   }
+
+  if (!formValues.type) {
+    errors.type = "Event type is required";
+  }
+
   if (!formValues.moderators) {
     errors.moderators = "Atleast one moderator is required";
   }

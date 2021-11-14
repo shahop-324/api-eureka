@@ -1,9 +1,18 @@
 import React from "react";
-import './../../../../assets/Sass/DataGrid.scss';
+import Divider from "@material-ui/core/Divider";
+import "./../../../../assets/Sass/DataGrid.scss";
 
 const ArchiveListFields = () => {
   return (
-    <div className="events-list-fields-container" style={{display: "grid", gridTemplateColumns: "3fr 1fr 1fr 1fr 1fr"}}>
+    <>
+    <div
+      className="events-list-fields-container"
+      style={{
+        alignItems: "center",
+        display: "grid",
+        gridTemplateColumns: "3.5fr 1fr 1fr 1fr 0.5fr",
+      }}
+    >
       <div className="event-card-field ">
         <div className="event-field-label ms-3">Event</div>
       </div>
@@ -20,6 +29,10 @@ const ArchiveListFields = () => {
         <div className="event-field-label">Unarchive</div>
       </div>
     </div>
+    <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
+        <Divider />
+      </div>
+    </>
   );
 };
 

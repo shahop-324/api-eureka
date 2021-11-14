@@ -22,6 +22,8 @@ const CommunityAccountRequest = require("./../models/CommunityAccountRequestMode
 const UserAccountRequest = require("./../models/UserAccountRequest");
 const CommunityVideo = require("./../models/videoModel");
 const EventVideo = require("./../models/eventVideosModel");
+const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
+const RegistrationForm = require("./../models/registrationFormModel");
 
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1798,5 +1800,182 @@ exports.getLatestEvent = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getArchivedEvents = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
 
+  // Find all events of this community which are archived
+
+  const archivedEvents = await Event.find({
+    $and: [{ communityId: communityId }, { archived: true }],
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: archivedEvents,
+  });
+});
+
+exports.duplicateEvent = catchAsync(async (req, res, next) => {
+  try {
+    const eventId = req.params.eventId;
+
+    // Duplicate event with this eventId
+
+    const originalEvent = await Event.findById(eventId);
+    const communityId = originalEvent.communityId;
+
+    const communityGettingEvent = await Community.findById(communityId);
+    const document = await EventsIdsCommunityWise.findById(
+      communityGettingEvent.eventsDocIdCommunityWise
+    );
+
+    const communityObject = await Community.findById(communityId).select(
+      "eventManagers"
+    );
+
+    const eventManagers = communityObject.eventManagers;
+
+    // 1.) Create a new event document with required fields
+
+    const createdEvent = await Event.create({
+      type: originalEvent.type,
+      eventName: originalEvent.eventName,
+      image: originalEvent.image,
+      shortDescription: originalEvent.shortDescription,
+      visibility: originalEvent.visibility,
+      createdBy: communityId,
+      communityRating: communityGettingEvent.commuintyAverageRating,
+      categories: originalEvent.categories,
+      startDate: Date.now(),
+      endDate: Date.now() + 15 * 24 * 60 * 60 * 1000,
+      startTime: Date.now(),
+      endTime: Date.now() + 15 * 24 * 60 * 60 * 1000,
+      socialMediaHandles: communityGettingEvent.socialMediaHandles,
+      Timezone: originalEvent.Timezone,
+      communityName: communityGettingEvent.name,
+      communityLogo: communityGettingEvent.image,
+      organisedBy: communityGettingEvent.name,
+      communityId: communityGettingEvent._id,
+      numberOfTablesInLounge: originalEvent.numberOfTablesInLounge,
+    });
+
+    // Initialise all tables as specified
+
+    // Register all members of its community into this event
+
+    // Step 1. Get all members of this community
+
+    let members = [];
+
+    members.push(communityGettingEvent.superAdmin);
+
+    for (let element of eventManagers) {
+      members.push(element);
+    }
+
+    // Here we have all team members ids
+
+    for (let element of members) {
+      // Fetch user document for this id and then register in this event
+      await User.findById(element, async (err, doc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          if (doc) {
+            // User document is found. So, now we will just register this person in this event
+
+            await Registration.create({
+              type: "Host",
+              status: "Completed",
+              viaCommunity: true,
+              eventName: originalEvent.eventName,
+              userName: doc.firstName + " " + doc.lastName,
+              userImage: doc.image,
+              userEmail: doc.email,
+              bookedByUser: doc._id,
+              bookedForEventId: createdEvent._id,
+              eventByCommunityId: communityId,
+              createdAt: Date.now(),
+              image: doc.image,
+              email: doc.email,
+              first_name: doc.firstName,
+              last_name: doc.lastName,
+              name: doc.firstName + " " + doc.lastName,
+              headline: doc.headline,
+              organisation: doc.organisation,
+              designation: doc.designation,
+              city: doc.city,
+              country: doc.country,
+              interests: doc.interests,
+              socialMediaHandles: doc.socialMediaHandles,
+              event_name: req.body.eventName,
+            });
+          }
+        }
+      });
+    }
+
+    // Here we have all team members of this community registered in this event
+
+    for (let i = 0; i < originalEvent.numberOfTablesInLounge * 1; i++) {
+      // Create tables with tableId as `${eventId}_table_${i}`
+      await RoomTable.create({
+        eventId: createdEvent._id,
+        tableId: `${createdEvent._id}_table_${i}`,
+        lastUpdatedAt: Date.now(),
+      });
+    }
+
+    // Generate mux stream key --- this needs to be very very private.
+
+    const muxRes = await Video.LiveStreams.create({
+      playback_policy: "public",
+      new_asset_settings: { playback_policy: "public" },
+    });
+
+    // 0) Create a registration form document for this event and store its id in this event
+
+    const registrationForm = await RegistrationForm.create({
+      initialisedAt: Date.now(),
+      eventId: createdEvent._id,
+    });
+
+    createdEvent.registrationFormId = registrationForm._id;
+
+    createdEvent.muxStreamKey = muxRes.stream_key;
+    createdEvent.muxVideoPlaybackId = muxRes.playback_ids[0].id;
+    createdEvent.mux_credentialId = muxRes.id;
+    createdEvent.moderators = originalEvent.moderators;
+    const newEvent = await createdEvent.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
+
+    // 2) Update that event into communities resource in events array
+    document.eventsIds.push(createdEvent.id);
+    await document.save({ validateModifiedOnly: true });
+
+    const event = await Event.findById(createdEvent.id).populate(
+      "registrationFormId"
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: event,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getShowcaseEvents = catchAsync(async (req, res, next) => {
+  const events = await Event.find({ showOnGetStarted: true });
+
+  console.log("These are events to be shown as Demo events", events);
+
+  res.status(200).json({
+    status: "success",
+    data: events,
+  });
+});
 
