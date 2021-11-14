@@ -49,6 +49,7 @@ const paypalRoutes = require("./routes/payPalRoutes");
 const zapierRoutes = require("./routes/zapierRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const mailRoutes = require("./routes/mailRoutes");
+const trackRoutes = require("./routes/trackRoutes");
 const authController = require("./controllers/authController.js");
 
 const MailChimp = require("./models/mailChimpModel");
@@ -242,6 +243,7 @@ app.use("/api-eureka/eureka/v1/paypal", paypalRoutes);
 app.use("/api-eureka/eureka/v1/zapier", zapierRoutes);
 app.use("/api-eureka/eureka/v1/role", roleRoutes);
 app.use("/api-eureka/eureka/v1/mail", mailRoutes);
+app.use("/api-eureka/eureka/v1/track", trackRoutes);
 
 const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET);
 

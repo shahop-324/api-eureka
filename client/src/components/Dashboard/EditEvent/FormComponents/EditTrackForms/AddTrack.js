@@ -5,6 +5,10 @@ import { IconButton } from "@material-ui/core";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { Field, reduxForm } from "redux-form";
+import { useDispatch } from "react-redux";
+
+import { showSnackbar, addTrack } from "./../../../../../actions";
+import { useParams } from "react-router";
 
 const Paper = styled.div`
   width: 400px !important;
@@ -90,7 +94,19 @@ const AddTrack = ({
   submitting,
   handleSubmit,
 }) => {
+  const dispatch = useDispatch();
+
+  const params = useParams();
+  const eventId = params.id;
+
   const onSubmit = (formValues) => {
+    if (!formValues.name || !formValues.description) {
+      dispatch(showSnackbar("Track name & Description are required."));
+      return;
+    }
+
+    dispatch(addTrack(formValues, eventId));
+
     console.log(formValues);
   };
 
@@ -107,9 +123,7 @@ const AddTrack = ({
                 }}
               >
                 <IconButton aria-label="close-drawer">
-                  <CancelRoundedIcon
-                    style={{ fontSize: "24" }}
-                  />
+                  <CancelRoundedIcon style={{ fontSize: "24" }} />
                 </IconButton>
               </div>
             </div>
@@ -120,10 +134,7 @@ const AddTrack = ({
               <div className="side-drawer-more-details-content-section">
                 <div className="row  mb-3">
                   <div className="mb-3">
-                    <FormLabel
-                      for="communityHeadline"
-                      className="form-label"
-                    >
+                    <FormLabel for="communityHeadline" className="form-label">
                       Name
                     </FormLabel>
                     <Field
@@ -137,10 +148,7 @@ const AddTrack = ({
                     />
                   </div>
                   <div className="">
-                    <FormLabel
-                      for="communityHeadline"
-                      className="form-label"
-                    >
+                    <FormLabel for="communityHeadline" className="form-label">
                       Description
                     </FormLabel>
                     <Field

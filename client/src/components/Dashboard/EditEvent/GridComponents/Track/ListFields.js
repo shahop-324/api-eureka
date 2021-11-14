@@ -7,7 +7,7 @@ const TrackListFields = () => {
       <>
     <div
       className="registrations-list-fields-container py-3"
-      style={{ gridTemplateColumns: "2fr 2fr 1fr" }}
+      style={{ gridTemplateColumns: "1.5fr 2fr 1fr" }}
     >
       <div className="registrations-email-field">
         <div className="registrations-field-label">Name</div>
@@ -15,6 +15,7 @@ const TrackListFields = () => {
       <div className="registrations-email-field">
         <div className="registrations-field-label">Description</div>
       </div>
+      
       <div className="registrations-phone-field">
         <div className="registrations-field-label">Actions</div>
       </div>

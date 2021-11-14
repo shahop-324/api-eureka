@@ -811,6 +811,8 @@ exports.addSession = catchAsync(async (req, res, next) => {
       eventId: eventGettingSessions.id,
     });
 
+    session.tracks = req.body.tracks;
+
     console.log(processedArray); // array of speaker Ids
     console.log(req.body.host);
 
@@ -866,7 +868,8 @@ exports.addSession = catchAsync(async (req, res, next) => {
 
     const populatedSession = await Session.findById(session.id)
       .populate("speaker")
-      .populate("host");
+      .populate("host")
+      .populate("tracks");
 
     eventGettingSessions.session.push(session._id);
     await eventGettingSessions.save({ validateModifiedOnly: true });
@@ -1035,7 +1038,8 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "ticketSaleIsEnabled",
       "archived",
       "type",
-      "showOnGetStarted"
+      "showOnGetStarted",
+      "landingPageColor"
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);

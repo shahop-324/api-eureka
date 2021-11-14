@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
@@ -25,9 +28,10 @@ import Help from "./help.png";
 import EventStreamSettings from "../EditEvent/SubComponent/EventStreamSettings";
 import GetHelp from "../GetHelp";
 
-import {useSelector} from 'react-redux';
+import { useSelector } from "react-redux";
 
 import { TwitterPicker } from "react-color";
+import { editEvent } from "./../../../actions";
 
 const EventDetailsHeading = styled.div`
   font-weight: 500;
@@ -160,6 +164,11 @@ const ImgCard = styled.img`
 `;
 
 const MainEventSetupCheckList = () => {
+  const params = useParams();
+  const eventId = params.id;
+
+  const dispatch = useDispatch();
+
   const [openGetHelp, setOpenGetHelp] = useState(false);
 
   const handleCloseGetHelp = () => {
@@ -176,7 +185,9 @@ const MainEventSetupCheckList = () => {
 
   const { eventDetails, isLoading } = useSelector((state) => state.event);
 
-  const [color, setColor] = useState(eventDetails.landingPageColor ? eventDetails.landingPageColor : "#3567C3");
+  const [color, setColor] = useState(
+    eventDetails.landingPageColor ? eventDetails.landingPageColor : "#3567C3"
+  );
 
   const handleChangeComplete = (color) => {
     setColor(color.hex);
@@ -516,16 +527,23 @@ const MainEventSetupCheckList = () => {
         <EventPromoImageContainer className="px-4 py-3">
           <RTMPCard className="mb-3">
             <div className="d-flex flex-row align-items-center justify-content-between mb-4">
-          <EventDetailsHeading className="">
+              <EventDetailsHeading className="">
                 Registration Page Theme
               </EventDetailsHeading>
-              <button className="btn btn-outline-text btn-outline-primary">Save</button>
-              </div>
-          <div
+              <button
+                onClick={() => {
+                  dispatch(editEvent({ landingPageColor: color }, eventId));
+                }}
+                className="btn btn-outline-text btn-outline-primary"
+              >
+                Save
+              </button>
+            </div>
+            <div
               className="theme-color-preview mb-3"
               style={{ backgroundColor: color }}
             ></div>
-              <TwitterPicker
+            <TwitterPicker
               color={color}
               onChangeComplete={handleChangeComplete}
             />

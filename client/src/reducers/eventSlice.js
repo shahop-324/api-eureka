@@ -5,6 +5,8 @@ const eventSlice = createSlice({
 
   initialState: {
     events: [],
+    tracks: [],
+    trackDetails: null,
     favouriteEvents: [],
     archivedEvents: [],
     demoEvents: [],
@@ -38,11 +40,21 @@ const eventSlice = createSlice({
       state.events.unshift(action.payload.event);
       state.isLoading = false;
     },
+    CreateTrack(state, action) {
+      state.tracks.unshift(action.payload.track);
+      state.trackDetails = action.payload.track;
+      state.isLoading = false;
+    },
     FetchEvents(state, action) {
       state.events = action.payload.events;
       state.length = action.payload.length;
       state.isLoading = false;
     },
+    FetchTracks(state, action) {
+      state.tracks = action.payload.tracks;
+      state.isLoading = false;
+    },
+
     FetchArchivedEvents(state, action) {
       state.archivedEvents = action.payload.events;
       state.isLoading = false;
@@ -72,8 +84,6 @@ const eventSlice = createSlice({
       state.error = false;
     },
     FetchEvent(state, action) {
-      console.log("opoo", 28);
-
       const newEvent = action.payload.event;
       const existingEvent = state.events.find(
         (event) => event.id === newEvent.id
@@ -87,9 +97,12 @@ const eventSlice = createSlice({
       state.isLoading = false;
     },
 
-    EditEvent(state, action) {
-      console.log(action.payload.event);
+    FetchTrack(state, action) {
+      state.trackDetails = action.payload.track;
+      state.isLoading = false;
+    },
 
+    EditEvent(state, action) {
       const id =
         action.payload.event && action.payload.event._id
           ? action.payload.event._id
@@ -99,6 +112,20 @@ const eventSlice = createSlice({
         event.id === id ? action.payload.event : event
       );
       state.eventDetails = action.payload.event;
+      state.isLoading = false;
+    },
+    EditTrack(state, action) {
+      const track = action.payload.track;
+      state.tracks = state.tracks.map((track) =>
+        track._id === action.payload.track._id ? action.payload.track : track
+      );
+      state.trackDetails = action.payload.track;
+      state.isLoading = false;
+    },
+    DeleteTrack(state, action) {
+      state.tracks = state.tracks.filter(
+        (track) => track._id.toString() !== action.payload.trackId.toString()
+      );
       state.isLoading = false;
     },
     DeleteEvent(state, action) {

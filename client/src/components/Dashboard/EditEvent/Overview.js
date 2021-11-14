@@ -4,7 +4,7 @@ import { editEvent, showSnackbar } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
-import {IconButton} from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
@@ -30,9 +30,10 @@ import { Link } from "react-router-dom";
 import MainEventSetupCheckList from "../Checklist/Main";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-
-
 import Switch from "@mui/material/Switch";
+
+import ArchiveRoundedIcon from "@mui/icons-material/ArchiveRounded";
+import UnarchiveRoundedIcon from "@mui/icons-material/UnarchiveRounded";
 
 const label = {
   inputProps: { "aria-label": "Switch demo" },
@@ -108,9 +109,6 @@ const EventLinkInput = styled.input`
 `;
 
 const EventOverview = (props) => {
-
-  
-
   const [openBasicForm, setOpenBasicForm] = useState(false);
 
   const [openWidget, setOpenWidget] = useState(false);
@@ -135,8 +133,6 @@ const EventOverview = (props) => {
     eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null
   );
   const [editMode, setEditMode] = useState(false);
-
- 
 
   const { handleSubmit } = props;
 
@@ -224,9 +220,27 @@ const EventOverview = (props) => {
         <div className="secondary-heading-row d-flex flex-row align-items-center justify-content-between px-4 py-4">
           <SectionHeading className="">Overview</SectionHeading>
           <div>
-            <button className="btn btn-outline-text btn-outline-primary">
-              Add to archive
-            </button>
+            {eventDetails.archived ? (
+              <button
+                onClick={() => {
+                  dispatch(editEvent({ archived: false }, id));
+                }}
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
+              >
+                {" "}
+                <UnarchiveRoundedIcon />{" "}
+                <span className="ms-2"> Unarchive </span>{" "}
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  dispatch(editEvent({ archived: true }, id));
+                }}
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
+              >
+                <ArchiveRoundedIcon /> <span className="ms-2"> Archive </span>
+              </button>
+            )}
           </div>
         </div>
         <div className=" px-3 mb-4">
@@ -382,10 +396,8 @@ const EventOverview = (props) => {
                   />
                 </div>
               </div>
-              
+
               {/* // TODO We need to make it work properly */}
-             
-              
             </EventDetails>
             <EventPromoImageContainer>
               <UploadEventImageForm />

@@ -17,6 +17,7 @@ import {
   errorTrackerForFetchSessions,
   fetchSessions,
   fetchSpeakers,
+  fetchTracks,
 } from "../../../actions";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,6 +134,7 @@ const Sessions = () => {
 
   useEffect(() => {
     dispatch(fetchSpeakers(id));
+    dispatch(fetchTracks(id));
   }, [dispatch, id]);
 
   useEffect(() => {

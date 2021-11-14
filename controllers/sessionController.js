@@ -15,7 +15,8 @@ const filterObj = (obj, ...allowedFields) => {
 exports.getParticularSession = catchAsync(async (req, res, next) => {
   const session = await Session.findById(req.params.id)
     .populate("speaker")
-    .populate("host", "firstName lastName email");
+    .populate("host", "firstName lastName email")
+    .populate("tracks");
 
   res.status(200).json({
     status: "SUCCESS",
@@ -45,6 +46,13 @@ exports.updateSession = catchAsync(async (req, res, next) => {
     let removedSpeakers = [];
 
     const sessionDoc = await Session.findById(req.params.id);
+
+    sessionDoc.tracks = req.body.tracks;
+
+    await sessionDoc.save({
+      new: true,
+      validateModifiedOnly: true,
+    });
 
     const speakersSinceLastUpdate = sessionDoc.speaker;
 
@@ -117,7 +125,8 @@ exports.updateSession = catchAsync(async (req, res, next) => {
       }
     )
       .populate("speaker")
-      .populate("host");
+      .populate("host")
+      .populate("tracks");
 
     // Tags
 
@@ -209,7 +218,8 @@ exports.getAllSessions = catchAsync(async (req, res, next) => {
     eventId: mongoose.Types.ObjectId(req.params.eventId),
   })
     .populate("speaker")
-    .populate("host", "firstName lastName email");
+    .populate("host", "firstName lastName email")
+    .populate("tracks");
 
   const features = new apiFeatures(query, req.query).textFilter();
   const sessions = await features.query;

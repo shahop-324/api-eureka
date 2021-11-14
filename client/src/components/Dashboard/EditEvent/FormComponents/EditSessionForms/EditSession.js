@@ -183,6 +183,14 @@ const EditSession = ({
   submitting,
   reset,
 }) => {
+  let trackOptions = [];
+
+  const { tracks } = useSelector((state) => state.event);
+
+  for (let element of tracks) {
+    trackOptions.push({ value: element._id, label: element.name });
+  }
+
   const { detailError, isLoadingDetail } = useSelector(
     (state) => state.session
   );
@@ -223,88 +231,101 @@ const EditSession = ({
   });
 
   const onSubmit = (formValues) => {
-    const categories = [];
+    if (!formValues.tracks) {
+      // Tracks are required
+      dispatch(
+        showSnackbar("error", "Each session must be associated with a track.")
+      );
+    } else {
+      const categories = [];
+      let tracksArray = [];
 
-    console.log(categories);
-    console.log(formValues);
+      for (let element of formValues.tracks) {
+        tracksArray.push(element.value);
+      }
 
-    const ModifiedFormValues = {};
+      console.log(categories);
+      console.log(formValues);
 
-    ModifiedFormValues.speaker = [];
+      const ModifiedFormValues = {};
 
-    ModifiedFormValues.name = formValues.name;
-    ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.startDate = formValues.startDate;
-    ModifiedFormValues.endDate = formValues.endDate;
-    ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
-    ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
-    ModifiedFormValues.tags = formValues.tags;
+      ModifiedFormValues.speaker = [];
 
-    if (
-      typeof formValues.speaker !== "undefined" &&
-      formValues.speaker.length > 0
-    ) {
-      ModifiedFormValues.speaker = formValues.speaker.map((speaker) => {
-        return speaker.value;
-      });
-    }
-    if (
-      typeof formValues.hosts !== "undefined" &&
-      formValues.hosts.length > 0
-    ) {
-      ModifiedFormValues.host = formValues.hosts.map((host) => {
-        return host.value;
-      });
-    }
+      ModifiedFormValues.name = formValues.name;
+      ModifiedFormValues.description = formValues.description;
+      ModifiedFormValues.startDate = formValues.startDate;
+      ModifiedFormValues.endDate = formValues.endDate;
+      ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
+      ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
+      ModifiedFormValues.tags = formValues.tags;
+      ModifiedFormValues.tracks = tracksArray;
 
-    if (
-      !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
-    ) {
-      // Atleast one tag for each session is required
-      dispatch(showSnackbar("warning", "Atleast one tag is required."));
-      return;
-    }
+      if (
+        typeof formValues.speaker !== "undefined" &&
+        formValues.speaker.length > 0
+      ) {
+        ModifiedFormValues.speaker = formValues.speaker.map((speaker) => {
+          return speaker.value;
+        });
+      }
+      if (
+        typeof formValues.hosts !== "undefined" &&
+        formValues.hosts.length > 0
+      ) {
+        ModifiedFormValues.host = formValues.hosts.map((host) => {
+          return host.value;
+        });
+      }
 
-    // Atleast one host is required
-    if (
-      !(
-        typeof ModifiedFormValues.host !== "undefined" &&
-        ModifiedFormValues.host.length > 0
-      )
-    ) {
+      if (
+        !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
+      ) {
+        // Atleast one tag for each session is required
+        dispatch(showSnackbar("warning", "Atleast one tag is required."));
+        return;
+      }
+
       // Atleast one host is required
-
-      dispatch(showSnackbar("warning", "Atleast one host is required."));
-      return;
-    }
-
-    if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
-      // Session start Date & time must be withing event timeline
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Session start Date time must be within event timeline"
+      if (
+        !(
+          typeof ModifiedFormValues.host !== "undefined" &&
+          ModifiedFormValues.host.length > 0
         )
-      );
-      return;
-    }
-    if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
-      // Session end Date & time must be withing event timeline
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Session end Date & time must be within event timeline"
-        )
-      );
-      return;
-    }
+      ) {
+        // Atleast one host is required
 
-    if (
-      !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
-      !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
-    ) {
-      // only in this case we will allow this session to be edited
-      dispatch(editSession(ModifiedFormValues, id));
+        dispatch(showSnackbar("warning", "Atleast one host is required."));
+        return;
+      }
+
+      if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
+        // Session start Date & time must be withing event timeline
+        dispatch(
+          showSnackbar(
+            "warning",
+            "Session start Date time must be within event timeline"
+          )
+        );
+        return;
+      }
+      if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
+        // Session end Date & time must be withing event timeline
+        dispatch(
+          showSnackbar(
+            "warning",
+            "Session end Date & time must be within event timeline"
+          )
+        );
+        return;
+      }
+
+      if (
+        !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
+        !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
+      ) {
+        // only in this case we will allow this session to be edited
+        dispatch(editSession(ModifiedFormValues, id));
+      }
     }
   };
 
@@ -358,6 +379,18 @@ const EditSession = ({
                       styles={styles}
                       menuPlacement="bottom"
                       options={activityOptions}
+                      component={renderReactSelect}
+                    />
+                  </div>
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel for="communityName">Select track(s)</FormLabel>
+                    <Field
+                      isMulti={true}
+                      name="tracks"
+                      placeholder="Select track"
+                      styles={styles}
+                      menuPlacement="bottom"
+                      options={trackOptions}
                       component={renderReactSelect}
                     />
                   </div>
@@ -549,6 +582,16 @@ const mapStateToProps = (state) => ({
         };
       }),
 
+    tracks:
+      state.session.sessionDetails &&
+      state.session.sessionDetails.tracks.length !== 0 &&
+      state.session.sessionDetails.tracks.map((element) => {
+        return {
+          value: element._id,
+          label: element.name,
+        };
+      }),
+
     hosts:
       state.session.sessionDetails &&
       state.session.sessionDetails.host.length !== 0 &&
@@ -571,6 +614,10 @@ const validate = (formValues) => {
   console.log(formValues.name);
   if (!formValues.name) {
     errors.name = "Session name is required";
+  }
+
+  if (!formValues.tracks) {
+    errors.tracks = "Tracks are required";
   }
 
   if (!formValues.description) {

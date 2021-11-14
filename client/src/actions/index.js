@@ -8594,7 +8594,7 @@ export const setVibeToPreview = (imgURL) => async (dispatch, getState) => {
 // Create RTMP stream destination
 
 export const createRTMPDestination =
-  (formValues, eventId) => async (dispatch, getState) => {
+  (formValues, eventId, handleClose) => async (dispatch, getState) => {
     try {
       let res = await fetch(`${BaseURL}createRTMPDestination/${eventId}`, {
         method: "POST",
@@ -8634,6 +8634,8 @@ export const createRTMPDestination =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+
+      handleClose();
     } catch (error) {
       console.log(error);
       dispatch(
@@ -8646,6 +8648,7 @@ export const createRTMPDestination =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      handleClose();
     }
   };
 
@@ -8959,7 +8962,7 @@ export const updateMail =
       let res = await fetch(`${BaseURL}mail/updateMail/${mailId}`, {
         method: "PATCH",
 
-        body: JSON.stringify({...formValues}),
+        body: JSON.stringify({ ...formValues }),
 
         headers: {
           "Content-Type": "application/json",
@@ -12056,5 +12059,182 @@ export const fetchRegistrations = (eventId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch registrations"));
+  }
+};
+
+export const addTrack = (formValues, eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}track/createTrack/${eventId}`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.CreateTrack({
+        track: res.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Track Created successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to add track, Please try again."));
+  }
+};
+export const updateTrack =
+  (formValues, trackId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}track/updateTrack/${trackId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        eventActions.EditTrack({
+          track: res.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Track Updated successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to update track, Please try again.")
+      );
+    }
+  };
+export const deleteTrack = (trackId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}track/deleteTrack/${trackId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.DeleteTrack({
+        trackId: trackId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Track Deleted successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to delete track, Please try again.")
+    );
+  }
+};
+export const fetchTracks = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}track/fetchTracks/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.FetchTracks({
+        tracks: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch tracks, Please try again.")
+    );
+  }
+};
+export const fetchTrack = (trackId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}track/fetchTrack/${trackId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      eventActions.FetchTrack({
+        track: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch track, Please try again."));
   }
 };

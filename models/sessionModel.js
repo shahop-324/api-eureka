@@ -141,6 +141,12 @@ const sessionSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    tracks: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Track",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

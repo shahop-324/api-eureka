@@ -3,7 +3,6 @@ const Mail = require("./../models/eventMailModel");
 const HTMLParser = require("node-html-parser");
 
 const sgMail = require("@sendgrid/mail");
-const ForgotPasswordTemplate = require("../services/email/ForgotPasswordTemplate");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const filterObj = (obj, ...allowedFields) => {
@@ -100,7 +99,7 @@ exports.sendMail = catchAsync(async (req, res, next) => {
         from: "shreyanshshah242@gmail.com", // Change to your verified sender
         subject: mailDoc.subject,
         // text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
-        html: HTMLParser.parse(mailDoc.html),
+        html: mailDoc.html.replace(/&lt;/gi, "<"),
       };
 
       sgMail

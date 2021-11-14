@@ -17,7 +17,11 @@ import DeleteTrack from "../../FormComponents/EditTrackForms/DeleteTrack";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
-const TrackDetailsCard = ({ id, name, description }) => {
+import Chip from '@mui/material/Chip';
+
+import {fetchTrack} from "./../../../../../actions";
+
+const TrackDetailsCard = ({ id, name, description, sessions }) => {
   const dispatch = useDispatch();
 
   const [openEdit, setOpenEdit] = useState(false);
@@ -30,29 +34,35 @@ const TrackDetailsCard = ({ id, name, description }) => {
   const handleCloseEdit = () => {
     setOpenEdit(false);
   };
+
+ 
+
   return (
     <>
       <div
         className="registrations-field-value-container"
-        style={{ gridTemplateColumns: "2fr 2fr 1fr" }}
+        style={{ gridTemplateColumns: "1.5fr 2fr 1fr" }}
       >
         <div className="registrations-email-field">
           <div className="registrations-field-label registrations-field-value-modified">
             {/* {name} */}
-            Startups
+            {name}
           </div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
             {/* {Description} */}
-            This track will have sessions for startups
+           {description}
           </div>
         </div>
+
+        
 
         <div className="registrations-amount-field">
           <div className="registrations-field-label registrations-field-value-modified">
             <IconButton
               onClick={() => {
+                dispatch(fetchTrack(id))
                 setOpenEdit(true);
               }}
               color="primary"
@@ -62,6 +72,7 @@ const TrackDetailsCard = ({ id, name, description }) => {
             </IconButton>
             <IconButton
               onClick={() => {
+                dispatch(fetchTrack(id))
                 setOpenDelete(true);
               }}
               color="secondary"
@@ -75,8 +86,8 @@ const TrackDetailsCard = ({ id, name, description }) => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
-      <EditTrack open={openEdit} handleClose={handleCloseEdit} />
-      <DeleteTrack open={openDelete} handleClose={handleCloseDelete} />
+      <EditTrack open={openEdit} handleClose={handleCloseEdit} id={id} />
+      <DeleteTrack open={openDelete} handleClose={handleCloseDelete} id={id} />
     </>
   );
 };

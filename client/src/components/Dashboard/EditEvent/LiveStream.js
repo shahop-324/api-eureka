@@ -9,6 +9,7 @@ import { useParams } from "react-router";
 import { fetchStreamDestinations } from "./../../../actions";
 import NoContentFound from "./../../NoContent";
 import Broadcast from "./../../../assets/images/broadcast.png";
+import RTMPDestination from "../FormComponents/StreamDestinations.js/RTMPDestination";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -106,7 +107,8 @@ const LiveStream = () => {
           </div>
         )}
       </div>
-      <AddStreamDestinationOptions open={open} handleClose={handleClose} />
+      {/* <AddStreamDestinationOptions open={open} handleClose={handleClose} /> */}
+      <RTMPDestination open={open} handleClose={handleClose} />
     </>
   );
 };

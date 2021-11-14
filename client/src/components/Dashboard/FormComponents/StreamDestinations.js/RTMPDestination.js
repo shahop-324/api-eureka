@@ -164,7 +164,7 @@ const RTMPDestination = ({ open, handleClose, handleSubmit }) => {
     ModifiedFormValues.sessions = sessions;
 
     console.log(ModifiedFormValues);
-    dispatch(createRTMPDestination(ModifiedFormValues, eventId));
+    dispatch(createRTMPDestination(ModifiedFormValues, eventId, handleClose));
   };
 
   return (
@@ -178,7 +178,7 @@ const RTMPDestination = ({ open, handleClose, handleSubmit }) => {
           <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
             <div></div>
             <div className="coupon-overlay-form-headline">
-              Configure RTMP Destination
+              Add Live Stream Destination
             </div>
             <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton aria-label="delete">
@@ -227,20 +227,7 @@ const RTMPDestination = ({ open, handleClose, handleSubmit }) => {
               </div>
               <div className="mb-4 overlay-form-input-row">
                 <FormLabel for="communityName">
-                  Live stream page URL<span className="mandatory-field">*</span>
-                </FormLabel>
-                <Field
-                  name="liveStreamPageURL"
-                  type="text"
-                  classes="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Live stream page URL"
-                  component={renderInput}
-                />
-              </div>
-              <div className="mb-4 overlay-form-input-row">
-                <FormLabel for="communityName">
-                  Friendly Name<span className="mandatory-field">*</span>
+                  Destination Name<span className="mandatory-field">*</span>
                 </FormLabel>
                 <Field
                   name="streamFriendlyName"

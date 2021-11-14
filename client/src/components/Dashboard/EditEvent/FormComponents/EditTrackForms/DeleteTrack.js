@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 
+import { deleteTrack } from "./../../../../../actions";
+
 const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
@@ -26,6 +28,8 @@ const DeleteTrack = ({ open, handleClose, id }) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { trackDetails } = useSelector((state) => state.event);
 
   return (
     <>
@@ -56,6 +60,7 @@ const DeleteTrack = ({ open, handleClose, id }) => {
             className="btn btn-outline-text btn-primary"
             onClick={() => {
               //   dispatch(deleteBooth(id));
+              dispatch(deleteTrack(id));
               handleClose();
             }}
           >

@@ -162,11 +162,12 @@ const renderTextArea = ({
 
 const renderReactSelect = ({
   input,
+  isMulti,
+  meta: { touched, error, warning },
   styles,
   menuPlacement,
   options,
   defaultValue,
-  isMulti,
   name,
 }) => (
   <div>
@@ -194,6 +195,14 @@ const AddNewSession = ({
   submitting,
 }) => {
   let speakerOptions = [];
+  let trackOptions = [];
+
+  const { tracks } = useSelector((state) => state.event);
+
+  for (let element of tracks) {
+    trackOptions.push({ value: element._id, label: element.name });
+  }
+
   const { error, isLoading } = useSelector((state) => state.session);
 
   const { communityManagers } = useSelector((state) => state.community);
@@ -238,100 +247,114 @@ const AddNewSession = ({
   const eventEndDateTime = new Date(endTime);
 
   const onSubmit = (formValues) => {
-    console.log(formValues);
-    let speakersArray = [];
-    let hostArray = [];
+    if (!formValues.tracks) {
+      // Tracks are required
+      dispatch(
+        showSnackbar("error", "Each session must be associated with a track.")
+      );
+    } else {
+      console.log(formValues);
+      let speakersArray = [];
+      let tracksArray = [];
+      let hostArray = [];
 
-    if (formValues.speaker !== undefined)
-      for (let element of formValues.speaker) {
-        speakersArray.push(element.value);
+      if (formValues.speaker !== undefined) {
+        for (let element of formValues.speaker) {
+          speakersArray.push(element.value);
+        }
       }
 
-    if (formValues.hosts !== undefined) {
-      for (let element of formValues.hosts) {
-        hostArray.push(element.value);
+      for (let element of formValues.tracks) {
+        tracksArray.push(element.value);
       }
-    }
 
-    const ModifiedFormValues = {};
+      if (formValues.hosts !== undefined) {
+        for (let element of formValues.hosts) {
+          hostArray.push(element.value);
+        }
+      }
 
-    // Activity type is required
+      const ModifiedFormValues = {};
 
-    if (!formValues.activityType) {
-      // Please choose activity type
+      // Activity type is required
 
-      dispatch(showSnackbar("warning", "Please choose an activity type"));
-      return;
-    }
+      if (!formValues.activityType) {
+        // Please choose activity type
 
-    ModifiedFormValues.type = formValues.activityType.value;
-    ModifiedFormValues.name = formValues.name;
-    ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.startDate = formValues.startDate;
-    ModifiedFormValues.endDate = formValues.endDate;
-    ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
-    ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
-    ModifiedFormValues.speakers = speakersArray;
-    ModifiedFormValues.tags = formValues.tags;
-    ModifiedFormValues.host = hostArray;
+        dispatch(showSnackbar("warning", "Please choose an activity type"));
+        return;
+      }
 
-    if (
-      !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
-    ) {
-      // Atleast one tag for each session is required
-      dispatch(showSnackbar("warning", "Atleast one tag is required."));
-      return;
-    }
+      ModifiedFormValues.type = formValues.activityType.value;
+      ModifiedFormValues.name = formValues.name;
+      ModifiedFormValues.description = formValues.description;
+      ModifiedFormValues.startDate = formValues.startDate;
+      ModifiedFormValues.endDate = formValues.endDate;
+      ModifiedFormValues.startTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
+      ModifiedFormValues.endTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
+      ModifiedFormValues.speakers = speakersArray;
+      ModifiedFormValues.tags = formValues.tags;
+      ModifiedFormValues.host = hostArray;
+      ModifiedFormValues.tracks = tracksArray;
 
-    // Atleast one host is required
-    if (!(typeof hostArray !== "undefined" && hostArray.length > 0)) {
+      if (
+        !(typeof formValues.tags !== "undefined" && formValues.tags.length > 0)
+      ) {
+        // Atleast one tag for each session is required
+        dispatch(showSnackbar("warning", "Atleast one tag is required."));
+        return;
+      }
+
       // Atleast one host is required
+      if (!(typeof hostArray !== "undefined" && hostArray.length > 0)) {
+        // Atleast one host is required
 
-      dispatch(showSnackbar("warning", "Atleast one host is required."));
-      return;
-    }
+        dispatch(showSnackbar("warning", "Atleast one host is required."));
+        return;
+      }
 
-    if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
-      // Session start Date & time must be withing event timeline
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Session start Date time must be within event timeline"
-        )
-      );
-      return;
-    }
-    if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
-      // Session end Date & time must be withing event timeline
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Session end Date & time must be within event timeline"
-        )
-      );
-      return;
-    }
+      if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
+        // Session start Date & time must be withing event timeline
+        dispatch(
+          showSnackbar(
+            "warning",
+            "Session start Date time must be within event timeline"
+          )
+        );
+        return;
+      }
+      if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
+        // Session end Date & time must be withing event timeline
+        dispatch(
+          showSnackbar(
+            "warning",
+            "Session end Date & time must be within event timeline"
+          )
+        );
+        return;
+      }
 
-    if (
-      new Date(ModifiedFormValues.startTime) >=
-      new Date(ModifiedFormValues.endTime)
-    ) {
-      // Session start Date & Time must be less than session end Date & Time
-      dispatch(
-        showSnackbar(
-          "warning",
-          "Session start Date & Time must be less than session end Date & Time"
-        )
-      );
-      return;
-    }
+      if (
+        new Date(ModifiedFormValues.startTime) >=
+        new Date(ModifiedFormValues.endTime)
+      ) {
+        // Session start Date & Time must be less than session end Date & Time
+        dispatch(
+          showSnackbar(
+            "warning",
+            "Session start Date & Time must be less than session end Date & Time"
+          )
+        );
+        return;
+      }
 
-    if (
-      !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
-      !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
-    ) {
-      // only in this case we will allow this session to be created
-      dispatch(createSession(ModifiedFormValues, id));
+      if (
+        !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
+        !(new Date(ModifiedFormValues.endTime) > eventEndDateTime)
+      ) {
+        // only in this case we will allow this session to be created
+        dispatch(createSession(ModifiedFormValues, id));
+      }
     }
   };
 
@@ -349,7 +372,6 @@ const AddNewSession = ({
 
   if (error) {
     dispatch(errorTrackerForCreateSession());
-    alert(error);
     return;
   }
 
@@ -384,11 +406,24 @@ const AddNewSession = ({
                 <div className="mb-4 overlay-form-input-row">
                   <FormLabel for="communityName">Activity type</FormLabel>
                   <Field
+                    isMulti={false}
                     name="activityType"
                     placeholder="Select one activity"
                     styles={styles}
                     menuPlacement="bottom"
                     options={activityOptions}
+                    component={renderReactSelect}
+                  />
+                </div>
+                <div className="mb-4 overlay-form-input-row">
+                  <FormLabel for="communityName">Select track(s)</FormLabel>
+                  <Field
+                    isMulti={true}
+                    name="tracks"
+                    placeholder="Select track"
+                    styles={styles}
+                    menuPlacement="bottom"
+                    options={trackOptions}
                     component={renderReactSelect}
                   />
                 </div>
@@ -512,6 +547,9 @@ const validate = (formValues) => {
   console.log(formValues.name);
   if (!formValues.name) {
     errors.name = "Name is required";
+  }
+  if (!formValues.tracks) {
+    errors.tracks = "Tracks are required";
   }
   if (!formValues.description) {
     errors.description = "Description is required";

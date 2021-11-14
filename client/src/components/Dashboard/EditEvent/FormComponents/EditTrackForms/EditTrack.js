@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
 import { connect, useSelector } from "react-redux";
 import { IconButton } from "@material-ui/core";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { Field, reduxForm } from "redux-form";
+import { updateTrack, showSnackbar } from "./../../../../../actions";
 
 const Paper = styled.div`
   width: 400px !important;
@@ -91,9 +93,21 @@ const EditTrack = ({
   submitting,
   handleSubmit,
   reset,
+  id,
 }) => {
+  const dispatch = useDispatch();
+
+  const { trackDetails } = useSelector((state) => state.event);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    if (!formValues.name || !formValues.description) {
+      dispatch(showSnackbar("Track name & Description are required."));
+      return;
+    }
+
+    dispatch(updateTrack(formValues, id));
   };
 
   return (
@@ -181,14 +195,14 @@ const EditTrack = ({
 
 const mapStateToProps = (state) => ({
   initialValues: {
-    name: state.track
-      ? state.track.trackDetails && state.track.trackDetails.name
-        ? state.track.trackDetails.name
+    name: state.event
+      ? state.event.trackDetails && state.event.trackDetails.name
+        ? state.event.trackDetails.name
         : ""
       : "",
-    description: state.track
-      ? state.track.trackDetails && state.track.trackDetails.description
-        ? state.track.trackDetails.description
+    description: state.event
+      ? state.event.trackDetails && state.event.trackDetails.description
+        ? state.event.trackDetails.description
         : ""
       : "",
   },
