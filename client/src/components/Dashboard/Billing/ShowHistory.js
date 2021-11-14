@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { SwipeableDrawer } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
@@ -8,12 +8,22 @@ import PayoutHistoryListFields from "./../HelperComponent/PayoutComponents/Payou
 import PayoutHistoryDetailsCard from "./../HelperComponent/PayoutComponents/PayoutHistoryDetailsCard";
 import NoContentFound from "../../NoContent";
 import NoPayoutHistory from "./../../../assets/images/no-transaction.svg";
+import { fetchPaypalPayouts } from "../../../actions";
+
+import { useParams } from "react-router-dom";
 
 const renderPayoutsList = (payouts) => {
   return payouts.map((payout) => {
     return (
       <PayoutHistoryDetailsCard
-      //   Requested at processed at amount status Payout Id paypal email
+        payoutId={payout.payoutId}
+        id={payout._id}
+        key={payout._id}
+        email={payout.email}
+        amount={payout.amount}
+        requestedAt={payout.createdAt}
+        processedAt={payout.processedAt}
+        status={payout.status}
       />
     );
   });
@@ -21,6 +31,13 @@ const renderPayoutsList = (payouts) => {
 
 const ShowHistory = ({ open, handleClose }) => {
   const { payouts } = useSelector((state) => state.community);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const communityId = params.id;
+
+  useEffect(() => {
+    dispatch(fetchPaypalPayouts(communityId));
+  }, []);
 
   return (
     <>

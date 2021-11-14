@@ -181,6 +181,7 @@ const EventManagement = () => {
         moderators,
         hosts,
         archived,
+        type,
       } = communityEvent;
 
       let imgUrl = " #";
@@ -204,6 +205,7 @@ const EventManagement = () => {
           moderators={moderators}
           hosts={hosts}
           archived={archived}
+          type={type}
         />
       );
     });

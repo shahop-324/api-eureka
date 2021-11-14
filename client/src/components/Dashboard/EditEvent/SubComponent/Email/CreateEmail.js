@@ -1,12 +1,33 @@
 import React from "react";
 import styled from "styled-components";
+
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import EmailSVG from "./../../../../assets/images/email.svg";
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import { IconButton } from "@material-ui/core";
+
+import Select from "react-select";
+
+const styles = {
+  control: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    color: "#757575",
+  }),
+};
 
 const Heading = styled.div`
   font-size: 1.1rem;
@@ -22,17 +43,11 @@ const HeaderFooter = styled.div`
 const FormLabel = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
-  font-size: 0.86rem;
+  font-size: 0.76rem;
   color: #494949;
 `;
 
-const Image = styled.img`
-  height: 360px;
-  width: auto;
-  object-fit: contain;
-`;
-
-const EmailConfirmation = ({ open, handleClose }) => {
+const CreateEmail = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -45,23 +60,26 @@ const EmailConfirmation = ({ open, handleClose }) => {
       >
         <div className="" style={{ width: "520px" }}>
           <HeaderFooter className="p-3">
-            <Heading className="">Mail confirmation</Heading>
+            <Heading className="">Create Mail Template</Heading>
           </HeaderFooter>
 
-          <DialogContent
-            className="py-4 d-flex flex-column align-items-center"
-            style={{}}
-          >
+          <DialogContent className="py-4">
             {/* Here write main content */}
-
-            <Image className="mb-4" src={EmailSVG} />
-
+            <div className="mb-2">
+              <FormLabel className="mb-2">Template Name</FormLabel>
+              <input
+                type="text"
+                placeholder="Speakers Annoucement"
+                className="form-control"
+              ></input>
+            </div>
             <div className="">
-              <FormLabel className="mb-2">
-                This mail will be sent to all 4 attendees of Test Event.
-               
-              </FormLabel>
-              
+              <FormLabel className="mb-2">Subject</FormLabel>
+              <input
+                type="text"
+                placeholder="e.g. Announcing New speaker line up"
+                className="form-control"
+              ></input>
             </div>
           </DialogContent>
           <HeaderFooter className="p-3">
@@ -73,10 +91,7 @@ const EmailConfirmation = ({ open, handleClose }) => {
                 Cancel
               </button>
               <button className="btn btn-primary btn-outline-text">
-                  <SendRoundedIcon className="me-2" />
-                  <span>
-                Send Email
-                </span>
+                Create Mail Template
               </button>
             </DialogActions>
           </HeaderFooter>
@@ -86,4 +101,4 @@ const EmailConfirmation = ({ open, handleClose }) => {
   );
 };
 
-export default EmailConfirmation;
+export default CreateEmail;

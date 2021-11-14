@@ -322,4 +322,16 @@ router.get(
 
 router.get("/getShowcaseEvents", globalController.getShowcaseEvents);
 
+router.post(
+  "/editPayPalPayoutEmail/:communityId",
+  authController.protectCommunity,
+  globalController.editPayPalPayoutEmail
+);
+
+router.get("/verifyPayPalEmail/:id", globalController.verifyPayPalEmail);
+
+router.get("/fetchPaypalPayouts/:communityId", authController.protectCommunity, globalController.fetchPaypalPayouts);
+
+router.post("/createPayPalPayoutRequest/:communityId", authController.protectCommunity, globalController.createPayPalPayoutRequest);
+
 module.exports = router;

@@ -1,53 +1,70 @@
 import React from "react";
 import "./../../../../assets/Sass/DataGrid.scss";
 import dateFormat from "dateformat";
-import Faker from "faker";
 import Chip from "@mui/material/Chip";
+import Tooltip from "@mui/material/Tooltip";
 
 const PayoutHistoryDetailsCard = ({
-  type,
-  planName,
-  currency,
-  price,
-  transactionId,
-  purchasedBy,
-  timestamp,
+  payoutId,
+  email,
+  amount,
+  requestedAt,
+  processedAt,
+  status,
 }) => {
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
   return (
     <div
       className="registrations-list-fields-container mb-4"
-      style={{ gridTemplateColumns: "1fr 1.2fr 1fr 1.5fr 2fr 2fr" }}
+      style={{
+        gridTemplateColumns: " 1fr 1.5fr 2fr 2fr 1fr 1fr",
+        alignItems: "center",
+      }}
     >
       <div className="registrations-name-field">
-        <div className="registrations-field-label">
-          {/* Payout Id */}
-          <span>7jui82ijiouiUJKH</span>
-        </div>
+        <Tooltip title={payoutId}>
+          <div className="registrations-field-label">
+            {/* Payout Id */}
+
+            <span>{truncateText(payoutId, 10)}</span>
+          </div>
+        </Tooltip>
       </div>
+
       <div className="registrations-name-field">
-        <div className="registrations-field-label">
-          {Faker.internet.email()}
-        </div>
+        <Tooltip title={email}>
+          <div className="registrations-field-label">
+            <span> {truncateText(email, 14)} </span>
+          </div>
+        </Tooltip>
       </div>
+
       <div className="registrations-email-field">
         <div className="registrations-field-label">
-          {dateFormat(Date.now(), "mmm dS, yyyy, h:MM TT")}
+          {dateFormat(new Date(requestedAt), "mmm dS, yyyy, h:MM TT")}
         </div>
       </div>
       <div className="registrations-phone-field">
         <div className="registrations-field-label">
-          {dateFormat(Date.now(), "mmm dS, yyyy, h:MM TT")}
+          {processedAt ? (
+            dateFormat(new Date(processedAt), "mmm dS, yyyy, h:MM TT")
+          ) : (
+            <Chip label="-----" variant="outlined" />
+          )}
         </div>
       </div>
       <div className="registrations-phone-field">
         <div className="registrations-field-label">
           {/* Status */}
-          <Chip label="Processing" color="primary" variant="outlined" />
+          <Chip label={status} color="primary" variant="outlined" />
         </div>
       </div>
       <div className="registrations-amount-field">
         <div className="registrations-field-label">
-          {"$500"}
+          {`$${amount.toFixed(2)}`}
           {/* Amount */}
         </div>
       </div>

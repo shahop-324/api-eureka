@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import styled from "styled-components";
 
@@ -7,8 +8,11 @@ import Select from "react-select";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import { useSelector, useDispatch } from "react-redux";
 
 import { reduxForm, Field } from "redux-form";
+import { createPayPalPayoutrequest, showSnackbar } from "../../../actions";
+import { useParams } from "react-router-dom";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -79,12 +83,54 @@ const renderInput = ({
   );
 };
 
-const Withdraw = ({ open, handleClose, handleSubmit }) => {
+const Withdraw = ({ open, handleClose, handleSubmit, handleOpenEditEmail }) => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const communityId = params.id;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const {
+    isStripeEnabled,
+    verifiedStripeAccountId,
+    payPalPayoutEmailId,
+    paypalEmailIsVerified,
+    amountToWithdraw,
+  } = useSelector((state) => state.community.communityDetails);
+
   const onSubmit = (formValues) => {
+    if (formValues.amount * 1 <= 0) {
+      dispatch(showSnackbar("warning", "Please enter a valid amount."));
+      return;
+    }
+    if (formValues.amount * 1 > amountToWithdraw) {
+      //
+      dispatch(
+        showSnackbar(
+          "warning",
+          `You can withdraw maximum $${amountToWithdraw.toFixed(
+            2
+          )} at the moment`
+        )
+      );
+      return;
+    }
+    if (!paypalEmailIsVerified) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          `You must verify your paypal email to request payout.`
+        )
+      );
+    }
     console.log(formValues);
+    dispatch(
+      createPayPalPayoutrequest(
+        communityId,
+        payPalPayoutEmailId,
+        formValues.amount
+      )
+    );
   };
 
   return (
@@ -122,12 +168,21 @@ const Withdraw = ({ open, handleClose, handleSubmit }) => {
             >
               <div className="mb-4 overlay-form-input-row mb-3">
                 <FormLabel Forhtml="eventEndDate" className="mb-2">
-                  Paypal Email <a href="#">Change Email</a>
+                  Paypal Email{" "}
+                  <a
+                    href="#"
+                    onClick={() => {
+                      handleClose();
+                      handleOpenEditEmail();
+                    }}
+                  >
+                    Change Email
+                  </a>
                 </FormLabel>
                 <input
                   className="form-control mb-2"
                   type="email"
-                  value={"omprakash.shah@bluemeet.in"}
+                  value={payPalPayoutEmailId}
                   disabled
                 />
                 <Small>
@@ -137,7 +192,7 @@ const Withdraw = ({ open, handleClose, handleSubmit }) => {
 
               <div className="mb-4 overlay-form-input-row mb-4">
                 <FormLabel Forhtml="eventEndDate" className="mb-2">
-                  Enter amount (available $5500)
+                  Enter amount (available ${amountToWithdraw.toFixed(2)})
                 </FormLabel>
                 <Field
                   name="amount"

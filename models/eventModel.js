@@ -457,6 +457,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default: "#3567C3",
     },
+    landingPageColor: {
+      type: String,
+      default: "#3567C3",
+    },
     liveChat: {
       type: Boolean,
       default: true,
@@ -527,6 +531,7 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     // * Done I have to do research on how recording will work and where it will be stored.
   },
   {

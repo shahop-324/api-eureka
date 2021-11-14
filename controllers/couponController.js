@@ -3,6 +3,7 @@ const Coupon = require("../models/couponModel");
 const Event = require("../models/eventModel");
 const mongoose = require("mongoose");
 const catchAsync = require("../utils/catchAsync");
+const Ticket = require("./../models/ticketModel");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -63,32 +64,36 @@ exports.CreateNewCoupon = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllCoupons = catchAsync(async (req, res, next) => {
-  const eventId = req.params.eventId;
+  try {
+    const eventId = req.params.eventId;
 
-  let couponDocs = await Coupon.find({
-    eventId: mongoose.Types.ObjectId(eventId),
-  }).populate("tickets", "name");
+    let couponDocs = await Coupon.find({
+      eventId: mongoose.Types.ObjectId(eventId),
+    }).populate("tickets", "name");
 
-  // Filter out all deleted coupons
+    // Filter out all deleted coupons
 
-  couponDocs = couponDocs.filter((el) => !el.deleted);
+    couponDocs = couponDocs.filter((el) => !el.deleted);
 
-  // Also fetch all active and non-deleted tickets for this event
+    // Also fetch all active and non-deleted tickets for this event
 
-  const tickets = await Ticket.find({
-    $and: [
-      { eventId: mongoose.Types.ObjectId(eventId) },
-      { active: true },
-      { deleted: false },
-      { soldOut: false },
-    ],
-  });
+    const tickets = await Ticket.find({
+      $and: [
+        { eventId: mongoose.Types.ObjectId(eventId) },
+        { active: true },
+        { deleted: false },
+        { soldOut: false },
+      ],
+    });
 
-  res.status(200).json({
-    status: "success",
-    data: couponDocs,
-    tickets: tickets,
-  });
+    res.status(200).json({
+      status: "success",
+      data: couponDocs,
+      tickets: tickets,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.UpdateCoupon = catchAsync(async (req, res, next) => {

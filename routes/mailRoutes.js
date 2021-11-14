@@ -12,7 +12,7 @@ router.post(
   mailController.createNewMail
 );
 
-// * Get all mails of one community
+// * Get all mails of one event
 
 router.get(
   "/getMails/:eventId",

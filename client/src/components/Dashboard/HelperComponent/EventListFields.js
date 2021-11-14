@@ -4,9 +4,6 @@ import './../../../assets/Sass/DataGrid.scss';
 const EventListFields = () => {
   return (
     <div className="events-list-fields-container">
-      {/* <div className="event-edit-field">
-        <div className="event-field-label"></div>
-      </div> */}
       <div className="event-card-field ">
         <div className="event-field-label ms-3">Event</div>
       </div>
@@ -26,7 +23,7 @@ const EventListFields = () => {
         <div className="event-field-label">Running Status</div>
       </div>
       <div className="event-stage-field">
-        <div className="event-field-label">Stage</div>
+        <div className="event-field-label">Actions</div>
       </div>
     </div>
   );

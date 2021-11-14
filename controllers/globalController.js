@@ -24,6 +24,8 @@ const CommunityVideo = require("./../models/videoModel");
 const EventVideo = require("./../models/eventVideosModel");
 const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
 const RegistrationForm = require("./../models/registrationFormModel");
+const PaypalEmailChange = require("./../models/paypalEmailChangeModel");
+const PaypalPayout = require("./../models/paypalPayoutModel");
 
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -1971,11 +1973,267 @@ exports.duplicateEvent = catchAsync(async (req, res, next) => {
 exports.getShowcaseEvents = catchAsync(async (req, res, next) => {
   const events = await Event.find({ showOnGetStarted: true });
 
-  console.log("These are events to be shown as Demo events", events);
-
   res.status(200).json({
     status: "success",
     data: events,
   });
 });
 
+exports.editPayPalPayoutEmail = catchAsync(async (req, res, next) => {
+  const communityId = req.body.communityId;
+
+  const communityDoc = await Community.findById(communityId);
+
+  const email = req.body.email;
+
+  // Create new paypal Email change request and expire all previous ones for this community
+
+  const allPreviousEmailChangeRequests = await PaypalEmailChange.find({
+    communityId: mongoose.Types.ObjectId(communityId),
+  });
+
+  for (let element of allPreviousEmailChangeRequests) {
+    await PaypalEmailChange.findByIdAndUpdate(
+      element._id,
+      { status: "Expired" },
+      { new: true, validateModifiedOnly: true }
+    );
+  }
+
+  const paypalEmailUpdateRequest = await PaypalEmailChange.create({
+    communityId: communityId,
+    email: email,
+    createdAt: Date.now(),
+    status: "Active",
+  });
+
+  communityDoc.payPalPayoutEmailId = email;
+
+  communityDoc.paypalEmailIsVerified = false;
+
+  const updatedCommunity = await communityDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  // Create a notification for this community and send verification mail to newly registered email
+
+  const msg = {
+    to: email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: "Please verify your Paypal Payout email.",
+    text: `Hi, please click on the button below to verify this email for reciving Paypal Payouts for your Bluemeet Community ${
+      updatedCommunity.name
+    }. ${`http://localhost:3001/verify-paypal-email/${paypalEmailUpdateRequest._id}`}`,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  sgMail
+    .send(msg)
+    .then(async () => {
+      console.log("Verification mail sent to newly added email");
+    })
+    .catch(async (error) => {
+      console.log("Failed to send verification mail to newly added email.");
+    });
+
+  // Send a alert mail to community superAdmin
+
+  const superAdmin = communityDoc.superAdmin;
+  const userDoc = await User.findById(superAdmin);
+  const superAdminEmail = userDoc.email;
+
+  const msgToSuperAdmin = {
+    to: superAdminEmail, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: "Alert!, Bluemeet Paypal Payout email changed.",
+    text: `Hi, This is to inform you that your Bluemeet community ${updatedCommunity.name} Paypal Payout email has been updated to ${email}. Please verify the same through mail sent on provided email or if not done by you, then report immediately at support@bluemeet.in`,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  sgMail
+    .send(msgToSuperAdmin)
+    .then(async () => {
+      console.log("Confirmation mail sent to super admin email");
+    })
+    .catch(async (error) => {
+      console.log("Failed to send confirmation mail sent to super admin email");
+    });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedCommunity,
+  });
+});
+
+exports.verifyPayPalEmail = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+
+  const requestObject = await PaypalEmailChange.findById(id);
+
+  if (requestObject.status === "Active") {
+    // Active
+
+    // Mark this email as verified in community doc and expire this request Object
+
+    const communityId = requestObject.communityId;
+
+    const communityDoc = await Community.findByIdAndUpdate(
+      communityId,
+      { paypalEmailIsVerified: true, payPalPayoutEmailId: requestObject.email },
+      { new: true, validateModifiedOnly: true }
+    );
+
+    requestObject.status = "Expired";
+    await requestObject.save({ new: true, validateModifiedOnly: true });
+
+    res.status(200).json({
+      status: "success",
+      succeded: true,
+    });
+  } else {
+    // Expired
+
+    res.status(200).json({
+      status: "success",
+      expired: true,
+    });
+  }
+});
+
+exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
+  // Create a payout request and send a confirmation mail to verified Paypal email and super admin
+  // Create a notification for community
+  // Also send a mail to payouts@bluemeet.in to proceed with this payout handling
+
+  // * NOTE => We also need to provide payoutId
+
+  try {
+    const communityId = req.body.communityId;
+    const email = req.body.email;
+    const amount = req.body.amount;
+
+    const communityDoc = await Community.findById(communityId);
+
+    const superAdmin = communityDoc.superAdmin;
+    const userDoc = await User.findById(superAdmin);
+    const superAdminEmail = userDoc.email;
+
+    // Make checks if requested amount is below or equal to available balance for community
+    // Make sure email is verified
+
+    // Deduct the amount from from community current balance
+
+    if (amount * 1 <= communityDoc.amountToWithdraw) {
+      if (email.toString() === communityDoc.payPalPayoutEmailId.toString()) {
+        if (communityDoc.paypalEmailIsVerified) {
+          // Only in this case proceed with the payout otherwise deny it
+
+          const newPayout = await PaypalPayout.create({
+            communityId: communityId,
+            email: email,
+            createdAt: Date.now(),
+            amount: amount,
+            status: "Pending",
+          });
+
+          newPayout.payoutId = newPayout._id;
+          await newPayout.save({ new: true, validateModifiedOnly: true });
+
+          communityDoc.amountToWithdraw =
+            communityDoc.amountToWithdraw * 1 - amount * 1;
+
+            await communityDoc.save({new: true, validateModifiedOnly: true});
+
+          // Mail to superadmin & Mail to Verified PayPal email
+
+          const msgToSuperAdmin = {
+            to: superAdminEmail, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Your payout of $${amount} is on its way.`,
+            text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(msgToSuperAdmin)
+            .then(async () => {
+              console.log("Confirmation mail sent to super admin email");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail sent to super admin email"
+              );
+            });
+
+          const msgToVerifiedEmail = {
+            to: email, // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Your payout of $${amount} is on its way.`,
+            text: `Hi, This is to inform you that we have received your request for payout and we are working on that and it will be safely delivered to your paypal account associated with this email ${email} in 4-6 hours.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(msgToVerifiedEmail)
+            .then(async () => {
+              console.log("Confirmation mail sent to verified paypal email");
+            })
+            .catch(async (error) => {
+              console.log(
+                "Failed to send confirmation mail sent to verified paypal email"
+              );
+            });
+
+          // Mail to payout team
+
+          const msgToPayoutTeam = {
+            to: "payments@bluemeet.in", // Change to your recipient
+            from: "shreyanshshah242@gmail.com", // Change to your verified sender
+            subject: `Please process payout with payout Id ${newPayout._id}`,
+            text: `We have recieved a payout request with this payout Id ${newPayout._id}. Please process it ASAP with utmost care.`,
+            // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+          };
+
+          sgMail
+            .send(msgToPayoutTeam)
+            .then(async () => {
+              console.log("Info sent to Payout Team.");
+            })
+            .catch(async (error) => {
+              console.log("Failed to send info to payout team.");
+            });
+
+          res.status(200).json({
+            status: "success",
+            data: newPayout,
+          });
+        }
+      }
+    } else {
+      res.status(400).json({
+        status: "error",
+        code: "Invalid payout request",
+        message:
+          "Either amount specified is higher than current available balance or email is not present or verified.",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.fetchPaypalPayouts = catchAsync(async (req, res, next) => {
+  const communityId = req.params.communityId;
+
+  // Fetch all payouts for this communityId
+
+  const payouts = await PaypalPayout.find({
+    communityId: mongoose.Types.ObjectId(communityId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: payouts,
+  });
+});

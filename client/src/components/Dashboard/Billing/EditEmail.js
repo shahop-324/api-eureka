@@ -7,8 +7,10 @@ import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-
+import {useDispatch} from 'react-redux';
 import { reduxForm, Field } from "redux-form";
+import { editPaypalPayoutEmail } from "../../../actions";
+import { useParams } from "react-router";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -81,11 +83,17 @@ const renderInput = ({
 };
 
 const EditEmail = ({ open, handleClose, handleSubmit }) => {
+  const params = useParams();
+  const communityId = params.id;
+  const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    dispatch(editPaypalPayoutEmail(communityId, formValues.email, handleClose));
+
   };
 
   return (
@@ -99,7 +107,7 @@ const EditEmail = ({ open, handleClose, handleSubmit }) => {
           <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
             <div></div>
             <div className="coupon-overlay-form-headline">
-              Edit Paypal Email
+             Paypal Email
             </div>
             <div className="overlay-form-close-button" onClick={handleClose}>
               <IconButton aria-label="delete">
@@ -128,7 +136,7 @@ const EditEmail = ({ open, handleClose, handleSubmit }) => {
                   Paypal Account Email
                 </FormLabel>
                 <Field
-                  name="Email"
+                  name="email"
                   type="email"
                   placeholder=""
                   classes="form-control"

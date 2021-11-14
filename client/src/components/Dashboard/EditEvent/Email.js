@@ -7,7 +7,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import EmailListFields from "./GridComponents/Email/ListFields";
 import EmailDetailsCard from "./GridComponents/Email/DetailsCard";
-import CreateMail from "./SubComponent/CreateEmail";
+import CreateEmail from "./SubComponent/Email/CreateEmail";
 import DndEmailEditor from "./SubComponent/DndEmailEditor";
 
 const SectionHeading = styled.div`
@@ -82,14 +82,14 @@ const useStyles = makeStyles((theme) => ({
 const Email = () => {
   const classes = useStyles();
 
-  const [openCreateMail, setOpenCreateMail] = React.useState(false);
+  const [openCreateEmail, setOpenCreateEmail] = React.useState(false);
 
-  const handleOpenCreateMail = () => {
-    setOpenCreateMail(true);
+  const handleOpenCreateEmail = () => {
+    setOpenCreateEmail(true);
   };
 
-  const handleCloseCreateMail = () => {
-    setOpenCreateMail(false);
+  const handleCloseCreateEmail = () => {
+    setOpenCreateEmail(false);
   };
 
   return (
@@ -118,7 +118,7 @@ const Email = () => {
 
           <button
             className="btn btn-primary btn-outline-text"
-            onClick={handleOpenCreateMail}
+            onClick={handleOpenCreateEmail}
           >
             {/*  Mail icon here */}
             <MailOutlineOutlinedIcon
@@ -143,7 +143,8 @@ const Email = () => {
         </div>
       </div>
       {/* <CreateMail open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
-      <DndEmailEditor open={openCreateMail} handleClose={handleCloseCreateMail} />
+      {/* <DndEmailEditor open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
+      <CreateEmail open={openCreateEmail} handleClose={handleCloseCreateEmail} />
     </>
   );
 };

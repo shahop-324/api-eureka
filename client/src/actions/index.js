@@ -8851,29 +8851,11 @@ export const createMail =
         })
       );
 
-      dispatch(
-        snackbarActions.openSnackBar({
-          message: "New mail added successfully to draft!",
-          severity: "success",
-        })
-      );
-
-      setTimeout(function () {
-        closeSnackbar();
-      }, 6000);
+      dispatch(showSnackbar("success", "New mail added successfully!"))
     } catch (error) {
       console.log(error);
 
-      dispatch(
-        snackbarActions.openSnackBar({
-          message: "Failed to save mail. Please try again.",
-          severity: "error",
-        })
-      );
-
-      setTimeout(function () {
-        closeSnackbar();
-      }, 6000);
+      dispatch(showSnackbar("error", "Failed to create mail, Please try again."))
     }
   };
 
@@ -8909,16 +8891,7 @@ export const fetchMails = (eventId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch mails. Please try again later.",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("error", "Failed to fetch mails. Please try again later."))
   }
 };
 
@@ -8954,16 +8927,7 @@ export const getOneMail = (mailId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch mail details. Please try again later!",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("error", "Failed to fetch mail details. Please try again later!"));
   }
 };
 
@@ -9002,7 +8966,7 @@ export const updateMail =
 
       dispatch(
         snackbarActions.openSnackBar({
-          message: "Successfully Update mail!",
+          message: "Mail saved successfully!",
           severity: "success",
         })
       );
@@ -9068,12 +9032,14 @@ export const deleteMail = (mailId) => async (dispatch, getState) => {
     }, 6000);
   } catch (error) {
     console.log(error);
+    dispatch(showSnackbar("error", "Failed to delete mail, Please try again later."))
   }
 };
 
 // Send mail
 
-export const SendMail = (mailId) => async (dispatch, getState) => {
+export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
+  //  recepients will be an array of emails to which email will be sent
   try {
     let res = await fetch(`${BaseURL}mail/sendMail/${mailId}`, {
       method: "POST",
@@ -9130,13 +9096,12 @@ export const SendMail = (mailId) => async (dispatch, getState) => {
 // Send test mail
 
 export const sendTestMail =
-  (mailId, mailInfoObject, receiverMail) => async (dispatch, getState) => {
+  (mailId, receiverMail) => async (dispatch, getState) => {
     try {
       let res = await fetch(`${BaseURL}mail/sendTestMail/${mailId}`, {
         method: "POST",
 
         body: JSON.stringify({
-          mailInfoObject: mailInfoObject,
           receiverMail: receiverMail,
         }),
 
@@ -11770,6 +11735,8 @@ export const fetchPaypalPayouts =
       }
       const result = await res.json();
 
+      console.log(result.data);
+
       dispatch(
         communityActions.FetchPayouts({
           payouts: result.data,
@@ -11839,7 +11806,7 @@ export const createPayPalPayoutrequest =
   };
 
 export const editPaypalPayoutEmail =
-  (communityId, email) => async (dispatch, getState) => {
+  (communityId, email, handleClose) => async (dispatch, getState) => {
     try {
       // Create a request to change paypal email
 
@@ -11873,6 +11840,8 @@ export const editPaypalPayoutEmail =
           community: result.data,
         })
       );
+
+      handleClose();
 
       dispatch(
         showSnackbar("success", "Please check provided email for verification.")
@@ -12017,3 +11986,4 @@ export const fetchShowcaseEvents = () => async (dispatch, getState) => {
     );
   }
 };
+

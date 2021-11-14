@@ -4,6 +4,7 @@ import { editEvent, showSnackbar } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
+import {IconButton} from "@material-ui/core";
 
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
@@ -28,6 +29,8 @@ import EditBasicDetailsForm from "./FormComponents/EditBasicDetailsForm";
 import { Link } from "react-router-dom";
 import MainEventSetupCheckList from "../Checklist/Main";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+
+
 
 import Switch from "@mui/material/Switch";
 
@@ -105,6 +108,9 @@ const EventLinkInput = styled.input`
 `;
 
 const EventOverview = (props) => {
+
+  
+
   const [openBasicForm, setOpenBasicForm] = useState(false);
 
   const [openWidget, setOpenWidget] = useState(false);
@@ -129,6 +135,8 @@ const EventOverview = (props) => {
     eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null
   );
   const [editMode, setEditMode] = useState(false);
+
+ 
 
   const { handleSubmit } = props;
 
@@ -358,7 +366,7 @@ const EventOverview = (props) => {
                 </buttton>
                 <div className="d-flex flex-row align-items-center mt-4">
                   <div style={{ fontWeight: "500", fontSize: "0.9rem" }}>
-                    Ticket Sell
+                    Ticket Sale
                   </div>
                   <Switch
                     {...label}
@@ -374,67 +382,10 @@ const EventOverview = (props) => {
                   />
                 </div>
               </div>
-              <EventDetailsHeading className="mb-4">
-                Event organised by
-              </EventDetailsHeading>
+              
               {/* // TODO We need to make it work properly */}
-              {/* <div className="form-group">
-                <div className="editable-mail-group-name d-flex flex-row align-items-center justify-content-between px-3">
-                  <EventLinkInput
-                    name="community name"
-                    type="text"
-                    readOnly={!editMode}
-                    className="mail-group-name-input px-4 py-3"
-                    style={{ width: "100%" }}
-                    onChange={(e) => {
-                      handleChangeTag(e);
-                    }}
-                    value={tag}
-                    id="tag"
-                    aria-describedby="community name"
-                    placeholder="Community name"
-                  />
-                  {!editMode ? (
-                    <EditRoundedIcon
-                      disabled={eventDetails.status === "Ended" ? true : false}
-                      onClick={() => {
-                        turnOnEditMode();
-                      }}
-                      className="chat-msg-hover-icon"
-                      style={{ position: "absolute", right: "10px" }}
-                    />
-                  ) : (
-                    <div className="d-flex flex-row align-items-center">
-                      <CheckRoundedIcon
-                        onClick={() => {
-                          if (tag === eventDetails.organisedBy) {
-                            dispatch(
-                              showSnackbar(
-                                "info",
-                                "Please make some changes to update organiser name."
-                              )
-                            );
-                          } else {
-                            dispatch(
-                              editEvent({ organisedBy: tag }, eventDetails._id)
-                            );
-                          }
-                        }}
-                        style={{ fill: "#188627" }}
-                        className="editable me-3"
-                      />
-                      <ClearRoundedIcon
-                        onClick={() => {
-                          resetTag();
-                          turnOffEditMode();
-                        }}
-                        style={{ fill: "#A51320" }}
-                        className="editable"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div> */}
+             
+              
             </EventDetails>
             <EventPromoImageContainer>
               <UploadEventImageForm />

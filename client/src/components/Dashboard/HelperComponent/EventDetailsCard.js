@@ -23,7 +23,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
-import UnarchiveRoundedIcon from '@mui/icons-material/UnarchiveRounded';
+import UnarchiveRoundedIcon from "@mui/icons-material/UnarchiveRounded";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -37,6 +37,30 @@ const MenuText = styled.span`
   font-weight: 500;
   font-size: 0.87rem;
   color: #212121;
+`;
+
+const EventTag = styled.div`
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  clip-path: polygon(100% 0, 93% 50%, 100% 100%, 0 100%, 0 0);
+  height: 30px;
+  min-width: 125px;
+  position: absolute;
+  background-color: #538bf7;
+  z-index: 10;
+  top: 5px;
+  left: -5px;
+
+  font-weight: 500;
+  font-family: "Ubuntu";
+  color: #ffffff;
+  font-size: 0.8rem;
+  text-align: center;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 15px;
 `;
 
 const StyledMenu = MUIStyled((props) => (
@@ -96,6 +120,7 @@ const EventDetailCard = ({
   moderators, // ids of moderators
   hosts, // ids of hosts
   archived,
+  type,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -134,22 +159,13 @@ const EventDetailCard = ({
         className="events-field-value-container"
         style={{ alignItems: "center" }}
       >
-        {/* <div className="event-edit-field me-2">
-          <Link
-            className="event-field-label event-edit-icon "
-            to={`/community/${communityId}/edit-event/${id}/event-overview`}
-          >
-            <IconButton>
-              <EditRoundedIcon />
-            </IconButton>
-          </Link>
-        </div> */}
         <div
           onClick={() => {
             window.location.href = `/community/${communityId}/edit-event/${id}/event-overview`;
           }}
           className="event-card-field event-img-name-container ms-3"
         >
+          <EventTag>{type}</EventTag>
           <div
             className="event-field-label field-label-value event-name-short-description-card"
             style={{ width: "100%" }}
@@ -157,7 +173,7 @@ const EventDetailCard = ({
             <img
               src={imgUrl}
               alt="event-poster"
-              style={{ width: "41%", height: "110px", borderRadius: "3px" }}
+              style={{ width: "41%", height: "110px", borderRadius: "10px" }}
             />
             <div className="event-name-and-description-wrapper">
               <div style={{ width: "100%", textDecoration: "none" }}>

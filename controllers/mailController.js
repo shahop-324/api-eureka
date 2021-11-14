@@ -1,5 +1,8 @@
 const catchAsync = require("./../utils/catchAsync");
-const Mail = require("./../models/MailModel");
+const Mail = require("./../models/eventMailModel");
+
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -68,14 +71,38 @@ exports.updateMail = catchAsync(async (req, res, next) => {
 
 exports.sendMail = catchAsync(async (req, res, next) => {
   const mailId = req.params.mailId;
+  const receivers = req.body.recepients;
+
+  const mailDoc = await Mail.findById(mailId);
 
   // * Send mail to all applicable candidates with personalisation.
 
+  for (let element of receivers) {
+    const msg = {
+      to: element, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: mailDoc.subject,
+      // text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+      html: mailDoc.html,
+    };
+
+    sgMail
+      .send(msg)
+      .then(async () => {
+        console.log("Mail sent successfully!");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send mail.");
+      });
+  }
+
   // * Update status of mailDoc to sent
+
+  mailDoc.status = "Sent";
+  await mailDoc.save({ new: true, validateModifiedOnly: true });
 
   res.status(200).json({
     status: "success",
-    data: mailId,
   });
 });
 
@@ -138,13 +165,29 @@ exports.getMails = catchAsync(async (req, res, next) => {
 exports.sendTestMail = catchAsync(async (req, res, next) => {
   const mailId = req.params.mailId;
 
-  const mailInfoObject = req.body.mailInfoObject;
-  const reciever = req.body.recieverMail;
+  const mailDoc = await Mail.findById(mailId);
+  const receiver = req.body.recieverMail;
 
-  // * Send a test mail using above information.
+  const msg = {
+    to: receiver, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: mailDoc.subject,
+    // text: `${totalNumOfCodes} Codes have been successfully applied to your Bluemeet Community. ${communityDoc.name}.`,
+    html: mailDoc.html,
+  };
 
-  res.status(200).json({
-    status: "success",
-    message: "Test mail sent successfully!",
-  });
+  sgMail
+    .send(msg)
+    .then(async () => {
+      res.status(200).json({
+        status: "success",
+        message: "Test mail sent successfully!",
+      });
+    })
+    .catch(async (error) => {
+      res.status(400).json({
+        status: "error",
+        message: "Failed to send test mail, Please try again.",
+      });
+    });
 });

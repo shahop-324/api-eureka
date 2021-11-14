@@ -10,6 +10,7 @@ import "./../../assets/Sass/Billing.scss";
 import styled from "styled-components";
 import Ripple from "./../ActiveStatusRipple";
 import EnterprisePlanCard from "./HelperComponent/BillingComponents/EnterprisePlanCard";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +18,7 @@ import {
   getStripeConnectLink,
   fetchCommunityTransactions,
   showSnackbar,
+  resendPayPalPayoutEmailVerificationLink,
 } from "../../actions";
 import { useParams } from "react-router-dom";
 import FreePlanCard from "./HelperComponent/BillingComponents/FreePlanCard";
@@ -134,9 +136,13 @@ const Amount = styled.div`
 `;
 
 const Billing = () => {
-  const { isStripeEnabled, verifiedStripeAccountId } = useSelector(
-    (state) => state.community.communityDetails
-  );
+  const {
+    isStripeEnabled,
+    verifiedStripeAccountId,
+    payPalPayoutEmailId,
+    paypalEmailIsVerified,
+    amountToWithdraw,
+  } = useSelector((state) => state.community.communityDetails);
 
   const [isClicked, setIsClicked] = React.useState(false);
 
@@ -147,6 +153,10 @@ const Billing = () => {
   const [openWithdraw, setOpenWithdraw] = useState(false);
 
   const [openEditEmail, setOpenEditEmail] = useState(false);
+
+  const handleOpenEditEmail = () => {
+    setOpenEditEmail(true);
+  }
 
   const handleCloseEditEmail = () => {
     setOpenEditEmail(false);
@@ -189,7 +199,7 @@ const Billing = () => {
 
   // Determine if currently logged in user is the community super admin
 
-  const { superAdmin } = useSelector(
+  const { superAdmin, _id } = useSelector(
     (state) => state.community.communityDetails
   );
 
@@ -216,12 +226,39 @@ const Billing = () => {
               <AmountToWithdraw className="me-3">
                 Amount to withdraw:{" "}
               </AmountToWithdraw>
-              <Amount>$5500</Amount>
+              <Amount>${amountToWithdraw}</Amount>
             </div>
 
             <div className="d-flex flex-row align-items-center">
               <button
                 onClick={() => {
+                  if (!payPalPayoutEmailId) {
+                    dispatch(
+                      showSnackbar(
+                        "warning",
+                        "There is no verified paypal email for this community. Please add email to withdraw."
+                      )
+                    );
+                    return;
+                  }
+                  if (payPalPayoutEmailId && !paypalEmailIsVerified) {
+                    dispatch(
+                      showSnackbar(
+                        "warning",
+                        "You must verify your PayPal Email in order to withdraw."
+                      )
+                    );
+                    return;
+                  }
+                  if (!amountToWithdraw * 1 > 0) {
+                    dispatch(
+                      showSnackbar(
+                        "warning",
+                        "You must have net positive balance to withdraw"
+                      )
+                    );
+                    return;
+                  }
                   setOpenWithdraw(true);
                 }}
                 className="btn btn-outline-text btn-primary"
@@ -248,34 +285,79 @@ const Billing = () => {
 
             {/* Email */}
 
-            <Email className="me-3">omprakash.shah@bluemeet.in</Email>
+            {payPalPayoutEmailId ? (
+              <Email className="me-3">omprakash.shah@bluemeet.in</Email>
+            ) : (
+              <Chip label="No Email on file" color="error" variant="outlined" />
+            )}
+
             {/* if email is not present then ask them to add email with a add button */}
 
             {/* Verified status */}
 
-            <Chip
-              label="Not verified"
-              color="error"
-              variant="outlined"
-              className="me-3"
-            />
+            {payPalPayoutEmailId && !paypalEmailIsVerified ? (
+              <Chip
+                label="Not verified"
+                color="error"
+                variant="outlined"
+                className=""
+              />
+            ) : (
+              <></>
+            )}
+
+            {payPalPayoutEmailId && paypalEmailIsVerified ? (
+              <Chip
+                label="Verified"
+                color="success"
+                variant="outlined"
+                className=""
+              />
+            ) : (
+              <></>
+            )}
 
             {/* Add / Edit */}
             {/* Give edit & Send verification email button */}
 
-            <button
-              onClick={() => {
-                setOpenEditEmail(true);
-              }}
-              className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3"
-            >
-              <EditRoundedIcon style={{ fontSize: "20px" }} />{" "}
-              <span className="ms-1">Edit</span>
-            </button>
-            <button className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center">
-              <ReplayRoundedIcon style={{ fontSize: "20px" }} />{" "}
-              <span className="ms-1">Resend verification email</span>
-            </button>
+            {payPalPayoutEmailId ? (
+              <button
+                onClick={() => {
+                  setOpenEditEmail(true);
+                }}
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center mx-3"
+              >
+                <EditRoundedIcon style={{ fontSize: "20px" }} />{" "}
+                <span className="ms-1">Edit</span>{" "}
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setOpenEditEmail(true);
+                }}
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center mx-3"
+              >
+                {" "}
+                <AddCircleOutlineRoundedIcon
+                  style={{ fontSize: "20px" }}
+                />{" "}
+                <span className="ms-1">Add</span>
+              </button>
+            )}
+
+            {!paypalEmailIsVerified ? (
+              <button
+                onClick={() => {
+                  dispatch(resendPayPalPayoutEmailVerificationLink(_id));
+                }}
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
+              >
+                <ReplayRoundedIcon style={{ fontSize: "20px" }} />{" "}
+                <span className="ms-1">Resend verification email</span>
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Paypal email */}
@@ -465,7 +547,7 @@ const Billing = () => {
         open={openPayoutHistory}
         handleClose={handleClosePayoutHistory}
       />
-      <Withdraw open={openWithdraw} handleClose={handleCloseWithdraw} />
+      <Withdraw open={openWithdraw} handleClose={handleCloseWithdraw} handleOpenEditEmail={handleOpenEditEmail} />
       <EditEmail open={openEditEmail} handleClose={handleCloseEditEmail} />
     </>
   );

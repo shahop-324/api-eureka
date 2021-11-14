@@ -49,19 +49,6 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
 
   const { eventDetails } = useSelector((state) => state.event);
 
-  // Store these in local state
-
-  // "theme",
-  //   "color",
-  //   "liveChat",
-  //   "peopleInEvent",
-  //   "privateMeetings",
-  //   "privateChat",
-  //   "qna",
-  //   "attendeeCount",
-  //   "emojiReaction",
-  //   "review"
-
   const [theme, setTheme] = useState(
     eventDetails && eventDetails.theme ? eventDetails.theme : "dark"
   );

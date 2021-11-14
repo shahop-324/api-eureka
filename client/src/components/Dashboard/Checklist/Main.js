@@ -25,6 +25,17 @@ import Help from "./help.png";
 import EventStreamSettings from "../EditEvent/SubComponent/EventStreamSettings";
 import GetHelp from "../GetHelp";
 
+import {useSelector} from 'react-redux';
+
+import { TwitterPicker } from "react-color";
+
+const EventDetailsHeading = styled.div`
+  font-weight: 500;
+  font-family: "Ubuntu";
+  font-size: 0.8rem;
+  color: #212121;
+`;
+
 const EventOverviewGrid = styled.div`
   display: grid;
   grid-template-columns: 3fr 1.5fr;
@@ -161,6 +172,14 @@ const MainEventSetupCheckList = () => {
 
   const handleCloseStreamSettings = () => {
     setOpenStreamSettings(false);
+  };
+
+  const { eventDetails, isLoading } = useSelector((state) => state.event);
+
+  const [color, setColor] = useState(eventDetails.landingPageColor ? eventDetails.landingPageColor : "#3567C3");
+
+  const handleChangeComplete = (color) => {
+    setColor(color.hex);
   };
 
   return (
@@ -496,22 +515,20 @@ const MainEventSetupCheckList = () => {
 
         <EventPromoImageContainer className="px-4 py-3">
           <RTMPCard className="mb-3">
-            <CheckListHeading className="mb-3">
-              RTMP credentials
-            </CheckListHeading>
-            <TextSmall className="mb-3">
-              You can use RTMP to stream live from Youtube, Vimeo, Facebook,
-              Twitter, Linkedin, Vmix, OBS and more streaming software directly
-              in your Bluemeet event.{" "}
-            </TextSmall>
-            <button
-              onClick={() => {
-                setOpenStreamSettings(true);
-              }}
-              className="btn btn-outline-text btn-outline-primary"
-            >
-              View
-            </button>
+            <div className="d-flex flex-row align-items-center justify-content-between mb-4">
+          <EventDetailsHeading className="">
+                Registration Page Theme
+              </EventDetailsHeading>
+              <button className="btn btn-outline-text btn-outline-primary">Save</button>
+              </div>
+          <div
+              className="theme-color-preview mb-3"
+              style={{ backgroundColor: color }}
+            ></div>
+              <TwitterPicker
+              color={color}
+              onChangeComplete={handleChangeComplete}
+            />
           </RTMPCard>
 
           <HelpCard className="d-flex flex-row align-items-center">

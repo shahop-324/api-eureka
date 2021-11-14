@@ -65,18 +65,11 @@ const SendTestEmail = ({ open, handleClose }) => {
 
           <DialogContent className="py-4">
             {/* Here write main content */}
-
-            <div className="mb-3">
-              <FormLabel className="mb-2">
-                Send preview mail as (optional)
-              </FormLabel>
-              <Select options={[]} styles={styles} />
-            </div>
             <div className="">
               <FormLabel className="mb-2">Send email to</FormLabel>
               <input
-                type="text"
-                placeholder="f20190858@pilani.bits-pilani.ac.in"
+                type="email"
+                placeholder="Enter email here to receive test email"
                 className="form-control"
               ></input>
             </div>
