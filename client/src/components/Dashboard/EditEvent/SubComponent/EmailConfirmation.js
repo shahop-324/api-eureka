@@ -6,7 +6,10 @@ import { useTheme } from "@material-ui/core/styles";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import EmailSVG from "./../../../../assets/images/email.svg";
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
+
+import { useDispatch } from "react-redux";
+import { SendMail, showSnackbar } from "./../../../../actions";
 
 const Heading = styled.div`
   font-size: 1.1rem;
@@ -32,9 +35,55 @@ const Image = styled.img`
   object-fit: contain;
 `;
 
-const EmailConfirmation = ({ open, handleClose }) => {
+const EmailConfirmation = ({
+  type,
+  mailId,
+  open,
+  handleClose,
+  everyoneEmails,
+  speakerEmails,
+  attendeeEmails,
+  exhibitorEmails,
+}) => {
+  const dispatch = useDispatch();
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleSendEmail = () => {
+    switch (type) {
+      case "Attendee":
+        typeof attendeeEmails !== "undefined" && attendeeEmails.length > 0
+          ? dispatch(SendMail(mailId, attendeeEmails))
+          : dispatch(
+              showSnackbar("info", "There are no attendees to send email.")
+            );
+        break;
+      case "Speaker":
+        typeof speakerEmails !== "undefined" && speakerEmails.length > 0
+          ? dispatch(SendMail(mailId, speakerEmails))
+          : dispatch(
+              showSnackbar("info", "There are no speakers to send email.")
+            );
+
+        break;
+      case "Exhibitor":
+        typeof exhibitorEmails !== "undefined" && exhibitorEmails.length > 0
+          ? dispatch(SendMail(mailId, exhibitorEmails))
+          : dispatch(
+              showSnackbar("info", "There are no exhibitors to send email.")
+            );
+
+        break;
+      case "Everyone":
+        dispatch(SendMail(mailId, everyoneEmails));
+        break;
+
+      default:
+        break;
+    }
+    handleClose();
+  };
 
   return (
     <>
@@ -58,10 +107,45 @@ const EmailConfirmation = ({ open, handleClose }) => {
 
             <div className="">
               <FormLabel className="mb-2">
-                This mail will be sent to all 4 attendees of Test Event.
-               
+                {(() => {
+                  switch (type) {
+                    case "Attendee":
+                      return (
+                        <span>
+                          This mail will be sent to all {attendeeEmails.length}{" "}
+                          attendees of this Event.
+                        </span>
+                      );
+
+                    case "Speaker":
+                      return (
+                        <span>
+                          This mail will be sent to all {speakerEmails.length}{" "}
+                          attendees of this Event.
+                        </span>
+                      );
+
+                    case "Exhibitor":
+                      return (
+                        <span>
+                          This mail will be sent to all {exhibitorEmails.length}{" "}
+                          attendees of this Event.
+                        </span>
+                      );
+
+                    case "Everyone":
+                      return (
+                        <span>
+                          This mail will be sent to all {everyoneEmails.length}{" "}
+                          attendees of this Event.
+                        </span>
+                      );
+
+                    default:
+                      break;
+                  }
+                })()}
               </FormLabel>
-              
             </div>
           </DialogContent>
           <HeaderFooter className="p-3">
@@ -72,11 +156,14 @@ const EmailConfirmation = ({ open, handleClose }) => {
               >
                 Cancel
               </button>
-              <button className="btn btn-primary btn-outline-text">
-                  <SendRoundedIcon className="me-2" />
-                  <span>
-                Send Email
-                </span>
+              <button
+                onClick={() => {
+                  handleSendEmail();
+                }}
+                className="btn btn-primary btn-outline-text"
+              >
+                <SendRoundedIcon className="me-2" />
+                <span>Send Email</span>
               </button>
             </DialogActions>
           </HeaderFooter>

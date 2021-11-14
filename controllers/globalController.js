@@ -2143,7 +2143,7 @@ exports.createPayPalPayoutRequest = catchAsync(async (req, res, next) => {
           communityDoc.amountToWithdraw =
             communityDoc.amountToWithdraw * 1 - amount * 1;
 
-            await communityDoc.save({new: true, validateModifiedOnly: true});
+          await communityDoc.save({ new: true, validateModifiedOnly: true });
 
           // Mail to superadmin & Mail to Verified PayPal email
 
@@ -2235,5 +2235,20 @@ exports.fetchPaypalPayouts = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: payouts,
+  });
+});
+
+exports.fetchRegistrations = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const eventDoc = await Event.findById(eventId);
+
+  const registrations = await Registration.find({
+    bookedForEventId: mongoose.Types.ObjectId(eventId),
+  }).select('type userName userEmail userImage');
+
+  res.status(200).json({
+    status: "success",
+    data: registrations,
   });
 });

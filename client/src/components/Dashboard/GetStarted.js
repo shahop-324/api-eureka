@@ -289,11 +289,17 @@ const GetStarted = () => {
                 Community
               </button>
             </a>
-            <Chip
-              label={`${millify(communityDetails.followers.length)} Followers`}
-              color="primary"
-              style={{ fontWeight: "500" }}
-            />
+            {communityDetails ? (
+              <Chip
+                label={`${millify(
+                  communityDetails.followers.length
+                )} Followers`}
+                color="primary"
+                style={{ fontWeight: "500" }}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="px-4 mb-5">
@@ -382,14 +388,16 @@ const GetStarted = () => {
               gridGap: "32px",
             }}
           >
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gridGap: "32px",
-            }}>
-            {renderDemoEvents(demoEvents)}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gridGap: "32px",
+              }}
+            >
+              {renderDemoEvents(demoEvents)}
             </div>
-           
+
             <div>
               <DemoCarousel />
             </div>

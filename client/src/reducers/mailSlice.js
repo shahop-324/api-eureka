@@ -6,6 +6,7 @@ const mailSlice = createSlice({
   initialState: {
     mails: [],
     mailDetails: null,
+    currentMail: null,
     isLoading: false,
     error: false,
   },
@@ -49,6 +50,9 @@ const mailSlice = createSlice({
       const deletedMailId = action.payload.deletedMailId;
       state.mails = state.mails.filter((mail) => mail._id !== deletedMailId);
     },
+    SetCurrentMail(state, action) {
+      state.currentMail = action.payload.mail;
+    }
   },
 });
 export const mailActions = mailSlice.actions;

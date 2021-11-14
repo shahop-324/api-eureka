@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { makeStyles, alpha } from "@material-ui/core";
+
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+
+import { fetchMails, fetchRegistrations } from "./../../../actions";
 
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -9,6 +14,9 @@ import EmailListFields from "./GridComponents/Email/ListFields";
 import EmailDetailsCard from "./GridComponents/Email/DetailsCard";
 import CreateEmail from "./SubComponent/Email/CreateEmail";
 import DndEmailEditor from "./SubComponent/DndEmailEditor";
+import { useSelector } from "react-redux";
+import NoContentFound from "./../../NoContent";
+import NoMails from "./../../../assets/images/NoMails.png";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -79,8 +87,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderEmails = (emails) => {
+  return emails.map((mail) => {
+    return (
+      <EmailDetailsCard
+        name={mail.name}
+        subject={mail.subject}
+        lastUpdatedAt={mail.lastUpdatedAt}
+        status={mail.status}
+        html={mail.html}
+        design={mail.design}
+        key={mail._id}
+        id={mail._id}
+      />
+    );
+  });
+};
+
 const Email = () => {
   const classes = useStyles();
+  const params = useParams();
+  const eventId = params.id;
+  const dispatch = useDispatch();
+
+  const { mails } = useSelector((state) => state.mail);
 
   const [openCreateEmail, setOpenCreateEmail] = React.useState(false);
 
@@ -91,6 +121,11 @@ const Email = () => {
   const handleCloseCreateEmail = () => {
     setOpenCreateEmail(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchMails(eventId));
+    dispatch(fetchRegistrations(eventId));
+  }, []);
 
   return (
     <>
@@ -136,15 +171,28 @@ const Email = () => {
 
       <div className="session-content-grid px-3 mb-4">
         <div className="basic-form-left-white px-4 py-4">
-          <EmailListFields />
-          <EmailDetailsCard />
-          <EmailDetailsCard />
-          <EmailDetailsCard />
+          {typeof mails !== "undefined" && mails.length > 0 ? (
+            <>
+              <EmailListFields />
+              {renderEmails(mails)}
+            </>
+          ) : (
+            <div
+              className="d-flex flex-row align-items-center justify-content-center"
+              style={{ height: "73vh", width: "100%" }}
+            >
+              <NoContentFound
+                msgText="No mail templated were found!"
+                img={NoMails}
+              />
+            </div>
+          )}
         </div>
       </div>
-      {/* <CreateMail open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
-      {/* <DndEmailEditor open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
-      <CreateEmail open={openCreateEmail} handleClose={handleCloseCreateEmail} />
+      <CreateEmail
+        open={openCreateEmail}
+        handleClose={handleCloseCreateEmail}
+      />
     </>
   );
 };

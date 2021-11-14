@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+
+import { useDispatch } from "react-redux";
+import validator from "validator";
 
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -11,6 +14,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import { IconButton } from "@material-ui/core";
+import { sendTestMail, showSnackbar } from "./../../../../actions";
 
 import Select from "react-select";
 
@@ -47,9 +51,12 @@ const FormLabel = styled.div`
   color: #494949;
 `;
 
-const SendTestEmail = ({ open, handleClose }) => {
+const SendTestEmail = ({ open, handleClose, mailId }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [recepient, setRecepient] = useState(null);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -69,6 +76,10 @@ const SendTestEmail = ({ open, handleClose }) => {
               <FormLabel className="mb-2">Send email to</FormLabel>
               <input
                 type="email"
+                value={recepient}
+                onChange={(e) => {
+                  setRecepient(e.target.value);
+                }}
                 placeholder="Enter email here to receive test email"
                 className="form-control"
               ></input>
@@ -82,7 +93,21 @@ const SendTestEmail = ({ open, handleClose }) => {
               >
                 Cancel
               </button>
-              <button className="btn btn-primary btn-outline-text">
+              <button
+                onClick={() => {
+                  if (validator.isEmail(recepient)) {
+                    dispatch(sendTestMail(mailId, recepient, handleClose));
+                  } else {
+                    dispatch(
+                      showSnackbar(
+                        "warning",
+                        "Please enter a valid email address"
+                      )
+                    );
+                  }
+                }}
+                className="btn btn-primary btn-outline-text"
+              >
                 Send Test Mail
               </button>
             </DialogActions>

@@ -13,6 +13,8 @@ import Button from "@material-ui/core/Button";
 import { IconButton } from "@material-ui/core";
 
 import Select from "react-select";
+import { deleteMail } from "../../../../../actions";
+import { useDispatch } from "react-redux";
 
 const styles = {
   control: (base) => ({
@@ -47,7 +49,9 @@ const FormLabel = styled.div`
   color: #494949;
 `;
 
-const DeleteEmail = ({ open, handleClose }) => {
+const DeleteEmail = ({ open, handleClose, mailId }) => {
+  const dispatch = useDispatch();
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -80,7 +84,12 @@ const DeleteEmail = ({ open, handleClose }) => {
               >
                 Cancel
               </button>
-              <button className="btn btn-outline-danger btn-outline-text">
+              <button
+                onClick={() => {
+                  dispatch(deleteMail(mailId, handleClose));
+                }}
+                className="btn btn-outline-danger btn-outline-text"
+              >
                 Proceed
               </button>
             </DialogActions>

@@ -334,4 +334,6 @@ router.get("/fetchPaypalPayouts/:communityId", authController.protectCommunity, 
 
 router.post("/createPayPalPayoutRequest/:communityId", authController.protectCommunity, globalController.createPayPalPayoutRequest);
 
+router.get("/fetchRegistrations/:eventId", authController.protectCommunity, globalController.fetchRegistrations);
+
 module.exports = router;

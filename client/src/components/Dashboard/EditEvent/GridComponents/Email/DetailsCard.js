@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Divider from "@material-ui/core/Divider";
 import "./../../../../../assets/Sass/DataGrid.scss";
 import styled from "styled-components";
 import { IconButton } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
 
 import CloudDownloadRoundedIcon from "@mui/icons-material/CloudDownloadRounded"; // Download report
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded"; // Update report
@@ -18,6 +19,8 @@ import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRound
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded"; // Preview
 
 import SendRoundedIcon from "@mui/icons-material/SendRounded"; // Send
+
+import Chip from "@mui/material/Chip";
 
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"; // Delete
 
@@ -41,6 +44,8 @@ import SendTestEmail from "../../SubComponent/SendTestEmail";
 import EmailConfirmation from "../../SubComponent/EmailConfirmation";
 import DndEmailEditor from "../../SubComponent/DndEmailEditor";
 import DeleteEmail from "../../SubComponent/Email/DeleteEmail";
+
+import { setCurrentMailTemplate, showSnackbar } from "./../../../../../actions";
 
 const MenuText = styled.span`
   font-weight: 500;
@@ -108,7 +113,47 @@ const StyledMenu = MUIStyled((props) => (
   },
 }));
 
-const EmailDetailsCard = () => {
+const EmailDetailsCard = ({
+  name,
+  subject,
+  lastUpdatedAt,
+  status,
+  id,
+  html,
+  design,
+}) => {
+  const dispatch = useDispatch();
+
+  let everyoneEmails = [];
+  let attendeeEmails = [];
+  let speakerEmails = [];
+  let exhibitorEmails = [];
+
+  const { registrations } = useSelector((state) => state.registration);
+
+  // "Attendee", "Speaker", "Exhibitor", "Host"
+
+  for (let element of registrations) {
+    everyoneEmails.push(element.userEmail);
+  }
+  for (let element of registrations) {
+    if (element.type === "Attendee") {
+      attendeeEmails.push(element.userEmail);
+    }
+  }
+  for (let element of registrations) {
+    if (element.type === "Speaker") {
+      speakerEmails.push(element.userEmail);
+    }
+  }
+  for (let element of registrations) {
+    if (element.type === "Exhibitor") {
+      exhibitorEmails.push(element.userEmail);
+    }
+  }
+
+  const [type, setType] = useState("Attendee");
+
   const [openTestEmail, setOpenTestEmail] = React.useState(false);
   const [openEditMail, setOpenEditMail] = React.useState(false);
   const [openDeleteMail, setOpenDeleteMail] = React.useState(false);
@@ -165,32 +210,30 @@ const EmailDetailsCard = () => {
               <EventReportIconBox className="me-3">
                 <MailOutlineOutlinedIcon />
               </EventReportIconBox>
-              Event Chat Report
+              {name}
             </div>
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
-            New Speakers Line up
+            {subject}
           </ListFieldText>
         </div>
 
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             {/* Email status */}
-            <div className="d-flex flex-row align-items-center">
-              <CircleRoundedIcon
-                style={{ fontSize: "10px", color: "#21C760" }}
-                className="me-2"
-              />
-              <span>Sent</span>
-            </div>
+            {status === "Sent" ? (
+              <Chip label="Sent" color="success" variant="outlined" />
+            ) : (
+              <Chip label="Draft" color="primary" variant="outlined" />
+            )}
           </ListFieldText>
         </div>
         <div className="">
           <ListFieldText className="" style={{ width: "100%" }}>
             {/* Last update */}
-            {dateFormat(now)}
+            {dateFormat(new Date(lastUpdatedAt))}
           </ListFieldText>
         </div>
 
@@ -219,6 +262,7 @@ const EmailDetailsCard = () => {
             <MenuItem
               onClick={() => {
                 handleOpenEditMail();
+                dispatch(setCurrentMailTemplate(id));
                 handleClose();
               }}
               disableRipple
@@ -228,7 +272,17 @@ const EmailDetailsCard = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpenTestEmail(true);
+                if (design && html) {
+                  setOpenTestEmail(true);
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "warning",
+                      "Please edit your email template body."
+                    )
+                  );
+                }
+
                 handleClose();
               }}
               disableRipple
@@ -238,7 +292,30 @@ const EmailDetailsCard = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpenEmailConfirmation(true);
+                if (design && html) {
+                  if (
+                    typeof attendeeEmails !== "undefined" &&
+                    attendeeEmails.length > 0
+                  ) {
+                    setType("Attendee");
+                    setOpenEmailConfirmation(true);
+                  } else {
+                    dispatch(
+                      showSnackbar(
+                        "info",
+                        "There are no attendees yet to send email."
+                      )
+                    );
+                  }
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "warning",
+                      "Please edit your email template body."
+                    )
+                  );
+                }
+
                 handleClose();
               }}
               disableRipple
@@ -248,7 +325,30 @@ const EmailDetailsCard = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpenEmailConfirmation(true);
+                if (design && html) {
+                  if (
+                    typeof speakerEmails !== "undefined" &&
+                    speakerEmails.length > 0
+                  ) {
+                    setType("Speaker");
+                    setOpenEmailConfirmation(true);
+                  } else {
+                    dispatch(
+                      showSnackbar(
+                        "info",
+                        "There are no speakers to send email."
+                      )
+                    );
+                  }
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "warning",
+                      "Please edit your email template body."
+                    )
+                  );
+                }
+
                 handleClose();
               }}
               disableRipple
@@ -258,7 +358,30 @@ const EmailDetailsCard = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpenEmailConfirmation(true);
+                if (design && html) {
+                  if (
+                    typeof exhibitorEmails !== "undefined" &&
+                    exhibitorEmails.length > 0
+                  ) {
+                    setType("Exhibitor");
+                    setOpenEmailConfirmation(true);
+                  } else {
+                    dispatch(
+                      showSnackbar(
+                        "info",
+                        "There are no exhibitors to send email."
+                      )
+                    );
+                  }
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "warning",
+                      "Please edit your email template body."
+                    )
+                  );
+                }
+
                 handleClose();
               }}
               disableRipple
@@ -268,7 +391,18 @@ const EmailDetailsCard = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpenEmailConfirmation(true);
+                if (design && html) {
+                  setType("Everyone");
+                  setOpenEmailConfirmation(true);
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "warning",
+                      "Please edit your email template body."
+                    )
+                  );
+                }
+
                 handleClose();
               }}
               disableRipple
@@ -294,14 +428,36 @@ const EmailDetailsCard = () => {
         <Divider />
       </div>
 
-      <SendTestEmail open={openTestEmail} handleClose={handleCloseTestEmail} />
+      <SendTestEmail
+        open={openTestEmail}
+        handleClose={handleCloseTestEmail}
+        mailId={id}
+      />
       <EmailConfirmation
+        type={type}
+        mailId={id}
+        everyoneEmails={everyoneEmails}
+        speakerEmails={speakerEmails}
+        attendeeEmails={attendeeEmails}
+        exhibitorEmails={exhibitorEmails}
         open={openEmailConfirmation}
         handleClose={handleCloseEmailConfirmation}
       />
       {/* <DndEmailEditor open={openCreateMail} handleClose={handleCloseCreateMail} /> */}
-      <DndEmailEditor open={openEditMail} handleClose={handleCloseEditMail} />
-      <DeleteEmail open={openDeleteMail} handleClose={handleCloseDeleteMail} />
+      <DndEmailEditor
+        open={openEditMail}
+        handleClose={handleCloseEditMail}
+        mailId={id}
+        name={name}
+        subject={subject}
+        html={html}
+        design={design}
+      />
+      <DeleteEmail
+        open={openDeleteMail}
+        handleClose={handleCloseDeleteMail}
+        mailId={id}
+      />
     </>
   );
 };

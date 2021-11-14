@@ -8818,10 +8818,19 @@ export const deleteStreamDestination =
     }
   };
 
+export const setCurrentMailTemplate =
+  (mailId) => async (dispatch, getState) => {
+    dispatch(
+      mailActions.SetCurrentMail({
+        mail: mailId,
+      })
+    );
+  };
+
 // Create Mail
 
 export const createMail =
-  (formValues, eventId) => async (dispatch, getState) => {
+  (formValues, eventId, handleClose) => async (dispatch, getState) => {
     try {
       let res = await fetch(`${BaseURL}mail/createNewMail/${eventId}`, {
         method: "POST",
@@ -8851,11 +8860,15 @@ export const createMail =
         })
       );
 
-      dispatch(showSnackbar("success", "New mail added successfully!"))
+      handleClose();
+
+      dispatch(showSnackbar("success", "New mail added successfully!"));
     } catch (error) {
       console.log(error);
 
-      dispatch(showSnackbar("error", "Failed to create mail, Please try again."))
+      dispatch(
+        showSnackbar("error", "Failed to create mail, Please try again.")
+      );
     }
   };
 
@@ -8891,7 +8904,9 @@ export const fetchMails = (eventId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(showSnackbar("error", "Failed to fetch mails. Please try again later."))
+    dispatch(
+      showSnackbar("error", "Failed to fetch mails. Please try again later.")
+    );
   }
 };
 
@@ -8927,19 +8942,24 @@ export const getOneMail = (mailId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(showSnackbar("error", "Failed to fetch mail details. Please try again later!"));
+    dispatch(
+      showSnackbar(
+        "error",
+        "Failed to fetch mail details. Please try again later!"
+      )
+    );
   }
 };
 
 // Update mail
 
 export const updateMail =
-  (formValues, mailId) => async (dispatch, getState) => {
+  (formValues, mailId, handleClose) => async (dispatch, getState) => {
     try {
       let res = await fetch(`${BaseURL}mail/updateMail/${mailId}`, {
         method: "PATCH",
 
-        body: JSON.stringify({ ...formValues }),
+        body: JSON.stringify({...formValues}),
 
         headers: {
           "Content-Type": "application/json",
@@ -8974,6 +8994,10 @@ export const updateMail =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+
+      handleClose();
+
+      // window.location.reload();
     } catch (error) {
       console.log(error);
 
@@ -8987,54 +9011,63 @@ export const updateMail =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+
+      handleClose();
+
+      // window.location.reload();
     }
   };
 
 // Delete mail
 
-export const deleteMail = (mailId) => async (dispatch, getState) => {
-  try {
-    let res = await fetch(`${BaseURL}mail/deleteMail/${mailId}`, {
-      method: "DELETE",
+export const deleteMail =
+  (mailId, handleClose) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}mail/deleteMail/${mailId}`, {
+        method: "DELETE",
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
-      },
-    });
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      });
 
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
       }
+      res = await res.json();
+
+      console.log(res);
+
+      dispatch(
+        mailActions.DeleteMail({
+          deletedMailId: mailId,
+        })
+      );
+
+      dispatch(
+        snackbarActions.openSnackBar({
+          message: "Successfully deleted mail!",
+          severity: "success",
+        })
+      );
+
+      setTimeout(function () {
+        closeSnackbar();
+      }, 6000);
+
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to delete mail, Please try again later.")
+      );
     }
-    res = await res.json();
-
-    console.log(res);
-
-    dispatch(
-      mailActions.DeleteMail({
-        deletedMailId: mailId,
-      })
-    );
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Successfully deleted mail!",
-        severity: "success",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("error", "Failed to delete mail, Please try again later."))
-  }
-};
+  };
 
 // Send mail
 
@@ -9043,6 +9076,10 @@ export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
   try {
     let res = await fetch(`${BaseURL}mail/sendMail/${mailId}`, {
       method: "POST",
+
+      body: JSON.stringify({
+        recepients: recepients,
+      }),
 
       headers: {
         "Content-Type": "application/json",
@@ -9096,13 +9133,13 @@ export const SendMail = (mailId, recepients) => async (dispatch, getState) => {
 // Send test mail
 
 export const sendTestMail =
-  (mailId, receiverMail) => async (dispatch, getState) => {
+  (mailId, recieverMail, handleClose) => async (dispatch, getState) => {
     try {
       let res = await fetch(`${BaseURL}mail/sendTestMail/${mailId}`, {
         method: "POST",
 
         body: JSON.stringify({
-          receiverMail: receiverMail,
+          recieverMail: recieverMail,
         }),
 
         headers: {
@@ -9134,6 +9171,8 @@ export const sendTestMail =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+
+      handleClose();
     } catch (error) {
       console.log(error);
 
@@ -9147,6 +9186,7 @@ export const sendTestMail =
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
+      handleClose();
     }
   };
 
@@ -11987,3 +12027,34 @@ export const fetchShowcaseEvents = () => async (dispatch, getState) => {
   }
 };
 
+export const fetchRegistrations = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}fetchRegistrations/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      registrationActions.FetchRegistrations({
+        registrations: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch registrations"));
+  }
+};
