@@ -5,22 +5,31 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   errorTrackerForRegisteredEvents,
   fetchUserRegisteredEvents,
-  getUserRegistrations
+  getUserRegistrations,
+  fetchMyFavouriteEvents,
 } from "../../actions";
 import Loader from "./../Loader";
 import dateFormat from "dateformat";
 import YouHaveNoEventComing from "./YouHaveNoEventsComing";
 import NotRegistered from "./../../assets/images/NoWish.png";
 
-const renderRegisteredEvents = (events, registrations) => {
+const renderRegisteredEvents = (events, registrations, favouriteEvents) => {
   return events.map((event) => {
     const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
     let magic_link;
 
     for (let element of registrations) {
-      if (element.bookedForEventId.toString() === event._id.toString()) {
-        magic_link = element.magic_link;
+      if (element.bookedForEventId && event._id) {
+        if (element.bookedForEventId.toString() === event._id.toString()) {
+          magic_link = element.magic_link;
+        }
       }
+    }
+
+    let isFavourite = false;
+
+    if (favouriteEvents.includes(event._id)) {
+      isFavourite = true;
     }
 
     return (
@@ -38,6 +47,7 @@ const renderRegisteredEvents = (events, registrations) => {
         // TODO show commuity rating on thier events cards
         rating={4.0}
         magic_link={magic_link}
+        isFavourite={isFavourite}
       />
     );
   });
@@ -46,6 +56,8 @@ const renderRegisteredEvents = (events, registrations) => {
 const UserAccountHomeMainBody = () => {
   const { events, isLoading, error } = useSelector((state) => state.event);
   const { registrations } = useSelector((state) => state.registration);
+
+  const { favouriteEvents } = useSelector((state) => state.event);
 
   const uniqueEventIds = []; // No duplicates allowed
   const uniqueEventRegistrations = []; // No duplicated allowed
@@ -78,7 +90,8 @@ const UserAccountHomeMainBody = () => {
 
   useEffect(() => {
     dispatch(fetchUserRegisteredEvents());
-    dispatch(getUserRegistrations())
+    dispatch(getUserRegistrations());
+    dispatch(fetchMyFavouriteEvents());
   }, [dispatch]);
 
   if (isLoading) {
@@ -113,16 +126,20 @@ const UserAccountHomeMainBody = () => {
 
         {typeof formattedEvents !== "undefined" &&
         formattedEvents.length > 0 ? (
-          <EventCardsGrid>
-            {renderRegisteredEvents(formattedEvents, formattedRegistrations)}
-          </EventCardsGrid>
+          <div className="user-account-events-event-card-grid px-2 py-2">
+            {renderRegisteredEvents(
+              formattedEvents,
+              formattedRegistrations,
+              favouriteEvents
+            )}
+          </div>
         ) : (
           <div
             style={{ width: "100%", height: "70vh" }}
             className="d-flex flex-row align-items-center justify-content-center"
           >
             <YouHaveNoEventComing
-            img={NotRegistered}
+              img={NotRegistered}
               msgText={"You have not yet registered in any events yet."}
             />
           </div>

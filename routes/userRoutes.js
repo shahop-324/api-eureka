@@ -80,6 +80,10 @@ router.patch("/deactivateMe/:userId", userController.deactivateMe);
 
 router.get("/myFavouriteEvents", userController.getFavouriteEvents);
 
+router.get("/myPopulatedFavouriteEvents", userController.getPopulatedFavouriteEvents);
+
+
+
 router.post(
   "/addToFavouriteEvents/:eventId",
   userController.addToFavouriteEvents

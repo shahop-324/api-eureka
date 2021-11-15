@@ -10,6 +10,7 @@ import NoNewEvents from "./Images/NoNewEvents.png";
 import { DashboardSectionHeading } from "./Elements";
 
 const UserAccountEventsMainBody = () => {
+  const { favouriteEvents } = useSelector((state) => state.event);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(madeJustForYou());
@@ -20,10 +21,16 @@ const UserAccountEventsMainBody = () => {
     return dispatch(errorTrackerForMadeJustForYou());
   }
 
-  const renderSuggestedEventsList = (events) => {
+  const renderSuggestedEventsList = (events, favouriteEvents) => {
     if (!events) return;
     if (events.length !== 0) {
       return events.map((event) => {
+        let isFavourite = false;
+
+        if (favouriteEvents.includes(event._id)) {
+          isFavourite = true;
+        }
+
         const now = new Date(event.startDate);
         const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
 
@@ -35,7 +42,7 @@ const UserAccountEventsMainBody = () => {
 
         return (
           <EventCard
-          showSpeakers={true}
+            showSpeakers={true}
             image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
             date={formatedDate}
             id={event.id}
@@ -47,6 +54,7 @@ const UserAccountEventsMainBody = () => {
             endTime={endTime}
             rating={(event.communityRating * 1).toFixed(1)}
             communityId={event.communityId}
+            isFavourite={isFavourite}
           />
         );
       });
@@ -76,7 +84,7 @@ const UserAccountEventsMainBody = () => {
                   <Loader />
                 </div>
               ) : (
-                renderSuggestedEventsList(events)
+                renderSuggestedEventsList(events, favouriteEvents)
               )}
             </div>
           ) : (

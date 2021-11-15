@@ -11,7 +11,11 @@ import history from "../../history";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import { errorTrackerForFetchEvents, fetchEvents } from "../../actions/index";
+import {
+  errorTrackerForFetchEvents,
+  fetchEvents,
+  fetchMyFavouriteEvents,
+} from "../../actions/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import dateFormat from "dateformat";
@@ -58,12 +62,11 @@ const MainResultHeading = styled.div`
 `;
 
 const EventAndCatgory = styled.div`
-text-align: center;
-font-weight: 400;
+  text-align: center;
+  font-weight: 400;
   font-size: 0.9rem;
   color: #212121;
-
-`
+`;
 
 const SearchEvents = () => {
   const dispatch = useDispatch();
@@ -84,10 +87,13 @@ const SearchEvents = () => {
 
   const { error, isLoading } = useSelector((state) => state.event);
 
+  const { favouriteEvents } = useSelector((state) => state.event);
+
   const location = useLocation();
 
   useEffect(() => {
     dispatch(fetchEvents(location.search));
+    dispatch(fetchMyFavouriteEvents());
   }, [location.search, dispatch]);
 
   useEffect(() => {
@@ -106,8 +112,6 @@ const SearchEvents = () => {
   };
 
   const eventsList = useSelector((state) => state.event.events);
-
-  const userFavourites = useSelector((state) => state.event.favouriteEvents);
 
   console.log(eventsList);
   const onPriceFilterChange = (e) => {
@@ -214,8 +218,14 @@ const SearchEvents = () => {
     }
   };
 
-  const renderedList = (eventsList, userFavourites) => {
+  const renderedList = (eventsList, favouriteEvents) => {
     return eventsList.map((event) => {
+      let isFavourite = false;
+
+      if (favouriteEvents.includes(event._id)) {
+        isFavourite = true;
+      }
+
       const now = new Date(event.startDate);
       const end = new Date(event.endDate);
       const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
@@ -223,19 +233,6 @@ const SearchEvents = () => {
 
       const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
       const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
-
-      let isFavourite = false;
-
-      let favouriteEvent;
-      if (userFavourites) {
-        favouriteEvent = userFavourites.filter((el) => el.id === event.id);
-      }
-
-      if (typeof favouriteEvent !== "undefined" && favouriteEvent.length > 0) {
-        isFavourite = true;
-      } else {
-        isFavourite = false;
-      }
 
       return (
         <EventCard
@@ -658,7 +655,7 @@ const SearchEvents = () => {
                     <Loader />{" "}
                   </div>
                 ) : (
-                  renderedList(eventsList, userFavourites)
+                  renderedList(eventsList, favouriteEvents)
                 )}
               </div>
             ) : (

@@ -8,6 +8,7 @@ const eventSlice = createSlice({
     tracks: [],
     trackDetails: null,
     favouriteEvents: [],
+    populatedFavouriteEvents: [],
     archivedEvents: [],
     demoEvents: [],
     eventDetails: null,
@@ -61,7 +62,11 @@ const eventSlice = createSlice({
     },
     FetchFavouriteEvents(state, action) {
       state.favouriteEvents = action.payload.events;
-      state.length = action.payload.length;
+      state.isLoading = false;
+      state.error = false;
+    },
+    FetchPopulatedFavouriteEvents(state, action) {
+      state.populatedFavouriteEvents = action.payload.events;
       state.isLoading = false;
       state.error = false;
     },
@@ -70,15 +75,18 @@ const eventSlice = createSlice({
       state.isLoading = false;
     },
     AddToFavouriteEvents(state, action) {
-      const newFavouriteEvent = action.payload.event;
-
-      state.favouriteEvents.push(newFavouriteEvent);
+      state.populatedFavouriteEvents.push(action.payload.eventDoc);
+      state.favouriteEvents.push(action.payload.event);
       state.isLoading = false;
       state.error = false;
     },
     RemoveFromFavouriteEvents(state, action) {
       state.favouriteEvents = state.favouriteEvents.filter(
-        (event) => event.id !== action.payload.event.id
+        (eventId) => eventId.toString() !== action.payload.eventId.toString()
+      );
+      state.populatedFavouriteEvents = state.populatedFavouriteEvents.filter(
+        (event) =>
+          event._id.toString() !== action.payload.eventDoc._id.toString()
       );
       state.isLoading = false;
       state.error = false;

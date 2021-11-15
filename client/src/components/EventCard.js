@@ -31,6 +31,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+
 const SpeakersHeading = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
@@ -159,7 +168,13 @@ const EventCard = ({
         }}
       >
         <button
+          onClick={() => {
+            isFavourite
+              ? dispatch(removeFromFavouriteEvents(id))
+              : dispatch(addToFavouriteEvents(id));
+          }}
           style={{
+            color: isFavourite ? "#C22929" : "#212121",
             borderRadius: "23px",
             height: "46px",
             width: "46px",
@@ -207,29 +222,80 @@ const EventCard = ({
           onClose={handleClose}
         >
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <FacebookIcon style={{ color: "#4267B2" }} />
-            <MenuText>Facebook</MenuText>
+            <div className="Demo__some-network">
+              <FacebookShareButton
+                url={`https://www.bluemeet.in`}
+                quote={"Bluemeet"}
+                className="Demo__some-network__share-button"
+              >
+                <FacebookIcon style={{ color: "#4267B2" }} />
+                <MenuText>Facebook</MenuText>
+              </FacebookShareButton>
+            </div>
           </MenuItem>
 
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <TwitterIcon style={{ color: "#1DA1F2" }} />
-            <MenuText>Twitter</MenuText>
+            <div className="Demo__some-network">
+              <TwitterShareButton
+                url={`https://www.bluemeet.in`}
+                title={"Bluemeet"}
+                className="Demo__some-network__share-button"
+              >
+                <TwitterIcon style={{ color: "#1DA1F2" }} />
+                <MenuText>Twitter</MenuText>
+              </TwitterShareButton>
+            </div>
           </MenuItem>
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <LinkedInIcon style={{ color: "#0e76a8" }} />
-            <MenuText>Linkedin</MenuText>
+            <div className="Demo__some-network">
+              <LinkedinShareButton
+                url={`https://www.bluemeet.in`}
+                title={"Bluemeet"}
+                className="Demo__some-network__share-button"
+              >
+                <LinkedInIcon style={{ color: "#0e76a8" }} />
+                <MenuText>Linkedin</MenuText>
+              </LinkedinShareButton>
+            </div>
           </MenuItem>
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <WhatsAppIcon style={{ color: "#075E54" }} />
-            <MenuText>WhatsApp</MenuText>
+            <div className="Demo__some-network">
+              <WhatsappShareButton
+                url={`https://www.bluemeet.in`}
+                title={"Bluemeet"}
+                separator=":: "
+                className="Demo__some-network__share-button"
+              >
+                <WhatsAppIcon style={{ color: "#075E54" }} />
+                <MenuText>WhatsApp</MenuText>
+              </WhatsappShareButton>
+            </div>
           </MenuItem>
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <TelegramIcon style={{ color: "#0088cc" }} />
-            <MenuText>Telegram</MenuText>
+            <div className="Demo__some-network">
+              <TelegramShareButton
+                url={`https://www.bluemeet.in`}
+                title={"Bluemeet"}
+                separator=":: "
+                className="Demo__some-network__share-button"
+              >
+                <TelegramIcon style={{ color: "#0088cc" }} />
+                <MenuText>Telegram</MenuText>
+              </TelegramShareButton>
+            </div>
           </MenuItem>
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <RedditIcon style={{ color: "#FF5700" }} />
-            <MenuText>Reddit</MenuText>
+            <div className="Demo__some-network">
+              <RedditShareButton
+                url={`https://www.bluemeet.in`}
+                title={"Bluemeet"}
+                separator=":: "
+                className="Demo__some-network__share-button"
+              >
+                <RedditIcon style={{ color: "#FF5700" }} />
+                <MenuText>Reddit</MenuText>
+              </RedditShareButton>
+            </div>
           </MenuItem>
         </StyledMenu>
       </div>
@@ -311,7 +377,12 @@ const EventCard = ({
           {minPrice && `$ ${minPrice} - `} Upto ${maxPrice}
         </div>
         <div className="d-flex flex-row justify-content-end align-items-center">
-          <a href={`${magic_link}`} target="_blank" rel="noreferrer">
+          <a
+            href={`${magic_link}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: "none" }}
+          >
             <button
               type="button"
               className="btn btn-outline-primary btn-outline-text"

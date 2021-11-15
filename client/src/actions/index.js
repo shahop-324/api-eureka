@@ -835,6 +835,54 @@ export const errorTrackerForRegisteredEvents =
     dispatch(eventActions.disabledError());
   };
 
+export const fetchMyPopulatedFavouriteEvents =
+  () => async (dispatch, getState) => {
+    dispatch(eventActions.startLoading());
+
+    const fetchData = async () => {
+      let res = await fetch(
+        `${BaseURL}users/myPopulatedFavouriteEvents`,
+
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+      console.log(res);
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("fetching user favourite events failed");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+      return res;
+    };
+
+    try {
+      const res = await fetchData();
+      console.log(res);
+
+      dispatch(
+        eventActions.FetchPopulatedFavouriteEvents({
+          events: res.data.favouriteEvents,
+        })
+      );
+    } catch (error) {
+      dispatch(eventActions.hasError(error.message));
+      dispatch(
+        showSnackbar("error", "Failed to fetch wishlist, Please try again.")
+      );
+    }
+  };
+
 export const fetchMyFavouriteEvents = () => async (dispatch, getState) => {
   dispatch(eventActions.startLoading());
 
@@ -876,6 +924,9 @@ export const fetchMyFavouriteEvents = () => async (dispatch, getState) => {
     );
   } catch (error) {
     dispatch(eventActions.hasError(error.message));
+    dispatch(
+      showSnackbar("error", "Failed to fetch wishlist, Please try again.")
+    );
   }
 };
 
@@ -916,10 +967,16 @@ export const addToFavouriteEvents = (eventId) => async (dispatch, getState) => {
     dispatch(
       eventActions.AddToFavouriteEvents({
         event: res.data,
+        eventDoc: res.eventDoc,
       })
     );
+
+    dispatch(showSnackbar("success", "Added to wishlist."));
   } catch (error) {
     dispatch(eventActions.hasError(error.message));
+    dispatch(
+      showSnackbar("success", "Failed to add to wishlist, Please try again.")
+    );
   }
 };
 
@@ -940,7 +997,6 @@ export const removeFromFavouriteEvents =
           },
         }
       );
-      console.log(res);
 
       if (!res.ok) {
         if (!res.message) {
@@ -956,15 +1012,25 @@ export const removeFromFavouriteEvents =
 
     try {
       const res = await removeFromFavourites();
+
       console.log(res);
 
       dispatch(
         eventActions.RemoveFromFavouriteEvents({
-          event: res.data,
+          eventId: res.data,
+          eventDoc: res.eventDoc,
         })
       );
+
+      dispatch(showSnackbar("success", "Removed from wishlist."));
     } catch (error) {
       dispatch(eventActions.hasError(error.message));
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to remove from wishlist, Please try again."
+        )
+      );
     }
   };
 

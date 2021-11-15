@@ -1065,6 +1065,17 @@ exports.getUserRegistrations = catchAsync(async (req, res, next) => {
 exports.getFavouriteEvents = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
+  const favouriteEvents = await User.findById(userId).select("favouriteEvents");
+
+  res.status(200).json({
+    status: "success",
+    data: favouriteEvents,
+  });
+});
+
+exports.getPopulatedFavouriteEvents = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+
   const favouriteEvents = await User.findById(userId)
     .select("favouriteEvents")
     .populate("favouriteEvents");
@@ -1090,7 +1101,8 @@ exports.addToFavouriteEvents = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Successfully added to my favourite events",
-    data: event,
+    data: eventId,
+    eventDoc: event,
   });
 });
 
@@ -1102,13 +1114,9 @@ exports.removeFromFavouriteEvents = catchAsync(async (req, res, next) => {
 
   const event = await Event.findById(eventId);
 
-  const remainingEvents = userDoc.favouriteEvents.filter((id) => {
-    console.log(id);
-    console.log(eventId, "This is event Id");
-    return id !== eventId;
-  });
-
-  console.log(remainingEvents);
+  const remainingEvents = userDoc.favouriteEvents.filter(
+    (id) => id.toString() !== eventId.toString()
+  );
 
   userDoc.favouriteEvents = remainingEvents;
 
@@ -1117,7 +1125,8 @@ exports.removeFromFavouriteEvents = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Successfully removed from my favourite events",
-    data: event,
+    data: eventId,
+    eventDoc: event,
   });
 });
 
