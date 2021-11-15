@@ -743,10 +743,21 @@ exports.unfollowCommunity = catchAsync(async (req, res, next) => {
     (sampleCommunity) => sampleCommunity.toString() !== communityId.toString()
   );
 
-  const updatedUser = await userDoc.save({
+  await userDoc.save({
     new: true,
     validateModifiedOnly: true,
   });
+
+  const updatedUser = await User.findById(userDoc._id)
+    .populate("following", "name image email")
+    .populate("communities", "name image email")
+    .populate("invitedCommunities", "name image email")
+    .populate({
+      path: "registeredInEvents",
+      populate: {
+        path: "speaker tickets coupon sponsors session booths",
+      },
+    });
 
   res.status(200).json({
     status: "success",

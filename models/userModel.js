@@ -258,10 +258,12 @@ const userSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    following: [{
-      type: mongoose.Schema.ObjectId,
-      ref: "Community",
-    }]
+    following: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Community",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

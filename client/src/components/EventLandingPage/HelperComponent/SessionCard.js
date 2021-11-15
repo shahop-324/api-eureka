@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { IconButton } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { Tooltip } from "@material-ui/core";
@@ -8,21 +8,21 @@ import dateFormat from "dateformat";
 import AddToCalender from "./../HelperComponent/AddTocalender";
 
 const SessionTimeline = styled.div`
-font-weight: 500;
+  font-weight: 500;
   font-size: 0.9rem;
   color: #212121;
 `;
 
 const SessionName = styled.div`
-font-weight: 500;
+  font-weight: 500;
   font-size: 1rem;
-  color: #212121;`;
+  color: #212121;
+`;
 
 const SessionBrief = styled.div`
-font-weight: 400;
+  font-weight: 400;
   font-size: 0.85rem;
   color: #212121;
-
 `;
 
 const SessionCard = ({
@@ -35,6 +35,13 @@ const SessionCard = ({
   id,
 }) => {
   const [openCalender, setOpenCalender] = React.useState(false);
+
+  const calenderEvent = {
+    title: sessionName,
+    description: sessionDescription,
+    start: new Date(startTime),
+    end: new Date(endTime),
+  };
 
   const handleCloseCalender = () => {
     setOpenCalender(false);
@@ -79,13 +86,19 @@ const SessionCard = ({
         </div>
 
         <SessionName className="session-name mb-2">{sessionName}</SessionName>
-        <SessionBrief className="session-description mb-2">{sessionDescription}</SessionBrief>
+        <SessionBrief className="session-description mb-2">
+          {sessionDescription}
+        </SessionBrief>
 
         <div className="session-speakers-grid pt-3">
           {renderSpeakerAvatarList(speakerAvatarList)}
         </div>
       </div>
-      <AddToCalender open={openCalender} handleClose={handleCloseCalender} />
+      <AddToCalender
+        open={openCalender}
+        handleClose={handleCloseCalender}
+        event={calenderEvent}
+      />
     </>
   );
 };

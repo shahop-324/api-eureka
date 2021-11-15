@@ -54,6 +54,7 @@ exports.getAllPersonalData = catchAsync(async (req, res, next) => {
   // const personalData = await User.findById(id)
   // const personalData = await User.findById(id)
   const personalData = await User.findById(req.user.id)
+    .populate("following", "name image email")
     .populate("communities", "name image email")
     .populate("invitedCommunities", "name image email")
     .populate({
@@ -1098,11 +1099,23 @@ exports.addToFavouriteEvents = catchAsync(async (req, res, next) => {
 
   await userDoc.save({ new: true, validateModifiedOnly: true });
 
+  const updatedUser = await User.findById(userDoc._id)
+    .populate("following", "name image email")
+    .populate("communities", "name image email")
+    .populate("invitedCommunities", "name image email")
+    .populate({
+      path: "registeredInEvents",
+      populate: {
+        path: "speaker tickets coupon sponsors session booths",
+      },
+    });
+
   res.status(200).json({
     status: "success",
     message: "Successfully added to my favourite events",
     data: eventId,
     eventDoc: event,
+    userDoc: updatedUser,
   });
 });
 
@@ -1122,11 +1135,23 @@ exports.removeFromFavouriteEvents = catchAsync(async (req, res, next) => {
 
   await userDoc.save({ new: true, validateModifiedOnly: true });
 
+  const updatedUser = await User.findById(userDoc._id)
+    .populate("following", "name image email")
+    .populate("communities", "name image email")
+    .populate("invitedCommunities", "name image email")
+    .populate({
+      path: "registeredInEvents",
+      populate: {
+        path: "speaker tickets coupon sponsors session booths",
+      },
+    });
+
   res.status(200).json({
     status: "success",
     message: "Successfully removed from my favourite events",
     data: eventId,
     eventDoc: event,
+    userDoc: updatedUser,
   });
 });
 

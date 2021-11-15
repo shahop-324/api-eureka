@@ -98,6 +98,30 @@ const StickyFooter = () => {
     setOpenTickets(false);
   };
 
+  let community = useSelector((state) => state.communityPage.community);
+  let tickets = useSelector((state) => state.ticket.tickets);
+
+  let isCommunityTeamMember = false;
+
+  if (isSignedIn) {
+    let teamMembers = [];
+    if (event) {
+      teamMembers.push(event.createdBy.superAdmin);
+      if (
+        typeof event.createdBy.eventManagers !== "undefined" &&
+        event.createdBy.eventManagers.length
+      ) {
+        for (let element of event.createdBy.eventManagers) {
+          teamMembers.push(element);
+        }
+      }
+
+      if (teamMembers.includes(userDetails._id)) {
+        isCommunityTeamMember = true;
+      }
+    }
+  }
+
   return (
     <>
       <div
@@ -297,13 +321,22 @@ const StickyFooter = () => {
           </Toolbar>
         </AppBar>
 
-        <div className="p-4">
-          <TicketForm
-            eventId={id}
-            tickets={event.tickets}
-            coupon={event.coupon}
-          />
-        </div>
+        {event ? (
+          <div className="p-4">
+            <TicketForm
+              isCommunityTeamMember={isCommunityTeamMember}
+              eventId={id}
+              tickets={tickets}
+              coupon={event.coupon}
+              eventName={event.eventName}
+              eventDescription={event.shortDescription}
+              startTime={event.startTime}
+              endTime={event.endTime}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </Dialog>
     </>
   );

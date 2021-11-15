@@ -47,9 +47,16 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
+const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName, eventDescription, startTime, endTime }) => {
   const params = useParams();
   const currentEventId = params.id;
+
+ const calendarEvent = {
+  title: eventName,
+  description: eventDescription,
+  start: new Date(startTime),
+  end: new Date(endTime),
+};
 
   const [openCalender, setOpenCalender] = React.useState(false);
 
@@ -322,6 +329,7 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon }) => {
         </div>
       </div>
       <AddToCalender
+      event={calendarEvent}
         open={openCalender}
         handleClose={handleCloseAddToCalender}
       />

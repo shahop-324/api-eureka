@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import "./../../../../assets/Sass/DataGrid.scss";
+import { useDispatch, useSelector } from "react-redux";
 
 import MenuItem from "@material-ui/core/MenuItem";
 
@@ -11,6 +11,7 @@ import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import { unfollowCommunity } from "./../../../../actions";
 
 const MenuText = styled.span`
   font-weight: 500;
@@ -68,7 +69,7 @@ const StyledMenu = MUIStyled((props) => (
   },
 }));
 
-const FollowingDetailsCard = () => {
+const FollowingDetailsCard = ({ id, name, email, image }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClickMore = (event) => {
@@ -77,6 +78,12 @@ const FollowingDetailsCard = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const dispatch = useDispatch();
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
 
   return (
     <>
@@ -93,8 +100,8 @@ const FollowingDetailsCard = () => {
             className=" d-flex flex-row align-items-center"
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
           >
-            <Avatar src={Faker.image.avatar()} />
-            <span className="ms-3"> {Faker.name.findName()} </span>
+            <Avatar src={image} variant="rounded" />
+            <span className="ms-3"> {name} </span>
           </div>
         </div>
         <div className="">
@@ -102,13 +109,20 @@ const FollowingDetailsCard = () => {
             className=""
             style={{ width: "100%", fontWeight: "500", fontSize: "0.8rem" }}
           >
-            {Faker.internet.email()}
+            {email}
           </div>
         </div>
         <div className="">
-          <button className="btn btn-outline-text btn-outline-primary">
-            Community
-          </button>
+          <a
+            href={`/community/${id}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <button className="btn btn-outline-text btn-outline-primary">
+              Community
+            </button>
+          </a>
         </div>
         <div className="">
           <button
@@ -134,7 +148,14 @@ const FollowingDetailsCard = () => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+            <MenuItem
+              className="mb-1"
+              onClick={() => {
+                dispatch(unfollowCommunity(userId, id));
+                handleClose();
+              }}
+              disableRipple
+            >
               <MenuText>Unfollow</MenuText>
             </MenuItem>
           </StyledMenu>

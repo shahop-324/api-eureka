@@ -330,12 +330,28 @@ router.post(
 
 router.get("/verifyPayPalEmail/:id", globalController.verifyPayPalEmail);
 
-router.get("/fetchPaypalPayouts/:communityId", authController.protectCommunity, globalController.fetchPaypalPayouts);
+router.get(
+  "/fetchPaypalPayouts/:communityId",
+  authController.protectCommunity,
+  globalController.fetchPaypalPayouts
+);
 
-router.post("/createPayPalPayoutRequest/:communityId", authController.protectCommunity, globalController.createPayPalPayoutRequest);
+router.post(
+  "/createPayPalPayoutRequest/:communityId",
+  authController.protectCommunity,
+  globalController.createPayPalPayoutRequest
+);
 
-router.get("/fetchRegistrations/:eventId", authController.protectCommunity, globalController.fetchRegistrations);
+router.get(
+  "/fetchRegistrations/:eventId",
+  authController.protectCommunity,
+  globalController.fetchRegistrations
+);
 
-router.post("/reportEvent", globalController.reportEvent);
+router.post(
+  "/reportEvent/:eventId",
+  authController.protect,
+  globalController.reportEvent
+);
 
 module.exports = router;

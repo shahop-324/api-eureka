@@ -973,6 +973,12 @@ export const addToFavouriteEvents = (eventId) => async (dispatch, getState) => {
       })
     );
 
+    dispatch(
+      userActions.CreateUser({
+        user: res.userDoc,
+      })
+    );
+
     dispatch(showSnackbar("success", "Added to wishlist."));
   } catch (error) {
     dispatch(eventActions.hasError(error.message));
@@ -1021,6 +1027,12 @@ export const removeFromFavouriteEvents =
         eventActions.RemoveFromFavouriteEvents({
           eventId: res.data,
           eventDoc: res.eventDoc,
+        })
+      );
+
+      dispatch(
+        userActions.CreateUser({
+          user: res.userDoc,
         })
       );
 
@@ -11635,10 +11647,6 @@ export const followCommunity =
 export const unfollowCommunity =
   (userId, communityId) => async (dispatch, getState) => {
     try {
-      // Here we will get updated user
-
-      // Here we will get updated user
-
       const res = await fetch(
         `${BaseURL}community/${communityId}/unfollowCommunity`,
         {
@@ -12521,6 +12529,41 @@ export const fetchRecordings = (eventId) => async (dispatch, getState) => {
     console.log(error);
     dispatch(
       showSnackbar("error", "Failed to fetch recordings, Please try again")
+    );
+  }
+};
+
+export const reportEvent = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}reportEvent/${eventId}`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      showSnackbar(
+        "success",
+        "This event has been reported and we are reviewing it."
+      )
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to report event, Please try again.")
     );
   }
 };

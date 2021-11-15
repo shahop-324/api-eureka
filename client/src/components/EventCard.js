@@ -5,11 +5,12 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import { Link } from "react-router-dom";
 import "./../assets/css/CardStyle.scss";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addToFavouriteEvents,
   fetchEvent,
   removeFromFavouriteEvents,
+  showSnackbar,
 } from "../actions";
 import StarRateRoundedIcon from "@material-ui/icons/StarRateRounded";
 import history from "./../history";
@@ -136,6 +137,10 @@ const EventCard = ({
   const dispatch = useDispatch();
   const showLiked = isFavourite;
 
+  const {isSignedIn} = useSelector((state) => state.auth);
+
+  const eventLink = `https://www.bluemeet.in/event-landing-page/${id}/${communityId}`;
+
   const [showIconButton, setShowIconButton] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -169,9 +174,13 @@ const EventCard = ({
       >
         <button
           onClick={() => {
-            isFavourite
-              ? dispatch(removeFromFavouriteEvents(id))
-              : dispatch(addToFavouriteEvents(id));
+            if(isSignedIn) {
+              isFavourite
+                ? dispatch(removeFromFavouriteEvents(id))
+                : dispatch(addToFavouriteEvents(id));
+            }else {
+              dispatch(showSnackbar("info", "Please log in to wishlist this event."));
+            }
           }}
           style={{
             color: isFavourite ? "#C22929" : "#212121",
@@ -224,8 +233,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <FacebookShareButton
-                url={`https://www.bluemeet.in`}
-                quote={"Bluemeet"}
+                url={eventLink}
+                quote={eventName}
                 className="Demo__some-network__share-button"
               >
                 <FacebookIcon style={{ color: "#4267B2" }} />
@@ -237,8 +246,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <TwitterShareButton
-                url={`https://www.bluemeet.in`}
-                title={"Bluemeet"}
+                url={eventLink}
+                title={eventName}
                 className="Demo__some-network__share-button"
               >
                 <TwitterIcon style={{ color: "#1DA1F2" }} />
@@ -249,8 +258,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <LinkedinShareButton
-                url={`https://www.bluemeet.in`}
-                title={"Bluemeet"}
+                url={eventLink}
+                title={eventName}
                 className="Demo__some-network__share-button"
               >
                 <LinkedInIcon style={{ color: "#0e76a8" }} />
@@ -261,8 +270,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <WhatsappShareButton
-                url={`https://www.bluemeet.in`}
-                title={"Bluemeet"}
+                url={eventLink}
+                title={eventName}
                 separator=":: "
                 className="Demo__some-network__share-button"
               >
@@ -274,8 +283,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <TelegramShareButton
-                url={`https://www.bluemeet.in`}
-                title={"Bluemeet"}
+                url={eventLink}
+                title={eventName}
                 separator=":: "
                 className="Demo__some-network__share-button"
               >
@@ -287,8 +296,8 @@ const EventCard = ({
           <MenuItem className="mb-1" onClick={handleClose} disableRipple>
             <div className="Demo__some-network">
               <RedditShareButton
-                url={`https://www.bluemeet.in`}
-                title={"Bluemeet"}
+                url={eventLink}
+                title={eventName}
                 separator=":: "
                 className="Demo__some-network__share-button"
               >

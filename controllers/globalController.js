@@ -26,6 +26,7 @@ const EventsIdsCommunityWise = require("../models/eventsIdsCommunityWiseModel");
 const RegistrationForm = require("./../models/registrationFormModel");
 const PaypalEmailChange = require("./../models/paypalEmailChangeModel");
 const PaypalPayout = require("./../models/paypalPayoutModel");
+const Report = require("./../models/reportModel");
 
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -2254,5 +2255,65 @@ exports.fetchRegistrations = catchAsync(async (req, res, next) => {
 });
 
 exports.reportEvent = catchAsync(async (req, res, next) => {
-  // mark event as reported and increase reported count => send a mail to report@bluemeet.in and SuperAdmin, community Verified mail and also create a notification for community
+  try {
+    const eventId = req.params.eventId;
+    const userId = req.user._id;
+
+    const eventDoc = await Event.findById(eventId);
+    const userDoc = await User.findById(userId);
+
+    // mark event as reported and increase reported count => send a mail to report@bluemeet.in and SuperAdmin, community Verified mail and also create a notification for community
+
+    const newEventReport = await Report.create({
+      event: eventId,
+      user: userId,
+      reportedAt: Date.now(),
+    });
+
+    // Send mail to person who reported this event
+
+    const msgToUser = {
+      to: userDoc.email, // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `We have recieved your report for following event ${eventDoc.eventName}`,
+      text: `Hi, ${userDoc.firstName}, we have successfully recieved your report for the event ${eventDoc.eventName} and we are currently reviewing it. Thanks for reporting, We will take appropriate action and will reach out to you with our conclusion.`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msgToUser)
+      .then(async () => {
+        console.log("Confirmation sent to user.");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send confirmation to user.");
+      });
+
+    // Send a mail to event surveillance team
+
+    const msgToSurveillanceTeam = {
+      to: "surveillanc@bluemeet.in", // Change to your recipient
+      from: "shreyanshshah242@gmail.com", // Change to your verified sender
+      subject: `Please review this event immediately and take appropriate action.`,
+      text: `Please review event report with following Id: ${newEventReport._id}.`,
+      // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+    };
+
+    sgMail
+      .send(msgToSurveillanceTeam)
+      .then(async () => {
+        console.log("Info sent to surveillance Team.");
+      })
+      .catch(async (error) => {
+        console.log("Failed to send info to surveillance team.");
+      });
+
+    res.status(200).json({
+      status: "success",
+      message:
+        "This event has been successfully reported and is currently under review.",
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });

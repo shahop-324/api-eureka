@@ -19,6 +19,11 @@ import {
   fetchEventLandingPage,
   getCommunityTawkLink,
   fetchCommunityProfile,
+  fetchUserAllPersonalData,
+  addToFavouriteEvents,
+  removeFromFavouriteEvents,
+  reportEvent,
+  showSnackbar,
 } from "../../actions/index";
 
 import BluemeetLogoLight from "./../../assets/images/Bluemeet_Logo_Light.svg";
@@ -239,6 +244,24 @@ const TicketsHeadline = styled.div`
 const EventLandingPage = (props) => {
   const params = useParams();
 
+  let isFavourite = false;
+
+  const communityId = params.communityId;
+
+  const id = params.id;
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  if (userDetails) {
+    if (userDetails.favouriteEvents) {
+      if (userDetails.favouriteEvents.includes(id)) {
+        isFavourite = true;
+      }
+    }
+  }
+
+  const eventLink = `https://www.bluemeet.in/event-landing-page/${id}/${communityId}`;
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -260,7 +283,6 @@ const EventLandingPage = (props) => {
   let event = useSelector((state) => state.event.eventDetails);
   let tickets = useSelector((state) => state.ticket.tickets);
   const isSignedIn = useSelector((state) => state.auth.isSignedIn);
-  const userDetails = useSelector((state) => state.user.userDetails);
 
   let isCommunityTeamMember = false;
 
@@ -304,13 +326,13 @@ const EventLandingPage = (props) => {
 
   const tawkLink = useSelector((state) => state.tawk.directChatLink);
 
-  const communityId = params.communityId;
-
-  const id = params.id;
   console.log(id);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (isSignedIn) {
+      dispatch(fetchUserAllPersonalData());
+    }
     dispatch(getCommunityTawkLink(communityId));
     dispatch(fetchCommunityProfile(communityId));
     dispatch(fetchEventLandingPage(id, true)); // true indicates that we have to increase number of views on this event
@@ -704,8 +726,8 @@ const EventLandingPage = (props) => {
                   </div>
                   <div className="Demo__some-network">
                     <LinkedinShareButton
-                      url={`https://www.bluemeet.in`}
-                      title={"Bluemeet"}
+                      url={eventLink}
+                      title={event.eventName}
                       className="Demo__some-network__share-button"
                     >
                       <div className="shareon-icon mb-3">
@@ -719,8 +741,8 @@ const EventLandingPage = (props) => {
 
                   <div className="Demo__some-network">
                     <TwitterShareButton
-                      url={`https://www.bluemeet.in`}
-                      title={"Bluemeet"}
+                      url={eventLink}
+                      title={event.eventName}
                       className="Demo__some-network__share-button"
                     >
                       <div className="shareon-icon mb-3">
@@ -733,8 +755,8 @@ const EventLandingPage = (props) => {
 
                   <div className="Demo__some-network">
                     <FacebookShareButton
-                      url={`https://www.bluemeet.in`}
-                      quote={"Bluemeet"}
+                      url={eventLink}
+                      quote={event.eventName}
                       className="Demo__some-network__share-button"
                     >
                       <div className="shareon-icon mb-3">
@@ -746,8 +768,8 @@ const EventLandingPage = (props) => {
                   </div>
                   <div className="Demo__some-network">
                     <WhatsappShareButton
-                      url={`https://www.bluemeet.in`}
-                      title={"Bluemeet"}
+                      url={eventLink}
+                      title={event.eventName}
                       separator=":: "
                       className="Demo__some-network__share-button"
                     >
@@ -760,8 +782,8 @@ const EventLandingPage = (props) => {
                   </div>
                   <div className="Demo__some-network">
                     <TelegramShareButton
-                      url={`https://www.bluemeet.in`}
-                      title={"Bluemeet"}
+                      url={eventLink}
+                      title={event.eventName}
                       separator=":: "
                       className="Demo__some-network__share-button"
                     >
@@ -774,8 +796,8 @@ const EventLandingPage = (props) => {
                   </div>
                   <div className="Demo__some-network">
                     <RedditShareButton
-                      url={`https://www.bluemeet.in`}
-                      title={"Bluemeet"}
+                      url={eventLink}
+                      title={event.eventName}
                       separator=":: "
                       className="Demo__some-network__share-button"
                     >
@@ -821,11 +843,55 @@ const EventLandingPage = (props) => {
                     open={open}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose} disableRipple>
-                      <FavoriteRoundedIcon />
-                      <MenuText>Add to wishlist</MenuText>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose} disableRipple>
+                    {isFavourite ? (
+                      <MenuItem
+                        onClick={() => {
+                          dispatch(removeFromFavouriteEvents(id));
+                          handleClose();
+                        }}
+                        disableRipple
+                      >
+                        <FavoriteRoundedIcon style={{ color: "#B82B2B" }} />
+                        <MenuText>Remove from wishlist</MenuText>
+                      </MenuItem>
+                    ) : (
+                      <MenuItem
+                        onClick={() => {
+                          if (isSignedIn) {
+                            dispatch(addToFavouriteEvents(id));
+                            handleClose();
+                          } else {
+                            dispatch(
+                              showSnackbar(
+                                "info",
+                                "Please Sign in to wishlist this event."
+                              )
+                            );
+                          }
+                        }}
+                        disableRipple
+                      >
+                        <FavoriteRoundedIcon />
+                        <MenuText>Add to wishlist</MenuText>
+                      </MenuItem>
+                    )}
+
+                    <MenuItem
+                      onClick={() => {
+                        if (isSignedIn) {
+                          dispatch(reportEvent(id));
+                          handleClose();
+                        } else {
+                          dispatch(
+                            showSnackbar(
+                              "info",
+                              "Please sign in to report this event."
+                            )
+                          );
+                        }
+                      }}
+                      disableRipple
+                    >
                       <ReplyRoundedIcon />
                       <MenuText>Report</MenuText>
                     </MenuItem>
@@ -1382,6 +1448,10 @@ const EventLandingPage = (props) => {
                     eventId={id}
                     tickets={tickets}
                     coupon={event.coupon}
+                    eventName={event.eventName}
+                    eventDescription={event.shortDescription}
+                    startTime={event.startTime}
+                    endTime={event.endTime}
                   />
                 </div>
               </div>

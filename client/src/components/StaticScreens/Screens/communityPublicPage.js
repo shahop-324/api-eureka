@@ -9,7 +9,6 @@ import "./../Styles/CommunityPublicPage.scss";
 import dateFormat from "dateformat";
 import EventCard from "./../../EventCard";
 import { makeStyles } from "@material-ui/core/styles";
-import StarOutlineRoundedIcon from "@material-ui/icons/StarOutlineRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -41,6 +40,7 @@ import {
   followCommunity,
   unfollowCommunity,
   fetchMyFavouriteEvents,
+  showSnackbar,
 } from "./../../../actions";
 
 import { Dialog, useMediaQuery, useTheme } from "@material-ui/core";
@@ -539,7 +539,13 @@ const CommunityPublicPage = () => {
               ) : (
                 <button
                   onClick={() => {
-                    dispatch(followCommunity(userId, communityId));
+                    if(isSignedIn) {
+                      dispatch(followCommunity(userId, communityId));
+                    }
+                    else {
+                      dispatch(showSnackbar("info", "Please log in to follow this event."));
+                    }
+                   
                   }}
                   className="btn btn-primary btn-outline-text ms-3"
                 >
@@ -734,7 +740,7 @@ const CommunityPublicPage = () => {
               } tab`}
               style={{ fontWeight: "600" }}
             >
-              Upcoming Events ({upcomingEvents.length*1})
+              Upcoming Events ({upcomingEvents.length * 1})
             </div>
             <div
               onClick={handlePastEventsClick}
@@ -742,7 +748,7 @@ const CommunityPublicPage = () => {
                 selectedTabIndex === 1 ? "active-tab" : ""
               }`}
             >
-              Past Events ({pastEvents.length*1})
+              Past Events ({pastEvents.length * 1})
             </div>
             <div
               onClick={handleReviewsClick}
@@ -750,7 +756,7 @@ const CommunityPublicPage = () => {
                 selectedTabIndex === 2 ? "active-tab" : ""
               }`}
             >
-              Reviews 
+              Reviews
             </div>
           </div>
 
@@ -765,7 +771,7 @@ const CommunityPublicPage = () => {
                   </div>
                 ) : (
                   <div
-                    className="d-flex flex-row align-items-center justify-content-center"
+                    className="d-flex flex-row align-items-center justify-content-center mb-5"
                     style={{ height: "400px", width: "100%" }}
                   >
                     <NoContentFound
@@ -784,7 +790,7 @@ const CommunityPublicPage = () => {
                       renderEvents(pastEvents, favouriteEvents)
                     ) : (
                       <div
-                        className="d-flex flex-row align-items-center justify-content-center"
+                        className="d-flex flex-row align-items-center justify-content-center mb-5"
                         style={{ height: "400px", width: "100%" }}
                       >
                         <NoContentFound

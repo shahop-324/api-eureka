@@ -40,24 +40,26 @@ const AddToCalenderTab = styled.div`
   }
 `;
 
-const AddToCalender = ({ open, handleClose }) => {
+const AddToCalender = ({ open, handleClose, event }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Set event as an object
-  const event = {
-    title: "My birthday party",
-    description: "Be there!",
-    start: Date.now(),
-    duration: [3, "hour"],
-  };
-
   // Then fetch the link
-  const googleLink = google(event); // https://calendar.google.com/calendar/render...
-  const outlookLink = outlook(event); // https://outlook.live.com/owa/...
-  const office365Link = office365(event); // https://outlook.office.com/owa/...
-  const yahooLink = yahoo(event); // https://calendar.yahoo.com/?v=60&title=...
-  const icsLink = ics(event); // standard ICS file based on https://icalendar.org
+
+  let googleLink;
+  let outlookLink;
+  let yahooLink;
+  let office365Link;
+  let icsLink;
+
+
+  if (event) {
+    googleLink = google(event); // https://calendar.google.com/calendar/render...
+    outlookLink = outlook(event); // https://outlook.live.com/owa/...
+    office365Link = office365(event); // https://outlook.office.com/owa/...
+    yahooLink = yahoo(event); // https://calendar.yahoo.com/?v=60&title=...
+    icsLink = ics(event); // standard ICS file based on https://icalendar.org
+  }
 
   return (
     <>
