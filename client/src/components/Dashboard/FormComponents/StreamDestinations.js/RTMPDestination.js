@@ -143,7 +143,9 @@ const RTMPDestination = ({ open, handleClose, handleSubmit }) => {
 
   if (sessions) {
     sessionOptions = sessions.map((session) => {
-      return { value: session._id, label: session.name };
+      if (session) {
+        return { value: session._id, label: session.name };
+      }
     });
   }
 

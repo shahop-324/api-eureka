@@ -6,7 +6,8 @@ import { Link, useLocation } from "react-router-dom";
 import history from "../../../history";
 import AvatarMenu from "../../AvatarMenu";
 import "./../Styles/CommunityPublicPage.scss";
-import Faker from "faker";
+import dateFormat from "dateformat";
+import EventCard from "./../../EventCard";
 import { makeStyles } from "@material-ui/core/styles";
 import StarOutlineRoundedIcon from "@material-ui/icons/StarOutlineRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
@@ -28,21 +29,23 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import UploadCommunityCover from "./../Helper/UploadCommunityCover";
 
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+
+import ReviewCard from "./../../Dashboard/HelperComponent/ReviewCard";
+
 import {
   fetchCommunityProfile,
   fetchCommunityEvents,
   fetchCommunityReviews,
+  fetchCommunityFollowers,
+  followCommunity,
+  unfollowCommunity,
+  fetchMyFavouriteEvents,
 } from "./../../../actions";
 
-import {
-  Dialog,
-  SwipeableDrawer,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Dialog, useMediaQuery, useTheme } from "@material-ui/core";
 
 import Footer from "../../Footer";
-
 
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import TelegramIcon from "@mui/icons-material/Telegram";
@@ -53,16 +56,20 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { styled as MUIStyled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 
-const SpeakersHeading = styled.div`
-  font-weight: 500;
-  font-family: "Ubuntu";
-  color: #212121;
-  font-size: 0.8rem;
-`;
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
 
-const RatingPaper = styled.div`
-  background-color: #152d35 !important;
-`;
+import NoContentFound from "./../../NoContent";
+
+import NoUpcomingEvents from "./../../../assets/images/NoUpcomingEvents.png";
+import NoPastEvents from "./../../../assets/images/NoPastEvents.png";
+import NoReviews from "./../../../assets/images/NoReviews.png";
 
 const StyledMenu = MUIStyled((props) => (
   <Menu
@@ -156,8 +163,109 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderEvents = (events, favouriteEvents) => {
+  return events.map((event) => {
+    let isFavourite = false;
+
+    if (favouriteEvents.includes(event._id)) {
+      isFavourite = true;
+    }
+
+    const now = new Date(event.startDate);
+    const formatedDate = dateFormat(now, "mmm dS, h:MM TT");
+
+    const end = new Date(event.endDate);
+    const formatedEndDate = dateFormat(end, "mmm dS, h:MM TT");
+
+    const startTime = dateFormat(event.startTime, "mmm dS, h:MM TT");
+    const endTime = dateFormat(event.endTime, "mmm dS, h:MM TT");
+
+    return (
+      <EventCard
+        showSpeakers={true}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
+        date={formatedDate}
+        id={event.id}
+        eventName={event.eventName}
+        minPrice={event.minTicketPrice}
+        maxPrice={event.maxTicketPrice}
+        endDate={formatedEndDate}
+        startTime={startTime}
+        endTime={endTime}
+        rating={(event.communityRating * 1).toFixed(1)}
+        communityId={event.communityId}
+        isFavourite={isFavourite}
+      />
+    );
+  });
+};
+
+const renderReviews = (reviews) => {
+  return reviews.map((review) => {
+    return (
+      <ReviewCard
+        showVisibilityToggle={false}
+        image={
+          review.user.image
+            ? review.user.image.startsWith("https://")
+              ? review.user.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${review.user.image}`
+            : "#"
+        }
+        name={`${review.user.firstName} ${review.user.lastName}`}
+        rating={review.rating * 1}
+        reviewComment={review.reviewComment}
+        key={review._id}
+        id={review._id}
+        hidden={review.hidden}
+      />
+    );
+  });
+};
+
 const CommunityPublicPage = () => {
   const classes = useStyles();
+
+  const { isSignedIn } = useSelector((state) => state.auth);
+  const { favouriteEvents } = useSelector((state) => state.event);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      dispatch(fetchMyFavouriteEvents());
+    }
+  }, []);
+
+  let following = false; // Flag which tells us if this user is following this community or not
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const { community, followers, events, reviews, uploadPercent } = useSelector(
+    (state) => state.communityPage
+  );
+
+  // Filter Past and Upcoming events
+
+  let upcomingEvents = [];
+  let pastEvents = [];
+
+  upcomingEvents = events.filter(
+    (event) => new Date(event.startTime) >= Date.now()
+  );
+
+  pastEvents = events.filter((event) => new Date(event.startTime) < Date.now());
+
+  // Used to render following and unfollow options
+
+  const [anchorElFollowing, setAnchorElFollowing] = React.useState(null);
+  const openFollowing = Boolean(anchorElFollowing);
+  const handleClickMoreFollowing = (event) => {
+    setAnchorElFollowing(event.currentTarget);
+  };
+  const handleCloseFollowing = () => {
+    setAnchorElFollowing(null);
+  };
+
+  // Used to render share community profile options
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -174,10 +282,13 @@ const CommunityPublicPage = () => {
 
   const communityId = params.communityId;
 
+  const userId = userDetails._id;
+
   useEffect(() => {
     dispatch(fetchCommunityProfile(communityId));
     dispatch(fetchCommunityEvents(communityId));
     dispatch(fetchCommunityReviews(communityId));
+    dispatch(fetchCommunityFollowers(communityId));
   }, []);
 
   const location = useLocation();
@@ -187,8 +298,6 @@ const CommunityPublicPage = () => {
   const handleClickOpenSettings = () => {
     setOpenSettings(true);
   };
-
-  const { isSignedIn } = useSelector((state) => state.auth);
 
   const [text, setText] = useState("");
 
@@ -215,6 +324,7 @@ const CommunityPublicPage = () => {
   };
 
   const onSubmitTextSearch = (e) => {
+    // We just need to send this page to search events with parameters
     e.preventDefault();
     if (text === "") {
       search_params.delete("text");
@@ -245,6 +355,12 @@ const CommunityPublicPage = () => {
 
   // Check if I am following this community
 
+  if (followers.includes(userId)) {
+    following = true;
+  }
+
+  const communityPageURL = `https://www.bluemeet.in/community/${communityId}`;
+
   return (
     <>
       <CssBaseline />
@@ -259,7 +375,6 @@ const CommunityPublicPage = () => {
                   style={{ height: "50px" }}
                 />
               </a>
-
               <button
                 className="navbar-toggler"
                 data-bs-toggle="collapse"
@@ -345,11 +460,11 @@ const CommunityPublicPage = () => {
           >
             <EditRoundedIcon style={{ fontSize: "22px" }} />
           </StyledIconButton>
-
           <img
             className="community-page-art"
-            src="http://www.calendarp.com/wp-content/uploads/2019/02/YouTube-Channel-Art-CP-008.jpg"
+            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.cover}`}
             alt="community public page art"
+            style={{ objectFit: "cover" }}
           ></img>
         </div>
         <div
@@ -358,91 +473,253 @@ const CommunityPublicPage = () => {
         >
           {/* // TODO Replace alt and src */}
           <Avatar
-            alt="Travis Howard"
-            src={Faker.image.avatar()}
+            alt={community.name}
+            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.image}`}
             variant="rounded"
             className={classes.large}
           />
           <div className="d-flex flex-row align-items-center justify-content-between mt-4">
-            <div className="public-page-name">{Faker.name.findName()}</div>
+            <div className="public-page-name">{community.name}</div>
             <div className="d-flex flex-row align-items-center justify-content-between">
-            <button
-              className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
-              id="demo-customized-button"
-              aria-controls="demo-customized-menu"
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              variant="outlined"
-              disableElevation
-              onClick={handleClickMore}
-             
-            >
-              {" "}
-              <ReplyRoundedIcon style={{ fontSize: "20px" }} />{" "}
-              <span className="ms-2">Share</span>
-            </button>
-            <button className="btn btn-primary btn-outline-text ms-3">Follow</button>
-            </div>
-            
-            <StyledMenu
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <FacebookIcon style={{ color: "#4267B2" }} />
-            <MenuText>Facebook</MenuText>
-          </MenuItem>
+              <button
+                className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
+                id="demo-customized-button"
+                aria-controls="demo-customized-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                variant="outlined"
+                disableElevation
+                onClick={handleClickMore}
+              >
+                {" "}
+                <ReplyRoundedIcon style={{ fontSize: "20px" }} />{" "}
+                <span className="ms-2">Share</span>
+              </button>
 
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <TwitterIcon style={{ color: "#1DA1F2" }} />
-            <MenuText>Twitter</MenuText>
-          </MenuItem>
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <LinkedInIcon style={{ color: "#0e76a8" }} />
-            <MenuText>Linkedin</MenuText>
-          </MenuItem>
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <WhatsAppIcon style={{ color: "#075E54" }} />
-            <MenuText>WhatsApp</MenuText>
-          </MenuItem>
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <TelegramIcon style={{ color: "#0088cc" }} />
-            <MenuText>Telegram</MenuText>
-          </MenuItem>
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            <RedditIcon style={{ color: "#FF5700" }} />
-            <MenuText>Reddit</MenuText>
-          </MenuItem>
-        </StyledMenu>
-           
+              {following ? (
+                <>
+                  {" "}
+                  <button
+                    id="demo-customized-button-following"
+                    aria-controls="demo-customized-menu-following"
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    variant="outlined"
+                    disableElevation
+                    onClick={handleClickMoreFollowing}
+                    className="btn btn-outline-text btn-primary d-flex flex-row align-items-center ms-3"
+                  >
+                    {" "}
+                    <ArrowDropDownRoundedIcon
+                      style={{ fontSize: "20px" }}
+                    />{" "}
+                    <span className="ms-2"> Following </span>{" "}
+                  </button>
+                  <StyledMenu
+                    id="demo-customized-menu-following"
+                    MenuListProps={{
+                      "aria-labelledby": "demo-customized-button-following",
+                    }}
+                    anchorEl={anchorElFollowing}
+                    open={openFollowing}
+                    onClose={handleCloseFollowing}
+                  >
+                    <MenuItem
+                      className="mb-1"
+                      onClick={() => {
+                        dispatch(unfollowCommunity(userId, communityId));
+                        handleCloseFollowing();
+                      }}
+                      disableRipple
+                    >
+                      <MenuText>Unfollow</MenuText>
+                    </MenuItem>
+                  </StyledMenu>{" "}
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    dispatch(followCommunity(userId, communityId));
+                  }}
+                  className="btn btn-primary btn-outline-text ms-3"
+                >
+                  Follow
+                </button>
+              )}
+            </div>
+
+            <StyledMenu
+              id="demo-customized-menu"
+              MenuListProps={{
+                "aria-labelledby": "demo-customized-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem
+                className="mb-1"
+                onClick={() => {
+                  handleClose();
+                }}
+                disableRipple
+              >
+                <div className="Demo__some-network">
+                  <FacebookShareButton
+                    url={communityPageURL}
+                    quote={community.name}
+                    className="Demo__some-network__share-button"
+                  >
+                    <FacebookIcon style={{ color: "#4267B2" }} />
+                    <MenuText>Facebook</MenuText>
+                  </FacebookShareButton>
+                </div>
+              </MenuItem>
+              <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+                <div className="Demo__some-network">
+                  <TwitterShareButton
+                    url={communityPageURL}
+                    title={community.name}
+                    className="Demo__some-network__share-button"
+                  >
+                    <TwitterIcon style={{ color: "#1DA1F2" }} />
+                    <MenuText>Twitter</MenuText>
+                  </TwitterShareButton>
+                </div>
+              </MenuItem>
+              <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+                <div className="Demo__some-network">
+                  <LinkedinShareButton
+                    url={communityPageURL}
+                    title={community.name}
+                    className="Demo__some-network__share-button"
+                  >
+                    <LinkedInIcon style={{ color: "#0e76a8" }} />
+                    <MenuText>Linkedin</MenuText>
+                  </LinkedinShareButton>
+                </div>
+              </MenuItem>
+              <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+                <div className="Demo__some-network">
+                  <WhatsappShareButton
+                    url={communityPageURL}
+                    title={community.name}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
+                  >
+                    <WhatsAppIcon style={{ color: "#075E54" }} />
+                    <MenuText>WhatsApp</MenuText>
+                  </WhatsappShareButton>
+                </div>
+              </MenuItem>
+              <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+                <div className="Demo__some-network">
+                  <TelegramShareButton
+                    url={communityPageURL}
+                    title={community.name}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
+                  >
+                    <TelegramIcon style={{ color: "#0088cc" }} />
+                    <MenuText>Telegram</MenuText>
+                  </TelegramShareButton>
+                </div>
+              </MenuItem>
+              <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+                <div className="Demo__some-network">
+                  <RedditShareButton
+                    url={communityPageURL}
+                    title={community.name}
+                    separator=":: "
+                    className="Demo__some-network__share-button"
+                  >
+                    <RedditIcon style={{ color: "#FF5700" }} />
+                    <MenuText>Reddit</MenuText>
+                  </RedditShareButton>
+                </div>
+              </MenuItem>
+            </StyledMenu>
           </div>
           <div className="community-total-registrations-and-events mt-3">
-            324 events . 1389 registrations
+            {events.length} Events . {community.totalRegistrations * 1}{" "}
+            Registrations
           </div>
           <div className="d-flex flex-row align-items-center justify-content-between community-total-registrations-and-events mt-3">
-            <div>Vlogging our life on the road</div>
+            <div>{community.headline}</div>
 
             <div className="d-flex flex-row align-items-center justify-content-between">
-              <IconButton>
-                <LanguageIcon />
-              </IconButton>
-              <IconButton>
-                <TwitterIcon />
-              </IconButton>
-              <IconButton>
-                <FacebookIcon />
-              </IconButton>
-              <IconButton>
-                <LinkedInIcon />
-              </IconButton>
-              <IconButton>
-                <MailOutlineIcon />
-              </IconButton>
+              {community.socialMediaHandles ? (
+                <>
+                  {" "}
+                  {community.socialMediaHandles.website ? (
+                    <a
+                      href={`//${community.socialMediaHandles.website}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {" "}
+                      <IconButton>
+                        <LanguageIcon />
+                      </IconButton>
+                    </a>
+                  ) : (
+                    <></>
+                  )}
+                  {community.socialMediaHandles.twitter ? (
+                    <a
+                      href={`//${community.socialMediaHandles.twitter}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {" "}
+                      <IconButton>
+                        <TwitterIcon />
+                      </IconButton>
+                    </a>
+                  ) : (
+                    <></>
+                  )}
+                  {community.socialMediaHandles.facebook ? (
+                    <a
+                      href={`//${community.socialMediaHandles.facebook}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {" "}
+                      <IconButton>
+                        <FacebookIcon />
+                      </IconButton>
+                    </a>
+                  ) : (
+                    <></>
+                  )}
+                  {community.socialMediaHandles.linkedin ? (
+                    <a
+                      href={`//${community.socialMediaHandles.linkedin}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <IconButton>
+                        <LinkedInIcon />
+                      </IconButton>
+                    </a>
+                  ) : (
+                    <></>
+                  )}{" "}
+                </>
+              ) : (
+                <></>
+              )}
+
+              <a
+                href={`mailto:${community.email}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <IconButton>
+                  <MailOutlineIcon />
+                </IconButton>
+              </a>
             </div>
           </div>
 
@@ -457,7 +734,7 @@ const CommunityPublicPage = () => {
               } tab`}
               style={{ fontWeight: "600" }}
             >
-              Upcoming Events (3)
+              Upcoming Events ({upcomingEvents.length*1})
             </div>
             <div
               onClick={handlePastEventsClick}
@@ -465,7 +742,7 @@ const CommunityPublicPage = () => {
                 selectedTabIndex === 1 ? "active-tab" : ""
               }`}
             >
-              Past Events (592)
+              Past Events ({pastEvents.length*1})
             </div>
             <div
               onClick={handleReviewsClick}
@@ -473,101 +750,76 @@ const CommunityPublicPage = () => {
                 selectedTabIndex === 2 ? "active-tab" : ""
               }`}
             >
-              Reviews ( <StarOutlineRoundedIcon style={{ fontSize: "16px" }} />{" "}
-              4.3)
+              Reviews 
             </div>
           </div>
 
-          <div className="community-public-page-grid-view my-5">
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-            <div
-              className="dummy-card"
-              style={{ border: "1px solid green", height: "250px" }}
-            ></div>
-          </div>
+          {(() => {
+            switch (selectedTabIndex * 1) {
+              case 0:
+                return typeof upcomingEvents !== "undefined" &&
+                  upcomingEvents.length > 0 ? (
+                  <div className="community-public-page-grid-view my-5">
+                    {" "}
+                    {renderEvents(upcomingEvents, favouriteEvents)}{" "}
+                  </div>
+                ) : (
+                  <div
+                    className="d-flex flex-row align-items-center justify-content-center"
+                    style={{ height: "400px", width: "100%" }}
+                  >
+                    <NoContentFound
+                      msgText="No upcoming events found"
+                      img={NoUpcomingEvents}
+                    />
+                  </div>
+                );
+
+              case 1:
+                return (
+                  <div className="community-public-page-grid-view my-5">
+                    {" "}
+                    {typeof pastEvents !== "undefined" &&
+                    pastEvents.length > 0 ? (
+                      renderEvents(pastEvents, favouriteEvents)
+                    ) : (
+                      <div
+                        className="d-flex flex-row align-items-center justify-content-center"
+                        style={{ height: "400px", width: "100%" }}
+                      >
+                        <NoContentFound
+                          msgText="No past events found"
+                          img={NoPastEvents}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+
+              case 2:
+                return (
+                  <div className="my-5">
+                    {" "}
+                    {typeof reviews !== "undefined" && reviews.length > 0 ? (
+                      renderReviews(reviews)
+                    ) : (
+                      <div
+                        className="d-flex flex-row align-items-center justify-content-center"
+                        style={{ height: "400px", width: "100%" }}
+                      >
+                        <NoContentFound
+                          msgText="No reviews found"
+                          img={NoReviews}
+                        />
+                      </div>
+                    )}{" "}
+                  </div>
+                );
+
+              default:
+                break;
+            }
+          })()}
         </div>
         <Footer />
       </div>
@@ -602,7 +854,6 @@ const CommunityPublicPage = () => {
         </HeaderFooter>
         <CommunityProfileTab />
       </Dialog>
-
       <UploadCommunityCover
         open={openUploadCover}
         handleClose={handleCloseUploadCover}

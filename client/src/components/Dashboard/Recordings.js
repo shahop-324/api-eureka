@@ -15,9 +15,8 @@ import RecordingsListFields from "./HelperComponent/RecordingsListFields";
 import { useParams } from "react-router-dom";
 import NoContentFound from "../NoContent";
 import Downloading from "./../../assets/images/Downloading.png";
-
-// Here we need to provide list of sessions for which recording is present
-const sessionOptions = [{ value: "All", label: "All Sessions" }];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSessions, fetchRecordings } from "../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -95,14 +94,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderRecordings = (recordings) => {
+  return recordings.map((recording) => {
+    return (
+      <RecordingDetailsCard
+        sessionName={recording.session}
+        duration={recording.duration}
+        key={recording._id}
+        id={recording._id}
+        url={recording.url}
+        timestamp={recording.timestamp}
+      />
+    );
+  });
+};
+
 const Recordings = () => {
+  // Here we need to provide list of sessions for which recording is present
+  const sessionOptions = [{ value: "All", label: "All Sessions" }];
+
+  const dispatch = useDispatch();
   const classes = useStyles();
   const params = useParams();
+
+  const eventId = params.id;
+
   const communityId = params.communityId;
   console.log(communityId);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    dispatch(fetchSessions(eventId, ""));
+    dispatch(fetchRecordings(eventId));
+  }, []);
 
-  let recordings = [];
+  const { recordings } = useSelector((state) => state.recording);
+  const { sessions } = useSelector((state) => state.session);
+
+  if (typeof sessions !== "undefined" && sessions.length > 0) {
+    for (let element of sessions) {
+      if (element) {
+        sessionOptions.push({
+          value: element._id,
+          label: element.name,
+        });
+      }
+    }
+  }
 
   return (
     <>
@@ -136,19 +172,15 @@ const Recordings = () => {
             </div>
           </div>
         </div>
-        <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
-        <RecordingsListFields />
-            <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
-              <Divider />
-            </div>
-            <RecordingDetailsCard />
-            </div>
+
         {typeof recordings !== "undefined" && recordings.length > 0 ? (
           <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
             <RecordingsListFields />
             <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
               <Divider />
             </div>
+            {/* renderRecordings */}
+            {renderRecordings(recordings)}
           </div>
         ) : (
           <div

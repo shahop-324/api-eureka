@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -10,7 +10,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { uploadCommunityCover } from "./../../../actions";
+import { uploadCommunityCover, resetCoverUploadPercent } from "./../../../actions";
 
 const Container = styled.div`
   height: auto;
@@ -41,9 +41,9 @@ const ProgressText = styled.div`
 const IllustrationContainer = styled.div`
   height: 340px;
   width: 100%;
-  background-color: #dfdfdf;
+  background-color: #FBFBFB;
   border-radius: 10px;
-  border: none;
+  border: 1px dashed #CACACA;
 
   font-weight: 500;
   font-size: 1rem;
@@ -82,7 +82,7 @@ const UploadCommunityCover = ({ open, handleClose }) => {
   let imgUrl;
 
   if (community) {
-    key = community.image;
+    key = community.cover;
   }
 
   if (key) {
@@ -90,13 +90,17 @@ const UploadCommunityCover = ({ open, handleClose }) => {
   }
 
   const [file, setFile] = useState(null);
-  const [fileToPreview, setFileToPreview] = useState(imgUrl);
+  const [fileToPreview, setFileToPreview] = useState(null);
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
     setFile(event.target.files[0]);
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
+
+  useEffect(() => {
+    dispatch(resetCoverUploadPercent());
+  }, []);
 
   return (
     <>
@@ -109,6 +113,7 @@ const UploadCommunityCover = ({ open, handleClose }) => {
         <Container className="p-4">
           {fileToPreview ? (
             <PreviewContainer
+              style={{ objectFit: "cover" }}
               className="mb-4"
               src={fileToPreview}
             ></PreviewContainer>
@@ -117,7 +122,6 @@ const UploadCommunityCover = ({ open, handleClose }) => {
               <span>Please select an image to upload</span>
             </IllustrationContainer>
           )}
-          {/* <PreviewContainer className="mb-4"></PreviewContainer> */}
 
           <div className="container" style={{ maxWidth: "500px" }}>
             <div className="mb-4">
@@ -130,14 +134,16 @@ const UploadCommunityCover = ({ open, handleClose }) => {
               />
             </div>
 
-            {uploadPercent * 1 !== 0 ? (
+            {uploadPercent * 1 === 0 ? (
               <div
                 className="d-flex flex-row align-items-center justify-content-center"
                 style={{ width: "100%" }}
               >
                 <button
                   onClick={() => {
-                    dispatch(uploadCommunityCover(file, communityId));
+                    dispatch(
+                      uploadCommunityCover(file, communityId, handleClose)
+                    );
                   }}
                   className="btn btn-outline-text btn-primary me-3"
                 >

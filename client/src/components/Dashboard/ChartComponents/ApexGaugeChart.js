@@ -5,7 +5,7 @@ class ApexGaugeChart extends React.Component {
     super(props);
 
     this.state = {
-      series: [80],
+      series: [props.percent],
       colors: ["#538BF7"],
       options: {
         chart: {

@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import Faker from "faker";
 import { Avatar } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
@@ -69,25 +69,24 @@ const StyledMenu = MUIStyled((props) => (
 }));
 
 const FollowingDetailsCard = () => {
-
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClickMore = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickMore = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
       <div
         className="session-list-fields-container"
         style={{
-            gridTemplateColumns: "4fr 4fr 2.5fr 1fr",
-            gridGap: "24px",
-            alignItems: "center",
-          }}
+          gridTemplateColumns: "4fr 4fr 2.5fr 1fr",
+          gridGap: "24px",
+          alignItems: "center",
+        }}
       >
         <div className="">
           <div
@@ -112,33 +111,33 @@ const FollowingDetailsCard = () => {
           </button>
         </div>
         <div className="">
-          <button id="demo-customized-button"
-          aria-controls="demo-customized-menu"
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          variant="outlined"
-          disableElevation
-          onClick={handleClickMore} className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center">
+          <button
+            id="demo-customized-button"
+            aria-controls="demo-customized-menu"
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            variant="outlined"
+            disableElevation
+            onClick={handleClickMore}
+            className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
+          >
             {" "}
             <ArrowDropDownRoundedIcon style={{ fontSize: "20px" }} />{" "}
             <span className="ms-2"> Following </span>{" "}
           </button>
           <StyledMenu
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem className="mb-1" onClick={handleClose} disableRipple>
-            
-            <MenuText>Unfollow</MenuText>
-          </MenuItem>
-
-          
-        </StyledMenu>
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem className="mb-1" onClick={handleClose} disableRipple>
+              <MenuText>Unfollow</MenuText>
+            </MenuItem>
+          </StyledMenu>
         </div>
       </div>
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>

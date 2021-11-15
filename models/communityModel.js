@@ -533,6 +533,10 @@ const communitySchema = new mongoose.Schema(
       type: Number, // Amount in USD that needs to be paid to the commuity super admin
       default: 0,
     },
+    totalRegistrations: { // We need to inc this whenever some one registers for any event of this community
+      type: Number,
+      default: 0,
+    },
   },
   {
     toJSON: { virtuals: true },

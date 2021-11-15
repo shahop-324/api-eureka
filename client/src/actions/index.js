@@ -60,6 +60,8 @@ import { sessionQnAActions } from "../reducers/sessionQnASlice";
 import { sessionPollActions } from "./../reducers/sessionPollSlice";
 import { openCloseActions } from "../reducers/openCloseSlice";
 import { communityPageActions } from "./../reducers/communityPageSlice";
+import { reviewActions } from "./../reducers/reviewSlice";
+import { recordingActions } from "./../reducers/recordingSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -11497,6 +11499,14 @@ export const toggleRequestDemo = (openState) => async (dispatch, getState) => {
   );
 };
 
+export const resetCoverUploadPercent = () => async (dispatch, getState) => {
+  dispatch(
+    communityPageActions.FetchUploadPercent({
+      percent: 0,
+    })
+  );
+};
+
 export const uploadCommunityCover =
   (file, communityId, handleClose) => async (dispatch, getState) => {
     try {
@@ -11545,6 +11555,14 @@ export const uploadCommunityCover =
                 community: result.data,
               })
             );
+
+            dispatch(
+              communityPageActions.FetchUploadPercent({
+                percent: 0,
+              })
+            );
+
+            handleClose();
 
             dispatch(showSnackbar("success", "Cover updated successfully!"));
           } catch (error) {
@@ -11599,7 +11617,13 @@ export const followCommunity =
         })
       );
 
-      dispatch(showSnackbar("Started following this community."));
+      dispatch(
+        communityPageActions.FetchFollowers({
+          followers: result.followers,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Started following this community."));
     } catch (error) {
       console.log(error);
       dispatch(
@@ -11646,12 +11670,51 @@ export const unfollowCommunity =
         })
       );
 
-      dispatch(showSnackbar("Unfollowed this community."));
+      dispatch(
+        communityPageActions.FetchFollowers({
+          followers: result.followers,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Unfollowed this community."));
     } catch (error) {
       console.log(error);
       dispatch(
         showSnackbar("error", "Failed to unfollow community, Please try again.")
       );
+    }
+  };
+
+export const fetchCommunityFollowers =
+  (communityId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}community/${communityId}/getCommunityFollowers`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+      const result = await res.json();
+
+      dispatch(
+        communityPageActions.FetchFollowers({
+          followers: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to fetch followers, Please try again"));
     }
   };
 
@@ -12302,5 +12365,162 @@ export const fetchTrack = (trackId) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("error", "Failed to fetch track, Please try again."));
+  }
+};
+
+export const createEventReview =
+  (formValues, eventId, userId) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}review/createReview/${eventId}/${userId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            ...formValues,
+            eventId: eventId,
+            userId: userId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        reviewActions.CreateReview({
+          review: res.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Review created successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to create review, Please try again.")
+      );
+    }
+  };
+
+export const createRecording =
+  (formValues, sessionId, url) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(
+        `${BaseURL}recording/createRecording/${sessionId}/${url}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            ...formValues,
+            sessionId: sessionId,
+            url: url,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        recordingActions.CreateRecording({
+          recording: res.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to create recording, Please try again")
+      );
+    }
+  };
+
+export const fetchEventReviews = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}review/fetchReviews/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      reviewActions.FetchReviews({
+        reviews: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch reviews, Please try again")
+    );
+  }
+};
+
+export const fetchRecordings = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}recording/fetchRecordings/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().communityAuth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+
+    dispatch(
+      recordingActions.FetchRecordings({
+        recordings: res.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch recordings, Please try again")
+    );
   }
 };

@@ -93,7 +93,9 @@ const SearchEvents = () => {
 
   useEffect(() => {
     dispatch(fetchEvents(location.search));
-    dispatch(fetchMyFavouriteEvents());
+    if (isSignedIn) {
+      dispatch(fetchMyFavouriteEvents());
+    }
   }, [location.search, dispatch]);
 
   useEffect(() => {

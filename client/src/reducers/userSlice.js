@@ -20,7 +20,7 @@ const userSlice = createSlice({
     openCommunityVerificationNotice: false,
     communityVerificationLinkExpired: false,
     userVerificationLinkExpired: false,
-    communityVerificationSucceded : false,
+    communityVerificationSucceded: false,
   },
 
   reducers: {
@@ -110,7 +110,7 @@ const userSlice = createSlice({
     },
     SetReferralCode(state, action) {
       state.referredId = action.payload.referralCode;
-    }
+    },
   },
 });
 export const userActions = userSlice.actions;

@@ -122,11 +122,11 @@ const Sessions = () => {
 
   const handleManageTracks = () => {
     setOpenManageTracks(true);
-  }
+  };
 
   const handleCloseManageTracks = () => {
     setOpenManageTracks(false);
-  }
+  };
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -156,32 +156,34 @@ const Sessions = () => {
       .slice(0)
       .reverse()
       .map((session) => {
-        const {
-          id,
-          name,
-          startTime,
-          endTime,
-          startDate,
-          endDate,
-          description,
-          speaker,
-          type,
-        } = session;
+        if (session) {
+          const {
+            id,
+            name,
+            startTime,
+            endTime,
+            startDate,
+            endDate,
+            description,
+            speaker,
+            type,
+          } = session;
 
-        return (
-          <SessionDetailCard
-            key={id}
-            speaker={speaker}
-            description={description}
-            startTime={startTime}
-            endTime={endTime}
-            startDate={startDate}
-            endDate={endDate}
-            name={name}
-            id={id}
-            type={type}
-          />
-        );
+          return (
+            <SessionDetailCard
+              key={id}
+              speaker={speaker}
+              description={description}
+              startTime={startTime}
+              endTime={endTime}
+              startDate={startDate}
+              endDate={endDate}
+              name={name}
+              id={id}
+              type={type}
+            />
+          );
+        }
       });
   };
   const classes = useStyles();
@@ -267,7 +269,10 @@ const Sessions = () => {
       </div>
       <AddNewSession open={open} handleClose={handleClose} />
       <EventSchedule open={openSchedule} handleClose={handleCloseSchedule} />
-      <ManageTracks open={openManageTracks} handleClose={handleCloseManageTracks} />
+      <ManageTracks
+        open={openManageTracks}
+        handleClose={handleCloseManageTracks}
+      />
     </>
   );
 };

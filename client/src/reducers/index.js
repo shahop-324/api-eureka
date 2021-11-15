@@ -60,6 +60,8 @@ import sessionPollSlice from "./sessionPollSlice";
 import eventVideoSlice from "./eventVideoSlice";
 import openCloseSlice from "./openCloseSlice";
 import communityPageSlice from "./communityPageSlice";
+import reviewSlice from "./reviewSlice";
+import recordingSlice from "./recordingSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -122,4 +124,6 @@ export default combineReducers({
   eventVideos: eventVideoSlice.reducer,
   openClose: openCloseSlice.reducer,
   communityPage: communityPageSlice.reducer,
+  review: reviewSlice.reducer,
+  recording: recordingSlice.reducer,
 });

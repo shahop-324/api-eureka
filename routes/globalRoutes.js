@@ -336,4 +336,6 @@ router.post("/createPayPalPayoutRequest/:communityId", authController.protectCom
 
 router.get("/fetchRegistrations/:eventId", authController.protectCommunity, globalController.fetchRegistrations);
 
+router.post("/reportEvent", globalController.reportEvent);
+
 module.exports = router;

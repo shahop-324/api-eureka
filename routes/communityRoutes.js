@@ -314,9 +314,14 @@ router.post(
   communityController.followCommunity
 );
 
+router.get(
+  "/:communityId/getCommunityFollowers",
+  communityController.getCommunityFollowers
+);
+
 router.patch(
   "/:communityId/updateCommunityProfile",
-  authController.protect,
+  authController.protectCommunity,
   communityController.updateCommunityProfile
 );
 

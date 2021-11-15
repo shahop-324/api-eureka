@@ -2245,10 +2245,14 @@ exports.fetchRegistrations = catchAsync(async (req, res, next) => {
 
   const registrations = await Registration.find({
     bookedForEventId: mongoose.Types.ObjectId(eventId),
-  }).select('type userName userEmail userImage');
+  }).select("type userName userEmail userImage");
 
   res.status(200).json({
     status: "success",
     data: registrations,
   });
+});
+
+exports.reportEvent = catchAsync(async (req, res, next) => {
+  // mark event as reported and increase reported count => send a mail to report@bluemeet.in and SuperAdmin, community Verified mail and also create a notification for community
 });

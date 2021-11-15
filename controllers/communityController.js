@@ -630,7 +630,7 @@ exports.getReviews = catchAsync(async (req, res, next) => {
       { communityId: mongoose.Types.ObjectId(communityId) },
       { hidden: false },
     ],
-  });
+  }).populate("user", "firstName lastName image");
 
   res.status(200).json({
     status: "success",
@@ -653,13 +653,30 @@ exports.getEvents = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getCommunityFollowers = catchAsync(async (req, res, next) => {
+  // Get list of all follewers of this community
+
+  try {
+    const communityId = req.params.communityId;
+
+    const doc = await Community.findById(communityId).select("followers");
+
+    res.status(200).json({
+      status: "success",
+      data: doc.followers,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 exports.getCommunityProfile = catchAsync(async (req, res, next) => {
   // Get Community profile
 
   const communityId = req.params.communityId;
 
   const community = await Community.findById(communityId).select(
-    "name email socialMediaHandles image cover headline"
+    "name email socialMediaHandles image cover headline socialMediaHandles totalRegistrations"
   );
 
   res.status(200).json({
@@ -680,7 +697,10 @@ exports.followCommunity = catchAsync(async (req, res, next) => {
     communityDoc.followers.push(userId);
   }
 
-  await communityDoc.save({ new: true, validateModifiedOnly: true });
+  const updatedCommunity = await communityDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
 
   const userDoc = await User.findById(userId);
 
@@ -696,6 +716,7 @@ exports.followCommunity = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedUser,
+    followers: updatedCommunity.followers,
   });
 });
 
@@ -711,7 +732,10 @@ exports.unfollowCommunity = catchAsync(async (req, res, next) => {
     (follower) => follower.toString() !== userId.toString()
   );
 
-  await communityDoc.save({ new: true, validateModifiedOnly: true });
+  const updatedCommunity = await communityDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
 
   const userDoc = await User.findById(userId);
 
@@ -727,6 +751,7 @@ exports.unfollowCommunity = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedUser,
+    followers: updatedCommunity.followers,
   });
 });
 

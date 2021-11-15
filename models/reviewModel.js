@@ -10,7 +10,7 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Community",
     },
-    userId: {
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },

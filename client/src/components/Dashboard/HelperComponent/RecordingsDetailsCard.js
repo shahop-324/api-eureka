@@ -2,15 +2,11 @@ import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import styled from "styled-components";
 import FourKIcon from "@material-ui/icons/FourK";
 import React from "react";
-import dateFormat, { masks } from "dateformat";
+import dateFormat from "dateformat";
 import { IconButton } from "@material-ui/core";
-
 import Divider from "@material-ui/core/Divider";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-// import Avatar from '@material-ui/core/Avatar';
-
 import "./../../../assets/Sass/DataGrid.scss";
-import CustomizedSwitches from "./ToggleSwitchForRecordingsShraing";
 
 const SessionName = styled.div`
   font-weight: 500;
@@ -18,7 +14,17 @@ const SessionName = styled.div`
   color: #212121;
 `;
 
-const RecordingsDetailsCard = () => {
+const RecordingsDetailsCard = ({
+  sessionName,
+  duration,
+  id,
+  url,
+  timestamp,
+}) => {
+  const downloadRecording = () => {
+    window.location.href = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${url}`;
+  };
+
   return (
     <>
       <div
@@ -33,20 +39,18 @@ const RecordingsDetailsCard = () => {
           <div className="registrations-field-label mx-5 d-flex flex-row ">
             <VideocamRoundedIcon style={{ fill: "#538BF7" }} />
 
-            <SessionName className="ms-3 px-2">
-              Safegurading PM Career
-            </SessionName>
+            <SessionName className="ms-3 px-2">{sessionName}</SessionName>
           </div>
         </div>
 
         <div className="registrations-phone-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {/* phone number */}2 hr 30 min
+            {duration}
           </div>
         </div>
         <div className="registrations-date-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {dateFormat(Date.now(), "ddd, mmm dS, yy, h:MM:ss TT")}
+            {dateFormat(new Date(timestamp), "ddd, mmm dS, yy, h:MM:ss TT")}
           </div>
         </div>
 
@@ -59,7 +63,11 @@ const RecordingsDetailsCard = () => {
 
         <div className="registrations-invoice-field">
           <div className="registrations-field-label registrations-field-value-modified px-3">
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                downloadRecording();
+              }}
+            >
               <CloudDownloadIcon />
             </IconButton>
           </div>

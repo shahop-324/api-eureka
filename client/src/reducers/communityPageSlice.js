@@ -9,7 +9,7 @@ const communityPageSlice = createSlice({
     followers: [],
     events: [],
     reviews: [],
-    uploadPercent: 32,
+    uploadPercent: 0,
   },
   reducers: {
     FetchCommunity(state, action) {
