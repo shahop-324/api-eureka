@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const recordingSchema = new mongoose.Schema(
   {
+    eventId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Event",
+    },
     sessionName: {
       type: String,
     },
