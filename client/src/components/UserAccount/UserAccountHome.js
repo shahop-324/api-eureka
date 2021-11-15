@@ -265,16 +265,20 @@ const UserAccountHome = () => {
                 >
                   <MenuItem
                     onClick={() => {
-                      dispatch(navigationIndex(0));
-                      history.push("/user/home");
-                      window.location.href = `https://bluemeetinc.zendesk.com/hc/en-us`;
                       handleClose();
                     }}
                     className="mb-1"
                     disableRipple
                   >
-                    <ArticleRoundedIcon />
-                    <MenuText>Knowledge Base</MenuText>
+                    <a
+                      href={`https://bluemeetinc.zendesk.com/hc/en-us`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <ArticleRoundedIcon />
+                      <MenuText>Knowledge Base</MenuText>
+                    </a>
                   </MenuItem>
 
                   <MenuItem
@@ -285,19 +289,32 @@ const UserAccountHome = () => {
                     }}
                     disableRipple
                   >
-                    <VideoLibraryRoundedIcon />
-                    <MenuText>Tutorial videos</MenuText>
+                    <a
+                      href={`/learn`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <VideoLibraryRoundedIcon />
+                      <MenuText>Tutorial videos</MenuText>
+                    </a>
                   </MenuItem>
                   <MenuItem
                     className="mb-1"
                     onClick={() => {
-                      window.location.href = `https://bluemeetinc.zendesk.com/hc/en-us/community/topics`;
                       handleClose();
                     }}
                     disableRipple
                   >
-                    <ForumRoundedIcon />
-                    <MenuText>Ask in community</MenuText>
+                    <a
+                      href={`https://bluemeetinc.zendesk.com/hc/en-us/community/topics`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <ForumRoundedIcon />
+                      <MenuText>Ask in community</MenuText>
+                    </a>
                   </MenuItem>
                 </StyledMenu>
                 <div className="ms-3">

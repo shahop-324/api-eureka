@@ -174,8 +174,8 @@ const RequestIntegrationForm = ({ handleSubmit, handleClose, open }) => {
             >
               <div></div>
               <FormHeading
-                className="overlay-form-heading"
-                style={{ fontFamily: "Ubuntu" }}
+                className=""
+                style={{ fontFamily: "Ubuntu", textAlign: "center" }}
               >
                 Request integration
               </FormHeading>
@@ -191,7 +191,7 @@ const RequestIntegrationForm = ({ handleSubmit, handleClose, open }) => {
             </div>
             <FormSubHeading
               className={`overlay-sub-form-heading`}
-              style={{ fontFamily: "Ubuntu", textAlign: "center" }}
+              style={{ fontFamily: "Ubuntu", textAlign: "center", fontSize: "0.8rem" }}
             >
               Just fill in these two and we will deliver it at lightning fast
               speed.

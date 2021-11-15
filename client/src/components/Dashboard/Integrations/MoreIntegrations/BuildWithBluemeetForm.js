@@ -146,8 +146,8 @@ const BuildWithBluemeetForm = ({ handleSubmit, handleClose, open }) => {
             >
               <div></div>
               <FormHeading
-                className="overlay-form-heading"
-                style={{ fontFamily: "Ubuntu" }}
+                className=""
+                style={{ fontFamily: "Ubuntu", textAlign: "center" }}
               >
                 Build with Bluemeet
               </FormHeading>
@@ -163,7 +163,11 @@ const BuildWithBluemeetForm = ({ handleSubmit, handleClose, open }) => {
             </div>
             <FormSubHeading
               className={`overlay-sub-form-heading`}
-              style={{ fontFamily: "Ubuntu", textAlign: "center" }}
+              style={{
+                fontFamily: "Ubuntu",
+                textAlign: "center",
+                fontSize: "0.8rem",
+              }}
             >
               Just fill in your details and we will get in touch with you.
             </FormSubHeading>
@@ -207,23 +211,21 @@ const BuildWithBluemeetForm = ({ handleSubmit, handleClose, open }) => {
             </div>
 
             <div className="mb-4 overlay-form-input-row">
-            <FormLabel
-              for="productDescription"
-              className="form-label form-label-customized"
-            >
-              Product short description
-            </FormLabel>
-            <Field
-              name="productDescription"
-              type="text"
-              classes="form-control"
-              id="productDescription"
-              ariadescribedby="communityName"
-              component={renderTextArea}
-            />
-          </div>
-
-
+              <FormLabel
+                for="productDescription"
+                className="form-label form-label-customized"
+              >
+                Product short description
+              </FormLabel>
+              <Field
+                name="productDescription"
+                type="text"
+                classes="form-control"
+                id="productDescription"
+                ariadescribedby="communityName"
+                component={renderTextArea}
+              />
+            </div>
 
             <div style={{ width: "100%" }}>
               <button
@@ -251,7 +253,7 @@ const validate = (formValues) => {
     errors.companyName = "Company name is required.";
   }
 
-  if(!formValues.productDescription) {
+  if (!formValues.productDescription) {
     errors.productDescription = "Product description is required.";
   }
 

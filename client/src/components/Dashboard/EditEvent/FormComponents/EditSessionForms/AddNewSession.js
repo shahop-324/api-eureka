@@ -199,8 +199,10 @@ const AddNewSession = ({
 
   const { tracks } = useSelector((state) => state.event);
 
-  for (let element of tracks) {
-    trackOptions.push({ value: element._id, label: element.name });
+  if (tracks) {
+    for (let element of tracks) {
+      trackOptions.push({ value: element._id, label: element.name });
+    }
   }
 
   const { error, isLoading } = useSelector((state) => state.session);

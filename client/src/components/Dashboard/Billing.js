@@ -156,7 +156,7 @@ const Billing = () => {
 
   const handleOpenEditEmail = () => {
     setOpenEditEmail(true);
-  }
+  };
 
   const handleCloseEditEmail = () => {
     setOpenEditEmail(false);
@@ -341,11 +341,10 @@ const Billing = () => {
                 <AddCircleOutlineRoundedIcon
                   style={{ fontSize: "20px" }}
                 />{" "}
-                <span className="ms-1">Add</span>
+                <span className="ms-1">Add Email</span>
               </button>
             )}
-
-            {!paypalEmailIsVerified ? (
+            {!paypalEmailIsVerified && payPalPayoutEmailId ? (
               <button
                 onClick={() => {
                   dispatch(resendPayPalPayoutEmailVerificationLink(_id));
@@ -547,7 +546,11 @@ const Billing = () => {
         open={openPayoutHistory}
         handleClose={handleClosePayoutHistory}
       />
-      <Withdraw open={openWithdraw} handleClose={handleCloseWithdraw} handleOpenEditEmail={handleOpenEditEmail} />
+      <Withdraw
+        open={openWithdraw}
+        handleClose={handleCloseWithdraw}
+        handleOpenEditEmail={handleOpenEditEmail}
+      />
       <EditEmail open={openEditEmail} handleClose={handleCloseEditEmail} />
     </>
   );
