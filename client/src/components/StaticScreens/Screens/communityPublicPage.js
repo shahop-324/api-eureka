@@ -462,7 +462,7 @@ const CommunityPublicPage = () => {
           </StyledIconButton>
           <img
             className="community-page-art"
-            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.cover}`}
+            src={community ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.cover}` : "#"}
             alt="community public page art"
             style={{ objectFit: "cover" }}
           ></img>

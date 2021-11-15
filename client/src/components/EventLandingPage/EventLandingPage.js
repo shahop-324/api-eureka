@@ -936,7 +936,7 @@ const EventLandingPage = (props) => {
                   </div>
 
                   <CommunityHeadline className="mb-4">
-                    {community.headline}
+                    {community ? community.headline : <></>}
                   </CommunityHeadline>
 
                   {community ? (
@@ -1339,7 +1339,7 @@ const EventLandingPage = (props) => {
                   </div>
 
                   <CommunityHeadline className="mb-4">
-                    {community.headline}
+                    { community ? community.headline : <></>}
                   </CommunityHeadline>
 
                   {community ? (
