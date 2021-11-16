@@ -29,7 +29,8 @@ import MailRoundedIcon from "@mui/icons-material/MailRounded"; // Mail
 import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded"; // Rating review
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded"; // Sponsor
 import PagesIcon from "@mui/icons-material/Pages"; // Landing page Icon
-import EventRoundedIcon from '@mui/icons-material/EventRounded'; // Event Schedule
+import EventRoundedIcon from "@mui/icons-material/EventRounded"; // Event Schedule
+import Loader from "../../Loader";
 
 const SideNavEdit = ({
   activeIndex,
@@ -72,6 +73,10 @@ const SideNavEdit = ({
     });
   });
 
+  if(!event) {
+    return <Loader />
+  }
+
   // let isAlreadyPublished = true;
 
   let isDescriptionPresent = false;
@@ -79,10 +84,12 @@ const SideNavEdit = ({
   let isTicketPresent = false;
   let isSpeakerPresent = false;
 
-  event.session[0] && (isSessionPresent = true);
-  event.speaker[0] && (isSpeakerPresent = true);
-  event.tickets[0] && (isTicketPresent = true);
-  event.editingComment && (isDescriptionPresent = true);
+  if (event) {
+    event.session[0] && (isSessionPresent = true);
+    event.speaker[0] && (isSpeakerPresent = true);
+    event.tickets[0] && (isTicketPresent = true);
+    event.editingComment && (isDescriptionPresent = true);
+  }
 
   // let isReadyToPublish = false;
 

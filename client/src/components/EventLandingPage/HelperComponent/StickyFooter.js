@@ -67,7 +67,7 @@ const SaleOffContainer = styled.div`
   justify-content: center;
 `;
 
-const StickyFooter = ({ eventName }) => {
+const StickyFooter = ({ eventName, color }) => {
   const classes = useStyles();
 
   const params = useParams();
@@ -329,6 +329,7 @@ const StickyFooter = ({ eventName }) => {
             {/* {// ! Ticket sale is currently off } */}
             {event.ticketSaleIsEnabled ? (
               <TicketForm
+              color={color}
                 isCommunityTeamMember={isCommunityTeamMember}
                 eventId={id}
                 tickets={tickets}

@@ -6,6 +6,12 @@ import { Tooltip } from "@material-ui/core";
 import EventRoundedIcon from "@mui/icons-material/EventRounded";
 import dateFormat from "dateformat";
 import AddToCalender from "./../HelperComponent/AddTocalender";
+import α from "color-alpha";
+
+const SessionContainer = styled.div`
+  background-color: ${(props) =>
+    props && props.color ? α(props.color, 0.1) : "#e9effb"} !important;
+`;
 
 const SessionTimeline = styled.div`
   font-weight: 500;
@@ -33,6 +39,7 @@ const SessionCard = ({
   sessionDescription,
   speakerAvatarList,
   id,
+  color,
 }) => {
   const [openCalender, setOpenCalender] = React.useState(false);
 
@@ -67,7 +74,11 @@ const SessionCard = ({
 
   return (
     <>
-      <div key={id} className="session-card mb-3 px-3 py-4">
+      <SessionContainer
+        color={color}
+        key={id}
+        className="session-card mb-3 px-3 py-4"
+      >
         <div className="d-flex flex-row align-items-center justify-content-between mb-3">
           <SessionTimeline className="session-date-time-venue-section">
             {dateFormat(startTime, "mmm dS, h:MM TT")} -{" "}
@@ -93,7 +104,7 @@ const SessionCard = ({
         <div className="session-speakers-grid pt-3">
           {renderSpeakerAvatarList(speakerAvatarList)}
         </div>
-      </div>
+      </SessionContainer>
       <AddToCalender
         open={openCalender}
         handleClose={handleCloseCalender}

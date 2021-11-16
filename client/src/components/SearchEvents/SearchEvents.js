@@ -35,6 +35,8 @@ import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneR
 import NotificationSideDrawer from "./../UserAccount/Helper/NotificationSideDrawer";
 import Wishlist from "./../UserAccount/Helper/Wishlist";
 
+import Chip from "@mui/material/Chip";
+
 const categories = [
   { title: "Technology" },
   { title: "Education" },
@@ -48,8 +50,26 @@ const categories = [
   { title: "Business & Entrepreneurship" },
 ];
 
+const eventTypes = [
+  { title: "Conference" },
+  { title: "Product Launch" },
+  { title: "Meetup" },
+  { title: "Career Fair" },
+  { title: "Workshop" },
+  { title: "Summit" },
+  { title: "Office hour" },
+  { title: "Training Event" },
+  { title: "Social webinar" },
+  { title: "Onboarding" },
+  { title: "Investor Meetings" },
+  { title: "Team hour" },
+  { title: "Town Hall" },
+  { title: "Product demo" },
+  { title: "Interview Session" },
+];
+
 const HeroHeading = styled.div`
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.4rem;
   color: #212121;
   text-align: center;
@@ -70,6 +90,14 @@ const EventAndCatgory = styled.div`
 
 const SearchEvents = () => {
   const dispatch = useDispatch();
+
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
+
+  const handleDelete = () => {
+    console.info("You clicked the delete icon.");
+  };
 
   const [openNotifications, setOpenNotifications] = useState(false);
 
@@ -299,6 +327,33 @@ const SearchEvents = () => {
     }
   };
 
+  const onEventTypeChange = (event, value) => {
+    const queryString = value
+      .map(function (elem) {
+        return elem.title;
+      })
+      .join(",");
+
+    if (queryString === "") {
+      search_params.delete("type");
+    } else {
+      search_params.set("type", queryString);
+    }
+
+    url.search = search_params.toString();
+    let new_url = url.toString();
+    const len = new_url.split("?")[0].length;
+
+    const result = new_url.substring(len);
+    console.log(result);
+
+    if (result === "") {
+      history.push("/search-events/");
+    } else {
+      history.push(result);
+    }
+  };
+
   const onSubmitTextSearch = (e) => {
     e.preventDefault();
     if (text === "") {
@@ -416,7 +471,7 @@ const SearchEvents = () => {
         <div className="row no-of-events-section">
           <HeroHeading>Events</HeroHeading>
           <EventAndCatgory className="my-2">
-            {eventsList.length} Events . 8 Categories
+            {eventsList.length} Events . 10 Categories
           </EventAndCatgory>
         </div>
         <div
@@ -440,11 +495,10 @@ const SearchEvents = () => {
               >
                 <div
                   className="filter-name pt-3"
-                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
                 >
                   Date
                 </div>
-
                 <div className="px-2">
                   <DateRangePicker
                     initialSettings={{
@@ -476,7 +530,7 @@ const SearchEvents = () => {
               >
                 <div
                   className="filter-name mb-3"
-                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
                 >
                   Price (in USD)
                 </div>
@@ -548,7 +602,7 @@ const SearchEvents = () => {
               >
                 <div
                   className="filter-name mb-3"
-                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
                 >
                   Community Rating
                 </div>
@@ -611,12 +665,12 @@ const SearchEvents = () => {
               </div>
 
               <div
-                className="row categories-filter"
+                className="row categories-filter mb-3"
                 style={{ width: "90%", margin: "0 auto" }}
               >
                 <div
                   className="filter-name"
-                  style={{ fontFamily: "Inter", fontWeight: "600" }}
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
                 >
                   Categories
                 </div>
@@ -626,6 +680,30 @@ const SearchEvents = () => {
                     multiple
                     id="tags-standard"
                     options={categories}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="standard" />
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div
+                className="row categories-filter"
+                style={{ width: "90%", margin: "0 auto" }}
+              >
+                <div
+                  className="filter-name"
+                  style={{ fontFamily: "Inter", fontWeight: "500" }}
+                >
+                  Event Type
+                </div>
+                <div className="categories-filter-input">
+                  <Autocomplete
+                    onChange={onEventTypeChange}
+                    multiple
+                    id="tags-standard"
+                    options={eventTypes}
                     getOptionLabel={(option) => option.title}
                     renderInput={(params) => (
                       <TextField {...params} variant="standard" />

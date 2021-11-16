@@ -84,6 +84,10 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
+import { makeStyles } from "@mui/styles";
+
+import α from "color-alpha";
+
 const styles = {
   control: (base) => ({
     ...base,
@@ -256,8 +260,22 @@ const TicketsHeadline = styled.div`
   color: #212121;
 `;
 
+// const useStyles = makeStyles({
+//   root: {
+//     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+//     border: 0,
+//     borderRadius: 3,
+//     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+//     color: "#FF8E53",
+//     height: 48,
+//     padding: '0 30px',
+//   },
+// });
+
 const EventLandingPage = (props) => {
   const params = useParams();
+
+  // const classes = useStyles();
 
   let isFavourite = false;
 
@@ -450,11 +468,12 @@ const EventLandingPage = (props) => {
       secNavCol = "1fr 1fr 1fr 1fr 1fr";
   }
 
-  const renderSessionList = () => {
+  const renderSessionList = (color) => {
     return event.session.map((session) => {
       console.log(session.speaker);
       return (
         <SessionCard
+          color={color}
           startTime={session.startTime}
           endTime={session.endTime}
           sessionName={session.name}
@@ -1059,7 +1078,10 @@ const EventLandingPage = (props) => {
                         window.location.hash = "#overview-section";
                       }}
                       label="Overview"
-                      style={{ fontWeight: "500", textTransform: "capitalize" }}
+                      style={{
+                        fontWeight: "500",
+                        textTransform: "capitalize",
+                      }}
                     />
                     <Tab
                       onClick={() => {
@@ -1127,7 +1149,7 @@ const EventLandingPage = (props) => {
                       <div className="event-landing-page-section-headline mb-4">
                         <SectionHeading className="">Schedule</SectionHeading>
                       </div>
-                      <div className="schedule-filter-grid mb-4">
+                      {/* <div className="schedule-filter-grid mb-4">
                         <Select
                           options={[]}
                           placeholder="Speakers"
@@ -1161,9 +1183,9 @@ const EventLandingPage = (props) => {
                           onClick={handleClick}
                           onDelete={handleDelete}
                         />
-                      </div>
+                      </div> */}
                       <div className="session-card-row ">
-                        {renderSessionList()}
+                        {renderSessionList(event.landingPageColor)}
                       </div>
                     </div>
                     <hr className="my-5" />
@@ -1303,7 +1325,10 @@ const EventLandingPage = (props) => {
                 <div className="event-info-card-1">
                   <div
                     className="event-info-card-1-primary px-4 py-2"
-                    style={{ zIndex: "10000" }}
+                    style={{
+                      zIndex: "10000",
+                      backgroundColor: α(event.landingPageColor, 0.2),
+                    }}
                   >
                     <MonthOfEvent className="mb-3">{startMonth}</MonthOfEvent>
                     <DateOfEvent className="mb-3">
@@ -1451,6 +1476,7 @@ const EventLandingPage = (props) => {
 
                   {event.ticketSaleIsEnabled ? (
                     <TicketForm
+                      color={event.landingPageColor}
                       isCommunityTeamMember={isCommunityTeamMember}
                       eventId={id}
                       tickets={tickets}
@@ -1474,6 +1500,7 @@ const EventLandingPage = (props) => {
           </div>
           {/*  */}
           <StickyFooter
+            color={event.landingPageColor}
             eventName={event.eventName}
             eventId={id}
             tickets={event.tickets}

@@ -18,6 +18,7 @@ import Chip from "@mui/material/Chip";
 import history from "./../../../history";
 
 import { useDispatch } from "react-redux";
+import α from "color-alpha";
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV
@@ -48,16 +49,6 @@ const TicketPrice = styled.div`
   color: #212121;
 `;
 
-const RoyalBlueRadio = withStyles({
-  root: {
-    color: "#538BF7",
-    "&$checked": {
-      color: "#3372F0",
-    },
-  },
-  checked: {},
-})((props) => <Radio color="default" {...props} />);
-
 const TicketForm = ({
   isCommunityTeamMember,
   eventId,
@@ -66,7 +57,18 @@ const TicketForm = ({
   eventDescription,
   startTime,
   endTime,
+  color,
 }) => {
+  const RoyalBlueRadio = withStyles({
+    root: {
+      color: α(color, 1),
+      "&$checked": {
+        color: α(color, 1),
+      },
+    },
+    checked: {},
+  })((props) => <Radio {...props} />);
+
   const userToken = useSelector((state) => state.auth.token);
 
   const displayRazorpay = async (
@@ -351,7 +353,7 @@ const TicketForm = ({
             <RoyalBlueRadio
               color="primary"
               disabled={!isTicketOnSale}
-              style={{ fill: "#538BF7", maxHeight: "fit-content" }}
+              style={{ maxHeight: "fit-content" }}
               checked={isTicketOnSale ? selectedTicket === ticket.id : false}
               onChange={handleChange}
               value={ticket.id}
@@ -461,6 +463,7 @@ const TicketForm = ({
             onChange={handleCouponChange}
           />
           <button
+          style={{ border: `1px solid ${α(color, 1)}`, color: α(color, 2.5)}}
             disabled={
               (selectedTicket ? selectedTicket.type === "Free" : true) ||
               isCommunityTeamMember ||
@@ -492,7 +495,7 @@ const TicketForm = ({
               onClick={() => {
                 setOpenCalender(true);
               }}
-              style={{ width: "330px" }}
+              style={{ width: "330px", backgroundColor: α(color, 1), border: "none" }}
               className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center"
             >
               <TodayRoundedIcon className="me-2" />
@@ -509,6 +512,7 @@ const TicketForm = ({
             }}
           >
             <button
+              style={{ backgroundColor: α(color, 1), border: "none" }}
               onClick={() => {
                 history.push("/user/home");
               }}
@@ -517,6 +521,7 @@ const TicketForm = ({
               Join event
             </button>
             <button
+              style={{ backgroundColor: α(color, 1), border: "none" }}
               onClick={() => {
                 setOpenCalender(true);
               }}
@@ -529,6 +534,7 @@ const TicketForm = ({
         ) : (
           <div>
             <button
+              style={{ backgroundColor: α(color, 1), border: "none" }}
               disabled={!selectedTicket}
               className="btn btn-primary btn-outline-text mb-3"
               onClick={() => {
@@ -592,12 +598,12 @@ const TicketForm = ({
 
         <div className="col" style={{ marginTop: "4%", padding: "0" }}>
           {" "}
-          <Link to={`/signin/${eventId}/?intent=eventRegistration`}>
+          <Link to={`/signin/${eventId}/?intent=eventRegistration`} style={{textDecoration: "none"}}>
             {" "}
             {isSignedIn ? (
               <div></div>
             ) : (
-              <span style={{ color: "#11A1FD" }}>
+              <span style={{ color: α(color, 1) }}>
                 Login to register for this event.
               </span>
             )}
