@@ -22,7 +22,12 @@ import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { reduxForm } from "redux-form";
-import { createDemoRequest, switchToFreePlan, toggleRequestDemo } from "../../../actions";
+import {
+  createDemoRequest,
+  showSnackbar,
+  switchToFreePlan,
+  toggleRequestDemo,
+} from "../../../actions";
 import PreFooter from "../../PreFooter";
 import CreateNewCommunityMsgCard from "../../UserAccount/CreateNewCommunityMsgCard";
 import FemaleMascot from "./../../../assets/images/femaleMascot.png";
@@ -130,11 +135,11 @@ const RoyalBlueRadio = withStyles({
 })((props) => <Radio color="default" {...props} />);
 
 const ComparePlans = styled.div`
-font-weight: 500;
-font-size: 1.1rem;
-color: #ffffff;
-text-align: center;
-`
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-align: center;
+`;
 
 const Pricing = (props) => {
   const { signInSucceded } = useSelector((state) => state.auth);
@@ -229,6 +234,9 @@ const Pricing = (props) => {
 
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
+      dispatch(
+        showSnackbar("warning", "Razorpay SDK failed to load. Are you online?")
+      );
       return;
     }
 
@@ -255,12 +263,12 @@ const Pricing = (props) => {
       amount: order.data.amount,
       currency: "USD",
       name: "Bluemeet",
-      description: `This is a community plan purchase for communityId ${selectedCommunity} which is made by user ${userDetails._id}.`,
-      image: "https://bluemeet-inc.s3.us-west-1.amazonaws.com/company-logo.png",
+      description: `This is a community plan purchase transaction.`,
+      image: "https://bluemeet-inc.s3.us-west-1.amazonaws.com/evenz_logo.png",
 
       order_id: order.data.id,
       handler: function (response) {
-        alert("Congratulations, Your plan purchase was successful!");
+        dispatch(showSnackbar("success", "Your plan purchase was successful!"));
       },
       prefill: {
         name: `${userDetails.firstName} ${userDetails.lastName}`,
@@ -282,13 +290,12 @@ const Pricing = (props) => {
 
     paymentObject.open();
     paymentObject.on("payment.failed", function (response) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to process payment, If deducted money will be revesed."
+        )
+      );
     });
   };
 
@@ -842,7 +849,7 @@ const Pricing = (props) => {
 
                   <button
                     onClick={() => {
-                     dispatch(toggleRequestDemo(true));
+                      dispatch(toggleRequestDemo(true));
                     }}
                     className="card__button btn btn-primary btn-outline-text"
                   >
@@ -858,11 +865,8 @@ const Pricing = (props) => {
           </ComparePlans>
 
           <div className="container mb-5">
-          <PlanComparison />
-
+            <PlanComparison />
           </div>
-
-         
 
           <div className="FAQs-section px-4 mt-5">
             <h2 className="mb-4">F.A.Q.</h2>
@@ -931,7 +935,7 @@ const Pricing = (props) => {
             </details>
           </div>
         </div>
-        
+
         <PreFooter />
         {/* Pre Footer Here */}
         <Footer />

@@ -1061,7 +1061,6 @@ const EventLandingPage = (props) => {
                       label="Overview"
                       style={{ fontWeight: "500", textTransform: "capitalize" }}
                     />
-
                     <Tab
                       onClick={() => {
                         window.location.hash = "#schedule-section";
@@ -1069,8 +1068,7 @@ const EventLandingPage = (props) => {
                       label="Schedule"
                       style={{ fontWeight: "500", textTransform: "capitalize" }}
                     />
-
-                    {speakerIsPresent ? (
+                    {speakerIsPresent && (
                       <Tab
                         onClick={() => {
                           window.location.hash = "#speakers-section";
@@ -1081,10 +1079,8 @@ const EventLandingPage = (props) => {
                           textTransform: "capitalize",
                         }}
                       />
-                    ) : (
-                      <></>
                     )}
-                    {sponsorIsPresent ? (
+                    {sponsorIsPresent && (
                       <Tab
                         onClick={() => {
                           window.location.hash = "#sponsors-section";
@@ -1095,10 +1091,8 @@ const EventLandingPage = (props) => {
                           textTransform: "capitalize",
                         }}
                       />
-                    ) : (
-                      <></>
                     )}
-                    {boothsIsPresent ? (
+                    {boothsIsPresent && (
                       <Tab
                         onClick={() => {
                           window.location.hash = "#booths-section";
@@ -1109,12 +1103,9 @@ const EventLandingPage = (props) => {
                           textTransform: "capitalize",
                         }}
                       />
-                    ) : (
-                      <></>
                     )}
                   </Tabs>
                 </Box>
-
                 {event.editingComment ? (
                   <div
                     id="overview-section"
@@ -1126,16 +1117,14 @@ const EventLandingPage = (props) => {
                 ) : (
                   <></>
                 )}
-
                 <hr className="my-5" />
-
                 {sessionIsPresent ? (
                   <>
                     <div
                       className="schedule-section mb-5 mt-3 pt-4"
                       id="schedule-section"
                     >
-                      <div className="event-landing-page-section-headline mb-3">
+                      <div className="event-landing-page-section-headline mb-4">
                         <SectionHeading className="">Schedule</SectionHeading>
                       </div>
                       <div className="schedule-filter-grid mb-4">

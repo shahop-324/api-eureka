@@ -531,6 +531,10 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    totalRegistrations: {
+      type: Number,
+      default: 0,
+    },
 
     // * Done I have to do research on how recording will work and where it will be stored.
   },

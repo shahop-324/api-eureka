@@ -4,6 +4,7 @@ import Radio from "@material-ui/core/Radio";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
+  registerFreeTicket,
   fetchEventCoupons,
   getEventRegistrationCheckoutSession,
   showNotification,
@@ -14,7 +15,14 @@ import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 import AddToCalender from "../HelperComponent/AddTocalender";
 import Chip from "@mui/material/Chip";
 
+import history from "./../../../history";
+
 import { useDispatch } from "react-redux";
+
+const { REACT_APP_MY_ENV } = process.env;
+const BaseURL = REACT_APP_MY_ENV
+  ? "http://localhost:3000/api-eureka/eureka/v1/"
+  : "https://api.bluemeet.in/api-eureka/eureka/v1/";
 
 const TwoButtonsGrid = styled.div`
   display: grid;
@@ -54,12 +62,132 @@ const TicketForm = ({
   isCommunityTeamMember,
   eventId,
   tickets,
-  coupon,
   eventName,
   eventDescription,
   startTime,
   endTime,
 }) => {
+  const userToken = useSelector((state) => state.auth.token);
+
+  const displayRazorpay = async (
+    eventId,
+    selectedTicket,
+    communityId,
+    userId,
+    couponId,
+    userDetails
+  ) => {
+    const res = await loadRazorpay();
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    try {
+      let order = await fetch(`${BaseURL}razorpay/createEventTicketOrder`, {
+        method: "POST",
+        body: JSON.stringify({
+          eventId: eventId,
+          ticketId: selectedTicket,
+          communityId: communityId,
+          userId: userId,
+          couponId: couponId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      if (!order.ok) {
+        if (!order.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(order.message);
+        }
+      }
+
+      order = await order.json();
+      console.log(order);
+
+      if (order.alreadyRegistered) {
+        // This user has already registered for this event, do not allow him / her to register again
+
+        dispatch(
+          showNotification(
+            "You are already for this event, Please check your ticket in user account."
+          )
+        );
+      } else {
+        const options = {
+          key: "rzp_live_bDVAURs4oXxSGi",
+          amount: order.data.amount,
+          currency: "USD",
+          name: "Bluemeet",
+          description: `This is a event ticket purchase transaction.`,
+          image:
+            "https://bluemeet-inc.s3.us-west-1.amazonaws.com/evenz_logo.png",
+
+          order_id: order.data.id,
+          handler: function (response) {
+            dispatch(
+              showNotification(
+                "Your ticket has been successfully registered, Please check your mail."
+              )
+            );
+          },
+          prefill: {
+            name: `${userDetails.firstName} ${userDetails.lastName}`,
+            email: userDetails.email,
+          },
+          notes: {
+            // We can add some notes here
+            eventId: eventId,
+            ticketId: selectedTicket,
+            communityId: communityId,
+            userId: userId,
+            couponId: couponId,
+          },
+          theme: {
+            color: "#538BF7",
+          },
+        };
+        var paymentObject = new window.Razorpay(options);
+
+        paymentObject.open();
+        paymentObject.on("payment.failed", function (response) {
+          dispatch(
+            showNotification(
+              "Failed to process payment, If money is deducted, it will be revesed soon or contact us."
+            )
+          );
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showNotification(
+          "Failed to process payment, If money is deducted, it will be revesed soon or contact us."
+        )
+      );
+    }
+  };
+
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
   const dispatch = useDispatch();
   const params = useParams();
   const currentEventId = params.id;
@@ -128,6 +256,8 @@ const TicketForm = ({
 
   const [couponToBeApplied, setCouponToBeApplied] = useState("");
 
+  const [applicableCouponId, setApplicableCouponId] = useState(null);
+
   const handleChange = (event) => {
     setSelectedTicket(event.target.value);
     console.log(event.target.value);
@@ -164,7 +294,11 @@ const TicketForm = ({
 
     let coupon = validatedCoupon[0];
 
-    if (bool) {
+    if (coupon) {
+      setApplicableCouponId(coupon.id);
+    }
+
+    if (bool && coupon) {
       if (
         new Date(Date.now()) >= new Date(coupon.startTime) &&
         new Date(Date.now()) <= new Date(coupon.validTillTime)
@@ -186,6 +320,7 @@ const TicketForm = ({
     } else {
       setFactor(1);
       dispatch(showNotification("Invalid coupon code."));
+      setApplicableCouponId(null);
     }
   };
 
@@ -373,7 +508,12 @@ const TicketForm = ({
               marginRight: "auto",
             }}
           >
-            <button className="btn btn-outline-text btn-outline-primary">
+            <button
+              onClick={() => {
+                history.push("/user/home");
+              }}
+              className="btn btn-outline-text btn-outline-primary"
+            >
               Join event
             </button>
             <button
@@ -396,29 +536,29 @@ const TicketForm = ({
                   dispatch(showNotification("Please select a ticket."));
                 } else {
                   if (isSignedIn) {
-                    if (selectedTicket.type === "Paid") {
-                      // open razorpay window
-                      //   eventId: eventId,
-                      //   ticketId: selectedTicket,
-                      //   communityId: event.createdBy._id,
-                      //   transaction_type: "event_registration",
-                      //   userId: user._id,
-                      //   couponId:
-                      //     couponToBeApplied && couponToBeApplied[0]
-                      //       ? couponToBeApplied[0].id
-                      //       : null,
+                    let ticket = tickets.find(
+                      (ticket) => ticket._id === selectedTicket
+                    );
+
+                    if (ticket.type === "Paid") {
+                      displayRazorpay(
+                        eventId,
+                        selectedTicket,
+                        event.communityId,
+                        user._id,
+                        applicableCouponId,
+                        userDetails
+                      );
                     }
-                    if (selectedTicket.type === "Free") {
-                      // Register manually
-                      //   eventId: eventId,
-                      //   ticketId: selectedTicket,
-                      //   communityId: event.createdBy._id,
-                      //   transaction_type: "event_registration",
-                      //   userId: user._id,
-                      //   couponId:
-                      //     couponToBeApplied && couponToBeApplied[0]
-                      //       ? couponToBeApplied[0].id
-                      //       : null,
+                    if (ticket.type === "Free") {
+                      dispatch(
+                        registerFreeTicket({
+                          eventId: eventId,
+                          ticketId: selectedTicket,
+                          communityId: event.communityId,
+                          userId: user._id,
+                        })
+                      );
                     }
                   } else {
                     // Please sign in to register for this event
@@ -429,6 +569,8 @@ const TicketForm = ({
                     );
                   }
                 }
+
+                // ! This Snippet will be used for stripe connect integration
 
                 // getEventRegistrationCheckoutSession({
                 //   eventId: eventId,

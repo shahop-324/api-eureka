@@ -167,6 +167,8 @@ const Sessions = () => {
             description,
             speaker,
             type,
+            RTMPstreamKey,
+            RTMPstreamURL,
           } = session;
 
           return (
@@ -181,6 +183,8 @@ const Sessions = () => {
               name={name}
               id={id}
               type={type}
+              RTMPSecretKey={RTMPstreamKey}
+              RTMPUrl={RTMPstreamURL}
             />
           );
         }

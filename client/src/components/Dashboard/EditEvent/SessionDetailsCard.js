@@ -1,5 +1,5 @@
-import React from "react";
-import Faker from "faker";
+import React, { useState } from "react";
+import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -8,16 +8,71 @@ import "./../../../assets/Sass/DataGrid.scss";
 import Avatar from "@material-ui/core/Avatar";
 import EditSession from "./FormComponents/EditSessionForms/EditSession";
 import DeleteSession from "./FormComponents/EditSessionForms/DeleteSession";
-import { Tooltip } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { fetchParticularSessionOfEvent } from "../../../actions";
-
 import SessionMoreInfo from "./FormComponents/EditSessionForms/SessionMoreInfo";
 import AvatarGroup from "@mui/material/AvatarGroup";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
+import EventStreamSettings from "./SubComponent/EventStreamSettings";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+import { styled as MUIStyled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import AirplayRoundedIcon from "@mui/icons-material/AirplayRounded";
 
 var dateFormat = require("dateformat");
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
+`;
+
+const StyledMenu = MUIStyled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
 
 const SessionDetailCard = ({
   endTime,
@@ -29,15 +84,35 @@ const SessionDetailCard = ({
   speaker,
   id,
   type,
+  RTMPSecretKey,
+  RTMPUrl,
 }) => {
+  const [anchorElList, setAnchorElList] = React.useState(null);
+  const openList = Boolean(anchorElList);
+  const handleClickMoreList = (event) => {
+    setAnchorElList(event.currentTarget);
+  };
+  const handleCloseList = () => {
+    setAnchorElList(null);
+  };
+
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openMoreInfo, setOpenMoreInfo] = React.useState(false);
 
-  //  const formatDateAndTime =(date)=>{
-  //   var now = new Date();
-  //   dateFormat(startDate, "mm/d/yyyy");
-  //  }
+  const [openStreamCredentials, setOpenStreamCredentials] = useState(false);
+
+  const [secretKey, setSecretKey] = useState(null);
+
+  const [url, setUrl] = useState(null);
+
+  const handleCloseStreamCredentials = () => {
+    setOpenStreamCredentials(false);
+  };
+
+  const handleOpenStreamCredentials = () => {
+    setOpenStreamCredentials(true);
+  };
 
   const dispatch = useDispatch();
 
@@ -65,12 +140,10 @@ const SessionDetailCard = ({
   const renderSessionSpeakersList = (sessionSpeakers) => {
     return sessionSpeakers.map((speaker) => {
       return (
-       
-          <Avatar
-            alt={speaker.name}
-            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
-          />
-       
+        <Avatar
+          alt={speaker.name}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`}
+        />
       );
     });
   };
@@ -148,10 +221,13 @@ const SessionDetailCard = ({
         >
           <div
             className="event-field-label registrations-field-label"
-            style={{ width: "100%" }}
+            style={{ width: "100%", alignItems: "center" }}
           >
-            <Chip label={type} color="success" />
-            
+            {type === "Stream" ? (
+              <Chip label={type} color="success" />
+            ) : (
+              <Chip label={type} color="warning" />
+            )}
           </div>
         </div>
         <div
@@ -169,8 +245,11 @@ const SessionDetailCard = ({
                 </AvatarGroup>
               </div>
             ) : (
-              <Chip label="No speaker Assigned" color="error" variant="outlined" />
-             
+              <Chip
+                label="No speaker Assigned"
+                color="error"
+                variant="outlined"
+              />
             )}
           </div>
         </div>
@@ -179,16 +258,62 @@ const SessionDetailCard = ({
             className="event-field-label registrations-field-label"
             style={{ width: "100%" }}
           >
-            <div onClick={handleEditSession}>
-              <IconButton color="primary" aria-label="add to shopping cart">
-                <EditRoundedIcon />
-              </IconButton>
-            </div>
-            <div onClick={handleDeleteSession}>
-              <IconButton color="secondary" aria-label="add to shopping cart">
+            <IconButton
+              id="demo-customized-button"
+              aria-controls="demo-customized-menu"
+              aria-haspopup="true"
+              aria-expanded={openList ? "true" : undefined}
+              variant="outlined"
+              disableElevation
+              onClick={handleClickMoreList}
+            >
+              <MoreVertOutlinedIcon />
+            </IconButton>
+
+            <StyledMenu
+              id="demo-customized-menu"
+              MenuListProps={{
+                "aria-labelledby": "demo-customized-button",
+              }}
+              anchorEl={anchorElList}
+              open={openList}
+              onClose={handleCloseList}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleEditSession();
+                  handleCloseList();
+                }}
+                disableRipple
+              >
+                <EditIcon />
+                <MenuText>Edit</MenuText>
+              </MenuItem>
+              {type === "Stream" && (
+                <MenuItem
+                  onClick={() => {
+                    setSecretKey(RTMPSecretKey);
+                    setUrl(RTMPUrl);
+                    handleOpenStreamCredentials();
+                    handleCloseList();
+                  }}
+                  disableRipple
+                >
+                  <AirplayRoundedIcon />
+                  <MenuText>Show RTMP Credentials</MenuText>
+                </MenuItem>
+              )}
+              <MenuItem
+                onClick={() => {
+                  handleDeleteSession();
+                  handleCloseList();
+                }}
+                disableRipple
+              >
                 <DeleteRoundedIcon />
-              </IconButton>
-            </div>
+                <MenuText>Delete</MenuText>
+              </MenuItem>
+            </StyledMenu>
           </div>
         </div>
       </div>
@@ -203,6 +328,12 @@ const SessionDetailCard = ({
         id={id}
       />
       <SessionMoreInfo open={openMoreInfo} handleClose={handleCloseMoreInfo} />
+      <EventStreamSettings
+        open={openStreamCredentials}
+        handleClose={handleCloseStreamCredentials}
+        secretKey={secretKey}
+        url={url}
+      />
     </>
   );
 };

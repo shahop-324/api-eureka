@@ -15,7 +15,14 @@ import { useDispatch } from "react-redux";
 
 const renderSessions = (sessions) => {
   return sessions.map((session) => {
-    return <Chip label={session.name} color="primary" variant="outlined" />;
+    return (
+      <Chip
+        label={session.name}
+        color="primary"
+        variant="outlined"
+        className="me-2"
+      />
+    );
   });
 };
 
@@ -77,7 +84,7 @@ const LiveStreamDetailsCard = ({ type, name, sessions, id, url }) => {
                 <ModeEditOutlineRoundedIcon />
               </IconButton>
             </div>
-            <div>
+            {/* <div>
               <IconButton onClick={() => {
                   navigator.clipboard.writeText(url).then(function() {
                     console.log('Async: Copying to clipboard was successful!');
@@ -91,7 +98,7 @@ const LiveStreamDetailsCard = ({ type, name, sessions, id, url }) => {
                 }} aria-label="add to shopping cart">
                 <ContentCopyIcon style={{ color: "#DA580D" }} />
               </IconButton>
-            </div>
+            </div> */}
             <div
               onClick={() => {
                 setOpenDeleteVideo(true);

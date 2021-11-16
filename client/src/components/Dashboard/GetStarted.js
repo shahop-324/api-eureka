@@ -368,7 +368,6 @@ const GetStarted = () => {
             </EventPromoImageContainer>
           </Grid>
         </div>
-
         <div
           className="secondary-heading-row d-flex flex-row justify-content-between px-4 pt-4 mb-3"
           style={{ minWidth: "1138px" }}
@@ -401,7 +400,6 @@ const GetStarted = () => {
             >
               {demoEvents ? renderDemoEvents(demoEvents) : <></>}
             </div>
-
             <div>
               <DemoCarousel />
             </div>

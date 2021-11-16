@@ -243,6 +243,21 @@ const CommunityPublicPage = () => {
     (state) => state.communityPage
   );
 
+  let isCommunityMember = false;
+
+  if (isSignedIn) {
+    if (community) {
+      if (community.eventManagers && community.superAdmin) {
+        if (
+          community.eventManagers.includes(userDetails._id) ||
+          community.superAdmin.toString() === userDetails._id
+        ) {
+          isCommunityMember = true;
+        }
+      }
+    }
+  }
+
   // Filter Past and Upcoming events
 
   let upcomingEvents = [];
@@ -405,16 +420,19 @@ const CommunityPublicPage = () => {
                   </button>
                 </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 d-flex flex-row align-items-center">
-                  <div
-                    onClick={handleClickOpenSettings}
-                    className={`${classes.root} mx-2`}
-                  >
-                    <IconButton style={{ height: "fit-content" }}>
-                      <EditRoundedIcon
-                        style={{ color: "#212121", fontSize: "22px" }}
-                      />
-                    </IconButton>
-                  </div>
+                  {isSignedIn && isCommunityMember && (
+                    <div
+                      onClick={handleClickOpenSettings}
+                      className={`${classes.root} mx-2`}
+                    >
+                      <IconButton style={{ height: "fit-content" }}>
+                        <EditRoundedIcon
+                          style={{ color: "#212121", fontSize: "22px" }}
+                        />
+                      </IconButton>
+                    </div>
+                  )}
+
                   {isSignedIn ? (
                     <div className="py-2 d-flex flex-row align-items-center justify-content-center">
                       <AvatarMenu />
@@ -446,23 +464,30 @@ const CommunityPublicPage = () => {
           </nav>
         </div>
         <div>
-          <StyledIconButton
-            onClick={() => {
-              setOpenUploadCover(true);
-            }}
-            style={{
-              height: "fit-content",
-              position: "absolute",
-              bottom: "12px",
-              right: "12px",
-              zIndex: "100",
-            }}
-          >
-            <EditRoundedIcon style={{ fontSize: "22px" }} />
-          </StyledIconButton>
+          {isSignedIn && isCommunityMember && (
+            <StyledIconButton
+              onClick={() => {
+                setOpenUploadCover(true);
+              }}
+              style={{
+                height: "fit-content",
+                position: "absolute",
+                bottom: "12px",
+                right: "12px",
+                zIndex: "100",
+              }}
+            >
+              <EditRoundedIcon style={{ fontSize: "22px" }} />
+            </StyledIconButton>
+          )}
+
           <img
             className="community-page-art"
-            src={community ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.cover}` : "#"}
+            src={
+              community
+                ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${community.cover}`
+                : "#"
+            }
             alt="community public page art"
             style={{ objectFit: "cover" }}
           ></img>
@@ -539,13 +564,16 @@ const CommunityPublicPage = () => {
               ) : (
                 <button
                   onClick={() => {
-                    if(isSignedIn) {
+                    if (isSignedIn) {
                       dispatch(followCommunity(userId, communityId));
+                    } else {
+                      dispatch(
+                        showSnackbar(
+                          "info",
+                          "Please log in to follow this community."
+                        )
+                      );
                     }
-                    else {
-                      dispatch(showSnackbar("info", "Please log in to follow this event."));
-                    }
-                   
                   }}
                   className="btn btn-primary btn-outline-text ms-3"
                 >

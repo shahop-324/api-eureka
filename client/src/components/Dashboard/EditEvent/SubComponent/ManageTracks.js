@@ -96,23 +96,21 @@ const ManageTracks = ({ open, handleClose }) => {
               </IconButton>
             </div>
           </div>
-          <TrackListFields />
           {typeof tracks !== "undefined" && tracks.length > 0 ? (
-            renderTracks(tracks)
+            <>
+              <TrackListFields />
+              {renderTracks(tracks)}
+            </>
           ) : (
             <div
-              className="d-flex flex-row align-items-center justify-content-center"
+              className="d-flex flex-row align-items-center justify-content-center my-4"
               style={{ height: "50vh", width: "100%" }}
             >
-              <NoContentFound
-                msgText="No tracks found."
-                img={NoTrack}
-              />
+              <NoContentFound msgText="No tracks found." img={NoTrack} />
             </div>
           )}
         </Container>
       </Dialog>
-
       <AddTrack open={openAddTrack} handleClose={handleCloseAddTrack} />
     </>
   );

@@ -6,6 +6,7 @@ import { showSnackbar } from "./../../../../actions";
 
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+
 const EventLinkInput = styled.input`
   font-weight: 500;
   font-size: 0.8rem;
@@ -46,15 +47,11 @@ const HeaderFooter = styled.div`
   background-color: #ebf4f6;
 `;
 
-const EventStreamSettings = ({ open, handleClose }) => {
+const EventStreamSettings = ({ open, handleClose, url, secretKey }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [maxWidth, setMaxWidth] = React.useState("lg");
-
-  const { eventDetails } = useSelector((state) => state.event);
-
-  const link = `https://www.bluemeet.in/event-landing-page/${eventDetails._id}/${eventDetails.communityId}`;
 
   return (
     <>
@@ -84,37 +81,31 @@ const EventStreamSettings = ({ open, handleClose }) => {
                 <EventLinkInput
                   className="event-sharable-link"
                   type="text"
-                  value={`${eventDetails.muxStreamKey}`}
+                  value={`${secretKey}`}
                   readOnly
-                  placeholder="Search..."
                 />
                 <button
                   className="ui icon button"
                   onClick={() => {
-                    navigator.clipboard
-                      .writeText(`${eventDetails.muxStreamKey}`)
-                      .then(
-                        function () {
-                          console.log(
-                            "Async: Copying to clipboard was successful!"
-                          );
-                          dispatch(
-                            showSnackbar(
-                              "success",
-                              "RTMP stream key copied to clipboard!"
-                            )
-                          );
-                        },
-                        function (err) {
-                          console.error("Async: Could not copy text: ", err);
-                          dispatch(
-                            showSnackbar(
-                              "error",
-                              "Failed to copy to clipboard!"
-                            )
-                          );
-                        }
-                      );
+                    navigator.clipboard.writeText(`${secretKey}`).then(
+                      function () {
+                        console.log(
+                          "Async: Copying to clipboard was successful!"
+                        );
+                        dispatch(
+                          showSnackbar(
+                            "success",
+                            "RTMP stream key copied to clipboard!"
+                          )
+                        );
+                      },
+                      function (err) {
+                        console.error("Async: Could not copy text: ", err);
+                        dispatch(
+                          showSnackbar("error", "Failed to copy to clipboard!")
+                        );
+                      }
+                    );
                   }}
                 >
                   <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />
@@ -134,37 +125,31 @@ const EventStreamSettings = ({ open, handleClose }) => {
                 <EventLinkInput
                   className="event-sharable-link"
                   type="text"
-                  value={`${eventDetails.muxServerURL}`}
+                  value={`${url}`}
                   readOnly
-                  placeholder="Search..."
                 />
                 <button
                   className="ui icon button"
                   onClick={() => {
-                    navigator.clipboard
-                      .writeText(`${eventDetails.muxServerURL}`)
-                      .then(
-                        function () {
-                          console.log(
-                            "Async: Copying to clipboard was successful!"
-                          );
-                          dispatch(
-                            showSnackbar(
-                              "success",
-                              "RTMP server url copied to clipboard!"
-                            )
-                          );
-                        },
-                        function (err) {
-                          console.error("Async: Could not copy text: ", err);
-                          dispatch(
-                            showSnackbar(
-                              "error",
-                              "Failed to copy to clipboard!"
-                            )
-                          );
-                        }
-                      );
+                    navigator.clipboard.writeText(`${url}`).then(
+                      function () {
+                        console.log(
+                          "Async: Copying to clipboard was successful!"
+                        );
+                        dispatch(
+                          showSnackbar(
+                            "success",
+                            "RTMP server url copied to clipboard!"
+                          )
+                        );
+                      },
+                      function (err) {
+                        console.error("Async: Could not copy text: ", err);
+                        dispatch(
+                          showSnackbar("error", "Failed to copy to clipboard!")
+                        );
+                      }
+                    );
                   }}
                 >
                   <ContentCopyRoundedIcon style={{ fontSize: "18px" }} />

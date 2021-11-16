@@ -676,7 +676,7 @@ exports.getCommunityProfile = catchAsync(async (req, res, next) => {
   const communityId = req.params.communityId;
 
   const community = await Community.findById(communityId).select(
-    "name email socialMediaHandles image cover headline socialMediaHandles totalRegistrations"
+    "name email socialMediaHandles image cover headline socialMediaHandles totalRegistrations superAdmin eventManagers"
   );
 
   res.status(200).json({

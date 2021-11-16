@@ -4633,7 +4633,7 @@ export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
 };
 
 export const fetchEventCoupons = (eventId) => async (dispatch, getState) => {
-  try{
+  try {
     let res = await fetch(`${BaseURL}getCoupons/${eventId}`, {
       method: "GET",
 
@@ -4664,15 +4664,14 @@ export const fetchEventCoupons = (eventId) => async (dispatch, getState) => {
         tickets: res.tickets,
       })
     );
-  }
-  catch(error) {
+  } catch (error) {
     dispatch(couponActions.hasError(error.message));
 
     dispatch(
       showSnackbar("error", "Failed to fetch coupons, Please try again.")
     );
   }
-}
+};
 
 export const fetchCoupons = (eventId) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
@@ -12609,3 +12608,45 @@ export const reportEvent = (eventId) => async (dispatch, getState) => {
     );
   }
 };
+
+export const registerFreeTicket =
+  (formValues) => async (dispatch, getState) => {
+    try {
+      let res = await fetch(`${BaseURL}razorpay/registerFreeTicket`, {
+        method: "POST",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      // Inform that ticket has been successfully registered and take back to /user/home
+
+      dispatch(
+        showSnackbar(
+          "success",
+          "Ticket booked successfully, Please check your mail for confirmation."
+        )
+      );
+
+      window.location.href = `/user/home`;
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("error", "failed to register, Please try again."));
+    }
+  };

@@ -5,7 +5,11 @@ const razorpay = require("../services/payments/Razorpay");
 
 const router = express.Router();
 
-router.post("/createAddOnOrder", authController.protectCommunity, razorpay.createAddOnOrder);
+router.post(
+  "/createAddOnOrder",
+  authController.protectCommunity,
+  razorpay.createAddOnOrder
+);
 
 router.post(
   "/createCommunityPlanOrder",
@@ -14,8 +18,20 @@ router.post(
 );
 
 router.post(
+  "/createEventTicketOrder",
+  authController.protect,
+  razorpay.createEventTicketOrder
+);
+
+router.post(
   "/listenForSuccessfulRegistration",
   razorpay.listenForSuccessfulRegistration
+);
+
+router.post(
+  "/registerFreeTicket",
+  authController.protect,
+  razorpay.registerFreeTicket
 );
 
 module.exports = router;
