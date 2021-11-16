@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Radio from "@material-ui/core/Radio";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
+  fetchEventCoupons,
   getEventRegistrationCheckoutSession,
-  showSnackbar,
+  showNotification,
 } from "../../../actions";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
 import AddToCalender from "../HelperComponent/AddTocalender";
 import Chip from "@mui/material/Chip";
+
+import { useDispatch } from "react-redux";
 
 const TwoButtonsGrid = styled.div`
   display: grid;
@@ -47,16 +50,32 @@ const RoyalBlueRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName, eventDescription, startTime, endTime }) => {
+const TicketForm = ({
+  isCommunityTeamMember,
+  eventId,
+  tickets,
+  coupon,
+  eventName,
+  eventDescription,
+  startTime,
+  endTime,
+}) => {
+  const dispatch = useDispatch();
   const params = useParams();
   const currentEventId = params.id;
 
- const calendarEvent = {
-  title: eventName,
-  description: eventDescription,
-  start: new Date(startTime),
-  end: new Date(endTime),
-};
+  useEffect(() => {
+    dispatch(fetchEventCoupons(eventId));
+  }, []);
+
+  const { coupons } = useSelector((state) => state.coupon);
+
+  const calendarEvent = {
+    title: eventName,
+    description: eventDescription,
+    start: new Date(startTime),
+    end: new Date(endTime),
+  };
 
   const [openCalender, setOpenCalender] = React.useState(false);
 
@@ -89,20 +108,21 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
   });
 
   const couponsArray =
-    coupon &&
-    coupon.map((coupon) => {
+    coupons &&
+    coupons.map((coupon) => {
       return {
         id: coupon.id,
         code: coupon.discountCode,
         percentage: coupon.discountPercentage,
+        validTillTime: coupon.validTillTime,
+        startTime: coupon.startTime,
+        tickets: coupon.tickets,
       };
     });
 
   const [factor, setFactor] = useState(1);
 
-  const [selectedTicket, setSelectedTicket] = React.useState(
-    tickets[0] && tickets[0].id
-  );
+  const [selectedTicket, setSelectedTicket] = React.useState(null);
 
   const [couponText, setCouponText] = useState("");
 
@@ -118,25 +138,54 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
   };
 
   const handleCouponValidation = () => {
+    // alert("entered in coupon validation");
+
+    // Coupon will only be applicable on certain ticket in certain timeline
+
+    // Priority No. 1 => Timeline
+    // Priority No. 2 => Applicable tickets
+
+    if (!selectedTicket) {
+      dispatch(showNotification("Please select a ticket apply coupon"));
+    }
+
     console.log(couponText);
     console.log(couponsArray);
     const validatedCoupon = couponsArray.filter(
       (coupon) => couponText === coupon.code
     );
 
-    console.log(validatedCoupon);
     setCouponToBeApplied(validatedCoupon);
 
     const bool = validatedCoupon.length > 0;
     console.log(bool);
-    const validationStatus = bool ? "Not valid" : "valid";
+    const validationStatus = !bool ? "Not valid" : "valid";
     console.log(validationStatus);
+
+    let coupon = validatedCoupon[0];
+
     if (bool) {
-      setFactor((100 / (100 - validatedCoupon[0].percentage * 1)) * 1);
-      showSnackbar("success", "Coupon applied successfully!");
+      if (
+        new Date(Date.now()) >= new Date(coupon.startTime) &&
+        new Date(Date.now()) <= new Date(coupon.validTillTime)
+      ) {
+        if (coupon.tickets.includes(selectedTicket)) {
+          // Only in this case coupon will be applicable
+          setFactor((100 / (100 - validatedCoupon[0].percentage * 1)) * 1);
+          dispatch(showNotification("Coupon applied successfully!"));
+        } else {
+          setFactor(1);
+          dispatch(
+            showNotification("Coupon not applicable on selected ticket.")
+          );
+        }
+      } else {
+        setFactor(1);
+        dispatch(showNotification("Coupon not applicable currently."));
+      }
     } else {
       setFactor(1);
-      showSnackbar("error", "Invalid coupon code.");
+      dispatch(showNotification("Invalid coupon code."));
     }
   };
 
@@ -144,13 +193,31 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
     return tickets.map((ticket) => {
       const price = ticket.price;
 
+      // only allow ticket to be purchased when its within sales timeline
+
+      let isTicketOnSale = false;
+
+      if (
+        new Date(Date.now()) >= new Date(ticket.salesStartTime) &&
+        new Date(Date.now()) <= new Date(ticket.salesEndTime)
+      ) {
+        isTicketOnSale = true;
+      }
+
+      // console.log(new Date(Date.now()));
+      // console.log(new Date(ticket.salesStartTime));
+      // console.log(new Date(ticket.salesEndTime));
+
+      console.log(ticket.id, ticket.name, "This is ticket Id");
+
       return (
         <div className="ticket-card mb-2 px-3 py-4">
           <div className="d-flex flex-row align-items-center">
             <RoyalBlueRadio
               color="primary"
+              disabled={!isTicketOnSale}
               style={{ fill: "#538BF7", maxHeight: "fit-content" }}
-              checked={selectedTicket === ticket.id}
+              checked={isTicketOnSale ? selectedTicket === ticket.id : false}
               onChange={handleChange}
               value={ticket.id}
               name="radio-button-demo"
@@ -165,15 +232,25 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
               {ticket.description}
             </TicketBrief>
           </div>
-          {ticket.soldOut ? (
-            <TicketPrice
-              className="ticket-sold-out-text"
-              style={{ color: "#B84141" }}
-            >
-              Sold out
-            </TicketPrice>
+          {!isTicketOnSale ? (
+            <Chip
+              label="Sale off"
+              color="warning"
+              variant="outlined"
+              style={{ fontWeight: "500" }}
+            />
+          ) : ticket.soldOut ? (
+            <Chip
+              label="Sold out"
+              color="error"
+              variant="outlined"
+              style={{ fontWeight: "500" }}
+            />
           ) : (
-            <TicketPrice className="ticket-price">
+            <TicketPrice
+              className="ticket-price"
+              style={{ textAlign: "center" }}
+            >
               {(() => {
                 switch (ticket.type) {
                   case "Paid":
@@ -234,8 +311,12 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
           style={{ width: "100%" }}
         >
           <input
-            disabled={isCommunityTeamMember || alreadyRegistered}
-            style={{ textTransform: "uppercase" }}
+            disabled={
+              (selectedTicket ? selectedTicket.type === "Free" : true) ||
+              isCommunityTeamMember ||
+              alreadyRegistered
+            }
+            // style={{ textTransform: "uppercase" }}
             className="form-control mr-sm-2"
             type="search"
             placeholder="Coupon code"
@@ -245,9 +326,21 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
             onChange={handleCouponChange}
           />
           <button
-            disabled={isCommunityTeamMember || alreadyRegistered}
+            disabled={
+              (selectedTicket ? selectedTicket.type === "Free" : true) ||
+              isCommunityTeamMember ||
+              alreadyRegistered
+            }
             className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-            onClick={handleCouponValidation}
+            onClick={() => {
+              if (!selectedTicket) {
+                dispatch(
+                  showNotification("Please select a ticket to apply coupon.")
+                );
+              } else {
+                handleCouponValidation();
+              }
+            }}
           >
             Apply
           </button>
@@ -296,18 +389,59 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
         ) : (
           <div>
             <button
+              disabled={!selectedTicket}
               className="btn btn-primary btn-outline-text mb-3"
-              onClick={getEventRegistrationCheckoutSession({
-                eventId: eventId,
-                ticketId: selectedTicket,
-                communityId: event.createdBy._id,
-                transaction_type: "event_registration",
-                userId: user._id,
-                couponId:
-                  couponToBeApplied && couponToBeApplied[0]
-                    ? couponToBeApplied[0].id
-                    : null,
-              })}
+              onClick={() => {
+                if (!selectedTicket) {
+                  dispatch(showNotification("Please select a ticket."));
+                } else {
+                  if (isSignedIn) {
+                    if (selectedTicket.type === "Paid") {
+                      // open razorpay window
+                      //   eventId: eventId,
+                      //   ticketId: selectedTicket,
+                      //   communityId: event.createdBy._id,
+                      //   transaction_type: "event_registration",
+                      //   userId: user._id,
+                      //   couponId:
+                      //     couponToBeApplied && couponToBeApplied[0]
+                      //       ? couponToBeApplied[0].id
+                      //       : null,
+                    }
+                    if (selectedTicket.type === "Free") {
+                      // Register manually
+                      //   eventId: eventId,
+                      //   ticketId: selectedTicket,
+                      //   communityId: event.createdBy._id,
+                      //   transaction_type: "event_registration",
+                      //   userId: user._id,
+                      //   couponId:
+                      //     couponToBeApplied && couponToBeApplied[0]
+                      //       ? couponToBeApplied[0].id
+                      //       : null,
+                    }
+                  } else {
+                    // Please sign in to register for this event
+                    dispatch(
+                      showNotification(
+                        "Please sign in to register for this event."
+                      )
+                    );
+                  }
+                }
+
+                // getEventRegistrationCheckoutSession({
+                //   eventId: eventId,
+                //   ticketId: selectedTicket,
+                //   communityId: event.createdBy._id,
+                //   transaction_type: "event_registration",
+                //   userId: user._id,
+                //   couponId:
+                //     couponToBeApplied && couponToBeApplied[0]
+                //       ? couponToBeApplied[0].id
+                //       : null,
+                // })
+              }}
             >
               Reserve Your Spot
             </button>
@@ -329,7 +463,7 @@ const TicketForm = ({ isCommunityTeamMember, eventId, tickets, coupon, eventName
         </div>
       </div>
       <AddToCalender
-      event={calendarEvent}
+        event={calendarEvent}
         open={openCalender}
         handleClose={handleCloseAddToCalender}
       />

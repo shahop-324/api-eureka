@@ -511,7 +511,7 @@ const AddNewTicket = ({
                   defaultValue="Paid"
                   name="radio-buttons-group"
                 >
-                  <div className="mb-3 overlay-form-input-row form-row-3-in-1">
+                  <div className="mb-3 overlay-form-input-row form-row-2-in-1">
                     <div>
                       <FormControlLabel
                         value={"Paid"}
@@ -540,7 +540,7 @@ const AddNewTicket = ({
                       />
                       <RadioLabel>Free</RadioLabel>
                     </div>
-                    <div>
+                    {/* <div>
                       <FormControlLabel
                         value="Donation"
                         control={
@@ -553,7 +553,7 @@ const AddNewTicket = ({
                         label=""
                       />
                       <RadioLabel>Donation</RadioLabel>
-                    </div>
+                    </div> */}
                   </div>
                 </RadioGroup>
 

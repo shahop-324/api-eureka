@@ -27,6 +27,8 @@ const RegistrationForm = require("./../models/registrationFormModel");
 const PaypalEmailChange = require("./../models/paypalEmailChangeModel");
 const PaypalPayout = require("./../models/paypalPayoutModel");
 const Report = require("./../models/reportModel");
+const Coupon = require("./../models/couponModel");
+const Ticket = require("./../models/ticketModel");
 
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -2316,4 +2318,29 @@ exports.reportEvent = catchAsync(async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+exports.getCoupons = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  let couponDocs = await Coupon.find({
+    $and: [{ eventId: mongoose.Types.ObjectId(eventId) }, { deleted: false }],
+  });
+
+  // Also fetch all active and non-deleted tickets for this event
+
+  const tickets = await Ticket.find({
+    $and: [
+      { eventId: mongoose.Types.ObjectId(eventId) },
+      { active: true },
+      { deleted: false },
+      { soldOut: false },
+    ],
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: couponDocs,
+    tickets: tickets,
+  });
 });

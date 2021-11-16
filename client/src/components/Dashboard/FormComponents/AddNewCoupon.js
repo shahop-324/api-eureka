@@ -126,16 +126,18 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
 
   const tickets = useSelector((state) => state.ticket.tickets);
 
-  if (tickets) {
-    ticketOptions = tickets.map((ticket) => {
-      if (ticket.type === "Paid") {
-        return {
-          label: ticket.name,
-          value: ticket._id,
-        };
-      }
+  const filteredTickets = tickets.filter((ticket) => ticket.type === "Paid");
+
+  if (filteredTickets) {
+    ticketOptions = filteredTickets.map((ticket) => {
+      return {
+        label: ticket.name,
+        value: ticket._id,
+      };
     });
   }
+
+  console.log(ticketOptions, "This is ticket options");
 
   const theme = useTheme();
   const params = useParams();
@@ -189,11 +191,11 @@ const AddNewCoupon = ({ open, handleClose, handleSubmit }) => {
       formValues.numberOfDiscountsAvailable;
     ModifiedFormValues.createdAt = Date.now();
 
-    if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
-      // Coupon cannot be applied in past
-      dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
-      return;
-    }
+    // if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
+    //   // Coupon cannot be applied in past
+    //   dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
+    //   return;
+    // }
     if (new Date(ModifiedFormValues.validTillTime) > eventEndDateTime) {
       // Coupon must expire before event ends
       dispatch(

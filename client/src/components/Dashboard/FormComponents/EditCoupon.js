@@ -154,14 +154,14 @@ const EditCoupon = ({
   const eventStartDateTime = new Date(startTime);
   const eventEndDateTime = new Date(endTime);
 
-  if (tickets) {
-    ticketOptions = tickets.map((ticket) => {
-      if (ticket.type === "Paid") {
-        return {
-          label: ticket.name,
-          value: ticket._id,
-        };
-      }
+  const filteredTickets = tickets.filter((ticket) => ticket.type === "Paid");
+
+  if (filteredTickets) {
+    ticketOptions = filteredTickets.map((ticket) => {
+      return {
+        label: ticket.name,
+        value: ticket._id,
+      };
     });
   }
 
@@ -202,11 +202,11 @@ const EditCoupon = ({
     ModifiedFormValues.maxNumOfDiscountPermitted =
       formValues.numberOfDiscountsAvailable;
 
-    if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
-      // Coupon cannot be applied in past
-      dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
-      return;
-    }
+    // if (new Date(ModifiedFormValues.startTime) < new Date(Date.now())) {
+    //   // Coupon cannot be applied in past
+    //   dispatch(showSnackbar("warning", "Coupon cannot be applied in past"));
+    //   return;
+    // }
     if (new Date(ModifiedFormValues.validTillTime) > eventEndDateTime) {
       // Coupon must expire before event ends
       dispatch(

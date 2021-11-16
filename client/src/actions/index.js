@@ -4632,6 +4632,48 @@ export const errorTrackerForCreateCoupon = () => async (dispatch, getState) => {
   dispatch(couponActions.disabledError());
 };
 
+export const fetchEventCoupons = (eventId) => async (dispatch, getState) => {
+  try{
+    let res = await fetch(`${BaseURL}getCoupons/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      couponActions.FetchCoupons({
+        coupons: res.data,
+      })
+    );
+
+    dispatch(
+      ticketActions.FetchTickets({
+        tickets: res.tickets,
+      })
+    );
+  }
+  catch(error) {
+    dispatch(couponActions.hasError(error.message));
+
+    dispatch(
+      showSnackbar("error", "Failed to fetch coupons, Please try again.")
+    );
+  }
+}
+
 export const fetchCoupons = (eventId) => async (dispatch, getState) => {
   dispatch(couponActions.startLoading());
 

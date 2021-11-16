@@ -354,4 +354,6 @@ router.post(
   globalController.reportEvent
 );
 
+router.get("/getCoupons/:eventId", globalController.getCoupons);
+
 module.exports = router;

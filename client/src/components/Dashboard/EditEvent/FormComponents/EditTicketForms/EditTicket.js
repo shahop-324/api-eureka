@@ -184,14 +184,13 @@ const EditTicket = ({
   submitting,
   reset,
   id,
+  ticketType,
 }) => {
   const { detailError, isLoadingDetail, ticketDetails } = useSelector(
     (state) => state.ticket
   );
 
-  const [type, setType] = React.useState(
-    ticketDetails ? ticketDetails.type : "Paid"
-  );
+  const [type, setType] = React.useState(ticketType);
 
   const { startTime, endTime } = useSelector(
     (state) => state.event.eventDetails
@@ -368,18 +367,12 @@ const EditTicket = ({
     ModifiedFormValues.salesStartTime = `${formValues.salesStartDate}T${formValues.salesStartTime}:00Z`;
     ModifiedFormValues.salesEndTime = `${formValues.salesEndDate}T${formValues.salesEndTime}:00Z`;
 
-    if (new Date(ModifiedFormValues.salesStartTime) < new Date(Date.now())) {
-      // Ticket sale cannot be started in past
-      dispatch(
-        showSnackbar("warning", "Ticket sale cannot be started in past")
-      );
-    }
-
     if (new Date(ModifiedFormValues.salesEndTime) > eventEndDateTime) {
       // Ticket cannot be saled after event has ended
       dispatch(
         showSnackbar("warning", "Ticket cannot be saled after event has ended")
       );
+      return;
     }
 
     if (
@@ -393,6 +386,7 @@ const EditTicket = ({
           "Ticket sale end Date & Time must be greater than sale start Date & Time."
         )
       );
+      return;
     }
 
     if (
@@ -403,23 +397,22 @@ const EditTicket = ({
         // Currency and amount is required
         if (!ModifiedFormValues.currency) {
           dispatch(showSnackbar("warning", "Ticket currency is required"));
+          return;
         }
         if (!ModifiedFormValues.price) {
           dispatch(showSnackbar("warning", "Ticket price is required"));
+          return;
         }
         if (ModifiedFormValues.price && ModifiedFormValues.currency) {
           // Here we can create this ticket
           dispatch(editTicket(ModifiedFormValues, id, handleClose));
+          return;
         }
       }
       if (type === "Free") {
         // Niether currency nor amount is required
         dispatch(editTicket(ModifiedFormValues, id, handleClose));
-      }
-      if (type === "Donation") {
-        // Niether currency nor amount is required
-        // Buyers can choose a fair price for ticket according to them
-        dispatch(editTicket(ModifiedFormValues, id, handleClose));
+        return;
       }
     }
   };
@@ -502,7 +495,7 @@ const EditTicket = ({
                     defaultValue={type}
                     name="radio-buttons-group"
                   >
-                    <div className="mb-3 overlay-form-input-row form-row-3-in-1">
+                    <div className="mb-3 overlay-form-input-row form-row-2-in-1">
                       <div>
                         <FormControlLabel
                           value="Paid"
@@ -533,7 +526,7 @@ const EditTicket = ({
                         />
                         <RadioLabel>Free</RadioLabel>
                       </div>
-                      <div>
+                      {/* <div>
                         <FormControlLabel
                           value="Donation"
                           control={
@@ -547,7 +540,7 @@ const EditTicket = ({
                           label=""
                         />
                         <RadioLabel>Donation</RadioLabel>
-                      </div>
+                      </div> */}
                     </div>
                   </RadioGroup>
                   <div className="mb-4 overlay-form-input-row form-row-2-in-1">

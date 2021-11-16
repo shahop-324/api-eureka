@@ -114,9 +114,7 @@ const TicketingDetailsCard = (props) => {
             width: "100%",
           }}
         >
-          <div className="event-field-label registrations-field-label">
-            <div className="speaker-card-session-grid">{`${props.unitsAvailable} units`}</div>
-          </div>
+          <div className="registrations-field-label">{`${props.unitsAvailable} units`}</div>
         </div>
         <div
           className="event-views-field"
@@ -180,7 +178,12 @@ const TicketingDetailsCard = (props) => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
-      <EditTicket open={open} handleClose={handleClose} id={props.id} />
+      <EditTicket
+        ticketType={props.type}
+        open={open}
+        handleClose={handleClose}
+        id={props.id}
+      />
       <DeleteTicket
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteTicket={handleCloseDeleteTicket}

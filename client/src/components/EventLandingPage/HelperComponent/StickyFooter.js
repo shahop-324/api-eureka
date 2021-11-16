@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-
+import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
-
 import Dialog from "@material-ui/core/Dialog";
-
 import List from "@material-ui/core/List";
 import "./../../../assets/css/style.css";
-
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,11 +13,30 @@ import Slide from "@material-ui/core/Slide";
 import { createQuery } from "../../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import TicketForm from "../FormComponent/TicketForm";
+
+import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
+import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
+
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import RedditIcon from "@mui/icons-material/Reddit";
+
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -36,8 +52,29 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const StickyFooter = () => {
+const SaleOffContainer = styled.div`
+  border: 1px solid #c0c0c0;
+  border-radius: 10px;
+  background-color: #f1f1f1;
+
+  font-size: 0.9rem;
+  color: #212121;
+  font-weight: 500;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StickyFooter = ({ eventName }) => {
   const classes = useStyles();
+
+  const params = useParams();
+  const id = params.id;
+  const communityId = params.communityId;
+
+  const eventLink = `https://www.bluemeet.in/event-landing-page/${id}/${communityId}`;
 
   const dispatch = useDispatch();
 
@@ -48,10 +85,6 @@ const StickyFooter = () => {
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
-
-  const params = useParams();
-  const id = params.id;
-  console.log(id);
 
   const { userDetails } = useSelector((state) => state.user);
 
@@ -65,21 +98,6 @@ const StickyFooter = () => {
 
   const handleQueryText = (event) => {
     setQueryText(event.target.value);
-  };
-
-  const handleAskQuery = () => {
-    const formValues = {};
-    formValues.createdBy = userDetails.id;
-    formValues.userName = `${userDetails.firstName} ${userDetails.lastName}`;
-    formValues.userImg = userDetails.image;
-    formValues.createdForEventId = id;
-    formValues.questionText = queryText;
-
-    console.log(formValues);
-
-    dispatch(createQuery(formValues));
-
-    // setState({ openSuccess: true, vertical: "top", horizontal: "center" });
   };
 
   const [openFAQ, setOpenFAQ] = useState(false);
@@ -134,17 +152,24 @@ const StickyFooter = () => {
         >
           <button
             className="btn btn-outline-primary btn-outline-text FAQs"
-            style={{ width: "100%", maxWidth: "250px", fontSize: "1rem" }}
+            style={{
+              width: "100%",
+              maxWidth: "250px",
+              fontSize: "1rem",
+              alignItems: "center",
+            }}
             onClick={handleOpenFAQs}
           >
-            FAQs & Share
+            <ReplyRoundedIcon />
+            <span className="ms-2">Share</span>
           </button>
           <button
             className="btn btn-primary btn-outline-text buy-tickets"
             style={{ width: "100%", maxWidth: "250px", fontSize: "1rem" }}
             onClick={handleOpenTickets}
           >
-            Buy Ticket
+            <ConfirmationNumberRoundedIcon />
+            <span className="ms-2">Buy Ticket</span>
           </button>
         </div>
       </div>
@@ -158,7 +183,7 @@ const StickyFooter = () => {
         <AppBar className={classes.appBar}>
           <Toolbar style={{ backgroundColor: "#538BF7" }}>
             <Typography variant="h6" className={classes.title}>
-              FAQs
+              Share this event
             </Typography>
             <IconButton
               edge="start"
@@ -170,133 +195,111 @@ const StickyFooter = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <List>
-          <div
-            className="got-a-coupon-code mb-3 px-4 pt-3"
-            style={{ fontWeight: "500", fontFamily: "Inter" }}
-          >
-            Some question you might have?
+
+        {/* Here we need to provide share event buttons */}
+
+        <div className="py-5 px-4 d-flex flex-column align-items-center">
+          <div className="Demo__some-network mb-5">
+            <FacebookShareButton
+              url={eventLink}
+              quote={eventName}
+              className="Demo__some-network__share-button"
+            >
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
+              >
+                {" "}
+                <FacebookIcon style={{ fill: "#1760A8" }} />{" "}
+                <span className="ms-2"> Share on Facebook </span>
+              </button>
+            </FacebookShareButton>
           </div>
-          <div className={`${classes.root} d-flex flex-column px-4`}>
-            <MuiAccordion
-              square
-              expanded={expanded === "panel1"}
-              onChange={handleChange("panel1")}
+          <div className="Demo__some-network mb-5">
+            <TwitterShareButton
+              url={eventLink}
+              title={eventName}
+              className="Demo__some-network__share-button"
             >
-              <MuiAccordionSummary
-                aria-controls="panel1d-content"
-                id="panel1d-header"
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
               >
-                <Typography>
-                  Can I get to interact with other attendees in this event?
-                </Typography>
-              </MuiAccordionSummary>
-              <MuiAccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget.
-                </Typography>
-              </MuiAccordionDetails>
-            </MuiAccordion>
-            <MuiAccordion
-              square
-              expanded={expanded === "panel2"}
-              onChange={handleChange("panel2")}
+                {" "}
+                <TwitterIcon style={{ fill: "#539FF7" }} />{" "}
+                <span className="ms-2"> Share on Twitter </span>
+              </button>
+            </TwitterShareButton>
+          </div>
+          <div className="Demo__some-network mb-5">
+            <LinkedinShareButton
+              url={eventLink}
+              title={eventName}
+              className="Demo__some-network__share-button"
             >
-              <MuiAccordionSummary
-                aria-controls="panel2d-content"
-                id="panel2d-header"
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
               >
-                <Typography>
-                  Can I get session replays if i miss any session?
-                </Typography>
-              </MuiAccordionSummary>
-              <MuiAccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget.
-                </Typography>
-              </MuiAccordionDetails>
-            </MuiAccordion>
-            <MuiAccordion
-              square
-              expanded={expanded === "panel3"}
-              onChange={handleChange("panel3")}
+                {" "}
+                <LinkedInIcon style={{ fill: "#2565A5" }} />{" "}
+                <span className="ms-2"> Share on LinkedIn </span>
+              </button>
+            </LinkedinShareButton>
+          </div>
+          <div className="Demo__some-network mb-5">
+            <WhatsappShareButton
+              url={eventLink}
+              title={eventName}
+              separator=":: "
+              className="Demo__some-network__share-button"
             >
-              <MuiAccordionSummary
-                aria-controls="panel3d-content"
-                id="panel3d-header"
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
               >
-                <Typography>
-                  Will I get to participate in booths in this event?
-                </Typography>
-              </MuiAccordionSummary>
-              <MuiAccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget.
-                </Typography>
-              </MuiAccordionDetails>
-            </MuiAccordion>
+                {" "}
+                <WhatsAppIcon style={{ fill: "#378D1E" }} />{" "}
+                <span className="ms-2"> Share on WhatsApp </span>
+              </button>
+            </WhatsappShareButton>
+          </div>
+          <div className="Demo__some-network mb-5">
+            <TelegramShareButton
+              url={eventLink}
+              title={eventName}
+              separator=":: "
+              className="Demo__some-network__share-button"
+            >
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
+              >
+                {" "}
+                <TelegramIcon style={{ fill: "#0088cc" }} />{" "}
+                <span className="ms-2"> Share on Telegram </span>
+              </button>
+            </TelegramShareButton>
           </div>
 
-          <div className="mb-4 px-4">
-            <div
-              className="got-a-coupon-code mb-3 mt-3"
-              style={{ fontWeight: "500", fontFamily: "Inter" }}
+          <div className="Demo__some-network mb-5">
+            <RedditShareButton
+              url={eventLink}
+              title={eventName}
+              separator=":: "
+              className="Demo__some-network__share-button"
             >
-              Still have any queries before making call?
-            </div>
-            <form
-              // className="form-inline my-2 my-lg-0 d-flex flex-row mb-5 px-5"
-              style={{ width: "100%" }}
-            >
-              <div
-                className="d-flex flex-column align-items-center justify-content-center"
-                style={{ width: "100%" }}
+              <button
+                className="btn btn-light btn-outline-text d-flex flex-row align-items-center justify-content-center py-2"
+                style={{ width: "180px" }}
               >
-                <div className="d-flex flex-row mb-3" style={{ width: "82%" }}>
-                  <input
-                    className="form-control mr-sm-2"
-                    type="search"
-                    value={queryText}
-                    placeholder="Your question"
-                    aria-label="Search"
-                    onChange={handleQueryText}
-                  />
-                  <button
-                    disabled={!isSignedIn}
-                    className="btn btn-outline-primary my-2 my-sm-0 btn-outline-text"
-                    onClick={handleAskQuery}
-                  >
-                    Ask
-                  </button>
-                </div>
-                <div>
-                  <Link to={`/signin/${id}/?intent=eventRegistration`}>
-                    {" "}
-                    {isSignedIn ? (
-                      <div></div>
-                    ) : (
-                      <span style={{ color: "#11A1FD" }}>
-                        Login to ask query for this event.
-                      </span>
-                    )}
-                  </Link>
-                </div>
-              </div>
-            </form>
+                {" "}
+                <RedditIcon style={{ fill: "#ff4500" }} />{" "}
+                <span className="ms-2"> Share on Reddit </span>
+              </button>
+            </RedditShareButton>
           </div>
-        </List>
+        </div>
       </Dialog>
 
       <Dialog
@@ -323,16 +326,23 @@ const StickyFooter = () => {
 
         {event ? (
           <div className="p-4">
-            <TicketForm
-              isCommunityTeamMember={isCommunityTeamMember}
-              eventId={id}
-              tickets={tickets}
-              coupon={event.coupon}
-              eventName={event.eventName}
-              eventDescription={event.shortDescription}
-              startTime={event.startTime}
-              endTime={event.endTime}
-            />
+            {/* {// ! Ticket sale is currently off } */}
+            {event.ticketSaleIsEnabled ? (
+              <TicketForm
+                isCommunityTeamMember={isCommunityTeamMember}
+                eventId={id}
+                tickets={tickets}
+                coupon={event.coupon}
+                eventName={eventName}
+                eventDescription={event.shortDescription}
+                startTime={event.startTime}
+                endTime={event.endTime}
+              />
+            ) : (
+              <SaleOffContainer className="py-5">
+                Ticket sale if currently off
+              </SaleOffContainer>
+            )}
           </div>
         ) : (
           <></>

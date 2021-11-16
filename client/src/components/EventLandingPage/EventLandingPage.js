@@ -144,6 +144,21 @@ const StyledMenu = MUIStyled((props) => (
   },
 }));
 
+const SaleOffContainer = styled.div`
+  border: 1px solid #c0c0c0;
+  border-radius: 10px;
+  background-color: #f1f1f1;
+
+  font-size: 0.9rem;
+  color: #212121;
+  font-weight: 500;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
 const MenuText = styled.span`
   font-weight: 500;
   font-size: 0.87rem;
@@ -1339,7 +1354,7 @@ const EventLandingPage = (props) => {
                   </div>
 
                   <CommunityHeadline className="mb-4">
-                    { community ? community.headline : <></>}
+                    {community ? community.headline : <></>}
                   </CommunityHeadline>
 
                   {community ? (
@@ -1443,16 +1458,24 @@ const EventLandingPage = (props) => {
                     <div className="ticket-price-range"></div>
                   </div>
 
-                  <TicketForm
-                    isCommunityTeamMember={isCommunityTeamMember}
-                    eventId={id}
-                    tickets={tickets}
-                    coupon={event.coupon}
-                    eventName={event.eventName}
-                    eventDescription={event.shortDescription}
-                    startTime={event.startTime}
-                    endTime={event.endTime}
-                  />
+                  {/* {// ! Ticket sale is currently off} */}
+
+                  {event.ticketSaleIsEnabled ? (
+                    <TicketForm
+                      isCommunityTeamMember={isCommunityTeamMember}
+                      eventId={id}
+                      tickets={tickets}
+                      coupon={event.coupon}
+                      eventName={event.eventName}
+                      eventDescription={event.shortDescription}
+                      startTime={event.startTime}
+                      endTime={event.endTime}
+                    />
+                  ) : (
+                    <SaleOffContainer className="py-5">
+                      Ticket sale is currently off
+                    </SaleOffContainer>
+                  )}
                 </div>
               </div>
             </div>
@@ -1462,6 +1485,7 @@ const EventLandingPage = (props) => {
           </div>
           {/*  */}
           <StickyFooter
+            eventName={event.eventName}
             eventId={id}
             tickets={event.tickets}
             coupon={event.coupon}
