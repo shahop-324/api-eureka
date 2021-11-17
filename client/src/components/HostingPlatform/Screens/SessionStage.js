@@ -130,9 +130,17 @@ const SessionStage = () => {
 
   const { registrations } = useSelector((state) => state.registration);
 
-  const myRegistration = registrations.find(
-    (element) => element.bookedByUser.toString() === userId
-  );
+  let myRegistration;
+
+  for (let element of registrations) {
+    if(element) {
+      if(element.bookedByUser) {
+        if(element.bookedByUser.toString() === userId ) {
+          myRegistration = element;
+        }
+      }
+    }
+  }
 
   let registrationId;
 

@@ -5,6 +5,7 @@ import { Avatar } from "@material-ui/core";
 import "./../../../Styles/root.scss";
 import { makeStyles } from "@material-ui/core";
 import ReportActions from "../Sub/ReportActions";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,15 +25,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ModerationPeopleList = () => {
-
   const [openActions, setOpenActions] = useState(false);
 
   const handleOpenActions = () => {
     setOpenActions(true);
-  }
+  };
   const handleCloseActions = () => {
     setOpenActions(false);
-  }
+  };
 
   const classes = useStyles();
   return (
@@ -44,7 +44,14 @@ const ModerationPeopleList = () => {
             placeholder="Search people..."
             className="form-control"
           />
-          <i className="search icon"></i>
+          <SearchRoundedIcon
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              color: "#757575",
+            }}
+          />
         </div>
         {/* <div className="search-box-and-view-switch-container d-flex flex-row justify-content-between mb-3"></div> */}
 
@@ -69,7 +76,9 @@ const ModerationPeopleList = () => {
             </div>
 
             <button
-            onClick={() => {handleOpenActions()}}
+              onClick={() => {
+                handleOpenActions();
+              }}
               className="btn btn-outline-text btn-outline-primary"
               style={{ width: "100%" }}
             >

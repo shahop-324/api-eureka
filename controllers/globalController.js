@@ -29,6 +29,7 @@ const PaypalPayout = require("./../models/paypalPayoutModel");
 const Report = require("./../models/reportModel");
 const Coupon = require("./../models/couponModel");
 const Ticket = require("./../models/ticketModel");
+const Booth = require("./../models/boothModel");
 
 const { nanoid } = require("nanoid");
 const random = require("random");
@@ -2342,5 +2343,16 @@ exports.getCoupons = catchAsync(async (req, res, next) => {
     status: "success",
     data: couponDocs,
     tickets: tickets,
+  });
+});
+
+exports.getEventBooth = catchAsync(async (req, res, next) => {
+  const boothId = req.params.boothId;
+
+  const boothDoc = await Booth.findById(boothId);
+
+  res.status(200).json({
+    status: "success",
+    data: boothDoc,
   });
 });

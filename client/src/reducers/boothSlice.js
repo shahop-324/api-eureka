@@ -6,6 +6,7 @@ const boothSlice = createSlice({
   initialState: {
     booths: [],
     boothDetails: null,
+    currentBoothId: null,
     isLoading: true,
     isLoadingDetail: true,
     error: false,
@@ -74,6 +75,10 @@ const boothSlice = createSlice({
       );
       state.isLoading = false;
     },
+    SetCurrentBoothId(state, action) {
+      state.currentBoothId = action.payload.boothId;
+      state.isLoading = false;
+    }
   },
 });
 export const boothActions = boothSlice.actions;

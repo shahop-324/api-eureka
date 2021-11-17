@@ -87,6 +87,8 @@ const Root = () => {
 
   const eventDetails = useSelector((state) => state.event.eventDetails);
 
+  const { currentBoothId } = useSelector((state) => state.booth);
+
   let currentIndex = useSelector(
     (state) => state.navigation.currentIndexForHostingPlatform
   );
@@ -324,13 +326,13 @@ const Root = () => {
     );
   };
 
-  const handleStageClick = () => {
-    dispatch(navigationIndexForHostingPlatform(2));
+  // const handleStageClick = () => {
+  //   dispatch(navigationIndexForHostingPlatform(2));
 
-    history.push(
-      `/community/${communityId}/event/${eventId}/hosting-platform/Stage`
-    );
-  };
+  //   history.push(
+  //     `/community/${communityId}/event/${eventId}/hosting-platform/Stage`
+  //   );
+  // };
 
   const handleNetworkingClick = () => {
     dispatch(navigationIndexForHostingPlatform(3));
@@ -362,8 +364,6 @@ const Root = () => {
 
   currentIndex = currentIndex.toString();
 
-  // console.log(currentIndex);
-
   if (!eventDetails) {
     return (
       <>
@@ -387,7 +387,6 @@ const Root = () => {
           activeIndex={currentIndex}
           handleLobbyClick={handleLobbyClick}
           handleSessionsClick={handleSessionsClick}
-          handleStageClick={handleStageClick}
           handleNetworkingClick={handleNetworkingClick}
           handleRoomsClick={handleRoomsClick}
           handleBoothsClick={handleBoothsClick}
@@ -415,6 +414,7 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
+
                 case "1":
                   return (
                     <RootBackground style={{ position: "relative" }}>
@@ -426,7 +426,7 @@ const Root = () => {
                         style={{ maxWidth: "1360px", margin: "0 auto" }}
                         className="py-4 px-5"
                       >
-                       <Sessions />{" "}
+                        <Sessions />{" "}
                       </div>
                     </RootBackground>
                   );
@@ -459,6 +459,7 @@ const Root = () => {
                       </div>
                     </RootBackground>
                   );
+
                 case "4":
                   return (
                     <RootBackground style={{ position: "relative" }}>
@@ -486,8 +487,7 @@ const Root = () => {
                         style={{ maxWidth: "1360px", margin: "0 auto" }}
                         className="py-4 px-5"
                       >
-                        {/* <Booths />{" "} */}
-                        <BoothArea />
+                        {currentBoothId ? <BoothArea /> : <Booths />}
                       </div>
                     </RootBackground>
                   );

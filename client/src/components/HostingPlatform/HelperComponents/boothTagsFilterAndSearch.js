@@ -1,34 +1,26 @@
-import React from 'react';
-import './../Styles/booth.scss';
+import React from "react";
+import "./../Styles/booth.scss";
 
-import Select from 'react-select';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
+import Select from "react-select";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
 
-import {fade, makeStyles} from '@material-ui/core/styles';
-
-const options = [
-  {value: 'All', label: 'All Tags'},
-  {value: 'sass', label: 'sass'},
-  {value: 'ed-tech', label: 'ed-tech'},
-  {value: 'education', label: 'education'},
-  {value: 'green-energy', label: 'green-energy'},
-  {value: 'automobile', label: 'automobile'},
-  {value: 'automation', label: 'automation'},
-];
+import { alpha, makeStyles } from "@material-ui/core/styles";
 
 const styles = {
   control: (base) => ({
     ...base,
-    fontFamily: 'Ubuntu',
-    fontWeight: '500',
-    color: '#A7A7A7',
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
+    color: "#A7A7A7",
   }),
   menu: (base) => ({
     ...base,
-    fontFamily: 'Ubuntu',
-    fontWeight: '500',
-    color: '#292929',
+    fontFamily: "Ubuntu",
+    fontWeight: "500",
+    fontSize: "0.85rem",
+    color: "#292929",
   }),
 };
 
@@ -58,59 +50,69 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
-    color: '#ffffff',
-    backgroundColor: fade(theme.palette.common.white, 0.12),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+    color: "#ffffff",
+    backgroundColor: alpha(theme.palette.common.white, 0.12),
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
-      width: 'auto',
+      width: "auto",
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
   },
 }));
 
-const BoothTagsFilterAndSearch = () => {
-    const classes = useStyles();
-    return (
-<> 
-<div className="tags-filter-and-search-box-container mb-5 d-flex flex-row justify-content-between">
-        <div className="booth-tags-filter">
+const BoothTagsFilterAndSearch = ({ tags }) => {
+  const classes = useStyles();
+
+  const options = [{ value: "All", label: "All Tags" }];
+
+  tags.map((tag) => {
+    options.push({
+      value: tag,
+      label: tag,
+    });
+  });
+
+  return (
+    <>
+      <div className="tags-filter-and-search-box-container mb-5 d-flex flex-row justify-content-between">
+        <div className="booth-tags-filter" style={{ width: "300px" }}>
           <Select
             isMulti
             menuPlacement="auto"
@@ -120,24 +122,23 @@ const BoothTagsFilterAndSearch = () => {
           />
         </div>
         <div>
-
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
           </div>
-          <InputBase
-            placeholder="Search…"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{'aria-label': 'search'}}
-          />
-        </div>
         </div>
       </div>
-</>
-    );
-}
+    </>
+  );
+};
 
 export default BoothTagsFilterAndSearch;

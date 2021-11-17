@@ -21,6 +21,9 @@ const eventSlice = createSlice({
     length: 0,
     videoUploadPercent: 0,
     vibeUploadPercent: 0,
+    uploadBannerPercent: 0,
+    openUpdateEventSettings: false,
+    
   },
 
   reducers: {
@@ -94,7 +97,7 @@ const eventSlice = createSlice({
     FetchEvent(state, action) {
       const newEvent = action.payload.event;
       const existingEvent = state.events.find(
-        (event) => event.id === newEvent.id
+        (event) => event._id === newEvent._id
       );
 
       if (!existingEvent) {
@@ -164,6 +167,9 @@ const eventSlice = createSlice({
         (el) => el._id.toString() !== action.payload.eventId.toString()
       );
       state.isLoading = false;
+    },
+    FetchEventBannerUploadPercent(state, action) {
+      state.uploadBannerPercent = action.payload.percent;
     },
   },
 });

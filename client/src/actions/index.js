@@ -2401,13 +2401,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
         throw new Error(res.message);
       }
     }
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error("Something went wrong");
-      } else {
-        throw new Error(res.message);
-      }
-    }
+    
     res = await res.json();
     console.log(res);
 
@@ -2431,6 +2425,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
     }, 4000);
   }
 };
+
 export const errorTrackerForFetchBooth = () => async (dispatch, getState) => {
   dispatch(boothActions.disabledError());
 };
@@ -11634,6 +11629,96 @@ export const uploadCommunityCover =
     }
   };
 
+export const uploadEventBanner =
+  (file, eventId, handleClose) => async (dispatch, getState) => {
+    try {
+      // Here we will get updated event
+
+      const key = `${eventId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              eventActions.FetchEventBannerUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Edit community
+
+            const res = await fetch(
+              `${BaseURL}events/${eventId}/updateEventBanner`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  banner: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().communityAuth.token}`,
+                },
+              }
+            );
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+            const result = await res.json();
+
+            dispatch(
+              eventActions.FetchEvent({
+                event: result.data,
+              })
+            );
+
+            dispatch(
+              eventActions.FetchEventBannerUploadPercent({
+                percent: 0,
+              })
+            );
+
+            handleClose();
+
+            dispatch(
+              showSnackbar("success", "Event Banner updated successfully!")
+            );
+          } catch (error) {
+            console.log(error);
+            dispatch(
+              showSnackbar(
+                "error",
+                "Failed to update banner, Please try again."
+              )
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Updating Event Banner failed, Please try again.")
+      );
+    }
+  };
+
+export const resetEventBannerUploadPercent =
+  () => async (dispatch, getState) => {
+    dispatch(
+      eventActions.FetchEventBannerUploadPercent({
+        percent: 0,
+      })
+    );
+  };
+
 export const followCommunity =
   (userId, communityId) => async (dispatch, getState) => {
     try {
@@ -12650,3 +12735,45 @@ export const registerFreeTicket =
       dispatch(showSnackbar("error", "failed to register, Please try again."));
     }
   };
+
+export const SetCurrentBoothId = (boothId) => async (dispatch, getState) => {
+  dispatch(
+    boothActions.SetCurrentBoothId({
+      boothId: boothId,
+    })
+  );
+};
+
+export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(`${BaseURL}fetchEventBooth/${boothId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    
+    res = await res.json();
+    console.log(res);
+
+    dispatch(
+      boothActions.FetchBooth({
+        booth: res.data,
+      })
+    );
+  } catch (err) {
+    dispatch(boothActions.hasError(err.message));
+    console.log(err);
+
+    dispatch(showSnackbar("error", "Failed to fetch booth, Please try again."))
+  }
+};

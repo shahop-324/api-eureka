@@ -224,7 +224,7 @@ const VideoStreamContainer = styled.div`
 
   overflow: hidden;
   border-radius: 10px;
-  width: 100px;
+  width: 100%;
 
   /* video {
     object-fit: contain !important;
@@ -339,7 +339,7 @@ const PersonOrgDesignation = styled.div`
   font-weight: 500;
   font-family: "Ubuntu";
   font-size: 0.7rem;
-  color: #3F3F3F;
+  color: #3f3f3f;
   display: block;
   text-transform: capitalize;
 `;
@@ -419,9 +419,6 @@ const PersonInfoPopUp = styled.div`
   min-height: 60px;
   width: 300px;
 `;
-
-
-
 
 export {
   Button,

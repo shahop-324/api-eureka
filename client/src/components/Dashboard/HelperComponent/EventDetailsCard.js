@@ -433,14 +433,19 @@ const EventDetailCard = ({
                       )
                     );
 
-                    window.location.href = `/compatibility-test/community/${communityId}/event/${eventId}/`;
-
                     handleClose();
                   }}
                   disableRipple
                 >
-                  <ShareLocationRoundedIcon />
-                  <MenuText>Venue</MenuText>
+                  <a
+                    href={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <ShareLocationRoundedIcon />
+                    <MenuText>Venue</MenuText>
+                  </a>
                 </MenuItem>
               </StyledMenu>
 

@@ -485,11 +485,12 @@ const EventLandingPage = (props) => {
     });
   };
 
-  const renderSpeakerList = () => {
+  const renderSpeakerList = (color) => {
     return event.speaker.map((speaker) => {
       console.log(speaker.socialMediaHandles);
       return (
         <SpeakerCard
+          color={color}
           firstName={speaker.firstName}
           lastName={speaker.lastName}
           organisation={speaker.organisation}
@@ -1204,7 +1205,7 @@ const EventLandingPage = (props) => {
                         <SectionHeading>Speakers</SectionHeading>
                       </div>
                       <div className="speakers-card-grid">
-                        {renderSpeakerList()}
+                        {renderSpeakerList(event.landingPageColor)}
                       </div>
                     </div>
 

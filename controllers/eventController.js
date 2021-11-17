@@ -1122,7 +1122,10 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
     "qna",
     "attendeeCount",
     "emojiReaction",
-    "review"
+    "boothEnabled",
+    "loungeEnabled",
+    "networkingEnabled",
+    "review",
   );
 
   const eventDoc = await Event.findByIdAndUpdate(
@@ -1132,8 +1135,33 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
       new: true,
       validateModifiedOnly: true,
     }
-  ).populate("registrationFormId");
-
+  )
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts");
   res.status(200).json({
     status: "success",
     eventDoc,
@@ -1459,4 +1487,51 @@ exports.deleteVideo = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
   });
+});
+
+exports.uploadEventBanner = catchAsync(async (req, res, next) => {
+  try {
+    const banner = req.body.banner;
+
+    const eventId = req.params.eventId;
+
+    const eventDoc = await Event.findByIdAndUpdate(
+      eventId,
+      { banner: banner },
+      { new: true, validateModifiedOnly: true }
+    )
+      .populate({
+        path: "tickets",
+        options: {
+          sort: ["price"],
+        },
+      })
+      .populate("sponsors")
+      .populate("booths")
+      .populate({
+        path: "session",
+        populate: {
+          path: "speaker",
+        },
+      })
+      .populate("speaker")
+      .populate({
+        path: "createdBy",
+        select: "name socialMediaHandles image email superAdmin eventManagers",
+      })
+      .populate({
+        path: "coupon",
+        options: {
+          match: { status: "Active" },
+        },
+      })
+      .populate("hosts");
+
+    res.status(200).json({
+      status: "success",
+      data: eventDoc,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });

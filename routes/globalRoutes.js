@@ -356,4 +356,6 @@ router.post(
 
 router.get("/getCoupons/:eventId", globalController.getCoupons);
 
+router.get("/fetchEventBooth/:boothId", authController.protect, globalController.getEventBooth);
+
 module.exports = router;

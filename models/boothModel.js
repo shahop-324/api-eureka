@@ -39,8 +39,13 @@ const boothSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  promoImage: {
+    type: String,
+    default: "promoImage-abstract.jpeg",
+  },
   boothPoster: {
     type: String,
+    default: "banner-fonts-best.png",
   },
   socialMediaHandles: {
     type: Map,

@@ -535,7 +535,22 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
+    banner: {
+      type: String,
+      default: "Event_banner.webp",
+    },
+    loungeEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    boothEnabled: {
+      type: Boolean,
+      default: true
+    },
+    networkingEnabled: {
+      type: Boolean,
+      default: true,
+    },
     // * Done I have to do research on how recording will work and where it will be stored.
   },
   {

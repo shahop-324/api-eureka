@@ -20,6 +20,7 @@ import {
   setVenueRightDrawerSelectedTab,
   setOpenVenueRightDrawer,
 } from "../../../actions";
+import { Avatar } from "@material-ui/core";
 
 const DrawerBackground = styled.div`
   background-color: #ffffff;
@@ -27,6 +28,8 @@ const DrawerBackground = styled.div`
 
 const RightContent = () => {
   const dispatch = useDispatch();
+
+  const { userDetails } = useSelector((state) => state.user);
 
   const { venueRightDrawerSelectedTab, openVenueRightDrawer } = useSelector(
     (state) => state.selectedTab
@@ -59,40 +62,6 @@ const RightContent = () => {
       <div>
         <div className="right-top-nav-h d-flex flex-row justify-content-between align-items-center py-3 px-4">
           <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3 pe-3"
-            onClick={() => {
-              handleOpenSettings();
-              dispatch(setPersonalChatConfig(null));
-            }}
-            style={{ borderRight: "1px solid #D3D2D2" }}
-          >
-            <div
-              className={`icon-wrapper ${
-                venueRightDrawerSelectedTab === "feed"
-                  ? "active-wrapper-h"
-                  : " "
-              } py-2 px-3 mb-1`}
-            >
-              <SettingsRoundedIcon
-                className={`icon-btn-venue ${
-                  venueRightDrawerSelectedTab === "feed"
-                    ? "icon-btn-active-h"
-                    : " "
-                }`}
-                style={{ fontSize: "19" }}
-              />
-            </div>
-            <div
-              className={`icon-btn-text-venue ${
-                venueRightDrawerSelectedTab === "feed"
-                  ? "icon-btn-text-active-h"
-                  : " "
-              }`}
-            >
-              Settings
-            </div>
-          </div>
-          <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
             onClick={() => {
               setSelectedTab("feed");
@@ -113,7 +82,7 @@ const RightContent = () => {
                     ? "icon-btn-active-h"
                     : " "
                 }`}
-                style={{ fontSize: "19" }}
+                style={{ fontSize: "19px" }}
               />
             </div>
             <div
@@ -148,7 +117,7 @@ const RightContent = () => {
                     ? "icon-btn-active-h"
                     : " "
                 }`}
-                style={{ fontSize: "19" }}
+                style={{ fontSize: "19px" }}
               />
             </div>
             <div
@@ -183,7 +152,7 @@ const RightContent = () => {
                     ? "icon-btn-active-h"
                     : " "
                 }`}
-                style={{ fontSize: "19" }}
+                style={{ fontSize: "19px" }}
               />
             </div>
             <div
@@ -194,41 +163,6 @@ const RightContent = () => {
               }`}
             >
               Alerts
-            </div>
-          </div>
-
-          <div
-            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
-            onClick={() => {
-              setSelectedTab("polls");
-              openAndCloseDrawer(true);
-              dispatch(setPersonalChatConfig(null));
-            }}
-          >
-            <div
-              className={`icon-wrapper ${
-                venueRightDrawerSelectedTab === "polls"
-                  ? "active-wrapper-h"
-                  : " "
-              } py-2 px-3 mb-1`}
-            >
-              <AssessmentRoundedIcon
-                className={`icon-btn-venue ${
-                  venueRightDrawerSelectedTab === "polls"
-                    ? "icon-btn-active-h"
-                    : " "
-                }`}
-                style={{ fontSize: "19" }}
-              />
-            </div>
-            <div
-              className={`icon-btn-text-venue ${
-                venueRightDrawerSelectedTab === "polls"
-                  ? "icon-btn-text-active-h"
-                  : " "
-              }`}
-            >
-              Polls
             </div>
           </div>
 
@@ -253,7 +187,7 @@ const RightContent = () => {
                     ? "icon-btn-active-h"
                     : " "
                 }`}
-                style={{ fontSize: "19" }}
+                style={{ fontSize: "19px" }}
               />
             </div>
             <div
@@ -264,6 +198,40 @@ const RightContent = () => {
               }`}
             >
               Moderation
+            </div>
+          </div>
+
+          <div
+            className="icon-btn-lobby-wrapper d-flex flex-column align-items-center ms-3"
+            onClick={() => {
+              handleOpenSettings();
+              dispatch(setPersonalChatConfig(null));
+            }}
+          >
+            <div
+              className={`icon-wrapper ${
+                venueRightDrawerSelectedTab === "feed"
+                  ? "active-wrapper-h"
+                  : " "
+              } py-2 px-3 mb-1`}
+            >
+              <SettingsRoundedIcon
+                className={`icon-btn-venue ${
+                  venueRightDrawerSelectedTab === "feed"
+                    ? "icon-btn-active-h"
+                    : " "
+                }`}
+                style={{ fontSize: "19px" }}
+              />
+            </div>
+            <div
+              className={`icon-btn-text-venue ${
+                venueRightDrawerSelectedTab === "feed"
+                  ? "icon-btn-text-active-h"
+                  : " "
+              }`}
+            >
+              Settings
             </div>
           </div>
         </div>
@@ -386,40 +354,6 @@ const RightContent = () => {
               </div>
 
               <div
-                className="icon-btn-lobby-wrapper d-flex flex-column align-items-center me-3"
-                onClick={() => {
-                  setSelectedTab("polls");
-                  openAndCloseDrawer(true);
-                }}
-              >
-                <div
-                  className={`icon-wrapper ${
-                    venueRightDrawerSelectedTab === "polls"
-                      ? "active-wrapper-h"
-                      : " "
-                  } py-2 px-3 mb-1`}
-                >
-                  <AssessmentRoundedIcon
-                    className={`icon-btn-h ${
-                      venueRightDrawerSelectedTab === "polls"
-                        ? "icon-btn-active-h"
-                        : " "
-                    }`}
-                    style={{ fontSize: "19" }}
-                  />
-                </div>
-                <div
-                  className={`icon-btn-text ${
-                    venueRightDrawerSelectedTab === "polls"
-                      ? "icon-btn-text-active-h"
-                      : " "
-                  }`}
-                >
-                  Polls
-                </div>
-              </div>
-
-              <div
                 className="icon-btn-lobby-wrapper d-flex flex-column align-items-center"
                 onClick={() => {
                   setSelectedTab("moderation");
@@ -450,6 +384,40 @@ const RightContent = () => {
                   }`}
                 >
                   Moderation
+                </div>
+              </div>
+
+              <div
+                className="icon-btn-lobby-wrapper d-flex flex-column align-items-center ms-3"
+                onClick={() => {
+                  handleOpenSettings();
+                  dispatch(setPersonalChatConfig(null));
+                }}
+              >
+                <div
+                  className={`icon-wrapper ${
+                    venueRightDrawerSelectedTab === "polls"
+                      ? "active-wrapper-h"
+                      : " "
+                  } py-2 px-3 mb-1`}
+                >
+                  <SettingsRoundedIcon
+                    className={`icon-btn-h ${
+                      venueRightDrawerSelectedTab === "polls"
+                        ? "icon-btn-active-h"
+                        : " "
+                    }`}
+                    style={{ fontSize: "19" }}
+                  />
+                </div>
+                <div
+                  className={`icon-btn-text ${
+                    venueRightDrawerSelectedTab === "polls"
+                      ? "icon-btn-text-active-h"
+                      : " "
+                  }`}
+                >
+                  Settings
                 </div>
               </div>
             </div>

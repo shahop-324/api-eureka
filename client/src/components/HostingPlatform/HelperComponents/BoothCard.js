@@ -1,10 +1,25 @@
 import React from "react";
+import styled from "styled-components";
 import "./../Styles/booth.scss";
-
-import Faker from "faker";
-
+import { useDispatch } from "react-redux";
+import { SetCurrentBoothId } from "./../../../actions";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
+
+const BoothCardContainer = styled.div`
+  background-color: #213a42 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  &:hover {
+    cursor: pointer;
+    background-color: #2d434b !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,40 +38,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoothCard = (props) => {
+const renderTags = (tags) => {
+  return tags.map((tag) => {
+    return <div className=" booth-tag px-3 py-1 me-2">{tag}</div>;
+  });
+};
+
+const BoothCard = ({ promoImage, logo, name, tagline, tags, id }) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   return (
     <>
-      <div className="booth-card-wrapper px-4 py-3">
+      <BoothCardContainer
+        onClick={() => {
+          dispatch(SetCurrentBoothId(id));
+        }}
+        className="booth-card-wrapper px-4 py-3"
+      >
         <img
           className="booth-card-poster mb-3"
-          src={props.url}
-          alt="booth-poster"
+          src={promoImage}
+          alt={name}
         ></img>
 
         <div className="booth-logo-brand-name-and-short-description d-flex flex-row mb-3">
           <Avatar
-            alt="Remy Sharp"
-            src={Faker.image.avatar()}
+            alt={name}
+            src={logo}
             variant="rounded"
             className={classes.large}
           />
 
           <div className="booth-brand-name-and-short-description ms-4">
-            <div className="booth-card-brand-name mb-2">
-              {Faker.company.companyName()}
-            </div>
-            <div className="booth-card-short-description">
-              {Faker.company.catchPhrase()}
-            </div>
+            <div className="booth-card-brand-name mb-2">{name}</div>
+            <div className="booth-card-short-description">{tagline}</div>
           </div>
         </div>
         <div className="booth-card-tags d-flex flex-row align-items-center">
-          <div className=" booth-tag px-3 py-1">Sass</div>
-          <div className="mx-3 booth-tag px-3 py-1">Ed-tech</div>
-          <div className=" booth-tag px-3 py-1">Marketing</div>
+          {renderTags(tags)}
         </div>
-      </div>
+      </BoothCardContainer>
     </>
   );
 };

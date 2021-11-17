@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Faker from "faker";
+import { useDispatch, useSelector } from "react-redux";
 import "./../Styles/booth.scss";
 import LanguageRoundedIcon from "@material-ui/icons/LanguageRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
@@ -11,21 +13,40 @@ import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import { Avatar, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
-import Faker from "faker";
 import BoothLiveStream from "./BoothLiveStream";
 import styled from "styled-components";
+import Chip from "@mui/material/Chip";
+import { IconButton } from "@material-ui/core";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+
+import { SetCurrentBoothId } from "./../../../actions";
+import Loader from "./../../Loader";
+import { fetchBooth } from "./../../../actions";
+import GetInTouchForm from "./Sub/FormComponents/GetInTouchForm";
+
+import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
+
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+
+import ContactsRoundedIcon from '@mui/icons-material/ContactsRounded';
+import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
+import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 
 const ThemedBackgroundButtonOutlined = styled.div`
-  background-color: transparent;
+  background-color: #152d35 !important;
   text-decoration: none !important;
-  color: #152d35;
-
+  color: #ffffff !important;
+  border: 1px solid transparent;
   outline: none !important;
 
   &:hover {
-    background-color: #152d35;
-    color: #ffffff;
-    cursor: pointer;
+    background-color: transparent !important;
+    color: #152d35 !important;
+    border: 1px solid #152d35 !important;
+    cursor: pointer !important;
   }
 `;
 const ThemedBackgroundButtonFilled = styled.div`
@@ -53,7 +74,7 @@ const GetInTouchCard = styled.div`
   background-color: #ffffff;
   padding: 10px;
   width: 100%;
-  height: 160px;
+  height: auto;
 `;
 
 const DemoRoomCard = styled.div`
@@ -70,6 +91,11 @@ const Videos = styled.div`
   background-color: #ffffff;
   padding: 10px;
   width: 100%;
+
+  display: grid;
+  grid-template-columns: 0.1fr 1fr 1fr 1fr 0.1fr;
+  grid-gap: 24px;
+  align-items: center;
 `;
 const ProductsAndServices = styled.div`
   height: 260px;
@@ -77,6 +103,18 @@ const ProductsAndServices = styled.div`
   background-color: #ffffff;
   padding: 10px;
   width: 100%;
+
+  display: grid;
+  grid-template-columns: 0.1fr 1fr 1fr 0.1fr;
+  grid-gap: 24px;
+  align-items: center;
+`;
+
+const VideoCard = styled.video`
+  border-radius: 15px;
+  height: 230px;
+  width: 100%;
+  background-color: #212121;
 `;
 
 const Files = styled.div`
@@ -84,7 +122,40 @@ const Files = styled.div`
   background-color: #ffffff;
   padding: 10px;
   width: 100%;
+  height: 260px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 24px;
+  align-items: center;
 `;
+
+const FileTab = styled.div`
+  border-radius: 20px;
+  border: 1px solid #b9b9b9;
+  padding: 12px;
+  color: #152d35;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    background: #e5e9f1;
+    -webkit-box-shadow: 12px 12px 24px #e5e9f1, -12px -12px 24px #f0f8ff;
+    box-shadow: 12px 12px 24px #e5e9f1, -12px -12px 24px #f0f8ff;
+  }
+`;
+
+const FileName = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #152d35;
+`;
+
 const OffersCard = styled.div`
   border-radius: 10px;
   background-color: #ffffff;
@@ -92,12 +163,50 @@ const OffersCard = styled.div`
   width: 100%;
 `;
 
-const Exhibitors = styled.div`
-  height: 260px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
+const SocialButton = styled.div`
+  border: 1px solid #ffffff !important;
+
+  &:hover {
+    background-color: #ffffff !important;
+    border: 1px solid #152d35 !important;
+    cursor: pointer;
+  }
+`;
+
+const ContactInfo = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+`;
+
+const ProductCard = styled.div`
+  border-radius: 20px;
+  height: 230px;
+  padding: 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #b9b9b9;
+  }
+`;
+
+const ProductImage = styled.img`
+  border-radius: 20px;
+  max-height: 150px;
+  object-fit: contain;
+  justify-self: center;
+  /* border: 1px solid #212121; */
+`;
+
+const ProductName = styled.div`
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #152d35;
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -119,24 +228,74 @@ const useStyles = makeStyles((theme) => ({
 
 // <LobbyAgenda socket={socket} />
 
+const renderTags = (tags) => {
+  return tags.map((tag) => {
+    return (
+      <Chip
+        label={tag}
+        variant="outlined"
+        className="me-2"
+        style={{ color: "#152d35", border: "1px solid #152d35" }}
+      />
+    );
+  });
+};
+
 const BoothArea = () => {
-  const [openLiveStream, setOpenLiveStream] = useState(false);
+  const dispatch = useDispatch();
+
+  const [openGetInTouch, setOpenGetInTouch] = useState(false);
+  const [openUploadVideo, setOpenUploadVideo] = useState(false);
+  const [openAddProduct, setOpenAddProduct] = useState(false);
+  const [opneUploadFile, setOpenUploadFile] = useState(false);
+
+  const handleCloseGetInTouch = () => {
+    setOpenGetInTouch(false);
+  };
+
+  const handleCloseUploadVideo = () => {
+    setOpenUploadVideo(false);
+  };
+
+  const handleCloseAddProduct = () => {
+    setOpenAddProduct(false);
+  };
+
+  const handleCloseUploadFile = () => {
+    setOpenUploadFile(false);
+  };
+
+  const { currentBoothId, boothDetails } = useSelector((state) => state.booth);
+
+  const [openEditBanners, setOpenEditBanners] = useState(false);
 
   const [openAssets, setOpenAssets] = useState(false);
 
-  const handleOpenLiveStream = () => {
-    setOpenLiveStream(true);
+  const handleOpenEditBanners = () => {
+    setOpenEditBanners(true);
   };
 
-  const handleCloseLiveStream = () => {
-    setOpenLiveStream(false);
+  const handleCloseEditBanners = () => {
+    setOpenEditBanners(false);
   };
 
   const handleOpenAssets = () => {
     setOpenAssets(true);
   };
 
+  useEffect(() => {
+    dispatch(fetchBooth(currentBoothId));
+  }, []);
+
   const classes = useStyles();
+
+  const truncateText = (str, n) => {
+    return str.length > n ? `${str.substring(0, n)} ...` : str;
+  };
+
+  if (!boothDetails) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -146,16 +305,14 @@ const BoothArea = () => {
       >
         <div className="d-flex flex-row align-items-center justify-content-between mb-4">
           <div className="d-flex flex-row align-items-center">
-            <div
-              style={{
-                backgroundColor: "#94949436",
-                width: "fit-content",
-                borderRadius: "5px",
+            <IconButton
+              onClick={() => {
+                dispatch(SetCurrentBoothId(null));
               }}
-              className="px-2 py-1"
             >
               <ArrowBackIosRoundedIcon style={{ fontSize: "20px" }} />
-            </div>
+            </IconButton>
+
             <div
               className="ms-3"
               style={{ color: "#212121", fontWeight: "500" }}
@@ -167,24 +324,23 @@ const BoothArea = () => {
           <div>
             <ThemedBackgroundButtonOutlined
               onClick={() => {
-                handleOpenLiveStream();
+                handleOpenEditBanners();
               }}
-              className="btn btn-dark btn-outline-text d-flex flex-row align-items-center"
+              className="btn btn-outline-text d-flex flex-row align-items-center"
             >
-              <GroupRoundedIcon className="me-2" />
-              <span>Meet</span>
+              <EditRoundedIcon className="me-2" style={{ fontSize: "18px" }} />
+              <span>Edit</span>
             </ThemedBackgroundButtonOutlined>
           </div>
         </div>
 
         <div className="mb-4">
           <img
-            src="https://www.threatstack.com/wp-content/uploads/2017/06/docker-cloud-twitter-card.png"
-            alt="booth banner"
+            src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${boothDetails.boothPoster}`}
+            alt={boothDetails.name}
             style={{
-              // position: "absolute",
               width: "100%",
-              maxHeight: "400px",
+              maxHeight: "390px",
               objectFit: "cover",
               borderRadius: "10px",
             }}
@@ -204,11 +360,10 @@ const BoothArea = () => {
             className="d-flex flex-row align-items-center"
           >
             <Avatar
-              src={
-                "https://e7.pngegg.com/pngimages/291/969/png-clipart-docker-software-deployment-intermodal-container-minio-web-server-docker-nodejs-alpine-linux.png"
-              }
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${boothDetails.image}`}
               style={{ height: "5rem", width: "5rem" }}
               variant="rounded"
+              alt={boothDetails.name}
             />
             <div className="ms-3">
               <div
@@ -220,53 +375,91 @@ const BoothArea = () => {
                 }}
                 className="mb-3"
               >
-                Docker Cooperation
+                {boothDetails.name}
               </div>
 
-              <div className="booth-tagline">
-                Empowering App Development for developers.
-              </div>
+              <div className="booth-tagline">{boothDetails.tagline}</div>
             </div>
           </div>
           <div style={{ height: "100px" }}>
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
-              <div
-                className="button-custom-bg p-2 ms-3"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <LanguageRoundedIcon
-                  style={{ fontSize: "24px", color: "#538BF7" }}
-                />
-              </div>
-              <div
-                className="button-custom-bg p-2 ms-3"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <LinkedInIcon style={{ fontSize: "24px", color: "#0e76a8" }} />
-              </div>
-              <div
-                className="button-custom-bg p-2 ms-3"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <TwitterIcon style={{ fontSize: "24px", color: "#1DA1F2" }} />
-              </div>
-              <div
-                className="button-custom-bg p-2 ms-3"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <InstagramIcon style={{ fontSize: "24px", color: "#8a3ab9" }} />
-              </div>
-              <div
-                className="button-custom-bg p-2 ms-3"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <FacebookIcon style={{ fontSize: "24px", color: "#3b5998" }} />
-              </div>
+              {boothDetails.socialMediaHandles.website && (
+                <SocialButton
+                  className="button-custom-bg p-2 ms-3"
+                  style={{ backgroundColor: "#ffffff" }}
+                >
+                  <a
+                    href={`//${boothDetails.socialMediaHandles.website}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <LanguageRoundedIcon
+                      style={{ fontSize: "24px", color: "#538BF7" }}
+                    />
+                  </a>
+                </SocialButton>
+              )}
+
+              {boothDetails.socialMediaHandles.linkedIn && (
+                <SocialButton
+                  className="button-custom-bg p-2 ms-3"
+                  style={{ backgroundColor: "#ffffff" }}
+                >
+                  <a
+                    href={`//${boothDetails.socialMediaHandles.linkedIn}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <LinkedInIcon
+                      style={{ fontSize: "24px", color: "#0e76a8" }}
+                    />
+                  </a>
+                </SocialButton>
+              )}
+
+              {boothDetails.socialMediaHandles.twitter && (
+                <SocialButton
+                  className="button-custom-bg p-2 ms-3"
+                  style={{ backgroundColor: "#ffffff" }}
+                >
+                  <a
+                    href={`//${boothDetails.socialMediaHandles.twitter}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <TwitterIcon
+                      style={{ fontSize: "24px", color: "#1DA1F2" }}
+                    />
+                  </a>
+                </SocialButton>
+              )}
+
+              {boothDetails.socialMediaHandles.facebook && (
+                <SocialButton
+                  className="button-custom-bg p-2 ms-3"
+                  style={{ backgroundColor: "#ffffff" }}
+                >
+                  <a
+                    href={`//${boothDetails.socialMediaHandles.facebook}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FacebookIcon
+                      style={{ fontSize: "24px", color: "#3b5998" }}
+                    />
+                  </a>
+                </SocialButton>
+              )}
             </div>
 
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
+              {/* <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
+                <FileDownloadRoundedIcon />
+            <span className="ms-2">    Download Business Cards </span>
+              </ThemedBackgroundButtonFilled> */}
               <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
-                Share Business Card
+            
+              <span>  Share Business Card </span>
               </ThemedBackgroundButtonFilled>
             </div>
           </div>
@@ -275,47 +468,127 @@ const BoothArea = () => {
         <div className="mb-5">
           <div className="booth-about-heading mb-3">About</div>
           <div className="d-flex flex-row align-items-center mb-3">
-            <div
-              className="me-3 px-3 py-2 user-registration-status-chip"
-              style={{ width: "fit-content" }}
-            >
-              Sass
-            </div>
-            <div
-              className="me-3 px-3 py-2 user-registration-status-chip"
-              style={{ width: "fit-content" }}
-            >
-              Internet
-            </div>
-            <div
-              className="me-3 px-3 py-2 user-registration-status-chip"
-              style={{ width: "fit-content" }}
-            >
-              Communication
-            </div>
+            {renderTags(boothDetails.tags)}
           </div>
 
-          <div className="booth-description">
-            Docker is a set of platform as a service products that use OS-level
-            virtualisation to deliver software in packages called containers.
-            Containers are isolated from one another and bundle their own
-            software, libraries and configuration files; they can communicate
-            with each other through well-defined channels.
-          </div>
+          <div className="booth-description">{boothDetails.description}</div>
         </div>
 
         <BasicGrid className="mb-5">
-          <DemoRoomCard></DemoRoomCard>
-          <GetInTouchCard></GetInTouchCard>
+          <ProductsAndServices>
+            <IconButton>
+              <ArrowLeftRoundedIcon />
+            </IconButton>
+            <VideoCard
+              // controls={true}
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/video.mp4`}
+            />
+            <VideoCard
+              // controls={true}
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/video.mp4`}
+            />
+            <IconButton>
+              <ArrowRightRoundedIcon />
+            </IconButton>
+          </ProductsAndServices>
+          <GetInTouchCard className="p-4">
+            <div className="d-flex flex-row align-items-center pb-3 px-2">
+              <MailOutlineRoundedIcon />
 
-          <Videos></Videos>
-          <OffersCard></OffersCard>
+              <ContactInfo className="ms-3">
+                {truncateText(Faker.internet.email(), 25)}
+              </ContactInfo>
+            </div>
 
-          <ProductsAndServices></ProductsAndServices>
-          <Files></Files>
+            <div className="d-flex flex-row align-items-center py-3 px-2">
+              <PhoneRoundedIcon />
+              <ContactInfo className="ms-3">
+                {truncateText(Faker.phone.phoneNumber(), 30)}
+                {}
+              </ContactInfo>
+            </div>
+
+            <div className="d-flex flex-row align-items-center justify-content-end">
+              <button
+                onClick={() => {
+                  setOpenGetInTouch(true);
+                }}
+                className="btn btn-outline-text btn-outline-primary"
+              >
+                {" "}
+                <EditRoundedIcon style={{ fontSize: "17px" }} />{" "}
+                <span className="ms-2"> Edit </span>{" "}
+              </button>
+            </div>
+          </GetInTouchCard>
+
+          <Videos>
+            <IconButton>
+              <ArrowLeftRoundedIcon />
+            </IconButton>
+
+            <ProductCard>
+              <ProductImage
+                className="mb-3"
+                src={`https://ss7.vzw.com/is/image/VerizonWireless/apple-watch-series-6-blue-aluminum-sport-band-40-mm-m02r3lla-a`}
+              />
+              <ProductName>Apple watch series 6</ProductName>
+            </ProductCard>
+            <ProductCard>
+              <ProductImage
+                className="mb-3"
+                src={`https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-12-red-select-2020?wid=940&hei=1112&fmt=png-alpha&.v=1604343703000`}
+              />
+              <ProductName>iPhone 12 64 GB</ProductName>
+            </ProductCard>
+            <ProductCard>
+              <ProductImage
+                className="mb-3"
+                src={`https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-spacegray-select-202011_GEO_US?wid=904&hei=840&fmt=jpeg&qlt=80&.v=1632948875000`}
+              />
+              <ProductName>MacBook Pro 2021 512 GB</ProductName>
+            </ProductCard>
+
+            <IconButton>
+              <ArrowRightRoundedIcon />
+            </IconButton>
+          </Videos>
+          <div></div>
+
+          <Files className="py-3">
+            <div className="px-3">
+              <FileTab>
+                <DescriptionRoundedIcon />
+                <FileName className="ms-2">How to get started ?</FileName>
+              </FileTab>
+            </div>
+            <div className="px-3">
+              <FileTab>
+                <DescriptionRoundedIcon />
+                <FileName className="ms-2">How to get started ?</FileName>
+              </FileTab>
+            </div>
+            <div className="px-3">
+              <FileTab>
+                <DescriptionRoundedIcon />
+                <FileName className="ms-2">How to get started ?</FileName>
+              </FileTab>
+            </div>
+            <div className="px-3">
+              <FileTab>
+                <InsertLinkRoundedIcon />
+                <FileName className="ms-2">How to get started ?</FileName>
+              </FileTab>
+            </div>
+            <div className="px-3">
+              <FileTab>
+                <InsertLinkRoundedIcon />
+                <FileName className="ms-2">How to get started ?</FileName>
+              </FileTab>
+            </div>
+          </Files>
+          <div></div>
         </BasicGrid>
-
-        <Exhibitors className="mb-5"></Exhibitors>
 
         <div
           className="row d-flex flex-row"
@@ -343,9 +616,14 @@ const BoothArea = () => {
         <Rooms />
       </div>
 
-      <BoothLiveStream
+      {/* <BoothLiveStream
         open={openLiveStream}
         handleClose={handleCloseLiveStream}
+      /> */}
+
+      <GetInTouchForm
+        open={openGetInTouch}
+        handleClose={handleCloseGetInTouch}
       />
     </>
   );

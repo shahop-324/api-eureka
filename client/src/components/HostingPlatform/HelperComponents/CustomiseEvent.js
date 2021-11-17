@@ -84,6 +84,21 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
   const [review, setReview] = useState(
     eventDetails && eventDetails.review ? eventDetails.review : true
   );
+  const [boothEnabled, setBoothEnabled] = useState(
+    eventDetails && eventDetails.boothEnabled ? eventDetails.boothEnabled : true
+  );
+
+  const [loungeEnabled, setLoungeEnabled] = useState(
+    eventDetails && eventDetails.loungeEnabled
+      ? eventDetails.loungeEnabled
+      : true
+  );
+
+  const [networkingEnabled, setNetworkingEnabled] = useState(
+    eventDetails && eventDetails.networkingEnabled
+      ? eventDetails.networkingEnabled
+      : true
+  );
 
   // TODO Create form values out of these properties
 
@@ -97,6 +112,9 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
     attendeeCount,
     emojiReaction,
     review,
+    boothEnabled,
+    loungeEnabled,
+    networkingEnabled,
   };
 
   const [openCreateTheme, setOpenCreateTheme] = useState(false);
@@ -452,6 +470,92 @@ const CustomizeEvent = ({ openDrawer, handleCloseDrawer }) => {
                 </div>
                 <div className="my-3">
                   <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
+                  <div className="hosting-platform-widget-name">
+                    Networking Area
+                  </div>
+
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={networkingEnabled}
+                            onChange={(e) => {
+                              setNetworkingEnabled(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.networkingEnabled =
+                                e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="review"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
+                  <div className="hosting-platform-widget-name">
+                    Lounge Area
+                  </div>
+
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={loungeEnabled}
+                            onChange={(e) => {
+                              setLoungeEnabled(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.loungeEnabled = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="review"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <Divider />
+                </div>
+                <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
+                  <div className="hosting-platform-widget-name">Booth Area</div>
+
+                  <div>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <RoyalBlueSwitch
+                            checked={boothEnabled}
+                            onChange={(e) => {
+                              setBoothEnabled(e.target.checked);
+
+                              let newFormValues = { ...formValues };
+                              newFormValues.boothEnabled = e.target.checked;
+                              dispatch(
+                                updateEventCustomisation(newFormValues, eventId)
+                              );
+                            }}
+                            name="review"
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </div>
                 </div>
               </div>
             </div>

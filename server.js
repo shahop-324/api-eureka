@@ -598,11 +598,20 @@ io.on("connect", (socket) => {
 
       // Find if current user exists already using registration Id, userId  comparing with field user
 
-      const existingUser = onStagePeople.find(
-        (element) =>
-          element.user.toString() === userId.toString() ||
-          element.user.toString() === registrationId.toString()
-      );
+      let existingUser;
+
+      for (let element of onStagePeople) {
+        if (element) {
+          if (element.user && userId && registrationId) {
+            if (
+              element.user.toString() === userId.toString() ||
+              element.user.toString() === registrationId.toString()
+            ) {
+              existingUser = element;
+            }
+          }
+        }
+      }
 
       if (existingUser) {
         // update existing user and save sessionDoc
@@ -701,7 +710,7 @@ io.on("connect", (socket) => {
           element.user.toString() === registrationId
       );
 
-      if(thisUserOnStage) {
+      if (thisUserOnStage) {
         thisUserOnStage.camera = camera;
       }
 
@@ -4529,7 +4538,7 @@ io.on("connect", (socket) => {
     await LoggedInUsers.findOneAndDelete({
       userId: user.userId,
     });
-  }); 
+  });
 });
 
 server.listen(port, () => {

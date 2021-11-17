@@ -3,11 +3,17 @@ import styled from "styled-components";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import InstagramIcon from "@material-ui/icons/Instagram";
 import LanguageRoundedIcon from "@material-ui/icons/LanguageRounded";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
+
+import α from "color-alpha";
+
+const Card = styled.div`
+  border: ${(props) =>
+    props.color ? `1px solid ${α(props.color, 0.3)}` : "1px solid #212121"};
+`;
 
 const SpeakerName = styled.div`
   font-weight: 500;
@@ -47,16 +53,16 @@ const SpeakerCard = ({
   organisation,
   headline,
   id,
+  color,
 }) => {
   const linkedIn = speakerSocialHandles && speakerSocialHandles.linkedIn;
   const twitter = speakerSocialHandles && speakerSocialHandles.twitter;
   const facebook = speakerSocialHandles && speakerSocialHandles.facebook;
-  const instagram = speakerSocialHandles && speakerSocialHandles.instagram;
   const website = speakerSocialHandles && speakerSocialHandles.website;
 
   const classes = useStyles();
   return (
-    <div className="speaker-card px-4 py-3" key={id}>
+    <Card className="speaker-card px-4 py-3" key={id} color={color}>
       <Avatar
         alt={firstName}
         variant="rounded"
@@ -74,11 +80,7 @@ const SpeakerCard = ({
         {/* <div className="speaker-about mb-2 px-3">{headline}</div> */}
         <div className="speaker-social-media-grid">
           {linkedIn && (
-            <a
-              href={`//${linkedIn}`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={`//${linkedIn}`} target="_blank" rel="noreferrer">
               <IconButton>
                 <LinkedInIcon style={{ fill: "#2565A5", fontSize: "22px" }} />
               </IconButton>
@@ -86,11 +88,7 @@ const SpeakerCard = ({
           )}
 
           {twitter && (
-            <a
-              href={`//${twitter}`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={`//${twitter}`} target="_blank" rel="noreferrer">
               <IconButton>
                 <TwitterIcon style={{ fill: "#539FF7", fontSize: "22px" }} />
               </IconButton>
@@ -98,11 +96,7 @@ const SpeakerCard = ({
           )}
 
           {facebook && (
-            <a
-              href={`//${facebook}`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={`//${facebook}`} target="_blank" rel="noreferrer">
               <IconButton>
                 <FacebookIcon style={{ fill: "#1760A8", fontSize: "22px" }} />
               </IconButton>
@@ -120,7 +114,7 @@ const SpeakerCard = ({
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

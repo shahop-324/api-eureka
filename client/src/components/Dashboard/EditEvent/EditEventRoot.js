@@ -59,13 +59,15 @@ const Strip = styled.div`
 `;
 
 const EditEventRoot = () => {
+  const params = useParams();
+  const eventId = params.id;
+
   const [openMoreActions, setOpenMoreActions] = React.useState(false);
 
   const handleCloseMoreActions = () => {
     setOpenMoreActions(false);
   };
 
-  const params = useParams();
   const dispatch = useDispatch();
 
   const { eventDetails } = useSelector((state) => state.event);
@@ -308,10 +310,9 @@ const EditEventRoot = () => {
                 More actions
               </button>
               <Link
-                to={`/compatibility-test/community/${
-                  eventDetails ? eventDetails.communityId : null
-                }/event/${eventDetails ? eventDetails._id : null}/`}
+                to={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
                 target="_blank"
+                style={{ textDecoration: "none" }}
               >
                 <button
                   disabled={

@@ -14,6 +14,8 @@ import {
   setPersonalChatConfig,
 } from "../../../../../actions";
 
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+
 const PeopleComponent = ({
   name,
   image,
@@ -146,7 +148,7 @@ const PeopleList = ({ open, handleClose }) => {
               placeholder="Search people..."
               className="form-control"
             />
-            <i className="search icon"></i>
+           <SearchRoundedIcon style={{position: "absolute", right: "10px", top: "10px", color: "#757575"}} />
           </div>
           {/* Here goes list of people */}
 

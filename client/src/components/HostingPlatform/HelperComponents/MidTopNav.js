@@ -2,17 +2,18 @@ import React from "react";
 import "./../Styles/root.scss";
 
 import RightContent from "./RightContent";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const MidTopNavBody = styled.div`
-background-color: #233E44 !important;
-`
+  background-color: #233e44 !important;
+`;
 
 const EventName = styled.div`
-color: #ffffff !important;
-text-transform: capitalize;
-font-weight: 500;
-`
+  color: #ffffff !important;
+  text-transform: capitalize;
+  font-weight: 500 !important;
+  font-size: 1.05rem !important;
+`;
 
 const MidTopNav = ({ eventName }) => {
   return (

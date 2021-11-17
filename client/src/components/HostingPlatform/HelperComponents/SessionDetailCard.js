@@ -205,16 +205,6 @@ const SessionDetailCard = ({
         <div className="session-title-short-description-duration-and-speakers d-flex flex-column">
           <div className="d-flex flex-row align-items-center">
             <div className="session-title mb-3 me-3">{name}</div>
-
-            <Chip
-              className="mb-3"
-              icon={<AddCircleOutlineRoundedIcon />}
-              label="Set priority"
-              variant="outlined"
-              onClick={() => {
-                setOpenPriority(true);
-              }}
-            />
           </div>
 
           <div className="session-running-status-container px-2 py-2 mb-3">
@@ -232,14 +222,6 @@ const SessionDetailCard = ({
           className={`d-flex flex-row justify-content-end align-items-start`}
         >
           <div className="d-flex flex-row justify-content-end align-items-center">
-            <IconButton
-              onClick={() => {
-                setOpenReminder(true);
-              }}
-              aria-label="notification"
-            >
-              <NotificationsNoneOutlinedIcon />
-            </IconButton>
             <div
               onClick={() => {
                 // Get a RTC token

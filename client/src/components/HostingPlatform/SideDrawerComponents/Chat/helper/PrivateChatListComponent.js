@@ -14,6 +14,8 @@ import {
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+
 TimeAgo.addDefaultLocale(en);
 
 // Create formatter (English).
@@ -177,7 +179,7 @@ const renderIndividualChatSummary = (
 
     // Now at this point we will get details of each unique contact and their last message and last time ago so make an object and push it into individual chats
 
-    if(contactDetails) {
+    if (contactDetails) {
       IndividualChats.push({
         userId: contactDetails.userId,
         name: contactDetails.userName,
@@ -187,9 +189,8 @@ const renderIndividualChatSummary = (
         lastMsg: last_message_of_this_contact,
         lastTimeAgo: last_message_time_ago,
       });
-  
     }
-    
+
     // {userId, name, image, org, des, lastMsg, lastTimeAgo}
   }
 
@@ -238,8 +239,8 @@ const PrivateChatListComponent = () => {
               type="text"
               placeholder="Search people..."
               className="form-control"
-            />
-            <i className="search icon"></i>
+            ></input>
+            <SearchRoundedIcon style={{position: "absolute", right: "10px", top: "10px", color: "#757575"}} />
           </div>
           {/* //  TODO  */}
           <div className="individual-chat-summary-list">

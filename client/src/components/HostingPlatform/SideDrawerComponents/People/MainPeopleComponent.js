@@ -8,21 +8,42 @@ import "./../../Styles/root.scss";
 import { Dropdown } from "semantic-ui-react";
 import PeopleGridAvatar from "./helper/peopleGridAvatar";
 import { useSelector } from "react-redux";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+
+import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
+import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 
 import PeopleList from "./helper/PeopleList";
 
 const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown icon={`${view} layout`} button className="icon">
+  <Dropdown
+    icon={
+      view === "list" ? (
+        <FormatListBulletedRoundedIcon style={{ fontSize: "18px" }} />
+      ) : (
+        <GridViewRoundedIcon style={{ fontSize: "18px" }} />
+      )
+    }
+    button
+    className="icon"
+  >
     <Dropdown.Menu style={{ right: "0", left: "auto" }}>
       <Dropdown.Item
-        icon="list layout"
+        icon={
+          <FormatListBulletedRoundedIcon
+            style={{ fontSize: "18px" }}
+            className="me-2"
+          />
+        }
         text="List"
         onClick={() => {
           switchView("list");
         }}
       />
       <Dropdown.Item
-        icon="grid layout"
+        icon={
+          <GridViewRoundedIcon style={{ fontSize: "18px" }} className="me-2" />
+        }
         text="Grid"
         onClick={() => {
           switchView("grid");
@@ -97,7 +118,14 @@ const MainPeopleComponent = (props) => {
                 placeholder="Search people..."
                 className="form-control"
               />
-              <i className="search icon"></i>
+              <SearchRoundedIcon
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "10px",
+                  color: "#757575",
+                }}
+              />
             </div>
 
             <DropdownIcon switchView={switchView} view={view} />

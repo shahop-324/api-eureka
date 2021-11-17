@@ -216,7 +216,6 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
               <Link
                 to="/home"
                 onClick={() => {
-                  
                   socket.emit("leaveEvent", { userId, eventId }, (error) => {console.log(error)});
                   dispatch(signOut());
                 }}

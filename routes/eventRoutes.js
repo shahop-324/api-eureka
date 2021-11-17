@@ -139,4 +139,6 @@ router.delete(
   eventController.deleteVibe
 );
 
+router.patch("/:eventId/updateEventBanner", authController.protectCommunity, eventController.uploadEventBanner);
+
 module.exports = router;

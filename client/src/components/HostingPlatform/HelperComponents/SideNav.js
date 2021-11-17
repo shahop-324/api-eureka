@@ -1,18 +1,35 @@
-import React from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from "react";
 import "./../Styles/root.scss";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-
-import WifiTetheringRoundedIcon from "@material-ui/icons/WifiTetheringRounded";
+import MenuItem from "@material-ui/core/MenuItem";
 import StorefrontRoundedIcon from "@material-ui/icons/StorefrontRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import WeekendIcon from "@mui/icons-material/Weekend";
-import AirplayRoundedIcon from '@mui/icons-material/AirplayRounded';
-import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
+import ConnectWithoutContactRoundedIcon from "@mui/icons-material/ConnectWithoutContactRounded";
 import { Avatar } from "@material-ui/core";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import Popover from "@mui/material/Popover";
+import { Divider } from "@material-ui/core";
+
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
+import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import socket from "./../service/socket";
+import { signOut } from "./../../../actions";
+import { useParams } from "react-router";
+import UpdateEventProfile from "./../HelperComponents/UpdateEventProfile";
 
 const SideNavBody = styled.div`
   background-color: #233e44 !important;
+`;
+
+const MenuText = styled.span`
+  font-weight: 500;
+  font-size: 0.87rem;
+  color: #212121;
 `;
 
 const SideNav = ({
@@ -26,6 +43,34 @@ const SideNav = ({
   handleSessionsClick,
   handleStageClick,
 }) => {
+  const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
+
+  const handleCloseUpdateProfile = () => {
+    setOpenUpdateProfile(false);
+  };
+
+  const params = useParams();
+  const eventId = params.eventId;
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <>
       <SideNavBody className="h-side-nav">
@@ -48,6 +93,7 @@ const SideNav = ({
               }
             >
               <HomeRoundedIcon
+                style={{ fontSize: "22px" }}
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "0" ? "icon-btn-active-h" : "")
@@ -63,7 +109,7 @@ const SideNav = ({
               Lobby
             </div>
           </div>
-          
+
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleSessionsClick}
@@ -75,6 +121,7 @@ const SideNav = ({
               }
             >
               <VideocamRoundedIcon
+                style={{ fontSize: "22px" }}
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "1" ? "icon-btn-active-h" : "")
@@ -90,7 +137,7 @@ const SideNav = ({
               Sessions
             </div>
           </div>
-          <div
+          {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleStageClick}
           >
@@ -115,7 +162,7 @@ const SideNav = ({
             >
               Stage
             </div>
-          </div>
+          </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={handleNetworkingClick}
@@ -127,6 +174,7 @@ const SideNav = ({
               }
             >
               <ConnectWithoutContactRoundedIcon
+                style={{ fontSize: "22px" }}
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "3" ? "icon-btn-active-h" : "")
@@ -154,6 +202,7 @@ const SideNav = ({
               }
             >
               <WeekendIcon
+                style={{ fontSize: "22px" }}
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "4" ? "icon-btn-active-h" : "")
@@ -181,6 +230,7 @@ const SideNav = ({
               }
             >
               <StorefrontRoundedIcon
+                style={{ fontSize: "22px" }}
                 className={
                   "icon-btn-venue " +
                   (activeIndex === "5" ? "icon-btn-active-h" : "")
@@ -198,8 +248,91 @@ const SideNav = ({
           </div>
         </div>
 
-        
+        <div className="d-flex flex-row align-items-center justify-content-center">
+          <Avatar
+            src={
+              userDetails
+                ? userDetails.image
+                  ? userDetails.image.startsWith("https://")
+                    ? userDetails.image
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userDetails.image}`
+                  : "#"
+                : "#"
+            }
+            alt={"OP"}
+            className=""
+            onClick={handleClick}
+          />
+
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <MenuItem className="mb-1" disableRipple>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="/user/home"
+                style={{ textDecoration: "none" }}
+              >
+                <AccountCircleRoundedIcon style={{ fontSize: "19px" }} />
+                <MenuText className="ms-3">My Account</MenuText>
+              </a>
+            </MenuItem>
+
+            <MenuItem
+              className="mb-1"
+              disableRipple
+              onClick={() => {
+                handleClose();
+                setOpenUpdateProfile(true);
+              }}
+            >
+              <ModeEditOutlineRoundedIcon style={{ fontSize: "19px" }} />
+              <MenuText className="ms-3">Edit profile</MenuText>
+            </MenuItem>
+
+            <MenuItem className="mb-1" disableRipple>
+              <a
+                href={`https://bluemeetinc.zendesk.com/hc/en-us`}
+                target="_blank"
+                rel="noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <SupportAgentRoundedIcon style={{ fontSize: "19px" }} />
+                <MenuText className="ms-3">Support</MenuText>
+              </a>
+            </MenuItem>
+
+            <Divider sx={{ my: 0.5 }} />
+            <MenuItem className="mb-1" disableRipple>
+              <a
+                onClick={() => {
+                  socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                    console.log(error);
+                  });
+                  dispatch(signOut());
+                }}
+                href="/home"
+                style={{ textDecoration: "none" }}
+              >
+                <LogoutRoundedIcon style={{ fontSize: "19px" }} />
+                <MenuText className="ms-3">Sign out</MenuText>
+              </a>
+            </MenuItem>
+          </Popover>
+        </div>
       </SideNavBody>
+      <UpdateEventProfile
+        openDrawer={openUpdateProfile}
+        handleCloseDrawer={handleCloseUpdateProfile}
+      />
     </>
   );
 };
