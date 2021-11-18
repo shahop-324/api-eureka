@@ -5,6 +5,17 @@ const boothSlice = createSlice({
 
   initialState: {
     booths: [],
+    videos: [],
+    products: [],
+    files: [],
+    link: [],
+    offers: [],
+    forms: [],
+    businessCards: [],
+    uploadBannerPercent: 0,
+    uploadPromoImagePercent: 0,
+    uploadVideoPercent: 0,
+    uploadFilePercent: 0,
     boothDetails: null,
     currentBoothId: null,
     isLoading: true,
@@ -21,7 +32,7 @@ const boothSlice = createSlice({
     startLoadingDetail(state) {
       state.isLoadingDetail = true;
     },
-    
+
     hasError(state, action) {
       state.error = action.payload;
       state.isLoading = false;
@@ -78,7 +89,7 @@ const boothSlice = createSlice({
     SetCurrentBoothId(state, action) {
       state.currentBoothId = action.payload.boothId;
       state.isLoading = false;
-    }
+    },
   },
 });
 export const boothActions = boothSlice.actions;

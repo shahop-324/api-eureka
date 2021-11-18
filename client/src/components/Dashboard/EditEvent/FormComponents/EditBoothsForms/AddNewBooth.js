@@ -226,6 +226,7 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.emails = formValues.multiEmail;
     ModifiedFormValues.tags = formValues.multiTags;
+    ModifiedFormValues.numberOfTables = formValues.numberOfTables;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
@@ -389,6 +390,23 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
               <div className="form-group">
                 <Field name="multiTags" component={renderMultiTags} />
               </div>
+            </div>
+
+            <div className="mb-4 overlay-form-input-row">
+              <FormLabel
+                for="communityName"
+                className="form-label form-label-customized"
+              >
+                Number Of Tables
+              </FormLabel>
+              <Field
+                name="numberOfTables"
+                type="number"
+                classes="form-control"
+                ariadescribedby="emailHelp"
+                placeholder="10"
+                component={renderInput}
+              />
             </div>
 
             <div className="mb-3 overlay-form-input-row">

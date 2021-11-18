@@ -2401,7 +2401,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
         throw new Error(res.message);
       }
     }
-    
+
     res = await res.json();
     console.log(res);
 
@@ -3368,6 +3368,14 @@ export const navigationIndexForHostingPlatform =
       })
     );
   };
+
+export const setBoothNavigationIndex = (activeIndex) => (dispatch) => {
+  dispatch(
+    navigationActions.activeIndexForEditBooth({
+      currentIndex: activeIndex,
+    })
+  );
+};
 
 //alias routes
 export const madeJustForYou = () => async (dispatch) => {
@@ -12761,7 +12769,7 @@ export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
         throw new Error(res.message);
       }
     }
-    
+
     res = await res.json();
     console.log(res);
 
@@ -12774,6 +12782,165 @@ export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
     dispatch(boothActions.hasError(err.message));
     console.log(err);
 
-    dispatch(showSnackbar("error", "Failed to fetch booth, Please try again."))
+    dispatch(showSnackbar("error", "Failed to fetch booth, Please try again."));
+  }
+};
+
+export const uploadBoothPromoImage = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to update Promo Image, Please try again."));
+  }
+};
+
+export const uploadBoothPosterImage = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to update banner, Please try again."));
+  }
+};
+
+export const uploadVideoForBooth = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to update video, Please try again."));
+  }
+};
+
+export const resetBoothVideoProgress = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteBoothVideo = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete video, Please try again."));
+  }
+};
+
+export const addBoothProduct = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to add product, Please try again."));
+  }
+};
+
+export const editProduct = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to edit product, Please try again."));
+  }
+};
+
+export const deleteProduct = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete product, Please try again."));
+  }
+};
+
+export const addFile = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to add File, Please try again."));
+  }
+};
+
+export const deleteFile = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete File, Please try again."));
+  }
+};
+
+export const addLink = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to add Link, Please try again."));
+  }
+};
+
+export const editLink = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to edit Link, Please try again."));
+  }
+};
+
+export const deleteLink = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete Link, Please try again."));
+  }
+};
+
+export const addPromoCode = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to add Promo Code, Please try again."));
+  }
+};
+export const editPromoCode = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to edit Promo Code, Please try again."));
+  }
+};
+export const deletePromoCode = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete Promo Code, Please try again."));
+  }
+};
+
+export const sendBusinessCardsViaMail = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("Failed to send business cards via mail, Please try again.")
+    );
+  }
+};
+
+export const addForm = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to add form, Please try again."));
+  }
+};
+
+export const editForm = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to edit form, Please try again."));
+  }
+};
+
+export const deleteForm = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("Failed to delete form, Please try again."));
   }
 };

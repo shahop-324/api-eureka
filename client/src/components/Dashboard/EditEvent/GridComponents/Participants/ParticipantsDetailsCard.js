@@ -7,7 +7,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import { useDispatch } from "react-redux";
-import Faker from "faker";
 import MailIcon from "@mui/icons-material/Mail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PreviewParticipant from "../../HelperComponents/PreviewParticipant";

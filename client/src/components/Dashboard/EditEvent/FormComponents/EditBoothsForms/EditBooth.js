@@ -206,7 +206,6 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
 
   if (detailError) {
     dispatch(errorTrackerForEditBooth());
-    alert(detailError);
     return null;
   }
 
@@ -362,6 +361,23 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
                     </div>
                   </div>
 
+                  <div className="mb-4 overlay-form-input-row">
+                    <FormLabel
+                      for="communityName"
+                      className="form-label form-label-customized"
+                    >
+                      Number Of Tables
+                    </FormLabel>
+                    <Field
+                      name="numberOfTables"
+                      type="number"
+                      classes="form-control"
+                      ariadescribedby="emailHelp"
+                      placeholder="10"
+                      component={renderInput}
+                    />
+                  </div>
+
                   <div className="mb-3 overlay-form-input-row">
                     <FormLabel
                       for="communityName"
@@ -497,39 +513,37 @@ const mapStateToProps = (state) => ({
         ? state.booth.boothDetails.tags
         : "",
 
+    numberOfTables:
+      state.booth.boothDetails && state.booth.boothDetails.numberOfTables
+        ? state.booth.boothDetails.numberOfTables
+        : "",
+
     linkedIn:
       state.booth.boothDetails &&
       state.booth.boothDetails.socialMediaHandles &&
       state.booth.boothDetails.socialMediaHandles.linkedIn
-        ? `www.linkedin.com/in/${state.booth.boothDetails.socialMediaHandles.linkedIn}`
+        ? `${state.booth.boothDetails.socialMediaHandles.linkedIn}`
         : "",
 
     twitter:
       state.booth.boothDetails &&
       state.booth.boothDetails.socialMediaHandles &&
       state.booth.boothDetails.socialMediaHandles.twitter
-        ? `www.twitter.com/${state.booth.boothDetails.socialMediaHandles.twitter}`
+        ? `${state.booth.boothDetails.socialMediaHandles.twitter}`
         : "",
 
     facebook:
       state.booth.boothDetails &&
       state.booth.boothDetails.socialMediaHandles &&
       state.booth.boothDetails.socialMediaHandles.facebook
-        ? `www.facebook.com/${state.booth.boothDetails.socialMediaHandles.facebook}`
-        : "",
-
-    instagram:
-      state.booth.boothDetails &&
-      state.booth.boothDetails.socialMediaHandles &&
-      state.booth.boothDetails.socialMediaHandles.instagram
-        ? `www.instagram.com/${state.booth.boothDetails.socialMediaHandles.instagram}`
+        ? `${state.booth.boothDetails.socialMediaHandles.facebook}`
         : "",
 
     website:
       state.booth.boothDetails &&
       state.booth.boothDetails.socialMediaHandles &&
       state.booth.boothDetails.socialMediaHandles.website
-        ? `www.${state.booth.boothDetails.socialMediaHandles.website}`
+        ? `${state.booth.boothDetails.socialMediaHandles.website}`
         : "",
   },
 });

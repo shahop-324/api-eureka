@@ -68,25 +68,6 @@ const Basics = () => {
       <div style={{ minWidth: "1138px" }}>
         <div className="secondary-heading-row d-flex flex-row justify-content-between px-4 py-4">
           <div className="sec-heading-text">Basics</div>
-          {/* <div className="drop-selector d-flex flex-row justify-content-end">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(`https://www.bluemeet.in/event-landing-page/${id}/${communityId}`);
-                alert("copied to clipboard!");
-              }}
-              className="btn btn-outline-text btn-primary me-3"
-              style={{ backgroundColor: "#538BF7" }}
-            >
-              Copy Link
-            </button>
-            <a
-       
-              className="btn btn-outline-primary btn-outline-text me-3"
-              href={`/event-landing-page/${id}/${communityId}`}
-            >
-              Preview Landing Page
-            </a>
-          </div> */}
         </div>
         <div className="basic-content-grid px-3 mb-4">
           <div className="basic-form-left px-4 py-4">

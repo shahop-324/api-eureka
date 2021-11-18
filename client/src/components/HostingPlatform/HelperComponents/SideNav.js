@@ -18,7 +18,7 @@ import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import socket from "./../service/socket";
-import { signOut } from "./../../../actions";
+import { signOut, SetCurrentBoothId } from "./../../../actions";
 import { useParams } from "react-router";
 import UpdateEventProfile from "./../HelperComponents/UpdateEventProfile";
 
@@ -84,7 +84,10 @@ const SideNav = ({
         <div className="main-icon-btn-container py-3">
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleLobbyClick}
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleLobbyClick();
+            }}
           >
             <div
               className={
@@ -112,7 +115,10 @@ const SideNav = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleSessionsClick}
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleSessionsClick();
+            }}
           >
             <div
               className={
@@ -139,7 +145,11 @@ const SideNav = ({
           </div>
           {/* <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleStageClick}
+            
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleStageClick();
+            }}
           >
             <div
               className={
@@ -165,7 +175,10 @@ const SideNav = ({
           </div> */}
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleNetworkingClick}
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleNetworkingClick();
+            }}
           >
             <div
               className={
@@ -193,7 +206,10 @@ const SideNav = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleRoomsClick}
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleRoomsClick();
+            }}
           >
             <div
               className={
@@ -221,7 +237,10 @@ const SideNav = ({
 
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
-            onClick={handleBoothsClick}
+            onClick={() => {
+              dispatch(SetCurrentBoothId(null));
+              handleBoothsClick();
+            }}
           >
             <div
               className={

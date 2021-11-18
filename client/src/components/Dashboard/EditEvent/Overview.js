@@ -4,10 +4,6 @@ import { editEvent, showSnackbar } from "../../../actions";
 import UploadEventImageForm from "./FormComponents/uploadEventImageForm";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import Chip from "@mui/material/Chip";
-import { IconButton } from "@material-ui/core";
-
-import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
-import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch, useSelector } from "react-redux";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
@@ -129,11 +125,6 @@ const EventOverview = (props) => {
 
   const { eventDetails, isLoading } = useSelector((state) => state.event);
 
-  const [tag, setTag] = useState(
-    eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null
-  );
-  const [editMode, setEditMode] = useState(false);
-
   const { handleSubmit } = props;
 
   const { error } = useSelector((state) => state.event);
@@ -194,25 +185,6 @@ const EventOverview = (props) => {
     dispatch(errorTrackerForFetchEvent());
     return dispatch(errorTrackerForEditEventDiscription());
   }
-
-  const previousTag =
-    eventDetails && eventDetails.organisedBy ? eventDetails.organisedBy : null;
-
-  const handleChangeTag = (e) => {
-    setTag(e.target.value);
-  };
-
-  const resetTag = () => {
-    setTag(previousTag);
-  };
-
-  const turnOnEditMode = () => {
-    setEditMode(true);
-  };
-
-  const turnOffEditMode = () => {
-    setEditMode(false);
-  };
 
   return (
     <>

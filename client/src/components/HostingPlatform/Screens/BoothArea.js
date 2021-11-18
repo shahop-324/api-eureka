@@ -31,9 +31,12 @@ import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
 
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 
-import ContactsRoundedIcon from '@mui/icons-material/ContactsRounded';
-import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
-import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
+import ContactsRoundedIcon from "@mui/icons-material/ContactsRounded";
+import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import EditBoothDrawer from "./Sub/FormComponents/EditBoothDrawer";
+
+import { PopupButton } from "@typeform/embed-react";
 
 const ThemedBackgroundButtonOutlined = styled.div`
   background-color: #152d35 !important;
@@ -245,43 +248,17 @@ const BoothArea = () => {
   const dispatch = useDispatch();
 
   const [openGetInTouch, setOpenGetInTouch] = useState(false);
-  const [openUploadVideo, setOpenUploadVideo] = useState(false);
-  const [openAddProduct, setOpenAddProduct] = useState(false);
-  const [opneUploadFile, setOpenUploadFile] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const handleCloseGetInTouch = () => {
     setOpenGetInTouch(false);
   };
 
-  const handleCloseUploadVideo = () => {
-    setOpenUploadVideo(false);
-  };
-
-  const handleCloseAddProduct = () => {
-    setOpenAddProduct(false);
-  };
-
-  const handleCloseUploadFile = () => {
-    setOpenUploadFile(false);
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
   };
 
   const { currentBoothId, boothDetails } = useSelector((state) => state.booth);
-
-  const [openEditBanners, setOpenEditBanners] = useState(false);
-
-  const [openAssets, setOpenAssets] = useState(false);
-
-  const handleOpenEditBanners = () => {
-    setOpenEditBanners(true);
-  };
-
-  const handleCloseEditBanners = () => {
-    setOpenEditBanners(false);
-  };
-
-  const handleOpenAssets = () => {
-    setOpenAssets(true);
-  };
 
   useEffect(() => {
     dispatch(fetchBooth(currentBoothId));
@@ -324,7 +301,7 @@ const BoothArea = () => {
           <div>
             <ThemedBackgroundButtonOutlined
               onClick={() => {
-                handleOpenEditBanners();
+                setOpenEdit(true);
               }}
               className="btn btn-outline-text d-flex flex-row align-items-center"
             >
@@ -457,9 +434,16 @@ const BoothArea = () => {
                 <FileDownloadRoundedIcon />
             <span className="ms-2">    Download Business Cards </span>
               </ThemedBackgroundButtonFilled> */}
+              <PopupButton
+              className="btn btn-outline-text btn-dark me-3"
+          id="HLjqXS5W"
+          // style={{ padding: 8, fontSize: 16 }}
+          size={80}
+        >
+          Take survey
+        </PopupButton>
               <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
-            
-              <span>  Share Business Card </span>
+                <span> Share Business Card </span>
               </ThemedBackgroundButtonFilled>
             </div>
           </div>
@@ -504,11 +488,10 @@ const BoothArea = () => {
               <PhoneRoundedIcon />
               <ContactInfo className="ms-3">
                 {truncateText(Faker.phone.phoneNumber(), 30)}
-                {}
               </ContactInfo>
             </div>
 
-            <div className="d-flex flex-row align-items-center justify-content-end">
+            {/* <div className="d-flex flex-row align-items-center justify-content-end">
               <button
                 onClick={() => {
                   setOpenGetInTouch(true);
@@ -519,7 +502,7 @@ const BoothArea = () => {
                 <EditRoundedIcon style={{ fontSize: "17px" }} />{" "}
                 <span className="ms-2"> Edit </span>{" "}
               </button>
-            </div>
+            </div> */}
           </GetInTouchCard>
 
           <Videos>
@@ -625,6 +608,10 @@ const BoothArea = () => {
         open={openGetInTouch}
         handleClose={handleCloseGetInTouch}
       />
+
+      <EditBoothDrawer open={openEdit} handleClose={handleCloseEdit} />
+
+     
     </>
   );
 };

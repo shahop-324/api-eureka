@@ -133,7 +133,7 @@ const GetInTouchForm = ({
       >
         <HeaderFooter className="form-heading-and-close-button mb-4 px-4 py-3">
           <div></div>
-          <div className="coupon-overlay-form-headline">Get In Touch</div>
+          <div className="coupon-overlay-form-headline">Contact Details</div>
           <div className="overlay-form-close-button" onClick={handleClose}>
             <IconButton aria-label="delete">
               <CancelRoundedIcon />

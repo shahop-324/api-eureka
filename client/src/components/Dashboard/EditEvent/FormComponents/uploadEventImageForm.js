@@ -35,7 +35,9 @@ const UploadEventImageForm = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, eventDetails } = useSelector((state) => state.event);
+  const { error, isLoading, eventDetails } = useSelector(
+    (state) => state.event
+  );
 
   const classes = useStyles();
 
@@ -129,7 +131,7 @@ const UploadEventImageForm = (props) => {
             required
           />
           <button
-          disabled={eventDetails.status === "Ended" ? true : false}
+            disabled={eventDetails.status === "Ended" ? true : false}
             type="submit"
             className="btn btn-outline-primary btn-outline-text"
             style={{ width: "100%" }}

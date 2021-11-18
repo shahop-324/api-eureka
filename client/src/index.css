@@ -1357,3 +1357,18 @@ button.rbc-input::-moz-focus-inner {
     box-shadow: 0 0 0 10px rgba(0, 231, 255, 0.3), 0 0 0 30px rgba(0, 231, 255, 0.3), 0 0 0 60px rgba(0, 231, 255, 0.3), 0 0 0 90px rgba(0, 231, 255, 0);
   }
 }
+
+.App {
+  text-align: center;
+}
+
+.App-spacer {
+  width: 0;
+  height: 0;
+  margin-top: 100px;
+}
+
+.App-container {
+  background: #282c34;
+  padding: 20px 20px;
+}
