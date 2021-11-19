@@ -2468,7 +2468,7 @@ export const editBooth =
 
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${getState().communityAuth.token}`,
+                    Authorization: `Bearer ${getState().auth.token}`,
                   },
                 });
                 if (!res.ok) {
@@ -2488,28 +2488,18 @@ export const editBooth =
                 );
 
                 dispatch(
-                  snackbarActions.openSnackBar({
-                    message: "Updated booth successfully!",
-                    severity: "success",
-                  })
+                  showSnackbar("success", "Booth Updated successfully!")
                 );
-
-                setTimeout(function () {
-                  dispatch(snackbarActions.closeSnackBar());
-                }, 6000);
               } catch (error) {
                 eventActions.hasError(error.message);
                 console.log(error);
 
                 dispatch(
-                  snackbarActions.openSnackBar({
-                    message: "Failed to update booth. Please try again later.",
-                    severity: "error",
-                  })
+                  showSnackbar(
+                    "error",
+                    "Failed to update booth, Please try again."
+                  )
                 );
-                setTimeout(function () {
-                  dispatch(snackbarActions.closeSnackBar());
-                }, 4000);
               }
             }
           }
@@ -12786,21 +12776,175 @@ export const fetchEventBooth = (boothId) => async (dispatch, getState) => {
   }
 };
 
-export const uploadBoothPromoImage = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to update Promo Image, Please try again."));
-  }
-};
+export const uploadBoothPromoImage =
+  (file, boothId) => async (dispatch, getState) => {
+    try {
+      const key = `${boothId}/${UUID()}.${file.type}`;
 
-export const uploadBoothPosterImage = () => async (dispatch, getState) => {
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              boothActions.SetPromoImageUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Save this video info in community document.
+            const res = await fetch(`${BaseURL}booths/${boothId}/updateBooth`, {
+              method: "PATCH",
+
+              body: JSON.stringify({
+                promoImage: key,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            });
+
+            const result = await res.json();
+
+            dispatch(
+              boothActions.EditBooth({
+                booth: result.data,
+              })
+            );
+
+            dispatch(
+              showSnackbar("success", "Promo Image updated successfully!")
+            );
+            dispatch(
+              boothActions.SetPromoImageUploadPercent({
+                percent: 0,
+              })
+            );
+          } catch (error) {
+            console.log(error);
+
+            dispatch(
+              showSnackbar(
+                "error",
+                "Failed to update promo image, Please try again later."
+              )
+            );
+            dispatch(
+              boothActions.SetPromoImageUploadPercent({
+                percent: 0,
+              })
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to update Promo Image, Please try again."));
+      dispatch(
+        boothActions.SetPromoImageUploadPercent({
+          percent: 0,
+        })
+      );
+    }
+  };
+
+export const resetPromoImageUploadPercent =
+  () => async (dispatch, getState) => {
+    dispatch(
+      boothActions.SetPromoImageUploadPercent({
+        percent: 0,
+      })
+    );
+  };
+
+export const uploadBoothPosterImage = (file, boothId) => async (dispatch, getState) => {
   try {
+
+    const key = `${boothId}/${UUID()}.${file.type}`;
+
+    s3.getSignedUrl(
+      "putObject",
+      { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+      async (err, presignedURL) => {
+        await uploadS3(presignedURL, file, (percent) => {
+          dispatch(
+            boothActions.SetBoothPosterUploadPercent({
+              percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+            })
+          );
+        });
+
+        try {
+          // Save this video info in community document.
+          const res = await fetch(`${BaseURL}booths/${boothId}/updateBooth`, {
+            method: "PATCH",
+
+            body: JSON.stringify({
+              boothPoster: key,
+            }),
+
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
+
+          const result = await res.json();
+
+          dispatch(
+            boothActions.EditBooth({
+              booth: result.data,
+            })
+          );
+
+          dispatch(
+            showSnackbar("success", "Banner Image updated successfully!")
+          );
+          dispatch(
+            boothActions.SetBoothPosterUploadPercent({
+              percent: 0,
+            })
+          );
+        } catch (error) {
+          console.log(error);
+
+          dispatch(
+            showSnackbar(
+              "error",
+              "Failed to update Banner image, Please try again later."
+            )
+          );
+          dispatch(
+            boothActions.SetBoothPosterUploadPercent({
+              percent: 0,
+            })
+          );
+        }
+      }
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("Failed to update banner, Please try again."));
+    dispatch(
+      boothActions.SetBoothPosterUploadPercent({
+        percent: 0,
+      })
+    );
   }
 };
+
+export const resetBoothPosterUploadPercent =
+  () => async (dispatch, getState) => {
+    dispatch(
+      boothActions.SetBoothPosterUploadPercent({
+        percent: 0,
+      })
+    );
+  };
 
 export const uploadVideoForBooth = () => async (dispatch, getState) => {
   try {

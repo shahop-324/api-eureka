@@ -160,10 +160,9 @@ const Basics = () => {
             </div>
           </Grid>
 
-<div>
-<UploadBannerForm />
-</div>
-         
+          <div>
+            <UploadBannerForm />
+          </div>
         </div>
       </div>
       <GetInTouchForm

@@ -9,7 +9,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import EditBooth from "./FormComponents/EditBoothsForms/EditBooth";
 import DeleteBooth from "./FormComponents/EditBoothsForms/DeleteBooth";
 import { useDispatch } from "react-redux";
-import { fetchBooth, sendBoothInvitation, showSnackbar } from "../../../actions";
+import {
+  fetchBooth,
+  sendBoothInvitation,
+  showSnackbar,
+} from "../../../actions";
 import MailIcon from "@mui/icons-material/Mail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Chip from "@mui/material/Chip";
@@ -31,7 +35,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) => {
+const BoothDetailsCard = ({
+  id,
+  boothTags,
+  name,
+  emails,
+  url,
+  invitationLink,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
@@ -104,15 +115,16 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
               className="event-field-label registrations-field-label d-flex flex-column align-items-start"
               style={{ width: "100%" }}
             >
-              {emails.map((email) => {
-                return (
-                  <Chip
-                    label={truncateText(email, 20)}
-                    color="primary"
-                    variant="outlined"
-                  />
-                );
-              })}
+              {emails &&
+                emails.map((email) => {
+                  return (
+                    <Chip
+                      label={truncateText(email, 20)}
+                      color="primary"
+                      variant="outlined"
+                    />
+                  );
+                })}
             </div>
           </div>
           <div
@@ -126,20 +138,23 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
                 className="speaker-card-session-grid"
                 style={{ gridTemplateColumns: "1fr" }}
               >
-                { typeof boothTags !== "undefined" &&
-            boothTags.length > 0 ? boothTags.map((boothTag) => {
-                  return (
-                    <Chip
-                      label={truncateText(boothTag, 35)}
-                      color="secondary"
-                      variant="outlined"
-                    />
-                  );
-                }) : <Chip
-                label={"No tags"}
-                color="secondary"
-                variant="outlined"
-              />}
+                {  boothTags && typeof boothTags !== "undefined" && boothTags.length > 0 ? (
+                  boothTags.map((boothTag) => {
+                    return (
+                      <Chip
+                        label={truncateText(boothTag, 35)}
+                        color="secondary"
+                        variant="outlined"
+                      />
+                    );
+                  })
+                ) : (
+                  <Chip
+                    label={"No tags"}
+                    color="secondary"
+                    variant="outlined"
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -189,13 +204,20 @@ const BoothDetailsCard = ({ id, boothTags, name, emails, url, invitationLink }) 
               </div>
               <div
                 onClick={() => {
-                  navigator.clipboard.writeText(invitationLink).then(function() {
-                    console.log('Async: Copying to clipboard was successful!');
-                    dispatch(showSnackbar("success", "Copied to clipboard!"));
-                  }, function(err) {
-                    console.error('Async: Could not copy text: ', err);
-                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                  });
+                  navigator.clipboard.writeText(invitationLink).then(
+                    function () {
+                      console.log(
+                        "Async: Copying to clipboard was successful!"
+                      );
+                      dispatch(showSnackbar("success", "Copied to clipboard!"));
+                    },
+                    function (err) {
+                      console.error("Async: Could not copy text: ", err);
+                      dispatch(
+                        showSnackbar("error", "Failed to copy to clipboard!")
+                      );
+                    }
+                  );
                 }}
               >
                 <IconButton color="secondary" aria-label="add to shopping cart">

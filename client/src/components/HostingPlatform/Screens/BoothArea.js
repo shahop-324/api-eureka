@@ -232,16 +232,20 @@ const useStyles = makeStyles((theme) => ({
 // <LobbyAgenda socket={socket} />
 
 const renderTags = (tags) => {
-  return tags.map((tag) => {
-    return (
-      <Chip
-        label={tag}
-        variant="outlined"
-        className="me-2"
-        style={{ color: "#152d35", border: "1px solid #152d35" }}
-      />
-    );
-  });
+  if (!tags) {
+    return;
+  } else {
+    return tags.map((tag) => {
+      return (
+        <Chip
+          label={tag}
+          variant="outlined"
+          className="me-2"
+          style={{ color: "#152d35", border: "1px solid #152d35" }}
+        />
+      );
+    });
+  }
 };
 
 const BoothArea = () => {
@@ -271,7 +275,7 @@ const BoothArea = () => {
   };
 
   if (!boothDetails) {
-    return <Loader />;
+    return;
   }
 
   return (
@@ -435,13 +439,13 @@ const BoothArea = () => {
             <span className="ms-2">    Download Business Cards </span>
               </ThemedBackgroundButtonFilled> */}
               <PopupButton
-              className="btn btn-outline-text btn-dark me-3"
-          id="HLjqXS5W"
-          // style={{ padding: 8, fontSize: 16 }}
-          size={80}
-        >
-          Take survey
-        </PopupButton>
+                className="btn btn-outline-text btn-dark me-3"
+                id="HLjqXS5W"
+                // style={{ padding: 8, fontSize: 16 }}
+                size={80}
+              >
+                Take survey
+              </PopupButton>
               <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
                 <span> Share Business Card </span>
               </ThemedBackgroundButtonFilled>
@@ -610,8 +614,6 @@ const BoothArea = () => {
       />
 
       <EditBoothDrawer open={openEdit} handleClose={handleCloseEdit} />
-
-     
     </>
   );
 };

@@ -140,7 +140,7 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 };
 
 const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
-  const { detailError, isLoadingDetail } = useSelector((state) => state.booth);
+  const { detailError, isLoadingDetail, currentBoothId } = useSelector((state) => state.booth);
 
   const classes = useStyles();
 
@@ -175,8 +175,7 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.tagline = formValues.tagline;
     ModifiedFormValues.description = formValues.description;
-    ModifiedFormValues.emails = formValues.multiEmail;
-    ModifiedFormValues.tags = formValues.multiTags;
+    ModifiedFormValues.numberOfTables = formValues.numberOfTables;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
@@ -188,9 +187,7 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
 
     ModifiedFormValues.socialMediaHandles = groupedSocialHandles;
 
-    dispatch(editBooth(ModifiedFormValues, file, id));
-
-    handleClose();
+    dispatch(editBooth(ModifiedFormValues, file, currentBoothId));
   };
 
   if (detailError) {
@@ -198,9 +195,6 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     return null;
   }
 
-  //   if (!booth) {
-  //     return <Loader />;
-  //   }
 
   return (
     <>
@@ -397,9 +391,6 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
               <button
                 type="submit"
                 className="btn btn-primary btn-outline-text"
-                onClick={() => {
-                  handleClose();
-                }}
               >
                 Save Changes
               </button>

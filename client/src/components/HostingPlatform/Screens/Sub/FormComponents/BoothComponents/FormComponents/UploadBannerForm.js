@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { uploadBoothPosterImage } from "./../../../../../../../actions";
+import {
+  uploadBoothPosterImage,
+  showSnackbar,
+} from "./../../../../../../../actions";
 
 const Container = styled.div`
   height: auto;
@@ -109,7 +112,16 @@ const UploadBannerForm = () => {
             >
               <button
                 onClick={() => {
-                  dispatch(uploadBoothPosterImage(file, currentBoothId));
+                  if (file) {
+                    dispatch(uploadBoothPosterImage(file, currentBoothId));
+                  } else {
+                    dispatch(
+                      showSnackbar(
+                        "warning",
+                        "Please select an image to update Banner"
+                      )
+                    );
+                  }
                 }}
                 className="btn btn-outline-text btn-primary me-3"
               >

@@ -39,9 +39,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const renderTags = (tags) => {
-  return tags.map((tag) => {
-    return <div className=" booth-tag px-3 py-1 me-2">{tag}</div>;
-  });
+  if (!tags) {
+    return;
+  } else {
+    return tags.map((tag) => {
+      return <div className=" booth-tag px-3 py-1 me-2">{tag}</div>;
+    });
+  }
 };
 
 const BoothCard = ({ promoImage, logo, name, tagline, tags, id }) => {

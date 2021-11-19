@@ -10,6 +10,7 @@ import { useParams } from "react-router";
 import PhoneInput from "react-phone-input-2";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import "react-phone-input-2/lib/style.css";
+import { editBooth } from "./../../../../../actions";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -120,8 +121,17 @@ const GetInTouchForm = ({
 
   const dispatch = useDispatch();
 
+  const { currentBoothId } = useSelector((state) => state.booth);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
+
+    let ModifiedFormValues = {};
+
+    ModifiedFormValues.contactEmail = formValues.email;
+    ModifiedFormValues.contactNumber = formValues.contact;
+
+    dispatch(editBooth(ModifiedFormValues, null, currentBoothId));
   };
 
   return (

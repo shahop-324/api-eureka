@@ -90,6 +90,12 @@ const boothSlice = createSlice({
       state.currentBoothId = action.payload.boothId;
       state.isLoading = false;
     },
+    SetPromoImageUploadPercent(state, action) {
+      state.uploadPromoImagePercent = action.payload.percent;
+    },
+    SetBoothPosterUploadPercent(state, action) {
+      state.uploadBannerPercent = action.payload.percent;
+    },
   },
 });
 export const boothActions = boothSlice.actions;

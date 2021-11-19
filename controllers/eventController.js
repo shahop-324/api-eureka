@@ -300,7 +300,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
 
   let createdBooth;
 
-  Booth.create(
+  await Booth.create(
     {
       name: req.body.name,
       emails: req.body.emails,
@@ -309,6 +309,7 @@ exports.createBooth = catchAsync(async (req, res, next) => {
       image: req.body.image,
       tags: req.body.tags,
       eventId: eventGettingBooth.id,
+      numberOfTables: req.body.numberOfTables,
     },
     async (err, doc) => {
       console.log(err);
@@ -1125,7 +1126,7 @@ exports.updateCustomisationSettings = catchAsync(async (req, res, next) => {
     "boothEnabled",
     "loungeEnabled",
     "networkingEnabled",
-    "review",
+    "review"
   );
 
   const eventDoc = await Event.findByIdAndUpdate(

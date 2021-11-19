@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   uploadVideoForBooth,
   resetBoothVideoProgress,
+  showSnackbar,
 } from "./../../../../../../../../actions";
 import { useParams } from "react-router-dom";
 
@@ -86,14 +87,14 @@ const VideoContainer = styled.video`
 `;
 
 const UploadVideo = ({ open, handleClose }) => {
-  const params = useParams();
   const dispatch = useDispatch();
-  
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { uploadVideoPercent, currentBoothId } = useSelector((state) => state.booth);
+  const { uploadVideoPercent, currentBoothId } = useSelector(
+    (state) => state.booth
+  );
 
   const [file, setFile] = React.useState(null);
 
@@ -112,7 +113,13 @@ const UploadVideo = ({ open, handleClose }) => {
   }, []);
 
   const uploadVideo = () => {
-    dispatch(uploadVideoForBooth(currentBoothId, file, handleClose));
+    if (file) {
+      dispatch(uploadVideoForBooth(currentBoothId, file, handleClose));
+    } else {
+      dispatch(
+        showSnackbar("warning", "Please select a video file to upload.")
+      );
+    }
   };
 
   return (
@@ -156,7 +163,9 @@ const UploadVideo = ({ open, handleClose }) => {
             <ProgressContainer>
               <ProgressFill
                 style={{
-                  width: `${uploadVideoPercent ? `${uploadVideoPercent}%` : "0%"}`,
+                  width: `${
+                    uploadVideoPercent ? `${uploadVideoPercent}%` : "0%"
+                  }`,
                 }}
                 className="d-flex flex-row align-items-center py-2"
               >

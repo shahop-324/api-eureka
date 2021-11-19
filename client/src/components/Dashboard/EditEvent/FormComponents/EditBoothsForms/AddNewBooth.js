@@ -500,7 +500,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
         </>
         </SwipeableDrawer>
         </React.Fragment>
-      
     </>
   );
 };

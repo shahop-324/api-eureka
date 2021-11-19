@@ -51,6 +51,20 @@ const boothSchema = new mongoose.Schema({
     type: Map,
     of: String,
   },
+  numberOfTables: {
+    type: Number,
+    default: 10,
+  },
+  theme: {
+    type: String,
+    default: "#3567C3",
+  },
+  contactEmail: {
+    type: String,
+  },
+  contactNumber: {
+    type: String,
+  },
 });
 
 boothSchema.index({

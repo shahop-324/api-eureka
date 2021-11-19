@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import "./../../../../../../Dashboard/EditEvent/Style/uploadEventImage.scss";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,7 +9,30 @@ import { reduxForm } from "redux-form";
 import Loader from "../../../../../../Loader";
 import {
   uploadBoothPromoImage,
+  showSnackbar,
+  resetPromoImageUploadPercent,
 } from "../../../../../../../actions";
+
+const ProgressContainer = styled.div`
+  width: 100%;
+  height: 40px;
+  background-color: #dadada;
+  border-radius: 10px;
+`;
+
+const ProgressFill = styled.div`
+  height: 40px;
+  background-color: #47d188;
+  border-radius: 10px;
+`;
+
+const ProgressText = styled.div`
+  font-weight: 600;
+  font-family: "Ubuntu";
+  font-size: 0.9rem;
+  color: #000000;
+  padding-left: 32px;
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +56,9 @@ const UploadBoothPromoImageForm = (props) => {
 
   const { isLoading, boothDetails } = useSelector((state) => state.booth);
 
-  const { currentBoothId } = useSelector((state) => state.booth);
+  const { currentBoothId, uploadPromoImagePercent } = useSelector(
+    (state) => state.booth
+  );
 
   const classes = useStyles();
 
@@ -55,13 +81,10 @@ const UploadBoothPromoImageForm = (props) => {
   };
 
   const dispatch = useDispatch();
-  const onSubmit = (formValues) => {
-    console.log(formValues);
 
-    dispatch(uploadBoothPromoImage(file, currentBoothId));
-
-    console.log(file);
-  };
+  useEffect(() => {
+    dispatch(resetPromoImageUploadPercent());
+  }, []);
 
   if (isLoading) {
     return (
@@ -77,48 +100,79 @@ const UploadBoothPromoImageForm = (props) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="event-image-form-wrapper px-4 py-4">
-          <label for="eventName" className="form-label form-label-customized">
-            Promo image
-          </label>
-          <div className="my-2">
-            <Avatar
-              alt="Remy Sharp"
-              src={fileToPreview}
-              variant="rounded"
-              className={classes.large}
-            />
-          </div>
-          <div
-            style={{
-              textAlign: "center",
-              width: "100%",
-              fontSize: "15px",
-              fontWeight: "regular",
-              color: "#5C5C5C",
-            }}
-          >
-            <small>Optimal ratio (400/240px)</small>
-          </div>
-          <input
-            name="imgUpload"
-            type="file"
-            accept="image/*"
-            onChange={onFileChange}
-            className="form-control my-3"
-            style={{ fontSize: "14px", fontWeight: "bold", color: "#5C5C5C" }}
-            required
+      <div className="event-image-form-wrapper px-4 py-4">
+        <label for="eventName" className="form-label form-label-customized">
+          Promo image
+        </label>
+        <div className="my-2">
+          <Avatar
+            alt="Remy Sharp"
+            src={fileToPreview}
+            variant="rounded"
+            className={classes.large}
           />
+        </div>
+        <div
+          style={{
+            textAlign: "center",
+            width: "100%",
+            fontSize: "15px",
+            fontWeight: "regular",
+            color: "#5C5C5C",
+          }}
+        >
+          <small>Optimal ratio (400/240px)</small>
+        </div>
+        <input
+          name="imgUpload"
+          type="file"
+          accept="image/*"
+          onChange={onFileChange}
+          className="form-control my-3"
+          style={{ fontSize: "14px", fontWeight: "bold", color: "#5C5C5C" }}
+          required
+        />
+
+        {uploadPromoImagePercent !== 0 ? (
+          <ProgressContainer>
+            <ProgressFill
+              style={{
+                width: `${
+                  uploadPromoImagePercent ? `${uploadPromoImagePercent}%` : "0%"
+                }`,
+              }}
+              className="d-flex flex-row align-items-center py-2"
+            >
+              <ProgressText>
+                {uploadPromoImagePercent &&
+                uploadPromoImagePercent * 1 > 1.2 ? (
+                  `${(uploadPromoImagePercent * 1).toFixed(2)}%`
+                ) : (
+                  <div className="py-2">
+                    <div class="spinner-border text-dark" role="status"></div>
+                  </div>
+                )}
+              </ProgressText>
+            </ProgressFill>
+          </ProgressContainer>
+        ) : (
           <button
-            type="submit"
+            onClick={() => {
+              if (file) {
+                dispatch(uploadBoothPromoImage(file, currentBoothId));
+              } else {
+                dispatch(
+                  showSnackbar("warning", "Please select an image to update")
+                );
+              }
+            }}
             className="btn btn-outline-primary btn-outline-text"
             style={{ width: "100%" }}
           >
             Upload
           </button>
-        </div>
-      </form>
+        )}
+      </div>
     </>
   );
 };

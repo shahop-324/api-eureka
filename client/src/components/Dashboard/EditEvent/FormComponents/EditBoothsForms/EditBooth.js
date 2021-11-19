@@ -188,6 +188,7 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.emails = formValues.multiEmail;
     ModifiedFormValues.tags = formValues.multiTags;
+    ModifiedFormValues.numberOfTables = formValues.numberOfTables;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
