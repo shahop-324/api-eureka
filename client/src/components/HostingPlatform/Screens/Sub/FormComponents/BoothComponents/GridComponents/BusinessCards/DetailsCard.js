@@ -46,7 +46,7 @@ const BusinessDetailsCard = ({
 
         <div className="registrations-ticket-type-field">
           <div className="registrations-field-label registrations-field-value-modified">
-            {dateFormat(new Date(timestamp), "dddd, mmmm dS, yyyy, h:MM:ss TT")}
+            {dateFormat(new Date(timestamp), "ddd, mm dS, yy, h:MM TT")}
           </div>
         </div>
       </div>

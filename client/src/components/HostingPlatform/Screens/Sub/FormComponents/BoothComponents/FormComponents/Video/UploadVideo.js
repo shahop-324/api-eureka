@@ -88,6 +88,8 @@ const VideoContainer = styled.video`
 
 const UploadVideo = ({ open, handleClose }) => {
   const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.eventId;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -114,7 +116,7 @@ const UploadVideo = ({ open, handleClose }) => {
 
   const uploadVideo = () => {
     if (file) {
-      dispatch(uploadVideoForBooth(currentBoothId, file, handleClose));
+      dispatch(uploadVideoForBooth(currentBoothId, eventId, file, handleClose));
     } else {
       dispatch(
         showSnackbar("warning", "Please select a video file to upload.")

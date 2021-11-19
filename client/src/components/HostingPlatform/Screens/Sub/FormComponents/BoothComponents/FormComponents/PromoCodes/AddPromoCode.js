@@ -8,6 +8,7 @@ import { reduxForm, Field } from "redux-form";
 import { SwipeableDrawer } from "@material-ui/core";
 import { addPromoCode } from "../../../../../../../../actions";
 import styled from "styled-components";
+import {useParams} from 'react-router-dom';
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -115,16 +116,19 @@ const AddPromoCode = ({
 }) => {
   const { currentBoothId } = useSelector((state) => state.booth);
   const dispatch = useDispatch();
+  const params = useParams();
+
+  const eventId = params.eventId;
 
   const onSubmit = async (formValues) => {
     const ModifiedFormValues = {};
 
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.code = formValues.code;
-    ModifiedFormValues.percentage = formValues.percentage;
+    ModifiedFormValues.discount = formValues.percentage;
     ModifiedFormValues.instruction = formValues.instruction;
 
-    dispatch(addPromoCode(ModifiedFormValues, currentBoothId, handleClose));
+    dispatch(addPromoCode(ModifiedFormValues, currentBoothId, eventId, handleClose));
   };
 
   return (
@@ -172,7 +176,7 @@ const AddPromoCode = ({
                       Promo Code<span className="mandatory-field">*</span>
                     </FormLabel>
                     <Field
-                      name="name"
+                      name="code"
                       type="text"
                       classes="form-control"
                       ariadescribedby="emailHelp"
@@ -191,7 +195,7 @@ const AddPromoCode = ({
                       <span className="mandatory-field">*</span>
                     </FormLabel>
                     <Field
-                      name="name"
+                      name="percentage"
                       type="text"
                       classes="form-control"
                       ariadescribedby="emailHelp"

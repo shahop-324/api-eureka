@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, connect } from "react-redux";
@@ -6,6 +6,7 @@ import { reduxForm, Field } from "redux-form";
 import { editPromoCode } from "../../../../../../../../actions";
 import { SwipeableDrawer } from "@material-ui/core";
 import styled from "styled-components";
+import { fetchPromoCode } from "./../../../../../../../../actions";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -106,6 +107,10 @@ const renderTextArea = ({
 const EditPromoCode = ({ open, handleClose, handleSubmit, reset, id }) => {
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchPromoCode(id));
+  }, []);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -113,10 +118,10 @@ const EditPromoCode = ({ open, handleClose, handleSubmit, reset, id }) => {
 
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.code = formValues.code;
-    ModifiedFormValues.percentage = formValues.percentage;
+    ModifiedFormValues.discount = formValues.percentage;
     ModifiedFormValues.instruction = formValues.instruction;
 
-    dispatch(editPromoCode(ModifiedFormValues, id, handleClose()));
+    dispatch(editPromoCode(ModifiedFormValues, id, handleClose));
   };
 
   return (
@@ -165,7 +170,7 @@ const EditPromoCode = ({ open, handleClose, handleSubmit, reset, id }) => {
                       Promo Code<span className="mandatory-field">*</span>
                     </FormLabel>
                     <Field
-                      name="name"
+                      name="code"
                       type="text"
                       classes="form-control"
                       ariadescribedby="emailHelp"
@@ -184,7 +189,7 @@ const EditPromoCode = ({ open, handleClose, handleSubmit, reset, id }) => {
                       <span className="mandatory-field">*</span>
                     </FormLabel>
                     <Field
-                      name="name"
+                      name="percentage"
                       type="text"
                       classes="form-control"
                       ariadescribedby="emailHelp"
@@ -246,20 +251,20 @@ const EditPromoCode = ({ open, handleClose, handleSubmit, reset, id }) => {
 const mapStateToProps = (state) => ({
   initialValues: {
     name:
-      state.booth.promoCodeDetails && state.booth.promoCodeDetails.name
-        ? state.booth.promoCodeDetails.name
+      state.booth.offerDetails && state.booth.offerDetails.name
+        ? state.booth.offerDetails.name
         : "",
     code:
-      state.booth.promoCodeDetails && state.booth.promoCodeDetails.code
-        ? state.booth.promoCodeDetails.code
+      state.booth.offerDetails && state.booth.offerDetails.code
+        ? state.booth.offerDetails.code
         : "",
     percentage:
-      state.booth.promoCodeDetails && state.booth.promoCodeDetails.percentage
-        ? state.booth.promoCodeDetails.percentage
+      state.booth.offerDetails && state.booth.offerDetails.discount
+        ? state.booth.offerDetails.discount
         : "",
     instruction:
-      state.booth.promoCodeDetails && state.booth.promoCodeDetails.instruction
-        ? state.booth.promoCodeDetails.instruction
+      state.booth.offerDetails && state.booth.offerDetails.instruction
+        ? state.booth.offerDetails.instruction
         : "",
   },
 });

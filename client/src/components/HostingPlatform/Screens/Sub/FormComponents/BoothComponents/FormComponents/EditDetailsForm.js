@@ -140,7 +140,9 @@ const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
 };
 
 const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
-  const { detailError, isLoadingDetail, currentBoothId } = useSelector((state) => state.booth);
+  const { detailError, isLoadingDetail, currentBoothId } = useSelector(
+    (state) => state.booth
+  );
 
   const classes = useStyles();
 
@@ -176,6 +178,7 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.tagline = formValues.tagline;
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.numberOfTables = formValues.numberOfTables;
+    ModifiedFormValues.googleTag = formValues.googleTag;
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
@@ -195,7 +198,6 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     return null;
   }
 
-
   return (
     <>
       <>
@@ -210,7 +212,6 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
                 variant="rounded"
               />
             </div>
-
             <div className="mb-3 overlay-form-input-row">
               <FormLabel
                 for="communityHeadline"
@@ -226,7 +227,6 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
                 className="form-control"
               />
             </div>
-
             <div className="mb-3 overlay-form-input-row ">
               <div>
                 <FormLabel
@@ -262,6 +262,25 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
                   placeholder="e.g. The Simplest Drag
                   and Drop Explainer
                   Video Creator"
+                  component={renderInput}
+                />
+              </div>
+            </div>
+
+            <div className="mb-3 overlay-form-input-row">
+              <FormLabel
+                Forhtml="eventStartDate"
+                className="form-label form-label-customized"
+              >
+                Google Tracking Code
+              </FormLabel>
+              <div className="form-group">
+                <Field
+                  name="googleTag"
+                  type="text"
+                  classes="form-control"
+                  ariadescribedby="emailHelp"
+                  placeholder="e.g. G-HIUWGH82J929"
                   component={renderInput}
                 />
               </div>
@@ -411,6 +430,10 @@ const mapStateToProps = (state) => ({
     name:
       state.booth.boothDetails && state.booth.boothDetails.name
         ? state.booth.boothDetails.name
+        : "",
+    googleTag:
+      state.booth.boothDetails && state.booth.boothDetails.googleTag
+        ? state.booth.boothDetails.googleTag
         : "",
     tagline:
       state.booth.boothDetails && state.booth.boothDetails.tagline

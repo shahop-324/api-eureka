@@ -7,6 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EditPromoCode from "../../FormComponents/PromoCodes/EditPromoCode";
 import DeletePromoCode from "../../FormComponents/PromoCodes/DeletePromoCode";
+import Chip from '@mui/material/Chip';
 
 const PromoCodesDetailsCard = ({
   name,
@@ -37,16 +38,19 @@ const PromoCodesDetailsCard = ({
         }}
       >
         <div className="registrations-name-field">
-          <div className="registrations-field-label">{name}</div>
+          <div className="registrations-field-label mx-5">{name}</div>
         </div>
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5">{instruction}</div>
         </div>
         <div className="registrations-email-field">
-          <div className="registrations-field-label">{code}</div>
+          <div className="registrations-field-label">
+          <Chip label={code} color="primary" />
+  
+            </div>
         </div>
         <div className="registrations-phone-field">
-          <div className="registrations-field-label">{discount}</div>
+          <div className="registrations-field-label"><Chip label={`${discount}% off`} color="success" /></div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label">{clicks}</div>
@@ -81,8 +85,8 @@ const PromoCodesDetailsCard = ({
       <EditPromoCode
         open={openEditPromoCode}
         handleClose={handleCloseEditPromoCode}
+        id={id}
       />
-
       <DeletePromoCode
         open={openDeletePromoCode}
         handleClose={handleCloseDeletePromoCode}

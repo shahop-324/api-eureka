@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -7,6 +7,8 @@ import PromoCodesListFields from "../GridComponents/PromoCodes/ListFields";
 import PromoCodesDetailsCard from "./../GridComponents/PromoCodes/DetailsCard";
 import NoPromoCode from "./../../../../../../../assets/images/NoPromoCode.png";
 import AddPromoCode from "../FormComponents/PromoCodes/AddPromoCode";
+import { fetchPromoCodes } from "./../../../../../../../actions";
+import { useParams } from "react-router-dom";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -34,13 +36,22 @@ const renderPromoCodes = (PromoCodes) => {
 };
 
 const PromoCodes = () => {
-  const { codes } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const { offers, currentBoothId } = useSelector((state) => state.booth);
 
   const [openAddPromoCode, setOpenAddPromoCode] = useState(false);
 
   const handleCloseAddPromoCode = () => {
     setOpenAddPromoCode(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchPromoCodes(currentBoothId, eventId));
+  }, []);
 
   return (
     <>
@@ -59,13 +70,13 @@ const PromoCodes = () => {
           </div>
         </div>
 
-        {typeof codes !== "undefined" && codes.length > 0 ? (
+        {typeof offers !== "undefined" && offers.length > 0 ? (
           <div className="event-management-content-grid px-3 mx-3 mb-4 py-4">
             <PromoCodesListFields />
             <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
               <Divider />
             </div>
-            {renderPromoCodes(codes)}
+            {renderPromoCodes(offers)}
           </div>
         ) : (
           <div

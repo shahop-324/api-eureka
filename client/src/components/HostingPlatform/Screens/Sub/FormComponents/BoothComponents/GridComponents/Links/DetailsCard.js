@@ -31,8 +31,8 @@ const LinkLibraryDetailsCard = ({ name, url, clicks, id }) => {
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label">
-            <a href={`//${url}`} target="_blank" rel="noreferrer">
-              Link
+            <a href={`${url}`} target="_blank" rel="noreferrer" style={{textDecoration: "none"}}>
+              Visit
             </a>
           </div>
         </div>
@@ -42,7 +42,7 @@ const LinkLibraryDetailsCard = ({ name, url, clicks, id }) => {
               onClick={() => {
                 setOpenEditLink(true);
               }}
-              color="secondary"
+              color="primary"
               aria-label="edit link"
             >
               <EditRoundedIcon />

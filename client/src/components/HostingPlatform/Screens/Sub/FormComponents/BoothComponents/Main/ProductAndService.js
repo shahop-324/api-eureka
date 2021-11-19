@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {useParams} from 'react-router-dom';
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -7,6 +8,7 @@ import ProductLibraryListFields from "../GridComponents/Product/ListFields";
 import ProductLibraryDetailsCard from "./../GridComponents/Product/DetailsCard";
 import NoProduct from "./../../../../../../../assets/images/NoFile.png";
 import AddProduct from "./../FormComponents/Product/AddProduct";
+import {fetchBoothProducts} from "./../../../../../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -23,7 +25,7 @@ const renderProducts = (products) => {
       <ProductLibraryDetailsCard
         id={product._id}
         key={product._id}
-        image={product.image}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${product.image}`}
         name={product.name}
         description={product.description}
         link={product.link}
@@ -33,13 +35,20 @@ const renderProducts = (products) => {
 };
 
 const ProductAndService = () => {
-  const { products } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.eventId;
+  const { products, currentBoothId } = useSelector((state) => state.booth);
 
   const [openAddProduct, setOpenAddProduct] = useState(false);
 
   const handleCloseAddproduct = () => {
     setOpenAddProduct(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchBoothProducts(currentBoothId, eventId))
+  }, []);
 
   return (
     <>

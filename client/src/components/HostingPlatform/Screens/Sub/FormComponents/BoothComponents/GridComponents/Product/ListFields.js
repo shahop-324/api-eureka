@@ -4,7 +4,7 @@ import "./../../../../../../../../assets/Sass/TeamManagement.scss";
 
 const ProductLibraryListFields = () => {
   return (
-    <div className="team-members-list-fields-container" style={{display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 0.5fr"}}>
+    <div className="team-members-list-fields-container" style={{display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 0.5fr", gridGap: "20px"}}>
       <div className="registrations-name-field">
         <div className="registrations-field-label mx-5">Image</div>
       </div>

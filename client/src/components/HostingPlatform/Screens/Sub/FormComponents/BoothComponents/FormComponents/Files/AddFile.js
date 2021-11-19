@@ -66,6 +66,7 @@ const renderInput = ({
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
+        required
       />
       {touched &&
         ((error && <FormError className="my-1">{error}</FormError>) ||
@@ -83,8 +84,10 @@ const AddNewFile = ({
 }) => {
   const { isLoading } = useSelector((state) => state.booth);
   const params = useParams();
-  const id = params.id;
+  const eventId = params.eventId;
   const dispatch = useDispatch();
+
+  const { currentBoothId } = useSelector((state) => state.booth);
 
   const [file, setFile] = useState(null);
 
@@ -97,8 +100,10 @@ const AddNewFile = ({
     const ModifiedFormValues = {};
 
     ModifiedFormValues.name = formValues.name;
-   
-    dispatch(addFile(ModifiedFormValues, file, id, handleClose));
+
+    dispatch(
+      addFile(ModifiedFormValues, file, currentBoothId, eventId, handleClose)
+    );
   };
 
   if (isLoading) {
@@ -120,9 +125,7 @@ const AddNewFile = ({
           <>
             <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 py-4">
               <div></div>
-              <div className="coupon-overlay-form-headline">
-                Add New File
-              </div>
+              <div className="coupon-overlay-form-headline">Add New File</div>
               <div className="overlay-form-close-button" onClick={handleClose}>
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />
@@ -131,8 +134,6 @@ const AddNewFile = ({
             </HeaderFooter>
             <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
               <div className="create-new-coupon-form px-4 py-4">
-                
-
                 <div className="mb-3 overlay-form-input-row">
                   <FormLabel
                     for="communityHeadline"
@@ -141,11 +142,12 @@ const AddNewFile = ({
                     File<span className="mandatory-field">*</span>
                   </FormLabel>
                   <input
-                    name="image"
+                    name="file"
                     type="file"
-                    accept="image/*"
+                    accept="application/pdf,application/vnd.ms-excel"
                     onChange={onFileChange}
                     className="form-control"
+                    required
                   />
                 </div>
 
@@ -190,8 +192,11 @@ const AddNewFile = ({
 const validate = (formValues) => {
   const errors = {};
 
+  if (!formValues.file) {
+    errors.file = "File is required";
+  }
   if (!formValues.name) {
-    errors.name = "Name is required";
+    errors.name = "File Name is required";
   }
   return errors;
 };

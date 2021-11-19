@@ -296,7 +296,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       "promoImage",
       "boothPoster",
       "contactEmail",
-      "contactNumber"
+      "contactNumber",
+      "googleTag",
     );
 
     const processedBoothObj = await Booth.findByIdAndUpdate(
@@ -561,6 +562,8 @@ exports.addNewFile = catchAsync(async (req, res, next) => {
     boothId: boothId,
     deleted: false,
   });
+
+  console.log(newFile);
 
   res.status(200).json({
     status: "success",
@@ -920,18 +923,22 @@ exports.shareBusinessCard = catchAsync(async (req, res, next) => {
 });
 
 exports.getBusinessCards = catchAsync(async (req, res, next) => {
-  const boothId = req.params.boothId;
-  const eventId = req.params.eventId;
+  try {
+    const boothId = req.params.boothId;
+    const eventId = req.params.eventId;
 
-  const cards = await SharedBusinessCard.find({
-    $and: [
-      { boothId: mongoose.Types.ObjectId(boothId) },
-      { eventId: mongoose.Types.ObjectId(eventId) },
-    ],
-  });
+    const cards = await SharedBusinessCard.find({
+      $and: [
+        { boothId: mongoose.Types.ObjectId(boothId) },
+        { eventId: mongoose.Types.ObjectId(eventId) },
+      ],
+    }).populate("userId", "firstName lastName image email phoneNumber interests");
 
-  res.statu(200).json({
-    status: "success",
-    data: cards,
-  });
+    res.status(200).json({
+      status: "success",
+      data: cards,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });

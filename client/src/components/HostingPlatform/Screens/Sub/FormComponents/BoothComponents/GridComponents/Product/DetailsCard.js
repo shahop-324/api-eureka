@@ -10,11 +10,11 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EditProduct from "./../../FormComponents/Product/EditProduct";
 import { useDispatch } from "react-redux";
 
-const ProductImage = styled.div`
+const ProductImage = styled.img`
   border-radius: 20px;
-  max-height: 200px;
+  max-height: 100px;
   object-fit: contain;
-  width: 100%;
+  width: 100%;border-radius: 10px;
 `;
 
 const ProductLibraryDetailsCard = ({ name, image, description, link, id }) => {
@@ -36,6 +36,7 @@ const ProductLibraryDetailsCard = ({ name, image, description, link, id }) => {
         style={{
           display: "grid",
           gridTemplateColumns: "1.5fr 1fr 1fr 1fr 0.5fr",
+          gridGap: "20px"
         }}
       >
         <div className="registrations-name-field">
@@ -44,14 +45,14 @@ const ProductLibraryDetailsCard = ({ name, image, description, link, id }) => {
           </div>
         </div>
         <div className="registrations-name-field">
-          <div className="registrations-field-label mx-5">{name}</div>
+          <div className="registrations-field-label">{name}</div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label">{description}</div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label">
-            <a href={`//${link}`} target="_blank" rel="noreferrer">
+            <a href={`${link}`} target="_blank" rel="noreferrer">
               <button className="btn btn-outline-text btn-outline-primary">
                 Link
               </button>
@@ -88,6 +89,7 @@ const ProductLibraryDetailsCard = ({ name, image, description, link, id }) => {
       <EditProduct
         open={openEditProduct}
         handleClose={handleCloseEditProduct}
+        id={id}
       />
 
       <DeleteProduct

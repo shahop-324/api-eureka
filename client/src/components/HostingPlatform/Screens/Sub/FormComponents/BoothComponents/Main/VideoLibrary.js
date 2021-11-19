@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import NoContentFound from "../../../../../../NoContent";
@@ -8,6 +9,8 @@ import VideoLibraryDetailsCard from "./../GridComponents/Video/DetailsCard";
 import VOD from "./../../../../../../../assets/images/vod.png";
 import dateFormat from "dateformat";
 import UploadVideo from "../FormComponents/Video/UploadVideo";
+
+import { getBoothVideos } from "./../../../../../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -25,10 +28,11 @@ const renderVideos = (videos) => {
         name={video.name}
         id={video._id}
         key={video._id}
-        time={dateFormat(video.date, "h:MM:ss TT")}
-        date={dateFormat(video.date, "dddd, mmmm dS, yyyy")}
+        time={dateFormat(new Date(video.timestamp), "h:MM:ss TT")}
+        date={dateFormat(new Date(video.timestamp), "dddd, mmmm dS, yyyy")}
         eventId={video.eventId}
         boothId={video.boothId}
+        url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}`}
       />
     );
   });
@@ -37,11 +41,23 @@ const renderVideos = (videos) => {
 const VideoLibrary = () => {
   const [openUploadVideo, setOpenUploadVideo] = useState(false);
 
+  const { currentBoothId } = useSelector((state) => state.booth);
+
+  const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const eventId = params.eventId;
+
   const { videos } = useSelector((state) => state.booth);
 
   const handleCloseUploadVideo = () => {
     setOpenUploadVideo(false);
   };
+
+  useEffect(() => {
+    dispatch(getBoothVideos(currentBoothId, eventId));
+  }, []);
 
   return (
     <>

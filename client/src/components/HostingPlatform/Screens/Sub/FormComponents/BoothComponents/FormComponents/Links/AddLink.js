@@ -81,6 +81,7 @@ const AddNewLink = ({
   handleClose,
 }) => {
   const params = useParams();
+  const eventId = params.eventId;
 
   const { currentBoothId } = useSelector((state) => state.booth);
 
@@ -92,7 +93,7 @@ const AddNewLink = ({
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.url = formValues.url;
 
-    dispatch(addLink(ModifiedFormValues, currentBoothId, handleClose));
+    dispatch(addLink(ModifiedFormValues, currentBoothId, eventId, handleClose));
   };
 
   return (

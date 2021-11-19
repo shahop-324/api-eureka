@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editForm } from "../../../../../../../../actions";
+import { editForm, fetchBoothForm } from "../../../../../../../../actions";
 import { SwipeableDrawer } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -72,6 +72,10 @@ const renderInput = ({
 const EditForm = ({ open, handleClose, handleSubmit, reset, id }) => {
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchBoothForm(id));
+  }, []);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -80,7 +84,7 @@ const EditForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.formId = formValues.formId;
 
-    dispatch(editForm(ModifiedFormValues, id, handleClose()));
+    dispatch(editForm(ModifiedFormValues, id, handleClose));
   };
 
   return (
@@ -90,9 +94,7 @@ const EditForm = ({ open, handleClose, handleSubmit, reset, id }) => {
           <>
             <HeaderFooter className="form-heading-and-close-button mb-4 px-4 pt-3">
               <div></div>
-              <div className="coupon-overlay-form-headline">
-                Edit Form
-              </div>
+              <div className="coupon-overlay-form-headline">Edit Form</div>
               <div className="overlay-form-close-button" onClick={handleClose}>
                 <IconButton aria-label="delete">
                   <CancelRoundedIcon />

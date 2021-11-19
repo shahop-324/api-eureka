@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editLink } from "../../../../../../../../actions";
+import { editLink, fetchLink } from "../../../../../../../../actions";
 import { SwipeableDrawer } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -72,6 +72,10 @@ const renderInput = ({
 const EditLink = ({ open, handleClose, handleSubmit, reset, id }) => {
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchLink(id));
+  }, []);
+
   const onSubmit = (formValues) => {
     console.log(formValues);
 
@@ -80,7 +84,7 @@ const EditLink = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.url = formValues.url;
 
-    dispatch(editLink(ModifiedFormValues, id, handleClose()));
+    dispatch(editLink(ModifiedFormValues, id, handleClose));
   };
 
   return (
@@ -191,7 +195,7 @@ const validate = (formValues) => {
   }
 
   if (!formValues.url) {
-    errors.cta = "URL is required";
+    errors.url = "URL is required";
   }
   return errors;
 };

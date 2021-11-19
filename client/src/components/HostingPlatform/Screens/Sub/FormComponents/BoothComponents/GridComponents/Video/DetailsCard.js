@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import "./../../../../../../../../assets/Sass/DataGrid.scss";
 import "./../../../../../../../../assets/Sass/TeamManagement.scss";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,7 +9,14 @@ import DeleteVideo from "../../FormComponents/Video/DeleteVideo";
 import { useDispatch } from "react-redux";
 import { deleteBoothVideo } from "./../../../../../../../../actions";
 
-const VideoLibraryDetailsCard = ({ name, id, time, date }) => {
+const VideoPreview = styled.video`
+  border-radius: 15px;
+  height: 140px;
+  width: 100%;
+  background-color: #212121;
+`;
+
+const VideoLibraryDetailsCard = ({ name, id, time, date, url }) => {
   const [openDeleteVideo, setOpenDeleteVideo] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -22,9 +30,19 @@ const VideoLibraryDetailsCard = ({ name, id, time, date }) => {
   };
   return (
     <>
-      <div className="team-members-list-fields-container">
+      <div
+        className="team-members-list-fields-container"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.5fr",
+          gridGap: "24px",
+        }}
+      >
+        <div className="registrations-name-field mx-5">
+          <VideoPreview src={url}></VideoPreview>
+        </div>
         <div className="registrations-name-field">
-          <div className="registrations-field-label mx-5">{name}</div>
+          <div className="registrations-field-label">{name}</div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label">{date}</div>

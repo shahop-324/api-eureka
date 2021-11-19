@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { SwipeableDrawer } from "@material-ui/core";
-import { addBoothProduct } from "../../../../../../../../actions";
+import { addBoothProduct, showSnackbar } from "../../../../../../../../actions";
 import Loader from "../../../../../../../Loader";
 import styled from "styled-components";
 
@@ -133,9 +133,10 @@ const AddNewProduct = ({
   submitting,
   handleClose,
 }) => {
-  const { error, isLoading } = useSelector((state) => state.booth);
+  const { error, isLoading, currentBoothId } = useSelector((state) => state.booth);
   const params = useParams();
-  const id = params.id;
+  const eventId = params.eventId;
+  
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -153,10 +154,18 @@ const AddNewProduct = ({
     const ModifiedFormValues = {};
 
     ModifiedFormValues.name = formValues.name;
-    ModifiedFormValues.cta = formValues.cta;
+    ModifiedFormValues.link = formValues.cta;
     ModifiedFormValues.description = formValues.description;
 
-    dispatch(addBoothProduct(ModifiedFormValues, file, id, handleClose));
+    if(!file) {
+      dispatch(showSnackbar("warning", "Please select an image for product."));
+      return;
+    }
+    else {
+
+      dispatch(addBoothProduct(ModifiedFormValues, file, eventId, currentBoothId, handleClose));
+    }
+
   };
 
   if (isLoading) {
@@ -299,8 +308,8 @@ const validate = (formValues) => {
   if (!formValues.description) {
     errors.description = "Description is required";
   }
-  if (!formValues.link) {
-    errors.link = "CTA Link is required";
+  if (!formValues.cta) {
+    errors.cta = "CTA Link is required";
   }
 
   return errors;

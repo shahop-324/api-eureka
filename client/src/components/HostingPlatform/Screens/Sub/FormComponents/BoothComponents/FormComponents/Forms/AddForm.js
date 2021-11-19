@@ -81,6 +81,7 @@ const AddNewForm = ({
   handleClose,
 }) => {
   const params = useParams();
+  const eventId = params.eventId;
 
   const { currentBoothId } = useSelector((state) => state.booth);
 
@@ -92,7 +93,7 @@ const AddNewForm = ({
     ModifiedFormValues.name = formValues.name;
     ModifiedFormValues.formId = formValues.formId;
 
-    dispatch(addForm(ModifiedFormValues, currentBoothId, handleClose));
+    dispatch(addForm(ModifiedFormValues, currentBoothId, eventId, handleClose));
   };
 
   return (

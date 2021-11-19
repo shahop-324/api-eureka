@@ -7,7 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import DeleteFile from "../../FormComponents/Files/DeleteFile";
 import dateFormat from "dateformat";
 
-const FileLibraryDetailsCard = ({ name, id, downloads, timestamp }) => {
+const FileLibraryDetailsCard = ({ name, url, id, downloads, timestamp }) => {
   const [openDeleteFile, setOpenDeleteFile] = React.useState(false);
 
   const handleCloseDeleteFile = () => {
@@ -16,16 +16,23 @@ const FileLibraryDetailsCard = ({ name, id, downloads, timestamp }) => {
 
   return (
     <>
-      <div className="team-members-list-fields-container">
+      <div className="team-members-list-fields-container" style={{display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1.2fr 0.5fr"}}>
         <div className="registrations-name-field">
           <div className="registrations-field-label mx-5">{name}</div>
+        </div>
+        <div className="registrations-email-field">
+          <div className="registrations-field-label">
+            <a href={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${url}`} target="_blank" rel="noreferrer" style={{textDecoration: "none"}}>
+            <button className="btn btn-outline-text btn-outline-primary">Preview</button>
+            </a>
+          </div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label">{downloads}</div>
         </div>
         <div className="registrations-phone-field">
           <div className="registrations-field-label">
-            {dateFormat(new Date(timestamp), "dddd, mmmm dS, yyyy, h:MM:ss TT")}
+            {dateFormat(new Date(timestamp), "ddd, mmm dS, yy, h:MM TT")}
           </div>
         </div>
         <div className="registrations-invoice-field">

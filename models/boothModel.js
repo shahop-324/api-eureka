@@ -65,6 +65,9 @@ const boothSchema = new mongoose.Schema({
   contactNumber: {
     type: String,
   },
+  googleTag: {
+    type: String,
+  },
 });
 
 boothSchema.index({

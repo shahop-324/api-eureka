@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -7,6 +8,7 @@ import FormsListFields from "../GridComponents/Forms/ListFields";
 import FormsDetailsCard from "./../GridComponents/Forms/DetailsCard";
 import NoForm from "./../../../../../../../assets/images/NoForm.png";
 import AddForm from "../FormComponents/Forms/AddForm";
+import { fetchBoothForms } from "./../../../../../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -32,13 +34,22 @@ const renderForms = (forms) => {
 };
 
 const Forms = () => {
-  const { forms } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const { forms, currentBoothId } = useSelector((state) => state.booth);
 
   const [openAddForm, setOpenAddForm] = useState(false);
 
   const handleCloseAddForm = () => {
     setOpenAddForm(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchBoothForms(currentBoothId, eventId));
+  }, []);
 
   return (
     <>

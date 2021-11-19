@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editProduct } from "../../../../../../../../actions";
+import {
+  editProduct,
+  fetchBoothProduct,
+} from "../../../../../../../../actions";
 import { SwipeableDrawer } from "@material-ui/core";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 const StyledInput = styled.input`
   font-weight: 500;
@@ -122,6 +126,8 @@ const renderTextArea = ({
 
 const EditProduct = ({ open, handleClose, handleSubmit, reset, id }) => {
   const classes = useStyles();
+  const params = useParams();
+  const eventId = params.eventId;
 
   const onFileChange = (event) => {
     console.log(event.target.files[0]);
@@ -129,7 +135,11 @@ const EditProduct = ({ open, handleClose, handleSubmit, reset, id }) => {
     setFileToPreview(URL.createObjectURL(event.target.files[0]));
   };
 
-  const { productDetails } = useSelector((state) => state.booth);
+  let { productDetails, currentBoothId } = useSelector((state) => state.booth);
+
+  productDetails = useSelector((state) =>
+    state.booth.products.find((el) => el._id === id)
+  );
 
   let imgKey;
 
@@ -152,11 +162,24 @@ const EditProduct = ({ open, handleClose, handleSubmit, reset, id }) => {
     const ModifiedFormValues = {};
 
     ModifiedFormValues.name = formValues.name;
-    ModifiedFormValues.cta = formValues.cta;
+    ModifiedFormValues.link = formValues.link;
     ModifiedFormValues.description = formValues.description;
 
-    dispatch(editProduct(ModifiedFormValues, file, id, handleClose()));
+    dispatch(
+      editProduct(
+        ModifiedFormValues,
+        file,
+        currentBoothId,
+        eventId,
+        id,
+        handleClose
+      )
+    );
   };
+
+  useEffect(() => {
+    dispatch(fetchBoothProduct(id));
+  }, []);
 
   return (
     <>
@@ -180,7 +203,7 @@ const EditProduct = ({ open, handleClose, handleSubmit, reset, id }) => {
                 <div className="p-0 d-flex flex-row justify-content-center">
                   <Avatar
                     children=""
-                    alt={productDetails.name}
+                    alt={productDetails && productDetails.name}
                     src={fileToPreview}
                     className={classes.large}
                     variant="rounded"
@@ -250,7 +273,7 @@ const EditProduct = ({ open, handleClose, handleSubmit, reset, id }) => {
                   </FormLabel>
                   <div className="form-group">
                     <Field
-                      name="cta"
+                      name="link"
                       type="text"
                       classes="form-control"
                       ariadescribedby="emailHelp"
@@ -300,9 +323,9 @@ const mapStateToProps = (state) => ({
       state.booth.productDetails && state.booth.productDetails.name
         ? state.booth.productDetails.name
         : "",
-    cta:
-      state.booth.productDetails && state.booth.productDetails.cta
-        ? state.booth.productDetails.cta
+    link:
+      state.booth.productDetails && state.booth.productDetails.link
+        ? state.booth.productDetails.link
         : "",
     description:
       state.booth.productDetails && state.booth.productDetails.description
@@ -318,8 +341,8 @@ const validate = (formValues) => {
     errors.name = "Name is required";
   }
 
-  if (!formValues.cta) {
-    errors.cta = "CTA Link is required";
+  if (!formValues.link) {
+    errors.link = "CTA Link is required";
   }
 
   if (!formValues.description) {

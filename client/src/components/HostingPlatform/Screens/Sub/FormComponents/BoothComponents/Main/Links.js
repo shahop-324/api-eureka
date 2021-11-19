@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -7,6 +7,8 @@ import LinkLibraryListFields from "../GridComponents/Links/ListFields";
 import LinkLibraryDetailsCard from "./../GridComponents/Links/DetailsCard";
 import NoLink from "./../../../../../../../assets/images/NoLink.png";
 import AddLink from "../FormComponents/Links/AddLink.js";
+import { useParams } from "react-router-dom";
+import { fetchLinks } from "./../../../../../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -25,20 +27,27 @@ const renderLinks = (links) => {
         key={link._id}
         name={link.name}
         url={link.url}
-        Clicks={link.clicks}
+        clicks={link.clicks}
       />
     );
   });
 };
 
 const Links = () => {
-  const { links } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.eventId;
+  const { links, currentBoothId } = useSelector((state) => state.booth);
 
   const [openAddLink, setOpenAddLink] = useState(false);
 
   const handleCloseAddLink = () => {
     setOpenAddLink(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchLinks(currentBoothId, eventId));
+  }, []);
 
   return (
     <>
@@ -71,10 +80,7 @@ const Links = () => {
             style={{ height: "83vh", width: "100%" }}
           >
             {" "}
-            <NoContentFound
-              msgText="No Links Found"
-              img={NoLink}
-            />{" "}
+            <NoContentFound msgText="No Links Found" img={NoLink} />{" "}
           </div>
         )}
       </div>

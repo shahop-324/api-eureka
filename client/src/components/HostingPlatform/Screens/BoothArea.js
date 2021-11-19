@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Faker from "faker";
 import { useDispatch, useSelector } from "react-redux";
 import "./../Styles/booth.scss";
@@ -8,34 +9,25 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import { Avatar, makeStyles } from "@material-ui/core";
 import Rooms from "./Rooms";
-import BoothLiveStream from "./BoothLiveStream";
 import styled from "styled-components";
 import Chip from "@mui/material/Chip";
 import { IconButton } from "@material-ui/core";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-
-import { SetCurrentBoothId } from "./../../../actions";
+import { SetCurrentBoothId, shareBusinessCard } from "./../../../actions";
 import Loader from "./../../Loader";
 import { fetchBooth } from "./../../../actions";
-import GetInTouchForm from "./Sub/FormComponents/GetInTouchForm";
-
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
-
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
-
 import ContactsRoundedIcon from "@mui/icons-material/ContactsRounded";
 import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import EditBoothDrawer from "./Sub/FormComponents/EditBoothDrawer";
-
 import { PopupButton } from "@typeform/embed-react";
 
 const ThemedBackgroundButtonOutlined = styled.div`
@@ -250,6 +242,21 @@ const renderTags = (tags) => {
 
 const BoothArea = () => {
   const dispatch = useDispatch();
+  const params = useParams();
+
+  useEffect(() => {
+    if (boothDetails) {
+      if (boothDetails.googleTag) {
+        loadGoogleAnalytics();
+      }
+    }
+  }, []);
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  const eventId = params.eventId;
 
   const [openGetInTouch, setOpenGetInTouch] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -275,8 +282,29 @@ const BoothArea = () => {
   };
 
   if (!boothDetails) {
-    return;
+    return null;
   }
+
+  const loadGoogleAnalytics = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${boothDetails.googleTag}`;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", boothDetails.googleTag);
+    });
+  };
 
   return (
     <>
@@ -446,7 +474,12 @@ const BoothArea = () => {
               >
                 Take survey
               </PopupButton>
-              <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
+              <ThemedBackgroundButtonFilled
+                onClick={() => {
+                  dispatch(shareBusinessCard(userId, eventId, currentBoothId));
+                }}
+                className="btn btn-primary btn-outline-text"
+              >
                 <span> Share Business Card </span>
               </ThemedBackgroundButtonFilled>
             </div>
@@ -602,17 +635,6 @@ const BoothArea = () => {
 
         <Rooms />
       </div>
-
-      {/* <BoothLiveStream
-        open={openLiveStream}
-        handleClose={handleCloseLiveStream}
-      /> */}
-
-      <GetInTouchForm
-        open={openGetInTouch}
-        handleClose={handleCloseGetInTouch}
-      />
-
       <EditBoothDrawer open={openEdit} handleClose={handleCloseEdit} />
     </>
   );

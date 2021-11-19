@@ -7341,7 +7341,6 @@ export const uploadVideoForCommunity =
             });
 
             const result = await res.json();
-            console.log(result, "This is the result of new uploaded video.");
 
             dispatch(
               videoActions.UploadVideo({
@@ -7349,36 +7348,28 @@ export const uploadVideoForCommunity =
               })
             );
 
-            dispatch(
-              snackbarActions.openSnackBar({
-                message:
-                  "Video file uploaded successfully! Make sure to link it to an event.",
-                severity: "success",
-              })
-            );
-
             handleClose();
 
-            setTimeout(function () {
-              dispatch(snackbarActions.closeSnackBar());
-            }, 6000);
+            dispatch(
+              showSnackbar(
+                "success",
+                "Video file uploaded successfully! Make sure to link it to an event."
+              )
+            );
           } catch (error) {
             console.log(error);
 
             dispatch(
-              snackbarActions.openSnackBar({
-                message: "Failed to upload video file. Please try again",
-                severity: "error",
-              })
+              showSnackbar("error", "Failed to upload video, Please try again.")
             );
-            setTimeout(function () {
-              dispatch(snackbarActions.closeSnackBar());
-            }, 4000);
           }
         }
       );
     } catch (error) {
       console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to upload video, Please try again.")
+      );
     }
   };
 
@@ -12861,30 +12852,361 @@ export const resetPromoImageUploadPercent =
     );
   };
 
-export const uploadBoothPosterImage = (file, boothId) => async (dispatch, getState) => {
+export const uploadBoothPosterImage =
+  (file, boothId) => async (dispatch, getState) => {
+    try {
+      const key = `${boothId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              boothActions.SetBoothPosterUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Save this video info in community document.
+            const res = await fetch(`${BaseURL}booths/${boothId}/updateBooth`, {
+              method: "PATCH",
+
+              body: JSON.stringify({
+                boothPoster: key,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            });
+
+            const result = await res.json();
+
+            dispatch(
+              boothActions.EditBooth({
+                booth: result.data,
+              })
+            );
+
+            dispatch(
+              showSnackbar("success", "Banner Image updated successfully!")
+            );
+            dispatch(
+              boothActions.SetBoothPosterUploadPercent({
+                percent: 0,
+              })
+            );
+          } catch (error) {
+            console.log(error);
+
+            dispatch(
+              showSnackbar(
+                "error",
+                "Failed to update Banner image, Please try again later."
+              )
+            );
+            dispatch(
+              boothActions.SetBoothPosterUploadPercent({
+                percent: 0,
+              })
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to update banner, Please try again."));
+      dispatch(
+        boothActions.SetBoothPosterUploadPercent({
+          percent: 0,
+        })
+      );
+    }
+  };
+
+export const resetBoothPosterUploadPercent =
+  () => async (dispatch, getState) => {
+    dispatch(
+      boothActions.SetBoothPosterUploadPercent({
+        percent: 0,
+      })
+    );
+  };
+
+export const uploadVideoForBooth =
+  (boothId, eventId, file, handleClose) => async (dispatch, getState) => {
+    try {
+      const key = `${boothId}/${UUID()}.mp4`;
+
+      s3.getSignedUrl(
+        "putObject",
+        {
+          Bucket: "bluemeet-inc",
+          Key: key,
+          ContentType: "video/mp4",
+        },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            dispatch(
+              boothActions.SetVideoUploadPercent({
+                percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
+              })
+            );
+          });
+
+          try {
+            // Save this video info in community document.
+            const res = await fetch(
+              `${BaseURL}booths/saveVideo/${boothId}/${eventId}`,
+              {
+                method: "POST",
+
+                body: JSON.stringify({
+                  name: file.name,
+                  key: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().auth.token}`,
+                },
+              }
+            );
+
+            const result = await res.json();
+
+            dispatch(
+              boothActions.UploadVideo({
+                video: result.data,
+              })
+            );
+
+            handleClose();
+
+            dispatch(
+              showSnackbar("success", "Video file uploaded successfully!")
+            );
+            dispatch(
+              boothActions.SetVideoUploadPercent({
+                percent: 0,
+              })
+            );
+          } catch (error) {
+            console.log(error);
+
+            dispatch(
+              showSnackbar("error", "Failed to upload video, Please try again.")
+            );
+            dispatch(
+              boothActions.SetVideoUploadPercent({
+                percent: 0,
+              })
+            );
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to upload video, Please try again."));
+      dispatch(
+        boothActions.SetVideoUploadPercent({
+          percent: 0,
+        })
+      );
+    }
+  };
+
+export const resetBoothVideoProgress = () => async (dispatch, getState) => {
   try {
+    dispatch(
+      boothActions.SetVideoUploadPercent({
+        percent: 0,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    const key = `${boothId}/${UUID()}.${file.type}`;
+export const getBoothVideos =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getBoothVideos/${boothId}/${eventId}`,
+        {
+          method: "GET",
 
-    s3.getSignedUrl(
-      "putObject",
-      { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
-      async (err, presignedURL) => {
-        await uploadS3(presignedURL, file, (percent) => {
-          dispatch(
-            boothActions.SetBoothPosterUploadPercent({
-              percent: percent * 1 > 1.2 ? (percent * 1).toFixed(1) : 1.2,
-            })
-          );
-        });
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
 
+      const result = await res.json();
+
+      dispatch(
+        boothActions.FetchVideos({
+          videos: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch videos, Please try again!")
+      );
+    }
+  };
+
+export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}booths/deleteBoothVideo/${videoId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.DeleteVideo({
+        videoId: videoId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Video deleted successfully!"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to delete video, Please try again.")
+    );
+  }
+};
+
+export const addBoothProduct =
+  (formValues, file, eventId, boothId, handleClose) =>
+  async (dispatch, getState) => {
+    try {
+      const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            console.log(percent);
+          });
+
+          try {
+            const res = await fetch(
+              `${BaseURL}booths/addNewProduct/${boothId}/${eventId}`,
+              {
+                method: "POST",
+
+                body: JSON.stringify({
+                  ...formValues,
+                  key: key,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().auth.token}`,
+                },
+              }
+            );
+
+            const result = await res.json();
+
+            dispatch(
+              boothActions.AddProduct({
+                product: result.data,
+              })
+            );
+
+            dispatch(showSnackbar("success", "Product added successfully!"));
+            handleClose();
+          } catch (error) {
+            console.log(error);
+            dispatch(showSnackbar("Failed to add product, Please try again."));
+            handleClose();
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to add product, Please try again."));
+      handleClose();
+    }
+  };
+
+export const editProduct =
+  (formValues, file, boothId, eventId, productId, handleClose) =>
+  async (dispatch, getState) => {
+    try {
+      if (file) {
+        const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
+
+        s3.getSignedUrl(
+          "putObject",
+          { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+          async (err, presignedURL) => {
+            await uploadS3(presignedURL, file, (percent) => {
+              console.log(percent);
+            });
+
+            try {
+              const res = await fetch(
+                `${BaseURL}booths/editProduct/${productId}`,
+                {
+                  method: "PATCH",
+
+                  body: JSON.stringify({
+                    ...formValues,
+                    image: key,
+                  }),
+
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getState().auth.token}`,
+                  },
+                }
+              );
+
+              const result = await res.json();
+
+              dispatch(
+                boothActions.UpdateProduct({
+                  product: result.data,
+                })
+              );
+
+              dispatch(
+                showSnackbar("success", "Product updated successfully!")
+              );
+              handleClose();
+            } catch (error) {
+              console.log(error);
+              dispatch(
+                showSnackbar("Failed to update product, Please try again.")
+              );
+              handleClose();
+            }
+          }
+        );
+      } else {
         try {
-          // Save this video info in community document.
-          const res = await fetch(`${BaseURL}booths/${boothId}/updateBooth`, {
+          const res = await fetch(`${BaseURL}booths/editProduct/${productId}`, {
             method: "PATCH",
 
             body: JSON.stringify({
-              boothPoster: key,
+              ...formValues,
             }),
 
             headers: {
@@ -12896,195 +13218,740 @@ export const uploadBoothPosterImage = (file, boothId) => async (dispatch, getSta
           const result = await res.json();
 
           dispatch(
-            boothActions.EditBooth({
-              booth: result.data,
+            boothActions.UpdateProduct({
+              product: result.data,
             })
           );
 
-          dispatch(
-            showSnackbar("success", "Banner Image updated successfully!")
-          );
-          dispatch(
-            boothActions.SetBoothPosterUploadPercent({
-              percent: 0,
-            })
-          );
+          dispatch(showSnackbar("success", "Product updated successfully!"));
+          handleClose();
         } catch (error) {
           console.log(error);
-
-          dispatch(
-            showSnackbar(
-              "error",
-              "Failed to update Banner image, Please try again later."
-            )
-          );
-          dispatch(
-            boothActions.SetBoothPosterUploadPercent({
-              percent: 0,
-            })
-          );
+          dispatch(showSnackbar("Failed to update product, Please try again."));
+          handleClose();
         }
       }
-    );
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to update banner, Please try again."));
-    dispatch(
-      boothActions.SetBoothPosterUploadPercent({
-        percent: 0,
-      })
-    );
-  }
-};
-
-export const resetBoothPosterUploadPercent =
-  () => async (dispatch, getState) => {
-    dispatch(
-      boothActions.SetBoothPosterUploadPercent({
-        percent: 0,
-      })
-    );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to update product, Please try again."));
+      handleClose();
+    }
   };
 
-export const uploadVideoForBooth = () => async (dispatch, getState) => {
+export const deleteProduct = (productId) => async (dispatch, getState) => {
   try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to update video, Please try again."));
-  }
-};
+    const res = await fetch(`${BaseURL}booths/deleteProduct/${productId}`, {
+      method: "DELETE",
 
-export const resetBoothVideoProgress = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-};
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
-export const deleteBoothVideo = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to delete video, Please try again."));
-  }
-};
+    const result = await res.json();
 
-export const addBoothProduct = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to add product, Please try again."));
-  }
-};
+    dispatch(
+      boothActions.DeleteProduct({
+        productId: productId,
+      })
+    );
 
-export const editProduct = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to edit product, Please try again."));
-  }
-};
-
-export const deleteProduct = () => async (dispatch, getState) => {
-  try {
+    dispatch(showSnackbar("Product deleted successfully!"));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("Failed to delete product, Please try again."));
   }
 };
 
-export const addFile = () => async (dispatch, getState) => {
+export const fetchBoothProduct = (productId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/getProductDetails/${productId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchProduct({
+        product: result.data,
+      })
+    );
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to add File, Please try again."));
+    dispatch(showSnackbar("Failed to fetch product, Please try again."));
   }
 };
 
-export const deleteFile = () => async (dispatch, getState) => {
+export const fetchBoothProducts =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getBoothProducts/${boothId}/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.FetchProducts({
+          products: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch products, Please try again")
+      );
+    }
+  };
+
+export const addFile =
+  (formValues, file, boothId, eventId, handleClose) =>
+  async (dispatch, getState) => {
+    try {
+      const key = `${eventId}/${boothId}/${UUID()}.${file.type}`;
+
+      s3.getSignedUrl(
+        "putObject",
+        { Bucket: "bluemeet-inc", Key: key, ContentType: "file/pdf" },
+        async (err, presignedURL) => {
+          await uploadS3(presignedURL, file, (percent) => {
+            console.log(percent);
+          });
+
+          try {
+            const res = await fetch(
+              `${BaseURL}booths/addNewFile/${boothId}/${eventId}`,
+              {
+                method: "POST",
+
+                body: JSON.stringify({
+                  ...formValues,
+                  key: key,
+                  boothId,
+                  eventId,
+                }),
+
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getState().auth.token}`,
+                },
+              }
+            );
+
+            const result = await res.json();
+
+            dispatch(
+              boothActions.AddFile({
+                file: result.data,
+              })
+            );
+
+            dispatch(showSnackbar("success", "File added successfully!"));
+
+            handleClose();
+          } catch (error) {
+            console.log(error);
+            dispatch(showSnackbar("Failed to add product, Please try again."));
+            handleClose();
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to add product, Please try again."));
+    }
+  };
+
+export const deleteFile = (fileId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/deleteFile/${fileId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.DeleteFile({
+        fileId: fileId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "File deleted successfully!"));
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to delete File, Please try again."));
+    dispatch(showSnackbar("error", "Failed to delete File, Please try again."));
   }
 };
 
-export const addLink = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to add Link, Please try again."));
-  }
-};
+export const fetchBoothFiles =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getFiles/${boothId}/${eventId}`,
+        {
+          method: "GET",
 
-export const editLink = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to edit Link, Please try again."));
-  }
-};
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
 
-export const deleteLink = () => async (dispatch, getState) => {
+      const result = await res.json();
+
+      dispatch(
+        boothActions.FetchFiles({
+          files: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch files, Please try again.")
+      );
+    }
+  };
+
+export const addLink =
+  (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/addNewLink/${boothId}/${eventId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            ...formValues,
+            boothId: boothId,
+            eventId: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.AddLink({
+          link: result.data,
+        })
+      );
+
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to add Link, Please try again."));
+      handleClose();
+    }
+  };
+
+export const editLink =
+  (formValues, linkId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}booths/editLink/${linkId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.UpdateLink({
+          link: result.data,
+        })
+      );
+
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to edit Link, Please try again."));
+      handleClose();
+    }
+  };
+
+export const deleteLink = (linkId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/deleteLink/${linkId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.DeleteLink({
+        linkId: linkId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Link deleted successfully!"));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("Failed to delete Link, Please try again."));
   }
 };
 
-export const addPromoCode = () => async (dispatch, getState) => {
+export const fetchLink = (linkId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/getLinkDetails/${linkId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchLink({
+        link: result.data,
+      })
+    );
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to add Promo Code, Please try again."));
+    dispatch(showSnackbar("error", "Faild to fetch link, Please try again."));
   }
 };
-export const editPromoCode = () => async (dispatch, getState) => {
+
+export const fetchLinks = (boothId, eventId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/getLinks/${boothId}/${eventId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchLinks({
+        links: result.data,
+      })
+    );
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to edit Promo Code, Please try again."));
+    dispatch(showSnackbar("error", "Faild to fetch links, Please try again."));
   }
 };
-export const deletePromoCode = () => async (dispatch, getState) => {
+
+export const addPromoCode =
+  (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/createPromoCode/${boothId}/${eventId}`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            ...formValues,
+            boothId: boothId,
+            eventId: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.AddOffer({
+          offer: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Promo code added successfully!"));
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to add Promo Code, Please try again.")
+      );
+    }
+  };
+export const editPromoCode =
+  (formValues, promoCodeId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}booths/editPromoCode/${promoCodeId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.UpdateOffer({
+          offer: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Promo code updated successfully!"));
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to edit Promo Code, Please try again.")
+      );
+      handleClose();
+    }
+  };
+export const deletePromoCode = (promoCodeId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/deletePromoCode/${promoCodeId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.DeleteOffer({
+        offerId: promoCodeId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Promo code deleted successfully!"));
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to delete Promo Code, Please try again."));
+    dispatch(
+      showSnackbar("error", "Failed to delete Promo Code, Please try again.")
+    );
   }
 };
+
+export const fetchPromoCode = (promoCodeId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(
+      `${BaseURL}booths/getPromoCodeDetails/${promoCodeId}`,
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchOffer({
+        offer: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch Promo code, Please try again.")
+    );
+  }
+};
+
+export const fetchPromoCodes =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getPromoCodes/${boothId}/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.FetchOffers({
+          offers: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch promo codes, Please try again.")
+      );
+    }
+  };
 
 export const sendBusinessCardsViaMail = () => async (dispatch, getState) => {
   try {
   } catch (error) {
     console.log(error);
     dispatch(
-      showSnackbar("Failed to send business cards via mail, Please try again.")
+      showSnackbar(
+        "error",
+        "Failed to send business cards via mail, Please try again."
+      )
     );
   }
 };
 
-export const addForm = () => async (dispatch, getState) => {
+export const shareBusinessCard =
+  (userId, eventId, boothId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/shareBusinessCard/${userId}/${eventId}/${boothId}/`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(showSnackbar("success", "Business card shared successfully!"));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to share business card, Please try again."
+        )
+      );
+    }
+  };
+
+export const fetchBusinessCards = (boothId, eventId) => async (dispatch, getState) => {
   try {
+
+    const res = await fetch(
+      `${BaseURL}booths/getBusinessCards/${boothId}/${eventId}`,
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchBusinessCards({
+        cards: result.data,
+      })
+    );
+
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("Failed to add form, Please try again."));
+    dispatch(
+      showSnackbar("error", "Failed to fetch Business cards, Please try again.")
+    );
   }
 };
 
-export const editForm = () => async (dispatch, getState) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar("Failed to edit form, Please try again."));
-  }
-};
+export const addForm =
+  (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/createForm/${boothId}/${eventId}`,
+        {
+          method: "POST",
 
-export const deleteForm = () => async (dispatch, getState) => {
+          body: JSON.stringify({
+            ...formValues,
+            boothId: boothId,
+            eventId: eventId,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.AddForm({
+          form: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Form added successfully!"));
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to add form, Please try again."));
+    }
+  };
+
+export const editForm =
+  (formValues, formDocId, handleClose) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(`${BaseURL}booths/editForm/${formDocId}`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.UpdateForm({
+          form: result.data,
+        })
+      );
+
+      dispatch(showSnackbar("success", "Form updated successfully!"));
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("Failed to edit form, Please try again."));
+    }
+  };
+
+export const deleteForm = (formDocId) => async (dispatch, getState) => {
   try {
+    const res = await fetch(`${BaseURL}booths/deleteForm/${formDocId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.DeleteForm({
+        formId: formDocId,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Form deleted successfully!"));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar("Failed to delete form, Please try again."));
   }
 };
+
+export const fetchBoothForm = (formDocId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}booths/getFormDetails/${formDocId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    dispatch(
+      boothActions.FetchForm({
+        form: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch form, Please try again"));
+  }
+};
+
+export const fetchBoothForms =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getForms/${boothId}/${eventId}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+
+      dispatch(
+        boothActions.FetchForms({
+          forms: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to fetch forms, Please try again")
+      );
+    }
+  };

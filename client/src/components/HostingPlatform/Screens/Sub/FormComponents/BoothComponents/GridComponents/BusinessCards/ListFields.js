@@ -15,7 +15,7 @@ const BusinessCardListFields = () => {
         <div className="registrations-field-label">Contact</div>
       </div>
       <div className="registrations-amount-field">
-        <div className="registrations-field-label">Timestamp</div>
+        <div className="registrations-field-label">Shared on</div>
       </div>
     </div>
   );

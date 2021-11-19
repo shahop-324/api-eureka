@@ -50,7 +50,7 @@ router.post(
 );
 
 router.get(
-  "/getBoothVideos/:boothId/:eventIId",
+  "/getBoothVideos/:boothId/:eventId",
   authController.protect,
   boothController.getBoothVideos
 );

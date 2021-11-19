@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -7,6 +8,7 @@ import FileLibraryListFields from "../GridComponents/Files/ListFields";
 import FileLibraryDetailsCard from "./../GridComponents/Files/DetailsCard";
 import NoFile from "./../../../../../../../assets/images/NoProduct.png";
 import AddFile from "./../FormComponents/Files/AddFile";
+import { fetchBoothFiles } from "./../../../../../../../actions";
 
 const SectionHeading = styled.div`
   font-size: 1.15rem;
@@ -23,6 +25,7 @@ const renderFiles = (files) => {
       <FileLibraryDetailsCard
         id={file._id}
         key={file._id}
+        url={file.key}
         name={file.name}
         downloads={file.downloads}
         timestamp={file.timestamp}
@@ -32,13 +35,20 @@ const renderFiles = (files) => {
 };
 
 const Files = () => {
-  const { files } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.eventId;
+  const { files, currentBoothId } = useSelector((state) => state.booth);
 
   const [openAddFile, setOpenAddFile] = useState(false);
 
   const handleCloseAddFile = () => {
     setOpenAddFile(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchBoothFiles(currentBoothId, eventId));
+  }, []);
 
   return (
     <>
@@ -71,10 +81,7 @@ const Files = () => {
             style={{ height: "83vh", width: "100%" }}
           >
             {" "}
-            <NoContentFound
-              msgText="No File Found"
-              img={NoFile}
-            />{" "}
+            <NoContentFound msgText="No File Found" img={NoFile} />{" "}
           </div>
         )}
       </div>

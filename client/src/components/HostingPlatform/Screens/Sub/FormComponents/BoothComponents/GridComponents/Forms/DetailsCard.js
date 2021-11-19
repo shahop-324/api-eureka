@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {useDispatch} from 'react-redux';
+import {fetchBoothForm} from "./../../../../../../../../actions";
 import "./../../../../../../../../assets/Sass/DataGrid.scss";
 import "./../../../../../../../../assets/Sass/TeamManagement.scss";
 import IconButton from "@material-ui/core/IconButton";
@@ -11,6 +13,7 @@ import EditForm from "./../../FormComponents/Forms/EditForm";
 import { PopupButton } from "@typeform/embed-react";
 
 const FormsDetailsCard = ({ id, name, formId, clicks }) => {
+  const dispatch = useDispatch();
   const [openDeleteForm, setOpenDeleteForm] = useState(false);
 
   const [openEditForm, setOpenEditForm] = useState(false);
@@ -32,10 +35,10 @@ const FormsDetailsCard = ({ id, name, formId, clicks }) => {
         }}
       >
         <div className="registrations-name-field">
-          <div className="registrations-field-label">{name}</div>
+          <div className="registrations-field-label mx-5">{name}</div>
         </div>
         <div className="registrations-name-field">
-          <div className="registrations-field-label mx-5">{formId}</div>
+          <div className="registrations-field-label">{formId}</div>
         </div>
         <div className="registrations-email-field">
           <div className="registrations-field-label">{clicks}</div>
@@ -57,6 +60,7 @@ const FormsDetailsCard = ({ id, name, formId, clicks }) => {
             <IconButton
               onClick={() => {
                 setOpenEditForm(true);
+                dispatch(fetchBoothForm(id));
               }}
               color="primary"
               aria-label="edit form"
@@ -79,7 +83,7 @@ const FormsDetailsCard = ({ id, name, formId, clicks }) => {
       <div className="divider-wrapper" style={{ margin: "1.2% 0" }}>
         <Divider />
       </div>
-      <EditForm open={openEditForm} handleClose={handleCloseEditForm} />
+      <EditForm open={openEditForm} handleClose={handleCloseEditForm} id={id} />
 
       <DeleteForm
         open={openDeleteForm}

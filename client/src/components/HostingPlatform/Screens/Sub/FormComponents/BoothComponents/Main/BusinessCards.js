@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NoContentFound from "../../../../../../NoContent";
 import Divider from "@material-ui/core/Divider";
@@ -8,6 +8,11 @@ import BusinessCardDetailsCard from "./../GridComponents/BusinessCards/DetailsCa
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
 import NoBusinessCard from "./../../../../../../../assets/images/NoBusinessCard.png";
+import { useParams } from "react-router-dom";
+import {
+  fetchBusinessCards,
+  showSnackbar,
+} from "./../../../../../../../actions";
 
 import SendViaMail from "./../Helper/SendViaMail";
 
@@ -26,10 +31,16 @@ const renderBusinessCards = (businessCards) => {
       <BusinessCardDetailsCard
         id={businessCard._id}
         key={businessCard._id}
-        name={businessCard.name}
-        email={businessCard.email}
-        image={businessCard.image}
-        contact={businessCard.contact}
+        name={`${businessCard.userId.firstName} ${businessCard.userId.lastName}`}
+        email={businessCard.userId.email}
+        image={
+          businessCard.userId.image
+            ? businessCard.userId.image.startsWith("https://")
+              ? businessCard.userId.image
+              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${businessCard.userId.image}`
+            : "#"
+        }
+        contact={businessCard.userId.phoneNumber}
         timestamp={businessCard.timestamp}
       />
     );
@@ -37,7 +48,12 @@ const renderBusinessCards = (businessCards) => {
 };
 
 const Forms = () => {
-  const { businessCards } = useSelector((state) => state.booth);
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const eventId = params.eventId;
+
+  const { businessCards, currentBoothId } = useSelector((state) => state.booth);
 
   const [openSendMail, setOpenSendMail] = useState(false);
 
@@ -45,7 +61,48 @@ const Forms = () => {
     setOpenSendMail(false);
   };
 
-  const { currentBoothId } = useSelector((state) => state.booth);
+  useEffect(() => {
+    dispatch(fetchBusinessCards(currentBoothId, eventId));
+  }, []);
+
+  const processBusinessCardData = () => {
+    const processedArray = [];
+
+    businessCards.map((cards) => {
+      const array = Object.entries(cards.userId);
+
+      const filtered = array.filter(
+        ([key, value]) =>
+          key === "firstName" ||
+          key === "lastName" ||
+          key === "email" ||
+          key === "phoneNumber"
+      );
+
+      const asObject = Object.fromEntries(filtered);
+
+      processedArray.push(asObject);
+    });
+
+    const finalArray = processedArray.map((obj) => Object.values(obj));
+
+    return finalArray;
+  };
+
+  const CreateAndDownloadCSV = (data) => {
+    var csv = "First name, Last name,Email,Contact Number, \n";
+    data.forEach(function (row) {
+      csv += row.join(",");
+      csv += "\n";
+    });
+
+    console.log(csv);
+    var hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+    hiddenElement.download = "business_cards.csv";
+    hiddenElement.click();
+  };
 
   return (
     <>
@@ -55,18 +112,19 @@ const Forms = () => {
           <div className="d-flex flex-row align-items-center">
             <button
               onClick={() => {
-                // setOpenAddForm(true);
-                setOpenSendMail(true);
-              }}
-              className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3"
-            >
-              <MailOutlineRoundedIcon style={{ fontSize: "18px" }} />
-
-              <span className="ms-2">Send via Mail</span>
-            </button>
-            <button
-              onClick={() => {
-                // setOpenAddForm(true);
+                if (
+                  typeof businessCards !== "undefined" &&
+                  businessCards.length > 0
+                ) {
+                  CreateAndDownloadCSV(processBusinessCardData());
+                } else {
+                  dispatch(
+                    showSnackbar(
+                      "info",
+                      "Ther are no business cards to export right now"
+                    )
+                  );
+                }
               }}
               className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center"
             >
