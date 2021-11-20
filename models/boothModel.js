@@ -68,6 +68,12 @@ const boothSchema = new mongoose.Schema({
   googleTag: {
     type: String,
   },
+  chairs: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "BoothChair",
+    },
+  ],
 });
 
 boothSchema.index({

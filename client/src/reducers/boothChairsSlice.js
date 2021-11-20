@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const roomsSlice = createSlice({
-  name: "rooms",
+const boothChairsSlice = createSlice({
+  name: "boothChairs",
 
   initialState: {
     chairs: [],
@@ -14,17 +14,17 @@ const roomsSlice = createSlice({
     HasChanged(state) {
       state.hasChangedChairs = false;
     },
-    FetchRoomsChairs(state, action) {
+    FetchBoothRoomsChairs(state, action) {
       state.chairs = action.payload.chairs;
       state.hasChangedChairs = true;
     },
-    FetchNumOfPeopleOnTable(state, action) {
+    FetchBoothNumOfPeopleOnTable(state, action) {
       state.numberOfPeopleOnTable = action.payload.numberOfPeopleOnTable;
     },
-    FetchTableChats(state, action) {
+    FetchBoothTableChats(state, action) {
       state.tableChats = action.payload.chats;
     },
   },
 });
-export const roomsActions = roomsSlice.actions;
-export default roomsSlice;
+export const boothChairsActions = boothChairsSlice.actions;
+export default boothChairsSlice;

@@ -13,6 +13,9 @@ const SessionPoll = require("./models/sessionPollModel");
 const SessionQnA = require("./models/sessionQnAModel");
 const TeamInvite = require("./models/teamInviteModel");
 const Community = require("./models/communityModel");
+const BoothTable = require("./models/boothTableModel");
+const BoothChair = require("./models/boothChairModel");
+const Booth = require("./models/boothModel");
 const Speaker = require("./models/speakerModel");
 const { nanoid } = require("nanoid");
 
@@ -2252,11 +2255,354 @@ io.on("connect", (socket) => {
     };
 
     const { error } = unOccupyChair({ chairId, eventId, tableId });
-
-    if (error) return callback(error);
-
-    callback();
   });
+
+  socket.on(
+    "removeMeFromBoothTable",
+    async ({ chairId, tableId, userId, eventId, boothId }, callback) => {
+      fetchCurrentRoomChairs = async () => {
+        await Booth.findById(boothId, (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.to(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+          }
+        })
+          .select("chairs")
+          .populate("chairs");
+
+        };
+
+        fetchNumberOfPeopleOnTable = async () => {
+          await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+            if (err) {
+              console.log(err);
+            } else {
+              io.to(tableId).emit("numberOfPeopleOnBoothTable", {
+                numberOfPeopleOnTable: tableDoc.numberOfPeople,
+              });
+            }
+          });
+        };
+
+        // Remove this user from onStagePeople of this boothTable
+
+        const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
+
+        console.log(boothTableDoc.onStagePeople, "Before");
+        console.log(chairId, tableId, userId, eventId, boothId);
+
+        console.log("This is leave booth table");
+
+        boothTableDoc.onStagePeople = boothTableDoc.onStagePeople.filter(
+          (people) => people.user.toString() !== userId.toString()
+        );
+
+        console.log(boothTableDoc.onStagePeople, "After");
+
+        await boothTableDoc.save(
+          {
+            new: true,
+            validateModifiedOnly: true,
+          },
+          async (err, updatedTable) => {
+            io.to(tableId).emit("boothTable", { boothTable: updatedTable });
+          }
+        );
+
+        const unOccupyChair = async ({
+          chairId,
+          eventId,
+          boothId,
+          tableId,
+        }) => {
+          await BoothChair.findOneAndUpdate(
+            { chairId: chairId },
+            {
+              status: "Unoccupied",
+              userId: null,
+              userName: null,
+              userEmail: null,
+              userImage: null,
+              userCity: null,
+              userCountry: null,
+              userOrganisation: null,
+              userDesignation: null,
+            },
+            { new: true },
+            async (err, updatedChair) => {
+              if (err) {
+                console.log(err);
+              } else {
+                await BoothTable.findOne(
+                  { tableId: tableId },
+                  (err, tableDoc) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      tableDoc.numberOfPeople = tableDoc.numberOfPeople
+                        ? tableDoc.numberOfPeople - 1
+                        : 0;
+                      tableDoc.save(
+                        { validateModifiedOnly: true },
+                        (err, updatedTableDoc) => {
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            fetchCurrentRoomChairs(); // ! Listen To This event
+
+                            fetchNumberOfPeopleOnTable(); // ! Listen To This event
+
+                            socket.leave(tableId);
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            }
+          );
+        };
+
+        const { error } = unOccupyChair({ chairId, eventId, boothId, tableId });
+     
+    }
+  );
+
+  socket.on(
+    "updateBoothChair",
+    async (
+      {
+        eventId,
+        boothId,
+        tableId,
+        chairId,
+        userName,
+        userId,
+        userRole,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+        status,
+      },
+      callback
+    ) => {
+      socket.join(tableId);
+
+      console.log("This is join booth table");
+
+      fetchCurrentRoomChairs = async () => {
+        await Booth.findById(boothId, (err, doc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.to(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+          }
+        })
+          .select("chairs")
+          .populate("chairs");
+      };
+
+      fetchNumberOfPeopleOnTable = async () => {
+        await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.to(tableId).emit("numberOfPeopleOnBoothTable", {
+              numberOfPeopleOnTable: tableDoc.numberOfPeople,
+            });
+          }
+        });
+      };
+
+      // Add this user to onStagePeople of this boothTable
+
+      const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
+
+      boothTableDoc.onStagePeople.push({
+        user: userId,
+        role: userRole,
+        camera: false,
+        microphone: false,
+        screen: false,
+      });
+
+      await boothTableDoc.save(
+        {
+          new: true,
+          validateModifiedOnly: true,
+        },
+        async (err, updatedTable) => {
+          io.to(tableId).emit("boothTable", { boothTable: updatedTable });
+        }
+      );
+
+      const addUserToChair = async ({
+        eventId,
+        tableId,
+        boothId,
+        chairId,
+        userId,
+        userName,
+        userRole,
+        userEmail,
+        userImage,
+        userCity,
+        userCountry,
+        userOrganisation,
+        userDesignation,
+        status,
+      }) => {
+        const existingChair = await BoothChair.findOne(
+          { chairId: chairId },
+          async (err, existingChair) => {
+            if (err) {
+              console.log(err);
+            } else {
+              if (!existingChair) {
+                await BoothChair.create(
+                  {
+                    status: "Occupied",
+                    eventId: eventId,
+                    boothId: boothId,
+                    tableId: tableId,
+                    chairId: chairId,
+                    userId: userId,
+                    userName: userName,
+                    userRole: userRole,
+                    userEmail: userEmail,
+                    userImage: userImage,
+                    userCity: userCity,
+                    userCountry: userCountry,
+                    userOrganisation: userOrganisation,
+                    userDesignation: userDesignation,
+                  },
+                  async (err, newChair) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      const existingTable = await BoothTable.findOne(
+                        { tableId: tableId },
+                        async (err, tableDoc) => {
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            tableDoc.numberOfPeople =
+                              tableDoc.numberOfPeople + 1;
+
+                            tableDoc.save(
+                              { validateModifiedOnly: true },
+                              (err, updatedTableDoc) => {
+                                if (err) {
+                                  console.log(err);
+                                } else {
+                                  // * DONE call fetchNumberOfPeopleOnTable
+                                  fetchNumberOfPeopleOnTable();
+                                }
+                              }
+                            );
+                          }
+                        }
+                      );
+
+                      await Booth.findById(boothId, async (err, boothDoc) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          boothDoc.chairs.push(newChair._id);
+                          await boothDoc.save(
+                            { validateModifiedOnly: true },
+                            async (err, updatedBoothDoc) => {
+                              if (err) {
+                                console.log(err);
+                              } else {
+                                fetchCurrentRoomChairs();
+                              }
+                            }
+                          );
+                        }
+                      });
+                    }
+                  }
+                );
+              } else {
+                // Write what to do when chair already exists
+
+                await BoothTable.findOne(
+                  { tableId: tableId },
+                  async (err, tableDoc) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      tableDoc.numberOfPeople = tableDoc.numberOfPeople + 1;
+                      tableDoc.save(
+                        { validateModifiedOnly: true },
+                        (err, updatedTableDoc) => {
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            // TODO call fetchNumberOfPeopleOnTable
+                            fetchNumberOfPeopleOnTable();
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+
+                existingChair.status = "Occupied";
+                existingChair.userId = userId;
+                existingChair.userName = userName;
+                existingChair.userEmail = userEmail;
+                existingChair.userRole = userRole;
+                existingChair.userImage = userImage;
+                existingChair.userCity = userCity;
+                existingChair.userCountry = userCountry;
+                existingChair.userDesignation = userDesignation;
+                existingChair.userOrganisation = userOrganisation;
+
+                existingChair.save(
+                  { validateModifiedOnly: true },
+                  async (err, updatedChair) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      fetchCurrentRoomChairs();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        );
+      };
+
+      const { error } = addUserToChair({
+        eventId: eventId,
+        tableId: tableId,
+        chairId: chairId,
+        boothId: boothId,
+        userName: userName,
+        userId: userId,
+        userEmail: userEmail,
+        userRole: userRole,
+        userImage: userImage,
+        userCity: userCity,
+        userCountry: userCountry,
+        userOrganisation: userOrganisation,
+        userDesignation: userDesignation,
+        status: status,
+      });
+
+      if (error) return callback(error);
+
+      callback();
+    }
+  );
 
   socket.on(
     "updateChair",
@@ -2285,7 +2631,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            io.to(eventId).emit("roomChairData", { roomChairs: doc.chairs });
+            io.to(tableId).emit("roomChairData", { roomChairs: doc.chairs });
           }
         })
           .select("chairs")

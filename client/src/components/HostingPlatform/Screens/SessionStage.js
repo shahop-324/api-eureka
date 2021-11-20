@@ -611,15 +611,6 @@ const SessionStage = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    // // * We will need this on track ended event listner to tell everyone in this event that this particular screen track has stopped so it will be processed appropriately as needed to deliver best experience
-
-    // rtc.localScreenTrack.on("track-ended", () => {
-    //   // alert("screen sharing stopped");
-    //   console.info("screen sharing stopped");
-
-    //   stopPresenting();
-    // });
   };
 
   const stopPresenting = async () => {

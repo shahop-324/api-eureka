@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import styled from 'styled-components';
+import React, { useEffect, useState, useRef } from "react";
+import styled from "styled-components";
 import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -24,10 +24,10 @@ import Portal from "@mui/core/Portal";
 import SideComponent from "./SideComponent";
 
 const StreamBody = styled.div`
-border-radius: 20px;
-background-color: #212121;
-height: 75vh;
-`
+  border-radius: 20px;
+  background-color: #212121;
+  height: 75vh;
+`;
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -57,10 +57,18 @@ const TableScreen = ({
   closeTableScreen,
   id, // * This is tableId
 }) => {
-  const [fullScreen, setFullScreen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
   const [severity, setSeverity] = React.useState("info");
+
+  const userHasUnmutedAudio = useRef(false);
+  const userHasUnmutedVideo = useRef(false);
+
+  const [view, setView] = useState("gallery");
+
+  const [allStreams, setAllStreams] = useState([]);
+
+  const [screenTracks, setScreenTracks] = useState([]);
 
   let vertical = "bottom";
   let horizontal = "left";
@@ -79,15 +87,19 @@ const TableScreen = ({
 
   const dispatch = useDispatch();
 
-  const userId = useSelector((state) => state.eventAccessToken.id);
+  const {userDetails} = useSelector((state) => state.user);
 
-  const { token, screenToken } = useSelector((state) => state.RTC);
+  const userId = userDetails._id;
 
   const params = useParams();
 
   const eventId = params.eventId;
 
   const table = id;
+
+  const { token, screenToken } = useSelector((state) => state.RTC);
+
+  const { role } = useSelector((state) => state.eventAccessToken);
 
   let options = {
     // Pass your app ID here.
@@ -102,8 +114,99 @@ const TableScreen = ({
     uid: userId,
   };
 
+  let col = "1fr 1fr 1fr 1fr";
+  let row = "1fr 1fr";
+
+  const handleChangeGrid = () => {
+    if (allStreams.length * 1 === 1) {
+      col = "1fr";
+      row = "1fr";
+    }
+    if (allStreams.length * 1 === 2) {
+      col = "1fr 1fr";
+      row = "1fr";
+    }
+    if (allStreams.length * 1 === 3) {
+      col = "1fr 1fr 1fr";
+      row = "1fr";
+    }
+  };
+
+  useEffect(() => {
+    handleChangeGrid();
+  }, [allStreams]);
+
+  const currentChairId = useSelector(
+    (state) => state.user.currentlyJoinedChair
+  );
+
+  const { currentBoothId } = useSelector((state) => state.booth);
+
+  const { tableDetails } = useSelector((state) => state.boothTables); // We will get onStagePeople from tableDetails
+
+  if (allStreams.length * 1 === 1) {
+    col = "1fr";
+    row = "1fr";
+  }
+  if (allStreams.length * 1 === 2) {
+    col = "1fr 1fr";
+    row = "1fr";
+  }
+  if (allStreams.length * 1 === 3) {
+    col = "1fr 1fr 1fr";
+    row = "1fr";
+  }
+
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("xl");
+
+  const leaveStreaming = async () => {
+    // ! Emit mark me as leaved from session streaming if (I was able to publish stream to this channel)
+
+    socket.emit(
+      "removeMeFromBoothTable",
+      {
+        chairId: currentChairId,
+        tableId: id,
+        userId: userId,
+        eventId,
+        boothId: currentBoothId,
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    rtc.localAudioTrack && rtc.localAudioTrack.close();
+    rtc.localVideoTrack && rtc.localVideoTrack.close();
+
+    if (rtc.localScreenTrack) {
+      rtc.localScreenTrack.close();
+    }
+
+    // Close screen share and leave channel via screen share client
+
+    rtc.localScreenTrack && rtc.localScreenTrack.close();
+
+    if (rtc.screenClient) {
+      // Leave the channel.
+      await rtc.screenClient.leave();
+    }
+
+    // Traverse all remote users. (if any)
+
+    if (rtc.client) {
+      rtc.client.remoteUsers.forEach((user) => {
+        // Destroy the dynamically created DIV containers.
+        const playerContainer = document.getElementById(user.uid);
+        playerContainer && playerContainer.remove();
+      });
+    }
+
+    // Leave the channel via main user client
+    rtc.client && (await rtc.client.leave());
+    closeTableScreen();
+  };
 
   // * At this point we have all people in this table in peopleInThisRoom array with all of their relevant details
 
@@ -137,7 +240,6 @@ const TableScreen = ({
 
   return (
     <>
-      {/* <ControlReRender rtc={rtc} /> */}
       <Dialog
         fullWidth={fullWidth}
         maxWidth={maxWidth}
@@ -177,13 +279,12 @@ const TableScreen = ({
             <div>
               <IconButton
                 onClick={() => {
-                  closeTableScreen();
+                  leaveStreaming();
                 }}
               >
                 <CloseRoundedIcon
                   style={{ fill: "#ffffff" }}
                   id="leave-table"
-                  onClick={() => {}}
                 />
               </IconButton>
             </div>
@@ -204,7 +305,8 @@ const TableScreen = ({
               style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
             >
               {/* // Here we need to place stream body */}
-              <StreamBody ></StreamBody>
+              {/* // ! */}
+              <StreamBody></StreamBody>
               <div>
                 <hr style={{ color: "rgb(98, 98, 98)" }} />
               </div>
@@ -258,8 +360,6 @@ const TableScreen = ({
                 // peopleInThisRoom={peopleInThisRoom}
                 tableId={table}
               />
-              {/* This is the side component */}
-              {/* // Here provide appropriate ui for table chat and people on this table only in list view mode */}
             </div>
           </div>
         </TableScreenBody>

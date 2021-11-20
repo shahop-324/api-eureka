@@ -14,7 +14,7 @@ const Chair_7 = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
 
   const chair = useSelector((state) =>
-    state.rooms.chairs.find((chair) => {
+    state.boothChairs.chairs.find((chair) => {
       return chair && chair.chairId
         ? chair.chairId === `${id}_chair_7` && chair.status === "Occupied"
           ? chair

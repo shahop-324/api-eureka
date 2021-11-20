@@ -63,6 +63,7 @@ import { openCloseActions } from "../reducers/openCloseSlice";
 import { communityPageActions } from "./../reducers/communityPageSlice";
 import { reviewActions } from "./../reducers/reviewSlice";
 import { recordingActions } from "./../reducers/recordingSlice";
+import { boothChairsActions } from "../reducers/boothChairsSlice";
 
 const AWS = require("aws-sdk");
 const UUID = require("uuid/v1");
@@ -5436,7 +5437,7 @@ export const fetchBoothChairs = (roomChairs) => async (dispatch, getState) => {
   dispatch(roomsActions.HasChanged({}));
 
   dispatch(
-    roomsActions.FetchRoomsChairs({
+    boothChairsActions.FetchBoothRoomsChairs({
       chairs: roomChairs,
     })
   );
@@ -5446,6 +5447,15 @@ export const fetchNumberOfPeopleOnTable =
   (numberOfPeopleOnTable) => async (dispatch, getState) => {
     dispatch(
       roomsActions.FetchNumOfPeopleOnTable({
+        numberOfPeopleOnTable: numberOfPeopleOnTable,
+      })
+    );
+  };
+
+export const fetchNumberOfPeopleOnBoothTable =
+  (numberOfPeopleOnTable) => async (dispatch, getState) => {
+    dispatch(
+      boothChairsActions.FetchBoothNumOfPeopleOnTable({
         numberOfPeopleOnTable: numberOfPeopleOnTable,
       })
     );
@@ -5607,6 +5617,14 @@ export const fetchEventChats = (chats) => async (dispatch, getState) => {
 export const updateTableChats = (chats) => async (dispatch, getState) => {
   dispatch(
     roomsActions.FetchTableChats({
+      chats: chats,
+    })
+  );
+};
+
+export const updateBoothTableChats = (chats) => async (dispatch, getState) => {
+  dispatch(
+    boothChairsActions.FetchBoothTableChats({
       chats: chats,
     })
   );
@@ -6080,7 +6098,6 @@ export const getRTCTokenForJoiningBoothTable =
       );
 
       launchTableScreen();
-
     } catch (error) {
       console.log(error);
       dispatch(showSnackbar("error", "Failed to get token, Please try again."));
@@ -10534,6 +10551,41 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
   }
 };
 
+export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
+  try {
+    // Write logic to fetch all table chats for this table
+
+    const res = await fetch(`${BaseURL}getBoothTableChats/${tableId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      boothChairsActions.FetchBoothTableChats({
+        chats: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch chats, Please try again."));
+  }
+};
+
 export const fetchTableChats = (tableId) => async (dispatch, getState) => {
   try {
     // Write logic to fetch all table chats for this table
@@ -10864,8 +10916,6 @@ export const getBoothTables = (boothId) => async (dispatch, getState) => {
 
     const result = await res.json();
 
-
-
     dispatch(
       boothTablesActions.FetchBoothTables({
         boothTables: result.data,
@@ -10911,6 +10961,15 @@ export const getBoothTable = (tableId) => async (dispatch, getState) => {
     );
   }
 };
+
+export const fetchBoothTableDetails =
+  (boothTable) => async (dispatch, getState) => {
+    dispatch(
+      boothTablesActions.FetchBoothTable({
+        boothTable: boothTable,
+      })
+    );
+  };
 
 export const fetchVolumeIndicators = (arr) => async (dispatch, getState) => {
   dispatch(StreamingActions.fetchVolumeIndicators({ volumeIndicators: arr }));

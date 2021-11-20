@@ -20,7 +20,11 @@ import TableScreen from "./TableScreen";
 
 import styled from "styled-components";
 import EditBoothTable from "./EditBoothTable";
-import { getBoothTable } from "../../../../actions";
+import {
+  getBoothTable,
+  fetchNumberOfPeopleOnBoothTable,
+  fetchBoothTableDetails,
+} from "../../../../actions";
 
 const RoomTitle = styled.div`
   font-weight: 500;
@@ -58,6 +62,16 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
   };
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on("numberOfPeopleOnBoothTable", ({ numberOfPeopleOnTable }) => {
+      dispatch(fetchNumberOfPeopleOnBoothTable(numberOfPeopleOnTable));
+    });
+
+    socket.on("boothTable", ({ boothTable }) => {
+      dispatch(fetchBoothTableDetails(boothTable));
+    });
+  }, []);
 
   return (
     <>
