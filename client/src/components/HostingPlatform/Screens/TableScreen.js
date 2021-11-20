@@ -13,22 +13,15 @@ import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
-import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
-import ViewCompactRoundedIcon from "@material-ui/icons/ViewCompactRounded";
-import AccountBoxOutlinedIcon from "@material-ui/icons/AccountBoxOutlined";
-import ZoomOutMapOutlinedIcon from "@material-ui/icons/ZoomOutMapOutlined";
-import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
-import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import styled from "styled-components";
 import StreamBody from "./../Functions/Lounge/StreamBody";
-import { fetchTableChats, getRTCTokenForScreenShare } from "./../../../actions"; // TODO This will be used to render table chats
+import { getRTCTokenForScreenShare } from "./../../../actions"; // TODO This will be used to render table chats
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Portal from "@mui/core/Portal";
-import ControlReRender from "../HelperComponents/ControlReRender";
 import SideComponent from "../Functions/Lounge/SideComponent";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -897,9 +890,6 @@ const TableScreen = ({
               className=""
               style={{ display: "grid", gridTemplateColumns: "8fr 0.2fr" }}
             >
-              {/* <div className="table-side-drawer">
-
-              </div> */}
               <SideComponent
                 peopleInThisRoom={peopleInThisRoom}
                 tableId={table}

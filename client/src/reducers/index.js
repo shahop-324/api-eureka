@@ -62,6 +62,7 @@ import openCloseSlice from "./openCloseSlice";
 import communityPageSlice from "./communityPageSlice";
 import reviewSlice from "./reviewSlice";
 import recordingSlice from "./recordingSlice";
+import boothTablesSlice from "./boothTablesSlice";
 
 export default combineReducers({
   auth: authSlice.reducer,
@@ -114,6 +115,7 @@ export default combineReducers({
   teamInvite: teamInvitationSlice.reducer,
   magicLink: magicLinkSlice.reducer,
   eventTables: eventTablesSlice.reducer,
+  boothTables: boothTablesSlice.reducer,
   streaming: StreamingSlice.reducer,
   notification: notificationSlice.reducer,
   selectedTab: SelectedTabSlice.reducer,

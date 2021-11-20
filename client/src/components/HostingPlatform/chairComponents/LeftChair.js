@@ -124,15 +124,11 @@ const LeftChair = ({ id, launchTableScreen }) => {
           className="left-chair-wrapper"
           id={`${id}_chair_8`}
           onClick={() => {
-            // if(chairIsOccupied) return;
-            // console.log(`${id}_chair_8`);
-
             dispatch(
               userActions.EditCurrentlyJoinedChair({
                 chairId: `${id}_chair_8`,
               })
             );
-
             socket.emit(
               "updateChair",
               {
@@ -160,8 +156,6 @@ const LeftChair = ({ id, launchTableScreen }) => {
           }}
         >
           <div className={`left-chair chair pt-2  ${chairIsOccupied ? " " : "left-chair-hover"} `}>
-            {/*  */}
-
             <div style={{ transform: "translate(-8px, -8px)" }}>
               <Popup
                 trigger={

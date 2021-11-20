@@ -11,7 +11,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import { Avatar, makeStyles } from "@material-ui/core";
-import Rooms from "./Rooms";
+import Rooms from "./BoothTable/Rooms";
 import styled from "styled-components";
 import Chip from "@mui/material/Chip";
 import { IconButton } from "@material-ui/core";

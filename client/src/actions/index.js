@@ -51,6 +51,7 @@ import { personalChatActions } from "../reducers/personalChatSlice";
 import { teamInvitationActions } from "./../reducers/teamInvitationSlice";
 import { magicLinkActions } from "./../reducers/magicLinkSlice";
 import { eventTablesActions } from "./../reducers/eventTablesSlice";
+import { boothTablesActions } from "./../reducers/boothTablesSlice";
 import { StreamingActions } from "./../reducers/streamingSlice";
 import { notificationActions } from "../reducers/notificationSlice";
 import { SelectedTabActions } from "../reducers/selectedTabSlice";
@@ -5431,6 +5432,16 @@ export const fetchChairArrangement =
     );
   };
 
+export const fetchBoothChairs = (roomChairs) => async (dispatch, getState) => {
+  dispatch(roomsActions.HasChanged({}));
+
+  dispatch(
+    roomsActions.FetchRoomsChairs({
+      chairs: roomChairs,
+    })
+  );
+};
+
 export const fetchNumberOfPeopleOnTable =
   (numberOfPeopleOnTable) => async (dispatch, getState) => {
     dispatch(
@@ -6031,8 +6042,46 @@ export const getRTCTokenForJoiningTable =
 
       launchTableScreen();
     } catch (err) {
-      alert(err);
+      console.log(err);
+      dispatch(showSnackbar("error", "Failed to get token, Please try again."));
       dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
+export const getRTCTokenForJoiningBoothTable =
+  (tableId, userId, launchTableScreen) => async (dispatch, getState) => {
+    dispatch(RTCActions.startLoading());
+    try {
+      let res = await fetch(`${BaseURL}getTokenForBoothTable`, {
+        method: "POST",
+        body: JSON.stringify({
+          tableId: tableId,
+          userId: userId,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        RTCActions.fetchRTCToken({
+          token: res.token,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar("error", "Failed to get token, Please try again."));
+      dispatch(RTCActions.hasError(error.message));
     }
   };
 
@@ -6139,6 +6188,14 @@ export const getRTCTokenForScreenShare =
     } catch (err) {
       alert(err);
       dispatch(RTCActions.hasError(err.message));
+    }
+  };
+
+export const getRTCTokenForBoothScreenShare =
+  () => async (dispatch, getState) => {
+    try {
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -10505,23 +10562,12 @@ export const fetchTableChats = (tableId) => async (dispatch, getState) => {
     );
   } catch (error) {
     console.log(error);
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to fetch chats. Please try again!",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("error", "Failed to fetch chats, Please try again."));
   }
 };
 
 export const editTable =
   (title, tableId, file, priority) => async (dispatch, getState) => {
-    console.log(title, tableId, file, priority);
     try {
       const key = `${tableId}/${UUID()}.jpeg`;
 
@@ -10573,6 +10619,10 @@ export const editTable =
                 table: result.data,
               })
             );
+
+            dispatch(
+              showSnackbar("success", "Room details updated successfully!")
+            );
           }
         );
       } else {
@@ -10606,20 +10656,114 @@ export const editTable =
             table: result.data,
           })
         );
+
+        dispatch(showSnackbar("success", "Room Details updated successfully!"));
       }
     } catch (error) {
       console.log(error);
 
       dispatch(
-        snackbarActions.openSnackBar({
-          message: "Failed to update table. Please try again!",
-          severity: "error",
-        })
+        showSnackbar("error", "Failed to update room, Please try again.")
       );
+    }
+  };
 
-      setTimeout(function () {
-        closeSnackbar();
-      }, 6000);
+export const editBoothTable =
+  (title, tableId, file, priority) => async (dispatch, getState) => {
+    try {
+      if (file) {
+        const key = `${tableId}/${UUID()}.${file.type}`;
+
+        s3.getSignedUrl(
+          "putObject",
+          { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
+          async (err, presignedURL) => {
+            const awsRes = await fetch(presignedURL, {
+              method: "PUT",
+
+              body: file,
+
+              headers: {
+                "Content-Type": file.type,
+              },
+            });
+
+            const res = await fetch(`${BaseURL}editBoothTable/${tableId}`, {
+              method: "POST",
+
+              body: JSON.stringify({
+                title: title,
+                image: key,
+                priority: priority,
+              }),
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().auth.token}`,
+              },
+            });
+
+            if (!res.ok) {
+              if (!res.message) {
+                throw new Error("Something went wrong");
+              } else {
+                throw new Error(res.message);
+              }
+            }
+
+            const result = await res.json();
+            console.log(result);
+
+            dispatch(
+              boothTablesActions.UpdateBoothTable({
+                table: result.data,
+              })
+            );
+
+            dispatch(
+              showSnackbar("success", "Room details updated successfully!")
+            );
+          }
+        );
+      } else {
+        const res = await fetch(`${BaseURL}editBoothTable/${tableId}`, {
+          method: "POST",
+
+          body: JSON.stringify({
+            title: title,
+            priority: priority,
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error("Something went wrong");
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        const result = await res.json();
+        console.log(result);
+
+        dispatch(
+          boothTablesActions.UpdateBoothTable({
+            table: result.data,
+          })
+        );
+
+        dispatch(showSnackbar("success", "Room Details updated successfully!"));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar("error", "Failed to update room, Please try again.")
+      );
     }
   };
 
@@ -10643,7 +10787,6 @@ export const getEventTables = (eventId) => async (dispatch, getState) => {
     }
 
     const result = await res.json();
-    console.log(result);
 
     dispatch(
       eventTablesActions.FetchEventTables({
@@ -10652,17 +10795,7 @@ export const getEventTables = (eventId) => async (dispatch, getState) => {
     );
   } catch (error) {
     console.log(error);
-
-    dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to get tables. Please try again!",
-        severity: "error",
-      })
-    );
-
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+    dispatch(showSnackbar("error", "Failed to get Rooms, Please try again!"));
   }
 };
 
@@ -10687,7 +10820,6 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
     }
 
     const result = await res.json();
-    // console.log(result);
 
     dispatch(
       eventTablesActions.FetchEventTable({
@@ -10698,20 +10830,80 @@ export const getEventTable = (tableId) => async (dispatch, getState) => {
     console.log(error);
     dispatch(
       eventTablesActions.hasError(
-        "Failed to get table details. Please try again!"
+        "Failed to fetch Room Details, Please try again."
       )
     );
 
     dispatch(
-      snackbarActions.openSnackBar({
-        message: "Failed to get table details. Please try again!",
-        severity: "error",
+      showSnackbar("error", "Failed to fetch Room Details, Please try again.")
+    );
+  }
+};
+
+export const getBoothTables = (boothId) => async (dispatch, getState) => {
+  try {
+    const res = await fetch(`${BaseURL}getBoothTables/${boothId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+
+    dispatch(
+      boothTablesActions.FetchBoothTables({
+        tables: result.data,
       })
     );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch Rooms, Please try again."));
+  }
+};
 
-    setTimeout(function () {
-      closeSnackbar();
-    }, 6000);
+export const getBoothTable = (tableId) => async (dispatch, getState) => {
+  dispatch(boothTablesActions.startLoading());
+  try {
+    const res = await fetch(`${BaseURL}getBoothTableDetails/${tableId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+
+    dispatch(
+      boothTablesActions.FetchBoothTable({
+        table: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to fetch Room Details, Please try again.")
+    );
   }
 };
 
@@ -13776,36 +13968,38 @@ export const shareBusinessCard =
     }
   };
 
-export const fetchBusinessCards = (boothId, eventId) => async (dispatch, getState) => {
-  try {
+export const fetchBusinessCards =
+  (boothId, eventId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}booths/getBusinessCards/${boothId}/${eventId}`,
+        {
+          method: "GET",
 
-    const res = await fetch(
-      `${BaseURL}booths/getBusinessCards/${boothId}/${eventId}`,
-      {
-        method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      );
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      }
-    );
+      const result = await res.json();
 
-    const result = await res.json();
-
-    dispatch(
-      boothActions.FetchBusinessCards({
-        cards: result.data,
-      })
-    );
-
-  } catch (error) {
-    console.log(error);
-    dispatch(
-      showSnackbar("error", "Failed to fetch Business cards, Please try again.")
-    );
-  }
-};
+      dispatch(
+        boothActions.FetchBusinessCards({
+          cards: result.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to fetch Business cards, Please try again."
+        )
+      );
+    }
+  };
 
 export const addForm =
   (formValues, boothId, eventId, handleClose) => async (dispatch, getState) => {
@@ -13954,4 +14148,13 @@ export const fetchBoothForms =
         showSnackbar("error", "Failed to fetch forms, Please try again")
       );
     }
+  };
+
+export const editCurrentlyJoinedChair =
+  (chairId) => async (dispatch, getState) => {
+    dispatch(
+      userActions.EditCurrentlyJoinedChair({
+        chairId: chairId,
+      })
+    );
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -8,7 +8,7 @@ import { reduxForm, Field } from "redux-form";
 import { Avatar, IconButton } from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles } from "@material-ui/core/styles";
-import { editTable } from "./../../../actions";
+import { editBoothTable } from "./../../../../actions";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -100,7 +100,7 @@ const renderInput = ({
   );
 };
 
-const EditTable = ({
+const EditBoothTable = ({
   open,
   handleClose,
   tableId,
@@ -114,12 +114,8 @@ const EditTable = ({
   const dispatch = useDispatch();
 
   const { tableDetails, isLoading, error } = useSelector(
-    (state) => state.eventTables
+    (state) => state.boothTables
   );
-
-  useEffect(() => {
-    // dispatch(getEventTable(tableId));
-  }, []);
 
   const TableNum = tableId.slice(31) * 1 + 1;
 
@@ -128,12 +124,10 @@ const EditTable = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const onSubmit = (formValues) => {
-    console.log(formValues);
-
-    dispatch(editTable(formValues.title, tableId, file, priority));
+    dispatch(editBoothTable(formValues.title, tableId, file, priority));
   };
 
-  const [priority, setPriority] = React.useState(
+  const [priority, setPriority] = useState(
     tableDetails ? tableDetails.priority : "Logo"
   );
   const [file, setFile] = useState(null);
@@ -178,7 +172,6 @@ const EditTable = ({
               <div className="p-0 d-flex flex-row justify-content-center">
                 <Avatar
                   variant="rounded"
-                  // alt={userDetails.firstName}
                   src={fileToPreview}
                   className={classes.large}
                 />
@@ -260,26 +253,16 @@ const EditTable = ({
 const mapStateToProps = (state) => ({
   initialValues: {
     title:
-      state.eventTables.tableDetails && state.eventTables.tableDetails.title
-        ? state.eventTables.tableDetails.title
+      state.boothTables.tableDetails && state.boothTables.tableDetails.title
+        ? state.boothTables.tableDetails.title
         : "",
   },
 });
 
-const validate = (formValues) => {
-  const errors = {};
-
-  if (!formValues.eventName) {
-    errors.eventName = "Event name is required";
-  }
-  return errors;
-};
-
 export default connect(mapStateToProps)(
   reduxForm({
-    form: "EditTableForm",
-    validate,
+    form: "EditBoothTableForm",
     enableReinitialize: true,
     destroyOnUnmount: false,
-  })(EditTable)
+  })(EditBoothTable)
 );
