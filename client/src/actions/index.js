@@ -6206,16 +6206,53 @@ export const getRTCTokenForScreenShare =
 
       startPresenting(channelName, res.token, `screen-${uid}`);
     } catch (err) {
-      alert(err);
+      console.log(err);
       dispatch(RTCActions.hasError(err.message));
+      dispatch(
+        showSnackbar("error", "Failed to share screen, Please try again.")
+      );
     }
   };
 
 export const getRTCTokenForBoothScreenShare =
-  () => async (dispatch, getState) => {
+  (tableId, uid, startPresenting) => async (dispatch, getState) => {
     try {
+      dispatch(RTCActions.startLoading());
+
+      let res = await fetch(`${BaseURL}getTokenForBoothScreenShare`, {
+        method: "POST",
+        body: JSON.stringify({
+          channel: tableId,
+          uid: `screen-${uid}`,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        RTCActions.fetchRTCScreenToken({
+          ScreenToken: res.token,
+        })
+      );
+
+      startPresenting(res.token, `screen-${uid}`);
     } catch (error) {
       console.log(error);
+      dispatch(RTCActions.hasError(error.message));
+      dispatch(
+        showSnackbar("error", "Failed to share screen, Please try again.")
+      );
     }
   };
 

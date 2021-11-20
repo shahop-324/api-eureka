@@ -698,6 +698,174 @@ io.on("connect", (socket) => {
   );
 
   socket.on(
+    "updateMyMicOnBoothTable",
+    async (
+      { userId, tableId, boothId, eventId, microphone, rawTableId },
+      callback
+    ) => {
+      // Update user mic
+
+      // 1.) Find boothTable doc
+      const boothTableDoc = await BoothTable.findById(tableId);
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of boothTableDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.microphone = microphone;
+
+      // 3.) save Table Doc
+
+      await boothTableDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedBoothTable = await BoothTable.findById(tableId);
+
+      // 4.) Send updated booth table to everyone at this table.
+
+      io.in(rawTableId).emit("updatedBoothTable", {
+        tableDetails: updatedBoothTable,
+      });
+    }
+  );
+
+  socket.on(
+    "updateMyCameraOnBoothTable",
+    async (
+      { userId, tableId, boothId, eventId, camera, rawTableId },
+      callback
+    ) => {
+      // Update user camera
+      // 1.) Find boothTable doc
+      const boothTableDoc = await BoothTable.findById(tableId);
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of boothTableDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.camera = camera;
+
+      // 3.) save Table Doc
+
+      await boothTableDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedBoothTable = await BoothTable.findById(tableId);
+
+      console.log(updatedBoothTable);
+
+      // 4.) Send updated booth table to everyone at this table.
+
+      io.in(rawTableId).emit("updatedBoothTable", {
+        tableDetails: updatedBoothTable,
+      });
+    }
+  );
+
+  socket.on(
+    "updateMyScreenOnBoothTable",
+    async (
+      { userId, tableId, boothId, eventId, screen, rawTableId },
+      callback
+    ) => {
+      // Update user screen
+      // 1.) Find boothTable doc
+      const boothTableDoc = await BoothTable.findById(tableId);
+
+      const registrations = await Registration.find({
+        bookedForEventId: mongoose.Types.ObjectId(eventId),
+      });
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of boothTableDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.screen = screen;
+
+      // 3.) save Table Doc
+
+      await boothTableDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedBoothTable = await BoothTable.findById(tableId);
+
+      console.log(updatedBoothTable);
+
+      // 4.) Send updated booth table to everyone at this table.
+
+      io.in(rawTableId).emit("updatedBoothTable", {
+        tableDetails: updatedBoothTable,
+      });
+
+      let people = []; // Collection of {userId, socketId, camera, mic, screen}
+      let uniquePeople = [];
+
+      for (let element of boothTableDoc.onStagePeople) {
+        for (let item of registrations) {
+          console.log(element.user, item);
+          if (item.bookedByUser) {
+            if (element.user.toString() === item.bookedByUser.toString()) {
+              if (!uniquePeople.includes(element.user)) {
+                // Find socketId
+
+                const { socketId } = await UsersInEvent.findOne({
+                  $and: [
+                    { room: mongoose.Types.ObjectId(eventId) },
+                    { userId: mongoose.Types.ObjectId(item.bookedByUser) },
+                  ],
+                }).select("socketId");
+
+                people.push({
+                  userId: item.bookedByUser,
+                  socketId: socketId,
+                  camera: element.camera,
+                  mic: element.microphone,
+                  screen: element.screen,
+                });
+
+                uniquePeople.push(element.user);
+              }
+            }
+          }
+        }
+      }
+
+      // 5.) Find everyone who is currently on stage with thier current camera, mic, screen, socket and userId (collection of objects)
+      // * Now here we have required persons in people array
+
+      // 6.) Tell everyone currently on stage to set => userHasUnmutedVideo.current = false; and userHasUnmutedAudio.current = false;
+
+      console.log(people);
+
+      for (let element of people) {
+        io.to(element.socketId).emit("resetAudioAndVideoControls");
+      }
+
+      // 7.) Everyone with their camera currently on should call unMuteMyVideo();
+      for (let person of people) {
+        if (person.camera) {
+          io.to(person.socketId).emit("unMuteYourVideo");
+        }
+      }
+    }
+  );
+
+  socket.on(
     "updateMyCameraOnSessionStage",
     async ({ userId, registrationId, sessionId, camera }, callback) => {
       // Update user mic
@@ -2270,103 +2438,96 @@ io.on("connect", (socket) => {
         })
           .select("chairs")
           .populate("chairs");
+      };
 
-        };
+      fetchNumberOfPeopleOnTable = async () => {
+        await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.to(tableId).emit("numberOfPeopleOnBoothTable", {
+              numberOfPeopleOnTable: tableDoc.numberOfPeople,
+            });
+          }
+        });
+      };
 
-        fetchNumberOfPeopleOnTable = async () => {
-          await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
+      // Remove this user from onStagePeople of this boothTable
+
+      const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
+
+      console.log(boothTableDoc.onStagePeople, "Before");
+      console.log(chairId, tableId, userId, eventId, boothId);
+
+      console.log("This is leave booth table");
+
+      boothTableDoc.onStagePeople = boothTableDoc.onStagePeople.filter(
+        (people) => people.user.toString() !== userId.toString()
+      );
+
+      console.log(boothTableDoc.onStagePeople, "After");
+
+      await boothTableDoc.save(
+        {
+          new: true,
+          validateModifiedOnly: true,
+        },
+        async (err, updatedTable) => {
+          io.to(tableId).emit("boothTable", { boothTable: updatedTable });
+        }
+      );
+
+      const unOccupyChair = async ({ chairId, eventId, boothId, tableId }) => {
+        await BoothChair.findOneAndUpdate(
+          { chairId: chairId },
+          {
+            status: "Unoccupied",
+            userId: null,
+            userName: null,
+            userEmail: null,
+            userImage: null,
+            userCity: null,
+            userCountry: null,
+            userOrganisation: null,
+            userDesignation: null,
+          },
+          { new: true },
+          async (err, updatedChair) => {
             if (err) {
               console.log(err);
             } else {
-              io.to(tableId).emit("numberOfPeopleOnBoothTable", {
-                numberOfPeopleOnTable: tableDoc.numberOfPeople,
-              });
+              await BoothTable.findOne(
+                { tableId: tableId },
+                (err, tableDoc) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    tableDoc.numberOfPeople = tableDoc.numberOfPeople
+                      ? tableDoc.numberOfPeople - 1
+                      : 0;
+                    tableDoc.save(
+                      { validateModifiedOnly: true },
+                      (err, updatedTableDoc) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          fetchCurrentRoomChairs(); // ! Listen To This event
+
+                          fetchNumberOfPeopleOnTable(); // ! Listen To This event
+
+                          socket.leave(tableId);
+                        }
+                      }
+                    );
+                  }
+                }
+              );
             }
-          });
-        };
-
-        // Remove this user from onStagePeople of this boothTable
-
-        const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
-
-        console.log(boothTableDoc.onStagePeople, "Before");
-        console.log(chairId, tableId, userId, eventId, boothId);
-
-        console.log("This is leave booth table");
-
-        boothTableDoc.onStagePeople = boothTableDoc.onStagePeople.filter(
-          (people) => people.user.toString() !== userId.toString()
-        );
-
-        console.log(boothTableDoc.onStagePeople, "After");
-
-        await boothTableDoc.save(
-          {
-            new: true,
-            validateModifiedOnly: true,
-          },
-          async (err, updatedTable) => {
-            io.to(tableId).emit("boothTable", { boothTable: updatedTable });
           }
         );
+      };
 
-        const unOccupyChair = async ({
-          chairId,
-          eventId,
-          boothId,
-          tableId,
-        }) => {
-          await BoothChair.findOneAndUpdate(
-            { chairId: chairId },
-            {
-              status: "Unoccupied",
-              userId: null,
-              userName: null,
-              userEmail: null,
-              userImage: null,
-              userCity: null,
-              userCountry: null,
-              userOrganisation: null,
-              userDesignation: null,
-            },
-            { new: true },
-            async (err, updatedChair) => {
-              if (err) {
-                console.log(err);
-              } else {
-                await BoothTable.findOne(
-                  { tableId: tableId },
-                  (err, tableDoc) => {
-                    if (err) {
-                      console.log(err);
-                    } else {
-                      tableDoc.numberOfPeople = tableDoc.numberOfPeople
-                        ? tableDoc.numberOfPeople - 1
-                        : 0;
-                      tableDoc.save(
-                        { validateModifiedOnly: true },
-                        (err, updatedTableDoc) => {
-                          if (err) {
-                            console.log(err);
-                          } else {
-                            fetchCurrentRoomChairs(); // ! Listen To This event
-
-                            fetchNumberOfPeopleOnTable(); // ! Listen To This event
-
-                            socket.leave(tableId);
-                          }
-                        }
-                      );
-                    }
-                  }
-                );
-              }
-            }
-          );
-        };
-
-        const { error } = unOccupyChair({ chairId, eventId, boothId, tableId });
-     
+      const { error } = unOccupyChair({ chairId, eventId, boothId, tableId });
     }
   );
 

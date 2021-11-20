@@ -8,18 +8,6 @@ import Paused from "./../../../../assets/images/paused.svg";
 import Ended from "./../../../../assets/images/ended.svg";
 import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 
-import {
-  renderGalleryView,
-  renderMainStream,
-  renderMiniStreams,
-  renderScreenShareStream,
-} from "./renderViewFxns";
-
-import {
-  GalleryView,
-  GridView,
-  GridViewMini,
-} from "../../../SessionStage/Elements";
 import { useSelector } from "react-redux";
 import VideoPlayer from "./VideoPlayer";
 import ScreenTrackPlayer from "./ScreenTrackPlayer";

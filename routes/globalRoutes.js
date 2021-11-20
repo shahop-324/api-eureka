@@ -151,6 +151,8 @@ router.post(
   globalController.generateTokenForLiveStreamingForScreenShare
 );
 
+router.post("/getTokenForBoothScreenShare", globalController.generateTokenForBoothScreenShare);
+
 router.post(
   "/getRTMToken",
   authController.protect,

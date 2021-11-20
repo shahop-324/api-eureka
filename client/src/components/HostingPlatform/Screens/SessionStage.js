@@ -133,9 +133,9 @@ const SessionStage = () => {
   let myRegistration;
 
   for (let element of registrations) {
-    if(element) {
-      if(element.bookedByUser) {
-        if(element.bookedByUser.toString() === userId ) {
+    if (element) {
+      if (element.bookedByUser) {
+        if (element.bookedByUser.toString() === userId) {
           myRegistration = element;
         }
       }
@@ -763,14 +763,6 @@ const SessionStage = () => {
     );
   };
 
-  // navigator.mediaDevices.getUserMedia(..).then((stream) => {..});
-
-  // navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-  //   stream.getVideoTracks()[0].onended = () => {
-  //     console.info("Screen share has ended");
-  //   };
-  // });
-
   const startLiveStream = async (localChannel, localToken) => {
     // alert(canPublishStream);
     if (agoraRole === "host") {
@@ -796,9 +788,6 @@ const SessionStage = () => {
           console.log(error);
         }
       );
-    } else {
-      // In this case we don't need to do anything
-      // alert("No, I can't publish stream");
     }
 
     AgoraRTC.setLogLevel(0);
@@ -812,11 +801,6 @@ const SessionStage = () => {
     // Listen for event "user-published" explanation: Some kind of audio or video stream is published
 
     rtc.client.on("user-published", async (user, mediaType) => {
-      console.error(allStreams);
-      console.log("Media stream was published.");
-      console.log(user);
-      console.log(mediaType);
-
       // ! Here we need to maintain tracks in all Streams and remote Streams
       const uid = user.uid.toString();
 
@@ -832,8 +816,6 @@ const SessionStage = () => {
             ...prev,
             { uid: uid, stream: remoteVideoTrack },
           ]);
-
-          // unMuteMyVideo();
         }
 
         remoteVideoTrack.play(uid);
@@ -1049,8 +1031,6 @@ const SessionStage = () => {
     if (runningStatus !== "Ended") {
       startLiveStream(localChannel);
     }
-
-    // startLiveStream();
   }, []);
 
   const clearPreviousStreams = () => {
@@ -1207,10 +1187,11 @@ const SessionStage = () => {
     (element) => element.available === true
   );
 
-  console.log(allStreams);
-
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}
+
+  let uniqueUserIds = [];
+  let uniqueRegistrationIds = [];
 
   for (let element of availablePeople) {
     for (let item of registrations) {
@@ -1218,19 +1199,24 @@ const SessionStage = () => {
         // for (let track of allStreams) {
         //   if (item.bookedByUser === track.uid) {
         // Get all required details here => { uid , name , image, designation, organisation, camera, mic, stream}
-        galleryViewInput.push({
-          // uid: track.uid,
-          userId: item.bookedByUser,
-          name: item.userName,
-          image: item.userImage
-            ? item.userImage.startsWith("https://")
-              ? item.userImage
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
-            : "#",
-          camera: element.camera,
-          mic: element.microphone,
-          // stream: track.stream,
-        });
+        // Push unique users only
+        if (!uniqueUserIds.includes(element.user)) {
+          galleryViewInput.push({
+            // uid: track.uid,
+            userId: item.bookedByUser,
+            name: item.userName,
+            image: item.userImage
+              ? item.userImage.startsWith("https://")
+                ? item.userImage
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
+              : "#",
+            camera: element.camera,
+            mic: element.microphone,
+            // stream: track.stream,
+          });
+          uniqueUserIds.push(element.user);
+        }
+
         //   }
         // }
       }
@@ -1238,22 +1224,22 @@ const SessionStage = () => {
         // for (let track of allStreams) {
         //   if (item.bookedByUser === track.uid) {
         // Get all required details here => { uid , name , image, designation, organisation, camera, mic, stream}
-        galleryViewInput.push({
-          // uid: track.uid,
-          userId: item.bookedByUser,
-          name: item.userName,
-          image: item.userImage
-            ? item.userImage.startsWith("https://")
-              ? item.userImage
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
-            : "#",
-          camera: element.camera,
-          mic: element.microphone,
-          // stream: track.stream,
-        });
-        //   }
-
-        // }
+        if (!uniqueRegistrationIds.includes(element.user)) {
+          galleryViewInput.push({
+            // uid: track.uid,
+            userId: item.bookedByUser,
+            name: item.userName,
+            image: item.userImage
+              ? item.userImage.startsWith("https://")
+                ? item.userImage
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
+              : "#",
+            camera: element.camera,
+            mic: element.microphone,
+            // stream: track.stream,
+          });
+          uniqueRegistrationIds.push(element.user);
+        }
       }
     }
   }
