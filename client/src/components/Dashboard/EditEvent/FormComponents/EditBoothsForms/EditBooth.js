@@ -5,7 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { editBooth, errorTrackerForEditBooth } from "../../../../../actions";
+import {
+  editBooth,
+  errorTrackerForEditBooth,
+  showSnackbar,
+} from "../../../../../actions";
 import MultiEmailInput from "../../../MultiEmailInput";
 import MultiTagInput from "../../../MultiTagInput";
 import Loader from "../../../../Loader";
@@ -189,6 +193,16 @@ const EditBooth = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.emails = formValues.multiEmail;
     ModifiedFormValues.tags = formValues.multiTags;
     ModifiedFormValues.numberOfTables = formValues.numberOfTables;
+
+    if (formValues.numberOfTables * 1 < booth.numberOfTables * 1) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          `Tables cannot be less than ${booth.numberOfTables * 1}`
+        )
+      );
+      return;
+    }
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,

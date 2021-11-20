@@ -101,7 +101,9 @@ const Chair_6 = ({ id, launchTableScreen }) => {
         console.log(error);
       });
     } else {
-      document.getElementById(`${id}_chair_6_img_blob`).remove();
+      if (document.getElementById(`${id}_chair_6_img_blob`)) {
+        document.getElementById(`${id}_chair_6_img_blob`).remove();
+      }
     }
   }, [userImage6, id]);
 
@@ -110,7 +112,7 @@ const Chair_6 = ({ id, launchTableScreen }) => {
   return (
     <>
       <div
-        className="upper-chair-wrapper"
+        className="lower-chair-wrapper"
         id={`${id}_chair_6`}
         onClick={() => {
           dispatch(editCurrentlyJoinedChair(`${id}_chair_6`));
@@ -146,8 +148,8 @@ const Chair_6 = ({ id, launchTableScreen }) => {
         }}
       >
         <div
-          className={`upper-chair chair pt-2 ${
-            chairIsOccupied ? " " : "upper-chair-hover"
+          className={`lower-chair chair pt-2 ${
+            chairIsOccupied ? " " : "lower-chair-hover"
           }`}
         >
           {/* <PeopleGridAvatar /> */}

@@ -159,6 +159,7 @@ const BoothArea = () => {
   const classes = useStyles();
 
   const truncateText = (str, n) => {
+    if(!str) return;
     return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
 

@@ -113,8 +113,8 @@ const EditBoothTable = ({
 
   const dispatch = useDispatch();
 
-  const { tableDetails, isLoading, error } = useSelector(
-    (state) => state.boothTables
+  const tableDetails = useSelector((state) =>
+    state.boothTables.boothTables.find((table) => table.tableId === tableId)
   );
 
   const TableNum = tableId.slice(31) * 1 + 1;
@@ -169,7 +169,7 @@ const EditBoothTable = ({
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="row  d-flex align-items-center justify-content-center mb-4 px-3">
-              <div className="p-0 d-flex flex-row justify-content-center">
+              <div className="p-0 d-flex flex-row justify-content-center mb-3">
                 <Avatar
                   variant="rounded"
                   src={fileToPreview}

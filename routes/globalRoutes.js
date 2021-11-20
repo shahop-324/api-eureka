@@ -134,6 +134,8 @@ router.post(
   globalController.generateLiveStreamingTokenForJoiningTable
 );
 
+router.post("/getTokenForBoothTable", globalController.getTokenForBoothTable);
+
 router.post(
   "/getLiveStreamingTokenForNetworking",
   globalController.getLiveStreamingTokenForNetworking
@@ -238,17 +240,23 @@ router.get(
   globalController.fetchEventTables
 );
 
+router.get("/getBoothTables/:boothId", authController.protect, globalController.fetchBoothTables);
+
 router.post(
   "/editTable/:tableId",
   authController.protect,
   globalController.editTable
 );
 
+router.post("/editBoothTable/:tableId", authController.protect, globalController.editBoothTable);
+
 router.get(
   "/getTableDetails/:tableId",
   authController.protect,
   globalController.getTableDetails
 );
+
+router.get("/getBoothTableDetails/:tableId", authController.protect, globalController.getBoothTableDetails);
 
 router.get(
   "/getTableChats/:tableId",

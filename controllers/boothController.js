@@ -11,6 +11,7 @@ const BoothLink = require("./../models/boothLinksModel");
 const BoothPromoCode = require("./../models/boothPromoCodes");
 const BoothForm = require("./../models/boothFormsModel");
 const SharedBusinessCard = require("./../models/sharedBusinessCard");
+const BoothTable = require("./../models/boothTableModel");
 const mongoose = require("mongoose");
 const apiFeatures = require("../utils/apiFeatures");
 const validator = require("validator");
@@ -119,6 +120,8 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
     const boothId = req.params.id;
 
     const boothDoc = await Booth.findById(boothId);
+
+    const tablesBeforeUpdate = boothDoc.numberOfTables;
 
     const eventId = boothDoc.eventId;
 
@@ -297,7 +300,7 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       "boothPoster",
       "contactEmail",
       "contactNumber",
-      "googleTag",
+      "googleTag"
     );
 
     const processedBoothObj = await Booth.findByIdAndUpdate(
@@ -322,6 +325,24 @@ exports.updateBooth = catchAsync(async (req, res, next) => {
       new: true,
       validateModifiedOnly: true,
     });
+
+    const tablesAfterUpdate = doublyUpdatedBooth.numberOfTables;
+
+    // If numberOfTables is updated then please check diff and create required no. of tables for that event
+
+    const diff = tablesAfterUpdate * 1 - tablesBeforeUpdate * 1;
+
+    if (diff > 0) {
+      for (let i = 0; i < diff * 1; i++) {
+        // Create tables with tableId as `${eventId}_table_${i}`
+        await BoothTable.create({
+          boothId: boothId,
+          eventId: eventId,
+          tableId: `${boothId}_table_${i}`,
+          lastUpdatedAt: Date.now(),
+        });
+      }
+    }
 
     let uniqueTags = [];
 
@@ -932,7 +953,10 @@ exports.getBusinessCards = catchAsync(async (req, res, next) => {
         { boothId: mongoose.Types.ObjectId(boothId) },
         { eventId: mongoose.Types.ObjectId(eventId) },
       ],
-    }).populate("userId", "firstName lastName image email phoneNumber interests");
+    }).populate(
+      "userId",
+      "firstName lastName image email phoneNumber interests"
+    );
 
     res.status(200).json({
       status: "success",

@@ -6078,6 +6078,9 @@ export const getRTCTokenForJoiningBoothTable =
           token: res.token,
         })
       );
+
+      launchTableScreen();
+
     } catch (error) {
       console.log(error);
       dispatch(showSnackbar("error", "Failed to get token, Please try again."));
@@ -10861,9 +10864,11 @@ export const getBoothTables = (boothId) => async (dispatch, getState) => {
 
     const result = await res.json();
 
+
+
     dispatch(
       boothTablesActions.FetchBoothTables({
-        tables: result.data,
+        boothTables: result.data,
       })
     );
   } catch (error) {
@@ -10896,7 +10901,7 @@ export const getBoothTable = (tableId) => async (dispatch, getState) => {
 
     dispatch(
       boothTablesActions.FetchBoothTable({
-        table: result.data,
+        boothTable: result.data,
       })
     );
   } catch (error) {

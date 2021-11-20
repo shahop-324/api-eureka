@@ -79,10 +79,11 @@ const Chair_8 = ({ id, launchTableScreen }) => {
 
     let image = document.createElement("img");
     image.src = objectURL;
-    image.style.width = "40px";
+    image.style.width = "50px";
     image.style.height = "35px";
     image.style.objectFit = "cover";
-    image.style.borderRadius = "5px";
+    image.style.borderTopLeftRadius = "5px";
+    image.style.borderBottomLeftRadius = "5px";
     image.id = `${id}_chair_8_img_blob`;
 
     if (imgURL) {
@@ -101,7 +102,9 @@ const Chair_8 = ({ id, launchTableScreen }) => {
         console.log(error);
       });
     } else {
-      document.getElementById(`${id}_chair_8_img_blob`).remove();
+      if (document.getElementById(`${id}_chair_8_img_blob`)) {
+        document.getElementById(`${id}_chair_8_img_blob`).remove();
+      }
     }
   }, [userImage8, id]);
 
@@ -110,7 +113,7 @@ const Chair_8 = ({ id, launchTableScreen }) => {
   return (
     <>
       <div
-        className="upper-chair-wrapper"
+        className="left-chair-wrapper"
         id={`${id}_chair_8`}
         onClick={() => {
           dispatch(editCurrentlyJoinedChair(`${id}_chair_8`));
@@ -146,13 +149,13 @@ const Chair_8 = ({ id, launchTableScreen }) => {
         }}
       >
         <div
-          className={`upper-chair chair pt-2 ${
-            chairIsOccupied ? " " : "upper-chair-hover"
+          className={`left-chair chair pt-2 ${
+            chairIsOccupied ? " " : "left-chair-hover"
           }`}
         >
           {/* <PeopleGridAvatar /> */}
 
-          <div style={{ transform: "translateY(-16.5px)" }}>
+          <div style={{ transform: "translate(-8px, -8px)" }}>
             <Popup
               trigger={
                 <div

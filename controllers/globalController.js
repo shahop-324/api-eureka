@@ -15,6 +15,7 @@ const Speaker = require("./../models/speakerModel");
 const PersonalChat = require("./../models/PersonalChatModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("../models/roomTableModel");
+const BoothTable = require("./../models/boothTableModel");
 const TableChats = require("./../models/tableChatsModel");
 const SessionQnA = require("./../models/sessionQnAModel");
 const SessionPoll = require("./../models/sessionPollModel");
@@ -457,6 +458,41 @@ exports.generateLiveStreamingTokenForJoiningTable = catchAsync(
     });
   }
 );
+
+exports.getTokenForBoothTable = catchAsync(async (req, res, next) => {
+  const tableId = req.body.tableId;
+  const userId = req.body.userId;
+  const isPublisher = true;
+
+  const appID = "702d57c3092c4fd389eb7ea5a505d471";
+  const appCertificate = "d8311f38cf434445805478cb8c93a334";
+  const channelName = tableId;
+  const uid = userId;
+  const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+
+  const expirationTimeInSeconds = 3600;
+
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
+
+  // Build token with uid
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    appID,
+    appCertificate,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs
+  );
+
+  res.status(200).json({
+    status: "success",
+    token: token,
+  });
+});
 
 exports.getLiveStreamingTokenForNetworking = catchAsync(
   async (req, res, next) => {
@@ -1479,6 +1515,19 @@ exports.fetchEventTables = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.fetchBoothTables = catchAsync(async (req, res, next) => {
+  const boothId = req.params.boothId;
+
+  const tables = await BoothTable.find({
+    boothId: mongoose.Types.ObjectId(boothId),
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: tables,
+  });
+});
+
 exports.editTable = catchAsync(async (req, res, next) => {
   const tableId = req.params.tableId;
 
@@ -1502,10 +1551,44 @@ exports.editTable = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.editBoothTable = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const tableDoc = await BoothTable.findOne({ tableId: tableId });
+
+  if (req.body.image) {
+    tableDoc.image = req.body.image;
+  }
+
+  tableDoc.title = req.body.title;
+  tableDoc.priority = req.body.priority;
+
+  const updatedTable = await tableDoc.save({
+    new: true,
+    validateModifiedOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedTable,
+  });
+});
+
 exports.getTableDetails = catchAsync(async (req, res, next) => {
   const tableId = req.params.tableId;
 
   const tableDoc = await RoomTable.findOne({ tableId: tableId });
+
+  res.status(200).json({
+    status: "success",
+    data: tableDoc,
+  });
+});
+
+exports.getBoothTableDetails = catchAsync(async (req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const tableDoc = await BoothTable.findOne({ tableId: tableId });
 
   res.status(200).json({
     status: "success",

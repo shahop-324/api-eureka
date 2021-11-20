@@ -18,6 +18,7 @@ const Mux = require("@mux/mux-node");
 const Vibe = require("./../models/vibeModel");
 const Registration = require("./../models/registrationsModel");
 const RoomTable = require("./../models/roomTableModel");
+const BoothTable = require("./../models/boothTableModel");
 const EventVideo = require("./../models/eventVideosModel");
 
 const { Video } = new Mux(
@@ -313,6 +314,17 @@ exports.createBooth = catchAsync(async (req, res, next) => {
     },
     async (err, doc) => {
       console.log(err);
+
+      for (let i = 0; i < req.body.numberOfTables * 1; i++) {
+        // Create tables with tableId as `${eventId}_table_${i}`
+        await BoothTable.create({
+          eventId: eventGettingBooth._id,
+          boothId: doc._id,
+          tableId: `${doc._id}_table_${i}`,
+          lastUpdatedAt: Date.now(),
+        });
+      }
+  
 
       createdBooth = doc;
 

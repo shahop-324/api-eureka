@@ -102,7 +102,10 @@ const Chair_1 = ({ id, launchTableScreen }) => {
         console.log(error);
       });
     } else {
-      document.getElementById(`${id}_chair_1_img_blob`).remove();
+      if(document.getElementById(`${id}_chair_1_img_blob`)) {
+        document.getElementById(`${id}_chair_1_img_blob`).remove();
+      }
+      
     }
   }, [userImage1, id]);
 

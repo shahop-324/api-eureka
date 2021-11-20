@@ -223,7 +223,7 @@ function a11yProps(index) {
 }
 
 export default function SideComponent({ peopleInThisRoom, tableId }) {
-  const { id, role } = useSelector((state) => state.eventAccessToken);
+  const { id } = useSelector((state) => state.eventAccessToken);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {

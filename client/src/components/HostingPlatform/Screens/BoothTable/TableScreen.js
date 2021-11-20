@@ -2,12 +2,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
+import styled from 'styled-components';
 import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import socket from "./../../service/socket";
 import "./../../../../index.css";
-import "./../../Styles/rooms.scss"
+import "./../../Styles/rooms.scss";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded";
@@ -16,13 +17,17 @@ import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import styled from "styled-components";
-import StreamBody from "../../Functions/Lounge/StreamBody";
 import { getRTCTokenForBoothScreenShare } from "./../../../../actions";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Portal from "@mui/core/Portal";
 import SideComponent from "./SideComponent";
+
+const StreamBody = styled.div`
+border-radius: 20px;
+background-color: #212121;
+height: 75vh;
+`
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -124,7 +129,7 @@ const TableScreen = ({
     await rtc.screenClient.publish(rtc.localScreenTrack);
 
     rtc.localScreenTrack.on("track-ended", () => {
-    //   handleStopScreenShare();
+      //   handleStopScreenShare();
     });
 
     return rtc.localScreenTrack;
@@ -170,13 +175,15 @@ const TableScreen = ({
               {/* Table title */}
             </div>
             <div>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  closeTableScreen();
+                }}
+              >
                 <CloseRoundedIcon
                   style={{ fill: "#ffffff" }}
                   id="leave-table"
-                  onClick={() => {
-                
-                  }}
+                  onClick={() => {}}
                 />
               </IconButton>
             </div>
@@ -194,9 +201,10 @@ const TableScreen = ({
           >
             <div
               className="d-flex flex-column justify-content-between"
-              style={{ width: "100%", height: "100%", maxHeight: "65vh" }}
+              style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
             >
-                {/* // Here we need to place stream body */}
+              {/* // Here we need to place stream body */}
+              <StreamBody ></StreamBody>
               <div>
                 <hr style={{ color: "rgb(98, 98, 98)" }} />
               </div>
@@ -211,42 +219,24 @@ const TableScreen = ({
                 <div className="stage-left-controls d-flex flex-row  align-items-center"></div>
 
                 <div className="" style={{ justifySelf: "center" }}>
-                  <IconButton
-                    onClick={() => {
-                     
-                    }}
-                    aria-label="audio"
-                  >
-                   
-                      <VideocamRoundedIcon
-                        style={{ fill: "#D3D3D3", size: "24" }}
-                      />
-                   
+                  <IconButton onClick={() => {}} aria-label="audio">
+                    <VideocamRoundedIcon
+                      style={{ fill: "#D3D3D3", size: "24" }}
+                    />
                   </IconButton>
 
                   <IconButton
-                    onClick={() => {
-                     
-                    }}
+                    onClick={() => {}}
                     aria-label="audio"
                     className="mx-3"
                   >
-                    
-                      <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
-                   
+                    <MicRoundedIcon style={{ fill: "#D3D3D3", size: "24" }} />
                   </IconButton>
 
-                  <IconButton
-                    onClick={() => {
-                      
-                    }}
-                    aria-label="share screen"
-                  >
-                    
-                      <ScreenShareRoundedIcon
-                        style={{ fill: "#D3D3D3", size: "24" }}
-                      />
-                   
+                  <IconButton onClick={() => {}} aria-label="share screen">
+                    <ScreenShareRoundedIcon
+                      style={{ fill: "#D3D3D3", size: "24" }}
+                    />
                   </IconButton>
 
                   <IconButton aria-label="settings" className="mx-3">

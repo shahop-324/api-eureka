@@ -120,8 +120,7 @@ const LeftChair = ({ id, launchTableScreen }) => {
 
   return (
     <>
-<span
-        
+      <span
         className="right-chair-wrapper"
         style={{ position: "absolute", display: "inline-block" }}
         id={`${id}_chair_4`}
@@ -161,52 +160,52 @@ const LeftChair = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-
-        <Popup content={<div                
-              >
-                <div className="d-flex flex-row align-items-center">
-                  <Avatar alt={userName4} src={userImage4} variant="rounded" />
-                  <div className="ms-3">
-                    <div
-                      className="btn-outline-text"
-                      style={{ fontSize: "14px" }}
-                    >
-                      {userName4}
-                    </div>
-                    <div className="people-headline">
-                      {userDesignation4} at {userOrganisation4}
-                    </div>
-                    <div className="people-location">
-                      {userCity4}, {userCountry4}
-                    </div>
+        <Popup
+          content={
+            <div>
+              <div className="d-flex flex-row align-items-center">
+                <Avatar alt={userName4} src={userImage4} variant="rounded" />
+                <div className="ms-3">
+                  <div
+                    className="btn-outline-text"
+                    style={{ fontSize: "14px" }}
+                  >
+                    {userName4}
+                  </div>
+                  <div className="people-headline">
+                    {userDesignation4} at {userOrganisation4}
+                  </div>
+                  <div className="people-location">
+                    {userCity4}, {userCountry4}
                   </div>
                 </div>
-              </div>} trigger={<div
-          className={`right-chair chair pt-2 ${
-            chairIsOccupied ? " " : "right-chair-hover"
-          }`}
-        >
-          <div style={{ transform: "translate(8px, -8px)" }}>
-            <span
-              
-              id={`${id}_chair_4_img`}
-              style={{
-                position: "absolute",
-                // position: "relative",
-                top: "0",
-                left: "0",
-                height: "100%",
-                width: "100%",
-                borderRadius: "10px",
-              }}
+              </div>
+            </div>
+          }
+          trigger={
+            <div
+              className={`right-chair chair pt-2 ${
+                chairIsOccupied ? " " : "right-chair-hover"
+              }`}
             >
-              
-            </span>
-          </div>
-        </div>} />
-        
+              <div style={{ transform: "translate(8px, -8px)" }}>
+                <span
+                  id={`${id}_chair_4_img`}
+                  style={{
+                    position: "absolute",
+                    // position: "relative",
+                    top: "0",
+                    left: "0",
+                    height: "100%",
+                    width: "100%",
+                    borderRadius: "10px",
+                  }}
+                ></span>
+              </div>
+            </div>
+          }
+        />
       </span>
-      
     </>
   );
 };

@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import {
   editBooth,
+  showSnackbar,
   errorTrackerForEditBooth,
 } from "../../../../../../../actions";
-import MultiTagInput from "./../../../../../../MultiTagsInput";
-import Loader from "../../../../../../Loader";
-import { SwipeableDrawer } from "@material-ui/core";
 import styled from "styled-components";
 
 const StyledInput = styled.input`
@@ -37,9 +33,6 @@ const FormLabel = styled.label`
   font-weight: 500 !important;
   color: #727272 !important;
   margin-bottom: 5px;
-`;
-const HeaderFooter = styled.div`
-  background-color: #ebf4f6;
 `;
 
 const FormError = styled.div`
@@ -126,21 +119,8 @@ const renderTextArea = ({
   );
 };
 
-const renderMultiTags = ({ input, meta: { touched, error, warning } }) => {
-  console.log(input);
-  const className = `field ${error && touched ? "error" : ""}`;
-  return (
-    <div className={className}>
-      <MultiTagInput input={input} value={input.value} />
-      {touched &&
-        ((error && <FormError className="my-1">{error}</FormError>) ||
-          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
-    </div>
-  );
-};
-
 const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
-  const { detailError, isLoadingDetail, currentBoothId } = useSelector(
+  const { detailError, currentBoothId } = useSelector(
     (state) => state.booth
   );
 
@@ -179,6 +159,16 @@ const EditDetailsForm = ({ open, handleClose, handleSubmit, reset, id }) => {
     ModifiedFormValues.description = formValues.description;
     ModifiedFormValues.numberOfTables = formValues.numberOfTables;
     ModifiedFormValues.googleTag = formValues.googleTag;
+
+    if (formValues.numberOfTables * 1 < booth.numberOfTables * 1) {
+      dispatch(
+        showSnackbar(
+          "warning",
+          `Tables cannot be less than ${booth.numberOfTables * 1}`
+        )
+      );
+      return;
+    }
 
     const groupedSocialHandles = {
       facebook: formValues.facebook,
