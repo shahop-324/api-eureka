@@ -376,6 +376,10 @@ const CommunityPublicPage = () => {
 
   const communityPageURL = `https://www.bluemeet.in/community/${communityId}`;
 
+  if (!community) {
+    return null;
+  }
+
   return (
     <>
       <CssBaseline />

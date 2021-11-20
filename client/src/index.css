@@ -1372,3 +1372,27 @@ button.rbc-input::-moz-focus-inner {
   background: #282c34;
   padding: 20px 20px;
 }
+
+.carousel-container-video, .carousel-container-products, .carousel-container-links {
+  width: 850px;
+}
+
+.carousel-container-forms, .carousel-container-offers{
+  width: 260px;
+}
+
+.carousel-item-forms, .carousel-item-offers {
+  width: 100%;
+}
+
+.carousel-item-video {
+  width: 370px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.carousel-item-products {
+  width: 205px;
+  padding-right: 10px;
+  padding-left: 10px;
+}

@@ -18,17 +18,18 @@ import { IconButton } from "@material-ui/core";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { SetCurrentBoothId, shareBusinessCard } from "./../../../actions";
 import Loader from "./../../Loader";
-import { fetchBooth } from "./../../../actions";
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
-import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
-import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
-import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
-import ContactsRoundedIcon from "@mui/icons-material/ContactsRounded";
-import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
-import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import EditBoothDrawer from "./Sub/FormComponents/EditBoothDrawer";
 import { PopupButton } from "@typeform/embed-react";
+
+import BoothVideos from "./BoothComponents/BoothVideos";
+import BoothProducts from "./BoothComponents/BoothProducts";
+import BoothFiles from "./BoothComponents/BoothFiles";
+import BoothOffers from "./BoothComponents/BoothPromoCodes";
+import BoothForms from "./BoothComponents/BoothForms";
+
+import { fetchBooth, fetchBusinessCards } from "./../../../actions";
 
 const ThemedBackgroundButtonOutlined = styled.div`
   background-color: #152d35 !important;
@@ -72,92 +73,6 @@ const GetInTouchCard = styled.div`
   height: auto;
 `;
 
-const DemoRoomCard = styled.div`
-  height: 220px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-`;
-
-const Videos = styled.div`
-  height: 260px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 0.1fr 1fr 1fr 1fr 0.1fr;
-  grid-gap: 24px;
-  align-items: center;
-`;
-const ProductsAndServices = styled.div`
-  height: 260px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 0.1fr 1fr 1fr 0.1fr;
-  grid-gap: 24px;
-  align-items: center;
-`;
-
-const VideoCard = styled.video`
-  border-radius: 15px;
-  height: 230px;
-  width: 100%;
-  background-color: #212121;
-`;
-
-const Files = styled.div`
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-  height: 260px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 24px;
-  align-items: center;
-`;
-
-const FileTab = styled.div`
-  border-radius: 20px;
-  border: 1px solid #b9b9b9;
-  padding: 12px;
-  color: #152d35;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  &:hover {
-    cursor: pointer;
-    -webkit-border-radius: 50px;
-    border-radius: 50px;
-    background: #e5e9f1;
-    -webkit-box-shadow: 12px 12px 24px #e5e9f1, -12px -12px 24px #f0f8ff;
-    box-shadow: 12px 12px 24px #e5e9f1, -12px -12px 24px #f0f8ff;
-  }
-`;
-
-const FileName = styled.div`
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: #152d35;
-`;
-
-const OffersCard = styled.div`
-  border-radius: 10px;
-  background-color: #ffffff;
-  padding: 10px;
-  width: 100%;
-`;
-
 const SocialButton = styled.div`
   border: 1px solid #ffffff !important;
 
@@ -171,37 +86,6 @@ const SocialButton = styled.div`
 const ContactInfo = styled.div`
   font-weight: 500;
   font-size: 0.8rem;
-`;
-
-const ProductCard = styled.div`
-  border-radius: 20px;
-  height: 230px;
-  padding: 15px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid transparent;
-  &:hover {
-    cursor: pointer;
-    border: 1px solid #b9b9b9;
-  }
-`;
-
-const ProductImage = styled.img`
-  border-radius: 20px;
-  max-height: 150px;
-  object-fit: contain;
-  justify-self: center;
-  /* border: 1px solid #212121; */
-`;
-
-const ProductName = styled.div`
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: #152d35;
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -257,22 +141,19 @@ const BoothArea = () => {
   const userId = userDetails._id;
 
   const eventId = params.eventId;
-
-  const [openGetInTouch, setOpenGetInTouch] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-
-  const handleCloseGetInTouch = () => {
-    setOpenGetInTouch(false);
-  };
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
   };
 
-  const { currentBoothId, boothDetails } = useSelector((state) => state.booth);
+  const { currentBoothId, boothDetails, businessCards } = useSelector(
+    (state) => state.booth
+  );
 
   useEffect(() => {
     dispatch(fetchBooth(currentBoothId));
+    dispatch(fetchBusinessCards(currentBoothId, eventId));
   }, []);
 
   const classes = useStyles();
@@ -305,6 +186,16 @@ const BoothArea = () => {
       gtag("config", boothDetails.googleTag);
     });
   };
+
+  let businessCardShared = false;
+
+  const sharedEmail = businessCards.map((el) => {
+    return el.userId._id;
+  });
+
+  if (sharedEmail.includes(userId)) {
+    businessCardShared = true;
+  }
 
   return (
     <>
@@ -462,26 +353,20 @@ const BoothArea = () => {
             </div>
 
             <div className="d-flex flex-row align-items-center justify-content-end mb-3">
-              {/* <ThemedBackgroundButtonFilled className="btn btn-primary btn-outline-text">
-                <FileDownloadRoundedIcon />
-            <span className="ms-2">    Download Business Cards </span>
-              </ThemedBackgroundButtonFilled> */}
-              <PopupButton
-                className="btn btn-outline-text btn-dark me-3"
-                id="HLjqXS5W"
-                // style={{ padding: 8, fontSize: 16 }}
-                size={80}
-              >
-                Take survey
-              </PopupButton>
-              <ThemedBackgroundButtonFilled
-                onClick={() => {
-                  dispatch(shareBusinessCard(userId, eventId, currentBoothId));
-                }}
-                className="btn btn-primary btn-outline-text"
-              >
-                <span> Share Business Card </span>
-              </ThemedBackgroundButtonFilled>
+              {businessCardShared ? (
+                <Chip label="Shared business card" color="success" />
+              ) : (
+                <ThemedBackgroundButtonFilled
+                  onClick={() => {
+                    dispatch(
+                      shareBusinessCard(userId, eventId, currentBoothId)
+                    );
+                  }}
+                  className="btn btn-primary btn-outline-text"
+                >
+                  <span> Share Business Card </span>
+                </ThemedBackgroundButtonFilled>
+              )}
             </div>
           </div>
         </div>
@@ -496,118 +381,39 @@ const BoothArea = () => {
         </div>
 
         <BasicGrid className="mb-5">
-          <ProductsAndServices>
-            <IconButton>
-              <ArrowLeftRoundedIcon />
-            </IconButton>
-            <VideoCard
-              // controls={true}
-              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/video.mp4`}
-            />
-            <VideoCard
-              // controls={true}
-              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/video.mp4`}
-            />
-            <IconButton>
-              <ArrowRightRoundedIcon />
-            </IconButton>
-          </ProductsAndServices>
+          <BoothVideos />
           <GetInTouchCard className="p-4">
             <div className="d-flex flex-row align-items-center pb-3 px-2">
               <MailOutlineRoundedIcon />
-
-              <ContactInfo className="ms-3">
-                {truncateText(Faker.internet.email(), 25)}
-              </ContactInfo>
+              <a
+                href={`mailto:${boothDetails.contactEmail}`}
+                style={{ textDecoration: "none" }}
+              >
+                <ContactInfo className="ms-3">
+                  {truncateText(boothDetails.contactEmail, 25)}
+                </ContactInfo>
+              </a>
             </div>
 
             <div className="d-flex flex-row align-items-center py-3 px-2">
               <PhoneRoundedIcon />
-              <ContactInfo className="ms-3">
-                {truncateText(Faker.phone.phoneNumber(), 30)}
-              </ContactInfo>
-            </div>
-
-            {/* <div className="d-flex flex-row align-items-center justify-content-end">
-              <button
-                onClick={() => {
-                  setOpenGetInTouch(true);
-                }}
-                className="btn btn-outline-text btn-outline-primary"
+              <a
+                href={`tel:${boothDetails.contactNumber}`}
+                style={{ textDecoration: "none" }}
               >
-                {" "}
-                <EditRoundedIcon style={{ fontSize: "17px" }} />{" "}
-                <span className="ms-2"> Edit </span>{" "}
-              </button>
-            </div> */}
+                <ContactInfo className="ms-3">
+                  {truncateText(boothDetails.contactNumber, 30)}
+                </ContactInfo>
+              </a>
+            </div>
           </GetInTouchCard>
 
-          <Videos>
-            <IconButton>
-              <ArrowLeftRoundedIcon />
-            </IconButton>
+          <BoothProducts />
+          <BoothForms />
 
-            <ProductCard>
-              <ProductImage
-                className="mb-3"
-                src={`https://ss7.vzw.com/is/image/VerizonWireless/apple-watch-series-6-blue-aluminum-sport-band-40-mm-m02r3lla-a`}
-              />
-              <ProductName>Apple watch series 6</ProductName>
-            </ProductCard>
-            <ProductCard>
-              <ProductImage
-                className="mb-3"
-                src={`https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-12-red-select-2020?wid=940&hei=1112&fmt=png-alpha&.v=1604343703000`}
-              />
-              <ProductName>iPhone 12 64 GB</ProductName>
-            </ProductCard>
-            <ProductCard>
-              <ProductImage
-                className="mb-3"
-                src={`https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-spacegray-select-202011_GEO_US?wid=904&hei=840&fmt=jpeg&qlt=80&.v=1632948875000`}
-              />
-              <ProductName>MacBook Pro 2021 512 GB</ProductName>
-            </ProductCard>
+          <BoothFiles />
 
-            <IconButton>
-              <ArrowRightRoundedIcon />
-            </IconButton>
-          </Videos>
-          <div></div>
-
-          <Files className="py-3">
-            <div className="px-3">
-              <FileTab>
-                <DescriptionRoundedIcon />
-                <FileName className="ms-2">How to get started ?</FileName>
-              </FileTab>
-            </div>
-            <div className="px-3">
-              <FileTab>
-                <DescriptionRoundedIcon />
-                <FileName className="ms-2">How to get started ?</FileName>
-              </FileTab>
-            </div>
-            <div className="px-3">
-              <FileTab>
-                <DescriptionRoundedIcon />
-                <FileName className="ms-2">How to get started ?</FileName>
-              </FileTab>
-            </div>
-            <div className="px-3">
-              <FileTab>
-                <InsertLinkRoundedIcon />
-                <FileName className="ms-2">How to get started ?</FileName>
-              </FileTab>
-            </div>
-            <div className="px-3">
-              <FileTab>
-                <InsertLinkRoundedIcon />
-                <FileName className="ms-2">How to get started ?</FileName>
-              </FileTab>
-            </div>
-          </Files>
-          <div></div>
+          <BoothOffers />
         </BasicGrid>
 
         <div
