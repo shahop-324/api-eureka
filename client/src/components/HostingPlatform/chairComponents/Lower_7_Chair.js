@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { getRTCTokenForJoiningTable } from "../../../actions";
+import { getRTCTokenForJoiningTable, editCurrentlyJoinedChair } from "../../../actions";
 
 const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -19,8 +18,6 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
         : null;
     })
   );
-
-  const chairArrangement = useSelector((state) => state.rooms.chairs);
 
   let chairIsOccupied;
   let userName7;
@@ -46,7 +43,6 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   } else {
     // What if chair_7 is not occupied
     chairIsOccupied = false;
-
     displayPopUp = "none";
   }
 
@@ -57,19 +53,17 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email, role } = useSelector((state) => state.eventAccessToken);
-  const userId = useSelector((state) => state.user.userDetails._id);
+  const { role } = useSelector((state) => state.eventAccessToken);
+  const userId = userDetails._id;
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
-  const userImage = userDetails.image ? userDetails.image : " ";
-  const userCity = userDetails.city ? userDetails.city : "Los Angeles";
-  const userCountry = userDetails.country ? userDetails.country : "USA";
+  const userImage = userDetails.image && userDetails.image;
+  const userCity = userDetails.city && userDetails.city;
+  const userCountry = userDetails.country && userDetails.country;
   const userOrganisation = userDetails.organisation
-    ? userDetails.organisation
-    : "Google Inc.";
+    && userDetails.organisation;
   const userDesignation = userDetails.designation
-    ? userDetails.designation
-    : "Vice President";
+    && userDetails.designation;
 
   const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
@@ -107,13 +101,12 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
         //   "There has been a problem with your fetch operation."
       });
     } else {
-      document.getElementById(`${id}_chair_7_img_blob`).remove();
+      if(document.getElementById(`${id}_chair_7_img_blob`)) {
+        document.getElementById(`${id}_chair_7_img_blob`).remove();
+      }
+      
     }
   }, [userImage7, id, userImage]);
-
-  useEffect(() => {
-    return 1 + 1;
-  }, [chairArrangement, chairIsOccupied, chairArrangement.length]);
 
   return (
     <>
@@ -125,9 +118,8 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
           // console.log(`${id}_chair_7`);
 
           dispatch(
-            userActions.EditCurrentlyJoinedChair({
-              chairId: `${id}_chair_7`,
-            })
+            editCurrentlyJoinedChair(
+              `${id}_chair_7`)
           );
 
           socket.emit(
@@ -139,7 +131,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
               userName,
               userId,
               userRole: role,
-              userEmail: email,
+              userEmail: userDetails.email,
               userImage,
               userCity,
               userCountry,

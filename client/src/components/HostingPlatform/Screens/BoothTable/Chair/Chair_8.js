@@ -57,7 +57,7 @@ const Chair_8 = ({ id, launchTableScreen }) => {
 
   const { userDetails } = useSelector((state) => state.user);
 
-  const { email, role } = useSelector((state) => state.eventAccessToken);
+  const { role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
   const userImage = userDetails.image && userDetails.image;
@@ -99,7 +99,6 @@ const Chair_8 = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage8) {
       fetchImage(userImage8, id).catch((error) => {
-        console.log(error);
       });
     } else {
       if (document.getElementById(`${id}_chair_8_img_blob`)) {
@@ -128,7 +127,7 @@ const Chair_8 = ({ id, launchTableScreen }) => {
               userName,
               userId,
               userRole: role,
-              userEmail: email,
+              userEmail: userDetails.email,
               userImage,
               userCity,
               userCountry,

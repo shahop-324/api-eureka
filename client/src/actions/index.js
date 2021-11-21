@@ -11008,6 +11008,15 @@ export const fetchBoothTableDetails =
     );
   };
 
+export const fetchLoungeTableDetails =
+  (table) => async (dispatch, getState) => {
+    dispatch(
+      eventTablesActions.FetchEventTable({
+        eventTable: table,
+      })
+    );
+  };
+
 export const fetchVolumeIndicators = (arr) => async (dispatch, getState) => {
   dispatch(StreamingActions.fetchVolumeIndicators({ volumeIndicators: arr }));
 };

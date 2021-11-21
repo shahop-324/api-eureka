@@ -24,7 +24,7 @@ import {
   getBoothTable,
   fetchNumberOfPeopleOnBoothTable,
   fetchBoothTableDetails,
-  fetchBoothChairs
+  fetchBoothChairs,
 } from "../../../../actions";
 
 const RoomTitle = styled.div`
@@ -76,9 +76,6 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
     socket.on("updatedBoothTable", ({ tableDetails }) => {
       dispatch(fetchBoothTableDetails(tableDetails));
     });
-
-    
-
   }, []);
 
   return (
@@ -209,4 +206,4 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
 export default Room;
 
-// DONE => Edit Booth Table , Table Screen , DONE => getBoothTable
+// DONE => Edit Booth Table , DONE => Table Screen , DONE => getBoothTable

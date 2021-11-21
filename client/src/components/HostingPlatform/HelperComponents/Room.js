@@ -20,7 +20,11 @@ import TableScreen from "../Screens/TableScreen";
 
 import styled from "styled-components";
 import EditTable from "./EditTable";
-import { getEventTable } from "../../../actions";
+import {
+  fetchNumberOfPeopleOnTable,
+  getEventTable,
+  fetchLoungeTableDetails,
+} from "../../../actions";
 
 const RoomTitle = styled.div`
   font-weight: 500;
@@ -63,13 +67,17 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
   useEffect(() => {
     socket.on("numberOfPeopleOnTable", ({ numberOfPeopleOnTable }) => {
-      dispatch(
-        roomsActions.FetchNumOfPeopleOnTable({
-          numberOfPeopleOnTable: numberOfPeopleOnTable,
-        })
-      );
+      dispatch(fetchNumberOfPeopleOnTable(numberOfPeopleOnTable));
     });
-  }, [chairArrangement, dispatch]);
+
+    socket.on("loungeTable", ({ loungeTable }) => {
+      dispatch(fetchLoungeTableDetails(loungeTable));
+    });
+
+    socket.on("updatedLoungeTable", ({ loungeTable }) => {
+      dispatch(fetchLoungeTableDetails(loungeTable));
+    });
+  }, []);
 
   return (
     <>
@@ -180,15 +188,13 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 
       {/* Table Screen here */}
 
-      {openTableScreen ? (
+      {openTableScreen && (
         <TableScreen
           openTableScreen={openTableScreen}
           launchTableScreen={launchTableScreen}
           closeTableScreen={closeTableScreen}
           id={id}
         />
-      ) : (
-        ""
       )}
 
       <EditTable
@@ -201,3 +207,5 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
 };
 
 export default Room;
+
+// fetchLoungeTableDetails, Table Screen, Edit table

@@ -6,10 +6,7 @@ import { useParams } from "react-router-dom";
 import Loader from "./../../Loader";
 import socket from "../service/socket";
 
-import {
-  fetchChairArrangement,
-  getEventTables,
-} from "../../../actions";
+import { fetchChairArrangement, getEventTables } from "../../../actions";
 
 const RenderEventTables = (tables) => {
   if (!tables) return;
@@ -39,10 +36,6 @@ const Rooms = () => {
     socket.on("roomChairData", ({ roomChairs }) => {
       dispatch(fetchChairArrangement(roomChairs));
     });
-  }, []);
-
-  useEffect(() => {
-    dispatch(getEventTables(eventId));
   }, []);
 
   if (!eventTables) {

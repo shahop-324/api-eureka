@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
 
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { getRTCTokenForJoiningTable } from "../../../actions";
+import { getRTCTokenForJoiningTable, editCurrentlyJoinedChair } from "../../../actions";
 
 const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -30,7 +29,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   let userOrganisation5;
   let userDesignation5;
   let displayPopUp = "auto";
-  let displayAvatar = "auto";
+  // let displayAvatar = "auto";
 
   if (chair) {
     // What if chair_5 is occupied
@@ -47,9 +46,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   } else {
     // What if chair_5 is not occupied
     chairIsOccupied = false;
-
     displayPopUp = "none";
-    displayAvatar = "none";
   }
 
   const fetchImage = async (imgURL, id) => {
@@ -84,19 +81,17 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email, role } = useSelector((state) => state.eventAccessToken);
+  const { role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
-  const userImage = userDetails.image ? userDetails.image : " ";
-  const userCity = userDetails.city ? userDetails.city : "Los Angeles";
-  const userCountry = userDetails.country ? userDetails.country : "USA";
+  const userImage = userDetails.image && userDetails.image;
+  const userCity = userDetails.city && userDetails.city;
+  const userCountry = userDetails.country && userDetails.country;
   const userOrganisation = userDetails.organisation
-    ? userDetails.organisation
-    : "Google Inc.";
+    && userDetails.organisation;
   const userDesignation = userDetails.designation
-    ? userDetails.designation
-    : "Vice President";
+    && userDetails.designation;
 
   useEffect(() => {
     if (userImage) {
@@ -104,7 +99,10 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
         //   "There has been a problem with your fetch operation."
       });
     } else {
-      document.getElementById(`${id}_chair_5_img_blob`).remove();
+      if(document.getElementById(`${id}_chair_5_img_blob`)) {
+        document.getElementById(`${id}_chair_5_img_blob`).remove();
+      }
+      
     }
   }, [userImage5, id, userImage]);
 
@@ -112,7 +110,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
   // console.log(params);
 
   const eventId = params.eventId;
-  const userId = useSelector((state) => state.user.userDetails._id);
+  const userId = userDetails._id;
 
   return (
     <>
@@ -120,13 +118,8 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
         className="lower-chair-wrapper"
         id={`${id}_chair_5`}
         onClick={() => {
-          // if(chairIsOccupied) return;
-          // console.log(`${id}_chair_5`);
-
           dispatch(
-            userActions.EditCurrentlyJoinedChair({
-              chairId: `${id}_chair_5`,
-            })
+            editCurrentlyJoinedChair(`${id}_chair_5`)
           );
 
           socket.emit(
@@ -138,7 +131,7 @@ const LOWER_5_CHAIR = ({ id, launchTableScreen }) => {
               userId,
               userName,
               userRole: role,
-              userEmail: email,
+              userEmail: userDetails.email,
               userImage,
               userCity,
               userCountry,

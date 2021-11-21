@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import "./../../Styles/rooms.scss";
 import Room from "./Room";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import Loader from "./../../../Loader";
 import socket from "./../../service/socket";
 
@@ -26,8 +25,6 @@ const RenderBoothTables = (tables) => {
 
 const Rooms = () => {
   const dispatch = useDispatch();
-  const params = useParams();
-  const eventId = params.eventId;
 
   const { currentBoothId } = useSelector((state) => state.booth);
 

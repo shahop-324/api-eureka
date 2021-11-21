@@ -30,12 +30,6 @@ import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphon
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 
-// const StreamBody = styled.div`
-//   border-radius: 20px;
-//   background-color: #212121;
-//   height: 75vh;
-// `;
-
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -85,6 +79,8 @@ const TableScreen = ({
       }
     );
   };
+
+
   const turnOnVideo = async (uid) => {
     console.log(rtc.localVideoTrack);
 
@@ -127,6 +123,8 @@ const TableScreen = ({
       }
     );
   };
+
+  
   const turnOnAudio = async (uid) => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(true);

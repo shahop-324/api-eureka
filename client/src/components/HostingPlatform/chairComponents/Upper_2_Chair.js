@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../../reducers/userSlice";
 import { Avatar } from "@material-ui/core";
-
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { getRTCTokenForJoiningTable } from "../../../actions";
+import {
+  getRTCTokenForJoiningTable,
+  editCurrentlyJoinedChair,
+} from "../../../actions";
 
 const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -57,19 +58,17 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
 
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const { email, role } = useSelector((state) => state.eventAccessToken);
+  const { role } = useSelector((state) => state.eventAccessToken);
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
 
-  const userImage = userDetails.image ? userDetails.image : " ";
-  const userCity = userDetails.city ? userDetails.city : "Los Angeles";
-  const userCountry = userDetails.country ? userDetails.country : "USA";
+  const userImage = userDetails.image && userDetails.image;
+  const userCity = userDetails.city && userDetails.city;
+  const userCountry = userDetails.country && userDetails.country;
   const userOrganisation = userDetails.organisation
-    ? userDetails.organisation
-    : "Google Inc.";
+    && userDetails.organisation;
   const userDesignation = userDetails.designation
-    ? userDetails.designation
-    : "Vice President";
+    && userDetails.designation;
 
   const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
@@ -104,10 +103,13 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage2, id).catch((e) => {
-//   "There has been a problem with your fetch operation."
+        //   "There has been a problem with your fetch operation."
       });
     } else {
-      document.getElementById(`${id}_chair_2_img_blob`).remove();
+      if(document.getElementById(`${id}_chair_2_img_blob`)) {
+        document.getElementById(`${id}_chair_2_img_blob`).remove();
+      }
+      
     }
   }, [userImage2, userImage, id]);
 
@@ -119,14 +121,7 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
         className="upper-chair-wrapper"
         id={`${id}_chair_2`}
         onClick={() => {
-          // if(chairIsOccupied) return;
-          // console.log(`${id}_chair_2`);
-
-          dispatch(
-            userActions.EditCurrentlyJoinedChair({
-              chairId: `${id}_chair_2`,
-            })
-          );
+          dispatch(editCurrentlyJoinedChair(`${id}_chair_2`));
 
           socket.emit(
             "updateChair",
@@ -137,7 +132,7 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
               userName,
               userId,
               userRole: role,
-              userEmail: email,
+              userEmail: userDetails.email,
               userImage,
               userCity,
               userCountry,
@@ -155,7 +150,11 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className={`upper-chair chair pt-2 ${chairIsOccupied ? " " : "upper-chair-hover"}`}>
+        <div
+          className={`upper-chair chair pt-2 ${
+            chairIsOccupied ? " " : "upper-chair-hover"
+          }`}
+        >
           <div style={{ transform: "translateY(-16.5px)" }}>
             <Popup
               trigger={

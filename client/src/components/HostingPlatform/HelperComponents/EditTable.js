@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -113,13 +113,9 @@ const EditTable = ({
 
   const dispatch = useDispatch();
 
-  const { tableDetails, isLoading, error } = useSelector(
-    (state) => state.eventTables
+  const tableDetails = useSelector((state) =>
+    state.eventTables.eventTables.find((table) => table.tableId === tableId)
   );
-
-  useEffect(() => {
-    // dispatch(getEventTable(tableId));
-  }, []);
 
   const TableNum = tableId.slice(31) * 1 + 1;
 
@@ -178,7 +174,6 @@ const EditTable = ({
               <div className="p-0 d-flex flex-row justify-content-center">
                 <Avatar
                   variant="rounded"
-                  // alt={userDetails.firstName}
                   src={fileToPreview}
                   className={classes.large}
                 />
@@ -209,7 +204,7 @@ const EditTable = ({
               <FormLabel component="legend">Which one to show ?</FormLabel>
               <RadioGroup
                 row
-                aria-label="gender"
+                aria-label="priority"
                 defaultValue={priority}
                 name="radio-buttons-group"
               >
@@ -266,19 +261,9 @@ const mapStateToProps = (state) => ({
   },
 });
 
-const validate = (formValues) => {
-  const errors = {};
-
-  if (!formValues.eventName) {
-    errors.eventName = "Event name is required";
-  }
-  return errors;
-};
-
 export default connect(mapStateToProps)(
   reduxForm({
     form: "EditTableForm",
-    validate,
     enableReinitialize: true,
     destroyOnUnmount: false,
   })(EditTable)

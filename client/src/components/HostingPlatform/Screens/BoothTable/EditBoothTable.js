@@ -202,7 +202,7 @@ const EditBoothTable = ({
               <FormLabel component="legend">Which one to show ?</FormLabel>
               <RadioGroup
                 row
-                aria-label="gender"
+                aria-label="priority"
                 defaultValue={priority}
                 name="radio-buttons-group"
               >
