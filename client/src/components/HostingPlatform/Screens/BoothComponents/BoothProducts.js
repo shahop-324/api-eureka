@@ -96,14 +96,16 @@ const BoothProducts = () => {
 
   return (
     <>
+      
       <ProductsContainer className="d-flex flex-column justify-content-center">
-      <Carousel
+        {products && <Carousel
           containerClass="carousel-container-products"
           itemClass="carousel-item-products"
           responsive={responsive}
         >
         {renderProducts(products)}
-        </Carousel>
+        </Carousel>}
+      
       </ProductsContainer>
     </>
   );

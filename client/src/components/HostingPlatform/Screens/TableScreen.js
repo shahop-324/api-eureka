@@ -339,7 +339,14 @@ const TableScreen = ({
         );
       }
 
-      // ! Call Remove from all streams
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
     });
 
     rtc.client.on("user-left", async (user) => {
@@ -353,6 +360,20 @@ const TableScreen = ({
         setScreenTracks((prev) =>
           prev.filter((element) => element.uid !== uid)
         );
+      }
+
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
+
+      if (!uid.startsWith("screen")) {
+        rtc.localVideoTrack.stop();
+        rtc.localVideoTrack.play(userId);
       }
     });
 
@@ -583,11 +604,10 @@ const TableScreen = ({
 
     setView("gallery"); // We will set view as gallery whenever session lifecycle stage is switched
   };
-let availablePeople = [];
-if(tableDetails) {
-  availablePeople =   tableDetails.onStagePeople;
-}
-  
+  let availablePeople = [];
+  if (tableDetails) {
+    availablePeople = tableDetails.onStagePeople;
+  }
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}

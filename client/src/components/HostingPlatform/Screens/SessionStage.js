@@ -832,9 +832,6 @@ const SessionStage = () => {
     });
 
     rtc.client.on("user-unpublished", async (user, mediaType) => {
-      console.log(user);
-      console.log(mediaType);
-
       const uid = user.uid.toString();
 
       // This will ensure that the screen track is unmounted immidiately as its unpublished
@@ -845,7 +842,14 @@ const SessionStage = () => {
         );
       }
 
-      // ! Call Remove from all streams
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
     });
 
     rtc.client.on("user-left", async (user) => {
@@ -859,6 +863,20 @@ const SessionStage = () => {
         setScreenTracks((prev) =>
           prev.filter((element) => element.uid !== uid)
         );
+      }
+
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
+
+      if (!uid.startsWith("screen")) {
+        rtc.localVideoTrack.stop();
+        rtc.localVideoTrack.play(userId);
       }
     });
 

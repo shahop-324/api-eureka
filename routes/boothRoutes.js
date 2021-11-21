@@ -13,13 +13,13 @@ router.post(
 
 router.get(
   "/:eventId/getAllbooths",
-  authController.protectCommunity,
+  authController.protect,
   boothController.getAllBoothOfEvent
 );
 
 router.get(
   "/:id/getBoothDetails",
-  authController.protectCommunity,
+  authController.protect,
   boothController.getOneBoothDetails
 );
 

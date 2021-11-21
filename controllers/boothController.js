@@ -104,6 +104,7 @@ exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
       data: booths,
     });
   } catch (error) {
+    
     console.log(error);
   }
 });

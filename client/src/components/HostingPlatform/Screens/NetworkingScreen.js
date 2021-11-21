@@ -338,7 +338,14 @@ const NetworkingScreen = ({ open, handleClose }) => {
         );
       }
 
-      // ! Call Remove from all streams
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
     });
 
     rtc.client.on("user-left", async (user) => {
@@ -353,9 +360,29 @@ const NetworkingScreen = ({ open, handleClose }) => {
           prev.filter((element) => element.uid !== uid)
         );
       }
-    });
 
-    console.log(options.appId, channelName, options.token, options.uid, "These are credentials used to join channel");
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
+
+      if (!uid.startsWith("screen")) {
+        rtc.localVideoTrack.stop();
+        rtc.localVideoTrack.play(userId);
+      }
+    });
+    
+    console.log(
+      options.appId,
+      channelName,
+      options.token,
+      options.uid,
+      "These are credentials used to join channel"
+    );
 
     await rtc.client
       .join(options.appId, channelName, options.token, options.uid)

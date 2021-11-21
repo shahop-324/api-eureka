@@ -343,7 +343,14 @@ const TableScreen = ({
         );
       }
 
-      // ! Call Remove from all streams
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
     });
 
     rtc.client.on("user-left", async (user) => {
@@ -357,6 +364,20 @@ const TableScreen = ({
         setScreenTracks((prev) =>
           prev.filter((element) => element.uid !== uid)
         );
+      }
+
+      for (let element of rtc.client.remoteUsers) {
+        let remoteVideoTrack = element.videoTrack;
+        let remoteUid = element.uid;
+
+        if (remoteVideoTrack && remoteUid) {
+          remoteVideoTrack.play(remoteUid);
+        }
+      }
+
+      if (!uid.startsWith("screen")) {
+        rtc.localVideoTrack.stop();
+        rtc.localVideoTrack.play(userId);
       }
     });
 

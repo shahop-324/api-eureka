@@ -76,13 +76,15 @@ const BoothForms = () => {
   return (
     <>
       <BoothFormsContainer className="">
-        <Carousel
-          containerClass="carousel-container-forms"
-          itemClass="carousel-item-forms"
-          responsive={responsive}
-        >
-          {renderForms(forms)}
-        </Carousel>
+        {forms && (
+          <Carousel
+            containerClass="carousel-container-forms"
+            itemClass="carousel-item-forms"
+            responsive={responsive}
+          >
+            {renderForms(forms)}
+          </Carousel>
+        )}
       </BoothFormsContainer>
     </>
   );

@@ -113,8 +113,8 @@ const BoothFiles = () => {
             gridGap: "32px",
           }}
         >
-          {renderFiles(files)}
-          {renderLinks(links)}
+          { files && renderFiles(files)}
+          { links && renderLinks(links)}
         </div>
       </Files>
     </>

@@ -77,13 +77,14 @@ const BoothOffers = () => {
   return (
     <>
       <BoothPromoCodes className="">
-        <Carousel
+        { offers && <Carousel
           containerClass="carousel-container-offers"
           itemClass="carousel-item-offers"
           responsive={responsive}
         >
-            {renderoffers(offers)}
-        </Carousel>
+           { renderoffers(offers)}
+        </Carousel> }
+        
       </BoothPromoCodes>
     </>
   );

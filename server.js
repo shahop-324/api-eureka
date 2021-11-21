@@ -151,7 +151,7 @@ io.on("connect", (socket) => {
 
     if (networkingRoom) {
       networkingRoom.onStagePeople = networkingRoom.onStagePeople.filter(
-        (person) => person.user !== userId
+        (person) => person.user.toString() !== userId.toString()
       );
 
       await networkingRoom.save(

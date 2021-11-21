@@ -87,13 +87,15 @@ const BoothVideos = () => {
   return (
     <>
       <VideosContainer className="d-flex flex-column justify-content-center">
-        <Carousel
-          containerClass="carousel-container-video"
-          itemClass="carousel-item-video"
-          responsive={responsive}
-        >
-          {renderVideos(videos)}
-        </Carousel>
+        {videos && (
+          <Carousel
+            containerClass="carousel-container-video"
+            itemClass="carousel-item-video"
+            responsive={responsive}
+          >
+            {renderVideos(videos)}
+          </Carousel>
+        )}
       </VideosContainer>
     </>
   );

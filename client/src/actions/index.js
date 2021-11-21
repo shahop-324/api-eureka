@@ -2339,7 +2339,7 @@ export const fetchBooths = (id, term, tag) => async (dispatch, getState) => {
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
+        Authorization: `Bearer ${getState().auth.token}`,
       },
     });
 
@@ -2393,7 +2393,7 @@ export const fetchBooth = (id) => async (dispatch, getState) => {
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
+        Authorization: `Bearer ${getState().auth.token}`,
       },
     });
     if (!res.ok) {
