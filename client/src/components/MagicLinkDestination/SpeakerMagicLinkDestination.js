@@ -208,12 +208,12 @@ const SpeakerMagicLinkDestination = () => {
         <></>
       )}
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
-      <a href="/">
-        <img
-          src={BluemeetLogoLight}
-          alt="Bluemeet Logo"
-          style={{ height: "50px" }}
-        />
+        <a href="/">
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </a>
         {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
@@ -302,7 +302,7 @@ const SpeakerMagicLinkDestination = () => {
                           <JoinEventButton
                             onClick={() => {
                               dispatch(logInMagicLinkUser(userId));
-                              dispatch(navigationIndexForHostingPlatform(5));
+                              dispatch(navigationIndexForHostingPlatform(0));
                               dispatch(
                                 generateEventAccessToken(
                                   userId,
@@ -349,7 +349,7 @@ const SpeakerMagicLinkDestination = () => {
                       <JoinEventButton
                         onClick={() => {
                           dispatch(logInMagicLinkUser(userId));
-                          dispatch(navigationIndexForHostingPlatform(5));
+                          dispatch(navigationIndexForHostingPlatform(0));
                           dispatch(
                             generateEventAccessToken(
                               userId,
@@ -372,10 +372,7 @@ const SpeakerMagicLinkDestination = () => {
                         <Announcement className="mb-3">
                           This event is already ended.
                         </Announcement>
-                        <a
-                          href="https://www.bluemeet.in"
-                          style={{ textDecoration: "none" }}
-                        >
+                        <a href="/" style={{ textDecoration: "none" }}>
                           <JoinEventButton
                             className="btn btn-outline-text btn-primary"
                             style={{ width: "100%" }}

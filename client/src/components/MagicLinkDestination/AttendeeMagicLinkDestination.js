@@ -259,7 +259,7 @@ const AttendeeMagicLinkDestination = () => {
                         <JoinEventButton
                           onClick={() => {
                             dispatch(logInMagicLinkUser(userId));
-                            dispatch(navigationIndexForHostingPlatform(5));
+                            dispatch(navigationIndexForHostingPlatform(0));
                             dispatch(
                               generateEventAccessToken(
                                 userId,
@@ -306,7 +306,7 @@ const AttendeeMagicLinkDestination = () => {
                     <JoinEventButton
                       onClick={() => {
                         dispatch(logInMagicLinkUser(userId));
-                        dispatch(navigationIndexForHostingPlatform(5));
+                        dispatch(navigationIndexForHostingPlatform(0));
                         dispatch(
                           generateEventAccessToken(
                             userId,
@@ -330,7 +330,7 @@ const AttendeeMagicLinkDestination = () => {
                         This event is already ended.
                       </Announcement>
                       <a
-                        href="https://www.bluemeet.in"
+                        href="/"
                         style={{ textDecoration: "none" }}
                       >
                         <JoinEventButton

@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Avatar } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import "./../Styles/networking.scss";
 import { useDispatch, useSelector } from "react-redux";
 import socket from "./../service/socket";
-import { setOpenMatching } from "./../../../actions";
+import { setOpenMatching, fetchNetworkingRoomDetails } from "./../../../actions";
 import { useParams } from "react-router-dom";
 import Matching from "../HelperComponents/Matching";
 
@@ -15,17 +15,15 @@ const Networking = () => {
 
   const eventId = params.eventId;
 
-  const [open, setOpen] = useState(false);
-
-  const handleCloseMatching = () => {
-    setOpen(false);
-  };
-
   const { image, id, firstName, lastName } = useSelector(
     (state) => state.user.userDetails
   );
 
   useEffect(() => {
+    socket.on("updatedNetworkingRoom", ({updatedNetworkingRoom}) => {
+      dispatch(fetchNetworkingRoomDetails(updatedNetworkingRoom));
+    })
+
     return () => {
       socket.emit(
         "leaveNetworking",
@@ -85,8 +83,6 @@ const Networking = () => {
         <div
           className="btn-filled-h px-5 py-3 start-networking-btn"
           onClick={() => {
-            console.log("speed networking was just clicked!");
-
             setTimeout(() => {
               socket.emit("startNetworking", {
                 eventId,
@@ -95,9 +91,8 @@ const Networking = () => {
                 image,
                 socketId: socket.id,
               });
-            }, 3000);
+            }, 2000);
             dispatch(setOpenMatching(true));
-
             // TODO   Emit a message to put this user in available for networking and start matching him/her to others who are also avialable.
           }}
         >
@@ -106,8 +101,6 @@ const Networking = () => {
       </div>
 
       <Matching />
-      
-      
     </>
   );
 };

@@ -209,12 +209,12 @@ const BoothMagicLinkDestination = () => {
         <></>
       )}
       <NavBar className="d-flex flex-row align-items-center justify-content-between px-4 py-3">
-      <a href="/">
-        <img
-          src={BluemeetLogoLight}
-          alt="Bluemeet Logo"
-          style={{ height: "50px" }}
-        />
+        <a href="/">
+          <img
+            src={BluemeetLogoLight}
+            alt="Bluemeet Logo"
+            style={{ height: "50px" }}
+          />
         </a>
         {isSignedIn ? <AvatarMenu /> : <></>}
       </NavBar>
@@ -250,9 +250,7 @@ const BoothMagicLinkDestination = () => {
 
           <div className="p-4">
             {/* Event Name */}
-            <EventName className="mb-5">
-              How to build a thriving Business from scratch.
-            </EventName>
+            <EventName className="mb-5">{eventDetails.eventName}</EventName>
             {/* Event timeline */}
             <Heading className="mb-3">Event Timeline</Heading>
             <EventTimeline className="mb-4">
@@ -302,7 +300,7 @@ const BoothMagicLinkDestination = () => {
                           <JoinEventButton
                             onClick={() => {
                               dispatch(logInMagicLinkUser(userId));
-                              dispatch(navigationIndexForHostingPlatform(5));
+                              dispatch(navigationIndexForHostingPlatform(0));
                               dispatch(
                                 generateEventAccessToken(
                                   userId,
@@ -349,7 +347,7 @@ const BoothMagicLinkDestination = () => {
                       <JoinEventButton
                         onClick={() => {
                           dispatch(logInMagicLinkUser(userId));
-                          dispatch(navigationIndexForHostingPlatform(5));
+                          dispatch(navigationIndexForHostingPlatform(0));
                           dispatch(
                             generateEventAccessToken(
                               userId,
@@ -372,10 +370,7 @@ const BoothMagicLinkDestination = () => {
                         <Announcement className="mb-3">
                           This event is already ended.
                         </Announcement>
-                        <a
-                          href="https://www.bluemeet.in"
-                          style={{ textDecoration: "none" }}
-                        >
+                        <a href="/" style={{ textDecoration: "none" }}>
                           <JoinEventButton
                             className="btn btn-outline-text btn-primary"
                             style={{ width: "100%" }}

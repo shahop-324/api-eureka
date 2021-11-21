@@ -79,7 +79,6 @@ const Matching = () => {
                 backgroundColor: "#F7536E",
               }}
               onClick={() => {
-                console.log("Cancel speed networking was just clicked!");
                 socket.emit("leaveNetworking", {
                   eventId,
                   userId: userId,

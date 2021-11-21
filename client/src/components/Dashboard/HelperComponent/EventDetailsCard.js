@@ -141,17 +141,17 @@ const EventDetailCard = ({
 
   // Check if the entering person is a host/ moderator / organiser
 
-  if (moderators) {
-    if (moderators.includes(userId)) {
-      role = "moderator";
-    }
-  }
+  // if (moderators) {
+  //   if (moderators.includes(userId)) {
+  //     role = "moderator";
+  //   }
+  // }
 
-  if (hosts) {
-    if (hosts.includes(userId)) {
-      role = "host";
-    }
-  }
+  // if (hosts) {
+  //   if (hosts.includes(userId)) {
+  //     role = "host";
+  //   }
+  // }
 
   return (
     <>
@@ -441,39 +441,13 @@ const EventDetailCard = ({
                     href={`/community/${communityId}/event/${eventId}/hosting-platform/lobby`}
                     target="_blank"
                     rel="noreferrer"
-                    style={{textDecoration: "none"}}
+                    style={{ textDecoration: "none" }}
                   >
                     <ShareLocationRoundedIcon />
                     <MenuText>Venue</MenuText>
                   </a>
                 </MenuItem>
               </StyledMenu>
-
-              {/* <Link
-                onClick={() => {
-                  dispatch(fetchEvent(eventId));
-                }}
-                to={`/compatibility-test/community/${communityId}/event/${eventId}/`}
-              >
-                <button
-                  onClick={() => {
-                    dispatch(
-                      generateEventAccessToken(
-                        userId,
-                        email,
-                        role // organiser ||  moderator ||  host
-                      )
-                    );
-                  }}
-                  className="btn btn-outline-dark btn-outline-text event-field-label py-2"
-                >
-                  <VisibilityIcon
-                    className="me-2"
-                    style={{ fontSize: "18px" }}
-                  />
-                  Preview
-                </button>
-              </Link> */}
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ import history from "../../../history";
 import {
   errorTrackerForFetchParticularEventOfCommunity,
   fetchParticularEventOfCommunity,
+  generateEventAccessToken,
 } from "../../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
@@ -76,7 +77,9 @@ const EditEventRoot = () => {
 
   const communityId = params.communityId;
 
-  const userId = useSelector((state) => state.user.userDetails._id);
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
 
   const { error } = useSelector((state) => state.event);
 
@@ -315,6 +318,15 @@ const EditEventRoot = () => {
                 style={{ textDecoration: "none" }}
               >
                 <button
+                  onClick={() => {
+                    dispatch(
+                      generateEventAccessToken(
+                        userId,
+                        userDetails.email,
+                        "organiser" // organiser ||  moderator ||  host
+                      )
+                    );
+                  }}
                   disabled={
                     eventDetails && eventDetails.status === "Ended"
                       ? true

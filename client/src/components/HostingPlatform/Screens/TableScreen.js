@@ -18,7 +18,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 
 import StreamBody from "./../Screens/BoothTable/StreamBody";
 import {
-  getRTCTokenForScreenShare,
+  getRTCTokenForLoungeScreenShare,
   fetchEventRegistrations,
   setOpenAudioVideoSettings,
 } from "./../../../actions"; // TODO This will be used to render table chats
@@ -583,8 +583,11 @@ const TableScreen = ({
 
     setView("gallery"); // We will set view as gallery whenever session lifecycle stage is switched
   };
-
-  const availablePeople = tableDetails.onStagePeople;
+let availablePeople = [];
+if(tableDetails) {
+  availablePeople =   tableDetails.onStagePeople;
+}
+  
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}
@@ -793,7 +796,7 @@ const TableScreen = ({
                       localUserState.screen
                         ? stopPresenting()
                         : dispatch(
-                            getRTCTokenForScreenShare(
+                            getRTCTokenForLoungeScreenShare(
                               id,
                               userId,
                               startPresenting

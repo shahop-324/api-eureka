@@ -18,6 +18,7 @@ const BoothTable = require("./models/boothTableModel");
 const BoothChair = require("./models/boothChairModel");
 const Booth = require("./models/boothModel");
 const Speaker = require("./models/speakerModel");
+const NetworkingRoom = require("./models/networkingRoomModel");
 const { nanoid } = require("nanoid");
 
 process.on("uncaughtException", (err) => {
@@ -90,34 +91,82 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
-  socket.on("joinNetworking", async ({ room, userId, eventId }, callback) => {
-    // Join the room
-    socket.join(room); // User has joined the networking room
+  socket.on(
+    "joinNetworking",
+    async ({ room, userId, eventId, userRole }, callback) => {
+      // Join the room
+      socket.join(room); // User has joined the networking room
 
-    // Find socket Id of this user
+      // TODO Add this person to onStagePeople of this networkingRoom and send updated networkingRoomDetails in this room
+      const networkingRoom = await NetworkingRoom.findOne({ roomId: room });
 
-    const { socketId } = await UsersInEvent.findOne({
-      $and: [
-        { room: mongoose.Types.ObjectId(eventId) },
-        { userId: mongoose.Types.ObjectId(userId) },
-      ],
-    }).select("socketId");
+      networkingRoom.joinedByUsers.push(userId);
 
-    // Send chat messages for this room to person who just joined (if any)
+      networkingRoom.onStagePeople.push({
+        user: userId,
+        role: userRole,
+        camera: false,
+        microphone: false,
+        screen: false,
+      });
 
-    const chats = await NetworkingRoomChats.find({ roomId: room });
+      await networkingRoom.save(
+        { new: true, validateModifiedOnly: true },
+        (err, updatedNetworkingRoom) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.in(room).emit("updatedNetworkingRoom", {
+              updatedNetworkingRoom: updatedNetworkingRoom,
+            });
+          }
+        }
+      );
 
-    io.to(socketId).emit("networkingChat", {
-      chats: chats,
-    });
-  });
+      // Find socket Id of this user
+
+      const { socketId } = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      }).select("socketId");
+
+      // Send chat messages for this room to person who just joined (if any)
+
+      const chats = await NetworkingRoomChats.find({ roomId: room });
+
+      io.to(socketId).emit("networkingChat", {
+        chats: chats,
+      });
+    }
+  );
 
   socket.on("leaveNetworking", async ({ eventId, userId, room }, callback) => {
     // Remove this user from available for networking people in this event
 
-    console.log(eventId, userId);
+    // TODO Remove this person from onStagePeople of this networkingRoom and send updated networkingRoomDetails in this room
 
-    console.log("leave networking function was invoked.");
+    const networkingRoom = await NetworkingRoom.findOne({ roomId: room });
+
+    networkingRoom.onStagePeople = networkingRoom.onStagePeople.filter(
+      (person) => person.user !== userId
+    );
+
+    await networkingRoom.save(
+      { new: true, validateModifiedOnly: true },
+      (err, updatedNetworkingRoom) => {
+        if (err) {
+          console.log(err);
+        } else {
+          io.in(room).emit("updatedNetworkingRoom", {
+            updatedNetworkingRoom: updatedNetworkingRoom,
+          });
+
+          socket.leave(room);
+        }
+      }
+    );
 
     const doc = await AvailableForNetworking.findOne({
       $and: [
@@ -237,7 +286,6 @@ io.on("connect", (socket) => {
     "startNetworking",
     async ({ eventId, userId, userName, image, socketId }, callback) => {
       // Make this person available for networking
-
       // Check if already available then just update his / her document otherwise create new document
 
       const existingUser = await AvailableForNetworking.findOne({
@@ -310,6 +358,19 @@ io.on("connect", (socket) => {
 
         const senderUserDoc = await User.findById(userId); // Sender user document
         const receiverUserDoc = await User.findById(matchedPersonUserId); // Receiver user document
+
+        //  Create a NetworkingRoom with roomId
+
+        const newNetworkingRoom = await NetworkingRoom.create({
+          roomId: room,
+          eventId: eventId,
+          createdAt: Date.now(),
+        });
+
+        newNetworkingRoom.matchedUsers.push(userId);
+        newNetworkingRoom.matchedUsers.push(matchedPersonUserId);
+
+        await newNetworkingRoom.save({ new: true, validateModifiedOnly: true });
 
         // Send matched with and room id to both sender and reciever
 
@@ -741,7 +802,7 @@ io.on("connect", (socket) => {
   socket.on(
     "updateMyMicOnSessionStage",
     async ({ userId, registrationId, sessionId, microphone }, callback) => {
-      // Update user camera
+      // Update user mic
 
       // 1.) Find session doc
 
@@ -768,6 +829,45 @@ io.on("connect", (socket) => {
 
       io.in(sessionId).emit("updatedSession", {
         session: updatedSession,
+      });
+    }
+  );
+
+  socket.on(
+    "updateMyMicOnNetworkingRoom",
+    async ({ userId, eventId, roomId, microphone }, callback) => {
+      // Update user mic
+
+      // 1.) Find NetworkingRoom doc
+
+      const networkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of networkingRoomDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.microphone = microphone;
+
+      // 3.) save Table Doc
+
+      await networkingRoomDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedNetworkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      // 4.) Send updated networking room doc to everyone in this networking room.
+
+      io.in(roomId).emit("updatedNetworkingRoom", {
+        updatedNetworkingRoom: updatedNetworkingRoomDoc,
       });
     }
   );
@@ -845,8 +945,48 @@ io.on("connect", (socket) => {
   );
 
   socket.on(
-    "updateMycameraOnLoungeTable",
+    "updateMyCameraOnNetworkingRoom",
+    async ({ userId, eventId, roomId, camera }, callback) => {
+      // Update user camera
+
+      // 1.) Find NetworkingRoom doc
+
+      const networkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of networkingRoomDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.camera = camera;
+
+      // 3.) save Table Doc
+
+      await networkingRoomDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedNetworkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      // 4.) Send updated networking room doc to everyone in this networking room.
+
+      io.in(roomId).emit("updatedNetworkingRoom", {
+        updatedNetworkingRoom: updatedNetworkingRoomDoc,
+      });
+    }
+  );
+
+  socket.on(
+    "updateMyCameraOnLoungeTable",
     async ({ userId, tableId, eventId, camera, rawTableId }, callback) => {
+      console.log("enetered update my camer");
       // Update user camera
       // 1.) Find loungeTable doc
       const loungeTableDoc = await RoomTable.findById(tableId);
@@ -873,7 +1013,7 @@ io.on("connect", (socket) => {
 
       // 4.) Send updated lounge table to everyone at this table.
 
-      io.in(rawTableId).emit("updatedLoungeTable", {
+      io.to(rawTableId).emit("updatedLoungeTable", {
         tableDetails: updatedLoungeTable,
       });
     }
@@ -914,6 +1054,98 @@ io.on("connect", (socket) => {
       io.in(rawTableId).emit("updatedBoothTable", {
         tableDetails: updatedBoothTable,
       });
+    }
+  );
+
+  socket.on(
+    "updateMyScreenOnNetworkingRoom",
+    async ({ userId, eventId, roomId, screen }, callback) => {
+      // Update user screen
+      // 1.) Find networkingRoom doc
+
+      const networkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      const registrations = await Registration.find({
+        bookedForEventId: mongoose.Types.ObjectId(eventId),
+      });
+
+      // 2.) Find and update user on stage
+
+      let thisUserOnStage;
+
+      for (let element of networkingRoomDoc.onStagePeople) {
+        console.log(element.user, userId);
+        if (element.user == userId) {
+          thisUserOnStage = element;
+        }
+      }
+
+      thisUserOnStage.screen = screen;
+
+      // 3.) save Table Doc
+
+      await networkingRoomDoc.save({ new: true, validateModifiedOnly: true });
+      const updatedNetworkingRoomDoc = await NetworkingRoom.findOne({
+        roomId: roomId,
+      });
+
+      // 4.) Send updated networking room doc to everyone in this networking room.
+
+      io.in(roomId).emit("updatedNetworkingRoom", {
+        updatedNetworkingRoom: updatedNetworkingRoomDoc,
+      });
+
+      let people = []; // Collection of {userId, socketId, camera, mic, screen}
+      let uniquePeople = [];
+
+      for (let element of networkingRoomDoc.onStagePeople) {
+        for (let item of registrations) {
+          console.log(element.user, item);
+          if (item.bookedByUser) {
+            if (element.user.toString() === item.bookedByUser.toString()) {
+              if (!uniquePeople.includes(element.user)) {
+                // Find socketId
+                const { socketId } = await UsersInEvent.findOne({
+                  $and: [
+                    { room: mongoose.Types.ObjectId(eventId) },
+                    { userId: mongoose.Types.ObjectId(item.bookedByUser) },
+                  ],
+                }).select("socketId");
+
+                people.push({
+                  userId: item.bookedByUser,
+                  socketId: socketId,
+                  camera: element.camera,
+                  mic: element.microphone,
+                  screen: element.screen,
+                });
+
+                uniquePeople.push(element.user);
+              }
+            }
+          }
+        }
+      }
+
+      // 5.) Find everyone who is currently on stage with thier current camera, mic, screen, socket and userId (collection of objects)
+      // * Now here we have required persons in people array
+
+      // 6.) Tell everyone currently on stage to set => userHasUnmutedVideo.current = false; and userHasUnmutedAudio.current = false;
+
+      console.log(people);
+
+      for (let element of people) {
+        io.to(element.socketId).emit("resetAudioAndVideoControls");
+      }
+
+      // 7.) Everyone with their camera currently on should call unMuteMyVideo();
+      for (let person of people) {
+        if (person.camera) {
+          io.to(person.socketId).emit("unMuteYourVideo");
+        }
+      }
     }
   );
 
@@ -2598,7 +2830,7 @@ io.on("connect", (socket) => {
             console.log(err);
           } else {
             console.log("Sent lounge chair data");
-            io.in(tableId).emit("roomChairData", { roomChairs: doc.chairs });
+            io.in(eventId).emit("roomChairData", { roomChairs: doc.chairs });
             socket.leave(tableId);
           }
         })
@@ -3033,7 +3265,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            io.in(tableId).emit("roomChairData", { roomChairs: doc.chairs });
+            io.in(eventId).emit("roomChairData", { roomChairs: doc.chairs });
           }
         })
           .select("chairs")

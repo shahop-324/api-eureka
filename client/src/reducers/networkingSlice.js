@@ -5,6 +5,7 @@ const networkingSlice = createSlice({
 
   initialState: {
     networkingSettings: null,
+    networkingRoomDetails: null,
     openMatching: false, // this will open matching portal
     openConfirmation: false, // This will open confirmation portal
     openNetworkingTable: false, // This will open networking table
@@ -32,12 +33,10 @@ const networkingSlice = createSlice({
       state.networkingSettings = action.payload.settings;
       state.isLoading = false;
     },
-
     EditNetworking(state, action) {
       state.networkingSettings = action.payload.settings;
       state.isLoading = false;
     },
-
     SetOpenMatching(state, action) {
       state.openMatching = action.payload.openState;
     },
@@ -56,11 +55,9 @@ const networkingSlice = createSlice({
     SetNetworkingChats(state, action) {
       state.networkingChats = action.payload.networkingChats;
     },
-
     CreateNewNetworkingMsg(state, action) {
       state.networkingChats.push(action.payload.newMsg);
     },
-
     DeleteNetworkingMsg(state, action) {
       state.networkingChats = state.networkingChats.map((chat) =>
         chat._id === action.payload.deletedMsg._id
@@ -68,7 +65,11 @@ const networkingSlice = createSlice({
           : chat
       );
     },
+    FetchNetworkingRoomDetails(state, action) {
+      state.networkingRoomDetails = action.payload.networkingRoom;
+    },
   },
 });
+
 export const networkingActions = networkingSlice.actions;
 export default networkingSlice;

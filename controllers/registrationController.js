@@ -15,19 +15,23 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getAllRegistrations = catchAsync(async (req, res, next) => {
-  // TODO Implement get all registrations for a community
+  try {
+    // TODO Implement get all registrations for a community
 
-  const communityId = req.community.id;
+    const communityId = req.community.id;
 
-  const registrations = await Registration.find({
-    eventByCommunityId: communityId,
-  });
+    const registrations = await Registration.find({
+      eventByCommunityId: communityId,
+    });
 
-  res.status(200).json({
-    status: "success",
-    length: registrations.length,
-    data: registrations,
-  });
+    res.status(200).json({
+      status: "success",
+      length: registrations.length,
+      data: registrations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.updateRegistration = catchAsync(async (req, res, next) => {

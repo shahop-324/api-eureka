@@ -131,9 +131,7 @@ const Root = () => {
 
     socket.on("newMatch", ({ room, matchedWith }) => {
       dispatch(showNotification("New match detected"));
-      console.log(room);
       dispatch(setNetworkingRoom(room));
-      console.log(matchedWith);
       dispatch(setMatchedWith(matchedWith));
       // Close matching portal
       dispatch(setOpenMatching(false));

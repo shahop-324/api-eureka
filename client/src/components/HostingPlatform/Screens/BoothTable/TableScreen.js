@@ -80,7 +80,6 @@ const TableScreen = ({
     );
   };
 
-
   const turnOnVideo = async (uid) => {
     console.log(rtc.localVideoTrack);
 
@@ -124,7 +123,6 @@ const TableScreen = ({
     );
   };
 
-  
   const turnOnAudio = async (uid) => {
     if (!rtc.localAudioTrack) return;
     await rtc.localAudioTrack.setEnabled(true);
@@ -594,7 +592,10 @@ const TableScreen = ({
     setView("gallery"); // We will set view as gallery whenever session lifecycle stage is switched
   };
 
-  const availablePeople = tableDetails.onStagePeople;
+  let availablePeople = [];
+  if (tableDetails) {
+    availablePeople = tableDetails.onStagePeople;
+  }
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}

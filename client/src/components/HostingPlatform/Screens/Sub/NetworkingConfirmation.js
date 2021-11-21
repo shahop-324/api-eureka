@@ -131,7 +131,6 @@ const NetworkingConfirmation = () => {
   );
 
   const [open, setOpen] = React.useState(false);
-  const [renderScreen, setRenderScreen] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -140,7 +139,7 @@ const NetworkingConfirmation = () => {
     setOpen(false);
   };
 
-  const { id } = useSelector((state) => state.eventAccessToken);
+  const { id, role } = useSelector((state) => state.eventAccessToken);
   const eventId = params.eventId;
 
   let userName;
@@ -245,6 +244,7 @@ const NetworkingConfirmation = () => {
                         room: networkingRoom,
                         userId: id,
                         eventId: eventId,
+                        userRole: role,
                       },
                       (error) => {
                         if (error) {

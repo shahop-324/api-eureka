@@ -6214,6 +6214,48 @@ export const getRTCTokenForScreenShare =
     }
   };
 
+export const getRTCTokenForLoungeScreenShare =
+  (tableId, uid, startPresenting) => async (dispatch, getState) => {
+    try {
+      dispatch(RTCActions.startLoading());
+
+      let res = await fetch(`${BaseURL}getTokenForBoothScreenShare`, {
+        method: "POST",
+        body: JSON.stringify({
+          channel: tableId,
+          uid: `screen-${uid}`,
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      res = await res.json();
+
+      dispatch(
+        RTCActions.fetchRTCScreenToken({
+          ScreenToken: res.token,
+        })
+      );
+
+      startPresenting(res.token, `screen-${uid}`);
+    } catch (error) {
+      console.log(error);
+      dispatch(RTCActions.hasError(error.message));
+      dispatch(
+        showSnackbar("error", "Failed to share screen, Please try again.")
+      );
+    }
+  };
+
 export const getRTCTokenForBoothScreenShare =
   (tableId, uid, startPresenting) => async (dispatch, getState) => {
     try {
@@ -14265,6 +14307,15 @@ export const editCurrentlyJoinedChair =
     dispatch(
       userActions.EditCurrentlyJoinedChair({
         chairId: chairId,
+      })
+    );
+  };
+
+export const fetchNetworkingRoomDetails =
+  (networkingRoom) => async (dispatch, getState) => {
+    dispatch(
+      networkingActions.FetchNetworkingRoomDetails({
+        networkingRoom: networkingRoom,
       })
     );
   };

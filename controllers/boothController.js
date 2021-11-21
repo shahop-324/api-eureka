@@ -91,17 +91,21 @@ exports.deleteBooth = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBoothOfEvent = catchAsync(async (req, res, next) => {
-  const query = Booth.find({
-    eventId: mongoose.Types.ObjectId(req.params.eventId),
-  });
+  try {
+    const query = Booth.find({
+      eventId: mongoose.Types.ObjectId(req.params.eventId),
+    });
 
-  const features = new apiFeatures(query, req.query).textFilter().tagFilter();
-  const booths = await features.query;
+    const features = new apiFeatures(query, req.query).textFilter().tagFilter();
+    const booths = await features.query;
 
-  res.status(200).json({
-    status: "SUCCESS",
-    data: booths,
-  });
+    res.status(200).json({
+      status: "SUCCESS",
+      data: booths,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.getOneBoothDetails = catchAsync(async (req, res, next) => {
