@@ -666,7 +666,6 @@ const TableScreen = ({
 
   return (
     <>
-      {/* <ControlReRender rtc={rtc} /> */}
       <Dialog
         fullWidth={fullWidth}
         maxWidth={maxWidth}
@@ -704,14 +703,14 @@ const TableScreen = ({
               {/* Table title */}
             </div>
             <div>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  leaveStreaming();
+                }}
+              >
                 <CloseRoundedIcon
                   style={{ fill: "#ffffff" }}
                   id="leave-table"
-                  onClick={() => {
-                    // Execute logic to leave table
-                    leaveStreaming();
-                  }}
                 />
               </IconButton>
             </div>
@@ -729,7 +728,7 @@ const TableScreen = ({
           >
             <div
               className="d-flex flex-column justify-content-between"
-              style={{ width: "100%", height: "100%", maxHeight: "65vh" }}
+              style={{ width: "100%", height: "100%", maxHeight: "80vh" }}
             >
               {/* // Here we need to place stream body */}
               {/* // ! */}
@@ -837,8 +836,6 @@ const TableScreen = ({
                 peopleInThisRoom={peopleInThisRoom}
                 tableId={table}
               />
-              {/* This is the side component */}
-              {/* // Here provide appropriate ui for table chat and people on this table only in list view mode */}
             </div>
           </div>
         </TableScreenBody>

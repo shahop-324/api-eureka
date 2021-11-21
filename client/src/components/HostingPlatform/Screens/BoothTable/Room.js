@@ -24,7 +24,7 @@ import {
   getBoothTable,
   fetchNumberOfPeopleOnBoothTable,
   fetchBoothTableDetails,
-  fetchBoothChairs,
+  fetchBoothChairs
 } from "../../../../actions";
 
 const RoomTitle = styled.div`
@@ -76,6 +76,9 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
     socket.on("updatedBoothTable", ({ tableDetails }) => {
       dispatch(fetchBoothTableDetails(tableDetails));
     });
+
+    
+
   }, []);
 
   return (

@@ -74,8 +74,8 @@ const Room = ({ id, num, image, title, rawImage, priority }) => {
       dispatch(fetchLoungeTableDetails(loungeTable));
     });
 
-    socket.on("updatedLoungeTable", ({ loungeTable }) => {
-      dispatch(fetchLoungeTableDetails(loungeTable));
+    socket.on("updatedLoungeTable", ({ tableDetails }) => {
+      dispatch(fetchLoungeTableDetails(tableDetails));
     });
   }, []);
 
