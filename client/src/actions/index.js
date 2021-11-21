@@ -5625,7 +5625,7 @@ export const updateTableChats = (chats) => async (dispatch, getState) => {
 export const updateBoothTableChats = (chats) => async (dispatch, getState) => {
   dispatch(
     boothChairsActions.FetchBoothTableChats({
-      chats: chats,
+      tableChats: chats,
     })
   );
 };
@@ -10590,7 +10590,7 @@ export const logInMagicLinkUser = (userId) => async (dispatch, getState) => {
 
 export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
   try {
-    // Write logic to fetch all table chats for this table
+    // Write logic to fetch all table chats for this booth table
 
     const res = await fetch(`${BaseURL}getBoothTableChats/${tableId}`, {
       method: "GET",
@@ -10614,7 +10614,7 @@ export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
 
     dispatch(
       boothChairsActions.FetchBoothTableChats({
-        chats: result.data,
+        tableChats: result.data,
       })
     );
   } catch (error) {

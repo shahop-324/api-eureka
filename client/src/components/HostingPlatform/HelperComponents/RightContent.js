@@ -14,13 +14,11 @@ import AlertMainComponent from "../SideDrawerComponents/Alerts/AlertsMainCompone
 import PollsMainComponent from "../SideDrawerComponents/Polls/PollsMainComponent";
 import ModerationMainComponent from "../SideDrawerComponents/Moderation/ModerationMainComponent";
 import SettingsDrawer from "./SettingsDrawer";
-import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
 import {
   setPersonalChatConfig,
   setVenueRightDrawerSelectedTab,
   setOpenVenueRightDrawer,
 } from "../../../actions";
-import { Avatar } from "@material-ui/core";
 
 const DrawerBackground = styled.div`
   background-color: #ffffff;
@@ -28,8 +26,6 @@ const DrawerBackground = styled.div`
 
 const RightContent = () => {
   const dispatch = useDispatch();
-
-  const { userDetails } = useSelector((state) => state.user);
 
   const { venueRightDrawerSelectedTab, openVenueRightDrawer } = useSelector(
     (state) => state.selectedTab

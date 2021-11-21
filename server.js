@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
 const TableChats = require("./models/tableChatsModel");
+const BoothTableChats = require("./models/boothTableChatsModel");
 const PersonalChat = require("./models/PersonalChatModel");
 const ScheduledMeet = require("./models/scheduledMeetModel");
 const Registration = require("./models/registrationsModel");
@@ -431,6 +432,80 @@ io.on("connect", (socket) => {
     io.in(`${sessionId}-back`).emit("deleteBackstageMsg", {
       deletedMsg: populatedMsg,
     });
+  });
+
+  socket.on(
+    "transmitBoothTableMessage",
+    async (
+      {
+        isReply,
+        replyTo,
+        textMessage,
+        eventId,
+        tableId,
+        createdAt,
+        userRole,
+        userName,
+        userEmail,
+        userId,
+        userImage,
+        userOrganisation,
+        userDesignation,
+        reported,
+        numOfTimesReported,
+        visibilityStatus,
+      },
+      callback
+    ) => {
+      await BoothTableChats.create(
+        {
+          isReply,
+          textMessage,
+          eventId,
+          tableId,
+          createdAt,
+          userRole,
+          userName,
+          userEmail,
+          userImage,
+          userOrganisation,
+          userDesignation,
+          userId,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+            const populatedChatMsg = await BoothTableChats.find({
+              tableId: tableId,
+            }).populate("replyTo");
+
+            console.log(populatedChatMsg)
+
+            io.in(tableId).emit("newBoothTableMsg", {
+              chats: populatedChatMsg,
+            });
+          }
+        }
+      );
+    }
+  );
+
+  socket.on("deleteBoothTableMessage", async ({ msgId, tableId }) => {
+    await BoothTableChats.findByIdAndUpdate(msgId, { deleted: true });
+
+    await BoothTableChats.find({ tableId: tableId }, async (err, doc) => {
+      io.in(tableId).emit("updateBoothTableChats", {
+        chats: doc,
+      });
+    }).populate("replyTo");
   });
 
   socket.on(
@@ -2428,30 +2503,23 @@ io.on("connect", (socket) => {
   socket.on(
     "removeMeFromBoothTable",
     async ({ chairId, tableId, userId, eventId, boothId }, callback) => {
+      socket.join(tableId);
+      console.log(chairId, tableId, userId, eventId, boothId)
       fetchCurrentRoomChairs = async () => {
         await Booth.findById(boothId, (err, doc) => {
           if (err) {
             console.log(err);
           } else {
-            io.to(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+            console.log("Sent booth chair data");
+            io.in(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+            socket.leave(tableId);
           }
         })
           .select("chairs")
           .populate("chairs");
       };
 
-      fetchNumberOfPeopleOnTable = async () => {
-        await BoothTable.findOne({ tableId: tableId }, (err, tableDoc) => {
-          if (err) {
-            console.log(err);
-          } else {
-            io.to(tableId).emit("numberOfPeopleOnBoothTable", {
-              numberOfPeopleOnTable: tableDoc.numberOfPeople,
-            });
-          }
-        });
-      };
-
+     
       // Remove this user from onStagePeople of this boothTable
 
       const boothTableDoc = await BoothTable.findOne({ tableId: tableId });
@@ -2496,6 +2564,7 @@ io.on("connect", (socket) => {
             if (err) {
               console.log(err);
             } else {
+              console.log(updatedChair);
               await BoothTable.findOne(
                 { tableId: tableId },
                 (err, tableDoc) => {
@@ -2512,10 +2581,6 @@ io.on("connect", (socket) => {
                           console.log(err);
                         } else {
                           fetchCurrentRoomChairs(); // ! Listen To This event
-
-                          fetchNumberOfPeopleOnTable(); // ! Listen To This event
-
-                          socket.leave(tableId);
                         }
                       }
                     );

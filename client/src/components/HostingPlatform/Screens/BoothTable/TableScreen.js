@@ -11,7 +11,6 @@ import "./../../../../index.css";
 import "./../../Styles/rooms.scss";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
-import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
@@ -19,6 +18,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import {
   getRTCTokenForBoothScreenShare,
   fetchEventRegistrations,
+  setOpenAudioVideoSettings,
 } from "./../../../../actions";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -584,7 +584,6 @@ const TableScreen = ({
         unMuteMyVideo();
       }, 2000);
     });
-
   }, []);
 
   const clearPreviousStreams = () => {
@@ -651,6 +650,31 @@ const TableScreen = ({
 
   // if view is gallery => render all streams in grid
   // if view is presentation => render allStreams in stack and screen tracks in grid
+
+  let peopleInThisRoom = [];
+  let uniquePeopleIds = [];
+
+  for (let element of tableDetails.onStagePeople) {
+    for (let item of registrations) {
+      if (item.bookedByUser === element.user) {
+        if (!uniquePeopleIds.includes(element.user)) {
+          peopleInThisRoom.push({
+            userId: element.user,
+            userName: item.userName,
+            userRole: item.type,
+            userImage: item.userImage,
+            userEmail: item.email,
+            userCity: item.city,
+            userCountry: item.country,
+            userOrganisation: item.organisation,
+            userDesignation: item.designation,
+          });
+
+          uniquePeopleIds.push(element.user);
+        }
+      }
+    }
+  }
 
   return (
     <>
@@ -799,7 +823,13 @@ const TableScreen = ({
                     )}
                   </IconButton>
 
-                  <IconButton aria-label="settings" className="mx-3">
+                  <IconButton
+                    onClick={() => {
+                      dispatch(setOpenAudioVideoSettings(true));
+                    }}
+                    aria-label="settings"
+                    className="mx-3"
+                  >
                     <SettingsOutlinedIcon
                       style={{ fill: "#D3D3D3", size: "24" }}
                     />
@@ -815,7 +845,7 @@ const TableScreen = ({
               style={{ display: "grid", gridTemplateColumns: "8fr 0.2fr" }}
             >
               <SideComponent
-                // peopleInThisRoom={peopleInThisRoom}
+                peopleInThisRoom={peopleInThisRoom}
                 tableId={table}
               />
             </div>

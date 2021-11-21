@@ -22,7 +22,7 @@ const boothChairsSlice = createSlice({
       state.numberOfPeopleOnTable = action.payload.numberOfPeopleOnTable;
     },
     FetchBoothTableChats(state, action) {
-      state.tableChats = action.payload.chats;
+      state.tableChats = action.payload.tableChats;
     },
   },
 });

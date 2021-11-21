@@ -266,6 +266,8 @@ router.get(
   globalController.getTableChats
 );
 
+router.get("/getBoothTableChats/:tableId", authController.protect, globalController.getBoothTableChats);
+
 router.get(
   "/getSessionQnA/:sessionId",
   authController.protect,

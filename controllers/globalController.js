@@ -17,6 +17,7 @@ const Registration = require("./../models/registrationsModel");
 const RoomTable = require("../models/roomTableModel");
 const BoothTable = require("./../models/boothTableModel");
 const TableChats = require("./../models/tableChatsModel");
+const BoothTableChats = require("./../models/boothTableChatsModel");
 const SessionQnA = require("./../models/sessionQnAModel");
 const SessionPoll = require("./../models/sessionPollModel");
 const CommunityAccountRequest = require("./../models/CommunityAccountRequestModel");
@@ -1643,6 +1644,17 @@ exports.getTableChats = catchAsync(async (req, res, next) => {
     data: chats,
   });
 });
+
+exports.getBoothTableChats = catchAsync(async(req, res, next) => {
+  const tableId = req.params.tableId;
+
+  const chats = await BoothTableChats.find({ tableId: tableId }).populate("replyTo");
+
+  res.status(200).json({
+    status: "success",
+    data: chats,
+  });
+})
 
 exports.fetchSessionQnA = catchAsync(async (req, res, next) => {
   const sessionId = req.params.sessionId;

@@ -24,6 +24,7 @@ import {
   getBoothTable,
   fetchNumberOfPeopleOnBoothTable,
   fetchBoothTableDetails,
+  fetchBoothChairs
 } from "../../../../actions";
 
 const RoomTitle = styled.div`
