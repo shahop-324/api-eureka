@@ -283,7 +283,13 @@ const NetworkingConfirmation = () => {
         </div>
       </Dialog>
 
-      <NetworkingScreen open={open} handleClose={handleClose} />
+      {open && (
+        <NetworkingScreen
+          open={open}
+          handleClose={handleClose}
+          networkingRoom={networkingRoom}
+        />
+      )}
     </>
   );
 };

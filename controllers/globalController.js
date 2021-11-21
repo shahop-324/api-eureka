@@ -501,7 +501,7 @@ exports.getLiveStreamingTokenForNetworking = catchAsync(
       const roomId = req.body.roomId;
       const userId = req.body.userId;
 
-      console.log(roomId, userId);
+      console.log(roomId, userId, "Room Id", "User Id");
 
       const appID = "702d57c3092c4fd389eb7ea5a505d471";
       const appCertificate = "d8311f38cf434445805478cb8c93a334";

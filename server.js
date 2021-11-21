@@ -149,24 +149,26 @@ io.on("connect", (socket) => {
 
     const networkingRoom = await NetworkingRoom.findOne({ roomId: room });
 
-    networkingRoom.onStagePeople = networkingRoom.onStagePeople.filter(
-      (person) => person.user !== userId
-    );
+    if (networkingRoom) {
+      networkingRoom.onStagePeople = networkingRoom.onStagePeople.filter(
+        (person) => person.user !== userId
+      );
 
-    await networkingRoom.save(
-      { new: true, validateModifiedOnly: true },
-      (err, updatedNetworkingRoom) => {
-        if (err) {
-          console.log(err);
-        } else {
-          io.in(room).emit("updatedNetworkingRoom", {
-            updatedNetworkingRoom: updatedNetworkingRoom,
-          });
+      await networkingRoom.save(
+        { new: true, validateModifiedOnly: true },
+        (err, updatedNetworkingRoom) => {
+          if (err) {
+            console.log(err);
+          } else {
+            io.in(room).emit("updatedNetworkingRoom", {
+              updatedNetworkingRoom: updatedNetworkingRoom,
+            });
 
-          socket.leave(room);
+            socket.leave(room);
+          }
         }
-      }
-    );
+      );
+    }
 
     const doc = await AvailableForNetworking.findOne({
       $and: [

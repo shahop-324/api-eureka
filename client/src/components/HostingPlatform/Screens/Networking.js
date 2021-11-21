@@ -5,7 +5,10 @@ import React, { useEffect } from "react";
 import "./../Styles/networking.scss";
 import { useDispatch, useSelector } from "react-redux";
 import socket from "./../service/socket";
-import { setOpenMatching, fetchNetworkingRoomDetails } from "./../../../actions";
+import {
+  setOpenMatching,
+  fetchNetworkingRoomDetails,
+} from "./../../../actions";
 import { useParams } from "react-router-dom";
 import Matching from "../HelperComponents/Matching";
 
@@ -20,10 +23,9 @@ const Networking = () => {
   );
 
   useEffect(() => {
-    socket.on("updatedNetworkingRoom", ({updatedNetworkingRoom}) => {
+    socket.on("updatedNetworkingRoom", ({ updatedNetworkingRoom }) => {
       dispatch(fetchNetworkingRoomDetails(updatedNetworkingRoom));
-    })
-
+    });
     return () => {
       socket.emit(
         "leaveNetworking",

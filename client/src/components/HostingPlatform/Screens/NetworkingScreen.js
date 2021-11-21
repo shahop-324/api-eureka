@@ -62,15 +62,11 @@ const LowerSection = styled.div`
   border-top: 1px solid #2c2c2c;
 `;
 
-const VideoGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 24px;
-`;
+const VideoGrid = styled.div``;
 
 const NetworkingScreen = ({ open, handleClose }) => {
   console.log("This is networking screen");
-
+  const params = useParams();
   const { registrations } = useSelector((state) => state.registration);
 
   const { id } = useSelector((state) => state.eventAccessToken);
@@ -83,7 +79,6 @@ const NetworkingScreen = ({ open, handleClose }) => {
   ); // Networking room is the Id of currentNetworking room and matchedWith is the userDocument with whom this user is currently matched
 
   const dispatch = useDispatch();
-  const params = useParams();
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
@@ -248,7 +243,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
       "leaveNetworking",
       {
         room: networkingRoom,
-        userId: id,
+        userId: userId,
         eventId: eventId,
       },
       (error) => {
@@ -291,7 +286,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
     handleClose();
   };
 
-  const startLiveStream = async () => {
+  const startLiveStream = async (channelName) => {
     AgoraRTC.setLogLevel(0);
 
     // Created client object using Agora SDK
@@ -360,8 +355,10 @@ const NetworkingScreen = ({ open, handleClose }) => {
       }
     });
 
+    console.log(options.appId, channelName, options.token, options.uid, "These are credentials used to join channel");
+
     await rtc.client
-      .join(options.appId, options.channel, options.token, options.uid)
+      .join(options.appId, channelName, options.token, options.uid)
       .then(async () => {
         console.log("Bluemeet: Joined RTC Channel.");
       })
@@ -553,26 +550,28 @@ const NetworkingScreen = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-    startLiveStream();
+    if (networkingRoom) {
+      startLiveStream(networkingRoom);
 
-    socket.on("resetAudioAndVideoControls", async () => {
-      // userHasUnmutedAudio.current = false;
-      userHasUnmutedVideo.current = false;
-      rtc.localVideoTrack && rtc.localVideoTrack.close();
-
-      // Unpublish the video, the audio is still being published
-      if (rtc.localVideoTrack) {
-        await rtc.client.unpublish(rtc.localVideoTrack);
-      }
-    });
-
-    socket.on("unMuteYourVideo", () => {
-      setTimeout(() => {
+      socket.on("resetAudioAndVideoControls", async () => {
+        // userHasUnmutedAudio.current = false;
         userHasUnmutedVideo.current = false;
-        unMuteMyVideo();
-      }, 2000);
-    });
-  }, []);
+        rtc.localVideoTrack && rtc.localVideoTrack.close();
+
+        // Unpublish the video, the audio is still being published
+        if (rtc.localVideoTrack) {
+          await rtc.client.unpublish(rtc.localVideoTrack);
+        }
+      });
+
+      socket.on("unMuteYourVideo", () => {
+        setTimeout(() => {
+          userHasUnmutedVideo.current = false;
+          unMuteMyVideo();
+        }, 2000);
+      });
+    }
+  }, [networkingRoom]);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained
@@ -632,6 +631,8 @@ const NetworkingScreen = ({ open, handleClose }) => {
       localUserState.screen = element.screen;
     }
   }
+
+  console.info(galleryViewInput, "This is gallery view input");
 
   // Decide which view we will render (There can be two views gallery and presentation mode)
 

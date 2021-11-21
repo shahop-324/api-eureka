@@ -6106,7 +6106,7 @@ export const getRTCTokenForJoiningBoothTable =
   };
 
 export const getRTCTokenForNetworking =
-  (handleOpen, setRenderScreen) => async (dispatch, getState) => {
+  (handleOpen) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
 
     try {
