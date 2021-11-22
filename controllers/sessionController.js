@@ -75,7 +75,6 @@ exports.updateSession = catchAsync(async (req, res, next) => {
           await speaker.save({ new: true, validateModifiedOnly: true });
         }
 
-        sessionDoc.onStagePeople.push({ user: speaker.registrationId }); // Added newly assigned speaker to onStagePeople
         await sessionDoc.save({ new: true, validateModifiedOnly: true });
       }
     }
@@ -108,10 +107,6 @@ exports.updateSession = catchAsync(async (req, res, next) => {
           }
         );
 
-        // Remove this speaker from onStagePeople
-        sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
-          (el) => el.user !== speaker.registrationId
-        );
         await sessionDoc.save({ new: true, validateModifiedOnly: true });
       }
     }

@@ -375,7 +375,7 @@ const NetworkingScreen = ({ open, handleClose }) => {
         rtc.localVideoTrack && rtc.localVideoTrack.play(userId);
       }
     });
-    
+
     console.log(
       options.appId,
       channelName,
@@ -650,12 +650,14 @@ const NetworkingScreen = ({ open, handleClose }) => {
 
   // * We need to get local user camera, mic and screen state in an object
 
-  for (let element of networkingRoomDetails.onStagePeople) {
-    if (element.user === userId) {
-      // Its a Host or Attendee
-      localUserState.camera = element.camera;
-      localUserState.mic = element.microphone;
-      localUserState.screen = element.screen;
+  if (networkingRoomDetails) {
+    for (let element of networkingRoomDetails.onStagePeople) {
+      if (element.user === userId) {
+        // Its a Host or Attendee
+        localUserState.camera = element.camera;
+        localUserState.mic = element.microphone;
+        localUserState.screen = element.screen;
+      }
     }
   }
 

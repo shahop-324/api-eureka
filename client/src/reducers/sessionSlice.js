@@ -66,21 +66,33 @@ const sessionSlice = createSlice({
     },
 
     SwitchOffMedia(state, action) {
-      const updatedPeopleOnStage = state.sessionDetails.onStagePeople.map(
-        (el) => {
+      const updatedPeopleOnLiveStage =
+        state.sessionDetails.onLiveStagePeople.map((el) => {
           return {
             camera: false,
             microphone: false,
             screen: false,
-            available: el.available,
             _id: el._id,
             user: el.user,
             userRole: el.userRole,
           };
-        }
-      );
+        });
 
-      state.sessionDetails.onStagePeople = updatedPeopleOnStage;
+      const updatedPeopleOnBackStage =
+        state.sessionDetails.onBackStagePeople.map((el) => {
+          return {
+            camera: false,
+            microphone: false,
+            screen: false,
+            _id: el._id,
+            user: el.user,
+            userRole: el.userRole,
+          };
+        });
+
+      state.sessionDetails.onBackStagePeople = updatedPeopleOnBackStage;
+
+      state.sessionDetails.onLiveStagePeople = updatedPeopleOnLiveStage;
     },
 
     EditSession(state, action) {

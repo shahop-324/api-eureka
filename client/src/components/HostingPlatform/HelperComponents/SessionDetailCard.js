@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import "./../../../index.css";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
@@ -14,11 +13,6 @@ import {
 } from "../../../actions";
 
 import styled from "styled-components";
-import Chip from "@mui/material/Chip";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-
-import SetReminder from "./../Screens/Sub/SetReminder";
-import SetPriority from "./../Screens/Sub/SetPriority";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -90,38 +84,25 @@ const SessionDetailCard = ({
   hosts,
   runningStatus,
 }) => {
-  const [openPriority, setOpenPriority] = useState(false);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const eventId = params.eventId;
+  const communityId = params.communityId;
 
-  const [openReminder, setOpenReminder] = useState(false);
-  const [channel, setChannel] = useState(`${id}-live`);
+  const [channel, setChannel] = useState(`${id}-live`); // Channel to join => defaults to live
 
-  const userEmail = useSelector((state) => state.user.userDetails.email);
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userEmail = userDetails.email; // User email
+  const userId = userDetails._id; // User Id
 
   const speakerEmails = speakers.map((element) => element.email);
 
-  const handleClosePriority = () => {
-    setOpenPriority(false);
-  };
+  const { role } = useSelector((state) => state.eventAccessToken); // Possible values => "speaker" || "attendee" || "organiser" || "exhibitor"
 
-  const handleCloseReminder = () => {
-    setOpenReminder(false);
-  };
-
-  const dispatch = useDispatch();
-
-  const params = useParams();
-
-  const eventId = params.eventId;
-  const communityId = params.communityId;
-  const role = useSelector((state) => state.eventAccessToken.role);
-  const userId = useSelector((state) => state.eventAccessToken.id);
-
-  const userDetails = useSelector((state) => state.user.userDetails);
-
-  const { email } = useSelector((state) => state.eventAccessToken);
+  // => Determine if this person should be treated as a publisher or subscriber
 
   const userName = `${userDetails.firstName} ${userDetails.lastName}`;
-
   const userImage = userDetails.image;
   const userCity = userDetails.city;
   const userCountry = userDetails.country;
@@ -136,22 +117,17 @@ const SessionDetailCard = ({
   let btnText = "Join";
   let bgColor = "#538BF7d8";
 
-  if (role === "host" || role === "speaker") {
+  if (role === "organiser" || role === "speaker") {
+    console.info("Level 1");
     if (hosts.includes(userId) || speakerEmails.includes(userEmail)) {
+      console.info("Level 1");
       // Set role as host for this session
       sessionRole = "host";
-      // alert('This is case 11')
     } else {
       sessionRole = "audience";
-      // alert('This is case 12')
     }
   } else {
     sessionRole = "audience";
-    // alert('This is case 21')
-  }
-
-  if (role === "host") {
-    sessionRole = "host";
   }
 
   if (sessionRole === "host") {
@@ -162,32 +138,20 @@ const SessionDetailCard = ({
   const agoraRole = sessionRole === "host" ? "host" : "audience";
 
   useEffect(() => {
-    if (agoraRole === "host") {
-      if (runningStatus === "Started" || runningStatus === "Resumed") {
-        // alert(1)
-        // Session is live
-        setChannel(`${id}-live`);
-      }
-      if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
-        // Session is not live
-        setChannel(`${id}-back`);
-        // alert(2)
-      }
-      if (runningStatus === "Ended") {
-        // Session has already ended
-        // No channel will be needed in this case as user won't join any agora channel here
-        // alert(3)
-      }
+    if (runningStatus === "Ended") {
+      // No one will join any channel in this case
     } else {
-      if (runningStatus !== "Ended") {
-        // take to live stage
-        setChannel(`${id}-live`);
-        // alert(4)
+      // runningStatus === "Paused" || runningStatus === "Not Yet Started"
+
+      // Only host will join backstage
+
+      if (sessionRole === "host") {
+        setChannel(`${id}-back`);
       }
-      if (runningStatus === "Ended") {
-        // No channel will be needed in this case as user won't join any agora channel here
-        // alert(5)
-      }
+    }
+    if (runningStatus === "Started" || runningStatus === "Resumed") {
+      // Everyone will join live stage, No metter if he /she is host or audience
+      setChannel(`${id}-live`);
     }
   }, []);
 
@@ -246,7 +210,7 @@ const SessionDetailCard = ({
                     userId: userId,
                     sessionRole: sessionRole,
                     userName: userName,
-                    userEmail: email,
+                    userEmail: userEmail,
                     userImage: userImage,
                     userCity: userCity,
                     userCountry: userCountry,
@@ -272,10 +236,6 @@ const SessionDetailCard = ({
           </div>
         </div>
       </div>
-
-      <SetReminder open={openReminder} handleClose={handleCloseReminder} />
-
-      <SetPriority open={openPriority} handleClose={handleClosePriority} />
     </>
   );
 };

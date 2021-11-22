@@ -103,8 +103,6 @@ const SessionStage = () => {
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  let userRole = "Attendee";
-
   const [openBackstageReminder, setOpenBackstageReminder] = useState(false);
 
   const handleCloseBackstageReminder = () => {
@@ -151,23 +149,6 @@ const SessionStage = () => {
   const hosts = sessionDetails.host; // Hosts for this session
   const speakers = sessionDetails.speaker; // Speakers for this session
 
-  const hostIds = hosts.map((el) => el._id);
-  const speakerEmails = speakers.map((el) => el.email);
-
-  if (hostIds.includes(userId)) {
-    //This user is a host
-    // alert("This user is a host")
-    userRole = "Host";
-  } else if (speakerEmails.includes(userEmail)) {
-    // This user is a speaker
-    // alert("This user is a speaker")
-    userRole = "Speaker";
-  } else if (!hostIds.includes(userId) && !speakerEmails.includes(userEmail)) {
-    // This user is an attendee
-    // alert("This user is an attendee")
-    userRole = "Attendee";
-  }
-
   const previousState = useRef();
 
   // Re initialise previous state
@@ -178,7 +159,7 @@ const SessionStage = () => {
 
   const [state, setState] = useState("live"); // State can be live or back. It will be determined in useEffect
 
-  const [channel, setChannel] = useState(`${sessionId}-live`); // This will be the room used to join agora channel , It can be sessionIdlive or sessionIdback depanding on whether user joins livestage or backstage
+  const [channel, setChannel] = useState(`${sessionId}-live`); // This will be the room used to join agora channel , It can be sessionIdlive or sessionIdback depending on whether user joins livestage or backstage
 
   const userHasUnmutedAudio = useRef(false);
   const userHasUnmutedVideo = useRef(false);
@@ -192,42 +173,28 @@ const SessionStage = () => {
   const [screenTracks, setScreenTracks] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchSessionQnA(sessionId));
-    dispatch(fetchSessionPolls(sessionId));
+    dispatch(fetchSessionQnA(sessionId)); // Fetch QnA
+    dispatch(fetchSessionPolls(sessionId)); // Fetch Session polls
 
-    dispatch(fetchEventRegistrations(eventId));
-    dispatch(fetchSessionForSessionStage(sessionId));
+    dispatch(fetchEventRegistrations(eventId)); // Fetch registrations
+    dispatch(fetchSessionForSessionStage(sessionId)); // Fetch session doc
 
-    dispatch(fetchPreviousSessionChatMessages(sessionId));
+    dispatch(fetchPreviousSessionChatMessages(sessionId)); // Fetch previous chat message for live stage
 
-    dispatch(fetchPreviousBackstageChatMessages(sessionId));
-
-    socket.emit(
-      "subscribeSession",
-      {
-        sessionId: sessionId,
-      },
-      (error) => {
-        if (error) {
-          alert(error);
-        }
-      }
-    );
+    dispatch(fetchPreviousBackstageChatMessages(sessionId)); // Fetch previous chat message for back stage
 
     socket.on("resetAudioAndVideoControls", async () => {
+      // alert("resetAudioAndVideoControls Was triggered.")
       // userHasUnmutedAudio.current = false;
       userHasUnmutedVideo.current = false;
       rtc.localVideoTrack && rtc.localVideoTrack.close();
-
-      // Unpublish the video, the audio is still being published
-      if (rtc.localVideoTrack) {
-        await rtc.client.unpublish(rtc.localVideoTrack);
-      }
     });
 
     socket.on("unMuteYourVideo", () => {
+      // alert("unMuteYourVideo Was triggered.")
       setTimeout(() => {
         userHasUnmutedVideo.current = false;
+        rtc.localVideoTrack && rtc.localVideoTrack.close();
         unMuteMyVideo();
       }, 2000);
     });
@@ -357,6 +324,7 @@ const SessionStage = () => {
         dispatch(updateSession(session));
         dispatch(fetchSessionForSessionStage(sessionId));
         dispatch(switchOffMediaBeforeTransition());
+        handleHideTimer();
       }, 12000);
     });
 
@@ -390,6 +358,7 @@ const SessionStage = () => {
         dispatch(updateSession(session));
         dispatch(fetchSessionForSessionStage(sessionId));
         dispatch(switchOffMediaBeforeTransition());
+        // handleHideTimer();
       }, 12000);
     });
 
@@ -422,6 +391,7 @@ const SessionStage = () => {
         dispatch(updateSession(session));
         dispatch(fetchSessionForSessionStage(sessionId));
         dispatch(switchOffMediaBeforeTransition());
+        handleHideTimer();
       }, 12000);
     });
 
@@ -439,9 +409,7 @@ const SessionStage = () => {
       userHasUnmutedAudio.current = false;
       userHasUnmutedVideo.current = false;
 
-      dispatch(
-        showNotification("This session has been marked as ended by Host.")
-      );
+      dispatch(showNotification("This session has been ended by Host."));
 
       dispatch(updateSession(session));
 
@@ -495,6 +463,7 @@ const SessionStage = () => {
     socket.emit(
       "updateMyCameraOnSessionStage",
       {
+        channel,
         userId,
         registrationId,
         sessionId,
@@ -515,6 +484,7 @@ const SessionStage = () => {
     socket.emit(
       "updateMyCameraOnSessionStage",
       {
+        channel,
         userId,
         registrationId,
         sessionId,
@@ -533,6 +503,8 @@ const SessionStage = () => {
     socket.emit(
       "updateMyMicOnSessionStage",
       {
+        channel,
+        state,
         userId,
         registrationId,
         sessionId,
@@ -550,6 +522,8 @@ const SessionStage = () => {
     socket.emit(
       "updateMyMicOnSessionStage",
       {
+        channel,
+        state,
         userId,
         registrationId,
         sessionId,
@@ -595,6 +569,7 @@ const SessionStage = () => {
         socket.emit(
           "updateMyScreenOnSessionStage",
           {
+            channel,
             userId,
             registrationId,
             sessionId,
@@ -625,6 +600,7 @@ const SessionStage = () => {
     socket.emit(
       "updateMyScreenOnSessionStage",
       {
+        channel,
         userId,
         registrationId,
         sessionId,
@@ -645,8 +621,6 @@ const SessionStage = () => {
   };
 
   const runningStatus = sessionDetails.runningStatus; // Can be Started, Paused, Resumed, Ended, Not Yet Started
-
-  const { peopleInThisSession } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -716,6 +690,8 @@ const SessionStage = () => {
     socket.emit(
       "removeMeFromSessionStage",
       {
+        channel,
+        state,
         userId,
         userEmail,
         registrationId,
@@ -749,31 +725,40 @@ const SessionStage = () => {
       await rtc.screenClient.leave();
     }
 
-    // Traverse all remote users.
-    rtc.client.remoteUsers.forEach((user) => {
-      // Destroy the dynamically created DIV containers.
-      const playerContainer = document.getElementById(user.uid);
-      playerContainer && playerContainer.remove();
-    });
+    if (rtc.client) {
+      // Traverse all remote users.
+      rtc.client.remoteUsers.forEach((user) => {
+        // Destroy the dynamically created DIV containers.
+        const playerContainer = document.getElementById(user.uid);
+        playerContainer && playerContainer.remove();
+      });
 
-    // Leave the channel via main user client
-    await rtc.client.leave();
+      // Leave the channel via main user client
+      await rtc.client.leave();
+    }
+
     history.push(
-      `/community/${communityId}/event/${eventId}/hosting-platform/lobby`
+      `/community/${communityId}/event/${eventId}/hosting-platform/sessions`
     );
   };
 
   const startLiveStream = async (localChannel, localToken) => {
-    // alert(canPublishStream);
+    if (localToken) {
+      console.log(localChannel, localToken);
+      alert(localChannel, localToken);
+    }
     if (agoraRole === "host") {
       // Only here we need to emit event markAsAvailableInSession via socket
-      // alert("yes, I can publish stream");
-
       handleSwitchOffMediaBeforeTransition();
+
+      // alert(`Current state is ${state}`);
 
       socket.emit(
         "markAsAvailableInSession",
         {
+          role,
+          state,
+          channel, // We  need to push this user in onBackStagePeople or onLiveStagePeople Based on channel
           userId,
           userEmail,
           registrationId,
@@ -782,7 +767,6 @@ const SessionStage = () => {
           microphone: false,
           camera: false,
           screen: false,
-          available: true,
         },
         (error) => {
           console.log(error);
@@ -891,17 +875,6 @@ const SessionStage = () => {
         console.log(error);
       });
 
-    // * Enable dual stream mode
-
-    rtc.client
-      .enableDualStream()
-      .then(() => {
-        console.log("Enable Dual stream success!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     // Everyone will join channel and will have listners set to listen for other events in stream
 
     // Allow to publish media stream if permitted
@@ -916,37 +889,75 @@ const SessionStage = () => {
 
     // TODO Here is our opportunity to set preffered camera device to create local video track
 
-    rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
-      encoderConfig: "1080p_2",
-    });
+    if (rtc.client) {
+      await rtc.client.unpublish(rtc.client.localTracks).then(async () => {
+        rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
+          encoderConfig: "1080p_2",
+        });
 
-    await rtc.client.publish([rtc.localVideoTrack]).then(() => {
-      console.info("Video track published successfully!");
+        await rtc.client.publish([rtc.localVideoTrack]).then(() => {
+          console.info("Video track published successfully!");
 
-      // Play video in container with uid userId
+          // Play video in container with uid userId
 
-      rtc.localVideoTrack.play(userId);
+          rtc.localVideoTrack.play(userId);
 
-      userHasUnmutedVideo.current = true;
+          userHasUnmutedVideo.current = true;
 
-      socket.emit(
-        "updateMyCameraOnSessionStage",
-        {
-          userId,
-          registrationId,
-          sessionId,
-          camera: true,
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    });
+          socket.emit(
+            "updateMyCameraOnSessionStage",
+            {
+              channel,
+              userId,
+              registrationId,
+              sessionId,
+              camera: true,
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
 
-    setAllStreams((prev) => [
-      ...prev,
-      { uid: userId, stream: rtc.localVideoTrack },
-    ]);
+        setAllStreams((prev) => [
+          ...prev,
+          { uid: userId, stream: rtc.localVideoTrack },
+        ]);
+      });
+    } else {
+      rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack({
+        encoderConfig: "1080p_2",
+      });
+
+      await rtc.client.publish([rtc.localVideoTrack]).then(() => {
+        console.info("Video track published successfully!");
+
+        // Play video in container with uid userId
+
+        rtc.localVideoTrack.play(userId);
+
+        userHasUnmutedVideo.current = true;
+
+        socket.emit(
+          "updateMyCameraOnSessionStage",
+          {
+            channel,
+            userId,
+            registrationId,
+            sessionId,
+            camera: true,
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+
+      setAllStreams((prev) => [
+        ...prev,
+        { uid: userId, stream: rtc.localVideoTrack },
+      ]);
+    }
   };
 
   const unMuteMyAudio = async () => {
@@ -971,6 +982,8 @@ const SessionStage = () => {
       socket.emit(
         "updateMyMicOnSessionStage",
         {
+          channel,
+          state,
           userId,
           registrationId,
           sessionId,
@@ -1027,7 +1040,6 @@ const SessionStage = () => {
         setOpenBackstageReminder(true);
         setChannel(`${sessionId}-back`);
         localChannel = `${sessionId}-back`;
-        // alert("We have setted channel as backstage");
       }
       if (runningStatus === "Ended") {
         // Session has already ended
@@ -1047,9 +1059,11 @@ const SessionStage = () => {
     }
 
     if (runningStatus !== "Ended") {
-      startLiveStream(localChannel);
+      setTimeout(() => {
+        startLiveStream(localChannel);
+      }, 1500);
     }
-  }, []);
+  }, [state]);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained
@@ -1067,6 +1081,7 @@ const SessionStage = () => {
     socket.emit(
       "removeMeFromSessionStage",
       {
+        channel,
         userId,
         userEmail,
         registrationId,
@@ -1112,9 +1127,9 @@ const SessionStage = () => {
     userHasUnmutedAudio.current = false;
     userHasUnmutedVideo.current = false;
 
-    if (state === "back") {
-      stopLiveStreaming(); // To stop backstage streaming
-    }
+    // if (state === "back") {
+    //   stopLiveStreaming(); // To stop backstage streaming
+    // }
 
     socket.emit("unsubscribeBackstage", { sessionId: sessionId }, (error) => {
       console.log(error);
@@ -1201,62 +1216,43 @@ const SessionStage = () => {
     }
   };
 
-  const availablePeople = sessionDetails.onStagePeople.filter(
-    (element) => element.available === true
-  );
+  let availablePeople = [];
+
+  if (state === "live") {
+    availablePeople = sessionDetails.onLiveStagePeople;
+  }
+  if (state === "back") {
+    availablePeople = sessionDetails.onBackStagePeople;
+  }
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}
 
   let uniqueUserIds = [];
-  let uniqueRegistrationIds = [];
 
   for (let element of availablePeople) {
     for (let item of registrations) {
-      if (element.user === item.bookedByUser) {
-        // for (let track of allStreams) {
-        //   if (item.bookedByUser === track.uid) {
-        // Get all required details here => { uid , name , image, designation, organisation, camera, mic, stream}
-        // Push unique users only
-        if (!uniqueUserIds.includes(element.user)) {
-          galleryViewInput.push({
-            // uid: track.uid,
-            userId: item.bookedByUser,
-            name: item.userName,
-            image: item.userImage
-              ? item.userImage.startsWith("https://")
-                ? item.userImage
-                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
-              : "#",
-            camera: element.camera,
-            mic: element.microphone,
-            // stream: track.stream,
-          });
-          uniqueUserIds.push(element.user);
-        }
-
-        //   }
-        // }
-      }
-      if (element.user === item._id) {
-        // for (let track of allStreams) {
-        //   if (item.bookedByUser === track.uid) {
-        // Get all required details here => { uid , name , image, designation, organisation, camera, mic, stream}
-        if (!uniqueRegistrationIds.includes(element.user)) {
-          galleryViewInput.push({
-            // uid: track.uid,
-            userId: item.bookedByUser,
-            name: item.userName,
-            image: item.userImage
-              ? item.userImage.startsWith("https://")
-                ? item.userImage
-                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
-              : "#",
-            camera: element.camera,
-            mic: element.microphone,
-            // stream: track.stream,
-          });
-          uniqueRegistrationIds.push(element.user);
+      if (element.user && item.bookedByUser) {
+        if (element.user === item.bookedByUser) {
+          // for (let track of allStreams) {
+          //   if (item.bookedByUser === track.uid) {
+          // Get all required details here => { uid , name , image, designation, organisation, camera, mic, stream}
+          // Push unique users only
+          if (!uniqueUserIds.includes(element.user)) {
+            galleryViewInput.push({
+              // uid: track.uid,
+              userId: item.bookedByUser,
+              name: item.userName,
+              image: item.userImage
+                ? item.userImage.startsWith("https://")
+                  ? item.userImage
+                  : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${item.userImage}`
+                : "#",
+              camera: element.camera,
+              mic: element.microphone,
+            });
+            uniqueUserIds.push(element.user);
+          }
         }
       }
     }
@@ -1267,18 +1263,22 @@ const SessionStage = () => {
 
   // * We need to get local user camera, mic and screen state in an object
 
-  for (let element of sessionDetails.onStagePeople) {
-    if (element.user === userId) {
-      // Its a Host or Attendee
-      localUserState.camera = element.camera;
-      localUserState.mic = element.microphone;
-      localUserState.screen = element.screen;
+  if (state === "live") {
+    for (let element of sessionDetails.onLiveStagePeople) {
+      if (element.user === userId) {
+        localUserState.camera = element.camera;
+        localUserState.mic = element.microphone;
+        localUserState.screen = element.screen;
+      }
     }
-    if (element.user === registrationId) {
-      // Its a speaker
-      localUserState.camera = element.camera;
-      localUserState.mic = element.microphone;
-      localUserState.screen = element.screen;
+  }
+  if (state === "back") {
+    for (let element of sessionDetails.onBackStagePeople) {
+      if (element.user === userId) {
+        localUserState.camera = element.camera;
+        localUserState.mic = element.microphone;
+        localUserState.screen = element.screen;
+      }
     }
   }
 

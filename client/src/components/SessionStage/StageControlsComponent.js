@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
@@ -27,10 +26,7 @@ import StopRecordingConfirmation from "./SubComponent/StopRecordingConfirmation"
 import PanToolRoundedIcon from "@mui/icons-material/PanToolRounded";
 import Like from "./../../assets/images/like.png";
 import Clapping from "./../../assets/images/clapping.png";
-import Love from "./../../assets/images/love.png";
 import Smile from "./../../assets/images/Smile.png";
-import Speakers from "./Speakers";
-import SpeakerInfoTab from "./SpeakersInfoTab";
 
 const IconButton = styled.div`
   max-width: fit-content;
@@ -129,12 +125,6 @@ const StageControlsComponent = ({
 
   let sessionHasEnded = false;
   let currentUserIsAHost = false;
-  let currentUserIsASpeaker = false;
-  let currentUserIsAnAttendeeOnStage = false;
-  let currentUserIsAnAttendee = false;
-
-  const [openSpeakers, setOpenSpeakers] = React.useState(false);
-  const [openSpeakersInfo, setOpenSpeakersInfo] = useState(false);
 
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -145,14 +135,6 @@ const StageControlsComponent = ({
   const [startRecording, setStartRecording] = useState(false);
 
   const [stopRecording, setStopRecording] = useState(false);
-
-  const handleCloseSpeakerInfoTab = () => {
-    setOpenSpeakersInfo(false);
-  };
-
-  const handleCloseSpeakers = () => {
-    setOpenSpeakers(false);
-  };
 
   const handleCloseStopRecording = () => {
     setStopRecording(false);
@@ -194,36 +176,14 @@ const StageControlsComponent = ({
 
   // Determine if the current user is a host and place restrictions based on that
 
+  const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
   const { userDetails } = useSelector((state) => state.user);
-  const { sessionDetails } = useSelector((state) => state.session);
 
   const userId = userDetails._id;
-  const userEmail = userDetails.email;
 
-  const hosts = sessionDetails.host; // Hosts for this session
-  const speakers = sessionDetails.speaker; // Speakers for this session
-
-  const hostIds = hosts.map((el) => el._id);
-  const speakerEmails = speakers.map((el) => el.email);
-
-  if (hostIds.includes(userId)) {
-    //This user is a host
+  if (sessionRole === "host" && role !== "speaker") {
     currentUserIsAHost = true;
-  } else if (speakerEmails.includes(userEmail)) {
-    // This user is a speaker
-    currentUserIsASpeaker = true;
-  } else if (
-    canPublishStream &&
-    !hostIds.includes(userId) &&
-    !speakerEmails.includes(userEmail)
-  ) {
-    // This user is an attendee invited on stage
-    currentUserIsAnAttendeeOnStage = true;
-  } else {
-    currentUserIsAnAttendee = true;
   }
-
-  currentUserIsAHost = true;
 
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
@@ -242,49 +202,10 @@ const StageControlsComponent = ({
               socket.emit("leaveSession", { sessionId, userId }, (error) => {
                 console.log(error);
               });
-              window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/lobby`;
             }}
           >
             Leave
           </BtnDanger>
-
-          {/* Show speaker managemenet widget if its session host and speaker details widget if its an audience */}
-          {/* This widget will be shown throughout the lifecycle of a session (i.e., in ay running state) */}
-          {/* But show only speaker details widget if session has ended */}
-
-          {currentState !== "back" ? (
-            <button
-              onClick={() => {
-                if (currentUserIsAHost && !sessionHasEnded) {
-                  setOpenSpeakers(true);
-                }
-                if (!currentUserIsAHost) {
-                  setOpenSpeakersInfo(true);
-                }
-                if (currentUserIsAHost && sessionHasEnded) {
-                  setOpenSpeakersInfo(true);
-                }
-              }}
-              className="btn btn-outline-light btn-outline-text d-flex flex-row align-items-center"
-            >
-              {" "}
-              <PersonRoundedIcon className="me-2" />{" "}
-              {runningStatus === "Ended" ? (
-                <span>Speakers</span>
-              ) : currentUserIsAHost ? (
-                <span>Manage stage</span>
-              ) : (
-                <span>Speakers</span>
-              )}
-            </button>
-          ) : (
-            <></>
-          )}
-
-          <div className="stage-left-controls d-flex flex-row  align-items-center">
-            {/* Here we just need to give an option to switch layouts */}
-            {/* // Layout will be last priority <button className="btn btn-outline-text btn-light ms-3">Layout</button> */}
-          </div>
         </div>
 
         {!sessionHasEnded ? (
@@ -411,7 +332,7 @@ const StageControlsComponent = ({
                           sessionId,
                           userId,
                           startPresenting,
-                          currentState,
+                          currentState
                         ) // We will use this fxn to request a token and start screen sharing
                       );
                 }}
@@ -617,24 +538,7 @@ const StageControlsComponent = ({
         open={stopRecording}
         handleClose={handleCloseStopRecording}
       />
-      <Speakers
-        open={openSpeakers}
-        handleClose={handleCloseSpeakers}
-        stopPresenting={stopPresenting}
-        startPresenting={startPresenting}
-        turnOnAudio={turnOnAudio}
-        turnOffAudio={turnOffAudio}
-        turnOnVideo={turnOnVideo}
-        turnOffVideo={turnOffVideo}
-        userHasUnmutedVideo={userHasUnmutedVideo}
-        userHasUnmutedAudio={userHasUnmutedAudio}
-        unMuteMyVideo={unMuteMyVideo}
-        unMuteMyAudio={unMuteMyAudio}
-      />
-      <SpeakerInfoTab
-        open={openSpeakersInfo}
-        handleClose={handleCloseSpeakerInfoTab}
-      />
+      {/*  */}
     </>
   );
 };

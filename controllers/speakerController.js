@@ -30,6 +30,7 @@ exports.getParticularSpeaker = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSpeaker = catchAsync(async (req, res, next) => {
+  const communityId = req.community._id;
   try {
     const filteredBody = filterObj(
       req.body,

@@ -282,7 +282,6 @@ const AddNewSession = ({
 
       if (!formValues.activityType) {
         // Please choose activity type
-
         dispatch(showSnackbar("warning", "Please choose an activity type"));
         return;
       }

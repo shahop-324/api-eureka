@@ -324,7 +324,6 @@ exports.createBooth = catchAsync(async (req, res, next) => {
           lastUpdatedAt: Date.now(),
         });
       }
-  
 
       createdBooth = doc;
 
@@ -828,19 +827,6 @@ exports.addSession = catchAsync(async (req, res, next) => {
 
     console.log(processedArray); // array of speaker Ids
     console.log(req.body.host);
-
-    try {
-      for (let element of req.body.host) {
-        session.onStagePeople.push({ user: element });
-      }
-
-      for (let element of processedArray) {
-        const speaker = await Speaker.findById(element);
-        session.onStagePeople.push({ user: speaker.registrationId });
-      }
-    } catch (error) {
-      console.log(error);
-    }
 
     // For all speakers add this session to their assigned sessions
 

@@ -5221,7 +5221,7 @@ export const fetchRegistrationsOfParticularEvent =
 
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().communityAuth.token}`,
+            Authorization: `Bearer ${getState().auth.token}`,
           },
         }
       );
@@ -5916,9 +5916,8 @@ export const getRTCTokenAndSession =
       history.push(
         `/community/${communityId}/event/${eventId}/hosting-platform/session/${sessionId}`
       );
-      // window.location.href = ;
     } catch (err) {
-      alert(err);
+      dispatch(showSnackbar("error", "Failed to get token, Please try again."));
       dispatch(RTCActions.hasError(err.message));
     }
   };
@@ -10431,7 +10430,6 @@ export const fetchSpeakerRegistrationInfo =
       if (result.userIsOnBluemeet) {
         if (result.notFound) {
           // Registration doc was not found
-
           history.push("/does-not-exist");
         } else {
           // Normal case => Registration doc was found.

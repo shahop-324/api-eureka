@@ -743,14 +743,33 @@ const UpdateEventProfile = ({
                         </div>
                       </div>
 
-                      <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                        <div className="shareon-icon p-3 me-3">
-                          {userDetails.socialMediaHandles.facebook ? (
-                            <a
-                              href={`//${userDetails.socialMediaHandles.facebook}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
+                      {userDetails.socialMediaHandles && (
+                        <div className="d-flex flex-row align-items-center justify-content-center mb-3">
+                          <div className="shareon-icon p-3 me-3">
+                            {userDetails.socialMediaHandles.facebook ? (
+                              <a
+                                href={`//${userDetails.socialMediaHandles.facebook}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: "#EBEBEBE8",
+                                    width: "fit-content",
+                                    borderRadius: "5px",
+                                    alignSelf: "center",
+                                  }}
+                                  className="px-2 py-2"
+                                >
+                                  <FacebookIcon
+                                    style={{
+                                      fontSize: "21",
+                                      fill: "#1760A8",
+                                    }}
+                                  />
+                                </div>
+                              </a>
+                            ) : (
                               <div
                                 style={{
                                   backgroundColor: "#EBEBEBE8",
@@ -762,37 +781,37 @@ const UpdateEventProfile = ({
                               >
                                 <FacebookIcon
                                   style={{
-                                    fontSize: "21",
-                                    fill: "#1760A8",
+                                    fill: "#777777",
                                   }}
                                 />
                               </div>
-                            </a>
-                          ) : (
-                            <div
-                              style={{
-                                backgroundColor: "#EBEBEBE8",
-                                width: "fit-content",
-                                borderRadius: "5px",
-                                alignSelf: "center",
-                              }}
-                              className="px-2 py-2"
-                            >
-                              <FacebookIcon
-                                style={{
-                                  fill: "#777777",
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <div className="shareon-icon p-3 me-3">
-                          {userDetails.socialMediaHandles.linkedin ? (
-                            <a
-                              href={`//${userDetails.socialMediaHandles.linkedin}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
+                            )}
+                          </div>
+                          <div className="shareon-icon p-3 me-3">
+                            {userDetails.socialMediaHandles.linkedin ? (
+                              <a
+                                href={`//${userDetails.socialMediaHandles.linkedin}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: "#EBEBEBE8",
+                                    width: "fit-content",
+                                    borderRadius: "5px",
+                                    alignSelf: "center",
+                                  }}
+                                  className="px-2 py-2"
+                                >
+                                  <LinkedInIcon
+                                    style={{
+                                      fontSize: "21",
+                                      fill: "#2565A5",
+                                    }}
+                                  />
+                                </div>
+                              </a>
+                            ) : (
                               <div
                                 style={{
                                   backgroundColor: "#EBEBEBE8",
@@ -805,38 +824,38 @@ const UpdateEventProfile = ({
                                 <LinkedInIcon
                                   style={{
                                     fontSize: "21",
-                                    fill: "#2565A5",
+                                    fill: "#777777",
                                   }}
                                 />
                               </div>
-                            </a>
-                          ) : (
-                            <div
-                              style={{
-                                backgroundColor: "#EBEBEBE8",
-                                width: "fit-content",
-                                borderRadius: "5px",
-                                alignSelf: "center",
-                              }}
-                              className="px-2 py-2"
-                            >
-                              <LinkedInIcon
-                                style={{
-                                  fontSize: "21",
-                                  fill: "#777777",
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
+                            )}
+                          </div>
 
-                        <div className="shareon-icon p-3 me-3">
-                          {userDetails.socialMediaHandles.twitter ? (
-                            <a
-                              href={`//${userDetails.socialMediaHandles.twitter}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
+                          <div className="shareon-icon p-3 me-3">
+                            {userDetails.socialMediaHandles.twitter ? (
+                              <a
+                                href={`//${userDetails.socialMediaHandles.twitter}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: "#EBEBEBE8",
+                                    width: "fit-content",
+                                    borderRadius: "5px",
+                                    alignSelf: "center",
+                                  }}
+                                  className="px-2 py-2"
+                                >
+                                  <TwitterIcon
+                                    style={{
+                                      fontSize: "21",
+                                      fill: "#539FF7",
+                                    }}
+                                  />
+                                </div>
+                              </a>
+                            ) : (
                               <div
                                 style={{
                                   backgroundColor: "#EBEBEBE8",
@@ -849,38 +868,38 @@ const UpdateEventProfile = ({
                                 <TwitterIcon
                                   style={{
                                     fontSize: "21",
-                                    fill: "#539FF7",
+                                    fill: "#777777",
                                   }}
                                 />
                               </div>
-                            </a>
-                          ) : (
-                            <div
-                              style={{
-                                backgroundColor: "#EBEBEBE8",
-                                width: "fit-content",
-                                borderRadius: "5px",
-                                alignSelf: "center",
-                              }}
-                              className="px-2 py-2"
-                            >
-                              <TwitterIcon
-                                style={{
-                                  fontSize: "21",
-                                  fill: "#777777",
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
+                            )}
+                          </div>
 
-                        <div className="shareon-icon p-3 me-3">
-                          {userDetails.socialMediaHandles.website ? (
-                            <a
-                              href={`//${userDetails.socialMediaHandles.website}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
+                          <div className="shareon-icon p-3 me-3">
+                            {userDetails.socialMediaHandles.website ? (
+                              <a
+                                href={`//${userDetails.socialMediaHandles.website}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <div
+                                  style={{
+                                    backgroundColor: "#EBEBEBE8",
+                                    width: "fit-content",
+                                    borderRadius: "5px",
+                                    alignSelf: "center",
+                                  }}
+                                  className="px-2 py-2"
+                                >
+                                  <LanguageIcon
+                                    style={{
+                                      fontSize: "21",
+                                      fill: "#538BF7",
+                                    }}
+                                  />
+                                </div>
+                              </a>
+                            ) : (
                               <div
                                 style={{
                                   backgroundColor: "#EBEBEBE8",
@@ -893,31 +912,14 @@ const UpdateEventProfile = ({
                                 <LanguageIcon
                                   style={{
                                     fontSize: "21",
-                                    fill: "#538BF7",
+                                    fill: "#777777",
                                   }}
                                 />
                               </div>
-                            </a>
-                          ) : (
-                            <div
-                              style={{
-                                backgroundColor: "#EBEBEBE8",
-                                width: "fit-content",
-                                borderRadius: "5px",
-                                alignSelf: "center",
-                              }}
-                              className="px-2 py-2"
-                            >
-                              <LanguageIcon
-                                style={{
-                                  fontSize: "21",
-                                  fill: "#777777",
-                                }}
-                              />
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       <ScheduleOneToOneCallForm
                         handleCloseDrawer={handleClose}

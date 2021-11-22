@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
 import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
 import PeopleOutlineRoundedIcon from "@material-ui/icons/PeopleOutlineRounded"; // Watching group
-import HomeRoundedIcon from "@material-ui/icons/HomeRounded"; // Live Stage
 import RssFeedRoundedIcon from "@mui/icons-material/RssFeedRounded"; // Live stream
 import styled from "styled-components";
 import Chip from "@mui/material/Chip";
@@ -79,26 +78,6 @@ const BtnOutlined = styled.div`
   }
 `;
 
-const IconButton = styled.div`
-  padding: 8px;
-  border-radius: 10px;
-  background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ffffff;
-
-  color: #152d35;
-
-  &:hover {
-    border: 1px solid #ffffff;
-    background-color: transparent;
-    color: #ffffff;
-    cursor: pointer;
-  }
-`;
-
 const IconButtonStatic = styled.div`
   padding: 8px;
   border-radius: 10px;
@@ -139,10 +118,6 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
   let currentUserIsAHost = false;
   let currentUserIsASpeaker = false;
-  let currentUserIsAnAttendeeOnStage = false;
-  let currentUserIsAnAttendee = false;
-
-  const { userDetails } = useSelector((state) => state.user);
 
   const { sessionDetails } = useSelector((state) => state.session);
 
@@ -151,12 +126,6 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
     : "Not Yet Started";
 
   const streamingLive = sessionDetails.streamingLive;
-
-  const img = userDetails.image
-    ? userDetails.image.startsWith("https://")
-      ? userDetails.image
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userDetails.image}`
-    : "#";
 
   // Show live tag only if its in resumed or started state => handled
 
@@ -172,34 +141,16 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
   //if the userCanPublishStream => then determine if he / she is host speaker or   attendee
   // We won't allow attendee on stage to visit backstage => only host and speakers can visit backstage.
 
-  const userId = userDetails._id;
-  const userEmail = userDetails.email;
+  const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
 
-  const hosts = sessionDetails.host; // Hosts for this session
-  const speakers = sessionDetails.speaker; // Speakers for this session
-
-  const hostIds = hosts.map((el) => el._id);
-  const speakerEmails = speakers.map((el) => el.email);
-
-  if (hostIds.includes(userId)) {
-    //This user is a host
+  if (sessionRole === "host" && role !== "speaker") {
     currentUserIsAHost = true;
-  } else if (speakerEmails.includes(userEmail)) {
-    // This user is a speaker
-    currentUserIsASpeaker = true;
-  } else if (
-    canPublishStream &&
-    !hostIds.includes(userId) &&
-    !speakerEmails.includes(userEmail)
-  ) {
-    // This user is an attendee invited on stage
-    currentUserIsAnAttendeeOnStage = true;
-  } else {
-    currentUserIsAnAttendee = true;
   }
 
-  currentUserIsAHost = true;
-  
+  if (sessionRole === "host" && role === "speaker") {
+    currentUserIsASpeaker = true;
+  }
+
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
   }
@@ -276,9 +227,12 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Paused":
                   return (
-                    <BtnOutlined onClick={() => {
-                      setOpenConfirmResume(true);
-                    }} className="me-3">
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmResume(true);
+                      }}
+                      className="me-3"
+                    >
                       <PlayArrowRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -289,9 +243,12 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Started":
                   return (
-                    <BtnOutlined onClick={() => {
-                      setOpenConfirmPause(true);
-                    }} className="me-3">
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmPause(true);
+                      }}
+                      className="me-3"
+                    >
                       <PauseRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -302,9 +259,12 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Resumed":
                   return (
-                    <BtnOutlined onClick={() => {
-                      setOpenConfirmPause(true);
-                    }} className="me-3">
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmPause(true);
+                      }}
+                      className="me-3"
+                    >
                       <PauseRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -354,9 +314,11 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
               switch (status) {
                 case "Started":
                   return (
-                    <BtnOutlined onClick={() => {
-                      setOpenConfirmEnd(true);
-                    }}>
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmEnd(true);
+                      }}
+                    >
                       <StopRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}
@@ -367,9 +329,11 @@ const StageNavComponent = ({ runningStatus, canPublishStream, state }) => {
 
                 case "Resumed":
                   return (
-                    <BtnOutlined onClick={() => {
-                      setOpenConfirmEnd(true);
-                    }}>
+                    <BtnOutlined
+                      onClick={() => {
+                        setOpenConfirmEnd(true);
+                      }}
+                    >
                       <StopRoundedIcon
                         className="me-2"
                         style={{ fontSize: "20px" }}

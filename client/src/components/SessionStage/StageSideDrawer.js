@@ -11,6 +11,9 @@ import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video C
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
 
+import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
+import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
+
 import {
   SessionLinkNav,
   SessionVideoContainer,
@@ -34,17 +37,30 @@ import MainQnAComponent from "../HostingPlatform/StageSideBar/QnA/MainQnACompone
 import MainPollComponent from "../HostingPlatform/StageSideBar/Poll/MainPollComponent";
 
 const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown icon={`${view} layout`} button className="icon">
+  <Dropdown icon={
+    view === "list" ? (
+      <FormatListBulletedRoundedIcon style={{ fontSize: "18px" }} />
+    ) : (
+      <GridViewRoundedIcon style={{ fontSize: "18px" }} />
+    )
+  } button className="icon">
     <Dropdown.Menu style={{ right: "0", left: "auto" }}>
       <Dropdown.Item
-        icon="list layout"
+        icon={
+          <FormatListBulletedRoundedIcon
+            style={{ fontSize: "18px" }}
+            className="me-2"
+          />
+        }
         text="List"
         onClick={() => {
           switchView("list");
         }}
       />
       <Dropdown.Item
-        icon="grid layout"
+        icon={
+          <GridViewRoundedIcon style={{ fontSize: "18px" }} className="me-2" />
+        }
         text="Grid"
         onClick={() => {
           switchView("grid");
@@ -78,12 +94,6 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) =>
 
   let currentUserIsAHost = false;
   let currentUserIsASpeaker = false;
-  let currentUserIsAnAttendeeOnStage = false;
-  let currentUserIsAnAttendee = false;
-
-  const { userDetails } = useSelector((state) => state.user);
-
-  const { sessionDetails } = useSelector((state) => state.session);
 
   const [activeLinkTab, setActiveLinkTab] = useState("chat");
 
@@ -95,33 +105,17 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) =>
     setView(view);
   };
 
-  const userId = userDetails._id;
-  const userEmail = userDetails.email;
 
-  const hosts = sessionDetails.host; // Hosts for this session
-  const speakers = sessionDetails.speaker; // Speakers for this session
+  const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
 
-  const hostIds = hosts.map((el) => el._id);
-  const speakerEmails = speakers.map((el) => el.email);
-
-  if (hostIds.includes(userId)) {
-    //This user is a host
+  if (sessionRole === "host" && role !== "speaker") {
     currentUserIsAHost = true;
-  } else if (speakerEmails.includes(userEmail)) {
-    // This user is a speaker
-    currentUserIsASpeaker = true;
-  } else if (
-    canPublishStream &&
-    !hostIds.includes(userId) &&
-    !speakerEmails.includes(userEmail)
-  ) {
-    // This user is an attendee invited on stage
-    currentUserIsAnAttendeeOnStage = true;
-  } else {
-    currentUserIsAnAttendee = true;
   }
 
-  currentUserIsAHost  = true;
+  if (sessionRole === "host" && role === "speaker") {
+    currentUserIsASpeaker = true;
+  }
+
 
   if (runningStatus === "Ended") {
     sessionHasEnded = true;

@@ -298,26 +298,26 @@ const EditSession = ({
         return;
       }
 
-      if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
-        // Session start Date & time must be withing event timeline
-        dispatch(
-          showSnackbar(
-            "warning",
-            "Session start Date time must be within event timeline"
-          )
-        );
-        return;
-      }
-      if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
-        // Session end Date & time must be withing event timeline
-        dispatch(
-          showSnackbar(
-            "warning",
-            "Session end Date & time must be within event timeline"
-          )
-        );
-        return;
-      }
+      // if (new Date(ModifiedFormValues.startTime) < eventStartDateTime) {
+      //   // Session start Date & time must be withing event timeline
+      //   dispatch(
+      //     showSnackbar(
+      //       "warning",
+      //       "Session start Date time must be within event timeline"
+      //     )
+      //   );
+      //   return;
+      // }
+      // if (new Date(ModifiedFormValues.endTime) > eventEndDateTime) {
+      //   // Session end Date & time must be withing event timeline
+      //   dispatch(
+      //     showSnackbar(
+      //       "warning",
+      //       "Session end Date & time must be within event timeline"
+      //     )
+      //   );
+      //   return;
+      // }
 
       if (
         !(new Date(ModifiedFormValues.startTime) < eventStartDateTime) ||
