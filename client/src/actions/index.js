@@ -5630,6 +5630,14 @@ export const updateBoothTableChats = (chats) => async (dispatch, getState) => {
   );
 };
 
+export const updateBoothChats = (chats) => async (dispatch, getState) => {
+  dispatch(
+    boothActions.FetchBoothChats({
+      chats: chats,
+    })
+  );
+};
+
 export const fetchSessionChats = (chats) => async (dispatch, getState) => {
   dispatch(sessionChatActions.startLoading());
   try {
@@ -10699,6 +10707,41 @@ export const fetchBoothTableChats = (tableId) => async (dispatch, getState) => {
     dispatch(
       boothChairsActions.FetchBoothTableChats({
         tableChats: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to fetch chats, Please try again."));
+  }
+};
+
+export const fetchBoothChats = (boothId) => async (dispatch, getState) => {
+  try {
+    // Write logic to fetch all booth area chats for this booth
+
+    const res = await fetch(`${BaseURL}getBoothChats/${boothId}`, {
+      method: "GET",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+
+    dispatch(
+      boothActions.FetchBoothChats({
+        chats: result.data,
       })
     );
   } catch (error) {

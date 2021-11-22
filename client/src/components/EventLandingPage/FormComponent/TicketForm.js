@@ -463,7 +463,7 @@ const TicketForm = ({
             onChange={handleCouponChange}
           />
           <button
-          style={{ border: `1px solid ${α(color, 1)}`, color: α(color, 2.5)}}
+            style={{ border: `1px solid ${α(color, 1)}`, color: α(color, 2.5) }}
             disabled={
               (selectedTicket ? selectedTicket.type === "Free" : true) ||
               isCommunityTeamMember ||
@@ -495,7 +495,11 @@ const TicketForm = ({
               onClick={() => {
                 setOpenCalender(true);
               }}
-              style={{ width: "330px", backgroundColor: α(color, 1), border: "none" }}
+              style={{
+                width: "330px",
+                backgroundColor: α(color, 1),
+                border: "none",
+              }}
               className="btn btn-outline-text btn-primary d-flex flex-row align-items-center justify-content-center"
             >
               <TodayRoundedIcon className="me-2" />
@@ -512,7 +516,11 @@ const TicketForm = ({
             }}
           >
             <button
-              style={{ backgroundColor: α(color, 1), border: "none" }}
+              style={{
+                border: `1px solid ${α(color, 1)}`,
+                color: α(color, 1),
+                backgroundColor: "#ffffff00",
+              }}
               onClick={() => {
                 history.push("/user/home");
               }}
@@ -598,7 +606,10 @@ const TicketForm = ({
 
         <div className="col" style={{ marginTop: "4%", padding: "0" }}>
           {" "}
-          <Link to={`/signin/${eventId}/?intent=eventRegistration`} style={{textDecoration: "none"}}>
+          <Link
+            to={`/signin/${eventId}/?intent=eventRegistration`}
+            style={{ textDecoration: "none" }}
+          >
             {" "}
             {isSignedIn ? (
               <div></div>

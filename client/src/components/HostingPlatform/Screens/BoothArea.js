@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import socket from "./../service/socket";
 import { useParams } from "react-router-dom";
 import Faker from "faker";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +30,24 @@ import BoothProducts from "./BoothComponents/BoothProducts";
 import BoothFiles from "./BoothComponents/BoothFiles";
 import BoothOffers from "./BoothComponents/BoothPromoCodes";
 import BoothForms from "./BoothComponents/BoothForms";
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 
-import { fetchBooth, fetchBusinessCards } from "./../../../actions";
+import { SwipeableDrawer } from "@material-ui/core";
+
+import MainChatComponent from "./BoothAreaChat/MainChatComponent";
+
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+
+import {
+  fetchBooth,
+  fetchBusinessCards,
+  fetchBoothChairs,
+} from "./../../../actions";
+
+const ChatContainer = styled.div`
+  width: 450px;
+`;
 
 const ThemedBackgroundButtonOutlined = styled.div`
   background-color: #152d35 !important;
@@ -134,6 +152,9 @@ const BoothArea = () => {
         loadGoogleAnalytics();
       }
     }
+    socket.on("boothChairData", ({ roomChairs }) => {
+      dispatch(fetchBoothChairs(roomChairs));
+    });
   }, []);
 
   const { userDetails } = useSelector((state) => state.user);
@@ -142,6 +163,12 @@ const BoothArea = () => {
 
   const eventId = params.eventId;
   const [openEdit, setOpenEdit] = useState(false);
+
+  const [openChats, setOpenChats] = useState(false);
+
+  const handleCloseChats = () => {
+    setOpenChats(false);
+  };
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
@@ -159,7 +186,7 @@ const BoothArea = () => {
   const classes = useStyles();
 
   const truncateText = (str, n) => {
-    if(!str) return;
+    if (!str) return;
     return str.length > n ? `${str.substring(0, n)} ...` : str;
   };
 
@@ -190,9 +217,13 @@ const BoothArea = () => {
 
   let businessCardShared = false;
 
-  const sharedEmail = businessCards.map((el) => {
-    return el.userId._id;
-  });
+  let sharedEmail = [];
+
+  if (businessCards) {
+    sharedEmail = businessCards.map((el) => {
+      return el.userId._id;
+    });
+  }
 
   if (sharedEmail.includes(userId)) {
     businessCardShared = true;
@@ -208,6 +239,16 @@ const BoothArea = () => {
           <div className="d-flex flex-row align-items-center">
             <IconButton
               onClick={() => {
+                if (currentBoothId) {
+                  socket.emit(
+                    "leaveBooth",
+                    { boothId: currentBoothId },
+                    (error) => {
+                      alert(error);
+                    }
+                  );
+                }
+
                 dispatch(SetCurrentBoothId(null));
               }}
             >
@@ -443,6 +484,62 @@ const BoothArea = () => {
         <Rooms />
       </div>
       <EditBoothDrawer open={openEdit} handleClose={handleCloseEdit} />
+
+      <Fab
+        onClick={() => {
+          setOpenChats(true);
+        }}
+        style={{
+          position: "fixed",
+          bottom: "16px",
+          right: "16px",
+          color: "#ffffff",
+          backgroundColor: "#152d35",
+        }}
+        color="primary"
+        aria-label="add"
+      >
+        <ChatRoundedIcon />
+      </Fab>
+      {/* <MainChatComponent /> */}
+      {openChats && (
+        <React.Fragment key="right">
+          <SwipeableDrawer anchor="right" open={openChats}>
+            <ChatContainer className="px-4 py-3">
+              <div className="side-drawer-heading-and-close-row d-flex flex-row align-items-center justify-content-between mb-4">
+                <div className="d-flex flex-column">
+                  <div className="event-platform-side-drawer-heading">
+                    Messages
+                  </div>
+                  <div className="setting-tab-sub-text">
+                    These Messages are private to this Booth.
+                  </div>
+                </div>
+
+                <IconButton
+                  onClick={() => {
+                    handleCloseChats();
+                  }}
+                  aria-label="close-drawer"
+                >
+                  <CancelOutlinedIcon
+                    style={{ fontSize: "18", color: "#4D4D4D" }}
+                  />
+                </IconButton>
+              </div>
+              <div
+                style={{
+                  backgroundColor: "#FBFBFB52",
+                  border: "1px solid #EBEBEB",
+                  borderRadius: "15px",
+                }}
+              >
+                <MainChatComponent />
+              </div>
+            </ChatContainer>
+          </SwipeableDrawer>
+        </React.Fragment>
+      )}
     </>
   );
 };

@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const LoggedInUsers = require("./models/loggedInUsers");
 const MailList = require("./models/emailListModel");
 const TableChats = require("./models/tableChatsModel");
+const BoothChats = require("./models/boothChatsModel");
 const BoothTableChats = require("./models/boothTableChatsModel");
 const PersonalChat = require("./models/PersonalChatModel");
 const ScheduledMeet = require("./models/scheduledMeetModel");
@@ -91,6 +92,16 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  socket.on("joinBooth", async ({ boothId }, callback) => {
+    socket.join(boothId);
+    console.log("This is join Booth");
+  });
+
+  socket.on("leaveBooth", async ({ boothId }, callback) => {
+    socket.leave(boothId);
+    console.log("This is leave Booth");
+  });
+
   socket.on(
     "joinNetworking",
     async ({ room, userId, eventId, userRole }, callback) => {
@@ -498,6 +509,71 @@ io.on("connect", (socket) => {
   });
 
   socket.on(
+    "transmitBoothMessage",
+    async (
+      {
+        isReply,
+        replyTo,
+        textMessage,
+        eventId,
+        boothId,
+        createdAt,
+        userRole,
+        userName,
+        userEmail,
+        userId,
+        userImage,
+        userOrganisation,
+        userDesignation,
+        reported,
+        numOfTimesReported,
+        visibilityStatus,
+      },
+      callback
+    ) => {
+      await BoothChats.create(
+        {
+          isReply,
+          replyTo,
+          textMessage,
+          eventId,
+          boothId,
+          createdAt,
+          userRole,
+          userName,
+          userEmail,
+          userId,
+          userImage,
+          userOrganisation,
+          userDesignation,
+          reported,
+          numOfTimesReported,
+          visibilityStatus,
+        },
+        async (err, chatMsgDoc) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (isReply) {
+              chatMsgDoc.replyTo = replyTo;
+              await chatMsgDoc.save({ new: true, validateModifiedOnly: true });
+            }
+            const populatedChatMsg = await BoothChats.find({
+              boothId: mongoose.Types.ObjectId(boothId),
+            }).populate("replyTo");
+
+            console.log(populatedChatMsg);
+
+            io.in(boothId).emit("newBoothMsg", {
+              chats: populatedChatMsg,
+            });
+          }
+        }
+      );
+    }
+  );
+
+  socket.on(
     "transmitBoothTableMessage",
     async (
       {
@@ -569,6 +645,19 @@ io.on("connect", (socket) => {
         chats: doc,
       });
     }).populate("replyTo");
+  });
+
+  socket.on("deleteBoothMessage", async ({ msgId, boothId }) => {
+    await BoothChats.findByIdAndUpdate(msgId, { deleted: true });
+
+    await BoothChats.find(
+      { boothId: mongoose.Types.ObjectId(boothId) },
+      async (err, doc) => {
+        io.in(boothId).emit("updateBoothChats", {
+          chats: doc,
+        });
+      }
+    ).populate("replyTo");
   });
 
   socket.on(
@@ -2924,7 +3013,7 @@ io.on("connect", (socket) => {
             console.log(err);
           } else {
             console.log("Sent booth chair data");
-            io.in(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+            io.in(boothId).emit("boothChairData", { roomChairs: doc.chairs });
             socket.leave(tableId);
           }
         })
@@ -3038,7 +3127,7 @@ io.on("connect", (socket) => {
           if (err) {
             console.log(err);
           } else {
-            io.to(tableId).emit("boothChairData", { roomChairs: doc.chairs });
+            io.to(boothId).emit("boothChairData", { roomChairs: doc.chairs });
           }
         })
           .select("chairs")

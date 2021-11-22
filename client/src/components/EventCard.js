@@ -103,9 +103,11 @@ const renderSpeakers = (speakers) => {
         <Avatar
           alt={speaker.firstName}
           src={
-            speaker.image.startsWith("https://")
-              ? speaker.image
-              : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
+            speaker.image
+              ? speaker.image.startsWith("https://")
+                ? speaker.image
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${speaker.image}`
+              : " "
           }
         />
       </Tooltip>
@@ -137,7 +139,7 @@ const EventCard = ({
   const dispatch = useDispatch();
   const showLiked = isFavourite;
 
-  const {isSignedIn} = useSelector((state) => state.auth);
+  const { isSignedIn } = useSelector((state) => state.auth);
 
   const eventLink = `https://www.bluemeet.in/event-landing-page/${id}/${communityId}`;
 
@@ -174,12 +176,14 @@ const EventCard = ({
       >
         <button
           onClick={() => {
-            if(isSignedIn) {
+            if (isSignedIn) {
               isFavourite
                 ? dispatch(removeFromFavouriteEvents(id))
                 : dispatch(addToFavouriteEvents(id));
-            }else {
-              dispatch(showSnackbar("info", "Please log in to wishlist this event."));
+            } else {
+              dispatch(
+                showSnackbar("info", "Please log in to wishlist this event.")
+              );
             }
           }}
           style={{

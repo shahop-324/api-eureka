@@ -5,6 +5,7 @@ const boothSlice = createSlice({
 
   initialState: {
     booths: [],
+    chats: [],
     videos: [],
     products: [],
     productDetails: null,
@@ -205,6 +206,9 @@ const boothSlice = createSlice({
     },
     FetchBusinessCards(state, action) {
       state.businessCards = action.payload.cards;
+    },
+    FetchBoothChats(state, action) {
+      state.chats = action.payload.chats;
     },
   },
 });

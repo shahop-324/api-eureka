@@ -88,6 +88,44 @@ const EventAndCatgory = styled.div`
   color: #212121;
 `;
 
+const renderedList = (eventsList, favouriteEvents) => {
+  return eventsList.map((event) => {
+    let isFavourite = false;
+
+    if (favouriteEvents.includes(event._id)) {
+      isFavourite = true;
+    }
+
+    const now = new Date(event.startDate);
+    const end = new Date(event.endDate);
+    const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
+    const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
+
+    const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
+    const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
+
+    return (
+      <EventCard
+        showSpeakers={true}
+        image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
+        date={formatedDate}
+        endDate={formatedEndDate}
+        id={event.id}
+        eventName={event.eventName}
+        minPrice={event.minTicketPrice}
+        maxPrice={event.maxTicketPrice}
+        key={event.id}
+        rating={(event.communityRating * 1.0).toFixed(1)}
+        startTime={startTime}
+        endTime={endTime}
+        communityId={event.communityId}
+        isFavourite={isFavourite}
+        speakers={event.speaker}
+      />
+    );
+  });
+};
+
 const SearchEvents = () => {
   const dispatch = useDispatch();
 
@@ -246,44 +284,6 @@ const SearchEvents = () => {
     } else {
       history.push(result);
     }
-  };
-
-  const renderedList = (eventsList, favouriteEvents) => {
-    return eventsList.map((event) => {
-      let isFavourite = false;
-
-      if (favouriteEvents.includes(event._id)) {
-        isFavourite = true;
-      }
-
-      const now = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      const formatedDate = dateFormat(now, "ddd mmm dS, h:MM TT");
-      const formatedEndDate = dateFormat(end, "ddd mmm dS, h:MM TT");
-
-      const startTime = dateFormat(event.startTime, "ddd mmm dS, h:MM TT");
-      const endTime = dateFormat(event.endTime, "ddd mmm dS, h:MM TT");
-
-      return (
-        <EventCard
-          showSpeakers={true}
-          image={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${event.image}`}
-          date={formatedDate}
-          endDate={formatedEndDate}
-          id={event.id}
-          eventName={event.eventName}
-          minPrice={event.minTicketPrice}
-          maxPrice={event.maxTicketPrice}
-          key={event.id}
-          rating={(event.communityRating * 1.0).toFixed(1)}
-          startTime={startTime}
-          endTime={endTime}
-          communityId={event.communityId}
-          isFavourite={isFavourite}
-          speakers={event.speaker}
-        />
-      );
-    });
   };
 
   const handleCancel = (event, picker) => {

@@ -45,6 +45,8 @@ const SideNav = ({
 }) => {
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
 
+  const { currentBoothId } = useSelector((state) => state.booth);
+
   const handleCloseUpdateProfile = () => {
     setOpenUpdateProfile(false);
   };
@@ -85,6 +87,16 @@ const SideNav = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
+              if (currentBoothId) {
+                socket.emit(
+                  "leaveBooth",
+                  { boothId: currentBoothId },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
+
               dispatch(SetCurrentBoothId(null));
               handleLobbyClick();
             }}
@@ -116,6 +128,15 @@ const SideNav = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
+              if (currentBoothId) {
+                socket.emit(
+                  "leaveBooth",
+                  { boothId: currentBoothId },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
               dispatch(SetCurrentBoothId(null));
               handleSessionsClick();
             }}
@@ -176,6 +197,15 @@ const SideNav = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
+              if (currentBoothId) {
+                socket.emit(
+                  "leaveBooth",
+                  { boothId: currentBoothId },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
               dispatch(SetCurrentBoothId(null));
               handleNetworkingClick();
             }}
@@ -207,6 +237,15 @@ const SideNav = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
+              if (currentBoothId) {
+                socket.emit(
+                  "leaveBooth",
+                  { boothId: currentBoothId },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
               dispatch(SetCurrentBoothId(null));
               handleRoomsClick();
             }}
@@ -238,6 +277,15 @@ const SideNav = ({
           <div
             className="icon-btn-lobby-wrapper d-flex flex-column align-items-center mb-3"
             onClick={() => {
+              if (currentBoothId) {
+                socket.emit(
+                  "leaveBooth",
+                  { boothId: currentBoothId },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
               dispatch(SetCurrentBoothId(null));
               handleBoothsClick();
             }}

@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useRef } from "react";
+import Loader from "./../../Loader";
 import styled from "styled-components";
 import { Dialog, IconButton, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
@@ -372,8 +373,8 @@ const TableScreen = ({
       }
 
       if (!uid.startsWith("screen")) {
-        rtc.localVideoTrack.stop();
-        rtc.localVideoTrack.play(userId);
+        rtc.localVideoTrack && rtc.localVideoTrack.stop();
+        rtc.localVideoTrack && rtc.localVideoTrack.play(userId);
       }
     });
 
@@ -644,12 +645,14 @@ const TableScreen = ({
 
   // * We need to get local user camera, mic and screen state in an object
 
-  for (let element of tableDetails.onStagePeople) {
-    if (element.user === userId) {
-      // Its a Host or Attendee
-      localUserState.camera = element.camera;
-      localUserState.mic = element.microphone;
-      localUserState.screen = element.screen;
+  if (tableDetails) {
+    for (let element of tableDetails.onStagePeople) {
+      if (element.user === userId) {
+        // Its a Host or Attendee
+        localUserState.camera = element.camera;
+        localUserState.mic = element.microphone;
+        localUserState.screen = element.screen;
+      }
     }
   }
 
@@ -665,26 +668,32 @@ const TableScreen = ({
   let peopleInThisRoom = [];
   let uniquePeopleIds = [];
 
-  for (let element of tableDetails.onStagePeople) {
-    for (let item of registrations) {
-      if (item.bookedByUser === element.user) {
-        if (!uniquePeopleIds.includes(element.user)) {
-          peopleInThisRoom.push({
-            userId: element.user,
-            userName: item.userName,
-            userRole: item.type,
-            userImage: item.userImage,
-            userEmail: item.email,
-            userCity: item.city,
-            userCountry: item.country,
-            userOrganisation: item.organisation,
-            userDesignation: item.designation,
-          });
+  if (tableDetails) {
+    for (let element of tableDetails.onStagePeople) {
+      for (let item of registrations) {
+        if (item.bookedByUser === element.user) {
+          if (!uniquePeopleIds.includes(element.user)) {
+            peopleInThisRoom.push({
+              userId: element.user,
+              userName: item.userName,
+              userRole: item.type,
+              userImage: item.userImage,
+              userEmail: item.email,
+              userCity: item.city,
+              userCountry: item.country,
+              userOrganisation: item.organisation,
+              userDesignation: item.designation,
+            });
 
-          uniquePeopleIds.push(element.user);
+            uniquePeopleIds.push(element.user);
+          }
         }
       }
     }
+  }
+
+  if (!tableDetails) {
+    return <Loader />;
   }
 
   return (

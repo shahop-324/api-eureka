@@ -151,7 +151,10 @@ router.post(
   globalController.generateTokenForLiveStreamingForScreenShare
 );
 
-router.post("/getTokenForBoothScreenShare", globalController.generateTokenForBoothScreenShare);
+router.post(
+  "/getTokenForBoothScreenShare",
+  globalController.generateTokenForBoothScreenShare
+);
 
 router.post(
   "/getRTMToken",
@@ -242,7 +245,11 @@ router.get(
   globalController.fetchEventTables
 );
 
-router.get("/getBoothTables/:boothId", authController.protect, globalController.fetchBoothTables);
+router.get(
+  "/getBoothTables/:boothId",
+  authController.protect,
+  globalController.fetchBoothTables
+);
 
 router.post(
   "/editTable/:tableId",
@@ -250,7 +257,11 @@ router.post(
   globalController.editTable
 );
 
-router.post("/editBoothTable/:tableId", authController.protect, globalController.editBoothTable);
+router.post(
+  "/editBoothTable/:tableId",
+  authController.protect,
+  globalController.editBoothTable
+);
 
 router.get(
   "/getTableDetails/:tableId",
@@ -258,7 +269,11 @@ router.get(
   globalController.getTableDetails
 );
 
-router.get("/getBoothTableDetails/:tableId", authController.protect, globalController.getBoothTableDetails);
+router.get(
+  "/getBoothTableDetails/:tableId",
+  authController.protect,
+  globalController.getBoothTableDetails
+);
 
 router.get(
   "/getTableChats/:tableId",
@@ -266,7 +281,17 @@ router.get(
   globalController.getTableChats
 );
 
-router.get("/getBoothTableChats/:tableId", authController.protect, globalController.getBoothTableChats);
+router.get(
+  "/getBoothTableChats/:tableId",
+  authController.protect,
+  globalController.getBoothTableChats
+);
+
+router.get(
+  "/getBoothChats/:boothId",
+  authController.protect,
+  globalController.getBoothChats
+);
 
 router.get(
   "/getSessionQnA/:sessionId",
@@ -368,6 +393,10 @@ router.post(
 
 router.get("/getCoupons/:eventId", globalController.getCoupons);
 
-router.get("/fetchEventBooth/:boothId", authController.protect, globalController.getEventBooth);
+router.get(
+  "/fetchEventBooth/:boothId",
+  authController.protect,
+  globalController.getEventBooth
+);
 
 module.exports = router;

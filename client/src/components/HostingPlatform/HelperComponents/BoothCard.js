@@ -1,4 +1,5 @@
 import React from "react";
+import socket from "./../service/socket";
 import styled from "styled-components";
 import "./../Styles/booth.scss";
 import { useDispatch } from "react-redux";
@@ -55,6 +56,11 @@ const BoothCard = ({ promoImage, logo, name, tagline, tags, id }) => {
     <>
       <BoothCardContainer
         onClick={() => {
+          socket.emit("joinBooth", { boothId: id }, (error) => {
+            if (error) {
+              alert(error);
+            }
+          });
           dispatch(SetCurrentBoothId(id));
         }}
         className="booth-card-wrapper px-4 py-3"

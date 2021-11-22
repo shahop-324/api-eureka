@@ -371,8 +371,8 @@ const NetworkingScreen = ({ open, handleClose }) => {
       }
 
       if (!uid.startsWith("screen")) {
-        rtc.localVideoTrack.stop();
-        rtc.localVideoTrack.play(userId);
+        rtc.localVideoTrack && rtc.localVideoTrack.stop();
+        rtc.localVideoTrack && rtc.localVideoTrack.play(userId);
       }
     });
     

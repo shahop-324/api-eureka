@@ -260,22 +260,8 @@ const TicketsHeadline = styled.div`
   color: #212121;
 `;
 
-// const useStyles = makeStyles({
-//   root: {
-//     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-//     border: 0,
-//     borderRadius: 3,
-//     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-//     color: "#FF8E53",
-//     height: 48,
-//     padding: '0 30px',
-//   },
-// });
-
 const EventLandingPage = (props) => {
   const params = useParams();
-
-  // const classes = useStyles();
 
   let isFavourite = false;
 
@@ -359,7 +345,6 @@ const EventLandingPage = (props) => {
 
   const tawkLink = useSelector((state) => state.tawk.directChatLink);
 
-  console.log(id);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -370,12 +355,6 @@ const EventLandingPage = (props) => {
     dispatch(fetchCommunityProfile(communityId));
     dispatch(fetchEventLandingPage(id, true)); // true indicates that we have to increase number of views on this event
   }, [dispatch, id]);
-
-  const [selectedSection, setSelectedSection] = useState(0);
-
-  const handleSecNav = (i) => {
-    setSelectedSection(i);
-  };
 
   const convertFromJSONToHTML = (text) => {
     return stateToHTML(convertFromRaw(JSON.parse(text)));
@@ -412,7 +391,6 @@ const EventLandingPage = (props) => {
   console.log(event);
 
   let col = 2;
-  let secNavCol = "1fr 1fr 1fr 1fr 1fr";
   let sessionIsPresent = false;
   let speakerIsPresent = false;
   let sponsorIsPresent = false;
@@ -449,23 +427,6 @@ const EventLandingPage = (props) => {
   }
   if (boothsIsPresent) {
     col = col + 1;
-  }
-
-  switch (col) {
-    case 2:
-      secNavCol = "1fr 1fr";
-      break;
-    case 3:
-      secNavCol = "1fr 1fr 1fr";
-      break;
-    case 4:
-      secNavCol = "1fr 1fr 1fr 1fr";
-      break;
-    case 5:
-      secNavCol = "1fr 1fr 1fr 1fr 1fr";
-      break;
-    default:
-      secNavCol = "1fr 1fr 1fr 1fr 1fr";
   }
 
   const renderSessionList = (color) => {
@@ -656,16 +617,18 @@ const EventLandingPage = (props) => {
             event. Please join event via community dashboard.
           </InfoMessageStrip>
         ) : (
-          <></>
+          <>
+            {alreadyRegistered === true ? (
+              <MessageStrip>
+                You are registered for this event. You can now join event or add
+                to your calender.
+              </MessageStrip>
+            ) : (
+              <></>
+            )}
+          </>
         )}
-        {alreadyRegistered === true ? (
-          <MessageStrip>
-            You are registered for this event. You can now join event or add to
-            your calender.
-          </MessageStrip>
-        ) : (
-          <></>
-        )}
+
         {tawkLink && chatBot(tawkLink)}
         {formatDate()}
         <CssBaseline />

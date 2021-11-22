@@ -36,9 +36,6 @@ const Rooms = () => {
 
   useEffect(() => {
     dispatch(getBoothTables(currentBoothId));
-    socket.on("boothChairData", ({ roomChairs }) => {
-      dispatch(fetchBoothChairs(roomChairs));
-    });
   }, []);
 
   if (!boothTables) {

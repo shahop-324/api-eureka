@@ -264,12 +264,6 @@ const AddNewBooth = ({open, handleSubmit, pristine, submitting, handleClose }) =
         <SwipeableDrawer
           anchor="right"
           open={open}
-          onOpen={() => {
-            console.log("Side nav was opended");
-          }}
-          onClose={() => {
-            console.log("Side nav was closed");
-          }}
         >
           <>
           <HeaderFooter className="form-heading-and-close-button mb-4 pt-3 py-4">
