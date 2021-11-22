@@ -85,6 +85,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderTicketList = (tickets) => {
+  console.log(tickets);
+  return tickets
+    .slice(0)
+    .reverse()
+    .map((ticket) => {
+      if (!ticket) return <></>;
+      return (
+        <TicketingDetailsCard
+          key={ticket._id}
+          name={ticket.name}
+          description={ticket.description}
+          price={ticket.price}
+          currency={ticket.currency}
+          unitsAvailable={ticket.numberOfTicketAvailable}
+          unitsSold={ticket.numberOfTicketSold}
+         active={ticket.active}
+          id={ticket._id}
+          type={ticket.type}
+        />
+      );
+    });
+};
+
 const Ticketing = () => {
   const [term, setTerm] = React.useState("");
 
@@ -115,29 +139,7 @@ const Ticketing = () => {
 
   const { tickets, isLoading, error } = useSelector((state) => state.ticket);
 
-  const renderTicketList = (tickets) => {
-    console.log(tickets);
-    return tickets
-      .slice(0)
-      .reverse()
-      .map((ticket) => {
-        if (!ticket) return <></>;
-        return (
-          <TicketingDetailsCard
-            key={ticket._id}
-            name={ticket.name}
-            description={ticket.description}
-            price={ticket.price}
-            currency={ticket.currency}
-            unitsAvailable={ticket.numberOfTicketAvailable}
-            unitsSold={ticket.numberOfTicketSold}
-           active={ticket.active}
-            id={ticket._id}
-            type={ticket.type}
-          />
-        );
-      });
-  };
+
 
   const classes = useStyles();
 

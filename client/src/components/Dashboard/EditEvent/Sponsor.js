@@ -112,6 +112,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const renderSponsorList = (sponsors) => {
+  return sponsors
+    .slice(0)
+    .reverse()
+    .map((sponsor) => {
+      return (
+        <SponsorDetailsCard
+          url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
+          key={sponsor._id}
+          id={sponsor._id}
+          organisationName={sponsor.organisationName}
+          website={sponsor.website}
+          status={sponsor.status}
+        />
+      );
+    });
+};
+
+
 const Sponsors = () => {
   const [openManageTiers, setOpenManageTiers] = React.useState(false);
 
@@ -150,24 +170,6 @@ const Sponsors = () => {
   const { sponsors, isLoading, error } = useSelector((state) => {
     return state.sponsor;
   });
-
-  const renderSponsorList = (sponsors) => {
-    return sponsors
-      .slice(0)
-      .reverse()
-      .map((sponsor) => {
-        return (
-          <SponsorDetailsCard
-            url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${sponsor.image}`}
-            key={sponsor._id}
-            id={sponsor._id}
-            organisationName={sponsor.organisationName}
-            website={sponsor.website}
-            status={sponsor.status}
-          />
-        );
-      });
-  };
 
   const classes = useStyles();
 

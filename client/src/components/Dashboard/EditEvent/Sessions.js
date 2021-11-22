@@ -97,6 +97,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderSessionsList = (sessions) => {
+  return sessions
+    .slice(0)
+    .reverse()
+    .map((session) => {
+      if (session) {
+        const {
+          id,
+          name,
+          startTime,
+          endTime,
+          startDate,
+          endDate,
+          description,
+          speaker,
+          type,
+          RTMPstreamKey,
+          RTMPstreamURL,
+        } = session;
+
+        return (
+          <SessionDetailCard
+            key={id}
+            speaker={speaker}
+            description={description}
+            startTime={startTime}
+            endTime={endTime}
+            startDate={startDate}
+            endDate={endDate}
+            name={name}
+            id={id}
+            type={type}
+            RTMPSecretKey={RTMPstreamKey}
+            RTMPUrl={RTMPstreamURL}
+          />
+        );
+      }
+    });
+};
+
 const Sessions = () => {
   const [open, setOpen] = React.useState(false);
   const handleNewSession = () => {
@@ -151,45 +191,7 @@ const Sessions = () => {
     return state.session;
   });
 
-  const renderSessionsList = (sessions) => {
-    return sessions
-      .slice(0)
-      .reverse()
-      .map((session) => {
-        if (session) {
-          const {
-            id,
-            name,
-            startTime,
-            endTime,
-            startDate,
-            endDate,
-            description,
-            speaker,
-            type,
-            RTMPstreamKey,
-            RTMPstreamURL,
-          } = session;
 
-          return (
-            <SessionDetailCard
-              key={id}
-              speaker={speaker}
-              description={description}
-              startTime={startTime}
-              endTime={endTime}
-              startDate={startDate}
-              endDate={endDate}
-              name={name}
-              id={id}
-              type={type}
-              RTMPSecretKey={RTMPstreamKey}
-              RTMPUrl={RTMPstreamURL}
-            />
-          );
-        }
-      });
-  };
   const classes = useStyles();
 
   if (error) {

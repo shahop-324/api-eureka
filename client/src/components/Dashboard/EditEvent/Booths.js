@@ -138,6 +138,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderBoothList = (booths) => {
+  return booths
+    .slice(0)
+    .reverse()
+    .map((booth) => {
+      if (!booth) return <div></div>;
+      return (
+        <BoothDetailsCard
+          url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${booth.image}`}
+          key={booth._id}
+          id={booth._id}
+          name={booth.name}
+          tagline={booth.tagline}
+          emails={booth.emails}
+          invitationLink={booth.invitationLink}
+          boothTags={booth.tags}
+        />
+      );
+    });
+};
+
 const Booths = () => {
   const params = useParams();
 
@@ -182,27 +203,6 @@ const Booths = () => {
   };
 
   const { booths, isLoading, error } = useSelector((state) => state.booth);
-
-  const renderBoothList = (booths) => {
-    return booths
-      .slice(0)
-      .reverse()
-      .map((booth) => {
-        if (!booth) return <div></div>;
-        return (
-          <BoothDetailsCard
-            url={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${booth.image}`}
-            key={booth._id}
-            id={booth._id}
-            name={booth.name}
-            tagline={booth.tagline}
-            emails={booth.emails}
-            invitationLink={booth.invitationLink}
-            boothTags={booth.tags}
-          />
-        );
-      });
-  };
 
   const classes = useStyles();
 

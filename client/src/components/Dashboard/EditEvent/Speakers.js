@@ -109,6 +109,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderSpeakersList = (speakers) => {
+  if (speakers.length !== 0) {
+    return speakers
+      .slice(0)
+      .reverse()
+      .map((speaker) => {
+        const {
+          id,
+          firstName,
+          lastName,
+          email,
+          image,
+          sessions,
+          headline,
+          invitationStatus,
+          invitationLink,
+          dashboardLink,
+        } = speaker;
+        let imgUrl = " #";
+        const imgKey = image;
+        if (imgKey) {
+          imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
+        }
+        return (
+          <SpeakersDetailsCard
+            url={imgUrl}
+            key={id}
+            name={firstName + " " + lastName}
+            email={email}
+            sessions={sessions}
+            id={id}
+            headline={headline}
+            invitationStatus={invitationStatus}
+            invitationLink={invitationLink}
+            dashboardLink={dashboardLink}
+          />
+        );
+      });
+  } else {
+    return <></>;
+  }
+};
+
 const Speakers = () => {
   const params = useParams();
   const eventId = params.id;
@@ -182,48 +225,7 @@ const Speakers = () => {
     setOpen(false);
   };
 
-  const renderSpeakersList = (speakers) => {
-    if (speakers.length !== 0) {
-      return speakers
-        .slice(0)
-        .reverse()
-        .map((speaker) => {
-          const {
-            id,
-            firstName,
-            lastName,
-            email,
-            image,
-            sessions,
-            headline,
-            invitationStatus,
-            invitationLink,
-            dashboardLink,
-          } = speaker;
-          let imgUrl = " #";
-          const imgKey = image;
-          if (imgKey) {
-            imgUrl = `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${imgKey}`;
-          }
-          return (
-            <SpeakersDetailsCard
-              url={imgUrl}
-              key={id}
-              name={firstName + " " + lastName}
-              email={email}
-              sessions={sessions}
-              id={id}
-              headline={headline}
-              invitationStatus={invitationStatus}
-              invitationLink={invitationLink}
-              dashboardLink={dashboardLink}
-            />
-          );
-        });
-    } else {
-      return <></>;
-    }
-  };
+
   const classes = useStyles();
 
   if (error) {
