@@ -52,9 +52,7 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
 
   // create and pass a function as props to Chat Msg Element which can set value of name, image and msg when clicked on reply icon.
 
-  const { sessionChats } = useSelector(
-    (state) => state.sessionChats
-  );
+  const { sessionChats } = useSelector((state) => state.sessionChats);
   const userDetails = useSelector((state) => state.user);
 
   const userId = userDetails._id;
@@ -82,15 +80,16 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               return <DeletedOwnMsg timestamp={chat.createdAt} />;
             return (
               <SelfReplyElement
-        
                 currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -99,9 +98,11 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -118,12 +119,13 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
-          
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -132,15 +134,16 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               );
             return (
               <OthersReplyElement
-             
                 currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -149,9 +152,11 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -169,18 +174,19 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             // Its an outgoing msg
             // check if its deleted => if yes then don't return but show that it has been deleted like whatsapp
             if (chat.deleted === true)
-              return <DeletedOwnMsg  timestamp={chat.createdAt} />;
+              return <DeletedOwnMsg timestamp={chat.createdAt} />;
 
             return (
               <OutgoingChatElement
-            
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -195,12 +201,13 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
             if (chat.deleted === true)
               return (
                 <DeletedOthersMsg
-                
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -209,15 +216,16 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
               );
             return (
               <IncomingChatMsgElement
-            
                 currentUserIsAHost={currentUserIsAHost}
                 key={chat._id}
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -241,11 +249,9 @@ const MainChatComponent = ({ currentUserIsAHost, runningStatus }) => {
           className="scrollable-chat-element-container"
           id="all-chat-msg-container"
         >
-          {renderChats(sessionChats)
-           }
+          {renderChats(sessionChats)}
         </div>
         <MsgInput
-      
           name={name}
           image={image}
           msg={msg}

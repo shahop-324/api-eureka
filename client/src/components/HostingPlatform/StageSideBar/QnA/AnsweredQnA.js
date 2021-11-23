@@ -217,7 +217,7 @@ const AnsweredQnA = ({
 
           {currentUserIsAHost ? (
             <div className="d-flex flex-row align-items-center justify-content-end">
-              {runningStatus === "Started" || runningStatus === "Resumed" ? (
+              {runningStatus === "In Progress" ? (
                 showOnStage ? (
                   <button
                     onClick={() => {

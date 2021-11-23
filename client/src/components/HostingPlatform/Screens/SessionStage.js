@@ -838,7 +838,7 @@ const SessionStage = () => {
         startLiveStream();
       }, 500);
     }
-  }, [canPublishStream]);
+  }, []);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained

@@ -455,7 +455,7 @@ const PollComponent = ({
               >
                 <DeleteRoundedIcon />
               </IconButton>
-              {runningStatus === "Started" || runningStatus === "Resumed" ? (
+              {runningStatus === "In Progress" ? (
                 showOnStage ? (
                   <button
                     onClick={() => {

@@ -5,7 +5,6 @@ import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Setting
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
 import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
 import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
-import WidgetsIcon from "@mui/icons-material/Widgets"; // Tools Icon
 import { BtnDanger, StageControl } from "./Elements";
 import { useParams } from "react-router";
 import ReactTooltip from "react-tooltip";
@@ -13,20 +12,20 @@ import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import CancelPresentationOutlinedIcon from "@mui/icons-material/CancelPresentationOutlined";
 import socket from "./../HostingPlatform/service/socket";
-import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
 import { useDispatch, useSelector } from "react-redux";
 import { getRTCTokenForScreenShare } from "../../actions";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
 import Settings from "./Settings";
-import Tools from "./Tools";
 import StartRecordingConfirmation from "./SubComponent/StartRecordingConfirmation";
 import StopRecordingConfirmation from "./SubComponent/StopRecordingConfirmation";
 import PanToolRoundedIcon from "@mui/icons-material/PanToolRounded";
 import Like from "./../../assets/images/like.png";
 import Clapping from "./../../assets/images/clapping.png";
 import Smile from "./../../assets/images/Smile.png";
+import CreatePoll from "../HostingPlatform/StageSideBar/Poll/CreatePoll";
+import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
 
 const IconButton = styled.div`
   max-width: fit-content;
@@ -122,14 +121,16 @@ const StageControlsComponent = ({
 }) => {
   // {/* // ! Caution don't show stage controls if session has ended */}
 
+  const [openCreatePoll, setOpenCreatePoll] = React.useState(false);
+
+  const handleCloseCreatePoll = () => {
+    setOpenCreatePoll(false);
+  };
+
   let sessionHasEnded = false;
   let currentUserIsAHost = false;
 
-  const [fullScreen, setFullScreen] = useState(false);
-
   const [openSettings, setOpenSettings] = useState(false);
-
-  const [showTools, setShowTools] = useState(false);
 
   const [startRecording, setStartRecording] = useState(false);
 
@@ -141,10 +142,6 @@ const StageControlsComponent = ({
 
   const handleCloseStartRecording = () => {
     setStartRecording(false);
-  };
-
-  const handleCloseTools = () => {
-    setShowTools(false);
   };
 
   const handleCloseSettings = () => {
@@ -409,12 +406,12 @@ const StageControlsComponent = ({
                 case "In Progress":
                   return (
                     <IconButton
-                      className="me-4"
+                      className=""
                       onClick={() => {
-                        setShowTools(true);
+                        setOpenCreatePoll(true);
                       }}
                     >
-                      <WidgetsIcon style={{ fontSize: "20px" }} />
+                      <AssessmentRoundedIcon style={{ fontSize: "20px" }} />
                     </IconButton>
                   );
 
@@ -425,29 +422,6 @@ const StageControlsComponent = ({
           ) : (
             <></>
           )}
-
-          <IconButton
-            onClick={() => {
-              if (fullScreen) {
-                // Logic for exiting full screen mode
-                setFullScreen(false);
-
-                document.exitFullscreen();
-              } else {
-                // Logic for entering full screen mode
-                let elem = document.getElementById("stage-full-screen-element");
-
-                if (!elem) return;
-
-                setFullScreen(true);
-
-                elem.requestFullscreen();
-              }
-            }}
-            className=""
-          >
-            <FullscreenRoundedIcon style={{ fontSize: "20px" }} />
-          </IconButton>
 
           {!sessionHasEnded ? (
             <IconButton
@@ -465,7 +439,7 @@ const StageControlsComponent = ({
         </div>
       </StageControl>
 
-      <Tools open={showTools} handleClose={handleCloseTools} />
+      <CreatePoll open={openCreatePoll} handleClose={handleCloseCreatePoll} />
       <ReactTooltip place="top" type="light" effect="float" />
       <Settings open={openSettings} handleClose={handleCloseSettings} />
 

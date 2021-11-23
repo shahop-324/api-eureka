@@ -91,7 +91,7 @@ const MsgInput = (props) => {
           }
         }}
       >
-        {props.name && props.image && props.msg ? (
+        {props.name && props.msg ? (
           <div className="p-2">
             <div className="d-flex flex-row align-items-center justify-content-end mb-2">
               <CancelOutlinedIcon

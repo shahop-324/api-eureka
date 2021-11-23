@@ -166,582 +166,115 @@ const StreamBody = ({
         </a>
 
         {
-          canPublishStream
-            ? (() => {
-                // NOTE: They will be automatically taken to live or backstage based on channel they join sessionId-live or sessionId-back => Take care of this in stage nav and controls component
-                switch (runningStatus) {
-                  case "Paused":
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Not Yet Started":
-                    // Take to back
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Started":
-                    // Take to live
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Resumed":
-                    // Take to live
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Ended":
-                    // Show Ended screen
-                    return (
-                      <NotYetStarted>
-                        <img
-                          src={Ended}
-                          style={{ height: "300px" }}
-                          className="mb-4"
-                          alt={"No video"}
-                        />
-                        <Text className="mb-4">
-                          Oops, this session has already ended. But we can still
-                          watch together.
-                        </Text>
-                        <ButtonStyled className="btn btn-danger btn-outline-text">
-                          {" "}
-                          <PlayCircleRoundedIcon className="me-2" />{" "}
-                          <span>Let's watch </span>
-                        </ButtonStyled>
-                      </NotYetStarted>
-                    );
-
-                  default:
-                    break;
+          (() => {
+            // NOTE: They will be automatically taken to live or backstage based on channel they join sessionId-live or sessionId-back => Take care of this in stage nav and controls component
+            switch (runningStatus) {
+              case "In Progress":
+                if (view === "gallery") {
+                  return (
+                    <>
+                      <div
+                        style={{
+                          height: "72vh",
+                          display: "grid",
+                          gridTemplateColumns: columns,
+                          gridTemplateRows: rows,
+                          gridGap: "24px",
+                          margin: "50px 65px",
+                        }}
+                      >
+                        {galleryViewInput.map((el) => {
+                          return (
+                            <VideoPlayer
+                              name={el.name}
+                              image={el.image}
+                              userId={el.userId}
+                              camera={el.camera}
+                              mic={el.mic}
+                            />
+                          );
+                        })}
+                      </div>
+                    </>
+                  );
                 }
-              })()
-            : (() => {
-                switch (runningStatus) {
-                  case "Started":
-                    // Take to live
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
+                if (view === "presentation") {
+                  // Here we will make presentation mode grid
+                  return (
+                    <>
+                      <div
+                        style={{
+                          height: "72vh",
+                          display: "grid",
+                          gridTemplateColumns: "4fr 1fr",
+                          gridGap: "24px",
+                          margin: "50px 65px",
+                        }}
+                      >
+                        {/* Here we will have screen tracks and main video tracks in stacked format */}
 
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Resumed":
-                    // Take to live
-
-                    if (view === "gallery") {
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: columns,
-                              gridTemplateRows: rows,
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {galleryViewInput.map((el) => {
-                              return (
-                                <VideoPlayer
-                                  name={el.name}
-                                  image={el.image}
-                                  userId={el.userId}
-                                  camera={el.camera}
-                                  mic={el.mic}
-                                />
-                              );
-                            })}
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "presentation") {
-                      // Here we will make presentation mode grid
-                      return (
-                        <>
-                          <div
-                            style={{
-                              height: "72vh",
-                              display: "grid",
-                              gridTemplateColumns: "4fr 1fr",
-                              gridGap: "24px",
-                              margin: "50px 65px",
-                            }}
-                          >
-                            {/* Here we will have screen tracks and main video tracks in stacked format */}
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: screenColumns,
-                                gridTemplateRows: screenRows,
-                                gridGap: "24px",
-                              }}
-                            >
-                              {processedScreenTracks.map((el) => {
-                                return <ScreenTrackPlayer userId={el.uid} />;
-                              })}
-                            </div>
-                            <div style={{ height: "72vh", overflow: "auto" }}>
-                              {galleryViewInput.map((el) => {
-                                return (
-                                  <VideoPlayer
-                                    height={"23vh"}
-                                    name={el.name}
-                                    image={el.image}
-                                    userId={el.userId}
-                                    camera={el.camera}
-                                    mic={el.mic}
-                                  />
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      );
-                    }
-                    if (view === "video") {
-                      // here we will make video mode grid
-                    }
-
-                    break;
-
-                  case "Paused":
-                    // Show paused screen
-                    return (
-                      <NotYetStarted>
-                        <img
-                          src={Paused}
-                          style={{ height: "300px" }}
-                          className="mb-4"
-                          alt={"No video"}
-                        />
-                        <Text>Looks like this session is paused for now.</Text>
-                      </NotYetStarted>
-                    );
-
-                  case "Not Yet Started":
-                    // Show not yet Started screen
-                    return (
-                      <NotYetStarted>
-                        <>
-                          <img
-                            src={VideoCall}
-                            style={{ height: "300px" }}
-                            className="mb-4"
-                            alt={"No video"}
-                          />
-                          <Text>
-                            Uh oh! Seems like this session is not yet started.
-                          </Text>
-                        </>
-                      </NotYetStarted>
-                    );
-
-                  case "Ended":
-                    // Show ended screen
-                    return (
-                      <NotYetStarted>
-                        <img
-                          src={Ended}
-                          style={{ height: "300px" }}
-                          className="mb-4"
-                          alt={"No video"}
-                        />
-                        <Text className="mb-4">
-                          Oops, this session has already ended. But we can still
-                          watch together.
-                        </Text>
-                        <ButtonStyled className="btn btn-danger btn-outline-text">
-                          {" "}
-                          <PlayCircleRoundedIcon className="me-2" />{" "}
-                          <span>Let's watch </span>
-                        </ButtonStyled>
-                      </NotYetStarted>
-                    );
-
-                  default:
-                    break;
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: screenColumns,
+                            gridTemplateRows: screenRows,
+                            gridGap: "24px",
+                          }}
+                        >
+                          {processedScreenTracks.map((el) => {
+                            return <ScreenTrackPlayer userId={el.uid} />;
+                          })}
+                        </div>
+                        <div style={{ height: "72vh", overflow: "auto" }}>
+                          {galleryViewInput.map((el) => {
+                            return (
+                              <VideoPlayer
+                                height={"23vh"}
+                                name={el.name}
+                                image={el.image}
+                                userId={el.userId}
+                                camera={el.camera}
+                                mic={el.mic}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  );
                 }
-              })()
+                if (view === "video") {
+                  // here we will make video mode grid
+                }
+
+                break;
+
+              case "Ended":
+                // Show Ended screen
+                return (
+                  <NotYetStarted>
+                    <img
+                      src={Ended}
+                      style={{ height: "300px" }}
+                      className="mb-4"
+                      alt={"No video"}
+                    />
+                    <Text className="mb-4">
+                      Oops, this session has already ended. But we can still
+                      watch together.
+                    </Text>
+                    <ButtonStyled className="btn btn-danger btn-outline-text">
+                      {" "}
+                      <PlayCircleRoundedIcon className="me-2" />{" "}
+                      <span>Let's watch </span>
+                    </ButtonStyled>
+                  </NotYetStarted>
+                );
+
+              default:
+                break;
+            }
+          })()
 
           // if cannot publish stream and session has ended then show session ended screen
           // if cannot publish stream and session has not ended then take to live stage => if (Started || Resumed) show videos || if(Paused or Not Yet Started) show illustration
