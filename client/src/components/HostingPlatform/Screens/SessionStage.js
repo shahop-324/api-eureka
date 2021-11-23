@@ -367,13 +367,13 @@ const SessionStage = () => {
     );
   };
 
-  const startPresenting = async (channelName, token, uid) => {
+  const startPresenting = async (token, uid) => {
     // We will use this fxn to start presenting our screen
     rtc.screenClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
     rtc.client.setClientRole(options.role);
 
     await rtc.screenClient
-      .join(options.appId, channelName, token, uid)
+      .join(options.appId, sessionId, token, uid)
       // .join(options.appId, sessionId, screenToken, `screen-${userId}`) // Here we need to take care of appId, channel name, token (specifically generated to share screen) and uid
       .then(async () => {
         rtc.localScreenTrack = await AgoraRTC.createScreenVideoTrack({
@@ -857,7 +857,6 @@ const SessionStage = () => {
     socket.emit(
       "removeMeFromSessionStage",
       {
-        channel,
         userId,
         userEmail,
         registrationId,
@@ -939,15 +938,7 @@ const SessionStage = () => {
 
   // * We need to get local user camera, mic and screen state in an object
 
-  for (let element of sessionDetails.onLiveStagePeople) {
-    if (element.user === userId) {
-      localUserState.camera = element.camera;
-      localUserState.mic = element.microphone;
-      localUserState.screen = element.screen;
-    }
-  }
-
-  for (let element of sessionDetails.onBackStagePeople) {
+  for (let element of sessionDetails.onStagePeople) {
     if (element.user === userId) {
       localUserState.camera = element.camera;
       localUserState.mic = element.microphone;

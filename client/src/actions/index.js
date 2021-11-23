@@ -6171,17 +6171,15 @@ export const getRTCTokenForNetworking =
   };
 
 export const getRTCTokenForScreenShare =
-  (sessionId, uid, startPresenting, currentState) =>
+  (sessionId, uid, startPresenting) =>
   async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
-    let channelName =
-      currentState === "back" ? `${sessionId}-back` : `${sessionId}-live`;
 
     const fetchingRTCToken = async () => {
       let res = await fetch(`${BaseURL}getLiveStreamingTokenForScreenShare`, {
         method: "POST",
         body: JSON.stringify({
-          channel: channelName,
+          channel: sessionId,
           sessionId: sessionId,
           uid: `screen-${uid}`,
         }),
@@ -6211,7 +6209,7 @@ export const getRTCTokenForScreenShare =
         })
       );
 
-      startPresenting(channelName, res.token, `screen-${uid}`);
+      startPresenting(res.token, `screen-${uid}`);
     } catch (err) {
       console.log(err);
       dispatch(RTCActions.hasError(err.message));
