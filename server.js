@@ -20,8 +20,6 @@ const BoothChair = require("./models/boothChairModel");
 const Booth = require("./models/boothModel");
 const Speaker = require("./models/speakerModel");
 const NetworkingRoom = require("./models/networkingRoomModel");
-const OnLiveStagePeople = require("./models/onLiveStagePeopleModel");
-const OnBackStagePeople = require("./models/onBackStagePeopleModel");
 const { nanoid } = require("nanoid");
 
 process.on("uncaughtException", (err) => {
@@ -790,21 +788,6 @@ io.on("connect", (socket) => {
       const sessionDoc = await Session.findById(sessionId)
         .populate("host")
         .populate("speaker"); // This is the session doc we need to update
-
-      // const onLiveStagePersons = await OnLiveStagePeople.find({
-      //   sessionId: mongoose.Types.ObjectId(sessionId),
-      // });
-
-      // const onBackStagePersons = await OnBackStagePeople.find({
-      //   sessionId: mongoose.Types.ObjectId(sessionId),
-      // });
-
-      // for (let element of onLiveStagePersons) {
-      //   await OnLiveStagePeople.findByIdAndDelete(element._id);
-      // }
-      // for (let element of onBackStagePersons) {
-      //   await OnBackStagePeople.findByIdAndDelete(element._id);
-      // }
 
       if (state === "live") {
         const newDoc = await OnLiveStagePeople.create({

@@ -103,21 +103,7 @@ const SessionStage = () => {
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  const [openBackstageReminder, setOpenBackstageReminder] = useState(false);
-
-  const handleCloseBackstageReminder = () => {
-    setOpenBackstageReminder(false);
-  };
-
-  const [showTimer, setShowTimer] = useState(false); // This will be used to show and hide timer
-  const [showPauseTimer, setShowPauseTimer] = useState(false); // This will used to show and hide puase session timer
-  const [timerHeading, setTimerHeading] = useState(null); // This will be used to show timer heading
-  const [timerSubHeading, setTimerSubHeading] = useState(null); // This will be used to show timer sub heading
-
-  const handleHideTimer = () => {
-    setShowTimer(false);
-  };
-
+  
   // Determine if the current user is a host and place restrictions based on that
 
   const { userDetails } = useSelector((state) => state.user);
@@ -146,20 +132,7 @@ const SessionStage = () => {
     registrationId = myRegistration._id;
   }
 
-  const hosts = sessionDetails.host; // Hosts for this session
-  const speakers = sessionDetails.speaker; // Speakers for this session
-
-  const previousState = useRef();
-
-  // Re initialise previous state
-
-  const resetPreviousStateRef = () => {
-    previousState.current = null;
-  };
-
-  const [state, setState] = useState("live"); // State can be live or back. It will be determined in useEffect
-
-  const [channel, setChannel] = useState(`${sessionId}-live`); // This will be the room used to join agora channel , It can be sessionIdlive or sessionIdback depending on whether user joins livestage or backstage
+  const channel = sessionId; // This will be the room used to join agora channel , It can be sessionIdlive or sessionIdback depending on whether user joins livestage or backstage
 
   const userHasUnmutedAudio = useRef(false);
   const userHasUnmutedVideo = useRef(false);
@@ -181,37 +154,17 @@ const SessionStage = () => {
 
     dispatch(fetchPreviousSessionChatMessages(sessionId)); // Fetch previous chat message for live stage
 
-    dispatch(fetchPreviousBackstageChatMessages(sessionId)); // Fetch previous chat message for back stage
-
     socket.on("resetAudioAndVideoControls", async () => {
-      // alert("resetAudioAndVideoControls Was triggered.")
-      // userHasUnmutedAudio.current = false;
       userHasUnmutedVideo.current = false;
       rtc.localVideoTrack && rtc.localVideoTrack.close();
     });
 
     socket.on("unMuteYourVideo", () => {
-      // alert("unMuteYourVideo Was triggered.")
       setTimeout(() => {
         userHasUnmutedVideo.current = false;
         rtc.localVideoTrack && rtc.localVideoTrack.close();
         unMuteMyVideo();
       }, 2000);
-    });
-
-    socket.on("removedFromStageAsSessionEnded", () => {
-      dispatch(
-        showNotification(
-          "You have been removed from stage because session has been Ended."
-        )
-      );
-    });
-    socket.on("removedFromStageAsSessionPaused", () => {
-      dispatch(
-        showNotification(
-          "You have been removed from stage because session has been Paused."
-        )
-      );
     });
 
     socket.on("updatedSession", ({ session }) => {
@@ -226,9 +179,7 @@ const SessionStage = () => {
       dispatch(createNewSessionMsg(newMsg));
     });
 
-    socket.on("newBackstageMsg", ({ newMsg }) => {
-      dispatch(createNewBackstageMsg(newMsg));
-    });
+   
 
     socket.on("newQnA", ({ newQnA }) => {
       dispatch(createSessionQnA(newQnA));
@@ -296,105 +247,6 @@ const SessionStage = () => {
       dispatch(deleteBackstageChat(deletedMsg));
     });
 
-    socket.on("sessionStarted", async ({ session }) => {
-      // Start showing 10 sec countdown timer
-
-      // ! Step 1.) Switch off camera, mic and screen share
-
-      // Make a fxn which will take care of this task (switching off camera, mic and screen if they are switched on or available)
-      handleSwitchOffMediaBeforeTransition();
-
-      userHasUnmutedAudio.current = false;
-      userHasUnmutedVideo.current = false;
-
-      setTimerHeading("Starting Session");
-      if (state === "back") {
-        setTimerSubHeading("Please wait while we are starting this session...");
-      }
-      if (state === "live") {
-        setTimerSubHeading("This session is about to start...");
-      }
-      setShowTimer(true);
-      // ? Set heading as Starting Session in both cases (state === "live" or state === "back")
-      // ? Set sub heading as Please wait while we are starting this session if state === "back"
-      // & Set subHeading as This session is about to start ... if state === "live"
-      // setShowTimer(true);
-
-      setTimeout(function () {
-        dispatch(updateSession(session));
-        dispatch(fetchSessionForSessionStage(sessionId));
-        dispatch(switchOffMediaBeforeTransition());
-        handleHideTimer();
-      }, 12000);
-    });
-
-    socket.on("sessionPaused", ({ session }) => {
-      // Here we will just show notification that this session has been paused to everyone
-      // No timer
-
-      // ! Step 1.) Switch off camera, mic and screen share
-
-      // Make a fxn which will take care of this task (switching off camera, mic and screen if they are switched on or available)
-
-      handleSwitchOffMediaBeforeTransition();
-      dispatch(showNotification("This session has been paused by Host."));
-
-      userHasUnmutedAudio.current = false;
-      userHasUnmutedVideo.current = false;
-
-      setTimerHeading("Pausing Session");
-
-      if (state === "back") {
-        setTimerSubHeading("Please wait while we are pausing this session...");
-      }
-      if (state === "live") {
-        setTimerSubHeading("This session is about to paused...");
-      }
-      setShowPauseTimer(true);
-
-      console.log(session);
-
-      setTimeout(function () {
-        dispatch(updateSession(session));
-        dispatch(fetchSessionForSessionStage(sessionId));
-        dispatch(switchOffMediaBeforeTransition());
-        // handleHideTimer();
-      }, 12000);
-    });
-
-    socket.on("sessionResumed", ({ session }) => {
-      // Here we need to show countdown timer to our users that this session is about to be resumed
-
-      // ! Step 1.) Switch off camera, mic and screen share
-
-      // Make a fxn which will take care of this task (switching off camera, mic and screen if they are switched on or available)
-
-      handleSwitchOffMediaBeforeTransition();
-
-      userHasUnmutedAudio.current = false;
-      userHasUnmutedVideo.current = false;
-
-      setTimerHeading("Resuming session");
-      if (state === "back") {
-        setTimerSubHeading("Please wait while we are resuming this session...");
-      }
-      if (state === "live") {
-        setTimerSubHeading("This session is about to resume...");
-      }
-      setShowTimer(true);
-      // ? Set heading as Resuming Session in both cases (state === "live" or state === "back")
-      // ? Set sub heading as Please wait while we are resuming this session if state === "back"
-      // & Set subHeading as This session is about to start ... if state === "live"
-      // setShowTimer(true);
-
-      setTimeout(function () {
-        dispatch(updateSession(session));
-        dispatch(fetchSessionForSessionStage(sessionId));
-        dispatch(switchOffMediaBeforeTransition());
-        handleHideTimer();
-      }, 12000);
-    });
-
     socket.on("sessionEnded", ({ session }) => {
       // Here we need to just show that this session has been ended by host and stop streaming but everyone will be still able to communicate via chat only
 
@@ -403,8 +255,6 @@ const SessionStage = () => {
       // Make a fxn which will take care of this task (switching off camera, mic and screen if they are switched on or available)
 
       clearPreviousStreams();
-
-      handleSwitchOffMediaBeforeTransition();
 
       userHasUnmutedAudio.current = false;
       userHasUnmutedVideo.current = false;
@@ -463,7 +313,6 @@ const SessionStage = () => {
     socket.emit(
       "updateMyCameraOnSessionStage",
       {
-        channel,
         userId,
         registrationId,
         sessionId,
@@ -484,7 +333,6 @@ const SessionStage = () => {
     socket.emit(
       "updateMyCameraOnSessionStage",
       {
-        channel,
         userId,
         registrationId,
         sessionId,
@@ -503,8 +351,6 @@ const SessionStage = () => {
     socket.emit(
       "updateMyMicOnSessionStage",
       {
-        channel,
-        state,
         userId,
         registrationId,
         sessionId,
@@ -522,8 +368,6 @@ const SessionStage = () => {
     socket.emit(
       "updateMyMicOnSessionStage",
       {
-        channel,
-        state,
         userId,
         registrationId,
         sessionId,
@@ -620,7 +464,7 @@ const SessionStage = () => {
     }
   };
 
-  const runningStatus = sessionDetails.runningStatus; // Can be Started, Paused, Resumed, Ended, Not Yet Started
+  const runningStatus = sessionDetails.runningStatus; // Can be In Progress or ended
 
   const dispatch = useDispatch();
 
@@ -690,8 +534,6 @@ const SessionStage = () => {
     socket.emit(
       "removeMeFromSessionStage",
       {
-        channel,
-        state,
         userId,
         userEmail,
         registrationId,
@@ -749,16 +591,12 @@ const SessionStage = () => {
     }
     if (agoraRole === "host") {
       // Only here we need to emit event markAsAvailableInSession via socket
-      handleSwitchOffMediaBeforeTransition();
-
       // alert(`Current state is ${state}`);
 
       socket.emit(
         "markAsAvailableInSession",
         {
           role,
-          state,
-          channel, // We  need to push this user in onBackStagePeople or onLiveStagePeople Based on channel
           userId,
           userEmail,
           registrationId,
@@ -907,7 +745,6 @@ const SessionStage = () => {
           socket.emit(
             "updateMyCameraOnSessionStage",
             {
-              channel,
               userId,
               registrationId,
               sessionId,
@@ -941,7 +778,6 @@ const SessionStage = () => {
         socket.emit(
           "updateMyCameraOnSessionStage",
           {
-            channel,
             userId,
             registrationId,
             sessionId,
@@ -982,8 +818,6 @@ const SessionStage = () => {
       socket.emit(
         "updateMyMicOnSessionStage",
         {
-          channel,
-          state,
           userId,
           registrationId,
           sessionId,
@@ -1017,53 +851,17 @@ const SessionStage = () => {
     if (agoraRole === "host") {
       setCanPublishStream(true); // We will manipulate this variable to allow audience to come on stage
 
-      if (runningStatus === "Started" || runningStatus === "Resumed") {
-        // Session is live
-        setState("live");
-        setChannel(`${sessionId}-live`);
-      }
-      if (runningStatus === "Paused" || runningStatus === "Not Yet Started") {
-        // Session is not not live
-        socket.emit(
-          // ! Subscribe to session backstage
-          "subscribeBackstage",
-          {
-            sessionId: sessionId,
-          },
-          (error) => {
-            if (error) {
-              alert(error);
-            }
-          }
-        );
-        setState("back");
-        setOpenBackstageReminder(true);
-        setChannel(`${sessionId}-back`);
-        localChannel = `${sessionId}-back`;
-      }
-      if (runningStatus === "Ended") {
-        // Session has already ended
-        setState("ended");
-        // No channel will be needed in this case as user won't join any agora channel here
-      }
-    } else {
-      if (runningStatus !== "Ended") {
-        // take to live stage
-        setState("live");
-        setChannel(`${sessionId}-live`);
-      }
-      if (runningStatus === "Ended") {
-        setState("ended");
-        // No channel will be needed in this case as user won't join any agora channel here
-      }
-    }
+      
+      
+      
+    } 
 
     if (runningStatus !== "Ended") {
       setTimeout(() => {
         startLiveStream(localChannel);
-      }, 1500);
+      }, 500);
     }
-  }, [state]);
+  }, []);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained
@@ -1121,109 +919,16 @@ const SessionStage = () => {
     await rtc.client.leave();
   };
 
-  const afterCountdownCompletes = () => {
-    // Please clear all streams maintained before calling startLiveStreaming
+  
 
-    userHasUnmutedAudio.current = false;
-    userHasUnmutedVideo.current = false;
 
-    // if (state === "back") {
-    //   stopLiveStreaming(); // To stop backstage streaming
-    // }
-
-    socket.emit("unsubscribeBackstage", { sessionId: sessionId }, (error) => {
-      console.log(error);
-    });
-
-    if (state === "back") {
-      previousState.current = "back";
-      setState("live");
-      setChannel(`${sessionId}-live`);
-    }
-
-    if (previousState.current === "back") {
-      // This means we had previous state as back
-
-      // Here we will call fxn to clear all maintained streams  before acquiring token and starting livestream on livestage
-      clearPreviousStreams();
-
-      // Pass startLiveStreaming and handleHideTimer fxn along with uid, channel and sessionId
-      // Pass resetPreviousStateRef to set previousState ref to null for reuse
-      dispatch(
-        fetchLiveStageTokenAndStartStreaming(
-          userId,
-          `${sessionId}-live`,
-          sessionId,
-          startLiveStream,
-          setShowTimer,
-          resetPreviousStateRef
-        )
-      );
-      // setShowTimer(false);
-    }
-  };
-
-  // Filter all people on stage with available => true
-  // Get all user registrations
-  // Get all streams
-
-  const handlePauseSession = () => {
-    // We will take everyone with role of host to backstage.
-    if (agoraRole !== "host") {
-      // Its an attendee in this session
-      // We will clear all previous maintained streams
-      clearPreviousStreams();
-    }
-    if (agoraRole === "host") {
-      // Its a host or speaker in this session
-      // We will clear all previous maintained streams
-      // We will have to stopLiveStream for host and then
-      stopLiveStreaming();
-
-      clearPreviousStreams();
-      // Resubscribe to backstage => setState("back") setChannel(`${sessionId}-back`)
-      socket.emit("subscribeBackstage", { sessionId }, (error) => {
-        console.log(error);
-      });
-      setState("back");
-      setChannel(`${sessionId}-back`);
-      dispatch(
-        fetchBackstageTokenAndStartStreaming(
-          userId,
-          `${sessionId}-back`,
-          sessionId,
-          startLiveStream,
-          setShowPauseTimer // Make sure to setShowPauseTimer to false false at the end of cycle
-        )
-      );
-      // Get token for back stage and join back stage then start streaming on backstage
-    }
-  };
-
-  const handleSwitchOffMediaBeforeTransition = async () => {
-    // here we need to switch off camera, mic and screen share if available
-
-    turnOffAudio(); // Audio turned off
-    turnOffVideo(); // Video turned off
-    // stopPresenting();
-
-    // Screen share turned off
-    rtc.localScreenTrack && rtc.localScreenTrack.close();
-
-    if (rtc.screenClient) {
-      // Leave the channel.
-      await rtc.screenClient.leave();
-    }
-  };
 
   let availablePeople = [];
 
-  if (state === "live") {
-    availablePeople = sessionDetails.onLiveStagePeople;
-  }
-  if (state === "back") {
-    availablePeople = sessionDetails.onBackStagePeople;
-  }
+  
+    availablePeople = sessionDetails.onStagePeople;
+
+  
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}
@@ -1263,7 +968,7 @@ const SessionStage = () => {
 
   // * We need to get local user camera, mic and screen state in an object
 
-  if (state === "live") {
+ 
     for (let element of sessionDetails.onLiveStagePeople) {
       if (element.user === userId) {
         localUserState.camera = element.camera;
@@ -1271,8 +976,8 @@ const SessionStage = () => {
         localUserState.screen = element.screen;
       }
     }
-  }
-  if (state === "back") {
+  
+
     for (let element of sessionDetails.onBackStagePeople) {
       if (element.user === userId) {
         localUserState.camera = element.camera;
@@ -1280,7 +985,7 @@ const SessionStage = () => {
         localUserState.screen = element.screen;
       }
     }
-  }
+  
 
   // Decide which view we will render (There can be two views gallery and presentation mode)
 
@@ -1294,26 +999,9 @@ const SessionStage = () => {
   return (
     <>
       <div style={{ position: "relative" }}>
-        {showTimer ? (
-          <StartingSessionCounter
-            heading={timerHeading}
-            timerSubHeading={timerSubHeading}
-            afterCountdownCompletes={afterCountdownCompletes}
-          />
-        ) : (
-          <></>
-        )}
+        
 
-        {showPauseTimer ? (
-          <PausingSessionCounter
-            heading={timerHeading}
-            timerSubHeading={timerSubHeading}
-            afterCountdownCompletes={handlePauseSession}
-          />
-        ) : (
-          <></>
-        )}
-
+       
         {/* // * Caution before setting setState("live") please make sure to set previousState.current = "back"
       // * Caution call startLiveStreaming only if previousState.current = "back"
       // * Caution call stopLiveStreaming() only if this user has state === "back"
@@ -1322,7 +1010,6 @@ const SessionStage = () => {
 
         {/* Stage Nav Goes here */}
         <StageNavComponent
-          state={state}
           runningStatus={runningStatus}
           canPublishStream={canPublishStream}
         />
@@ -1345,7 +1032,6 @@ const SessionStage = () => {
             {/* Stage side drawer component goes here */}
             {sideDrawerOpen && (
               <StageSideDrawerComponent
-                state={state}
                 runningStatus={runningStatus}
                 canPublishStream={canPublishStream}
               />
@@ -1365,7 +1051,6 @@ const SessionStage = () => {
             turnOffAudio={turnOffAudio}
             turnOnVideo={turnOnVideo}
             turnOffVideo={turnOffVideo}
-            currentState={state}
             leaveStreaming={leaveStreaming}
             runningStatus={runningStatus}
             canPublishStream={canPublishStream}
@@ -1373,10 +1058,6 @@ const SessionStage = () => {
         </div>
       </div>
       <ReactTooltip place="top" type="light" effect="float" />
-      <YouAreOnBackStage
-        open={openBackstageReminder}
-        handleClose={handleCloseBackstageReminder}
-      />
     </>
   );
 };

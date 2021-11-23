@@ -20,7 +20,7 @@ const renderSessionPolls = (
   sessionPolls,
   currentUserIsAHost,
   runningStatus,
-  currentUserIsASpeaker,
+  currentUserIsASpeaker
 ) => {
   return sessionPolls.map((poll) => {
     if (poll.deleted) return;
@@ -52,7 +52,11 @@ const renderSessionPolls = (
   });
 };
 
-const MainPollComponent = ({ currentUserIsAHost, runningStatus, currentUserIsASpeaker }) => {
+const MainPollComponent = ({
+  currentUserIsAHost,
+  runningStatus,
+  currentUserIsASpeaker,
+}) => {
   const userId = useSelector((state) => state.eventAccessToken.id);
   const { sessionPolls } = useSelector((state) => state.sessionPolls);
 
@@ -60,7 +64,12 @@ const MainPollComponent = ({ currentUserIsAHost, runningStatus, currentUserIsASp
     <>
       <MainPollContainer>
         <Scrollable className="mb-3">
-          {renderSessionPolls(sessionPolls, currentUserIsAHost, runningStatus, currentUserIsASpeaker)}
+          {renderSessionPolls(
+            sessionPolls,
+            currentUserIsAHost,
+            runningStatus,
+            currentUserIsASpeaker
+          )}
         </Scrollable>
       </MainPollContainer>
     </>

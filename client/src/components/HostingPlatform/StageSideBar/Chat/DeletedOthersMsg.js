@@ -5,7 +5,6 @@ import "./../../Styles/chatComponent.scss";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 
 const DeletedOthersMsg = ({
-  state,
   name,
   image,
   organisation,

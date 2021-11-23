@@ -25,8 +25,8 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
       // This question is unanswered
       return (
         <UnansweredQnA
-        currentUserIsAHost={currentUserIsAHost}
-        runningStatus={runningStatus}
+          currentUserIsAHost={currentUserIsAHost}
+          runningStatus={runningStatus}
           key={element._id}
           id={element._id}
           question={element.question}
@@ -51,8 +51,8 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
     } else {
       return (
         <AnsweredQnA
-        runningStatus={runningStatus}
-        currentUserIsAHost={currentUserIsAHost}
+          runningStatus={runningStatus}
+          currentUserIsAHost={currentUserIsAHost}
           key={element._id}
           id={element._id}
           question={element.question}
@@ -70,7 +70,9 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
           }
           askedByOrganisation={element.askedBy.organisation}
           askedByDesignation={element.askedBy.designation}
-          answeredByName={element.answeredBy.firstName + " " + element.answeredBy.lastName}
+          answeredByName={
+            element.answeredBy.firstName + " " + element.answeredBy.lastName
+          }
           answeredByImage={
             element.answeredBy.image
               ? element.answeredBy.image.startsWith("https://")
@@ -87,7 +89,7 @@ const renderQnA = (QnAs, currentUserIsAHost, runningStatus) => {
   });
 };
 
-const MainQnAComponent = ({currentUserIsAHost, runningStatus}) => {
+const MainQnAComponent = ({ currentUserIsAHost, runningStatus }) => {
   const { sessionQnAs } = useSelector((state) => state.sessionQnAs);
 
   return (
@@ -101,19 +103,13 @@ const MainQnAComponent = ({currentUserIsAHost, runningStatus}) => {
         {/* QnA can only be asked when session is live */}
         {(() => {
           switch (runningStatus) {
-            case "Started":
-              return <QnAInput /> 
+            case "In Progress":
+              return <QnAInput />;
 
-              
-
-              case "Resumed":
-                return <QnAInput />
-          
             default:
               break;
           }
         })()}
-        
       </QnAContainer>
     </>
   );

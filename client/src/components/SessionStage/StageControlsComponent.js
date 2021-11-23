@@ -109,7 +109,6 @@ const StageControlsComponent = ({
   localUserState,
   userHasUnmutedAudio,
   userHasUnmutedVideo,
-  currentState,
   handleStopScreenShare,
   turnOffAudio,
   turnOnAudio,
@@ -157,8 +156,6 @@ const StageControlsComponent = ({
   const params = useParams();
 
   const sessionId = params.sessionId;
-  const eventId = params.eventId;
-  const communityId = params.communityId;
 
   const [state, setState] = React.useState({
     checkedB: false,
@@ -291,19 +288,7 @@ const StageControlsComponent = ({
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
-                  case "Started":
-                    return (
-                      <IconButton style={{ padding: "3px" }} className="me-3">
-                        <img
-                          src={Smile}
-                          alt="smile-reaction"
-                          style={{ maxWidth: "24px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
-
-                  case "Resumed":
+                  case "In Progress":
                     return (
                       <IconButton style={{ padding: "3px" }} className="me-3">
                         <img
@@ -331,8 +316,7 @@ const StageControlsComponent = ({
                         getRTCTokenForScreenShare(
                           sessionId,
                           userId,
-                          startPresenting,
-                          currentState
+                          startPresenting
                         ) // We will use this fxn to request a token and start screen sharing
                       );
                 }}
@@ -352,19 +336,7 @@ const StageControlsComponent = ({
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
-                  case "Started":
-                    return (
-                      <IconButton style={{ padding: "3px" }} className="me-3">
-                        <img
-                          src={Clapping}
-                          alt="clapping-reaction"
-                          style={{ maxWidth: "24px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
-
-                  case "Resumed":
+                  case "In Progress":
                     return (
                       <IconButton style={{ padding: "3px" }} className="me-3">
                         <img
@@ -386,13 +358,7 @@ const StageControlsComponent = ({
             {!canPublishStream ? (
               (() => {
                 switch (runningStatus) {
-                  case "Started":
-                    return (
-                      <IconButton style={{ padding: "12px" }} className="me-3">
-                        <PanToolRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    );
-                  case "Resumed":
+                  case "In Progress":
                     return (
                       <IconButton style={{ padding: "12px" }} className="me-3">
                         <PanToolRoundedIcon style={{ fontSize: "20px" }} />
@@ -414,7 +380,7 @@ const StageControlsComponent = ({
           {canPublishStream && currentUserIsAHost && !sessionHasEnded ? (
             (() => {
               switch (runningStatus) {
-                case "Started":
+                case "In Progress":
                   return (
                     <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
                       <FormControlLabel
@@ -429,21 +395,7 @@ const StageControlsComponent = ({
                       <div className="rec-label-text">REC</div>
                     </div>
                   );
-                case "Resumed":
-                  return (
-                    <div className="d-flex flex-row align-items-center p-2 justify-content-center ps-3 pe-3 rec-toggle-btn-wrapper me-4">
-                      <FormControlLabel
-                        control={
-                          <IOSSwitch
-                            checked={state.checkedB}
-                            onChange={handleChange}
-                            name="checkedB"
-                          />
-                        }
-                      />
-                      <div className="rec-label-text">REC</div>
-                    </div>
-                  );
+
                 default:
                   break;
               }
@@ -454,19 +406,7 @@ const StageControlsComponent = ({
           {canPublishStream && currentUserIsAHost && !sessionHasEnded ? (
             (() => {
               switch (runningStatus) {
-                case "Started":
-                  return (
-                    <IconButton
-                      className="me-4"
-                      onClick={() => {
-                        setShowTools(true);
-                      }}
-                    >
-                      <WidgetsIcon style={{ fontSize: "20px" }} />
-                    </IconButton>
-                  );
-
-                case "Resumed":
+                case "In Progress":
                   return (
                     <IconButton
                       className="me-4"
@@ -488,7 +428,6 @@ const StageControlsComponent = ({
 
           <IconButton
             onClick={() => {
-              // handleOpenPhotoBooth();
               if (fullScreen) {
                 // Logic for exiting full screen mode
                 setFullScreen(false);

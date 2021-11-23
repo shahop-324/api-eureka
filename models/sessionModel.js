@@ -1,5 +1,28 @@
 const mongoose = require("mongoose");
 
+const onStagePeopleSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
+  userRole: {
+    type: String,
+    enum: ["organiser", "speaker", "attendee", "exhibitor"], // Can be a Host, Speaker or Attendee
+  },
+  camera: {
+    type: Boolean,
+    default: false,
+  },
+  microphone: {
+    type: Boolean,
+    default: false,
+  },
+  screen: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const sessionSchema = new mongoose.Schema(
   {
     type: {
@@ -85,8 +108,8 @@ const sessionSchema = new mongoose.Schema(
     ],
     runningStatus: {
       type: String,
-      default: "Not Yet Started",
-      enum: ["Not Yet Started", "Started", "Paused", "Ended", "Resumed"],
+      default: "In Progress",
+      enum: ["In Progress", "Ended"],
     },
     currentlyOnStage: {
       type: Number,
@@ -107,20 +130,7 @@ const sessionSchema = new mongoose.Schema(
     sid: {
       type: String,
     },
-
-    onLiveStagePeople: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "OnLiveStagePeople",
-      },
-    ],
-    onBackStagePeople: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "OnBackStagePeople",
-      },
-    ],
-
+    onStagePeople: [onStagePeopleSchema],
     streamingLive: {
       type: Boolean,
       default: false,

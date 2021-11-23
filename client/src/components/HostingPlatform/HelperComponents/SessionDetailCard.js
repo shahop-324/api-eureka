@@ -115,12 +115,10 @@ const SessionDetailCard = ({
 
   let sessionRole;
   let btnText = "Join";
-  let bgColor = "#538BF7d8";
+  let bgColor = "#3372F0D8";
 
   if (role === "organiser" || role === "speaker") {
-    console.info("Level 1");
     if (hosts.includes(userId) || speakerEmails.includes(userEmail)) {
-      console.info("Level 1");
       // Set role as host for this session
       sessionRole = "host";
     } else {
@@ -130,28 +128,14 @@ const SessionDetailCard = ({
     sessionRole = "audience";
   }
 
-  if (sessionRole === "host") {
-    btnText = "Backstage";
-    bgColor = "#538BF7";
-  }
-
   const agoraRole = sessionRole === "host" ? "host" : "audience";
 
   useEffect(() => {
     if (runningStatus === "Ended") {
       // No one will join any channel in this case
     } else {
-      // runningStatus === "Paused" || runningStatus === "Not Yet Started"
-
-      // Only host will join backstage
-
-      if (sessionRole === "host") {
-        setChannel(`${id}-back`);
-      }
-    }
-    if (runningStatus === "Started" || runningStatus === "Resumed") {
-      // Everyone will join live stage, No metter if he /she is host or audience
-      setChannel(`${id}-live`);
+      // If session has not ended then all of them will join session
+      setChannel(id);
     }
   }, []);
 

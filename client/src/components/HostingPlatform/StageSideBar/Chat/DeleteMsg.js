@@ -78,7 +78,6 @@ const MsgElement = ({
 };
 
 const DeleteMsg = ({
-  state,
   name,
   image,
   msgText,
@@ -98,7 +97,7 @@ const DeleteMsg = ({
 
   const deleteMsg = (msgId) => {
 
-    if(state === "live") {
+   
       socket.emit(
         "deleteSessionMessage", // !change this to deleteSessionMessage
         {
@@ -112,22 +111,7 @@ const DeleteMsg = ({
           }
         }
       );
-    }
-    if(state === "back") {
-      socket.emit(
-        "deleteBackstageMessage", // !change this to deleteBackstageMessage
-        {
-          msgId: msgId,
-          eventId: eventId,
-          sessionId: sessionId,
-        },
-        (error) => {
-          if (error) {
-            alert(error);
-          }
-        }
-      );
-    }
+    
 
     
   };

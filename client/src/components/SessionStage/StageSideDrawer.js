@@ -13,6 +13,7 @@ import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // S
 
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 import {
   SessionLinkNav,
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) => {
+const StageSideDrawerComponent = ({ runningStatus, canPublishStream }) => {
   // We need to know the current running state and if this user is a host or not in all of this side drawer component
 
   let sessionHasEnded = false;
@@ -228,7 +229,7 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) =>
                           return (
                             <div className="d-flex flex-column align-items-center justify-content-between">
                               <MainChatComponent
-                              state={state}
+                            
                                 currentUserIsAHost={currentUserIsAHost}
                                 runningStatus={runningStatus}
                               />
@@ -292,7 +293,14 @@ const StageSideDrawerComponent = ({ runningStatus, canPublishStream, state }) =>
                           placeholder="Search people..."
                           className="form-control"
                         />
-                        <i className="search icon"></i>
+                         <SearchRoundedIcon
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "10px",
+                  color: "#757575",
+                }}
+              />
                       </div>
 
                       <DropdownIcon switchView={switchView} view={view} />

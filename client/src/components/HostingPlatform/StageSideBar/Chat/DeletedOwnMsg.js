@@ -1,7 +1,7 @@
 import React from "react";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 
-const DeletedOwnMsg = ({state}) => {
+const DeletedOwnMsg = () => {
   return (
     <>
       <div style={{ position: "relative" }}>

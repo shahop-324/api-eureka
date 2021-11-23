@@ -42,7 +42,6 @@ const OriginalMsgPaper = styled.div`
 `;
 
 const OthersReplyElement = ({
-  state,
   replierName,
   replierImage,
   replierOrganisation,
@@ -234,7 +233,6 @@ const OthersReplyElement = ({
       />
 
       <DeleteMsg
-      state={state}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}

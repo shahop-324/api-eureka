@@ -16,7 +16,6 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 const IncomingChatMsgElement = ({
-  state,
   name,
   image,
   organisation,
@@ -147,7 +146,7 @@ const IncomingChatMsgElement = ({
       />
 
       <DeleteMsg
-      state={state}
+
         name={name}
         image={image}
         msgText={msgText}

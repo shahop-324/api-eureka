@@ -38,7 +38,6 @@ const OriginalMsgPaper = styled.div`
 `;
 
 const SelfReplyElement = ({
-  state,
   replierName,
   replierImage,
   replierOrganisation,
@@ -201,7 +200,6 @@ const SelfReplyElement = ({
         </div>
       </div>
       <DeleteMsg
-      state={state}
         name={replierName}
         image={replierImage}
         msgText={replierMsg}

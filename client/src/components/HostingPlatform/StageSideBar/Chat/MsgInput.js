@@ -37,78 +37,43 @@ const MsgInput = (props) => {
   let designation;
 
   const userDetails = useSelector((state) => state.user.userDetails);
-  
-    firstName = userDetails.firstName;
-    lastName = userDetails.lastName;
-    email = userDetails.email;
-    image = userDetails.image;
-    organisation = userDetails.organisation;
-    designation = userDetails.designation;
-  
+
+  firstName = userDetails.firstName;
+  lastName = userDetails.lastName;
+  email = userDetails.email;
+  image = userDetails.image;
+  organisation = userDetails.organisation;
+  designation = userDetails.designation;
 
   const [Message, setMessage] = useState("");
 
   const sendChannelMessage = () => {
-
-    if(props.state === "live") {
-      socket.emit(
-        "transmitSessionMessage",
-        {
-          isReply: props.name && props.image && props.msg ? true : false,
-          replyTo: props.chatMsgId,
-          textMessage: Message,
-          eventId: eventId,
-          sessionId: sessionId,
-          createdAt: Date.now(),
-          userRole: sessionRole,
-          userName: firstName + " " + lastName,
-          userEmail: email,
-          userId: id,
-          userImage: image,
-          userOrganisation: organisation,
-          userDesignation: designation,
-          reported: false,
-          numOfTimesReported: 0,
-          visibilityStatus: "Active",
-        },
-        (error) => {
-          if (error) {
-            alert(error);
-          }
+    socket.emit(
+      "transmitSessionMessage",
+      {
+        isReply: props.name && props.image && props.msg ? true : false,
+        replyTo: props.chatMsgId,
+        textMessage: Message,
+        eventId: eventId,
+        sessionId: sessionId,
+        createdAt: Date.now(),
+        userRole: sessionRole,
+        userName: firstName + " " + lastName,
+        userEmail: email,
+        userId: id,
+        userImage: image,
+        userOrganisation: organisation,
+        userDesignation: designation,
+        reported: false,
+        numOfTimesReported: 0,
+        visibilityStatus: "Active",
+      },
+      (error) => {
+        if (error) {
+          alert(error);
         }
-      );
-    }
-
-    if(props.state === "back") {
-      socket.emit(
-        "transmitBackstageMessage",
-        {
-          isReply: props.name && props.image && props.msg ? true : false,
-          replyTo: props.chatMsgId,
-          textMessage: Message,
-          eventId: eventId,
-          sessionId: sessionId,
-          createdAt: Date.now(),
-          userRole: sessionRole,
-          userName: firstName + " " + lastName,
-          userEmail: email,
-          userId: id,
-          userImage: image,
-          userOrganisation: organisation,
-          userDesignation: designation,
-          reported: false,
-          numOfTimesReported: 0,
-          visibilityStatus: "Active",
-        },
-        (error) => {
-          if (error) {
-            alert(error);
-          }
-        }
-      );
-    }
-
-    
+      }
+    );
   };
 
   return (
