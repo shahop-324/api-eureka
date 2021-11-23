@@ -771,7 +771,6 @@ io.on("connect", (socket) => {
     "markAsAvailableInSession",
     async ({
       role,
-      channel,
       state,
       userId,
       userEmail,
@@ -789,30 +788,13 @@ io.on("connect", (socket) => {
         .populate("host")
         .populate("speaker"); // This is the session doc we need to update
 
-      if (state === "live") {
-        const newDoc = await OnLiveStagePeople.create({
-          sessionId: sessionId,
-          user: userId,
-          userRole: role,
-          camera: false,
-          microphone: false,
-          screen: false,
-        });
-
-        sessionDoc.onLiveStagePeople.push(newDoc._id);
-      }
-      if (state === "back") {
-        const newDoc = await OnBackStagePeople.create({
-          sessionId: sessionId,
-          user: userId,
-          userRole: role,
-          camera: false,
-          microphone: false,
-          screen: false,
-        });
-
-        sessionDoc.onBackStagePeople.push(newDoc._id);
-      }
+      sessionDoc.onStagePeople.push({
+        user: userId,
+        userRole: role,
+        camera: false,
+        microphone: false,
+        screen: false,
+      });
 
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
 
@@ -820,9 +802,7 @@ io.on("connect", (socket) => {
 
       const session = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker")
-        .populate("onLiveStagePeople")
-        .populate("onBackStagePeople");
+        .populate("speaker");
 
       const { socketId } = await UsersInEvent.findOne({
         $and: [
@@ -839,10 +819,7 @@ io.on("connect", (socket) => {
 
   socket.on(
     "updateMyMicOnSessionStage",
-    async (
-      { channel, state, userId, registrationId, sessionId, microphone },
-      callback
-    ) => {
+    async ({ userId, registrationId, sessionId, microphone }, callback) => {
       // Update user mic
 
       // 1.) Find session doc
@@ -851,34 +828,12 @@ io.on("connect", (socket) => {
 
       // 2.) Find and update user on stage
 
-      const thisUserOnLiveStage = await OnLiveStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
+      const thisUserOnStage = await sessionDoc.onStagePeople.find(
+        (person) => person.user.toString() === userId.toString()
+      );
 
-      if (thisUserOnLiveStage) {
-        thisUserOnLiveStage.microphone = microphone;
-        await thisUserOnLiveStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
-      }
-
-      const thisUserOnBackStage = await OnBackStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
-
-      if (thisUserOnBackStage) {
-        thisUserOnBackStage.microphone = microphone;
-        await thisUserOnBackStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
+      if (thisUserOnStage) {
+        thisUserOnStage.microphone = microphone;
       }
 
       // 3.) save session doc
@@ -886,9 +841,7 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker")
-        .populate("onLiveStagePeople")
-        .populate("onBackStagePeople");
+        .populate("speaker");
 
       // 4.) Send updated session doc to everyone in this session.
 
@@ -1432,34 +1385,12 @@ io.on("connect", (socket) => {
 
       // 2.) Find and update user on stage
 
-      const thisUserOnLiveStage = await OnLiveStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
+      const thisUserOnStage = await sessionDoc.onStagePeople.find(
+        (person) => person.user.toString() === userId.toString()
+      );
 
-      if (thisUserOnLiveStage) {
-        thisUserOnLiveStage.camera = camera;
-        await thisUserOnLiveStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
-      }
-
-      const thisUserOnBackStage = await OnBackStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
-
-      if (thisUserOnBackStage) {
-        thisUserOnBackStage.camera = camera;
-        await thisUserOnBackStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
+      if (thisUserOnStage) {
+        thisUserOnStage.camera = camera;
       }
 
       // 3.) save session doc
@@ -1467,9 +1398,7 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker")
-        .populate("onLiveStagePeople")
-        .populate("onBackStagePeople");
+        .populate("speaker");
 
       // 4.) Send updated session doc to everyone in this session.
 
@@ -1496,34 +1425,12 @@ io.on("connect", (socket) => {
 
       // 2.) Find and update user on stage
 
-      const thisUserOnLiveStage = await OnLiveStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
+      const thisUserOnStage = await sessionDoc.onStagePeople.find(
+        (person) => person.user.toString() === userId.toString()
+      );
 
-      if (thisUserOnLiveStage) {
-        thisUserOnLiveStage.screen = screen;
-        await thisUserOnLiveStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
-      }
-
-      const thisUserOnBackStage = await OnBackStagePeople.findOne({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
-
-      if (thisUserOnBackStage) {
-        thisUserOnBackStage.screen = screen;
-        await thisUserOnBackStage.save({
-          new: true,
-          validateModifiedOnly: true,
-        });
+      if (thisUserOnStage) {
+        thisUserOnStage.screen = screen;
       }
 
       // 3.) save session doc
@@ -1531,9 +1438,7 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker")
-        .populate("onLiveStagePeople")
-        .populate("onBackStagePeople");
+        .populate("speaker");
 
       // 4.) Send updated session doc to everyone in this session.
 
@@ -1545,9 +1450,7 @@ io.on("connect", (socket) => {
       // console.log(sessionDoc.onStagePeople);
       // console.log(registrations);
 
-      let allPeopleOnStage = updatedSession.onLiveStagePeople.concat(
-        updatedSession.onBackStagePeople
-      );
+      let allPeopleOnStage = updatedSession.onStagePeople;
 
       for (let element of allPeopleOnStage) {
         for (let item of registrations) {
@@ -1606,8 +1509,6 @@ io.on("connect", (socket) => {
     "removeMeFromSessionStage",
     async (
       {
-        channel,
-        state,
         userId,
         userEmail,
         registrationId,
@@ -1623,27 +1524,19 @@ io.on("connect", (socket) => {
       // Remove from both onLiveStagePeople and onBackStagePeople
       // send updated session doc to everyone in event
 
-      await OnLiveStagePeople.findOneAndDelete({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
+      const sessionDoc = await Session.findById(sessionId);
 
-      await OnBackStagePeople.findOneAndDelete({
-        $and: [
-          { sessionId: mongoose.Types.ObjectId(sessionId) },
-          { user: userId },
-        ],
-      });
+      sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
+        (person) => person.user.toString() !== userId.toString()
+      );
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
 
       // Send updated user to everyone in this session
 
       const session = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker")
-        .populate("onLiveStagePeople")
-        .populate("onBackStagePeople");
+        .populate("speaker");
 
       io.in(sessionId).emit("updatedSession", { session: session });
 

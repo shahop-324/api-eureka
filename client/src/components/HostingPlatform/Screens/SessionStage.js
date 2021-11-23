@@ -31,18 +31,9 @@ import {
   deleteSessionChat,
   updateSession,
   deleteBackstageChat,
-  fetchPreviousBackstageChatMessages,
-  createNewBackstageMsg,
-  fetchLiveStageTokenAndStartStreaming,
-  fetchBackstageTokenAndStartStreaming,
-  switchOffMediaBeforeTransition,
 } from "./../../../actions";
 
 import StreamBody from "../Functions/Stage/StreamBody";
-import StartingSessionCounter from "../../SessionStage/SubComponent/StartingSessionCounter";
-import PausingSessionCounter from "./../../SessionStage/SubComponent/PausingSessionCounter";
-
-import YouAreOnBackStage from "./../HelperComponents/YouAreOnBackStage";
 
 let rtc = {
   localAudioTrack: null,
@@ -103,7 +94,6 @@ const SessionStage = () => {
   const eventId = params.eventId;
   const communityId = params.communityId;
 
-  
   // Determine if the current user is a host and place restrictions based on that
 
   const { userDetails } = useSelector((state) => state.user);
@@ -164,7 +154,7 @@ const SessionStage = () => {
         userHasUnmutedVideo.current = false;
         rtc.localVideoTrack && rtc.localVideoTrack.close();
         unMuteMyVideo();
-      }, 2000);
+      }, 1000);
     });
 
     socket.on("updatedSession", ({ session }) => {
@@ -178,8 +168,6 @@ const SessionStage = () => {
     socket.on("newSessionMsg", ({ newMsg }) => {
       dispatch(createNewSessionMsg(newMsg));
     });
-
-   
 
     socket.on("newQnA", ({ newQnA }) => {
       dispatch(createSessionQnA(newQnA));
@@ -584,12 +572,9 @@ const SessionStage = () => {
     );
   };
 
-  const startLiveStream = async (localChannel, localToken) => {
-    if (localToken) {
-      console.log(localChannel, localToken);
-      alert(localChannel, localToken);
-    }
-    if (agoraRole === "host") {
+  const startLiveStream = async (localToken) => {
+    
+    if (agoraRole === "host" || canPublishStream) {
       // Only here we need to emit event markAsAvailableInSession via socket
       // alert(`Current state is ${state}`);
 
@@ -703,9 +688,9 @@ const SessionStage = () => {
     });
 
     const tokenToBeUsed = localToken ? localToken : options.token;
-    console.log(options.appId, localChannel, tokenToBeUsed, options.uid);
+    console.log(options.appId, sessionId, tokenToBeUsed, options.uid);
     await rtc.client
-      .join(options.appId, localChannel, tokenToBeUsed, options.uid)
+      .join(options.appId, sessionId, tokenToBeUsed, options.uid)
       .then(async () => {
         console.log("Bluemeet: Joined RTC Channel.");
       })
@@ -845,23 +830,16 @@ const SessionStage = () => {
   };
 
   useEffect(() => {
-    // startAdvancedLiveStreaming();
-    let localChannel = `${sessionId}-live`;
-
     if (agoraRole === "host") {
       setCanPublishStream(true); // We will manipulate this variable to allow audience to come on stage
-
-      
-      
-      
-    } 
+    }
 
     if (runningStatus !== "Ended") {
       setTimeout(() => {
-        startLiveStream(localChannel);
+        startLiveStream();
       }, 500);
     }
-  }, []);
+  }, [canPublishStream]);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained
@@ -919,16 +897,9 @@ const SessionStage = () => {
     await rtc.client.leave();
   };
 
-  
-
-
-
   let availablePeople = [];
 
-  
-    availablePeople = sessionDetails.onStagePeople;
-
-  
+  availablePeople = sessionDetails.onStagePeople;
 
   let galleryViewInput = []; // Collection of objects { uid , name , image, designation, organisation, camera, mic, stream}
   let localUserState = {}; // {camera, mic, screen}
@@ -968,24 +939,21 @@ const SessionStage = () => {
 
   // * We need to get local user camera, mic and screen state in an object
 
- 
-    for (let element of sessionDetails.onLiveStagePeople) {
-      if (element.user === userId) {
-        localUserState.camera = element.camera;
-        localUserState.mic = element.microphone;
-        localUserState.screen = element.screen;
-      }
+  for (let element of sessionDetails.onLiveStagePeople) {
+    if (element.user === userId) {
+      localUserState.camera = element.camera;
+      localUserState.mic = element.microphone;
+      localUserState.screen = element.screen;
     }
-  
+  }
 
-    for (let element of sessionDetails.onBackStagePeople) {
-      if (element.user === userId) {
-        localUserState.camera = element.camera;
-        localUserState.mic = element.microphone;
-        localUserState.screen = element.screen;
-      }
+  for (let element of sessionDetails.onBackStagePeople) {
+    if (element.user === userId) {
+      localUserState.camera = element.camera;
+      localUserState.mic = element.microphone;
+      localUserState.screen = element.screen;
     }
-  
+  }
 
   // Decide which view we will render (There can be two views gallery and presentation mode)
 
@@ -999,9 +967,6 @@ const SessionStage = () => {
   return (
     <>
       <div style={{ position: "relative" }}>
-        
-
-       
         {/* // * Caution before setting setState("live") please make sure to set previousState.current = "back"
       // * Caution call startLiveStreaming only if previousState.current = "back"
       // * Caution call stopLiveStreaming() only if this user has state === "back"
