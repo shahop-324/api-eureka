@@ -573,7 +573,6 @@ const SessionStage = () => {
   };
 
   const startLiveStream = async (localToken) => {
-    
     if (agoraRole === "host" || canPublishStream) {
       // Only here we need to emit event markAsAvailableInSession via socket
       // alert(`Current state is ${state}`);
