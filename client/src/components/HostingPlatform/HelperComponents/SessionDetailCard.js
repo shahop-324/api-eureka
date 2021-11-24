@@ -98,6 +98,8 @@ const SessionDetailCard = ({
 
   const speakerEmails = speakers.map((element) => element.email);
 
+  const hostIds = hosts.map((element) => element._id);
+
   const { role } = useSelector((state) => state.eventAccessToken); // Possible values => "speaker" || "attendee" || "organiser" || "exhibitor"
 
   // => Determine if this person should be treated as a publisher or subscriber
@@ -118,7 +120,7 @@ const SessionDetailCard = ({
   let bgColor = "#3372F0D8";
 
   if (role === "organiser" || role === "speaker") {
-    if (hosts.includes(userId) || speakerEmails.includes(userEmail)) {
+    if (hostIds.includes(userId) || speakerEmails.includes(userEmail)) {
       // Set role as host for this session
       sessionRole = "host";
     } else {

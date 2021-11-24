@@ -36,7 +36,7 @@ const StageBody = styled.div`
 
   display: grid;
   grid-template-columns: ${(props) =>
-    props.openSideDrawer && props.openSideDrawer ? "5fr 1.55fr" : "1fr"};
+    props.openSideDrawer && props.openSideDrawer ? "5fr  1.55fr" : "1fr"};
   align-items: center;
   /* grid-gap: 8px; */
 `;
@@ -146,9 +146,9 @@ const BtnFilled = styled.div`
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
-  border: 1px solid #345b63;
+  border: 1px solid #1F3E49;
 
-  color: #dcc7be;
+  color: #1F3E49;
   font-family: "Ubuntu";
   font-weight: 500;
   font-size: 0.8rem;
@@ -158,6 +158,12 @@ const BtnOutlined = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  &:hover {
+    color: #ffffff;
+    cursor: pointer;
+    background-color: #1F3E49;
+  }
 `;
 
 const PeopleWatching = styled.div`
@@ -195,6 +201,7 @@ const BtnDanger = styled.div`
 `;
 
 const IconButton = styled.div`
+z-index: 1000000000000000000000000000000000000000000000000000000000;
   max-width: fit-content;
   padding: 7px;
   border-radius: 10px;
@@ -214,6 +221,25 @@ const IconButton = styled.div`
     border: 1px solid #ffffffa9;
     background-color: #ffffffa9;
     color: #1f545e;
+  }
+`;
+
+const DisabledIconButton = styled.div`
+  max-width: fit-content;
+  padding: 7px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #3f3f3f;
+  color: #3f3f3f;
+  background-color: #ffffff;
+
+  &:hover {
+    cursor: not-allowed;
   }
 `;
 
@@ -453,4 +479,5 @@ export {
   SpotlightView,
   PersonInfoPopUp,
   PersonOrgDesignation,
+  DisabledIconButton,
 };

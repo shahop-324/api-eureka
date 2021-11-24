@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Easing, LogBox } from "react-native-web";
+import { Emoji, Picker } from "emoji-mart";
+import Fly from "react-flying-objects";
 import styled from "styled-components";
 import { StageBody } from "./../../../components/SessionStage/Elements";
 import StageNavComponent from "../../SessionStage/StageNavComponent";
@@ -30,7 +33,8 @@ import {
   createNewSessionMsg,
   deleteSessionChat,
   updateSession,
-  deleteBackstageChat,
+  promoteToStage,
+  demoteFromStage,
 } from "./../../../actions";
 
 import StreamBody from "../Functions/Stage/StreamBody";
@@ -88,11 +92,109 @@ const Text = styled.div`
   text-align: center;
 `;
 
+const DELAY = 0;
+const DURATION = 5000;
+const SIZE = 25;
+
+const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
+
 const SessionStage = () => {
   const params = useParams();
   const sessionId = params.sessionId;
   const eventId = params.eventId;
   const communityId = params.communityId;
+
+  const handleJoinStage = async () => {
+    if (rtc.client) {
+      if (rtc.localScreenTrack) {
+        stopPresenting();
+      }
+      turnOffVideo();
+      turnOffAudio();
+      rtc.localVideoTrack && rtc.localVideoTrack.stop();
+      rtc.localAudioTrack && rtc.localAudioTrack.stop();
+      rtc.localScreenTrack && rtc.localScreenTrack.stop();
+      if (rtc.screenClient) {
+        await rtc.screenClient.leave().then(async () => {
+          await rtc.client.leave().then(() => {
+            console.log("Leaved previous channel");
+            dispatch(promoteToStage());
+          });
+        });
+      } else {
+        await rtc.client.leave().then(() => {
+          console.log("Leaved previous channel");
+          dispatch(promoteToStage());
+        });
+      }
+    }
+  };
+
+  const [animatedEmoji, setAnimatedEmoji] = useState(); // To randomly set values in the objectConfig
+  const [flyingObjects, setFlyingObjects] = useState([]); // Used to manage all flying currently objects by the Fly component
+
+  const onThumbsUp = () => {
+    const emoji = <Emoji emoji={{ id: "+1", skin: 3 }} size={24} />;
+    setAnimatedEmoji(emoji); // Setting the object which would fly in a moment
+  };
+  const onClap = () => {
+    const emoji = <Emoji emoji={{ id: "clap", skin: 3 }} size={24} />;
+    setAnimatedEmoji(emoji); // Setting the object which would fly in a moment
+  };
+  const onSmile = () => {
+    const emoji = <Emoji emoji={{ id: "smile", skin: 3 }} size={24} />;
+    setAnimatedEmoji(emoji); // Setting the object which would fly in a moment
+  };
+
+  const onEmojiSelect = (emojiData) => {
+    const emoji = <Emoji emoji={emojiData} size={24} />;
+    setAnimatedEmoji(emoji); // Setting the object which would fly in a moment
+  };
+
+  const objectConfig = useMemo(
+    () => ({
+      // Config for a single flying object which would fly in a moment
+      top: {
+        fromValue: 800,
+        toValue: 0,
+        duration: DURATION,
+        delay: DELAY,
+      },
+      right: {
+        fromValue: random(0, 100),
+        toValue: random(100, 200),
+        duration: DURATION,
+        easing: Easing.elastic(5),
+        delay: DELAY,
+      },
+      width: {
+        fromValue: random(SIZE - 10, SIZE + 10),
+        toValue: SIZE,
+        duration: DURATION,
+        easing: Easing.elastic(5),
+        delay: DELAY,
+      },
+      height: {
+        fromValue: random(SIZE - 10, SIZE + 10),
+        toValue: SIZE,
+        duration: DURATION,
+        easing: Easing.elastic(5),
+        delay: DELAY,
+      },
+      opacity: {
+        fromValue: 1,
+        toValue: 0,
+        duration: DURATION,
+        easing: Easing.exp,
+        delay: DELAY,
+      },
+    }),
+    [animatedEmoji]
+  ); // On animatedEmoji change we calculate new random values for the next flying object
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
+  }, []);
 
   // Determine if the current user is a host and place restrictions based on that
 
@@ -144,6 +246,30 @@ const SessionStage = () => {
 
     dispatch(fetchPreviousSessionChatMessages(sessionId)); // Fetch previous chat message for live stage
 
+    socket.on("leaveStage", () => {
+      dispatch(showNotification("You have been removed from stage"));
+      handleLeaveStage();
+    });
+
+    socket.on("invitedToStage", () => {
+      dispatch(showNotification("You have been invited to stage."));
+      handleJoinStage();
+    });
+
+    socket.on("thumbsUp", () => {
+      onThumbsUp();
+    });
+    socket.on("smile", () => {
+      onSmile();
+    });
+    socket.on("clap", () => {
+      onClap();
+    });
+
+    socket.on("emoji", ({ emoji }) => {
+      onEmojiSelect(emoji);
+    });
+
     socket.on("resetAudioAndVideoControls", async () => {
       userHasUnmutedVideo.current = false;
       rtc.localVideoTrack && rtc.localVideoTrack.close();
@@ -157,8 +283,16 @@ const SessionStage = () => {
       }, 1000);
     });
 
-    socket.on("updatedSession", ({ session }) => {
+    socket.on("raisedHand", ({ session, userName }) => {
       dispatch(updateSession(session));
+
+      if (sessionRole === "host" && (role === "speaker" || role === "host")) {
+        dispatch(showNotification(`${userName} has raised hand.`));
+      }
+    });
+
+    socket.on("updatedSession", ({ updatedSession }) => {
+      dispatch(updateSession(updatedSession));
     });
 
     socket.on("usersInSession", ({ users }) => {
@@ -229,10 +363,6 @@ const SessionStage = () => {
 
     socket.on("deletedMsg", ({ deletedMsg }) => {
       dispatch(deleteSessionChat(deletedMsg));
-    });
-
-    socket.on("deleteBackstageMsg", ({ deletedMsg }) => {
-      dispatch(deleteBackstageChat(deletedMsg));
     });
 
     socket.on("sessionEnded", ({ session }) => {
@@ -425,6 +555,8 @@ const SessionStage = () => {
 
     // Remove from screenTracks maintained in state
 
+    if (!rtc.localScreenTrack) return;
+
     setScreenTracks((prev) =>
       prev.filter((element) => element.uid !== `screen-${userId}`)
     ); // This will remove localScreenTrack from screenTracks in state
@@ -573,7 +705,11 @@ const SessionStage = () => {
   };
 
   const startLiveStream = async (localToken) => {
-    if (agoraRole === "host" || canPublishStream) {
+    if (
+      (sessionRole === "host" || canPublishStream) &&
+      sessionRole !== "attendee" &&
+      sessionRole !== "exhibitor"
+    ) {
       // Only here we need to emit event markAsAvailableInSession via socket
       // alert(`Current state is ${state}`);
 
@@ -829,8 +965,10 @@ const SessionStage = () => {
   };
 
   useEffect(() => {
-    if (agoraRole === "host") {
+    if (sessionRole === "host") {
       setCanPublishStream(true); // We will manipulate this variable to allow audience to come on stage
+    } else {
+      setCanPublishStream(false);
     }
 
     if (runningStatus !== "Ended") {
@@ -838,7 +976,7 @@ const SessionStage = () => {
         startLiveStream();
       }, 500);
     }
-  }, []);
+  }, [sessionRole]);
 
   const clearPreviousStreams = () => {
     // TODO Here we need to make sure that we reinitialise all streams that are maintained
@@ -954,9 +1092,58 @@ const SessionStage = () => {
   // if view is gallery => render all streams in grid
   // if view is presentation => render allStreams in stack and screen tracks in grid
 
+  const handleLeaveStage = async () => {
+    if (rtc.client) {
+      if (rtc.localScreenTrack) {
+        stopPresenting();
+      }
+      turnOffVideo();
+      turnOffAudio();
+      rtc.localVideoTrack && rtc.localVideoTrack.stop();
+      rtc.localAudioTrack && rtc.localAudioTrack.stop();
+      rtc.localScreenTrack && rtc.localScreenTrack.stop();
+      if (rtc.screenClient) {
+        await rtc.screenClient.leave().then(async () => {
+          await rtc.client.leave().then(() => {
+            socket.emit(
+              "removeFromOnSessionStage",
+              {
+                userId,
+                sessionId,
+                eventId,
+              },
+              (error) => {
+                alert(error);
+              }
+            );
+
+            console.log("Leaved previous channel");
+            dispatch(demoteFromStage());
+          });
+        });
+      } else {
+        await rtc.client.leave().then(() => {
+          socket.emit(
+            "removeFromOnSessionStage",
+            {
+              userId,
+              sessionId,
+              eventId,
+            },
+            (error) => {
+              alert(error);
+            }
+          );
+          console.log("Leaved previous channel");
+          dispatch(demoteFromStage());
+        });
+      }
+    }
+  };
+
   return (
     <>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", overflow: "hidden" }}>
         {/* // * Caution before setting setState("live") please make sure to set previousState.current = "back"
       // * Caution call startLiveStreaming only if previousState.current = "back"
       // * Caution call stopLiveStreaming() only if this user has state === "back"
@@ -973,6 +1160,23 @@ const SessionStage = () => {
           className="d-flex flex-column align-items-center"
           style={{ height: "100%" }}
         >
+          {/* <div
+            style={{
+              height: "60vh",
+              width: "50vw",
+              position: "absolute",
+              zIndex: "10000000000000000000000",
+              top: "200px",
+              left: "450px",
+            }}
+          >
+            <Fly
+              objectToFly={animatedEmoji}
+              objectConfig={objectConfig}
+              flyingObjects={flyingObjects}
+              setFlyingObjects={setFlyingObjects}
+            />
+          </div> */}
           <StageBody openSideDrawer={sideDrawerOpen}>
             {/* Stream body goes here */}
             <StreamBody
@@ -984,6 +1188,7 @@ const SessionStage = () => {
               runningStatus={runningStatus}
               canPublishStream={canPublishStream}
             />
+
             {/* Stage side drawer component goes here */}
             {sideDrawerOpen && (
               <StageSideDrawerComponent
@@ -995,6 +1200,10 @@ const SessionStage = () => {
 
           {/* Stage Controls components */}
           <StageControlsComponent
+            onEmojiSelect={onEmojiSelect}
+            onClap={onClap}
+            onSmile={onSmile}
+            onThumbsUp={onThumbsUp}
             unMuteMyAudio={unMuteMyAudio}
             unMuteMyVideo={unMuteMyVideo}
             localUserState={localUserState}
@@ -1012,6 +1221,7 @@ const SessionStage = () => {
           />
         </div>
       </div>
+
       <ReactTooltip place="top" type="light" effect="float" />
     </>
   );

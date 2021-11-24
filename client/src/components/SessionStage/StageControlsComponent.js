@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
+import { Emoji, Picker } from "emoji-mart";
 import styled from "styled-components";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
 import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
@@ -21,11 +22,10 @@ import Settings from "./Settings";
 import StartRecordingConfirmation from "./SubComponent/StartRecordingConfirmation";
 import StopRecordingConfirmation from "./SubComponent/StopRecordingConfirmation";
 import PanToolRoundedIcon from "@mui/icons-material/PanToolRounded";
-import Like from "./../../assets/images/like.png";
-import Clapping from "./../../assets/images/clapping.png";
-import Smile from "./../../assets/images/Smile.png";
 import CreatePoll from "../HostingPlatform/StageSideBar/Poll/CreatePoll";
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
+import ManageStage from "./ManageStage";
 
 const IconButton = styled.div`
   max-width: fit-content;
@@ -103,6 +103,10 @@ const IOSSwitch = withStyles((theme) => ({
 });
 
 const StageControlsComponent = ({
+  onEmojiSelect,
+  onClap,
+  onSmile,
+  onThumbsUp,
   unMuteMyAudio,
   unMuteMyVideo,
   localUserState,
@@ -121,7 +125,25 @@ const StageControlsComponent = ({
 }) => {
   // {/* // ! Caution don't show stage controls if session has ended */}
 
+  let myHandIsRaised = false;
+
+  const [openManageStage, setOpenManageStage] = useState(false);
+
+  const handleCloseManageStage = () => {
+    setOpenManageStage(false);
+  };
+
   const [openCreatePoll, setOpenCreatePoll] = React.useState(false);
+
+  const [emojiMartVisbility, setEmojiMartVisibility] = useState("none");
+
+  const toggleEmojiMart = () => {
+    if (emojiMartVisbility === "none") {
+      setEmojiMartVisibility("inline-block");
+    } else {
+      setEmojiMartVisibility("none");
+    }
+  };
 
   const handleCloseCreatePoll = () => {
     setOpenCreatePoll(false);
@@ -138,9 +160,11 @@ const StageControlsComponent = ({
 
   const handleCloseStopRecording = () => {
     setStopRecording(false);
+    setState(true);
   };
 
   const handleCloseStartRecording = () => {
+    setState(false);
     setStartRecording(false);
   };
 
@@ -153,13 +177,12 @@ const StageControlsComponent = ({
   const params = useParams();
 
   const sessionId = params.sessionId;
+  const eventId = params.eventId;
 
-  const [state, setState] = React.useState({
-    checkedB: false,
-  });
+  const [state, setState] = React.useState(false);
 
   const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    setState(event.target.checked);
 
     if (event.target.checked) {
       setStartRecording(true);
@@ -172,15 +195,24 @@ const StageControlsComponent = ({
 
   const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
   const { userDetails } = useSelector((state) => state.user);
+  const { sessionDetails } = useSelector((state) => state.session);
 
   const userId = userDetails._id;
 
-  if (sessionRole === "host" && role !== "speaker") {
+  let hostIds = sessionDetails.host.map((el) => el._id);
+
+  if (sessionRole === "host" && hostIds.includes(userId)) {
     currentUserIsAHost = true;
   }
 
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
+  }
+
+  for (let element of sessionDetails.raisedHands) {
+    if (element.userId.toString() === userId.toString()) {
+      myHandIsRaised = true;
+    }
   }
 
   return (
@@ -192,183 +224,282 @@ const StageControlsComponent = ({
             className="me-3"
             // ! If host leaves this session in live state then mark this session as Paused and show this warning to the host when leaving session in live state
             onClick={() => {
-              leaveStreaming();
               socket.emit("leaveSession", { sessionId, userId }, (error) => {
                 console.log(error);
               });
+
+              leaveStreaming();
             }}
           >
             Leave
           </BtnDanger>
+
+          {currentUserIsAHost ? (
+            <button
+              onClick={() => {
+                setOpenManageStage(true);
+              }}
+              className="btn btn-outline-text btn-outline-light"
+            >
+              Manage Stage
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
 
         {!sessionHasEnded ? (
-          <div className="d-flex flex-row align-items-center justify-content-center">
-            {canPublishStream ? (
-              <IconButton
-                onClick={() => {
-                  localUserState.camera
-                    ? turnOffVideo()
-                    : userHasUnmutedVideo.current
-                    ? turnOnVideo()
-                    : unMuteMyVideo();
+          <div>
+            <div style={{ position: "fixed", left: "48vw", bottom: "60px" }}>
+              <Picker
+                onSelect={(emoji) => {
+                  onEmojiSelect(emoji);
+                  console.log(emoji);
+                  socket.emit("emoji", { sessionId, emoji }, (error) => {
+                    alert(error);
+                  });
                 }}
-                className="me-4"
-              >
-                {localUserState.camera ? (
-                  <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <VideocamOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-            ) : (
-              <></>
-            )}
-
-            {!canPublishStream ? (
-              (() => {
-                switch (runningStatus) {
-                  case "Started":
-                    return (
-                      <IconButton style={{ padding: "4px" }} className="me-3">
-                        <img
-                          src={Like}
-                          alt="like-reaction"
-                          style={{ maxWidth: "20px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
-                  case "Resumed":
-                    return (
-                      <IconButton style={{ padding: "4px" }} className="me-3">
-                        <img
-                          src={Like}
-                          alt="like-reaction"
-                          style={{ maxWidth: "20px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
-
-                  default:
-                    break;
-                }
-              })()
-            ) : (
-              <></>
-            )}
-            {canPublishStream ? (
-              <IconButton
-                onClick={() => {
-                  localUserState.mic
-                    ? turnOffAudio()
-                    : userHasUnmutedAudio.current
-                    ? turnOnAudio()
-                    : unMuteMyAudio();
+                perLine={8}
+                emoji=""
+                showPreview={false}
+                set="apple"
+                style={{
+                  display: emojiMartVisbility,
                 }}
-                className="me-4"
-              >
-                {localUserState.mic ? (
-                  <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                ) : (
-                  <MicOffOutlinedIcon
-                    style={{ fontSize: "20px", color: "#BE1D1D" }}
-                  />
-                )}
-              </IconButton>
-            ) : (
-              <></>
-            )}
-            {!canPublishStream ? (
-              (() => {
-                switch (runningStatus) {
-                  case "In Progress":
-                    return (
-                      <IconButton style={{ padding: "3px" }} className="me-3">
-                        <img
-                          src={Smile}
-                          alt="smile-reaction"
-                          style={{ maxWidth: "24px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
+              />
+            </div>
 
-                  default:
-                    break;
-                }
-              })()
-            ) : (
-              <></>
-            )}
-            {canPublishStream ? (
-              <IconButton
-                onClick={() => {
-                  localUserState.screen
-                    ? stopPresenting()
-                    : dispatch(
-                        getRTCTokenForScreenShare(
-                          sessionId,
-                          userId,
-                          startPresenting
-                        ) // We will use this fxn to request a token and start screen sharing
+            <div className="d-flex flex-row align-items-center justify-content-center">
+              {canPublishStream ? (
+                <IconButton
+                  onClick={() => {
+                    localUserState.camera
+                      ? turnOffVideo()
+                      : userHasUnmutedVideo.current
+                      ? turnOnVideo()
+                      : unMuteMyVideo();
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.camera ? (
+                    <VideocamRoundedIcon style={{ fontSize: "20px" }} />
+                  ) : (
+                    <VideocamOffOutlinedIcon
+                      style={{ fontSize: "20px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </IconButton>
+              ) : (
+                <></>
+              )}
+
+              {!canPublishStream ? (
+                (() => {
+                  switch (runningStatus) {
+                    case "In Progress":
+                      return (
+                        <IconButton style={{ padding: "8px" }} className="me-3">
+                          <Emoji
+                            emoji={{ id: "+1", skin: 3 }}
+                            size={24}
+                            onClick={(emoji) => {
+                              onThumbsUp(emoji);
+                              socket.emit(
+                                "thumbsUp",
+                                { sessionId },
+                                (error) => {
+                                  alert(error);
+                                }
+                              );
+                            }}
+                          />
+                        </IconButton>
                       );
-                }}
-                className="me-4"
-              >
-                {localUserState.screen ? (
-                  <CancelPresentationOutlinedIcon
-                    style={{ fontSize: "20px", color: "#1D5BBE" }}
-                  />
-                ) : (
-                  <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                )}
-              </IconButton>
-            ) : (
-              <></>
-            )}
-            {!canPublishStream ? (
-              (() => {
-                switch (runningStatus) {
-                  case "In Progress":
-                    return (
-                      <IconButton style={{ padding: "3px" }} className="me-3">
-                        <img
-                          src={Clapping}
-                          alt="clapping-reaction"
-                          style={{ maxWidth: "24px" }}
-                          className="m-2"
-                        />
-                      </IconButton>
-                    );
 
-                  default:
-                    break;
-                }
-              })()
-            ) : (
-              <></>
-            )}
-            {!canPublishStream ? (
-              (() => {
-                switch (runningStatus) {
-                  case "In Progress":
-                    return (
-                      <IconButton style={{ padding: "12px" }} className="me-3">
-                        <PanToolRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    );
+                    default:
+                      break;
+                  }
+                })()
+              ) : (
+                <></>
+              )}
+              {canPublishStream ? (
+                <IconButton
+                  onClick={() => {
+                    localUserState.mic
+                      ? turnOffAudio()
+                      : userHasUnmutedAudio.current
+                      ? turnOnAudio()
+                      : unMuteMyAudio();
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.mic ? (
+                    <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
+                  ) : (
+                    <MicOffOutlinedIcon
+                      style={{ fontSize: "20px", color: "#BE1D1D" }}
+                    />
+                  )}
+                </IconButton>
+              ) : (
+                <></>
+              )}
+              {!canPublishStream ? (
+                (() => {
+                  switch (runningStatus) {
+                    case "In Progress":
+                      return (
+                        <IconButton style={{ padding: "8px" }} className="me-3">
+                          <Emoji
+                            emoji={{ id: "clap", skin: 3 }}
+                            size={24}
+                            onClick={(emoji) => {
+                              onClap(emoji);
+                              socket.emit("clap", { sessionId }, (error) => {
+                                alert(error);
+                              });
+                            }}
+                          />
+                        </IconButton>
+                      );
 
-                  default:
-                    break;
-                }
-              })()
-            ) : (
-              <></>
-            )}
+                    default:
+                      break;
+                  }
+                })()
+              ) : (
+                <></>
+              )}
+              {canPublishStream ? (
+                <IconButton
+                  onClick={() => {
+                    localUserState.screen
+                      ? stopPresenting()
+                      : dispatch(
+                          getRTCTokenForScreenShare(
+                            sessionId,
+                            userId,
+                            startPresenting
+                          ) // We will use this fxn to request a token and start screen sharing
+                        );
+                  }}
+                  className="me-4"
+                >
+                  {localUserState.screen ? (
+                    <CancelPresentationOutlinedIcon
+                      style={{ fontSize: "20px", color: "#1D5BBE" }}
+                    />
+                  ) : (
+                    <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
+                  )}
+                </IconButton>
+              ) : (
+                <></>
+              )}
+
+              {canPublishStream && role === "attendee" && (
+                <button
+                  onClick={() => {
+                    socket.emit(
+                      "removeFromStage",
+                      { userId, sessionId, eventId },
+                      (error) => {
+                        alert(error);
+                      }
+                    );
+                  }}
+                  className="btn btn-outline-text btn-outline-danger"
+                >
+                  Leave stage
+                </button>
+              )}
+              {!canPublishStream ? (
+                (() => {
+                  switch (runningStatus) {
+                    case "In Progress":
+                      return (
+                        <>
+                          <IconButton
+                            style={{ padding: "8px" }}
+                            className="me-3"
+                          >
+                            <Emoji
+                              emoji={{ id: "smile", skin: 3 }}
+                              size={24}
+                              onClick={(emoji) => {
+                                onSmile(emoji);
+                                socket.emit("smile", { sessionId }, (error) => {
+                                  alert(error);
+                                });
+                              }}
+                            />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              toggleEmojiMart();
+                            }}
+                            className="me-3"
+                          >
+                            <MoreVertRoundedIcon />
+                          </IconButton>
+                        </>
+                      );
+
+                    default:
+                      break;
+                  }
+                })()
+              ) : (
+                <></>
+              )}
+              {!canPublishStream ? (
+                (() => {
+                  switch (runningStatus) {
+                    case "In Progress":
+                      return (
+                        <IconButton
+                          onClick={() => {
+                            if (myHandIsRaised) {
+                              socket.emit(
+                                "removeFromStage",
+                                {
+                                  userId: userId,
+                                  eventId: eventId,
+                                  sessionId: sessionId,
+                                },
+                                (error) => {
+                                  alert(error);
+                                }
+                              );
+                            } else {
+                              socket.emit(
+                                "raiseHand",
+                                { userId: userId, sessionId: sessionId },
+                                (error) => {
+                                  alert(error);
+                                }
+                              );
+                            }
+                          }}
+                          style={{
+                            padding: "12px",
+                            color: myHandIsRaised ? "#FFFFFF" : "#152d35",
+                          }}
+                          className="me-3"
+                        >
+                          <PanToolRoundedIcon style={{ fontSize: "20px" }} />
+                        </IconButton>
+                      );
+
+                    default:
+                      break;
+                  }
+                })()
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         ) : (
           <div></div>
@@ -451,7 +582,15 @@ const StageControlsComponent = ({
         open={stopRecording}
         handleClose={handleCloseStopRecording}
       />
+
+      <ManageStage
+        open={openManageStage}
+        handleClose={handleCloseManageStage}
+      />
+
       {/*  */}
+
+      {/* <Picker set="apple" onSelect={onSelect} /> */}
     </>
   );
 };

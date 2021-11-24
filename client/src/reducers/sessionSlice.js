@@ -96,14 +96,18 @@ const sessionSlice = createSlice({
     },
 
     EditSession(state, action) {
-      const sessionsArr = state.sessions.map((session) =>
-        session.id === action.payload.session.id
-          ? action.payload.session
-          : session
-      );
-      state.sessions = sessionsArr;
-      state.sessionDetails = action.payload.session;
-      state.isLoadingDetail = false;
+      console.log(action.payload.session);
+      if (!action.payload.session) {
+        // alert("We found undefined");
+      } else {
+        state.sessions = state.sessions.map((session) =>
+          session._id === action.payload.session._id
+            ? action.payload.session
+            : session
+        );
+        state.sessionDetails = action.payload.session;
+        state.isLoadingDetail = false;
+      }
     },
 
     DeleteSession(state, action) {

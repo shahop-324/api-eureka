@@ -16,8 +16,6 @@ import {
 
 import { useSelector } from "react-redux";
 
-
-
 const BtnOutlined = styled.div`
   padding: 5px 8px;
   background-color: transparent;
@@ -52,12 +50,14 @@ const IconButtonStatic = styled.div`
   border: 1px solid #ffffff;
 `;
 
-const StageNavComponent = ({ runningStatus, canPublishStream }) => {
+const StageNavComponent = ({
+  runningStatus,
+  canPublishStream,
+}) => {
   // NOTICE : State can be live, back or ended
   // Hosts and speakers can go to backstage anytime they want by clicking on switch to backstage button and come back to live stage if the session is in running state
   const [openConfirmEnd, setOpenConfirmEnd] = useState(false);
 
- 
   const handleCloseConfirmEnd = () => {
     setOpenConfirmEnd(false);
   };
@@ -65,6 +65,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
   let currentUserIsAHost = false;
 
   const { sessionDetails } = useSelector((state) => state.session);
+  const { eventDetails } = useSelector((state) => state.event);
 
   const status = sessionDetails
     ? sessionDetails.runningStatus
@@ -88,7 +89,13 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
 
   const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
 
-  if (sessionRole === "host" && role !== "speaker") {
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  let hostIds = sessionDetails.host.map((el) => el._id);
+
+  if (sessionRole === "host" && hostIds.includes(userId)) {
     currentUserIsAHost = true;
   }
 
@@ -96,10 +103,26 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
     <>
       <StageNav className="px-3 py-1">
         <div className="d-flex flex-row align-items-center">
-          <BrandLogo className="me-3" />
-          <SessionName className="me-3">
-            Annual Founder Q&A with community
-          </SessionName>
+          <BrandLogo className="me-3">
+            <img
+              src={
+                eventDetails
+                  ? eventDetails.createdBy
+                    ? `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${eventDetails.createdBy.image}`
+                    : ""
+                  : ""
+              }
+              alt={
+                eventDetails
+                  ? eventDetails.createdBy
+                    ? eventDetails.createdBy.name
+                    : ""
+                  : ""
+              }
+              style={{ objectFit: "contain", objectPosition: "center" }}
+            />
+          </BrandLogo>
+          <SessionName className="me-3">{sessionDetails.name}</SessionName>
 
           {(() => {
             switch (status) {
@@ -122,6 +145,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-center">
+          
           {currentUserIsAHost ? (
             (() => {
               switch (status) {
@@ -141,9 +165,6 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
                     </BtnOutlined>
                   );
 
-                
-
-               
                 default:
                   break;
               }
@@ -151,17 +172,15 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
           ) : (
             <></>
           )}
-
-          
-
-          
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-end">
           {status !== "Ended" ? (
             <PeopleWatching>
               <PeopleOutlineRoundedIcon className="me-2" />
-              2,340 watching
+              {sessionDetails.people
+                ? `${sessionDetails.people.length} watching`
+                : `0 watching`}
               {/* This will be the total number of active users in this session currently */}
             </PeopleWatching>
           ) : (
@@ -179,7 +198,7 @@ const StageNavComponent = ({ runningStatus, canPublishStream }) => {
           )}
         </div>
       </StageNav>
-     
+
       <ConfirmEnd open={openConfirmEnd} handleClose={handleCloseConfirmEnd} />
     </>
   );

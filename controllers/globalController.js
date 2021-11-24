@@ -306,7 +306,8 @@ exports.generateTokenForLiveStreaming = catchAsync(async (req, res, next) => {
 
   const SessionDoc = await Session.findById(req.body.sessionId)
     .populate("host")
-    .populate("speaker");
+    .populate("speaker")
+    .populate("people");
 
   // IMPORTANT! Build token with either the uid or with the user account. Comment out the option you do not want to use below.
 
@@ -1140,29 +1141,27 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
           clientRequest: {
             token: token,
             recordingConfig: {
-              maxIdleTime: 30,
+              maxIdleTime: 21600,
               streamTypes: 2,
               channelType: 0,
+              videoStreamType: 0,
               transcodingConfig: {
                 height: 640,
                 width: 360,
                 bitrate: 500,
                 fps: 15,
-                mixedVideoLayout: 1,
-                backgroundColor: "#FF0000",
+                mixedVideoLayout: 0,
+                backgroundColor: "#212121",
               },
-              subscribeVideoUids: ["123", "456"],
-              subscribeAudioUids: ["123", "456"],
-              subscribeUidGroup: 0,
             },
             recordingFileConfig: {
-              avFileType: ["hls"],
+              avFileType: ["hls", "mp4"],
             },
             storageConfig: {
-              accessKey: "AKIA476PXBEVI6FHBGWC",
+              accessKey: "AKIA4IKLDA4ABVU7DUJJ",
               region: 2,
-              bucket: "bluemeet",
-              secretKey: "o9fN3IeJOdBEvUlZ0mEjXkVMz8d4loxp/nY5YXhb",
+              bucket: "bluemeet-inc",
+              secretKey: "IBL4uBLaHv7RDyZo6c1gNTKqttwGrybHCll/wtBF",
               vendor: 1,
               fileNamePrefix: ["directory1", "directory2"],
             },
@@ -1660,20 +1659,16 @@ exports.getBoothTableChats = catchAsync(async (req, res, next) => {
 });
 
 exports.getBoothChats = catchAsync(async (req, res, next) => {
- 
-    const boothId = req.params.boothId;
+  const boothId = req.params.boothId;
 
-    const chats = await BoothChats.find({
-      boothId: mongoose.Types.ObjectId(boothId),
-    }).populate("replyTo");
-  
-    res.status(200).json({
-      status: "success",
-      data: chats,
-    });
-  
+  const chats = await BoothChats.find({
+    boothId: mongoose.Types.ObjectId(boothId),
+  }).populate("replyTo");
 
-  
+  res.status(200).json({
+    status: "success",
+    data: chats,
+  });
 });
 
 exports.fetchSessionQnA = catchAsync(async (req, res, next) => {

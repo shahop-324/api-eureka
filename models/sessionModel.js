@@ -30,6 +30,30 @@ const onStagePeopleSchema = new mongoose.Schema(
   }
 );
 
+const raisedHandsSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.ObjectId, ref: "User" },
+    userName: { type: String },
+    userImage: { type: String },
+    userEmail: { type: String },
+    userOrganisation: { type: String },
+    userDesignation: { type: String },
+    isOnStage: {
+      type: Boolean,
+      default: false,
+    },
+    raisedAt: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  {
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
 const sessionSchema = new mongoose.Schema(
   {
     type: {
@@ -138,6 +162,7 @@ const sessionSchema = new mongoose.Schema(
       type: String,
     },
     onStagePeople: [onStagePeopleSchema],
+    raisedHands: [raisedHandsSchema],
     streamingLive: {
       type: Boolean,
       default: false,
@@ -146,6 +171,12 @@ const sessionSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "Track",
+      },
+    ],
+    people: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
       },
     ],
   },
@@ -159,7 +190,10 @@ const sessionSchema = new mongoose.Schema(
 sessionSchema.index({ name: "text", description: "text" });
 
 sessionSchema.pre(/^find/, function (next) {
-  this.find({ status: { $ne: "Deleted" } });
+  this.find({ status: { $ne: "Deleted" } })
+    .populate("people")
+    .populate("host")
+    .populate("speaker");
   next();
 });
 

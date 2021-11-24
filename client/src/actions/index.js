@@ -6171,8 +6171,7 @@ export const getRTCTokenForNetworking =
   };
 
 export const getRTCTokenForScreenShare =
-  (sessionId, uid, startPresenting) =>
-  async (dispatch, getState) => {
+  (sessionId, uid, startPresenting) => async (dispatch, getState) => {
     dispatch(RTCActions.startLoading());
 
     const fetchingRTCToken = async () => {
@@ -7780,7 +7779,7 @@ export const fetchEventVideos = (eventId) => async (dispatch, getState) => {
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getState().communityAuth.token}`,
+        Authorization: `Bearer ${getState().auth.token}`,
       },
     });
 
@@ -10893,7 +10892,7 @@ export const editBoothTable =
           "putObject",
           { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
           async (err, presignedURL) => {
-            const awsRes = await fetch(presignedURL, {
+           await fetch(presignedURL, {
               method: "PUT",
 
               body: file,
@@ -12596,7 +12595,7 @@ export const resendPayPalPayoutEmailVerificationLink =
           throw new Error(res.message);
         }
       }
-      const result = await res.json();
+     await res.json();
 
       dispatch(showSnackbar("success", "Email sent successfully!"));
     } catch (error) {
@@ -13498,7 +13497,7 @@ export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+   await res.json();
 
     dispatch(
       boothActions.DeleteVideo({
@@ -13674,7 +13673,7 @@ export const deleteProduct = (productId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteProduct({
@@ -13812,7 +13811,7 @@ export const deleteFile = (fileId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteFile({
@@ -13937,7 +13936,7 @@ export const deleteLink = (linkId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteLink({
@@ -14083,7 +14082,7 @@ export const deletePromoCode = (promoCodeId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteOffer({
@@ -14187,7 +14186,7 @@ export const shareBusinessCard =
         }
       );
 
-      const result = await res.json();
+      await res.json();
 
       dispatch(showSnackbar("success", "Business card shared successfully!"));
     } catch (error) {
@@ -14314,7 +14313,7 @@ export const deleteForm = (formDocId) => async (dispatch, getState) => {
       },
     });
 
-    const result = await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteForm({
@@ -14400,3 +14399,19 @@ export const fetchNetworkingRoomDetails =
       })
     );
   };
+
+export const promoteToStage = () => async (dispatch, getState) => {
+  dispatch(
+    eventAccessActions.setSessionRole({
+      sessionRole: "host",
+    })
+  );
+};
+
+export const demoteFromStage = () => async (dispatch, getState) => {
+  dispatch(
+    eventAccessActions.setSessionRole({
+      sessionRole: "attendee",
+    })
+  );
+};

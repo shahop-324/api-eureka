@@ -1,16 +1,12 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import socket from "./../HostingPlatform/service/socket";
 import { Avatar } from "@material-ui/core";
-import Faker from "faker";
+import PersonProfile from "./../HostingPlatform/PersonProfile";
 import { Dropdown } from "semantic-ui-react";
-
-import PauseRoundedIcon from "@material-ui/icons/PauseRounded"; // Pause
-import StopRoundedIcon from "@material-ui/icons/StopRounded"; // Stop
+import { fetchEventVideos } from "./../../actions";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded"; // Resume
-
-import VideocamRoundedIcon from "@material-ui/icons/VideocamRounded"; // Video Camera Icon
-import MicNoneRoundedIcon from "@material-ui/icons/MicNoneRounded"; // Microphone Icon
-import ScreenShareRoundedIcon from "@material-ui/icons/ScreenShareRounded"; // Screen Share Icon
-
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -26,25 +22,28 @@ import {
   PeopleListWidget,
   LinkTab,
   Divider,
-  IconButton,
   TabButton,
   BtnOutlined,
 } from "./Elements";
 
 import { makeStyles } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MainChatComponent from "../HostingPlatform/StageSideBar/Chat/MainChatComponent";
 import MainQnAComponent from "../HostingPlatform/StageSideBar/QnA/MainQnAComponent";
 import MainPollComponent from "../HostingPlatform/StageSideBar/Poll/MainPollComponent";
 
 const DropdownIcon = ({ switchView, view }) => (
-  <Dropdown icon={
-    view === "list" ? (
-      <FormatListBulletedRoundedIcon style={{ fontSize: "18px" }} />
-    ) : (
-      <GridViewRoundedIcon style={{ fontSize: "18px" }} />
-    )
-  } button className="icon">
+  <Dropdown
+    icon={
+      view === "list" ? (
+        <FormatListBulletedRoundedIcon style={{ fontSize: "18px" }} />
+      ) : (
+        <GridViewRoundedIcon style={{ fontSize: "18px" }} />
+      )
+    }
+    button
+    className="icon"
+  >
     <Dropdown.Menu style={{ right: "0", left: "auto" }}>
       <Dropdown.Item
         icon={
@@ -88,7 +87,261 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const PeopleListComponent = ({ person }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <>
+        <PeopleListWidget className="mb-3">
+          <div className="d-flex flex-row mb-4 justify-content-between">
+            <div className="d-flex flex-row">
+              <Avatar
+                src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+                alt={person.firstName}
+                variant="rounded"
+                className="me-3"
+              />
+              <div>
+                <PersonName>
+                  {`${person.firstName} ${person.lastName}`}
+                </PersonName>
+                {person.designation && person.organisation ? (
+                  <PersonName>
+                    {`${person.designation}, ${person.organisation}`}
+                  </PersonName>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            {/* <UserRoleTag>Host</UserRoleTag> */}
+          </div>
+          <ViewCompleteProfileBtn
+            onClick={() => {
+              // open person profile
+              setOpen(true);
+            }}
+          >
+            View complete profile
+          </ViewCompleteProfileBtn>
+        </PeopleListWidget>
+        <PersonProfile
+          open={open}
+          userId={person._id}
+          handleClose={handleClose}
+          userImage={person.image}
+          userName={`${person.firstName} ${person.lastName}`}
+          userOrganisation={person.organisation}
+          userDesignation={person.designation}
+        />
+      </>
+    </>
+  );
+};
+
+const renderPeopleGrid = (people, classes) => {
+  return people.map((person) => {
+    return (
+      <Avatar
+        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+        alt={`${person.firstName} ${person.lastName}`}
+        variant="rounded"
+        className={classes.large}
+      />
+    );
+  });
+};
+
+const renderPeopleList = (people) => {
+  return people.map((person) => {
+    return <PeopleListComponent person={person} />;
+  });
+};
+
+const renderVideos = (videos, eventId, sessionId) => {
+  return videos.map((video) => {
+    return (
+      <SessionVideoContainer className="mb-3">
+        <video
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}`}
+          style={{
+            borderRadius: "5px",
+            height: "150px",
+            width: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+          }}
+          className="mb-3"
+          alt="video cover"
+        ></video>
+
+        <BtnOutlined>
+          <PlayArrowRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
+          Play on stage
+        </BtnOutlined>
+      </SessionVideoContainer>
+    );
+  });
+};
+
+const renderRaisedHands = (people, eventId, sessionId) => {
+  return people.map((person) => {
+    return (
+      <PeopleListWidget className="mb-3">
+        <div className="d-flex flex-row mb-4 justify-content-between">
+          <div className="d-flex flex-row">
+            <Avatar
+              src={
+                person.image
+                  ? person.image.startsWith("https://")
+                    ? person.image
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
+                  : ""
+              }
+              alt={person.name}
+              variant="rounded"
+              className="me-3"
+            />
+            <div>
+              <PersonName>{person.name}</PersonName>
+              {person.designation && person.organisation ? (
+                <PersonName>{`${person.designation}, ${person.organisation}`}</PersonName>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {person.isOnStage ? (
+          <ViewCompleteProfileBtn
+            onClick={() => {
+              socket.emit(
+                "removeFromStage",
+                {
+                  userId: person.userId,
+                  eventId: eventId,
+                  sessionId: sessionId,
+                },
+                (error) => {
+                  alert(error);
+                }
+              );
+            }}
+            style={{ backgroundColor: "#152d35", color: "#ffffff" }}
+          >
+            Put off stage
+          </ViewCompleteProfileBtn>
+        ) : (
+          <div className="d-flex flex-row align-items-center">
+            <ViewCompleteProfileBtn
+              style={{ width: "48%" }}
+              onClick={() => {
+                socket.emit(
+                  "putOnStage",
+                  {
+                    userId: person.userId,
+                    eventId: eventId,
+                    sessionId: sessionId,
+                  },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }}
+            >
+              Put on stage
+            </ViewCompleteProfileBtn>
+
+            <ViewCompleteProfileBtn
+              style={{ width: "48%" }}
+              onClick={() => {
+                socket.emit(
+                  "rejectMicRequest",
+                  {
+                    userId: person.userId,
+                    eventId: eventId,
+                    sessionId: sessionId,
+                  },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }}
+            >
+              Reject
+            </ViewCompleteProfileBtn>
+          </div>
+        )}
+      </PeopleListWidget>
+    );
+  });
+};
+
 const StageSideDrawerComponent = ({ runningStatus }) => {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const eventId = params.eventId;
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const { videos } = useSelector((state) => state.eventVideos);
+
+  useEffect(() => {
+    dispatch(fetchEventVideos(eventId));
+  }, []);
+
+  const sessionId = params.sessionId;
+
+  // Filter out unique raised hands with personal and media tracks information
+
+  let uniqueIds = [];
+  let uniqueRaisedHands = [];
+
+  for (let element of sessionDetails.raisedHands) {
+    if (element.userId) {
+      for (let item of sessionDetails.onStagePeople) {
+        if (item.user.toString() === element.userId.toString()) {
+          if (!uniqueIds.includes(element.userId)) {
+            uniqueRaisedHands.push({
+              userId: element.userId,
+              name: element.userName,
+              image: element.userImage,
+              designation: element.userOrganisation,
+              organisation: element.userDesignation,
+              camera: item.camera,
+              microphone: item.microphone,
+              screen: item.screen,
+              isOnStage: element.isOnStage,
+            });
+
+            uniqueIds.push(element.userId);
+          }
+        } else {
+          if (!uniqueIds.includes(element.userId)) {
+            uniqueRaisedHands.push({
+              userId: element.userId,
+              name: element.userName,
+              image: element.userImage,
+              designation: element.userOrganisation,
+              organisation: element.userDesignation,
+              camera: false,
+              microphone: false,
+              screen: false,
+              isOnStage: element.isOnStage,
+            });
+
+            uniqueIds.push(element.userId);
+          }
+        }
+      }
+    }
+  }
+
   // We need to know the current running state and if this user is a host or not in all of this side drawer component
 
   let sessionHasEnded = false;
@@ -106,17 +359,20 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
     setView(view);
   };
 
-
   const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
 
-  if (sessionRole === "host" && role !== "speaker") {
+  if (
+    sessionRole === "host" &&
+    role !== "speaker" &&
+    role !== "attendee" &&
+    role !== "exhibitor"
+  ) {
     currentUserIsAHost = true;
   }
 
   if (sessionRole === "host" && role === "speaker") {
     currentUserIsASpeaker = true;
   }
-
 
   if (runningStatus === "Ended") {
     sessionHasEnded = true;
@@ -126,11 +382,21 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
 
   let gridColumns = "1fr 1fr";
 
-  if(currentUserIsAHost) {
-    gridColumns = "1fr 1fr 1fr 1fr"
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  let hostIds = sessionDetails.host.map((el) => el._id);
+
+  if (
+    (sessionRole === "host" && hostIds.includes(userId)) ||
+    (sessionRole === "host" && role === "speaker")
+  ) {
+    gridColumns = "1fr 1fr 1fr 1fr";
   }
-  if(runningStatus === "Ended") {
-    gridColumns = "1fr 1fr"
+
+  if (runningStatus === "Ended") {
+    gridColumns = "1fr 1fr";
   }
 
   return (
@@ -159,7 +425,9 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
           >
             People
           </TabButton>
-          {currentUserIsAHost && !sessionHasEnded ? (
+          {((sessionRole === "host" && hostIds.includes(userId)) ||
+            (sessionRole === "host" && role === "speaker")) &&
+          !sessionHasEnded ? (
             <>
               {" "}
               <TabButton
@@ -229,7 +497,6 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
                           return (
                             <div className="d-flex flex-column align-items-center justify-content-between">
                               <MainChatComponent
-                            
                                 currentUserIsAHost={currentUserIsAHost}
                                 runningStatus={runningStatus}
                               />
@@ -293,14 +560,14 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
                           placeholder="Search people..."
                           className="form-control"
                         />
-                         <SearchRoundedIcon
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "10px",
-                  color: "#757575",
-                }}
-              />
+                        <SearchRoundedIcon
+                          style={{
+                            position: "absolute",
+                            right: "10px",
+                            top: "10px",
+                            color: "#757575",
+                          }}
+                        />
                       </div>
 
                       <DropdownIcon switchView={switchView} view={view} />
@@ -311,180 +578,12 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
                         case "grid":
                           return (
                             <div className="people-list-grid">
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
-                              <Avatar
-                                src={Faker.image.avatar()}
-                                variant="rounded"
-                                className={classes.large}
-                              />
+                              {renderPeopleGrid(sessionDetails.people, classes)}
                             </div>
-                            // <div className="people-list-grid">
-                            //   {renderPeopleList(currentlyInEvent)}
-                            // </div>
                           );
                         case "list":
                           return (
-                            <div>
-                              <PeopleListWidget className="mb-3">
-                                <div className="d-flex flex-row mb-4 justify-content-between">
-                                  <div className="d-flex flex-row">
-                                    <Avatar
-                                      src={Faker.image.avatar()}
-                                      alt={Faker.name.findName()}
-                                      variant="rounded"
-                                      className="me-3"
-                                    />
-                                    <div>
-                                      <PersonName>
-                                        {Faker.name.findName()}
-                                      </PersonName>
-                                      <PersonName>
-                                        {"Product manager, Bluemeet"}
-                                      </PersonName>
-                                    </div>
-                                  </div>
-
-                                  <UserRoleTag>Host</UserRoleTag>
-                                </div>
-                                <ViewCompleteProfileBtn>
-                                  View complete profile
-                                </ViewCompleteProfileBtn>
-                              </PeopleListWidget>
-                              <PeopleListWidget className="mb-3">
-                                <div className="d-flex flex-row mb-4 justify-content-between">
-                                  <div className="d-flex flex-row">
-                                    <Avatar
-                                      src={Faker.image.avatar()}
-                                      alt={Faker.name.findName()}
-                                      variant="rounded"
-                                      className="me-3"
-                                    />
-                                    <div>
-                                      <PersonName>
-                                        {Faker.name.findName()}
-                                      </PersonName>
-                                      <PersonName>
-                                        {"Product manager, Bluemeet"}
-                                      </PersonName>
-                                    </div>
-                                  </div>
-
-                                  <UserRoleTag>Host</UserRoleTag>
-                                </div>
-                                <ViewCompleteProfileBtn>
-                                  View complete profile
-                                </ViewCompleteProfileBtn>
-                              </PeopleListWidget>
-                              <PeopleListWidget className="mb-3">
-                                <div className="d-flex flex-row mb-4 justify-content-between">
-                                  <div className="d-flex flex-row">
-                                    <Avatar
-                                      src={Faker.image.avatar()}
-                                      alt={Faker.name.findName()}
-                                      variant="rounded"
-                                      className="me-3"
-                                    />
-                                    <div>
-                                      <PersonName>
-                                        {Faker.name.findName()}
-                                      </PersonName>
-                                      <PersonName>
-                                        {"Product manager, Bluemeet"}
-                                      </PersonName>
-                                    </div>
-                                  </div>
-
-                                  <UserRoleTag>Host</UserRoleTag>
-                                </div>
-                                <ViewCompleteProfileBtn>
-                                  View complete profile
-                                </ViewCompleteProfileBtn>
-                              </PeopleListWidget>
-                            </div>
+                            <div>{renderPeopleList(sessionDetails.people)}</div>
                           );
 
                         default:
@@ -498,150 +597,14 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
               );
             case "raisedHands":
               return (
-                <div>
-                  <PeopleListWidget className="mb-3">
-                    <div className="d-flex flex-row mb-4 justify-content-between">
-                      <div className="d-flex flex-row">
-                        <Avatar
-                          src={Faker.image.avatar()}
-                          alt={Faker.name.findName()}
-                          variant="rounded"
-                          className="me-3"
-                        />
-                        <div>
-                          <PersonName>{Faker.name.findName()}</PersonName>
-                          <PersonName>{"Product manager, Bluemeet"}</PersonName>
-                        </div>
-                      </div>
-
-                      {/* <UserRoleTag>Host</UserRoleTag> */}
-                    </div>
-                    <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                      <IconButton className="me-4">
-                        <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    </div>
-                    <ViewCompleteProfileBtn>
-                      Put on stage
-                    </ViewCompleteProfileBtn>
-                  </PeopleListWidget>
-                  <PeopleListWidget className="mb-3">
-                    <div className="d-flex flex-row mb-4 justify-content-between">
-                      <div className="d-flex flex-row">
-                        <Avatar
-                          src={Faker.image.avatar()}
-                          alt={Faker.name.findName()}
-                          variant="rounded"
-                          className="me-3"
-                        />
-                        <div>
-                          <PersonName>{Faker.name.findName()}</PersonName>
-                          <PersonName>{"Product manager, Bluemeet"}</PersonName>
-                        </div>
-                      </div>
-
-                      {/* <UserRoleTag>Host</UserRoleTag> */}
-                    </div>
-                    <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                      <IconButton className="me-4">
-                        <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    </div>
-
-                    <ViewCompleteProfileBtn>
-                      Put on stage
-                    </ViewCompleteProfileBtn>
-                  </PeopleListWidget>
-                  <PeopleListWidget className="mb-3">
-                    <div className="d-flex flex-row mb-4 justify-content-between">
-                      <div className="d-flex flex-row">
-                        <Avatar
-                          src={Faker.image.avatar()}
-                          alt={Faker.name.findName()}
-                          variant="rounded"
-                          className="me-3"
-                        />
-                        <div>
-                          <PersonName>{Faker.name.findName()}</PersonName>
-                          <PersonName>{"Product manager, Bluemeet"}</PersonName>
-                        </div>
-                      </div>
-
-                      {/* <UserRoleTag>Host</UserRoleTag> */}
-                    </div>
-                    <div className="d-flex flex-row align-items-center justify-content-center mb-3">
-                      <IconButton className="me-4">
-                        <VideocamRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <MicNoneRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                      <IconButton className="me-4">
-                        <ScreenShareRoundedIcon style={{ fontSize: "20px" }} />
-                      </IconButton>
-                    </div>
-                    <ViewCompleteProfileBtn>
-                      Put on stage
-                    </ViewCompleteProfileBtn>
-                  </PeopleListWidget>
+                <div style={{ height: "73vh", overflow: "auto" }}>
+                  {renderRaisedHands(uniqueRaisedHands, eventId, sessionId)}
                 </div>
               );
             case "videos":
               return (
-                <div>
-                  <SessionVideoContainer className="mb-3">
-                    <img
-                      src="https://jungletopp.com/wp-content/uploads/2020/11/youtube.jpg"
-                      style={{ borderRadius: "5px" }}
-                      className="mb-3"
-                      alt="video cover"
-                    ></img>
-
-                    <BtnOutlined>
-                      <PlayArrowRoundedIcon
-                        className="me-2"
-                        style={{ fontSize: "20px" }}
-                      />
-                      Play on stage
-                    </BtnOutlined>
-                  </SessionVideoContainer>
-                  <SessionVideoContainer className="mb-3">
-                    <img
-                      src="https://i.ytimg.com/vi/8YbZuaBP9B8/maxresdefault.jpg"
-                      style={{ borderRadius: "5px" }}
-                      className="mb-3"
-                      alt="video cover"
-                    ></img>
-
-                    <div className="d-flex flex-row align-items-center justify-content-between">
-                      <BtnOutlined style={{ width: "48%" }}>
-                        <PauseRoundedIcon
-                          className="me-2"
-                          style={{ fontSize: "20px" }}
-                        />
-                        Pause
-                      </BtnOutlined>
-                      <BtnOutlined style={{ width: "48%" }}>
-                        <StopRoundedIcon
-                          className="me-2"
-                          style={{ fontSize: "20px" }}
-                        />
-                        Stop playing
-                      </BtnOutlined>
-                    </div>
-                  </SessionVideoContainer>
+                <div style={{ height: "73vh", overflow: "auto" }}>
+                  {renderVideos(videos, eventId, sessionId)}
                 </div>
               );
 

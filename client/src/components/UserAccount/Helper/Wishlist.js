@@ -96,11 +96,15 @@ const Wishlist = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
+  const { isSignedIn } = useSelector((state) => state.auth);
+
   const location = useLocation();
 
   useEffect(() => {
     dispatch(fetchEvents(location.search));
-    dispatch(fetchMyPopulatedFavouriteEvents());
+    if (isSignedIn) {
+      dispatch(fetchMyPopulatedFavouriteEvents());
+    }
   }, []);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));

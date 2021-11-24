@@ -92,6 +92,168 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  socket.on("raiseHand", async ({ userId, sessionId }, callback) => {
+    // Find user doc and add to sessions raised hands queue
+
+    console.log(userId, sessionId);
+    if ((userId, sessionId)) {
+      const userDoc = await User.findById(userId);
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      // // Make sure this user is not already present in raised Hands queue
+
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (person) =>
+          person.userId.toString() !== userId.toString() && person.userId
+      );
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Now add this person to the queue
+      if (userId && userDoc) {
+        sessionDoc.raisedHands.push({
+          userId: userId,
+          userName: `${userDoc.firstName} ${userDoc.lastName}`,
+          userEmail: userDoc.email,
+          userImage: userDoc.image,
+          userOrganisation: userDoc.organisation,
+          userDesignation: userDoc.designation,
+          isOnStage: false,
+          raisedAt: Date.now(),
+        });
+      }
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      io.in(sessionId).emit("raisedHand", {
+        session: updatedSession,
+        userName: `${userDoc.firstName} ${userDoc.lastName}`,
+      }); // New Event name because we will show a push notification to host that someone just raised hand
+    }
+  });
+
+  socket.on(
+    "rejectMicRequest",
+    async ({ userId, eventId, sessionId }, callback) => {
+      // Just remove this user from ordered queue of raised hands and send updated session to everyone in this session
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (person) =>
+          person.userId.toString() !== userId.toString() && person.userId
+      );
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+        userName: `${userDoc.firstName} ${userDoc.lastName}`,
+      });
+    }
+  );
+
+  socket.on("putOnStage", async ({ userId, eventId, sessionId }, callback) => {
+    // Just change isOnStage => true and ask user to come on stage
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    const thisUserInRaisedHandsQueue = sessionDoc.raisedHands.find(
+      (person) => person.userId.toString() == userId.toString()
+    );
+
+    thisUserInRaisedHandsQueue.isOnStage = true;
+
+    await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+    // Find this users socketId and ask him/her to come on stage
+
+    const UserDoc = await UsersInEvent.findOne({
+      $and: [
+        { room: mongoose.Types.ObjectId(eventId) },
+        { userId: mongoose.Types.ObjectId(userId) },
+      ],
+    });
+
+    const userSocket = UserDoc.socketId; // ! Socket Id of user who is to be invited on stage
+
+    io.to(userSocket).emit("invitedToStage"); // Following this => this user will be promoted to stage
+
+    const updatedSession = await Session.findById(sessionId)
+      .populate("host")
+      .populate("speaker")
+      .populate("people");
+
+    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
+  });
+
+  socket.on(
+    "removeFromStage",
+    async ({ userId, eventId, sessionId }, callback) => {
+      // This can be called by either user itself or host
+      // Find user in raised Hands Queue and remove from it and tell user to leaveStage
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      // Make sure this user is not already present in raised Hands queue
+
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (person) => person.userId.toString() !== userId.toString()
+      );
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Find this users socketId and ask him/her to leave stage
+
+      const UserDoc = await UsersInEvent.findOne({
+        $and: [
+          { room: mongoose.Types.ObjectId(eventId) },
+          { userId: mongoose.Types.ObjectId(userId) },
+        ],
+      });
+
+      const userSocket = UserDoc.socketId; // ! Socket Id of user who is to be demoted from stage
+
+      io.to(userSocket).emit("leaveStage"); // Following this => this user will be demoted from stage
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+    }
+  );
+
+  socket.on("thumbsUp", async ({ sessionId }) => {
+    socket.to(sessionId).emit("thumbsUp");
+  });
+  socket.on("clap", async ({ sessionId }) => {
+    socket.to(sessionId).emit("clap");
+  });
+  socket.on("smile", async ({ sessionId }) => {
+    socket.to(sessionId).emit("smile");
+  });
+
+  socket.on("emoji", async ({ sessionId, emoji }) => {
+    socket.to(sessionId).emit("emoji", {
+      emoji: emoji,
+    });
+  });
+
   socket.on("joinBooth", async ({ boothId }, callback) => {
     socket.join(boothId);
     console.log("This is join Booth");
@@ -786,7 +948,8 @@ io.on("connect", (socket) => {
 
       const sessionDoc = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker"); // This is the session doc we need to update
+        .populate("speaker")
+        .populate("people");
 
       sessionDoc.onStagePeople.push({
         user: userId,
@@ -800,9 +963,10 @@ io.on("connect", (socket) => {
 
       // Send updated user to everyone in this session
 
-      const session = await Session.findById(sessionId)
+      const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker");
+        .populate("speaker")
+        .populate("people");
 
       const { socketId } = await UsersInEvent.findOne({
         $and: [
@@ -811,9 +975,13 @@ io.on("connect", (socket) => {
         ],
       }).select("socketId");
 
-      io.to(socketId).emit("updatedSession", { session: session });
+      io.to(socketId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
 
-      io.in(sessionId).emit("updatedSession", { session: session });
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
     }
   );
 
@@ -841,12 +1009,13 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker");
+        .populate("speaker")
+        .populate("people");
 
       // 4.) Send updated session doc to everyone in this session.
 
       io.in(sessionId).emit("updatedSession", {
-        session: updatedSession,
+        updatedSession: updatedSession,
       });
     }
   );
@@ -1398,12 +1567,13 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker");
+        .populate("speaker")
+        .populate("people");
 
       // 4.) Send updated session doc to everyone in this session.
 
       io.in(sessionId).emit("updatedSession", {
-        session: updatedSession,
+        updatedSession: updatedSession,
       });
     }
   );
@@ -1438,12 +1608,13 @@ io.on("connect", (socket) => {
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
       const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker");
+        .populate("speaker")
+        .populate("people");
 
       // 4.) Send updated session doc to everyone in this session.
 
       io.in(sessionId).emit("updatedSession", {
-        session: updatedSession,
+        updatedSession: updatedSession,
       });
 
       let people = []; // Collection of {userId, socketId, camera, mic, screen}
@@ -1506,9 +1677,38 @@ io.on("connect", (socket) => {
   );
 
   socket.on(
+    "removeFromOnSessionStage",
+    async ({ userId, sessionId, eventId }, callback) => {
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.onStagePeople = sessionDoc.onStagePeople.filter(
+        (person) => person.user.toString() !== userId.toString()
+      );
+
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (person) => person.userId.toString() !== userId.toString()
+      );
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      // Send updated user to everyone in this session
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
+    }
+  );
+
+  socket.on(
     "removeMeFromSessionStage",
     async (
       {
+        leaveSession,
         userId,
         userEmail,
         registrationId,
@@ -1530,15 +1730,22 @@ io.on("connect", (socket) => {
         (person) => person.user.toString() !== userId.toString()
       );
 
+      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
+        (person) => person.userId.toString() !== userId.toString()
+      );
+
       await sessionDoc.save({ new: true, validateModifiedOnly: true });
 
       // Send updated user to everyone in this session
 
-      const session = await Session.findById(sessionId)
+      const updatedSession = await Session.findById(sessionId)
         .populate("host")
-        .populate("speaker");
+        .populate("speaker")
+        .populate("people");
 
-      io.in(sessionId).emit("updatedSession", { session: session });
+      io.in(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
 
       // Send fully updated session dooc to everyone in this session
     }
@@ -1917,166 +2124,6 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on("raiseHand", async ({ userId, sessionId, eventId }, callback) => {
-    // Add attendee to raised hands ordered queue and send it back to everyone in this session
-
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (!sessionDoc.raisedHands.includes(userId)) {
-      sessionDoc.raisedHands.push(userId);
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
-  socket.on("unRaisehand", async ({ userId, sessionId }, callback) => {
-    // Remove attendee from raised hands ordered queue and send it back to everyone in this session
-
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (sessionDoc.raisedHands.includes(userId)) {
-      sessionDoc.raisedHands = sessionDoc.raisedHands.filter(
-        (element) => element.toString() !== userId.toString()
-      );
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
-  socket.on("promoteToStage", async ({}, callback) => {
-    // Change this attendees role to host and send it back to everyone and attendee who is promoted to stage
-
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (!sessionDoc.attendeeOnStage.includes(userId)) {
-      sessionDoc.attendeeOnStage.push(userId);
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    // Find attendee socket id and emit event "promotedToStage"
-
-    const UserDoc = await UsersInEvent.findOne({
-      $and: [
-        { room: mongoose.Types.ObjectId(eventId) },
-        { userId: mongoose.Types.ObjectId(userId) },
-      ],
-    });
-
-    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
-
-    io.to(userSocket).emit("promotedToStage");
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
-  socket.on("removeFromStage", async ({}, callback) => {
-    // Change attendees role back to audience and send it back to everyone in session and attendee who is removed from stage
-
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (sessionDoc.attendeeOnStage.includes(userId)) {
-      sessionDoc.attendeeOnStage = sessionDoc.attendeeOnStage.filter(
-        (element) => element !== userId
-      );
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    // Find attendee socket id and emit event "promotedToStage"
-
-    const UserDoc = await UsersInEvent.findOne({
-      $and: [
-        { room: mongoose.Types.ObjectId(eventId) },
-        { userId: mongoose.Types.ObjectId(userId) },
-      ],
-    });
-
-    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
-
-    io.to(userSocket).emit("removeFromStage");
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
-  socket.on("inviteToStage", async ({}, callback) => {
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (!sessionDoc.invitedToStage.includes(userId)) {
-      sessionDoc.invitedToStage.push(userId);
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    // Find attendee socket id and emit event "promotedToStage"
-
-    const UserDoc = await UsersInEvent.findOne({
-      $and: [
-        { room: mongoose.Types.ObjectId(eventId) },
-        { userId: mongoose.Types.ObjectId(userId) },
-      ],
-    });
-
-    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
-
-    io.to(userSocket).emit("invitedToStage");
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
-  socket.on("acceptStageInvitation", async ({}, callback) => {
-    const sessionDoc = await Session.findById(sessionId);
-
-    if (!sessionDoc.attendeeOnStage.includes(userId)) {
-      sessionDoc.attendeeOnStage.push(userId);
-    }
-
-    if (sessionDoc.invitedToStage.includes(userId)) {
-      sessionDoc.invitedToStage = sessionDoc.invitedToStage.filter(
-        (element) => element !== userId
-      );
-    }
-
-    const updatedSession = await sessionDoc.save({
-      new: true,
-      validateModifiedOnly: true,
-    });
-
-    // Find attendee socket id and emit event "promotedToStage"
-
-    const UserDoc = await UsersInEvent.findOne({
-      $and: [
-        { room: mongoose.Types.ObjectId(eventId) },
-        { userId: mongoose.Types.ObjectId(userId) },
-      ],
-    });
-
-    const userSocket = UserDoc.socketId; // ! Socket Id of attendee
-
-    io.to(userSocket).emit("promotedToStage");
-
-    io.in(sessionId).emit("updatedSession", { updatedSession: updatedSession });
-  });
-
   socket.on(
     "playUploadedVideoOnStage",
     async ({ sessionId, eventId, videoURL }, callback) => {
@@ -2146,32 +2193,6 @@ io.on("connect", (socket) => {
     io.to(userSocket).emit("muteMic");
   });
 
-  // socket.on(
-  //   "confirmMicMuted",
-  //   async ({ userId, sessionId, eventId }, callback) => {
-  //     // Send confirmation to everyone in this session that requested person's mic has been muted
-
-  //     const sessionDoc = await Session.findById(sessionId);
-
-  //     for (let element of sessionDoc.speakersOnStage) {
-  //       if (userId === element.userId) {
-  //         element.mic = Disabled;
-  //       }
-  //     }
-
-  //     // save this session document
-
-  //     const updatedSession = await sessionDoc.save({
-  //       new: true,
-  //       validateModifiedOnly: true,
-  //     });
-
-  //     io.in(sessionId).emit("updatedSession", {
-  //       updatedSession: updatedSession,
-  //     });
-  //   }
-  // );
-
   socket.on("muteVideo", async ({ userId, sessionId }, callback) => {
     // Send mute video command to requested person socket
 
@@ -2189,29 +2210,6 @@ io.on("connect", (socket) => {
     io.to(userSocket).emit("muteCamera");
   });
 
-  // socket.on("confirmVideoMuted", async ({}, callback) => {
-  //   // Send confirmation to everyone in this session that the required person's video has been muted
-
-  //   const sessionDoc = await Session.findById(sessionId);
-
-  //   for (let element of sessionDoc.speakersOnStage) {
-  //     if (userId === element.userId) {
-  //       element.camera = Disabled;
-  //     }
-  //   }
-
-  //   // save this session document
-
-  //   const updatedSession = await sessionDoc.save({
-  //     new: true,
-  //     validateModifiedOnly: true,
-  //   });
-
-  //   io.in(sessionId).emit("updatedSession", {
-  //     updatedSession: updatedSession,
-  //   });
-  // });
-
   socket.on("muteScreenShare", async ({ userId, sessionId }, callback) => {
     // Send mute screen share command to requested persons socket
 
@@ -2228,29 +2226,6 @@ io.on("connect", (socket) => {
 
     io.to(userSocket).emit("stopScreenShare");
   });
-
-  // socket.on("confirmScreenShareMuted", async ({}, callback) => {
-  //   // Send confirmation to everyone in this session that the required person's screen share has been muted
-
-  //   const sessionDoc = await Session.findById(sessionId);
-
-  //   for (let element of sessionDoc.speakersOnStage) {
-  //     if (userId === element.userId) {
-  //       element.shareScreen = Disabled;
-  //     }
-  //   }
-
-  //   // save this session document
-
-  //   const updatedSession = await sessionDoc.save({
-  //     new: true,
-  //     validateModifiedOnly: true,
-  //   });
-
-  //   io.in(sessionId).emit("updatedSession", {
-  //     updatedSession: updatedSession,
-  //   });
-  // });
 
   socket.on(
     "insertLink",
@@ -2369,8 +2344,7 @@ io.on("connect", (socket) => {
     const updatedSession = await Session.findById(sessionId)
       .populate("host")
       .populate("speaker")
-      .populate("onLiveStagePeople")
-      .populate("onBackStagePeople");
+      .populate("people");
 
     io.in(sessionId).emit("sessionStarted", {
       session: updatedSession,
@@ -2399,8 +2373,7 @@ io.on("connect", (socket) => {
     const updatedSession = await Session.findById(sessionId)
       .populate("host")
       .populate("speaker")
-      .populate("onLiveStagePeople")
-      .populate("onBackStagePeople");
+      .populate("people");
 
     io.in(sessionId).emit("sessionPaused", {
       session: updatedSession,
@@ -2422,8 +2395,7 @@ io.on("connect", (socket) => {
     const updatedSession = await Session.findById(sessionId)
       .populate("host")
       .populate("speaker")
-      .populate("onLiveStagePeople")
-      .populate("onBackStagePeople");
+      .populate("people");
 
     io.in(sessionId).emit("sessionResumed", {
       session: updatedSession,
@@ -2445,8 +2417,7 @@ io.on("connect", (socket) => {
     const updatedSession = await Session.findById(sessionId)
       .populate("host")
       .populate("speaker")
-      .populate("onLiveStagePeople")
-      .populate("onBackStagePeople");
+      .populate("people");
 
     io.in(sessionId).emit("sessionEnded", {
       session: updatedSession,
@@ -3538,7 +3509,7 @@ io.on("connect", (socket) => {
 
   socket.on(
     "joinSession",
-    (
+    async (
       {
         userId,
         sessionId,
@@ -3555,6 +3526,27 @@ io.on("connect", (socket) => {
       callback
     ) => {
       socket.join(sessionId);
+
+      // Make sure to remove user from people if already present then
+
+      const sessionDoc = await Session.findById(sessionId);
+
+      sessionDoc.people = sessionDoc.people.filter(
+        (person) => person._id.toString() !== userId.toString()
+      );
+
+      sessionDoc.people.push(userId);
+
+      await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      io.to(sessionId).emit("updatedSession", {
+        updatedSession: updatedSession,
+      });
 
       const fetchCurrentUsersInSession = async (sessionId) => {
         await UsersInSession.find(
@@ -3683,7 +3675,7 @@ io.on("connect", (socket) => {
           } else {
             // transmit to whole event
             io.to(eventId).emit("updatedSession", {
-              session: doc,
+              updatedSession: doc,
             });
 
             // transmit to people currently in session
@@ -3692,7 +3684,10 @@ io.on("connect", (socket) => {
             });
           }
         }
-      );
+      )
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
       callback();
     }
   );
@@ -4093,6 +4088,24 @@ io.on("connect", (socket) => {
 
   socket.on("leaveSession", async ({ userId, sessionId }) => {
     socket.leave(sessionId);
+
+    const sessionDoc = await Session.findById(sessionId);
+
+    sessionDoc.people = sessionDoc.people.filter(
+      (person) => person._id.toString() !== userId.toString()
+    );
+
+    await sessionDoc.save({ new: true, validateModifiedOnly: true });
+
+    const updatedSession = await Session.findById(sessionId)
+      .populate("host")
+      .populate("speaker")
+      .populate("people");
+
+    io.to(sessionId).emit("updatedSession", {
+      updatedSession: updatedSession,
+    });
+
     await UsersInSession.findOneAndUpdate(
       {
         $and: [
