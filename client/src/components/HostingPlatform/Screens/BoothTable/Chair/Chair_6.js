@@ -37,9 +37,11 @@ const Chair_6 = ({ id, launchTableScreen }) => {
     // This is the case in which chair is occupied
     chairIsOccupied = true;
     userName6 = chair.userName;
-    userImage6 = chair.userImage.startsWith("https://")
-      ? chair.userImage
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+    userImage6 = chair.userImage
+      ? chair.userImage.startsWith("https://")
+        ? chair.userImage
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
+      : "";
     userCity6 = chair.userCity;
     userCountry6 = chair.userCountry;
     userOrganisation6 = chair.userOrganisation;

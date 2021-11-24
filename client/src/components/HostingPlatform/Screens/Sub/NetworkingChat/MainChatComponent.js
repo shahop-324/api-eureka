@@ -101,9 +101,11 @@ const MainChatComponent = () => {
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -112,9 +114,11 @@ const MainChatComponent = () => {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -133,9 +137,11 @@ const MainChatComponent = () => {
                 <DeletedOthersMsg
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -148,9 +154,11 @@ const MainChatComponent = () => {
                 createReplyWidget={createReplyWidget}
                 replierMsg={chat.textMessage}
                 replierImage={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 replierName={chat.userName}
                 replierOrganisation={chat.userOrganisation}
@@ -159,9 +167,11 @@ const MainChatComponent = () => {
                 replierMsgId={chat._id}
                 originalName={chat.replyTo.userName}
                 originalImage={
-                  chat.replyTo.userImage.startsWith("https://")
-                    ? chat.replyTo.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                  chat.replyTo.userImage
+                    ? chat.replyTo.userImage.startsWith("https://")
+                      ? chat.replyTo.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.replyTo.userImage}`
+                    : ""
                 }
                 originalOrganisation={chat.replyTo.userOrganisation}
                 originalDesignation={chat.replyTo.userDesignation}
@@ -187,9 +197,11 @@ const MainChatComponent = () => {
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}
@@ -206,9 +218,11 @@ const MainChatComponent = () => {
                 <DeletedOthersMsg
                   name={chat.userName}
                   image={
-                    chat.userImage.startsWith("https://")
-                      ? chat.userImage
-                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    chat.userImage
+                      ? chat.userImage.startsWith("https://")
+                        ? chat.userImage
+                        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                      : ""
                   }
                   organisation={chat.userOrganisation}
                   designation={chat.userDesignation}
@@ -221,9 +235,11 @@ const MainChatComponent = () => {
                 createReplyWidget={createReplyWidget}
                 msgText={chat.textMessage}
                 image={
-                  chat.userImage.startsWith("https://")
-                    ? chat.userImage
-                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                  chat.userImage
+                    ? chat.userImage.startsWith("https://")
+                      ? chat.userImage
+                      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chat.userImage}`
+                    : ""
                 }
                 name={chat.userName}
                 organisation={chat.userOrganisation}

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import socket from "./../../HostingPlatform/service/socket";
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -7,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { stopSessionRecording} from "./../../../actions";
+import { stopSessionRecording } from "./../../../actions";
 import { useParams } from "react-router";
 
 const HeaderFooter = styled.div`
@@ -21,7 +22,7 @@ const FormHeading = styled.div`
   color: #212121;
 `;
 
-const StopSessionRecording = ({open, handleClose}) => {
+const StopSessionRecording = ({ open, handleClose, handleStopRecording, setState }) => {
   const dispatch = useDispatch();
 
   const params = useParams();
@@ -29,6 +30,13 @@ const StopSessionRecording = ({open, handleClose}) => {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  // useEffect(() => {
+  //   socket.on("recordingStopped", ({session}) => {
+  //     handleClose();
+  //    })
+  // }, []);
+
   return (
     <>
       <Dialog
@@ -45,26 +53,29 @@ const StopSessionRecording = ({open, handleClose}) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-
-        <button
+          <button
             className="btn btn-outline-dark btn-outline-text me-3"
-            onClick={handleClose}
+            onClick={() =>{
+              setState(true);
+              handleClose();
+            }}
           >
             Cancel
           </button>
           <button
             className="btn btn-outline-text btn-primary"
             onClick={() => {
-             
-             dispatch(stopSessionRecording(sessionId, handleClose))
-             
+              socket.emit("stopCloudRecording", { sessionId }, (error) => {
+                alert(error);
+              });
+              handleClose();
+              //  dispatch(stopSessionRecording(sessionId, handleClose))
             }}
           >
             Proceed
-          </button> 
+          </button>
         </DialogActions>
       </Dialog>
-      
     </>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Emoji, Picker } from "emoji-mart";
 import styled from "styled-components";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // Settings rounded Icon
@@ -125,6 +125,14 @@ const StageControlsComponent = ({
 }) => {
   // {/* // ! Caution don't show stage controls if session has ended */}
 
+  const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
+  const { userDetails } = useSelector((state) => state.user);
+  const { sessionDetails } = useSelector((state) => state.session);
+
+  const [state, setState] = React.useState(
+    sessionDetails ? sessionDetails.recording : false
+  );
+
   let myHandIsRaised = false;
 
   const [openManageStage, setOpenManageStage] = useState(false);
@@ -136,6 +144,12 @@ const StageControlsComponent = ({
   const [openCreatePoll, setOpenCreatePoll] = React.useState(false);
 
   const [emojiMartVisbility, setEmojiMartVisibility] = useState("none");
+
+  useEffect(() => {
+    socket.on("invitedToStage", () => {
+      setEmojiMartVisibility("none");
+    });
+  }, []);
 
   const toggleEmojiMart = () => {
     if (emojiMartVisbility === "none") {
@@ -160,11 +174,9 @@ const StageControlsComponent = ({
 
   const handleCloseStopRecording = () => {
     setStopRecording(false);
-    setState(true);
   };
 
   const handleCloseStartRecording = () => {
-    setState(false);
     setStartRecording(false);
   };
 
@@ -179,11 +191,8 @@ const StageControlsComponent = ({
   const sessionId = params.sessionId;
   const eventId = params.eventId;
 
-  const [state, setState] = React.useState(false);
-
   const handleChange = (event) => {
     setState(event.target.checked);
-
     if (event.target.checked) {
       setStartRecording(true);
     } else {
@@ -192,10 +201,6 @@ const StageControlsComponent = ({
   };
 
   // Determine if the current user is a host and place restrictions based on that
-
-  const { role, sessionRole } = useSelector((state) => state.eventAccessToken);
-  const { userDetails } = useSelector((state) => state.user);
-  const { sessionDetails } = useSelector((state) => state.session);
 
   const userId = userDetails._id;
 
@@ -250,7 +255,14 @@ const StageControlsComponent = ({
 
         {!sessionHasEnded ? (
           <div>
-            <div style={{ position: "fixed", left: "48vw", bottom: "60px" }}>
+            <div
+              style={{
+                position: "fixed",
+                left: "48vw",
+                bottom: "60px",
+                zIndex: "100000000",
+              }}
+            >
               <Picker
                 onSelect={(emoji) => {
                   onEmojiSelect(emoji);
@@ -264,6 +276,7 @@ const StageControlsComponent = ({
                 showPreview={false}
                 set="apple"
                 style={{
+                  zIndex: "1000000",
                   display: emojiMartVisbility,
                 }}
               />
@@ -298,21 +311,17 @@ const StageControlsComponent = ({
                   switch (runningStatus) {
                     case "In Progress":
                       return (
-                        <IconButton style={{ padding: "8px" }} className="me-3">
-                          <Emoji
-                            emoji={{ id: "+1", skin: 3 }}
-                            size={24}
-                            onClick={(emoji) => {
-                              onThumbsUp(emoji);
-                              socket.emit(
-                                "thumbsUp",
-                                { sessionId },
-                                (error) => {
-                                  alert(error);
-                                }
-                              );
-                            }}
-                          />
+                        <IconButton
+                          onClick={(emoji) => {
+                            onThumbsUp(emoji);
+                            socket.emit("thumbsUp", { sessionId }, (error) => {
+                              alert(error);
+                            });
+                          }}
+                          style={{ padding: "8px" }}
+                          className="me-3"
+                        >
+                          <Emoji emoji={{ id: "+1", skin: 3 }} size={24} />
                         </IconButton>
                       );
 
@@ -350,17 +359,17 @@ const StageControlsComponent = ({
                   switch (runningStatus) {
                     case "In Progress":
                       return (
-                        <IconButton style={{ padding: "8px" }} className="me-3">
-                          <Emoji
-                            emoji={{ id: "clap", skin: 3 }}
-                            size={24}
-                            onClick={(emoji) => {
-                              onClap(emoji);
-                              socket.emit("clap", { sessionId }, (error) => {
-                                alert(error);
-                              });
-                            }}
-                          />
+                        <IconButton
+                          onClick={(emoji) => {
+                            onClap(emoji);
+                            socket.emit("clap", { sessionId }, (error) => {
+                              alert(error);
+                            });
+                          }}
+                          style={{ padding: "8px" }}
+                          className="me-3"
+                        >
+                          <Emoji emoji={{ id: "clap", skin: 3 }} size={24} />
                         </IconButton>
                       );
 
@@ -421,19 +430,16 @@ const StageControlsComponent = ({
                       return (
                         <>
                           <IconButton
+                            onClick={(emoji) => {
+                              onSmile(emoji);
+                              socket.emit("smile", { sessionId }, (error) => {
+                                alert(error);
+                              });
+                            }}
                             style={{ padding: "8px" }}
                             className="me-3"
                           >
-                            <Emoji
-                              emoji={{ id: "smile", skin: 3 }}
-                              size={24}
-                              onClick={(emoji) => {
-                                onSmile(emoji);
-                                socket.emit("smile", { sessionId }, (error) => {
-                                  alert(error);
-                                });
-                              }}
-                            />
+                            <Emoji emoji={{ id: "smile", skin: 3 }} size={24} />
                           </IconButton>
                           <IconButton
                             onClick={() => {
@@ -514,7 +520,7 @@ const StageControlsComponent = ({
                       <FormControlLabel
                         control={
                           <IOSSwitch
-                            checked={state.checkedB}
+                            checked={state}
                             onChange={handleChange}
                             name="checkedB"
                           />
@@ -575,10 +581,12 @@ const StageControlsComponent = ({
       <Settings open={openSettings} handleClose={handleCloseSettings} />
 
       <StartRecordingConfirmation
+        setState={setState}
         open={startRecording}
         handleClose={handleCloseStartRecording}
       />
       <StopRecordingConfirmation
+        setState={setState}
         open={stopRecording}
         handleClose={handleCloseStopRecording}
       />

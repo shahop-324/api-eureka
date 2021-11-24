@@ -176,11 +176,11 @@ const UserAccountHome = () => {
         break;
       }
       case 2: {
-        history.push("/user/connections");
+        history.push("/user/profile");
         break;
       }
       case 3: {
-        history.push("/user/profile");
+        history.push("/user/following");
         break;
       }
       case 4: {
@@ -331,17 +331,18 @@ const UserAccountHome = () => {
                 switch (currentIndex) {
                   case 0:
                     return <UserAccountHomeMainBody />;
+                    
                   case 1:
                     return <UserAccountEventsMainBody />;
 
                   case 2:
-                    return <UserAccountConnections />;
-
-                  case 3:
                     return <UserAccountProfileMainBody />;
 
-                  case 4:
+                  case 3:
                     return <Following />;
+
+                  case 4:
+                    return <UserAccountConnections />;
 
                   default:
                     return <div>You are a User.</div>;

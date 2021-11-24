@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
+import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
 import "./../../../index.css";
 import Select from "react-select";
@@ -72,6 +73,20 @@ const validate = (values) => {
   return errors;
 };
 
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -82,36 +97,40 @@ const renderError = ({ error, touched }) => {
   }
 };
 const renderInput = ({
+  disabled,
   input,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
-      <Input
+      <input
+        disabled={disabled}
         type={type}
         {...input}
         aria-describedby={ariadescribedby}
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
 const renderTextArea = ({
   input,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
@@ -123,7 +142,9 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-      {renderError(meta)}
+      {touched &&
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   );
 };
@@ -172,8 +193,8 @@ const renderEventPreferences = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -353,6 +374,7 @@ let EditProfileForm = (props) => {
             <div className="form-group">
               <FormLabel for="communityHeadline">E-mail</FormLabel>
               <Field
+                disabled={true}
                 name="email"
                 type="email"
                 classes="form-control"

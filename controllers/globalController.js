@@ -1163,7 +1163,7 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
               bucket: "bluemeet-inc",
               secretKey: "IBL4uBLaHv7RDyZo6c1gNTKqttwGrybHCll/wtBF",
               vendor: 1,
-              fileNamePrefix: ["directory1", "directory2"],
+              fileNamePrefix: ["cloudrecording", "session"],
             },
           },
         }),
@@ -1193,11 +1193,6 @@ exports.acquireRecordingResource = catchAsync(async (req, res, next) => {
       resourceId: startResult.resourceId,
       sid: startResult.sid,
     });
-
-    // res.status(200).json({
-    //   status: "success",
-    //   data: startResult,
-    // });
 
     next();
   } catch (error) {
@@ -1245,6 +1240,8 @@ exports.getRecordingStatus = catchAsync(async (req, res, next) => {
   } else {
     const result = await response.json();
 
+    console.log(result, "This is the result of querying recording status.")
+
     res.status(200).json({
       status: "success",
       data: result,
@@ -1278,7 +1275,7 @@ exports.stopCloudRecording = catchAsync(async (req, res, next) => {
         cname: sessionId,
         uid: "527841",
         clientRequest: {
-          async_stop: false,
+          async_stop: true,
         },
       }),
 
@@ -1299,6 +1296,8 @@ exports.stopCloudRecording = catchAsync(async (req, res, next) => {
     throw new Error("Something went wrong");
   } else {
     const result = await response.json();
+
+    console.log(result, "This is the result of stopping cloud recording.");
 
     res.status(200).json({
       status: "success",

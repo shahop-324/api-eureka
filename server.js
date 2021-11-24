@@ -20,7 +20,17 @@ const BoothChair = require("./models/boothChairModel");
 const Booth = require("./models/boothModel");
 const Speaker = require("./models/speakerModel");
 const NetworkingRoom = require("./models/networkingRoomModel");
+const Recording = require("./models/recordingModel");
 const { nanoid } = require("nanoid");
+
+var btoa = require("btoa");
+
+const {
+  RtcTokenBuilder,
+  RtmTokenBuilder,
+  RtcRole,
+  RtmRole,
+} = require("agora-access-token");
 
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -92,6 +102,275 @@ const {
   getSessionsInRoom,
 } = lobbyController;
 io.on("connect", (socket) => {
+  socket.on("startCloudRecording", async ({ sessionId }, callback) => {
+    const channelName = sessionId;
+    const isPublisher = false;
+    const appID = "702d57c3092c4fd389eb7ea5a505d471";
+    const appCertificate = "d8311f38cf434445805478cb8c93a334";
+    const role = isPublisher ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+
+    const expirationTimeInSeconds = 3600;
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    // Build token with uid
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      appID,
+      appCertificate,
+      channelName,
+      "52787172",
+      role,
+      privilegeExpiredTs
+    );
+
+    console.log("Channel name", channelName, process.env.AGORA_APP_ID);
+
+    const customerKey = process.env.AGORA_CUSTOMER_KEY;
+    // Customer secret
+    const customerSecret = process.env.AGORA_CUSTOMER_SECRET;
+
+    // Concatenate customer key and customer secret and use base64 to encode the concatenated string
+    const plainCredential = customerKey + ":" + customerSecret;
+
+    // Encode with base64
+    encodedCredential = btoa(plainCredential);
+
+    try {
+      const response = await fetch(
+        `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/acquire`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            cname: channelName,
+            uid: "52787172",
+            clientRequest: {},
+          }),
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${encodedCredential}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        res.status(400).json({
+          status: "error",
+          message: "Failed to acquire recording resource.",
+        });
+
+        throw new Error("Something went wrong");
+      }
+
+      const result = await response.json();
+
+      const startResponse = await fetch(
+        `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${result.resourceId}/mode/mix/start`,
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            uid: "52787172",
+            cname: channelName,
+            clientRequest: {
+              token: token,
+              recordingConfig: {
+                maxIdleTime: 21600,
+                streamTypes: 2,
+                channelType: 0,
+                videoStreamType: 0,
+                transcodingConfig: {
+                  height: 640,
+                  width: 360,
+                  bitrate: 500,
+                  fps: 15,
+                  mixedVideoLayout: 0,
+                  backgroundColor: "#212121",
+                },
+              },
+              recordingFileConfig: {
+                avFileType: ["hls", "mp4"],
+              },
+              storageConfig: {
+                accessKey: "AKIA4IKLDA4ABVU7DUJJ",
+                region: 2,
+                bucket: "bluemeet-inc",
+                secretKey: "IBL4uBLaHv7RDyZo6c1gNTKqttwGrybHCll/wtBF",
+                vendor: 1,
+                fileNamePrefix: ["cloudrecording", "session"],
+              },
+            },
+          }),
+
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            Authorization: `Basic ${encodedCredential}`,
+          },
+        }
+      );
+
+      if (!startResponse.ok) {
+        // res.status(400).json({
+        //   status: "error",
+        //   message: "Failed to start recording.",
+        //   res: startResponse,
+        // });
+
+        throw new Error("Something went wrong");
+      }
+
+      const startResult = await startResponse.json();
+
+      console.log(startResult);
+
+      await Session.findByIdAndUpdate(channelName, {
+        resourceId: startResult.resourceId,
+        sid: startResult.sid,
+      });
+
+      const sessionDoc = await Session.findById(sessionId);
+      const resourceId = sessionDoc.resourceId;
+      const sid = sessionDoc.sid;
+
+      const queryresponse = await fetch(
+        `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/query`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${encodedCredential}`,
+          },
+        }
+      );
+
+      if (!queryresponse.ok) {
+        // res.status(400).json({
+        //   status: "error",
+        //   message: "Failed to fetch recording status.",
+        //   res: queryresponse,
+        // });
+
+        throw new Error("Something went wrong");
+      } else {
+        const result = await queryresponse.json();
+
+        console.log(result, "This is the result of querying recording status.");
+
+        //  ! emeit message to everyone in session that recording has been started
+
+        await Session.findByIdAndUpdate(
+          sessionId,
+          { recording: true },
+          { new: true, validateModifiedOnly: true }
+        );
+
+        const updatedSession = await Session.findById(sessionId)
+          .populate("host")
+          .populate("speaker")
+          .populate("people");
+
+        io.in(sessionId).emit("recordingStarted", {
+          session: updatedSession,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("stopCloudRecording", async ({ sessionId }, callback) => {
+    const sessionDoc = await Session.findById(sessionId);
+    const resourceId = sessionDoc.resourceId;
+    const sid = sessionDoc.sid;
+
+    const customerKey = process.env.AGORA_CUSTOMER_KEY;
+    // Customer secret
+    const customerSecret = process.env.AGORA_CUSTOMER_SECRET;
+
+    // Concatenate customer key and customer secret and use base64 to encode the concatenated string
+    const plainCredential = customerKey + ":" + customerSecret;
+
+    // Encode with base64
+    encodedCredential = btoa(plainCredential);
+
+    const response = await fetch(
+      `https://api.agora.io/v1/apps/${process.env.AGORA_APP_ID}/cloud_recording/resourceid/${resourceId}/sid/${sid}/mode/mix/stop`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          cname: sessionId,
+          uid: "52787172",
+          clientRequest: {
+            async_stop: true,
+          },
+        }),
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${encodedCredential}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      res.status(400).json({
+        status: "error",
+        message: "Failed to stop recording.",
+        res: response,
+      });
+
+      throw new Error("Something went wrong");
+    } else {
+      const result = await response.json();
+
+      console.log(result, "This is the result of stopping cloud recording.");
+
+      // Here save recorded file in recording array of this event
+
+      console.log(
+        `${result.serverResponse.fileList[0].fileName.replace(
+          /.m3u8/g,
+          "_0.mp4"
+        )}`
+      );
+
+      const sessionDoc = await Session.findByIdAndUpdate(
+        sessionId,
+        { recording: false },
+        { new: true, validateModifiedOnly: true }
+      );
+
+      await Recording.create({
+        eventId: sessionDoc.eventId,
+        sessionId: sessionId,
+        sessionName: sessionDoc.name,
+        url: `${result.serverResponse.fileList[0].fileName.replace(
+          /.m3u8/g,
+          "_0.mp4"
+        )}`,
+        timestamp: Date.now(),
+      });
+
+      const updatedSession = await Session.findById(sessionId)
+        .populate("host")
+        .populate("speaker")
+        .populate("people");
+
+      // ! emit message to everyone that recording has been stopped
+
+      // recordingStopped
+
+      io.in(sessionId).emit("recordingStopped", {
+        session: updatedSession,
+      });
+    }
+  });
+
   socket.on("raiseHand", async ({ userId, sessionId }, callback) => {
     // Find user doc and add to sessions raised hands queue
 
@@ -2275,59 +2554,173 @@ io.on("connect", (socket) => {
     }
   );
 
-  socket.on(
-    "playVideoFromURL",
-    async ({ sessionId, eventId, videoURL }, callback) => {
-      // Send this Link to everyone in this session with its title and description and save it to list of external videos played in this session
+  socket.on("playVideo", async ({ sessionId, url }, callback) => {
+    // Update session video property and send to everyone in this session
 
-      // Find session doc and update videoLink
+    const updatedSession = await Session.findByIdAndUpdate(
+      sessionId,
+      { video: url },
+      { new: true, validateModifiedOnly: true }
+    )
+      .populate("host")
+      .populate("speaker")
+      .populate("people");
 
-      const sessionDoc = await Session.findById(sessionId);
+    io.in(sessionId).emit("startVideo", {
+      updatedSession: updatedSession,
+    });
 
-      sessionDoc.videoLink = videoURL;
+    const eventId = updatedSession.eventId;
 
-      const updatedSession = await sessionDoc.save({
-        new: true,
-        validateModifiedOnly: true,
-      });
+    const registrations = await Registration.find({
+      bookedForEventId: mongoose.Types.ObjectId(eventId),
+    });
 
-      io.in(sessionId).emit("updatedSession", {
-        updatedSession: updatedSession,
-      });
+    let people = []; // Collection of {userId, socketId, camera, mic, screen}
+    let uniquePeople = [];
 
-      // send this updated session doc to everyone in this session
+    for (let element of updatedSession.onStagePeople) {
+      for (let item of registrations) {
+        console.log(element.user, item);
+        if (item.bookedByUser) {
+          if (element.user.toString() === item.bookedByUser.toString()) {
+            if (!uniquePeople.includes(element.user)) {
+              // Find socketId
+              const { socketId } = await UsersInEvent.findOne({
+                $and: [
+                  { room: mongoose.Types.ObjectId(eventId) },
+                  { userId: mongoose.Types.ObjectId(item.bookedByUser) },
+                ],
+              }).select("socketId");
 
-      io.in(sessionId).emit("playVideoFromURL", {
-        videoURL: videoURL,
-      });
+              people.push({
+                userId: item.bookedByUser,
+                socketId: socketId,
+                camera: element.camera,
+                mic: element.microphone,
+                screen: element.screen,
+              });
+
+              uniquePeople.push(element.user);
+            }
+          }
+        }
+      }
     }
-  );
 
-  socket.on(
-    "stopPlayVideoFromURL",
-    async ({ sessionId, eventId }, callback) => {
-      // Remove video in playUploadedVideoOnStage in this session and send it back to everyone in this session
+    // 5.) Find everyone who is currently on stage with thier current camera, mic, screen, socket and userId (collection of objects)
+    // * Now here we have required persons in people array
 
-      // Find session doc and update videoLink
+    // 6.) Tell everyone currently on stage to set => userHasUnmutedVideo.current = false; and userHasUnmutedAudio.current = false;
 
-      const sessionDoc = await Session.findById(sessionId);
+    console.log(people);
 
-      sessionDoc.videoLink = null;
+    let filteredPeople = [];
 
-      const updatedSession = await sessionDoc.save({
-        new: true,
-        validateModifiedOnly: true,
-      });
+    let uniqueSocketIds = [];
 
-      io.in(sessionId).emit("updatedSession", {
-        updatedSession: updatedSession,
-      });
-
-      // send this updated session doc to everyone in this session
-
-      io.in(sessionId).emit("stopPlayVideoFromURL");
+    for (let item of people) {
+      if (!uniqueSocketIds.includes(item.socketId)) {
+        filteredPeople.push(item);
+        uniqueSocketIds.push(item.socketId);
+      }
     }
-  );
+
+    for (let element of filteredPeople) {
+      io.to(element.socketId).emit("resetAudioAndVideoControls");
+    }
+
+    // 7.) Everyone with their camera currently on should call unMuteMyVideo();
+    for (let person of filteredPeople) {
+      if (person.camera) {
+        io.to(person.socketId).emit("unMuteYourVideo");
+      }
+    }
+  });
+
+  socket.on("stopVideo", async ({ sessionId }, callback) => {
+    // Set session video property to null and send it to everyone in this session
+
+    const updatedSession = await Session.findByIdAndUpdate(
+      sessionId,
+      { video: null },
+      { new: true, validateModifiedOnly: true }
+    )
+      .populate("host")
+      .populate("speaker")
+      .populate("people");
+
+    io.in(sessionId).emit("stopVideo", {
+      updatedSession: updatedSession,
+    });
+
+    const eventId = updatedSession.eventId;
+
+    const registrations = await Registration.find({
+      bookedForEventId: mongoose.Types.ObjectId(eventId),
+    });
+
+    let people = []; // Collection of {userId, socketId, camera, mic, screen}
+    let uniquePeople = [];
+
+    for (let element of updatedSession.onStagePeople) {
+      for (let item of registrations) {
+        console.log(element.user, item);
+        if (item.bookedByUser) {
+          if (element.user.toString() === item.bookedByUser.toString()) {
+            if (!uniquePeople.includes(element.user)) {
+              // Find socketId
+              const { socketId } = await UsersInEvent.findOne({
+                $and: [
+                  { room: mongoose.Types.ObjectId(eventId) },
+                  { userId: mongoose.Types.ObjectId(item.bookedByUser) },
+                ],
+              }).select("socketId");
+
+              people.push({
+                userId: item.bookedByUser,
+                socketId: socketId,
+                camera: element.camera,
+                mic: element.microphone,
+                screen: element.screen,
+              });
+
+              uniquePeople.push(element.user);
+            }
+          }
+        }
+      }
+    }
+
+    // 5.) Find everyone who is currently on stage with thier current camera, mic, screen, socket and userId (collection of objects)
+    // * Now here we have required persons in people array
+
+    // 6.) Tell everyone currently on stage to set => userHasUnmutedVideo.current = false; and userHasUnmutedAudio.current = false;
+
+    console.log(people);
+
+    let filteredPeople = [];
+
+    let uniqueSocketIds = [];
+
+    for (let item of people) {
+      if (!uniqueSocketIds.includes(item.socketId)) {
+        filteredPeople.push(item);
+        uniqueSocketIds.push(item.socketId);
+      }
+    }
+
+    for (let element of filteredPeople) {
+      io.to(element.socketId).emit("resetAudioAndVideoControls");
+    }
+
+    // 7.) Everyone with their camera currently on should call unMuteMyVideo();
+    for (let person of filteredPeople) {
+      if (person.camera) {
+        io.to(person.socketId).emit("unMuteYourVideo");
+      }
+    }
+  });
 
   socket.on("startSession", async ({ sessionId }, callback) => {
     // Send start notification to everyone in this session and start 10 sec countdown

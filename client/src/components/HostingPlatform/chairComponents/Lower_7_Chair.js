@@ -4,7 +4,10 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { getRTCTokenForJoiningTable, editCurrentlyJoinedChair } from "../../../actions";
+import {
+  getRTCTokenForJoiningTable,
+  editCurrentlyJoinedChair,
+} from "../../../actions";
 
 const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -33,9 +36,11 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName7 = chair.userName;
-    userImage7 = chair.userImage.startsWith("https://")
-      ? chair.userImage
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+    userImage7 = chair.userImage
+      ? chair.userImage.startsWith("https://")
+        ? chair.userImage
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
+      : "";
     userCity7 = chair.userCity;
     userCountry7 = chair.userCountry;
     userOrganisation7 = chair.userOrganisation;
@@ -60,10 +65,8 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
   const userImage = userDetails.image && userDetails.image;
   const userCity = userDetails.city && userDetails.city;
   const userCountry = userDetails.country && userDetails.country;
-  const userOrganisation = userDetails.organisation
-    && userDetails.organisation;
-  const userDesignation = userDetails.designation
-    && userDetails.designation;
+  const userOrganisation = userDetails.organisation && userDetails.organisation;
+  const userDesignation = userDetails.designation && userDetails.designation;
 
   const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
@@ -101,10 +104,9 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
         //   "There has been a problem with your fetch operation."
       });
     } else {
-      if(document.getElementById(`${id}_chair_7_img_blob`)) {
+      if (document.getElementById(`${id}_chair_7_img_blob`)) {
         document.getElementById(`${id}_chair_7_img_blob`).remove();
       }
-      
     }
   }, [userImage7, id, userImage]);
 
@@ -117,10 +119,7 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
           // if(chairIsOccupied) return;
           // console.log(`${id}_chair_7`);
 
-          dispatch(
-            editCurrentlyJoinedChair(
-              `${id}_chair_7`)
-          );
+          dispatch(editCurrentlyJoinedChair(`${id}_chair_7`));
 
           socket.emit(
             "updateChair",
@@ -149,7 +148,11 @@ const LOWER_7_CHAIR = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className={`lower-chair chair pt-2 ${chairIsOccupied ? " " : "lower-chair-hover"}`}>
+        <div
+          className={`lower-chair chair pt-2 ${
+            chairIsOccupied ? " " : "lower-chair-hover"
+          }`}
+        >
           <div style={{ transform: "translateY(0)" }}>
             <Popup
               trigger={

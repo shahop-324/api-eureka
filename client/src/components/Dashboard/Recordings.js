@@ -98,7 +98,7 @@ const renderRecordings = (recordings) => {
   return recordings.map((recording) => {
     return (
       <RecordingDetailsCard
-        sessionName={recording.session}
+        sessionName={recording.sessionName}
         duration={recording.duration}
         key={recording._id}
         id={recording._id}

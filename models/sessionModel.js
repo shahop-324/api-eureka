@@ -179,6 +179,13 @@ const sessionSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    recording: {
+      type: Boolean,
+      default: false,
+    },
+    video: {
+      type: String,
+    },
   },
   {
     versionKey: false,

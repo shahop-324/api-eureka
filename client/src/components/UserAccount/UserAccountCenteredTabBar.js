@@ -39,10 +39,10 @@ export default function CenteredTabs(props) {
           label="Events"
           style={{ fontWeight: "500", textTransform: "capitalize" }}
         />
-        <Tab
+        {/* <Tab
           label="Connections"
           style={{ fontWeight: "500", textTransform: "capitalize" }}
-        />
+        /> */}
         <Tab
           label="Profile"
           style={{ fontWeight: "500", textTransform: "capitalize" }}

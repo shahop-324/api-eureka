@@ -1,15 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import socket from "./../HostingPlatform/service/socket";
 import { Avatar } from "@material-ui/core";
 import PersonProfile from "./../HostingPlatform/PersonProfile";
 import { Dropdown } from "semantic-ui-react";
-import { fetchEventVideos } from "./../../actions";
+import {
+  fetchEventVideos,
+  showSnackbar,
+  setVenueRightDrawerSelectedTab,
+  setChatSelectedTab,
+  setPersonalChatConfig,
+  setOpenVenueRightDrawer,
+} from "./../../actions";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded"; // Resume
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import Popover from "@mui/material/Popover";
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import Typography from "@mui/material/Typography";
+
+import StopCircleRoundedIcon from "@mui/icons-material/StopCircleRounded"; // Stop video
 
 import {
   SessionLinkNav,
@@ -81,11 +95,146 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  medium: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
   large: {
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
 }));
+
+const PopOverBox = styled.div`
+  height: auto;
+  width: 280px;
+  border-radius: 15px;
+  background-color: #ffffff;
+`;
+
+const ChatPopup = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 3px;
+  height: 56px;
+  width: 56px;
+  background-color: #ffffff;
+  z-index: 10000;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PeopleGridComponent = ({ person }) => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const [openProfile, setOpenProfile] = useState(false);
+
+  const handleCloseProfile = () => {
+    setOpenProfile(false);
+  }
+
+  return (
+    <>
+      <div>
+        {open && (
+          <ChatPopup
+            onClick={() => {
+              // dispatch(setVenueRightDrawerSelectedTab("feed"));
+              // dispatch(setChatSelectedTab("private"));
+              // dispatch(setPersonalChatConfig(person._id));
+              // dispatch(setOpenVenueRightDrawer(true));
+              setOpenProfile(true);
+            }}
+            aria-owns={open ? "mouse-over-popover" : undefined}
+            aria-haspopup="true"
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <PersonRoundedIcon />
+          </ChatPopup>
+        )}
+
+        <Avatar
+          aria-owns={open ? "mouse-over-popover" : undefined}
+          aria-haspopup="true"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+          src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+          alt={`${person.firstName} ${person.lastName}`}
+          variant="rounded"
+          className={classes.large}
+        />
+      </div>
+
+      {/*  */}
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: "none",
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <PopOverBox className="px-3 py-2">
+          <div className="d-flex flex-row align-items-top mb-3">
+            <Avatar
+              className={classes.medium}
+              variant="rounded"
+              src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
+            />
+            <div className="ms-3">
+              <PersonName className="mb-2">{`${person.firstName} ${person.lastName}`}</PersonName>
+              <PersonName
+                style={{ color: "#6D6D6D" }}
+              >{`${person.designation} ${person.organisation}`}</PersonName>
+            </div>
+          </div>
+        </PopOverBox>
+      </Popover>
+      <PersonProfile
+      hideBtns={true}
+          open={openProfile}
+          userId={person._id}
+          handleClose={handleCloseProfile}
+          userImage={person.image}
+          userName={`${person.firstName} ${person.lastName}`}
+          userOrganisation={person.organisation}
+          userDesignation={person.designation}
+        />
+    </>
+  );
+};
 
 const PeopleListComponent = ({ person }) => {
   const [open, setOpen] = useState(false);
@@ -131,6 +280,7 @@ const PeopleListComponent = ({ person }) => {
           </ViewCompleteProfileBtn>
         </PeopleListWidget>
         <PersonProfile
+         hideBtns={true}
           open={open}
           userId={person._id}
           handleClose={handleClose}
@@ -144,28 +294,11 @@ const PeopleListComponent = ({ person }) => {
   );
 };
 
-const renderPeopleGrid = (people, classes) => {
-  return people.map((person) => {
-    return (
-      <Avatar
-        src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`}
-        alt={`${person.firstName} ${person.lastName}`}
-        variant="rounded"
-        className={classes.large}
-      />
-    );
-  });
-};
+const VideoListComponent = ({ video, eventId, sessionId, sessionDetails }) => {
+  const dispatch = useDispatch();
 
-const renderPeopleList = (people) => {
-  return people.map((person) => {
-    return <PeopleListComponent person={person} />;
-  });
-};
-
-const renderVideos = (videos, eventId, sessionId) => {
-  return videos.map((video) => {
-    return (
+  return (
+    <>
       <SessionVideoContainer className="mb-3">
         <video
           src={`https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}`}
@@ -180,11 +313,83 @@ const renderVideos = (videos, eventId, sessionId) => {
           alt="video cover"
         ></video>
 
-        <BtnOutlined>
-          <PlayArrowRoundedIcon className="me-2" style={{ fontSize: "20px" }} />
-          Play on stage
-        </BtnOutlined>
+        {sessionDetails.video ===
+        `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}` ? (
+          <BtnOutlined
+            style={{ color: "#D63D3D", border: "1px solid #D63D3D" }}
+            onClick={() => {
+              socket.emit(
+                "stopVideo",
+                {
+                  sessionId: sessionId,
+                },
+                (error) => {
+                  alert(error);
+                }
+              );
+            }}
+          >
+            <StopCircleRoundedIcon
+              className="me-2"
+              style={{ fontSize: "20px", color: "#D63D3D" }}
+            />
+            Stop playing
+          </BtnOutlined>
+        ) : (
+          <BtnOutlined
+            onClick={() => {
+              if (sessionDetails.video) {
+                // Show snackbar to stop previous video
+                dispatch(
+                  showSnackbar("info", "Please stop previous video to play.")
+                );
+              } else {
+                socket.emit(
+                  "playVideo",
+                  {
+                    url: `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${video.key}`,
+                    sessionId: sessionId,
+                  },
+                  (error) => {
+                    alert(error);
+                  }
+                );
+              }
+            }}
+          >
+            <PlayArrowRoundedIcon
+              className="me-2"
+              style={{ fontSize: "20px" }}
+            />
+            Play on stage
+          </BtnOutlined>
+        )}
       </SessionVideoContainer>
+    </>
+  );
+};
+
+const renderPeopleGrid = (people, classes) => {
+  return people.map((person) => {
+    return <PeopleGridComponent person={person} />;
+  });
+};
+
+const renderPeopleList = (people) => {
+  return people.map((person) => {
+    return <PeopleListComponent person={person} />;
+  });
+};
+
+const renderVideos = (videos, eventId, sessionId, sessionDetails) => {
+  return videos.map((video) => {
+    return (
+      <VideoListComponent
+        video={video}
+        eventId={eventId}
+        sessionId={sessionId}
+        sessionDetails={sessionDetails}
+      />
     );
   });
 };
@@ -604,7 +809,7 @@ const StageSideDrawerComponent = ({ runningStatus }) => {
             case "videos":
               return (
                 <div style={{ height: "73vh", overflow: "auto" }}>
-                  {renderVideos(videos, eventId, sessionId)}
+                  {renderVideos(videos, eventId, sessionId, sessionDetails)}
                 </div>
               );
 

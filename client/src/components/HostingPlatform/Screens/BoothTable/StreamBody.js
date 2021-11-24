@@ -33,12 +33,6 @@ const StreamBody = ({ screenTracks, galleryViewInput }) => {
   let screenColumns = "1fr";
 
   switch (processedScreenTracks.length * 1) {
-    case 0:
-      screenRows = "1fr";
-      screenColumns = "1fr";
-
-      break;
-
     case 1:
       screenRows = "1fr";
       screenColumns = "1fr";
@@ -48,13 +42,36 @@ const StreamBody = ({ screenTracks, galleryViewInput }) => {
     case 2:
       screenRows = "1fr";
       screenColumns = "1fr 1fr";
-
       break;
 
     case 3:
+      screenRows = "1fr";
+      screenColumns = "1fr 1fr 1fr";
+      break;
+
+    case 4:
       screenRows = "1fr 1fr";
       screenColumns = "1fr 1fr";
+      break;
 
+    case 5:
+      screenRows = "1fr 1fr";
+      screenColumns = "1fr 1fr 1fr";
+      break;
+
+    case 7:
+      screenRows = "1fr 1fr";
+      screenColumns = "1fr 1fr 1fr 1fr";
+
+      break;
+    case 9:
+      screenRows = "1fr 1fr 1fr";
+      screenColumns = "1fr 1fr 1fr 1fr";
+      break;
+
+    case 13:
+      screenRows = "1fr 1fr 1fr 1fr";
+      screenColumns = "1fr 1fr 1fr 1fr";
       break;
 
     default:
@@ -70,6 +87,36 @@ const StreamBody = ({ screenTracks, galleryViewInput }) => {
     case 2:
       rows = "1fr";
       columns = "1fr 1fr";
+      break;
+
+    case 3:
+      rows = "1fr";
+      columns = "1fr 1fr 1fr";
+      break;
+
+    case 4:
+      rows = "1fr 1fr";
+      columns = "1fr 1fr";
+      break;
+
+    case 5:
+      rows = "1fr 1fr";
+      columns = "1fr 1fr 1fr";
+      break;
+
+    case 7:
+      rows = "1fr 1fr";
+      columns = "1fr 1fr 1fr 1fr";
+      break;
+
+    case 9:
+      rows = "1fr 1fr 1fr";
+      columns = "1fr 1fr 1fr 1fr";
+      break;
+
+    case 13:
+      rows = "1fr 1fr 1fr 1fr";
+      columns = "1fr 1fr 1fr 1fr";
       break;
 
     default:

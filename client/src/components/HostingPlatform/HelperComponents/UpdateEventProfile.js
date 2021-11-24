@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import "./../Styles/UpdateEventProfile.scss";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
@@ -43,6 +44,20 @@ const options = [
   { value: "Web Security", label: "Web Security" },
 ];
 
+const FormError = styled.div`
+  font-family: "Ubuntu";
+  color: red;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
+const FormWarning = styled.div`
+  font-family: "Ubuntu";
+  color: orange;
+  font-weight: 400;
+  font-size: 0.8rem;
+`;
+
 const renderError = ({ error, touched }) => {
   if (touched && error) {
     return (
@@ -55,13 +70,13 @@ const renderError = ({ error, touched }) => {
 
 const renderInput = ({
   input,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <input
@@ -71,19 +86,21 @@ const renderInput = ({
         className={classes}
         placeholder={placeholder}
       />
-      {renderError(meta)}
+      {touched &&
+        ((error && <FormError className="my-1">{error}</FormError>) ||
+          (warning && <FormWarning className="my-1">{warning}</FormWarning>))}
     </div>
   );
 };
 const renderTextArea = ({
   input,
-  meta,
+  meta: { touched, error, warning },
   type,
   ariadescribedby,
   classes,
   placeholder,
 }) => {
-  const className = `field ${meta.error && meta.touched ? "error" : ""}`;
+  const className = `field ${error && touched ? "error" : ""}`;
   return (
     <div className={className}>
       <textarea
@@ -95,7 +112,9 @@ const renderTextArea = ({
         placeholder={placeholder}
       />
 
-      {renderError(meta)}
+      {touched &&
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   );
 };
@@ -118,8 +137,8 @@ const renderEventPreferences = ({
         onBlur={() => input.onBlur()}
       />
       {touched &&
-        ((error && <span>{error}</span>) ||
-          (warning && <span>{warning}</span>))}
+        ((error && <FormError>{error}</FormError>) ||
+          (warning && <FormWarning>{warning}</FormWarning>))}
     </div>
   </div>
 );
@@ -652,27 +671,37 @@ const UpdateEventProfile = ({
                             {userDetails.firstName + " " + userDetails.lastName}
                           </div>
 
-                          <div
-                            style={{
-                              fontWeight: "500",
-                              color: "#3B3B3B",
-                              fontSize: "0.8rem",
-                            }}
-                            className="mb-2"
-                          >
-                            {userDetails.designation},{" "}
-                            {userDetails.organisation}
-                          </div>
-                          <div
-                            style={{
-                              fontWeight: "500",
-                              color: "#3B3B3B",
-                              fontSize: "0.8rem",
-                            }}
-                            className="mb-3"
-                          >
-                            {userDetails.city}, {userDetails.country}
-                          </div>
+                          {userDetails.designation &&
+                          userDetails.organisation ? (
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                color: "#3B3B3B",
+                                fontSize: "0.8rem",
+                              }}
+                              className="mb-2"
+                            >
+                              {userDetails.designation}{" "}
+                              {userDetails.organisation}
+                            </div>
+                          ) : (
+                            <div className=""></div>
+                          )}
+
+                          {userDetails.city && userDetails.country ? (
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                color: "#3B3B3B",
+                                fontSize: "0.8rem",
+                              }}
+                              className="mb-3"
+                            >
+                              {userDetails.city}, {userDetails.country}
+                            </div>
+                          ) : (
+                            <div></div>
+                          )}
                         </div>
 
                         <div></div>
@@ -687,46 +716,20 @@ const UpdateEventProfile = ({
                       >
                         <div></div>
 
-                        <div className="ms-4">
-                          <div
-                            style={{
-                              fontWeight: "500",
-                              fontFamily: "Ubuntu",
-                              color: "#212121",
-                              fontSize: "0.95rem",
-                            }}
-                            className={"mb-3"}
-                          >
-                            Headline
-                          </div>
+                        {userDetails.headline ? (
+                          <div className="ms-4">
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                fontFamily: "Ubuntu",
+                                color: "#212121",
+                                fontSize: "0.95rem",
+                              }}
+                              className={"mb-3"}
+                            >
+                              Headline
+                            </div>
 
-                          <div
-                            style={{
-                              fontWeight: "400",
-                              fontFamily: "Ubuntu",
-                              color: "#4D4D4D",
-                              fontSize: "0.9rem",
-                            }}
-                          >
-                            {userDetails.headline}
-                          </div>
-                        </div>
-                        <div></div>
-                        <div></div>
-                        <div className="ms-4">
-                          <div
-                            style={{
-                              fontWeight: "500",
-                              fontFamily: "Ubuntu",
-                              color: "#212121",
-                              fontSize: "0.95rem",
-                            }}
-                            className={"mb-3"}
-                          >
-                            Interests
-                          </div>
-
-                          {userDetails.interests ? (
                             <div
                               style={{
                                 fontWeight: "400",
@@ -735,12 +738,48 @@ const UpdateEventProfile = ({
                                 fontSize: "0.9rem",
                               }}
                             >
-                              {renderInterests(userDetails.interests)}
+                              {userDetails.headline}
                             </div>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+
+                        <div></div>
+                        <div></div>
+                        {typeof userDetails.interests !== "undefined" &&
+                        userDetails.interests.length > 0 ? (
+                          <div className="ms-4">
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                fontFamily: "Ubuntu",
+                                color: "#212121",
+                                fontSize: "0.95rem",
+                              }}
+                              className={"mb-3"}
+                            >
+                              Interests
+                            </div>
+
+                            {userDetails.interests ? (
+                              <div
+                                style={{
+                                  fontWeight: "400",
+                                  fontFamily: "Ubuntu",
+                                  color: "#4D4D4D",
+                                  fontSize: "0.9rem",
+                                }}
+                              >
+                                {renderInterests(userDetails.interests)}
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
                       </div>
 
                       {userDetails.socialMediaHandles && (
@@ -934,55 +973,13 @@ const UpdateEventProfile = ({
 
                   <div className="d-flex flex-column mb-4">
                     <div className="event-platform-side-drawer-heading">
-                      Manage Permissions
+                      Manage Permission
                     </div>
                     <div className="setting-tab-sub-text">
-                      Here you can choose to enable/disable connection requests
-                      and private messages
+                      Here you can choose to enable/disable private messaging
                     </div>
                   </div>
 
-                  <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                    <div className="hosting-platform-widget-name">
-                      Allow message from connections only
-                    </div>
-
-                    <div className="d-flex flex-column justify-content-center align-items-center">
-                      <FormGroup row>
-                        <FormControlLabel
-                          control={
-                            <RoyalBlueSwitch
-                              checked={allowMessageFromConnectionsOnly}
-                              onChange={(e) => {
-                                console.log(e.target.checked);
-                                setAllowMessageFromConnectionsOnly(
-                                  e.target.checked
-                                );
-
-                                let newFormValues = { ...formValues };
-                                newFormValues.allowMessageFromConnectionsOnly =
-                                  e.target.checked;
-
-                                console.log(newFormValues);
-                                if (myRegistration) {
-                                  dispatch(
-                                    updateRegistration(
-                                      newFormValues,
-                                      myRegistration._id
-                                    )
-                                  );
-                                }
-                              }}
-                              name="allowMessageFromConnectionsOnly"
-                            />
-                          }
-                        />
-                      </FormGroup>
-                    </div>
-                  </div>
-                  <div className="my-3">
-                    <Divider />
-                  </div>
                   <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
                     <div className="hosting-platform-widget-name">
                       Allow private messages
@@ -1022,83 +1019,6 @@ const UpdateEventProfile = ({
                   </div>
                   <div className="my-3">
                     <Divider />
-                  </div>
-                  <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                    <div className="hosting-platform-widget-name">
-                      Allow meeting invites
-                    </div>
-
-                    <div>
-                      <FormGroup row>
-                        <FormControlLabel
-                          control={
-                            <RoyalBlueSwitch
-                              checked={allowMeetingInvites}
-                              onChange={(e) => {
-                                console.log(e.target.checked);
-                                setAllowMeetingInvites(e.target.checked);
-
-                                let newFormValues = { ...formValues };
-                                newFormValues.allowMeetingInvites =
-                                  e.target.checked;
-
-                                console.log(newFormValues);
-
-                                if (myRegistration) {
-                                  dispatch(
-                                    updateRegistration(
-                                      newFormValues,
-                                      myRegistration._id
-                                    )
-                                  );
-                                }
-                              }}
-                              name="allowMeetingInvites"
-                            />
-                          }
-                        />
-                      </FormGroup>
-                    </div>
-                  </div>
-                  <div className="my-3">
-                    <Divider />
-                  </div>
-                  <div className="event-widget-show-hide d-flex flex-row align-items-center justify-content-between">
-                    <div className="hosting-platform-widget-name">
-                      Allow connection requests
-                    </div>
-
-                    <div className="d-flex flex-column justify-content-center">
-                      <FormGroup row>
-                        <FormControlLabel
-                          control={
-                            <RoyalBlueSwitch
-                              checked={allowConnectionRequests}
-                              onChange={(e) => {
-                                console.log(e.target.checked);
-                                setAllowConnectionRequests(e.target.checked);
-
-                                let newFormValues = { ...formValues };
-                                newFormValues.allowConnectionRequests =
-                                  e.target.checked;
-
-                                console.log(newFormValues);
-
-                                if (myRegistration) {
-                                  dispatch(
-                                    updateRegistration(
-                                      newFormValues,
-                                      myRegistration._id
-                                    )
-                                  );
-                                }
-                              }}
-                              name="allowConnectionRequests"
-                            />
-                          }
-                        />
-                      </FormGroup>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1170,11 +1090,14 @@ const mapStateToProps = (state) => ({
 const validate = (values) => {
   const errors = {};
 
-  if (values.firstName && values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
+  if (!values.firstName) {
+    errors.firstName = "First Name is required";
   }
-  if (values.lastName && values.lastName.length > 15) {
-    errors.lastName = "Must be 15 characters or less";
+  if (!values.lastName) {
+    errors.lastName = "Last Name is required";
+  }
+  if (!values.email) {
+    errors.email = "Email is required";
   }
   if (
     values.email &&

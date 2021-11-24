@@ -182,9 +182,9 @@ const renderPeople = (people, userId) => {
         id={person.userId}
         name={person.userName}
         image={
-          person.userImage.startsWith("https://")
+          person.userImage ? person.userImage.startsWith("https://")
             ? person.userImage
-            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}`
+            : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.userImage}` : ""
         }
         organisation={person.userOrganisation}
         designation={person.userDesignation}

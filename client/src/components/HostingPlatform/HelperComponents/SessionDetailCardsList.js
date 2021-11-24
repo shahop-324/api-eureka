@@ -26,8 +26,10 @@ const SessionDetailCardsList = ({
           speakers={session.speaker}
           duration={duration}
           startTime={session.startTime}
+          endTime={session.endTime}
           hosts={session.host}
           runningStatus={session.runningStatus}
+          people={session.people}
         />
       );
     });

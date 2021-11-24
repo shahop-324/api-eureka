@@ -37,9 +37,11 @@ const Chair_2 = ({ id, launchTableScreen }) => {
     // This is the case in which chair is occupied
     chairIsOccupied = true;
     userName2 = chair.userName;
-    userImage2 = chair.userImage.startsWith("https://")
-      ? chair.userImage
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+    userImage2 = chair.userImage
+      ? chair.userImage.startsWith("https://")
+        ? chair.userImage
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
+      : "";
     userCity2 = chair.userCity;
     userCountry2 = chair.userCountry;
     userOrganisation2 = chair.userOrganisation;
@@ -101,10 +103,9 @@ const Chair_2 = ({ id, launchTableScreen }) => {
         console.log(error);
       });
     } else {
-      if(document.getElementById(`${id}_chair_2_img_blob`)) {
+      if (document.getElementById(`${id}_chair_2_img_blob`)) {
         document.getElementById(`${id}_chair_2_img_blob`).remove();
       }
-      
     }
   }, [userImage2, id]);
 

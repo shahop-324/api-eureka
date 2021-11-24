@@ -14,7 +14,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import socket from "./service/socket";
 import ScheduleMeeting from "./Screens/Sub/ScheduleMeeting";
-import { fetchMyConnections, setOpenScheduleMeeting, setScheduleMeetingUserId } from "./../../actions";
+import {
+  fetchMyConnections,
+  setVenueRightDrawerSelectedTab,
+  setChatSelectedTab,
+  setPersonalChatConfig,
+  setOpenVenueRightDrawer,
+} from "./../../actions";
+
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 
 const PersonProfileBody = styled.div`
   width: 360px;
@@ -115,6 +123,7 @@ const renderInterests = (interests) => {
 };
 
 const PersonProfile = ({
+  hideBtns,
   open,
   handleClose,
   userId,
@@ -136,8 +145,6 @@ const PersonProfile = ({
   const { connections } = useSelector((state) => state.connections);
 
   const { registrations } = useSelector((state) => state.registration);
-
- 
 
   useEffect(() => {
     dispatch(fetchMyConnections());
@@ -208,6 +215,9 @@ const PersonProfile = ({
       >
         <PersonProfileBody>
           <IconButton
+            onClick={() => {
+              handleClose();
+            }}
             className="icon-btn"
             style={{
               position: "absolute",
@@ -216,23 +226,29 @@ const PersonProfile = ({
               zIndex: "1",
             }}
           >
-            <CancelIcon
-              style={{ color: "inherit" }}
-              onClick={() => {
-                handleClose();
-              }}
-            />
+            <CancelIcon style={{ color: "inherit" }} />
           </IconButton>
           <div className="d-flex flex-row align-items-center justify-content-center mb-4">
             <Avatar
-              src={userImage}
+              src={
+                userImage
+                  ? userImage.startsWith("https://")
+                    ? userImage
+                    : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${userImage}`
+                  : ""
+              }
               alt={userName}
               variant="rounded"
               style={{ width: "72px", height: "72px" }}
             />
           </div>
           <ProfileName className="mb-2">{userName}</ProfileName>
-          <ProfileDesignationOrg className="mb-5">{`${userOrganisation}, ${userDesignation}`}</ProfileDesignationOrg>
+          {userOrganisation && userDesignation ? (
+            <ProfileDesignationOrg className="mb-5">{`${userOrganisation} ${userDesignation}`}</ProfileDesignationOrg>
+          ) : (
+            <div className="mb-4"></div>
+          )}
+
           {userRegistrationDetails ? (
             <div className="d-flex flex-row align-items-center justify-content-center mb-4">
               {userRegistrationDetails.socialMediaHandles ? (
@@ -344,8 +360,9 @@ const PersonProfile = ({
             <></>
           )}
           {userRegistrationDetails ? (
-            userRegistrationDetails.interests ? (
-              <div className="mb-4">
+            typeof userRegistrationDetails.interests !== "undefined" &&
+            userRegistrationDetails.interests.length > 0 ? (
+              <div className="">
                 <ProfileSmallText className="mb-2">Interests</ProfileSmallText>
 
                 <div>{renderInterests(userRegistrationDetails.interests)}</div>
@@ -356,100 +373,28 @@ const PersonProfile = ({
           ) : (
             <></>
           )}
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            {thisPersonIsInMyConnections ? (
-              (() => {
-                switch (connectionStatusToThisPerson) {
-                  case "Pending":
-                    return (
-                      <ButtonFilledDark
-                        style={{ width: "48%" }}
-                        onClick={() => {
-                          socket.emit(
-                            "submitConnectionRequest",
-                            {
-                              senderId,
-                              receiverId,
-                              eventId,
-                            },
-                            (error) => {
-                              if (error) {
-                                alert(error);
-                              }
-                            }
-                          );
-                        }}
-                      >
-                        Request sent
-                      </ButtonFilledDark>
-                    );
-                  case "Accepted":
-                    return (
-                      <ButtonFilledDark
-                        style={{ width: "48%" }}
-                        onClick={() => {
-                          socket.emit(
-                            "submitConnectionRequest",
-                            {
-                              senderId,
-                              receiverId,
-                              eventId,
-                            },
-                            (error) => {
-                              if (error) {
-                                alert(error);
-                              }
-                            }
-                          );
-                        }}
-                      >
-                        Connected
-                      </ButtonFilledDark>
-                    );
-
-                  default:
-                    break;
-                }
-              })()
-            ) : (
-              <ButtonFilledDark
-                style={{ width: "48%" }}
+          {!hideBtns && (
+            <div className="d-flex flex-row align-items-center justify-content-between mt-4">
+              <ButtonOutlinedDark
                 onClick={() => {
-                  socket.emit(
-                    "submitConnectionRequest",
-                    {
-                      senderId,
-                      receiverId,
-                      eventId,
-                    },
-                    (error) => {
-                      if (error) {
-                        alert(error);
-                      }
-                    }
-                  );
+                  dispatch(setVenueRightDrawerSelectedTab("feed"));
+                  dispatch(setChatSelectedTab("private"));
+                  dispatch(setPersonalChatConfig(userId));
+                  dispatch(setOpenVenueRightDrawer(true));
                 }}
+                style={{ width: "100%" }}
               >
-                Connect
-              </ButtonFilledDark>
-            )}
-
-            <ButtonOutlinedDark
-              onClick={() => {
-                // setOpenScheduleMeet(true);
-                dispatch(setScheduleMeetingUserId(userId))
-                dispatch(setOpenScheduleMeeting(true))
-              }}
-              style={{ width: "48%" }}
-            >
-              Schedule meet
-            </ButtonOutlinedDark>
-          </div>
+                <ChatRoundedIcon
+                  style={{ fontSize: "18px" }}
+                  className="me-2"
+                />{" "}
+                Message
+              </ButtonOutlinedDark>
+            </div>
+          )}
         </PersonProfileBody>
       </Dialog>
-      <ScheduleMeeting
-       
-      />
+      <ScheduleMeeting />
     </>
   );
 };

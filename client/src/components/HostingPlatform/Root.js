@@ -160,8 +160,6 @@ const Root = () => {
     });
 
     socket.on("connectionRequestSubmitted", ({ newConnetionRequest }) => {
-      console.log(newConnetionRequest);
-
       dispatch(createNewConnectionRequest(newConnetionRequest));
 
       // Show notification that your connection request has been submitted successfully
@@ -171,8 +169,6 @@ const Root = () => {
     });
 
     socket.on("newConnectionRequest", ({ newConnetionRequest }) => {
-      console.log(newConnetionRequest);
-
       dispatch(createNewConnectionRequest(newConnetionRequest));
 
       // Show that you have got new connection request

@@ -95,7 +95,6 @@ const MyConnections = () => {
     <>
       <div className="event-management-content-grid px-3 mb-4 py-4">
         <MyConnectionsListFields />
-
         {renderConnections(connections, id)}
       </div>
     </>

@@ -1,16 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import "./../../../index.css";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
+import {IconButton} from "@material-ui/core";
 import dateFormat from "dateformat";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   getRTCTokenAndSession,
   setSessionRoleAndJoinSession,
 } from "../../../actions";
+
+import Chip from "@mui/material/Chip";
+import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
 
@@ -38,6 +44,25 @@ const ThemedText = styled.div`
   color: #152d35 !important;
   font-family: "Ubuntu";
 `;
+
+const renderPeople = (people) => {
+  return people.map((person) => {
+    return (
+      <Tooltip title={`${person.firstName} ${person.lastName}`}>
+        <Avatar
+          alt={`${person.firstName} ${person.lastName}`}
+          src={
+            person.image
+              ? person.image.startsWith("https://")
+                ? person.image
+                : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
+              : ""
+          }
+        />
+      </Tooltip>
+    );
+  });
+};
 
 const SessionSpeakerCard = ({ name, headline, image }) => {
   const classes = useStyles();
@@ -79,10 +104,12 @@ const SessionDetailCard = ({
   name,
   description,
   startTime,
+  endTime,
   duration,
   speakers,
   hosts,
   runningStatus,
+  people,
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -141,6 +168,24 @@ const SessionDetailCard = ({
     }
   }, []);
 
+  let sessionStatus = "Upcoming";
+
+  if (new Date(startTime) > new Date(Date.now())) {
+    sessionStatus = "Upcoming";
+  }
+  if (
+    new Date(startTime) <= new Date(Date.now()) &&
+    new Date(endTime) >= new Date(Date.now())
+  ) {
+    sessionStatus = "Ongoing";
+  }
+  if (new Date(endTime) < new Date(Date.now())) {
+    sessionStatus = "Ended";
+  }
+  if (runningStatus === "Ended") {
+    sessionStatus = "Ended";
+  }
+
   return (
     <>
       <div className="session-detail-card mb-3 px-4 py-5">
@@ -157,21 +202,98 @@ const SessionDetailCard = ({
             <div className="session-title mb-3 me-3">{name}</div>
           </div>
 
-          <div className="session-running-status-container px-2 py-2 mb-3">
-            <div className="session-running-status">Upcoming</div>
-          </div>
+          {(() => {
+            switch (sessionStatus) {
+              case "Upcoming":
+                return (
+                  <div className="session-running-status-container px-2 py-2 mb-3">
+                    <div
+                      className="session-running-status"
+                      style={{ fontWeight: "500" }}
+                    >
+                      Upcoming
+                    </div>
+                  </div>
+                );
+
+              case "Ongoing":
+                return (
+                  <div
+                    className="session-running-status-container px-2 py-2 mb-3"
+                    style={{ backgroundColor: "#A78B10" }}
+                  >
+                    <div
+                      className="session-running-status"
+                      style={{ backgroundColor: "#A78B10", fontWeight: "500" }}
+                    >
+                      Ongoing
+                    </div>
+                  </div>
+                );
+
+              case "Ended":
+                return (
+                  <div
+                    className="session-running-status-container px-2 py-2 mb-3"
+                    style={{ backgroundColor: "#A72E10" }}
+                  >
+                    <div
+                      className="session-running-status"
+                      style={{ backgroundColor: "#A72E10", fontWeight: "500" }}
+                    >
+                      Ended
+                    </div>
+                  </div>
+                );
+
+              default:
+                break;
+            }
+          })()}
 
           <div className="session-short-description mb-3">{description}</div>
 
           <div className="session-speakers-list-grid">
             {renderSpeakerList(speakers)}
           </div>
+
+          <div
+            style={{ fontWeight: "500", fontSize: "0.85rem", color: "#212121" }}
+            className="my-3"
+          >
+            Who's in
+          </div>
+
+          {people ? (
+            typeof people !== "undefined" && people.length > 0 ? (
+              <div className="d-flex flex-row align-items-center justify-content-start">
+                <AvatarGroup max={12}>{renderPeople(people)}</AvatarGroup>
+              </div>
+            ) : (
+              <Chip
+                label="Be the first one to attend"
+                color="primary"
+                variant="outlined"
+                style={{ fontWeight: "500", width: "max-content" }}
+              />
+            )
+          ) : (
+            <Chip
+              label="Be the first one to attend"
+              color="primary"
+              variant="outlined"
+              style={{ fontWeight: "500", width: "max-content" }}
+            />
+          )}
         </div>
 
         <div
           className={`d-flex flex-row justify-content-end align-items-start`}
         >
           <div className="d-flex flex-row justify-content-end align-items-center">
+            <IconButton>
+              <EditRoundedIcon />
+            </IconButton>
             <div
               onClick={() => {
                 // Get a RTC token

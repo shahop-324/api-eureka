@@ -6,6 +6,10 @@ const recordingSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
+    sessionId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Session",
+    },
     sessionName: {
       type: String,
     },

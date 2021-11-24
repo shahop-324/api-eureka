@@ -6,6 +6,8 @@ import Chip from "@mui/material/Chip";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import ConfirmEnd from "./LifecycleSwitch/ConfirmEnd";
 
+import CircleIcon from "@mui/icons-material/Circle";
+
 import {
   BrandLogo,
   ChipModified,
@@ -50,10 +52,7 @@ const IconButtonStatic = styled.div`
   border: 1px solid #ffffff;
 `;
 
-const StageNavComponent = ({
-  runningStatus,
-  canPublishStream,
-}) => {
+const StageNavComponent = ({ runningStatus, canPublishStream }) => {
   // NOTICE : State can be live, back or ended
   // Hosts and speakers can go to backstage anytime they want by clicking on switch to backstage button and come back to live stage if the session is in running state
   const [openConfirmEnd, setOpenConfirmEnd] = useState(false);
@@ -145,7 +144,6 @@ const StageNavComponent = ({
         </div>
 
         <div className="d-flex flex-row align-items-center justify-content-center">
-          
           {currentUserIsAHost ? (
             (() => {
               switch (status) {
@@ -176,13 +174,24 @@ const StageNavComponent = ({
 
         <div className="d-flex flex-row align-items-center justify-content-end">
           {status !== "Ended" ? (
-            <PeopleWatching>
-              <PeopleOutlineRoundedIcon className="me-2" />
-              {sessionDetails.people
-                ? `${sessionDetails.people.length} watching`
-                : `0 watching`}
-              {/* This will be the total number of active users in this session currently */}
-            </PeopleWatching>
+            <>
+              <PeopleWatching className="me-3">
+                <PeopleOutlineRoundedIcon className="me-2" />
+                {sessionDetails.people
+                  ? `${sessionDetails.people.length} watching`
+                  : `0 watching`}
+                {/* This will be the total number of active users in this session currently */}
+              </PeopleWatching>
+              {sessionDetails.recording && (
+                <Chip
+                  className="ms-3"
+                  icon={<CircleIcon style={{ color: "#CA3B3B" }} />}
+                  label="REC"
+                  variant="outlined"
+                  style={{ color: "red", border: "1px solid red" }}
+                />
+              )}
+            </>
           ) : (
             <></>
           )}

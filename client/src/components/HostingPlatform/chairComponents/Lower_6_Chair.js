@@ -5,7 +5,10 @@ import { Avatar } from "@material-ui/core";
 import { Popup } from "semantic-ui-react";
 import socket from "../service/socket";
 import { useParams } from "react-router";
-import { getRTCTokenForJoiningTable, editCurrentlyJoinedChair } from "../../../actions";
+import {
+  getRTCTokenForJoiningTable,
+  editCurrentlyJoinedChair,
+} from "../../../actions";
 
 const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
   const dispatch = useDispatch();
@@ -34,9 +37,11 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName6 = chair.userName;
-    userImage6 = chair.userImage.startsWith("https://")
-      ? chair.userImage
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+    userImage6 = chair.userImage
+      ? chair.userImage.startsWith("https://")
+        ? chair.userImage
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
+      : "";
     userCity6 = chair.userCity;
     userCountry6 = chair.userCountry;
     userOrganisation6 = chair.userOrganisation;
@@ -61,10 +66,8 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
   const userImage = userDetails.image && userDetails.image;
   const userCity = userDetails.city && userDetails.city;
   const userCountry = userDetails.country && userDetails.country;
-  const userOrganisation = userDetails.organisation
-    && userDetails.organisation;
-  const userDesignation = userDetails.designation
-    && userDetails.designation;
+  const userOrganisation = userDetails.organisation && userDetails.organisation;
+  const userDesignation = userDetails.designation && userDetails.designation;
 
   const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
@@ -99,13 +102,12 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
   useEffect(() => {
     if (userImage) {
       fetchImage(userImage6, id).catch((e) => {
-       //   "There has been a problem with your fetch operation."
+        //   "There has been a problem with your fetch operation."
       });
     } else {
-      if(document.getElementById(`${id}_chair_6_img_blob`)) {
+      if (document.getElementById(`${id}_chair_6_img_blob`)) {
         document.getElementById(`${id}_chair_6_img_blob`).remove();
       }
-      
     }
   }, [userImage6, id, userImage]);
 
@@ -117,9 +119,7 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
         className="lower-chair-wrapper"
         id={`${id}_chair_6`}
         onClick={() => {
-          dispatch(
-            editCurrentlyJoinedChair(`${id}_chair_6`)
-          );
+          dispatch(editCurrentlyJoinedChair(`${id}_chair_6`));
 
           socket.emit(
             "updateChair",
@@ -148,7 +148,11 @@ const LOWER_6_CHAIR = ({ id, launchTableScreen }) => {
           dispatch(getRTCTokenForJoiningTable(id, userId, launchTableScreen));
         }}
       >
-        <div className={`lower-chair chair pt-2 ${chairIsOccupied ? " " : "lower-chair-hover"}`}>
+        <div
+          className={`lower-chair chair pt-2 ${
+            chairIsOccupied ? " " : "lower-chair-hover"
+          }`}
+        >
           <div style={{ transform: "translateY(0)" }}>
             <Popup
               trigger={

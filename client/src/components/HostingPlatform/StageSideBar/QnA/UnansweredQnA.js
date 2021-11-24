@@ -230,11 +230,7 @@ const UnansweredQnA = ({
           <QuesText>{question}</QuesText>
         </div>
         <TextAreaWidget
-          disabled={
-            runningStatus === "In Progress"
-              ? false
-              : true
-          }
+          disabled={runningStatus === "In Progress" ? false : true}
           value={answer}
           onChange={(e) => {
             setAnswer(e.target.value);
@@ -276,7 +272,7 @@ const UnansweredQnA = ({
 
           {currentUserIsAHost ? (
             <div className="d-flex flex-row align-items-center justify-content-end">
-              {runningStatus === "In Progress" ? (
+              {/* {runningStatus === "In Progress" ? (
                 showOnStage ? (
                   <button
                     onClick={() => {
@@ -314,7 +310,7 @@ const UnansweredQnA = ({
                 )
               ) : (
                 <></>
-              )}
+              )} */}
 
               <IconButton
                 onClick={() => {

@@ -155,8 +155,8 @@ const SessionStage = () => {
     () => ({
       // Config for a single flying object which would fly in a moment
       top: {
-        fromValue: 800,
-        toValue: 0,
+        fromValue: 600,
+        toValue: -100,
         duration: DURATION,
         delay: DELAY,
       },
@@ -270,6 +270,16 @@ const SessionStage = () => {
       onEmojiSelect(emoji);
     });
 
+    socket.on("startVideo", ({ updatedSession }) => {
+      dispatch(updateSession(updatedSession));
+      handleToggleVideo();
+    });
+
+    socket.on("stopVideo", ({ updatedSession }) => {
+      dispatch(updateSession(updatedSession));
+      handleToggleVideo();
+    });
+
     socket.on("resetAudioAndVideoControls", async () => {
       userHasUnmutedVideo.current = false;
       rtc.localVideoTrack && rtc.localVideoTrack.close();
@@ -289,6 +299,16 @@ const SessionStage = () => {
       if (sessionRole === "host" && (role === "speaker" || role === "host")) {
         dispatch(showNotification(`${userName} has raised hand.`));
       }
+    });
+
+    socket.on("recordingStarted", ({ session }) => {
+      dispatch(updateSession(session));
+      dispatch(showNotification("This session is now being recorded."));
+    });
+
+    socket.on("recordingStopped", ({ session }) => {
+      dispatch(updateSession(session));
+      dispatch(showNotification("Recording has been stopped."));
     });
 
     socket.on("updatedSession", ({ updatedSession }) => {
@@ -1141,6 +1161,17 @@ const SessionStage = () => {
     }
   };
 
+  const handleToggleVideo = () => {
+    for (let element of rtc.client.remoteUsers) {
+      let remoteVideoTrack = element.videoTrack;
+      let remoteUid = element.uid;
+
+      if (remoteVideoTrack && remoteUid) {
+        remoteVideoTrack.play(remoteUid);
+      }
+    }
+  };
+
   return (
     <>
       <div style={{ position: "relative", overflow: "hidden" }}>
@@ -1160,12 +1191,12 @@ const SessionStage = () => {
           className="d-flex flex-column align-items-center"
           style={{ height: "100%" }}
         >
-          {/* <div
+          <div
             style={{
               height: "60vh",
               width: "50vw",
+              zIndex: "100",
               position: "absolute",
-              zIndex: "10000000000000000000000",
               top: "200px",
               left: "450px",
             }}
@@ -1176,7 +1207,7 @@ const SessionStage = () => {
               flyingObjects={flyingObjects}
               setFlyingObjects={setFlyingObjects}
             />
-          </div> */}
+          </div>
           <StageBody openSideDrawer={sideDrawerOpen}>
             {/* Stream body goes here */}
             <StreamBody

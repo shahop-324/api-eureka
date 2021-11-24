@@ -95,7 +95,7 @@ function VerticalTabs({ canPublishStream }) {
           <></>
         )}
 
-        {currentUserIsAHost ? (
+        {/* {currentUserIsAHost ? (
           <Tab
             label="Live streaming"
             {...a11yProps(2)}
@@ -103,7 +103,7 @@ function VerticalTabs({ canPublishStream }) {
           />
         ) : (
           <></>
-        )}
+        )} */}
       </Tabs>
       <TabPanel value={value} index={0}>
         <StreamSettings />
@@ -111,9 +111,9 @@ function VerticalTabs({ canPublishStream }) {
       <TabPanel value={value} index={1}>
         <SessionCustomisation />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      {/* <TabPanel value={value} index={2}>
         <EnableDisableLiveStreaming />
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 }

@@ -783,12 +783,12 @@ const NetworkingScreen = ({ open, handleClose }) => {
               </IconButton>
             </div>
             <div className="d-flex flex-row align-items-center justify-content-end">
-              <button className="btn btn-outline-text btn-light px-4">
+              {/* <button className="btn btn-outline-text btn-light px-4">
                 Connect
               </button>
               <button className="btn btn-outline-text btn-outline-light px-4 ms-3">
                 Share Business card
-              </button>
+              </button> */}
             </div>
           </LowerSection>
         </NetworkingTableBody>

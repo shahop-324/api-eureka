@@ -40,9 +40,11 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
     chairIsOccupied = true;
 
     userName2 = chair.userName;
-    userImage2 = chair.userImage.startsWith("https://")
-      ? chair.userImage
-      : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`;
+    userImage2 = chair.userImage
+      ? chair.userImage.startsWith("https://")
+        ? chair.userImage
+        : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${chair.userImage}`
+      : "";
     userCity2 = chair.userCity;
     userCountry2 = chair.userCountry;
     userOrganisation2 = chair.userOrganisation;
@@ -65,10 +67,8 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
   const userImage = userDetails.image && userDetails.image;
   const userCity = userDetails.city && userDetails.city;
   const userCountry = userDetails.country && userDetails.country;
-  const userOrganisation = userDetails.organisation
-    && userDetails.organisation;
-  const userDesignation = userDetails.designation
-    && userDetails.designation;
+  const userOrganisation = userDetails.organisation && userDetails.organisation;
+  const userDesignation = userDetails.designation && userDetails.designation;
 
   const fetchImage = async (imgURL, id) => {
     let response = await fetch(imgURL);
@@ -106,10 +106,9 @@ const UPPER_2_CHAIR = ({ id, launchTableScreen }) => {
         //   "There has been a problem with your fetch operation."
       });
     } else {
-      if(document.getElementById(`${id}_chair_2_img_blob`)) {
+      if (document.getElementById(`${id}_chair_2_img_blob`)) {
         document.getElementById(`${id}_chair_2_img_blob`).remove();
       }
-      
     }
   }, [userImage2, userImage, id]);
 

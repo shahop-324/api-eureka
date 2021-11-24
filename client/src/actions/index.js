@@ -10008,6 +10008,8 @@ export const startSessionRecording =
         })
       );
 
+      // Make a request to mark recording => true for this session
+
       setTimeout(function () {
         closeSnackbar();
       }, 6000);
@@ -10051,6 +10053,8 @@ export const stopSessionRecording =
 
       handleClose();
       console.log(result);
+
+      // Make a request to save this recording file for this event with sessionId
 
       dispatch(
         snackbarActions.openSnackBar({
@@ -10892,7 +10896,7 @@ export const editBoothTable =
           "putObject",
           { Bucket: "bluemeet-inc", Key: key, ContentType: "image/jpeg" },
           async (err, presignedURL) => {
-           await fetch(presignedURL, {
+            await fetch(presignedURL, {
               method: "PUT",
 
               body: file,
@@ -12595,7 +12599,7 @@ export const resendPayPalPayoutEmailVerificationLink =
           throw new Error(res.message);
         }
       }
-     await res.json();
+      await res.json();
 
       dispatch(showSnackbar("success", "Email sent successfully!"));
     } catch (error) {
@@ -13497,7 +13501,7 @@ export const deleteBoothVideo = (videoId) => async (dispatch, getState) => {
       },
     });
 
-   await res.json();
+    await res.json();
 
     dispatch(
       boothActions.DeleteVideo({

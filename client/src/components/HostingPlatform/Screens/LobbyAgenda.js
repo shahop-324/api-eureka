@@ -18,7 +18,7 @@ const CustomHorizontalTabWarpper = styled.div`
   background-color: #345b63;
 
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 16px;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -84,22 +84,8 @@ const LobbyAgenda = () => {
         >
           About
         </CustomTabButton>
-        <CustomTabButton
-          active={selectedTab === "myMeetings" ? true : false}
-          onClick={() => {
-            setSelectedTab("myMeetings");
-          }}
-        >
-          My meetings
-        </CustomTabButton>
-        <CustomTabButton
-          active={selectedTab === "connections" ? true : false}
-          onClick={() => {
-            setSelectedTab("connections");
-          }}
-        >
-          Connections
-        </CustomTabButton>
+        
+       
 
         <CustomTabButton
           active={selectedTab === "speakers" ? true : false}
@@ -122,10 +108,8 @@ const LobbyAgenda = () => {
         switch (selectedTab) {
           case "about":
             return <About />;
-          case "myMeetings":
-            return <MyMeetings />;
-          case "connections":
-            return <MyConnections />;
+          
+         
           case "speakers":
             return <Speakers />;
           case "hosts":
