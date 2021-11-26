@@ -5,9 +5,7 @@ import MsgTone from "./../../assets/msg_tone.mp3";
 import SideNav from "./HelperComponents/SideNav";
 import MidTopNav from "./HelperComponents/MidTopNav";
 import RatingComponent from "./RatingComponent";
-
 import "./Styles/root.scss";
-
 import Sessions from "./Screens/Sessions";
 import LobbyAgenda from "./Screens/LobbyAgenda";
 import Networking from "./Screens/Networking";
@@ -635,7 +633,7 @@ const Root = () => {
           </div>
         </div>
       </div>
-      <RatingComponent open={openRating} handleClose={handleCloseRating} />
+      <RatingComponent />
     </>
   );
 };

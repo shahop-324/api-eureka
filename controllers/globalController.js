@@ -33,6 +33,7 @@ const Report = require("./../models/reportModel");
 const Coupon = require("./../models/couponModel");
 const Ticket = require("./../models/ticketModel");
 const Booth = require("./../models/boothModel");
+const Review = require("./../models/reviewModel");
 
 const EventChatMessage = require("./../models/eventChatMessageModel");
 const SessionChats = require("./../models/sessionChatMessageModel");
@@ -659,16 +660,20 @@ exports.generateTokenForBoothScreenShare = catchAsync(
 );
 
 exports.getTawkLink = catchAsync(async (req, res, next) => {
-  const communityId = req.params.communityId;
+  try {
+    const communityId = req.params.communityId;
 
-  const communityDoc = await Community.findById(communityId);
+    const communityDoc = await Community.findById(communityId);
 
-  const tawkLink = communityDoc.tawkLink;
+    const tawkLink = communityDoc.tawkLink;
 
-  res.status(200).json({
-    data: { tawkLink: tawkLink },
-    message: "success",
-  });
+    res.status(200).json({
+      data: { tawkLink: tawkLink },
+      message: "success",
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 exports.generateMUXCredentials = catchAsync(async (req, res, next) => {
@@ -2568,7 +2573,10 @@ exports.getHighlightedSessions = catchAsync(async (req, res, next) => {
   const eventDoc = await Event.findById(eventId);
 
   for (let element of eventDoc.highlightedSessions) {
-    const sessionDoc = await Session.findById(element).populate('host').populate('speaker').populate('people');
+    const sessionDoc = await Session.findById(element)
+      .populate("host")
+      .populate("speaker")
+      .populate("people");
     // console.log(sessionDoc, element, "This is my debug log")
     if (sessionDoc) {
       sessions.push(sessionDoc);
@@ -2580,5 +2588,166 @@ exports.getHighlightedSessions = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: sessions,
+  });
+});
+
+exports.acceptInEvent = catchAsync(async (req, res, next) => {
+  // Unsuspend user and send mail to user and send confirmation to person who accepted in event
+
+  const eventId = req.params.eventId;
+  const userId = req.params.userId;
+
+  const eventDoc = await Event.findById(eventId);
+
+  eventDoc.blocked = eventDoc.blocked.filter(
+    (uid) => uid.toString() !== userId.toString()
+  );
+
+  await eventDoc.save({ new: true, validateModifiedOnly: true });
+
+  const acceptedUserDoc = await User.findById(userId);
+
+  // TODO Send warning via mail and notification
+
+  const msgToUser = {
+    to: acceptedUserDoc.email, // Change to your recipient
+    from: "shreyanshshah242@gmail.com", // Change to your verified sender
+    subject: `You have been accepted in ${eventDoc.eventName}.`,
+    text: `Here is a good news for you, You have been accepted in following event ${eventDoc.eventName}. You can now join this event by visiting your user dashboard. `,
+    // html: TeamInviteTemplate(urlToBeSent, communityDoc, userDoc),
+  };
+
+  // TODO Generate a notification for user
+
+  sgMail
+    .send(msgToUser)
+    .then(async () => {
+      console.log("Acceptance notification sent to user");
+    })
+    .catch(async (error) => {
+      console.log("Failed to send acceptance notification to user.");
+    });
+
+  // Find socketId of person who accepted
+
+  const updatedEventDoc = await Event.findById(eventId)
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts")
+    .populate("people")
+    .populate(
+      "blocked",
+      "firstName lastName email image organisation designation city country"
+    );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedEventDoc,
+  });
+});
+
+exports.resetEventLabels = catchAsync(async (req, res, next) => {
+  const eventId = req.params.eventId;
+
+  const updatedEventDoc = await Event.findByIdAndUpdate(
+    eventId,
+    {
+      lobbyLabel: "Lobby",
+      sessionsLabel: "Sessions",
+      networkingLabel: "Networking",
+      loungeLabel: "Lounge",
+      boothLabel: "Booth",
+      feedLabel: "Feed",
+      peopleLabel: "People",
+      alertsLabel: "Alerts",
+      moderationLabel: "Moderation",
+      settingsLabel: "Settings",
+    },
+    { new: true, validateModifiedOnly: true }
+  )
+    .populate({
+      path: "tickets",
+      options: {
+        sort: ["price"],
+      },
+    })
+    .populate("sponsors")
+    .populate("booths")
+    .populate({
+      path: "session",
+      populate: {
+        path: "speaker",
+      },
+    })
+    .populate("speaker")
+    .populate({
+      path: "createdBy",
+      select: "name socialMediaHandles image email superAdmin eventManagers",
+    })
+    .populate({
+      path: "coupon",
+      options: {
+        match: { status: "Active" },
+      },
+    })
+    .populate("hosts")
+    .populate("people")
+    .populate(
+      "blocked",
+      "firstName lastName email image organisation designation city country"
+    );
+
+  res.status(200).json({
+    status: "success",
+    data: updatedEventDoc,
+  });
+});
+
+exports.showReview = catchAsync(async (req, res, next) => {
+  const updatedReview = await Review.findByIdAndUpdate(
+    req.params.reviewId,
+    { hidden: false },
+    { new: true, validateModifiedOnly: true }
+  ).populate("user");
+
+  res.status(200).json({
+    status: "success",
+    data: updatedReview,
+  });
+});
+
+exports.hideReview = catchAsync(async (req, res, next) => {
+  const updatedReview = await Review.findByIdAndUpdate(
+    req.params.reviewId,
+    { hidden: true },
+    { new: true, validateModifiedOnly: true }
+  ).populate("user");
+
+  res.status(200).json({
+    status: "success",
+    data: updatedReview,
   });
 });

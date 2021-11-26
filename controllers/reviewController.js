@@ -63,12 +63,23 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
   const newReview = await Review.create({
     eventId: eventId,
-    communityId: req.body.communityId,
     user: req.body.userId,
     createdAt: Date.now(),
     rating: req.body.rating,
     reviewComment: req.body.reviewComment,
   });
+
+  // Mark that this user has reviewed this event
+
+  const eventDoc = await Event.findById(eventId);
+
+  eventDoc.reviewedBy = eventDoc.reviewedBy.filter(
+    (user) => user.toString() !== req.body.userId.toString()
+  );
+
+  eventDoc.reviewedBy.push(req.body.userId);
+
+  await eventDoc.save({ new: true, validateModifiedOnly: true });
 
   const populatedReview = await Review.findById(newReview._id).populate(
     "user",

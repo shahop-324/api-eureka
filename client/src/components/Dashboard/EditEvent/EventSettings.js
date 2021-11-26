@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useParams } from "react-router";
 import { IconButton, Avatar } from "@material-ui/core";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
-
-import Faker from "faker";
-
+import socket from "./../../HostingPlatform/service/socket";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -21,7 +19,12 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/styles";
 
-import { editEvent } from "./../../../actions";
+import {
+  editEvent,
+  acceptInEvent,
+  showSnackbar,
+  resetEventLabels,
+} from "./../../../actions";
 
 import { Divider } from "@material-ui/core";
 
@@ -99,10 +102,16 @@ const RoyalBlueSwitch = withStyles({
 const EventEntrySettings = () => {
   const dispatch = useDispatch();
 
-  const [sessionEntry, setSessionEntry] = useState(false);
-  const [networkingEntry, setNetworkingEntry] = useState(false);
-  const [loungeEntry, setLoungeEntry] = useState(false);
-  const [boothEntry, setBoothEntry] = useState(false);
+  const { eventDetails } = useSelector((state) => state.event);
+
+  const [sessionEntry, setSessionEntry] = useState(
+    eventDetails.allowEntryBeforeSessionBegin
+  );
+  const [networkingEntry, setNetworkingEntry] = useState(
+    eventDetails.networkingEntry
+  );
+  const [loungeEntry, setLoungeEntry] = useState(eventDetails.loungeEntry);
+  const [boothEntry, setBoothEntry] = useState(eventDetails.boothEntry);
 
   const params = useParams();
   const eventId = params.id;
@@ -242,16 +251,66 @@ const EventEntrySettings = () => {
 };
 
 const EventNavLabels = () => {
-  const [lobbyLabel, setLobbyLabel] = useState("Lobby");
-  const [sessionsLabel, setSessionsLabel] = useState("Sessions");
-  const [networkingLabel, setNetworkingLabel] = useState("Networking");
-  const [loungeLabel, setLoungeLabel] = useState("Lounge");
-  const [boothLabel, setBoothLabel] = useState("Booth");
-  const [feedLabel, setFeedLabel] = useState("Feed");
-  const [peopleLabel, setPeopleLabel] = useState("People");
-  const [alertsLabel, setAlertsLabel] = useState("Alerts");
-  const [moderationLabel, setModerationLabel] = useState("Moderation");
-  const [settingsLabel, setSettingsLabel] = useState("Settings");
+  const { eventDetails } = useSelector((state) => state.event);
+
+  const [lobbyLabel, setLobbyLabel] = useState(eventDetails.lobbyLabel);
+  const [sessionsLabel, setSessionsLabel] = useState(
+    eventDetails.sessionsLabel
+  );
+  const [networkingLabel, setNetworkingLabel] = useState(
+    eventDetails.networkingLabel
+  );
+  const [loungeLabel, setLoungeLabel] = useState(eventDetails.loungeLabel);
+  const [boothLabel, setBoothLabel] = useState(eventDetails.boothLabel);
+  const [feedLabel, setFeedLabel] = useState(eventDetails.feedLabel);
+  const [peopleLabel, setPeopleLabel] = useState(eventDetails.peopleLabel);
+  const [alertsLabel, setAlertsLabel] = useState(eventDetails.alertsLabel);
+  const [moderationLabel, setModerationLabel] = useState(
+    eventDetails.moderationLabel
+  );
+  const [settingsLabel, setSettingsLabel] = useState(
+    eventDetails.settingsLabel
+  );
+
+  const params = useParams();
+  const eventId = params.id;
+  const dispatch = useDispatch();
+
+  const handleSubmitLabels = () => {
+    if (
+      !lobbyLabel ||
+      !sessionsLabel ||
+      !networkingLabel ||
+      !loungeLabel ||
+      !boothLabel ||
+      !feedLabel ||
+      !peopleLabel ||
+      !alertsLabel ||
+      !moderationLabel ||
+      !settingsLabel
+    ) {
+      dispatch(showSnackbar("info", "No label should remain empty"));
+      return;
+    } else {
+      dispatch(
+        editEvent(
+          {
+            lobbyLabel,
+            sessionsLabel,
+            networkingLabel,
+            loungeLabel,
+            boothLabel,
+            feedLabel,
+            peopleLabel,
+            alertsLabel,
+            moderationLabel,
+            settingsLabel,
+          },
+          eventId
+        )
+      );
+    }
+  };
 
   return (
     <>
@@ -521,23 +580,47 @@ const EventNavLabels = () => {
       </div>
 
       <div className="d-flex flex-row align-items-center justify-content-end">
-          <button className="btn btn-outline-text btn-outline-dark d-flex flex-row align-items-center me-3">
-              <RestartAltIcon style={{fontSize: "18px"}} className="me-2" /> <span>Reset to default</span>
-          </button>
-          <button className="btn btn-outline-text btn-primary">Save</button>
+        <button
+          onClick={() => {
+            dispatch(resetEventLabels(eventId));
+          }}
+          className="btn btn-outline-text btn-outline-dark d-flex flex-row align-items-center me-3"
+        >
+          <RestartAltIcon style={{ fontSize: "18px" }} className="me-2" />{" "}
+          <span>Reset to default</span>
+        </button>
+        <button
+          onClick={() => {
+            handleSubmitLabels();
+          }}
+          className="btn btn-outline-text btn-primary"
+        >
+          Save
+        </button>
       </div>
     </>
   );
 };
 
-const BlockedPeopleComponent = () => {
+const BlockedPeopleComponent = ({ person }) => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const eventId = params.id;
+  const { userDetails } = useSelector((state) => state.user);
+
   return (
     <>
       <div className="d-flex flex-row align-items-center justify-content-between">
         <div className="d-flex flex-row align-items-center">
           <Avatar
-            src={Faker.image.avatar()}
-            alt={Faker.name.findName()}
+            src={
+              person.image
+                ? person.image.startsWith("https://")
+                  ? person.image
+                  : `https://bluemeet-inc.s3.us-west-1.amazonaws.com/${person.image}`
+                : ""
+            }
+            alt={`${person.firstName} ${person.lastName}`}
             variant="rounded"
           />
           <div className="ms-3 ">
@@ -549,7 +632,7 @@ const BlockedPeopleComponent = () => {
               }}
               className="mb-2"
             >
-              {Faker.name.findName()}
+              {`${person.firstName} ${person.lastName}`}
             </div>
             <div
               style={{
@@ -559,11 +642,16 @@ const BlockedPeopleComponent = () => {
               }}
               className=""
             >
-              Product Manager, Adidas
+              {person.designation} {person.organisation}
             </div>
           </div>
         </div>
-        <button className="btn btn-outline-text btn-outline-danger">
+        <button
+          onClick={() => {
+            dispatch(acceptInEvent(eventId, person._id));
+          }}
+          className="btn btn-outline-text btn-outline-danger"
+        >
           Lift ban
         </button>
       </div>
@@ -571,8 +659,16 @@ const BlockedPeopleComponent = () => {
   );
 };
 
+const renderBlockedPeople = (people) => {
+  return people.map((person) => {
+    return <BlockedPeopleComponent person={person} />;
+  });
+};
+
 const BasicTabs = () => {
   const [value, setValue] = useState(0);
+
+  const { eventDetails } = useSelector((state) => state.event);
 
   const params = useParams();
   const eventId = params.id;
@@ -628,7 +724,7 @@ const BasicTabs = () => {
         value={value}
         index={2}
       >
-        <BlockedPeopleComponent />
+        {renderBlockedPeople(eventDetails.blocked)}
       </TabPanel>
     </Box>
   );

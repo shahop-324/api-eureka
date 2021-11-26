@@ -452,6 +452,8 @@ export const signOut = () => async (dispatch, getState) => {
   socket.emit("logOut", { userId: getState().user.userDetails._id });
   window.localStorage.clear();
 
+  dispatch(toggleRatingWindow(false));
+
   window.gapi.load("client:auth2", () => {
     window.gapi.client
       .init({
@@ -1117,21 +1119,28 @@ export const fetchEvent = (id) => async (dispatch, getState) => {
   }
 };
 
-export const getHighlightedSessions = (eventId) =>async(dispatch, getState) => {
-  try{
-    const res = await eureka.get(`eureka/v1/getHighlightedSessions/${eventId}`);
-    console.log(res.data);
-    dispatch(
-      sessionActions.FetchHighlightedSessions({
-        sessions: res.data.data,
-      })
-    );
-  }
-  catch(error) {
-    console.log(error);
-    dispatch(showSnackbar("error", "Failed to fetch current session highlights, Please try again"));
-  }
-}
+export const getHighlightedSessions =
+  (eventId) => async (dispatch, getState) => {
+    try {
+      const res = await eureka.get(
+        `eureka/v1/getHighlightedSessions/${eventId}`
+      );
+      console.log(res.data);
+      dispatch(
+        sessionActions.FetchHighlightedSessions({
+          sessions: res.data.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to fetch current session highlights, Please try again"
+        )
+      );
+    }
+  };
 
 export const errorTrackerForFetchEvent = () => async (dispatch, getState) => {
   dispatch(eventActions.disabledError());
@@ -1173,6 +1182,93 @@ export const fetchParticularEventOfCommunity =
       console.log(err);
     }
   };
+
+export const acceptInEvent =
+  (eventId, userId) => async (dispatch, getState) => {
+    try {
+      const res = await fetch(
+        `${BaseURL}acceptInEvent/${eventId}/${userId}`,
+
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${getState().communityAuth.token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error("Something went wrong");
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+
+      dispatch(
+        eventActions.FetchEvent({
+          event: result.data,
+        })
+      );
+
+      dispatch(
+        showSnackbar(
+          "success",
+          "This person has been successfully accepted in this event."
+        )
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        showSnackbar(
+          "error",
+          "Failed to unsuspend this user, Please try again."
+        )
+      );
+    }
+  };
+
+export const resetEventLabels = (eventId) => async (dispatch, getState) => {
+  try {
+    let res = await fetch(
+      `${BaseURL}resetEventLabels/${eventId}`,
+
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error("Something went wrong");
+      } else {
+        throw new Error(res.message);
+      }
+    }
+    res = await res.json();
+
+    dispatch(
+      eventActions.EditEvent({
+        event: res.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", "Labels resetted successfully"));
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      showSnackbar("error", "Failed to reset labels, Please try again.")
+    );
+  }
+};
 
 export const errorTrackerForFetchParticularEventOfCommunity =
   () => async (dispatch, getState) => {
@@ -13274,7 +13370,8 @@ export const createEventReview =
         })
       );
 
-      dispatch(showSnackbar("success", "Review created successfully!"));
+      toggleRatingWindow(false);
+      dispatch(showSnackbar("success", "Review submitted successfully!"));
     } catch (error) {
       console.log(error);
       dispatch(
@@ -14745,3 +14842,67 @@ export const fetchUpdatedEvent = (event) => async (dispatch, getState) => {
     })
   );
 };
+
+export const toggleRatingWindow = (openState) => async (dispatch, getState) => {
+  dispatch(
+    eventActions.ToggleRatingWindow({
+      openState: openState,
+    })
+  );
+};
+
+export const showEventReview = (reviewId) => async(dispatch, getState) => {
+  try{
+    const res = await fetch(
+      `${BaseURL}showReview/${reviewId}`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    dispatch(reviewActions.UpdateReview({
+      review: result.data,
+    }))
+
+    dispatch(showSnackbar("success", "This review is now publicly visible"));
+  }
+  catch(error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to make this review public, Please try again."));
+  }
+}
+
+export const hideEventReview = (reviewId) => async(dispatch, getState) => {
+  try{
+    const res = await fetch(
+      `${BaseURL}hideReview/${reviewId}`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().communityAuth.token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    dispatch(reviewActions.UpdateReview({
+      review: result.data,
+    }))
+
+    dispatch(showSnackbar("success", "This review is now hidden"));
+  }
+  catch(error) {
+    console.log(error);
+    dispatch(showSnackbar("error", "Failed to hide review, Please try again."));
+  }
+}

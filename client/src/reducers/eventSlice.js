@@ -23,7 +23,7 @@ const eventSlice = createSlice({
     vibeUploadPercent: 0,
     uploadBannerPercent: 0,
     openUpdateEventSettings: false,
-    
+    openRating: false,
   },
 
   reducers: {
@@ -170,6 +170,9 @@ const eventSlice = createSlice({
     },
     FetchEventBannerUploadPercent(state, action) {
       state.uploadBannerPercent = action.payload.percent;
+    },
+    ToggleRatingWindow(state, action) {
+      state.openRating = action.payload.openState;
     },
   },
 });

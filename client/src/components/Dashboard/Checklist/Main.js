@@ -31,7 +31,14 @@ import GetHelp from "../GetHelp";
 import { useSelector } from "react-redux";
 
 import { TwitterPicker } from "react-color";
-import { editEvent } from "./../../../actions";
+import {
+  editEvent,
+  navigationIndexForEditEvent,
+  generateEventAccessToken,
+} from "./../../../actions";
+import history from "./../../../history";
+
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
 const EventDetailsHeading = styled.div`
   font-weight: 500;
@@ -135,9 +142,9 @@ const CheckListButton = styled.div`
 `;
 
 const FillerInner = styled.div`
-  width: 60%;
+  width: 100%;
   height: 7px;
-  background-color: #74c54f;
+  background-color: #65b342;
   border-radius: 20px;
 `;
 
@@ -166,6 +173,7 @@ const ImgCard = styled.img`
 const MainEventSetupCheckList = () => {
   const params = useParams();
   const eventId = params.id;
+  const communityId = params.communityId;
 
   const dispatch = useDispatch();
 
@@ -184,6 +192,10 @@ const MainEventSetupCheckList = () => {
   };
 
   const { eventDetails, isLoading } = useSelector((state) => state.event);
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
 
   const [color, setColor] = useState(
     eventDetails.landingPageColor ? eventDetails.landingPageColor : "#3567C3"
@@ -221,7 +233,7 @@ const MainEventSetupCheckList = () => {
               className="d-flex flex-row align-items-center mb-3"
             >
               <CheckCircleRoundedIcon
-                style={{ color: "#74C54F" }}
+                style={{ color: "#65B342" }}
                 className="me-3"
               />
               <span>Setup Event</span>
@@ -233,7 +245,10 @@ const MainEventSetupCheckList = () => {
               }}
               className="d-flex flex-row align-items-center mb-3"
             >
-              <CheckCircleRoundedIcon className="me-3" />
+              <CheckCircleRoundedIcon
+                style={{ color: "#65B342" }}
+                className="me-3"
+              />
               <span>Customize venue</span>
             </CheckListButton>
             <CheckListButton
@@ -243,7 +258,10 @@ const MainEventSetupCheckList = () => {
               }}
               className="d-flex flex-row align-items-center mb-3"
             >
-              <CheckCircleRoundedIcon className="me-3" />
+              <CheckCircleRoundedIcon
+                style={{ color: "#65B342" }}
+                className="me-3"
+              />
               <span>Add speakers</span>
             </CheckListButton>
             <CheckListButton
@@ -253,7 +271,10 @@ const MainEventSetupCheckList = () => {
               }}
               className="d-flex flex-row align-items-center mb-3"
             >
-              <CheckCircleRoundedIcon className="me-3" />
+              <CheckCircleRoundedIcon
+                style={{ color: "#65B342" }}
+                className="me-3"
+              />
               <span>Preview & Publish</span>
             </CheckListButton>
           </CheckListSteps>
@@ -273,7 +294,12 @@ const MainEventSetupCheckList = () => {
                 case "setupEvent":
                   return (
                     <div>
-                      <StepSectionButton className="mb-3">
+                      <StepSectionButton
+                        onClick={() => {
+                          window.location.hash = "event-basics";
+                        }}
+                        className="mb-3"
+                      >
                         <div className="d-flex flex-row align-items-center">
                           <AutoFixNormalIcon style={{ color: "#538BF7" }} />
                           <div className="ms-3">
@@ -291,14 +317,22 @@ const MainEventSetupCheckList = () => {
                           <KeyboardArrowRightRoundedIcon />
                         </IconButton>
                       </StepSectionButton>
-                      <StepSectionButton className="mb-3">
+                      <StepSectionButton
+                        onClick={() => {
+                          dispatch(navigationIndexForEditEvent(7));
+                          history.push(
+                            `/community/${communityId}/edit-event/${eventId}/ticketing`
+                          );
+                        }}
+                        className="mb-3"
+                      >
                         <div className="d-flex flex-row align-items-center">
                           <ConfirmationNumberRoundedIcon
                             style={{ color: "#538BF7" }}
                           />
                           <div className="ms-3">
-                            Create tickets, coupons, affiliates and set up
-                            integrations
+                            Create tickets & coupons to kickstart your event
+                            registration
                             <div className="mt-1">
                               <span>
                                 Set up details to drive registrations and
@@ -312,7 +346,12 @@ const MainEventSetupCheckList = () => {
                           <KeyboardArrowRightRoundedIcon />
                         </IconButton>
                       </StepSectionButton>
-                      <StepSectionButton className="mb-3">
+                      <StepSectionButton
+                        onClick={() => {
+                          window.location.hash = "landing-page-theme";
+                        }}
+                        className="mb-3"
+                      >
                         <div className="d-flex flex-row align-items-center">
                           <PagesRoundedIcon style={{ color: "#538BF7" }} />
                           <div className="ms-3">
@@ -337,34 +376,25 @@ const MainEventSetupCheckList = () => {
                   return (
                     <>
                       <div>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(
+                              generateEventAccessToken(
+                                userId,
+                                userDetails.email,
+                                "organiser" // organiser ||  moderator ||  host
+                              )
+                            );
+                            window.location.href = `/community/${communityId}/event/${eventId}/hosting-platform/lobby`;
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <AppRegistrationRoundedIcon
                               style={{ color: "#538BF7" }}
                             />
                             <div className="ms-3">
-                              Set up reception area
-                              <div className="mt-1">
-                                <span>
-                                  Add promo videos, banners, offers, quizzes,
-                                  photo booth and more to kick start event right
-                                  from entry
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <IconButton>
-                            <KeyboardArrowRightRoundedIcon />
-                          </IconButton>
-                        </StepSectionButton>
-                        <StepSectionButton className="mb-3">
-                          <div className="d-flex flex-row align-items-center">
-                            <AttractionsRoundedIcon
-                              style={{ color: "#538BF7" }}
-                            />
-                            <div className="ms-3">
-                              Customize venue based on your mood or brand
+                              Set up event venue
                               <div className="mt-1">
                                 <span>
                                   Set up any theme you want, add/remove widgets,
@@ -379,7 +409,42 @@ const MainEventSetupCheckList = () => {
                             <KeyboardArrowRightRoundedIcon />
                           </IconButton>
                         </StepSectionButton>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(navigationIndexForEditEvent(9));
+                            history.push(
+                              `/community/${communityId}/edit-event/${eventId}/videos`
+                            );
+                          }}
+                          className="mb-3"
+                        >
+                          <div className="d-flex flex-row align-items-center">
+                            <VideoLibraryIcon style={{ color: "#538BF7" }} />
+                            <div className="ms-3">
+                              Add pre recorded videos
+                              <div className="mt-1">
+                                <span>
+                                  You can add pre recorded videos to your
+                                  library so you can play and share them in your
+                                  sessions.
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <IconButton>
+                            <KeyboardArrowRightRoundedIcon />
+                          </IconButton>
+                        </StepSectionButton>
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(navigationIndexForEditEvent(10));
+                            history.push(
+                              `/community/${communityId}/edit-event/${eventId}/stage-vibes`
+                            );
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <WbIridescentRoundedIcon
                               style={{ color: "#538BF7" }}
@@ -407,7 +472,15 @@ const MainEventSetupCheckList = () => {
                   return (
                     <>
                       <div>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(navigationIndexForEditEvent(3));
+                            history.push(
+                              `/community/${communityId}/edit-event/${eventId}/sessions`
+                            );
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <ScheduleRoundedIcon style={{ color: "#538BF7" }} />
                             <div className="ms-3">
@@ -425,7 +498,15 @@ const MainEventSetupCheckList = () => {
                             <KeyboardArrowRightRoundedIcon />
                           </IconButton>
                         </StepSectionButton>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(navigationIndexForEditEvent(4));
+                            history.push(
+                              `/community/${communityId}/edit-event/${eventId}/speakers`
+                            );
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <PermIdentityRoundedIcon
                               style={{ color: "#538BF7" }}
@@ -446,7 +527,15 @@ const MainEventSetupCheckList = () => {
                             <KeyboardArrowRightRoundedIcon />
                           </IconButton>
                         </StepSectionButton>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            dispatch(navigationIndexForEditEvent(14));
+                            history.push(
+                              `/community/${communityId}/edit-event/${eventId}/integrations`
+                            );
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <SettingsEthernetRoundedIcon
                               style={{ color: "#538BF7" }}
@@ -474,7 +563,14 @@ const MainEventSetupCheckList = () => {
                   return (
                     <>
                       <div>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton
+                          onClick={() => {
+                            history.push(
+                              `/event-landing-page/${eventId}/${communityId}/`
+                            );
+                          }}
+                          className="mb-3"
+                        >
                           <div className="d-flex flex-row align-items-center">
                             <RemoveRedEyeRoundedIcon
                               style={{ color: "#538BF7" }}
@@ -494,7 +590,9 @@ const MainEventSetupCheckList = () => {
                             <KeyboardArrowRightRoundedIcon />
                           </IconButton>
                         </StepSectionButton>
-                        <StepSectionButton className="mb-3">
+                        <StepSectionButton  onClick={() => {
+                          window.location.hash = "event-basics";
+                        }} className="mb-3">
                           <div className="d-flex flex-row align-items-center">
                             <PublishRoundedIcon style={{ color: "#538BF7" }} />
                             <div className="ms-3">
@@ -525,7 +623,7 @@ const MainEventSetupCheckList = () => {
         </EventDetails>
 
         <EventPromoImageContainer className="px-4 py-3">
-          <RTMPCard className="mb-3">
+          <RTMPCard className="mb-3" id="landing-page-theme">
             <div className="d-flex flex-row align-items-center justify-content-between mb-4">
               <EventDetailsHeading className="">
                 Registration Page Theme

@@ -410,4 +410,16 @@ router.get(
   globalController.getHighlightedSessions
 );
 
+router.post(
+  "/acceptInEvent/:eventId/:userId",
+  authController.protectCommunity,
+  globalController.acceptInEvent
+);
+
+router.post("/resetEventLabels/:eventId", authController.protectCommunity, globalController.resetEventLabels);
+
+router.post("/hideReview/:reviewId", authController.protectCommunity, globalController.hideReview);
+
+router.post("/showReview/:reviewId", authController.protectCommunity, globalController.showReview);
+
 module.exports = router;

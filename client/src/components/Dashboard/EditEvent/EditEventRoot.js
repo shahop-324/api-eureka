@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import socket from "./../../HostingPlatform/service/socket";
 import "./../../../assets/Sass/Dashboard_Overview.scss";
 import "./../../../assets/Sass/SideNav.scss";
 import "./../../../assets/Sass/TopNav.scss";
@@ -19,6 +20,8 @@ import {
   errorTrackerForFetchParticularEventOfCommunity,
   fetchParticularEventOfCommunity,
   generateEventAccessToken,
+  fetchUpdatedEvent,
+  showSnackbar,
 } from "../../../actions";
 import { useParams } from "react-router";
 import { useEffect } from "react";
@@ -94,6 +97,15 @@ const EditEventRoot = () => {
 
   console.log(id);
   useEffect(() => {
+    socket.on("acceptedSuccessfully", ({ updatedEvent }) => {
+      dispatch(fetchUpdatedEvent(updatedEvent));
+      dispatch(
+        showSnackbar(
+          "success",
+          "This user has been successfully accepted in this event."
+        )
+      );
+    });
     dispatch(fetchParticularEventOfCommunity(id));
   }, [dispatch, id]);
 

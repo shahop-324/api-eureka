@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {useDispatch} from 'react-redux';
+import socket from "./service/socket";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,6 +16,13 @@ import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+
+import {
+  showSnackbar,
+  createEventReview,
+  signOut,
+  toggleRatingWindow,
+} from "./../../actions";
 
 const FormLabel = styled.label`
   font-family: "Ubuntu" !important;
@@ -73,12 +81,10 @@ IconContainer.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const RadioGroupRating = () => {
+const RadioGroupRating = ({ handleChangeRating }) => {
   return (
     <Rating
-    onChange={(event, value) => {
-        console.log(event, value);
-    }}
+      onChange={handleChangeRating}
       name="highlight-selected-only"
       defaultValue={4}
       IconContainerComponent={IconContainer}
@@ -97,8 +103,16 @@ const ReviewContainer = styled.div`
 `;
 
 const RatingComponent = ({ open, handleClose }) => {
+  const [rating, setRating] = useState(4);
+  const [reviewComment, setReviewComment] = useState(null);
 
-    const dispatch = useDispatch();
+  const { openRating } = useSelector((state) => state.event);
+
+  const { userDetails } = useSelector((state) => state.user);
+
+  const userId = userDetails._id;
+
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const params = useParams();
@@ -107,11 +121,39 @@ const RatingComponent = ({ open, handleClose }) => {
 
   const [feedback, setFeedback] = useState(null);
 
+  const handleChangeRating = (event, value) => {
+    setRating(value);
+  };
+
+  const handleSubmitReview = () => {
+    if (!rating) {
+      dispatch(showSnackbar("info", "Please provide rating."));
+      return;
+    }
+    if (!reviewComment) {
+      dispatch(showSnackbar("info", "Please provide your feedback."));
+      return;
+    }
+    dispatch(createEventReview({ rating, reviewComment }, eventId, userId));
+    socket.emit("leaveEvent", { userId, eventId }, (error) => {
+      console.log(error);
+    });
+    dispatch(signOut());
+  };
+
+  const handleAskMeLater = () => {
+    // Simply unsubscribe event and logout
+    socket.emit("leaveEvent", { userId, eventId }, (error) => {
+      console.log(error);
+    });
+    dispatch(signOut());
+  };
+
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
+        open={openRating}
         aria-labelledby="responsive-dialog-title"
       >
         <>
@@ -120,8 +162,11 @@ const RatingComponent = ({ open, handleClose }) => {
             <div className="coupon-overlay-form-headline">Your review</div>
           </HeaderFooter>
           <ReviewContainer className="px-4 py-3">
-              <div className="d-flex flex-row align-items-center justify-content-center">
-            <RadioGroupRating className="mb-4" />
+            <div className="d-flex flex-row align-items-center justify-content-center">
+              <RadioGroupRating
+                handleChangeRating={handleChangeRating}
+                className="mb-4"
+              />
             </div>
 
             <div className="my-3">
@@ -131,24 +176,33 @@ const RatingComponent = ({ open, handleClose }) => {
             <FormLabel className="mb-2">Feedback</FormLabel>
 
             <textarea
-              value={feedback}
+              value={reviewComment}
               onChange={(e) => {
                 setFeedback(e.target.value);
+                setReviewComment(e.target.value);
               }}
               className="form-control mb-3"
               rows="3"
               placeholder="Please tell us about your event experience."
             />
             <div className="d-flex flex-row align-items-center justify-content-end">
-              <button onClick={() => {
+              <button
+                onClick={() => {
                   // Close dialog and logout user or take to user home
-                  handleClose();
-              }} className="btn btn-outline-dark btn-outline-text me-3">
+                  handleAskMeLater();
+                  dispatch(toggleRatingWindow(false));
+                }}
+                className="btn btn-outline-dark btn-outline-text me-3"
+              >
                 Ask me later
               </button>
-              <button onClick={() => {
+              <button
+                onClick={() => {
                   // submit review and logout user or take to user home
-              }} className="btn btn-primary btn-outline-text">
+                  handleSubmitReview();
+                }}
+                className="btn btn-primary btn-outline-text"
+              >
                 Submit
               </button>
             </div>

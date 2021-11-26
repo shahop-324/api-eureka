@@ -29,6 +29,13 @@ const reviewSlice = createSlice({
       state.reviews.push(action.payload.review);
       state.isLoading = false;
     },
+    UpdateReview(state, action) {
+      state.reviews = state.reviews.map((review) =>
+        review._id.toString() === action.payload.review._id.toString()
+          ? action.payload.review
+          : review
+      );
+    },
   },
 });
 export const reviewActions = reviewSlice.actions;

@@ -6,10 +6,6 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Event",
     },
-    communityId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Community",
-    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",

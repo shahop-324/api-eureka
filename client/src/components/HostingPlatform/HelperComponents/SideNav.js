@@ -18,7 +18,11 @@ import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 import ModeEditOutlineRoundedIcon from "@mui/icons-material/ModeEditOutlineRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import socket from "./../service/socket";
-import { signOut, SetCurrentBoothId } from "./../../../actions";
+import {
+  signOut,
+  SetCurrentBoothId,
+  toggleRatingWindow,
+} from "./../../../actions";
 import { useParams } from "react-router";
 import UpdateEventProfile from "./../HelperComponents/UpdateEventProfile";
 
@@ -46,6 +50,8 @@ const SideNav = ({
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
 
   const { currentBoothId } = useSelector((state) => state.booth);
+
+  const {eventDetails} = useSelector((state) => state.event);
 
   const handleCloseUpdateProfile = () => {
     setOpenUpdateProfile(false);
@@ -342,12 +348,7 @@ const SideNav = ({
             }}
           >
             <MenuItem
-              onClick={() => {
-                socket.emit("leaveEvent", { userId, eventId }, (error) => {
-                  console.log(error);
-                });
-                handleClose();
-              }}
+              onClick={handleClose}
               className="mb-1"
               disableRipple
             >
@@ -374,7 +375,7 @@ const SideNav = ({
               <MenuText className="ms-3">Edit profile</MenuText>
             </MenuItem>
 
-            <MenuItem className="mb-1" disableRipple>
+            <MenuItem onClick={handleClose} className="mb-1" disableRipple>
               <a
                 href={`https://bluemeetinc.zendesk.com/hc/en-us`}
                 target="_blank"
@@ -388,19 +389,28 @@ const SideNav = ({
 
             <Divider sx={{ my: 0.5 }} />
             <MenuItem className="mb-1" disableRipple>
-              <a
+              <div
                 onClick={() => {
-                  socket.emit("leaveEvent", { userId, eventId }, (error) => {
-                    console.log(error);
-                  });
-                  dispatch(signOut());
+                  
+
+                  if(eventDetails.reviewedBy.includes(userId)) {
+                    // This user has already given his review
+
+                    socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                      console.log(error);
+                    });
+                    dispatch(signOut());
+                    handleClose();
+                  }
+                  else {
+                    dispatch(toggleRatingWindow(true));
+                    handleClose();
+                  }
                 }}
-                href="/home"
-                style={{ textDecoration: "none" }}
               >
                 <LogoutRoundedIcon style={{ fontSize: "19px" }} />
                 <MenuText className="ms-3">Sign out</MenuText>
-              </a>
+              </div>
             </MenuItem>
           </Popover>
         </div>

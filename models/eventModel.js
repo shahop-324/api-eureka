@@ -579,6 +579,62 @@ const eventSchema = new mongoose.Schema(
         ref: "Session",
       },
     ],
+    lobbyLabel: {
+      type: String,
+      default: "Lobby",
+    },
+    sessionsLabel: {
+      type: String,
+      default: "Sessions",
+    },
+    networkingLabel: {
+      type: String,
+      default: "Networking",
+    },
+    loungeLabel: {
+      type: String,
+      default: "Lounge",
+    },
+    boothLabel: {
+      type: String,
+      default: "Booth",
+    },
+    feedLabel: {
+      type: String,
+      default: "Feed",
+    },
+    peopleLabel: {
+      type: String,
+      default: "People",
+    },
+    alertsLabel: {
+      type: String,
+      default: "Alerts",
+    },
+    moderationLabel: {
+      type: String,
+      default: "Moderation",
+    },
+    settingsLabel: {
+      type: String,
+      default: "Settings",
+    },
+    boothEntry: {
+      type: Boolean,
+      default: false,
+    },
+    loungeEntry: {
+      type: Boolean,
+      default: false,
+    },
+    networkingEntry: {
+      type: Boolean,
+      default: false,
+    },
+    allowEntryBeforeSessionBegin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,

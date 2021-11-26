@@ -12,7 +12,11 @@ import history from "../../../history";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
-import { signOut, setOpenAudioVideoSettings } from "../../../actions";
+import {
+  signOut,
+  setOpenAudioVideoSettings,
+  toggleRatingWindow,
+} from "../../../actions";
 import socket from "../service/socket";
 import { Link } from "react-router-dom";
 import SwitchCommunity from "../../Dashboard/HelperComponent/SwitchCommunity";
@@ -27,7 +31,10 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
 
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
 
-  const userDetails = useSelector((state) => state.user.userDetails);
+  const { userDetails } = useSelector((state) => state.user);
+
+  const { eventDetails } = useSelector((state) => state.event);
+
   const userId = userDetails._id;
 
   const params = useParams();
@@ -213,10 +220,16 @@ const SettingsDrawer = ({ openDrawer, handleCloseDrawer }) => {
               <Link
                 to="/home"
                 onClick={() => {
-                  socket.emit("leaveEvent", { userId, eventId }, (error) => {
-                    console.log(error);
-                  });
-                  dispatch(signOut());
+                  if (eventDetails.reviewedBy.includes(userId)) {
+                    // This user has already given his review
+
+                    socket.emit("leaveEvent", { userId, eventId }, (error) => {
+                      console.log(error);
+                    });
+                    dispatch(signOut());
+                  } else {
+                    dispatch(toggleRatingWindow(true));
+                  }
                 }}
                 className="btn btn-outline-danger btn-outline-text"
                 style={{ width: "100%", textDecoration: "none" }}

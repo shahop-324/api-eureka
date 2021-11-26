@@ -1,10 +1,13 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import Box from "@material-ui/core/Box";
 import Rating from "react-star-rating-lite";
 import Avatar from "@material-ui/core/Avatar";
 import "./../../../assets/Sass/Reviews.scss";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
+
+import { showEventReview, hideEventReview } from "./../../../actions";
 
 const ReviewCard = ({
   showVisibilityToggle,
@@ -15,6 +18,8 @@ const ReviewCard = ({
   id,
   hidden,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <div className="review-card-wrapper px-4 py-3 mb-3">
       <div className="user-name-event-and-star-rating-row d-flex flex-row justify-content-between mb-3">
@@ -27,7 +32,12 @@ const ReviewCard = ({
           {showVisibilityToggle ? (
             <>
               {hidden ? (
-                <button className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3">
+                <button
+                  onClick={() => {
+                    dispatch(showEventReview(id));
+                  }}
+                  className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3"
+                >
                   <RemoveRedEyeRoundedIcon
                     style={{ fontSize: "20px" }}
                     className="me-2"
@@ -35,7 +45,12 @@ const ReviewCard = ({
                   <span>Show</span>
                 </button>
               ) : (
-                <button className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3">
+                <button
+                  onClick={() => {
+                    dispatch(hideEventReview(id));
+                  }}
+                  className="btn btn-outline-text btn-outline-primary d-flex flex-row align-items-center me-3"
+                >
                   <VisibilityOffRoundedIcon
                     style={{ fontSize: "20px" }}
                     className="me-2"

@@ -217,7 +217,7 @@ const EventOverview = (props) => {
         </div>
         <div className=" px-3 mb-4">
           <MainEventSetupCheckList />
-          <EventOverviewGrid className="mb-5 pb-4">
+          <EventOverviewGrid className="mb-5 pb-4" id="event-basics">
             <EventDetails className="px-4 py-3">
               <EventDetailsHeading className="mb-3">
                 Event Name

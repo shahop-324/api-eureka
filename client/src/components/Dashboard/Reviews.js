@@ -143,21 +143,26 @@ const Reviews = () => {
   const { reviews } = useSelector((state) => state.review);
 
   const [avgRating, setAvgRating] = useState(4.5);
-  let avgRatingPercent = Math.floor(((avgRating / 5) * 100).toFixed(1));
+  const [ratingPercent, setRatingPercent] = useState(90);
 
-  for (let element of reviews) {
-    let totalsum = 0;
-    let totalRatings = 0;
+  useEffect(() => {
+    for (let element of reviews) {
+      let totalsum = 0;
+      let totalRatings = 0;
 
-    if (element) {
-      if (element.rating) {
-        totalsum = totalsum + element.rating * 1;
-        totalRatings = totalRatings + 1;
+      if (element) {
+        if (element.rating) {
+          totalsum = totalsum + element.rating * 1;
+          totalRatings = totalRatings + 1;
+        }
       }
-    }
 
-    setAvgRating((totalsum / totalRatings).toFixed(1));
-  }
+      setAvgRating((totalsum / totalRatings).toFixed(1));
+      setRatingPercent(
+        Math.ceil((((totalsum / totalRatings).toFixed(1) / 5) * 100).toFixed(1))
+      );
+    }
+  }, []);
 
   return (
     <>
@@ -215,7 +220,7 @@ const Reviews = () => {
               Overall Rating
             </div>
             <div className="gauge-and-datalabel-wrapper">
-              <ApexGaugeChart percent={avgRatingPercent} />
+              <ApexGaugeChart percent={ratingPercent} />
               <div className="custom-gauge-datalabel">
                 {avgRating}
                 <span className="lightly-styled-guage-label"> / 5</span>

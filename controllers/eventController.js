@@ -279,6 +279,10 @@ exports.getOneEventForCommunities = catchAsync(async (req, res, next) => {
   const eventId = req.params.eventId;
   const event = await Event.findById(eventId)
     .populate("registrationFormId")
+    .populate(
+      "blocked",
+      "firstName lastName image email city country organisation designation"
+    )
     .populate("moderators", "firstName lastName email");
 
   res.status(200).json({
@@ -1038,7 +1042,21 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
       "archived",
       "type",
       "showOnGetStarted",
-      "landingPageColor"
+      "landingPageColor",
+      "lobbyLabel",
+      "sessionsLabel",
+      "networkingLabel",
+      "loungeLabel",
+      "boothLabel",
+      "feedLabel",
+      "peopleLabel",
+      "alertsLabel",
+      "moderationLabel",
+      "settingsLabel",
+      "allowEntryBeforeSessionBegin",
+      "networkingEntry",
+      "loungeEntry",
+      "boothEntry",
     );
 
     const eventBeforeUpdate = await Event.findById(req.params.id);
